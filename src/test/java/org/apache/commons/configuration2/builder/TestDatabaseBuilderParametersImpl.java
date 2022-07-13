@@ -18,13 +18,13 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,8 +87,7 @@ public class TestDatabaseBuilderParametersImpl {
      */
     @Test
     public void testSetDataSource() {
-        final DataSource src = EasyMock.createMock(DataSource.class);
-        EasyMock.replay(src);
+        final DataSource src = mock(DataSource.class);
         assertSame(params, params.setDataSource(src));
         assertSame(src, params.getParameters().get("dataSource"));
     }

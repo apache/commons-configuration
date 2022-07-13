@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +41,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -132,22 +134,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      * @return the resolver
      */
     private static NodeKeyResolver<ImmutableNode> createResolver() {
-        return createResolver(true);
-    }
-
-    /**
-     * Creates a default resolver which supports arbitrary queries on a target node and allows specifying the replay flag.
-     * If the boolean parameter is false, the mock is not replayed; so additional behaviors can be defined.
-     *
-     * @param replay the replay flag
-     * @return the resolver mock
-     */
-    private static NodeKeyResolver<ImmutableNode> createResolver(final boolean replay) {
         final NodeKeyResolver<ImmutableNode> resolver = NodeStructureHelper.createResolverMock();
-        NodeStructureHelper.expectResolveKeyForQueries(resolver);
-        if (replay) {
-            EasyMock.replay(resolver);
-        }
+        NodeStructureHelper.prepareResolveKeyForQueries(resolver);
         return resolver;
     }
 
@@ -158,16 +146,14 @@ public class TestInMemoryNodeModelTrackedNodes {
      * @param resolver the {@code NodeKeyResolver} mock
      */
     private static void prepareResolverForUpdateKeys(final NodeKeyResolver<ImmutableNode> resolver) {
-        EasyMock.expect(
-            resolver.resolveUpdateKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyString(), EasyMock.anyObject(), EasyMock.anyObject(TreeData.class)))
-            .andAnswer(() -> {
-                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                final String key = (String) EasyMock.getCurrentArguments()[1];
-                final TreeData handler = (TreeData) EasyMock.getCurrentArguments()[3];
-                final List<QueryResult<ImmutableNode>> results = DefaultExpressionEngine.INSTANCE.query(root, key, handler);
-                assertEquals(1, results.size());
-                return new NodeUpdateData<>(Collections.singletonMap(results.get(0), EasyMock.getCurrentArguments()[2]), null, null, null);
-            }).anyTimes();
+        when(resolver.resolveUpdateKey(any(), any(), any(), any())).thenAnswer(invocation -> {
+            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
+            final String key = invocation.getArgument(1, String.class);
+            final TreeData handler = invocation.getArgument(3, TreeData.class);
+            final List<QueryResult<ImmutableNode>> results = DefaultExpressionEngine.INSTANCE.query(root, key, handler);
+            assertEquals(1, results.size());
+            return new NodeUpdateData<>(Collections.singletonMap(results.get(0), invocation.getArgument(2)), null, null, null);
+        });
     }
 
     @BeforeAll
@@ -195,9 +181,9 @@ public class TestInMemoryNodeModelTrackedNodes {
      * @param queryResult the result set of the key
      */
     private void checkTrackChildNodesNoResult(final List<ImmutableNode> queryResult) {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(queryResult);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(queryResult);
+
         final TreeData oldData = model.getTreeData();
 
         assertTrue(model.trackChildNodes(TEST_KEY, resolver).isEmpty());
@@ -210,9 +196,9 @@ public class TestInMemoryNodeModelTrackedNodes {
      * @param queryResult the result set of the key
      */
     private void checkTrackChildNodeWithCreationInvalidKey(final List<ImmutableNode> queryResult) {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        EasyMock.expect(resolver.resolveNodeKey(model.getRootNode(), TEST_KEY, model.getNodeHandler())).andReturn(queryResult);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        when(resolver.resolveNodeKey(model.getRootNode(), TEST_KEY, model.getNodeHandler())).thenReturn(queryResult);
+
         assertThrows(ConfigurationRuntimeException.class, () -> model.trackChildNodeWithCreation(TEST_KEY, "someChild", resolver));
     }
 
@@ -223,9 +209,9 @@ public class TestInMemoryNodeModelTrackedNodes {
      * @param node the node whose name is to be resolved
      * @param key the key to be returned for this node
      */
-    private void expectNodeKey(final NodeKeyResolver<ImmutableNode> resolver, final ImmutableNode node, final String key) {
+    private void prepareNodeKey(final NodeKeyResolver<ImmutableNode> resolver, final ImmutableNode node, final String key) {
         final Map<ImmutableNode, String> cache = new HashMap<>();
-        EasyMock.expect(resolver.nodeKey(node, cache, model.getNodeHandler())).andReturn(key);
+        when(resolver.nodeKey(node, cache, model.getNodeHandler())).thenReturn(key);
     }
 
     /**
@@ -266,9 +252,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testAddNodesOnDetachedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        NodeStructureHelper.prepareResolveAddKeys(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
         final ImmutableNode rootNode = model.getRootNode();
@@ -282,9 +267,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testAddNodesOnTrackedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        NodeStructureHelper.prepareResolveAddKeys(resolver);
         model.trackNode(selector, resolver);
         model.addNodes("fields", selector, Collections.singleton(NodeStructureHelper.createFieldNode(NEW_FIELD)), resolver);
         checkForAddedField(fieldsNodeFromModel());
@@ -296,9 +280,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testAddPropertyOnDetachedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        NodeStructureHelper.prepareResolveAddKeys(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
         final ImmutableNode rootNode = model.getRootNode();
@@ -312,9 +295,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testAddPropertyOnTrackedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        NodeStructureHelper.prepareResolveAddKeys(resolver);
         model.trackNode(selector, resolver);
         model.addProperty("fields.field(-1).name", selector, Collections.singleton(NEW_FIELD), resolver);
         checkForAddedField(fieldsNodeFromModel());
@@ -554,15 +536,15 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testSelectAndTrackNodes() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         final String nodeKey1 = "tables/table(0)";
         final String nodeKey2 = "tables/table(1)";
         final ImmutableNode node1 = NodeStructureHelper.nodeForKey(root, nodeKey1);
         final ImmutableNode node2 = NodeStructureHelper.nodeForKey(root, nodeKey2);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Arrays.asList(node1, node2));
-        expectNodeKey(resolver, node1, nodeKey1);
-        expectNodeKey(resolver, node2, nodeKey2);
-        EasyMock.replay(resolver);
+
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Arrays.asList(node1, node2));
+        prepareNodeKey(resolver, node1, nodeKey1);
+        prepareNodeKey(resolver, node2, nodeKey2);
 
         final Collection<NodeSelector> selectors = model.selectAndTrackNodes(TEST_KEY, resolver);
         final Iterator<NodeSelector> it = selectors.iterator();
@@ -582,11 +564,11 @@ public class TestInMemoryNodeModelTrackedNodes {
     public void testSelectAndTrackNodesNodeAlreadyTracked() {
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
-        resolver = createResolver(false);
+        resolver = createResolver();
         final ImmutableNode node = model.getTrackedNode(selector);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Collections.singletonList(node));
-        expectNodeKey(resolver, node, SELECTOR_KEY);
-        EasyMock.replay(resolver);
+
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Collections.singletonList(node));
+        prepareNodeKey(resolver, node, SELECTOR_KEY);
 
         final Collection<NodeSelector> selectors = model.selectAndTrackNodes(TEST_KEY, resolver);
         assertEquals(1, selectors.size());
@@ -600,9 +582,9 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testSelectAndTrackNodesNoSelection() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Collections.<ImmutableNode>emptyList());
-        EasyMock.replay(resolver);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
+
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Collections.<ImmutableNode>emptyList());
 
         assertTrue(model.selectAndTrackNodes(TEST_KEY, resolver).isEmpty());
     }
@@ -612,9 +594,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testSetPropertyOnDetachedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         prepareResolverForUpdateKeys(resolver);
-        EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
         final ImmutableNode rootNode = model.getRootNode();
@@ -628,9 +609,8 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testSetPropertyOnTrackedNode() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         prepareResolverForUpdateKeys(resolver);
-        EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         model.setProperty("fields.field(0).name", selector, NEW_FIELD, resolver);
         checkedForChangedField(fieldsNodeFromModel(), 0);
@@ -642,16 +622,16 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testTrackChildNodes() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         final ImmutableNode node = NodeStructureHelper.nodeForKey(root, "tables");
         final String[] keys = new String[node.getChildren().size()];
+
         for (int i = 0; i < keys.length; i++) {
             final ImmutableNode child = node.getChildren().get(i);
             keys[i] = String.format("%s.%s(%d)", node.getNodeName(), child.getNodeName(), i);
-            expectNodeKey(resolver, child, keys[i]);
+            prepareNodeKey(resolver, child, keys[i]);
         }
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Collections.singletonList(node));
-        EasyMock.replay(resolver);
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Collections.singletonList(node));
 
         final Collection<NodeSelector> selectors = model.trackChildNodes(TEST_KEY, resolver);
         assertEquals(node.getChildren().size(), selectors.size());
@@ -693,15 +673,15 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testTrackChildNodeWithCreationExisting() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         final String childName = "name";
         final String parentKey = "tables/table(0)";
         final String childKey = parentKey + "/" + childName;
         final ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
         final ImmutableNode child = NodeStructureHelper.nodeForKey(node, childName);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Collections.singletonList(node));
-        expectNodeKey(resolver, child, childKey);
-        EasyMock.replay(resolver);
+
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Collections.singletonList(node));
+        prepareNodeKey(resolver, child, childKey);
 
         final NodeSelector childSelector = model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
         assertEquals(new NodeSelector(childKey), childSelector);
@@ -723,15 +703,14 @@ public class TestInMemoryNodeModelTrackedNodes {
      */
     @Test
     public void testTrackChildNodeWithCreationNonExisting() {
-        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         final String childName = "space";
         final String parentKey = "tables/table(0)";
         final String childKey = parentKey + "/" + childName;
         final ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
-        EasyMock.expect(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).andReturn(Collections.singletonList(node));
-        EasyMock.expect(resolver.nodeKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.eq(new HashMap<>()), EasyMock.anyObject(TreeData.class)))
-            .andReturn(childKey);
-        EasyMock.replay(resolver);
+
+        when(resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler())).thenReturn(Collections.singletonList(node));
+        when(resolver.nodeKey(any(), eq(new HashMap<>()), any())).thenReturn(childKey);
 
         final NodeSelector childSelector = model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
         assertEquals(new NodeSelector(childKey), childSelector);

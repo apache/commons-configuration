@@ -19,6 +19,10 @@ package org.apache.commons.configuration2.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +30,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -85,12 +88,15 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testEscapeNonStringValueTransformer() {
-        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        final ValueTransformer trans = mock(ValueTransformer.class);
         final Object value = 42;
-        EasyMock.expect(trans.transformValue(value)).andReturn(STR_VALUE);
-        EasyMock.replay(trans);
+
+        when(trans.transformValue(value)).thenReturn(STR_VALUE);
+
         assertEquals(STR_VALUE, handler.escape(value, trans));
-        EasyMock.verify(trans);
+
+        verify(trans).transformValue(value);
+        verifyNoMoreInteractions(trans);
     }
 
     /**
@@ -106,12 +112,15 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testEscapeStringValueTransformer() {
-        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        final ValueTransformer trans = mock(ValueTransformer.class);
         final String testStr = "Some other string";
-        EasyMock.expect(trans.transformValue(testStr)).andReturn(STR_VALUE);
-        EasyMock.replay(trans);
+
+        when(trans.transformValue(testStr)).thenReturn(STR_VALUE);
+
         assertEquals(STR_VALUE, handler.escape(testStr, trans));
-        EasyMock.verify(trans);
+
+        verify(trans).transformValue(testStr);
+        verifyNoMoreInteractions(trans);
     }
 
     /**

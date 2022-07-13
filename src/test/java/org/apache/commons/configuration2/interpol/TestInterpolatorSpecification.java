@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,20 +75,7 @@ public class TestInterpolatorSpecification {
      * @return the mock lookup
      */
     private static Lookup createLookup() {
-        return createMock(Lookup.class);
-    }
-
-    /**
-     * Convenience method for creating a mock object.
-     *
-     * @param cls the class of the mock
-     * @param <T> the type of the mock
-     * @return the mock
-     */
-    private static <T> T createMock(final Class<T> cls) {
-        final T mock = EasyMock.createMock(cls);
-        EasyMock.replay(mock);
-        return mock;
+        return mock(Lookup.class);
     }
 
     /** The builder for creating new instances. */
@@ -106,16 +93,16 @@ public class TestInterpolatorSpecification {
     public void testBuilderReuse() {
         builder
             .withDefaultLookup(createLookup())
-            .withInterpolator(createMock(ConfigurationInterpolator.class))
+            .withInterpolator(mock(ConfigurationInterpolator.class))
             .withPrefixLookup("test", createLookup())
-            .withParentInterpolator(createMock(ConfigurationInterpolator.class))
+            .withParentInterpolator(mock(ConfigurationInterpolator.class))
             .withStringConverter(obj -> "test")
             .create();
         final Lookup prefLook1 = createLookup();
         final Lookup prefLook2 = createLookup();
         final Lookup defLook1 = createLookup();
         final Lookup defLook2 = createLookup();
-        final ConfigurationInterpolator parent = createMock(ConfigurationInterpolator.class);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         final Function<Object, String> stringConverter = Objects::toString;
         final InterpolatorSpecification spec = builder
             .withPrefixLookup(PREFIX1, prefLook1)
@@ -140,8 +127,8 @@ public class TestInterpolatorSpecification {
         final Lookup prefLook2 = createLookup();
         final Lookup defLook1 = createLookup();
         final Lookup defLook2 = createLookup();
-        final ConfigurationInterpolator interpolator = createMock(ConfigurationInterpolator.class);
-        final ConfigurationInterpolator parent = createMock(ConfigurationInterpolator.class);
+        final ConfigurationInterpolator interpolator = mock(ConfigurationInterpolator.class);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         final Function<Object, String> stringConverter = Objects::toString;
         final InterpolatorSpecification spec = builder
             .withPrefixLookup(PREFIX1, prefLook1)

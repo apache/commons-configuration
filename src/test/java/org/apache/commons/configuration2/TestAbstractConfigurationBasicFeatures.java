@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +46,6 @@ import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.lang3.ArrayUtils;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -619,8 +620,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testGetEncodedStringNoValue() {
-        final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
-        EasyMock.replay(decoder);
+        final ConfigurationDecoder decoder = mock(ConfigurationDecoder.class);
         final PropertiesConfiguration config = new PropertiesConfiguration();
         assertNull(config.getEncodedString(KEY_PREFIX, decoder));
     }
@@ -630,11 +630,11 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testGetEncodedStringValue() {
-        final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
+        final ConfigurationDecoder decoder = mock(ConfigurationDecoder.class);
         final String value = "original value";
         final String decodedValue = "decoded value";
-        EasyMock.expect(decoder.decode(value)).andReturn(decodedValue);
-        EasyMock.replay(decoder);
+
+        when(decoder.decode(value)).thenReturn(decodedValue);
 
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty(KEY_PREFIX, value);
@@ -646,11 +646,11 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testGetEncodedStringWithDefaultDecoder() {
-        final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
+        final ConfigurationDecoder decoder = mock(ConfigurationDecoder.class);
         final String value = "original value";
         final String decodedValue = "decoded value";
-        EasyMock.expect(decoder.decode(value)).andReturn(decodedValue);
-        EasyMock.replay(decoder);
+
+        when(decoder.decode(value)).thenReturn(decodedValue);
 
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.setConfigurationDecoder(decoder);
@@ -931,8 +931,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetDefaultLookupsExistingInterpolator() {
-        final Lookup look = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(look);
+        final Lookup look = mock(Lookup.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.getInterpolator().addDefaultLookup(new ConfigurationLookup(new PropertiesConfiguration()));
         config.setDefaultLookups(Collections.singleton(look));
@@ -947,8 +946,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetDefaultLookupsNoInterpolator() {
-        final Lookup look = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(look);
+        final Lookup look = mock(Lookup.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.setInterpolator(null);
         config.setDefaultLookups(Collections.singleton(look));
@@ -973,8 +971,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetParentInterpolatorExistingInterpolator() {
-        final ConfigurationInterpolator parent = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.replay(parent);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         final ConfigurationInterpolator ci = config.getInterpolator();
         config.setParentInterpolator(parent);
@@ -988,8 +985,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetParentInterpolatorNoInterpolator() {
-        final ConfigurationInterpolator parent = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.replay(parent);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.setInterpolator(null);
         config.setParentInterpolator(parent);
@@ -1001,8 +997,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetPrefixLookupsExistingInterpolator() {
-        final Lookup look = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(look);
+        final Lookup look = mock(Lookup.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         final int count = config.getInterpolator().getLookups().size();
         final Map<String, Lookup> lookups = new HashMap<>();
@@ -1018,8 +1013,7 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     @Test
     public void testSetPrefixLookupsNoInterpolator() {
-        final Lookup look = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(look);
+        final Lookup look = mock(Lookup.class);
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.setInterpolator(null);
         config.setPrefixLookups(Collections.singletonMap("test", look));

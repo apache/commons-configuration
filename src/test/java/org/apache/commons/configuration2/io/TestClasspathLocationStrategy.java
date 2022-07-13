@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.io;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 import java.net.URL;
 
@@ -24,7 +25,6 @@ import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,8 +44,7 @@ public class TestClasspathLocationStrategy {
 
     @BeforeEach
     public void setUp() throws Exception {
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+        fileSystem = mock(FileSystem.class);
         strategy = new ClasspathLocationStrategy();
     }
 

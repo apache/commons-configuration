@@ -19,13 +19,15 @@ package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -92,15 +94,15 @@ public class TestConfigurationConverter {
      */
     @Test
     public void testConfigurationToPropertiesNoAbstractConfiguration() {
-        final Configuration src = EasyMock.createMock(Configuration.class);
+        final Configuration src = mock(Configuration.class);
         final BaseConfiguration config = createTestConfiguration();
-        EasyMock.expect(src.getKeys()).andReturn(config.getKeys());
-        src.getList(EasyMock.anyObject(String.class));
-        EasyMock.expectLastCall().andAnswer(() -> {
-            final String key = (String) EasyMock.getCurrentArguments()[0];
+
+        when(src.getKeys()).thenReturn(config.getKeys());
+        when(src.getList(any())).thenAnswer(invocation -> {
+            final String key = invocation.getArgument(0, String.class);
             return config.getList(key);
-        }).anyTimes();
-        EasyMock.replay(src);
+        });
+
         final Properties props = ConfigurationConverter.getProperties(src);
         assertEquals("item 1,item 2", props.getProperty("array"));
     }

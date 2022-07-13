@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -70,9 +70,8 @@ public class TestFileLocator {
     @BeforeAll
     public static void setUpOnce() throws Exception {
         sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        locationStrategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(fileSystem, locationStrategy);
+        fileSystem = mock(FileSystem.class);
+        locationStrategy = mock(FileLocationStrategy.class);
     }
 
     /**
@@ -123,11 +122,11 @@ public class TestFileLocator {
         ConfigurationAssert.checkEquals(loc1, loc2, false);
         loc2 = FileLocatorUtils.fileLocator(loc1).encoding(ENCODING + "_other").create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
-        loc2 = FileLocatorUtils.fileLocator(loc1).fileSystem(EasyMock.createMock(FileSystem.class)).create();
+        loc2 = FileLocatorUtils.fileLocator(loc1).fileSystem(mock(FileSystem.class)).create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
         loc2 = FileLocatorUtils.fileLocator(loc1).sourceURL(ConfigurationAssert.getTestURL("test.properties")).create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
-        loc2 = FileLocatorUtils.fileLocator(loc1).locationStrategy(EasyMock.createMock(FileLocationStrategy.class)).create();
+        loc2 = FileLocatorUtils.fileLocator(loc1).locationStrategy(mock(FileLocationStrategy.class)).create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
     }
 

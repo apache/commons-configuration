@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.net.URL;
@@ -36,7 +37,6 @@ import org.apache.commons.configuration2.io.FileBased;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileLocationStrategy;
 import org.apache.commons.configuration2.io.FileSystem;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -62,8 +62,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testClone() {
-        final FileBased content = EasyMock.createMock(FileBased.class);
-        EasyMock.replay(content);
+        final FileBased content = mock(FileBased.class);
         final FileHandler fh = new FileHandler(content);
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl(fh);
         params.setThrowExceptionOnMissing(true);
@@ -80,8 +79,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testFromMap() {
-        final ReloadingDetectorFactory factory = EasyMock.createMock(ReloadingDetectorFactory.class);
-        EasyMock.replay(factory);
+        final ReloadingDetectorFactory factory = mock(ReloadingDetectorFactory.class);
         final Map<String, Object> map = new HashMap<>();
         final String fileName = "someFileName";
         final String basePath = "someBasePath";
@@ -163,9 +161,9 @@ public class TestFileBasedBuilderParameters {
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         params.setEncoding("ISO-8856-1");
         params.setPath("A path");
-        params.setReloadingDetectorFactory(EasyMock.createMock(ReloadingDetectorFactory.class));
-        params.setFileSystem(EasyMock.createMock(FileSystem.class));
-        params.setLocationStrategy(EasyMock.createMock(FileLocationStrategy.class));
+        params.setReloadingDetectorFactory(mock(ReloadingDetectorFactory.class));
+        params.setFileSystem(mock(FileSystem.class));
+        params.setLocationStrategy(mock(FileLocationStrategy.class));
         params.setReloadingRefreshDelay(20160213171737L);
         params.setThrowExceptionOnMissing(true);
         final FileBasedBuilderParametersImpl params2 = new FileBasedBuilderParametersImpl();
@@ -197,7 +195,7 @@ public class TestFileBasedBuilderParameters {
     @Test
     public void testInheritFromSkipMissingProperties() {
         final String encoding = "UTF-16";
-        final ReloadingDetectorFactory factory = EasyMock.createMock(ReloadingDetectorFactory.class);
+        final ReloadingDetectorFactory factory = mock(ReloadingDetectorFactory.class);
         final Long refreshDelay = 20160213172611L;
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setEncoding(encoding).setReloadingDetectorFactory(factory)
             .setReloadingRefreshDelay(refreshDelay);
@@ -277,8 +275,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testSetFileSystem() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fs);
+        final FileSystem fs = mock(FileSystem.class);
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame(params, params.setFileSystem(fs));
         assertSame(fs, params.getFileHandler().getFileSystem());
@@ -289,8 +286,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testSetLocationStrategy() {
-        final FileLocationStrategy strat = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(strat);
+        final FileLocationStrategy strat = mock(FileLocationStrategy.class);
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame(params, params.setLocationStrategy(strat));
         assertSame(strat, params.getFileHandler().getLocationStrategy());
@@ -312,8 +308,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testSetReloadingDetectorFactory() {
-        final ReloadingDetectorFactory factory = EasyMock.createMock(ReloadingDetectorFactory.class);
-        EasyMock.replay(factory);
+        final ReloadingDetectorFactory factory = mock(ReloadingDetectorFactory.class);
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertNull(params.getReloadingDetectorFactory());
         assertSame(params, params.setReloadingDetectorFactory(factory));

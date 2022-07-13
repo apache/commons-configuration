@@ -21,11 +21,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.apache.commons.configuration2.event.Event;
 import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +44,9 @@ public class TestReloadingController {
      *
      * @return the mock listener
      */
+    @SuppressWarnings("unchecked")
     private static EventListener<ReloadingEvent> createListenerMock() {
-        return EasyMock.createMock(EventListener.class);
+        return mock(EventListener.class);
     }
 
     /** A mock for the detector. */
@@ -62,17 +68,25 @@ public class TestReloadingController {
      * @param l the listener mock
      * @param evRef the reference where to store the event
      */
-    private void expectEvent(final EventListener<ReloadingEvent> l, final MutableObject<ReloadingEvent> evRef) {
-        l.onEvent(EasyMock.anyObject(ReloadingEvent.class));
-        EasyMock.expectLastCall().andAnswer(() -> {
-            evRef.setValue((ReloadingEvent) EasyMock.getCurrentArguments()[0]);
+    private void setupEvent(final EventListener<ReloadingEvent> l, final MutableObject<ReloadingEvent> evRef) {
+        doAnswer(invocation -> {
+            evRef.setValue(invocation.getArgument(0, ReloadingEvent.class));
             return null;
-        });
+        }).when(l).onEvent(any());
+    }
+
+    /**
+     * Verifies that an invocation has occurred on the given event listener for an event notification.
+     *
+     * @param l the listener mock
+     */
+    private void verifyEvent(final EventListener<ReloadingEvent> l) {
+        verify(l).onEvent(any());
     }
 
     @BeforeEach
     public void setUp() throws Exception {
-        detector = EasyMock.createMock(ReloadingDetector.class);
+        detector = mock(ReloadingDetector.class);
     }
 
     /**
@@ -81,13 +95,16 @@ public class TestReloadingController {
     @Test
     public void testCheckForReloadingFalse() {
         final EventListener<ReloadingEvent> l = createListenerMock();
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.FALSE);
-        EasyMock.replay(detector, l);
+
+        when(detector.isReloadingRequired()).thenReturn(Boolean.FALSE);
+
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, l);
         assertFalse(ctrl.checkForReloading(null));
         assertFalse(ctrl.isInReloadingState());
-        EasyMock.verify(detector, l);
+
+        verify(detector).isReloadingRequired();
+        verifyNoMoreInteractions(detector, l);
     }
 
     /**
@@ -96,14 +113,18 @@ public class TestReloadingController {
     @Test
     public void testCheckForReloadingInReloadingState() {
         final EventListener<ReloadingEvent> l = createListenerMock();
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        expectEvent(l, new MutableObject<>());
-        EasyMock.replay(detector, l);
+
+        when(detector.isReloadingRequired()).thenReturn(Boolean.TRUE);
+        // No need to setup the event; the event is not captured
+
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, l);
         assertTrue(ctrl.checkForReloading(1));
         assertTrue(ctrl.checkForReloading(2));
-        EasyMock.verify(detector, l);
+
+        verify(detector).isReloadingRequired();
+        verifyEvent(l);
+        verifyNoMoreInteractions(detector, l);
     }
 
     /**
@@ -114,9 +135,10 @@ public class TestReloadingController {
         final EventListener<ReloadingEvent> l = createListenerMock();
         final EventListener<ReloadingEvent> lRemoved = createListenerMock();
         final MutableObject<ReloadingEvent> evRef = new MutableObject<>();
-        expectEvent(l, evRef);
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        EasyMock.replay(detector, l, lRemoved);
+
+        setupEvent(l, evRef);
+        when(detector.isReloadingRequired()).thenReturn(Boolean.TRUE);
+
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, lRemoved);
         ctrl.addEventListener(ReloadingEvent.ANY, l);
@@ -127,7 +149,10 @@ public class TestReloadingController {
         assertSame(ctrl, evRef.getValue().getSource());
         assertSame(ctrl, evRef.getValue().getController());
         assertEquals(testData, evRef.getValue().getData());
-        EasyMock.verify(l, lRemoved, detector);
+
+        verifyEvent(l);
+        verify(detector).isReloadingRequired();
+        verifyNoMoreInteractions(l, lRemoved, detector);
     }
 
     /**
@@ -159,7 +184,6 @@ public class TestReloadingController {
      */
     @Test
     public void testResetReloadingNotInReloadingState() {
-        EasyMock.replay(detector);
         createController().resetReloadingState();
     }
 
@@ -168,13 +192,15 @@ public class TestReloadingController {
      */
     @Test
     public void testResetReloadingState() {
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        detector.reloadingPerformed();
-        EasyMock.replay(detector);
+        when(detector.isReloadingRequired()).thenReturn(Boolean.TRUE);
+
         final ReloadingController ctrl = createController();
         ctrl.checkForReloading(null);
         ctrl.resetReloadingState();
         assertFalse(ctrl.isInReloadingState());
-        EasyMock.verify(detector);
+
+        verify(detector).isReloadingRequired();
+        verify(detector).reloadingPerformed();
+        verifyNoMoreInteractions(detector);
     }
 }

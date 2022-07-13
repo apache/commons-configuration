@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -82,9 +81,8 @@ public class TestInMemoryNodeModelReferences {
     @BeforeEach
     public void setUp() throws Exception {
         resolver = NodeStructureHelper.createResolverMock();
-        NodeStructureHelper.expectResolveKeyForQueries(resolver);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
+        NodeStructureHelper.prepareResolveKeyForQueries(resolver);
+        NodeStructureHelper.prepareResolveAddKeys(resolver);
         model = new InMemoryNodeModel();
         final Map<ImmutableNode, String> references = createReferences();
         model.mergeRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, null, references, NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), resolver);

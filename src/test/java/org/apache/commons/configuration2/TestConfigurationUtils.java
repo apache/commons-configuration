@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +44,6 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ImmutableNode;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -154,8 +154,8 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testAsEventSourceUnsupportedMock() {
-        final EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
-        EasyMock.replay(cl);
+        @SuppressWarnings("unchecked")
+        final EventListener<ConfigurationEvent> cl = mock(EventListener.class);
         final EventSource source = ConfigurationUtils.asEventSource(this, true);
         source.addEventListener(ConfigurationEvent.ANY, cl);
         assertFalse(source.removeEventListener(ConfigurationEvent.ANY, cl));
@@ -448,8 +448,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testEnableRuntimeExceptionsInvalid() {
-        final Configuration c = EasyMock.createMock(Configuration.class);
-        EasyMock.replay(c);
+        final Configuration c = mock(Configuration.class);
         assertThrows(IllegalArgumentException.class, () -> ConfigurationUtils.enableRuntimeExceptions(c));
     }
 

@@ -18,12 +18,12 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,7 +38,7 @@ public class TestCopyObjectDefaultHandler {
     public void testInitializeDefaultsBaseType() {
         final Long refresh = 50000L;
         final XMLBuilderParametersImpl paramsXml = new XMLBuilderParametersImpl();
-        paramsXml.setValidating(true).setExpressionEngine(EasyMock.createMock(ExpressionEngine.class)).setReloadingRefreshDelay(refresh);
+        paramsXml.setValidating(true).setExpressionEngine(mock(ExpressionEngine.class)).setReloadingRefreshDelay(refresh);
         final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(paramsXml);
         final FileBasedBuilderParametersImpl paramsFb = new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(paramsFb);
@@ -50,7 +50,7 @@ public class TestCopyObjectDefaultHandler {
      */
     @Test
     public void testInitializeDefaultsException() {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = mock(ExpressionEngine.class);
         final XMLBuilderParametersImpl source = new XMLBuilderParametersImpl();
         source.setExpressionEngine(engine);
         final XMLBuilderParametersImpl dest = new XMLBuilderParametersImpl() {

@@ -16,10 +16,15 @@
  */
 package org.apache.commons.configuration2.builder;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +50,7 @@ public class TestAutoSaveListener {
 
     @BeforeEach
     public void setUp() throws Exception {
-        builder = EasyMock.createMock(FileBasedConfigurationBuilder.class);
+        builder = mock(FileBasedConfigurationBuilder.class);
         listener = new AutoSaveListener(builder);
     }
 
@@ -54,14 +59,14 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testConfigurationChangedAfterLoading() throws ConfigurationException {
-        builder.save();
-        EasyMock.replay(builder);
         final FileHandler handler = new FileHandler();
         listener.loading(handler);
         fireChangeEvent(false);
         listener.loaded(handler);
         fireChangeEvent(false);
-        EasyMock.verify(builder);
+
+        verify(builder).save();
+        verifyNoMoreInteractions(builder);
     }
 
     /**
@@ -69,10 +74,10 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testConfigurationChangedAutoSave() throws ConfigurationException {
-        builder.save();
-        EasyMock.replay(builder);
         fireChangeEvent(false);
-        EasyMock.verify(builder);
+
+        verify(builder).save();
+        verifyNoMoreInteractions(builder);
     }
 
     /**
@@ -80,11 +85,12 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testConfigurationChangedAutoSaveException() throws ConfigurationException {
-        builder.save();
-        EasyMock.expectLastCall().andThrow(new ConfigurationException());
-        EasyMock.replay(builder);
+        doThrow(new ConfigurationException()).when(builder).save();
+
         fireChangeEvent(false);
-        EasyMock.verify(builder);
+
+        verify(builder).save();
+        verifyNoMoreInteractions(builder);
     }
 
     /**
@@ -92,8 +98,9 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testConfigurationChangedBeforeUpdateNoSave() {
-        EasyMock.replay(builder);
         fireChangeEvent(true);
+
+        verifyNoInteractions(builder);
     }
 
     /**
@@ -101,9 +108,10 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testConfigurationChangedWhileLoading() {
-        EasyMock.replay(builder);
         listener.loading(new FileHandler());
         fireChangeEvent(false);
+
+        verifyNoInteractions(builder);
     }
 
     /**
@@ -111,15 +119,16 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testUpdateFileHandler() {
-        final FileHandler handler = EasyMock.createMock(FileHandler.class);
-        final FileHandler handler2 = EasyMock.createMock(FileHandler.class);
-        handler.addFileHandlerListener(listener);
-        handler.removeFileHandlerListener(listener);
-        handler2.addFileHandlerListener(listener);
-        EasyMock.replay(handler, handler2);
+        final FileHandler handler = mock(FileHandler.class);
+        final FileHandler handler2 = mock(FileHandler.class);
+
         listener.updateFileHandler(handler);
         listener.updateFileHandler(handler2);
-        EasyMock.verify(handler, handler2);
+
+        verify(handler).addFileHandlerListener(listener);
+        verify(handler).removeFileHandlerListener(listener);
+        verify(handler2).addFileHandlerListener(listener);
+        verifyNoMoreInteractions(builder, handler, handler2);
     }
 
     /**
@@ -128,12 +137,13 @@ public class TestAutoSaveListener {
      */
     @Test
     public void testUpdateFileHandlerNull() {
-        final FileHandler handler = EasyMock.createMock(FileHandler.class);
-        handler.addFileHandlerListener(listener);
-        handler.removeFileHandlerListener(listener);
-        EasyMock.replay(handler);
+        final FileHandler handler = mock(FileHandler.class);
+
         listener.updateFileHandler(handler);
         listener.updateFileHandler(null);
-        EasyMock.verify(handler);
+
+        verify(handler).addFileHandlerListener(listener);
+        verify(handler).removeFileHandlerListener(listener);
+        verifyNoMoreInteractions(builder, handler);
     }
 }

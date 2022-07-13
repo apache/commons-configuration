@@ -26,6 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,7 +57,6 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.SynchronizerTestImpl;
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -639,16 +643,18 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadFromReaderIOException() throws IOException, ConfigurationException {
-        final FileBased content = EasyMock.createMock(FileBased.class);
+        final FileBased content = mock(FileBased.class);
         final Reader in = new StringReader(CONTENT);
         final IOException ioex = new IOException("Test exception");
-        content.read(in);
-        EasyMock.expectLastCall().andThrow(ioex);
-        EasyMock.replay(content);
+
+        doThrow(ioex).when(content).read(in);
+
         final FileHandler handler = new FileHandler(content);
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(in));
         assertEquals(ioex, cex.getCause());
-        EasyMock.verify(content);
+
+        verify(content).read(in);
+        verifyNoMoreInteractions(content);
     }
 
     /**
@@ -707,16 +713,18 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadInputStreamSupportIOException() throws ConfigurationException, IOException {
-        final FileBasedInputStreamSupportTestImpl content = EasyMock.createMock(FileBasedInputStreamSupportTestImpl.class);
+        final FileBasedInputStreamSupportTestImpl content = mock(FileBasedInputStreamSupportTestImpl.class);
         final ByteArrayInputStream bin = new ByteArrayInputStream(CONTENT.getBytes());
         final IOException ioex = new IOException();
-        content.read(bin);
-        EasyMock.expectLastCall().andThrow(ioex);
-        EasyMock.replay(content);
+
+        doThrow(ioex).when(content).read(bin);
+
         final FileHandler handler = new FileHandler(content);
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(bin));
         assertEquals(ioex, cex.getCause());
-        EasyMock.verify(content);
+
+        verify(content).read(bin);
+        verifyNoMoreInteractions(content);
     }
 
     /**
@@ -851,7 +859,7 @@ public class TestFileHandler {
      */
     @Test
     public void testLocationChangedFileSystem() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final FileSystem fs = mock(FileSystem.class);
         final FileHandler handler = new FileHandler();
         final FileHandlerListenerTestImpl listener = new FileHandlerListenerTestImpl(handler);
         handler.addFileHandlerListener(listener);
@@ -945,8 +953,7 @@ public class TestFileHandler {
      */
     @Test
     public void testResetFileSystem() {
-        final FileSystem sys = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(sys);
+        final FileSystem sys = mock(FileSystem.class);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(sys);
         handler.resetFileSystem();
@@ -1063,19 +1070,22 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToFileNameURLException() throws IOException {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final FileSystem fs = mock(FileSystem.class);
         final File file = newFile(tempFolder);
         final String basePath = "some base path";
         final MalformedURLException urlex = new MalformedURLException("Test exception");
         final String fileName = file.getName();
-        EasyMock.expect(fs.getURL(basePath, fileName)).andThrow(urlex);
-        EasyMock.replay(fs);
+
+        when(fs.getURL(basePath, fileName)).thenThrow(urlex);
+
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setBasePath(basePath);
         handler.setFileSystem(fs);
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.save(fileName));
         assertEquals(urlex, cex.getCause());
-        EasyMock.verify(fs);
+
+        verify(fs).getURL(basePath, fileName);
+        verifyNoMoreInteractions(fs);
     }
 
     /**
@@ -1083,15 +1093,18 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToFileNameURLNotResolved() throws IOException {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final FileSystem fs = mock(FileSystem.class);
         final File file = newFile(tempFolder);
         final String fileName = file.getName();
-        EasyMock.expect(fs.getURL(null, fileName)).andReturn(null);
-        EasyMock.replay(fs);
+
+        when(fs.getURL(null, fileName)).thenReturn(null);
+
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(fs);
         assertThrows(ConfigurationException.class, () -> handler.save(fileName));
-        EasyMock.verify(fs);
+
+        verify(fs).getURL(null, fileName);
+        verifyNoMoreInteractions(fs);
     }
 
     /**
@@ -1148,16 +1161,18 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToWriterIOException() throws ConfigurationException, IOException {
-        final FileBased content = EasyMock.createMock(FileBased.class);
+        final FileBased content = mock(FileBased.class);
         final StringWriter out = new StringWriter();
         final IOException ioex = new IOException("Test exception!");
-        content.write(out);
-        EasyMock.expectLastCall().andThrow(ioex);
-        EasyMock.replay(content);
+
+        doThrow(ioex).when(content).write(out);
+
         final FileHandler handler = new FileHandler(content);
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.save(out));
         assertEquals(ioex, cex.getCause());
-        EasyMock.verify(content);
+
+        verify(content).write(out);
+        verifyNoMoreInteractions(content);
     }
 
     /**
@@ -1258,8 +1273,7 @@ public class TestFileHandler {
      */
     @Test
     public void testSetFileSystemNull() {
-        final FileSystem sys = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(sys);
+        final FileSystem sys = mock(FileSystem.class);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(sys);
         assertSame(sys, handler.getFileSystem());
@@ -1272,8 +1286,7 @@ public class TestFileHandler {
      */
     @Test
     public void testSetLocationStrategy() {
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(strategy);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileHandler handler = new FileHandler();
         handler.setLocationStrategy(strategy);
         assertSame(strategy, handler.getFileLocator().getLocationStrategy());

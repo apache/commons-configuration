@@ -17,15 +17,19 @@
 package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.reloading.ReloadingDetector;
 import org.apache.commons.configuration2.reloading.ReloadingEvent;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,9 +41,10 @@ public class TestReloadingBuilderSupportListener {
      */
     @Test
     public void testResetBuilderOnReloadingEvent() {
-        final ReloadingDetector detector = EasyMock.createMock(ReloadingDetector.class);
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        EasyMock.replay(detector);
+        final ReloadingDetector detector = mock(ReloadingDetector.class);
+
+        when(detector.isReloadingRequired()).thenReturn(true);
+
         final ReloadingController controller = new ReloadingController(detector);
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         final BuilderEventListenerImpl builderListener = new BuilderEventListenerImpl();
@@ -55,18 +60,18 @@ public class TestReloadingBuilderSupportListener {
     /**
      * Tests that the controller's reloading state is reset when a new result object is created.
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testResetReloadingStateOnResultCreation() throws ConfigurationException {
-        final ReloadingController controller = EasyMock.createMock(ReloadingController.class);
-        controller.addEventListener(EasyMock.eq(ReloadingEvent.ANY), EasyMock.anyObject(EventListener.class));
-        controller.resetReloadingState();
-        EasyMock.replay(controller);
+        final ReloadingController controller = mock(ReloadingController.class);
+
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
 
         final ReloadingBuilderSupportListener listener = ReloadingBuilderSupportListener.connect(builder, controller);
         assertNotNull(listener);
         builder.getConfiguration();
-        EasyMock.verify(controller);
+
+        verify(controller).addEventListener(eq(ReloadingEvent.ANY), any());
+        verify(controller).resetReloadingState();
+        verifyNoMoreInteractions(controller);
     }
 }

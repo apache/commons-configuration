@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +42,6 @@ import org.apache.commons.configuration2.builder.DefaultParametersHandler;
 import org.apache.commons.configuration2.builder.DefaultParametersManager;
 import org.apache.commons.configuration2.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -53,8 +54,9 @@ public class TestCombinedBuilderParametersImpl {
      *
      * @return the handler mock
      */
+    @SuppressWarnings("unchecked")
     private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock() {
-        return EasyMock.createMock(DefaultParametersHandler.class);
+        return mock(DefaultParametersHandler.class);
     }
 
     /**
@@ -107,8 +109,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testGetChildDefaultParametersManagerSpecific() {
-        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
-        EasyMock.replay(manager);
+        final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertSame(params, params.setChildDefaultParametersManager(manager));
         assertSame(manager, params.getChildDefaultParametersManager());
@@ -150,7 +151,7 @@ public class TestCombinedBuilderParametersImpl {
     public void testGetProvidersModify() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final Map<String, ConfigurationBuilderProvider> providers = params.getProviders();
-        final ConfigurationBuilderProvider provider = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
         assertThrows(UnsupportedOperationException.class, () -> providers.put("tag", provider));
     }
 
@@ -159,7 +160,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testInheritFrom() {
-        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl().setInheritSettings(false).setChildDefaultParametersManager(manager);
         params.setThrowExceptionOnMissing(true);
         final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
@@ -198,14 +199,13 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testRegisterChildDefaultsHandler() {
-        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
-        manager.registerDefaultsHandler(BuilderParameters.class, handler);
-        EasyMock.replay(manager, handler);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
         assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler));
-        EasyMock.verify(manager);
+
+        verify(manager).registerDefaultsHandler(BuilderParameters.class, handler);
     }
 
     /**
@@ -213,14 +213,13 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testRegisterChildDefaultsHandlerWithStartClass() {
-        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
-        manager.registerDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class);
-        EasyMock.replay(manager, handler);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
         assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class));
-        EasyMock.verify(manager);
+
+        verify(manager).registerDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class);
     }
 
     /**
@@ -228,9 +227,9 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testRegisterMissingProviders() {
-        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider1 = mock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider2 = mock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider3 = mock(ConfigurationBuilderProvider.class);
         final String tagPrefix = "testTag";
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.registerProvider(tagPrefix, provider1);
@@ -269,9 +268,9 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testRegisterMissingProvidersParams() {
-        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider1 = mock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider2 = mock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider3 = mock(ConfigurationBuilderProvider.class);
         final String tagPrefix = "testTag";
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
@@ -298,8 +297,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testRegisterProvider() {
-        final ConfigurationBuilderProvider provider = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        EasyMock.replay(provider);
+        final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
         final String tagName = "testTag";
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertSame(params, params.registerProvider(tagName, provider));
@@ -324,7 +322,7 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testRegisterProviderNoTag() {
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
-        final ConfigurationBuilderProvider provider = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
         assertThrows(IllegalArgumentException.class, () -> builderParameters.registerProvider(null, provider));
     }
 
@@ -344,8 +342,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testSetBeanProperties() throws Exception {
-        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(defparams);
+        final BuilderParameters defparams = mock(BuilderParameters.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         BeanHelper.setProperty(params, "basePath", "testPath");
         BeanHelper.setProperty(params, "definitionBuilderParameters", defparams);
@@ -372,8 +369,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testSetDefinitionBuilderParameters() {
-        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(defparams);
+        final BuilderParameters defparams = mock(BuilderParameters.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertSame(params, params.setDefinitionBuilderParameters(defparams));
         assertSame(defparams, params.getDefinitionBuilderParameters());

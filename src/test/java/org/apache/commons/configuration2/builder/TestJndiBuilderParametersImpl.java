@@ -18,13 +18,13 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
 import javax.naming.Context;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,8 +57,7 @@ public class TestJndiBuilderParametersImpl {
      */
     @Test
     public void testSetBeanProperties() throws Exception {
-        final Context ctx = EasyMock.createMock(Context.class);
-        EasyMock.replay(ctx);
+        final Context ctx = mock(Context.class);
         final String prefix = "testJndiPrefix";
         BeanHelper.setProperty(params, "context", ctx);
         BeanHelper.setProperty(params, "prefix", prefix);
@@ -72,8 +71,7 @@ public class TestJndiBuilderParametersImpl {
      */
     @Test
     public void testSetContext() {
-        final Context ctx = EasyMock.createMock(Context.class);
-        EasyMock.replay(ctx);
+        final Context ctx = mock(Context.class);
         assertSame(params, params.setContext(ctx));
         final Map<String, Object> paramsMap = params.getParameters();
         assertSame(ctx, paramsMap.get("context"));

@@ -21,6 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +40,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -66,7 +70,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         @Override
         protected FileBasedConfigurationBuilder<XMLConfiguration> createManagedBuilder(final String fileName, final Map<String, Object> params)
             throws ConfigurationException {
-            final ReloadingController ctrl = EasyMock.createMock(ReloadingController.class);
+            final ReloadingController ctrl = mock(ReloadingController.class);
             reloadingControllers.add(ctrl);
             return new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(getResultClass(), params) {
                 @Override
@@ -136,13 +140,18 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         builder.getConfiguration();
         final List<ReloadingController> controllers = builder.getReloadingControllers();
         assertEquals(2, controllers.size());
-        EasyMock.reset(controllers.toArray());
+
         for (final ReloadingController c : controllers) {
-            EasyMock.expect(c.checkForReloading(null)).andReturn(Boolean.FALSE);
+            reset(c);
+            when(c.checkForReloading(null)).thenReturn(Boolean.FALSE);
         }
-        EasyMock.replay(controllers.toArray());
+
         assertFalse(builder.getReloadingController().checkForReloading(this));
-        EasyMock.verify(controllers.toArray());
+
+        for (final ReloadingController c : controllers) {
+            verify(c).checkForReloading(null);
+            verifyNoMoreInteractions(c);
+        }
     }
 
     /**
@@ -156,13 +165,18 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
             builder.getConfiguration();
         }
         final List<ReloadingController> controllers = builder.getReloadingControllers();
-        EasyMock.reset(controllers.toArray());
-        EasyMock.expect(controllers.get(0).checkForReloading(null)).andReturn(Boolean.FALSE).anyTimes();
-        EasyMock.expect(controllers.get(1).checkForReloading(null)).andReturn(Boolean.TRUE);
-        EasyMock.expect(controllers.get(2).checkForReloading(null)).andReturn(Boolean.FALSE).anyTimes();
-        EasyMock.replay(controllers.toArray());
+
+        reset(controllers.toArray());
+        when(controllers.get(0).checkForReloading(null)).thenReturn(Boolean.FALSE);
+        when(controllers.get(1).checkForReloading(null)).thenReturn(Boolean.TRUE);
+        when(controllers.get(2).checkForReloading(null)).thenReturn(Boolean.FALSE);
+
         assertTrue(builder.getReloadingController().checkForReloading(this));
-        EasyMock.verify(controllers.toArray());
+
+        for (final ReloadingController c : controllers) {
+            verify(c).checkForReloading(null);
+            verifyNoMoreInteractions(c);
+        }
     }
 
     /**
@@ -176,14 +190,19 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         switchToConfig(2);
         builder.getConfiguration();
         final List<ReloadingController> controllers = builder.getReloadingControllers();
-        EasyMock.reset(controllers.toArray());
+
+        reset(controllers.toArray());
         for (final ReloadingController c : controllers) {
-            EasyMock.expect(c.checkForReloading(null)).andReturn(Boolean.TRUE).anyTimes();
-            c.resetReloadingState();
+            when(c.checkForReloading(null)).thenReturn(Boolean.TRUE);
         }
-        EasyMock.replay(controllers.toArray());
+
         builder.getReloadingController().checkForReloading(null);
         builder.getReloadingController().resetReloadingState();
-        EasyMock.verify(controllers.toArray());
+
+        for (final ReloadingController c : controllers) {
+            verify(c).checkForReloading(null);
+            verify(c).resetReloadingState();
+            verifyNoMoreInteractions(c);
+        }
     }
 }

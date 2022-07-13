@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -52,8 +52,7 @@ public class TestHomeDirectoryLocationStrategy {
 
     @BeforeEach
     public void setUp() throws Exception {
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+        fileSystem = mock(FileSystem.class);
     }
 
     /**

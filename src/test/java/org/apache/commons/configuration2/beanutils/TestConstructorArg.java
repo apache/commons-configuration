@@ -19,8 +19,8 @@ package org.apache.commons.configuration2.beanutils;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -50,8 +50,7 @@ public class TestConstructorArg {
      */
     @Test
     public void testIsNestedBeanDeclarationTrue() {
-        final BeanDeclaration decl = EasyMock.createMock(BeanDeclaration.class);
-        EasyMock.replay(decl);
+        final BeanDeclaration decl = mock(BeanDeclaration.class);
         final ConstructorArg arg = ConstructorArg.forBeanDeclaration(decl);
         assertTrue(arg.isNestedBeanDeclaration());
     }

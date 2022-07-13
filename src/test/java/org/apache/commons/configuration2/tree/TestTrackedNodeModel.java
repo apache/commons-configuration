@@ -18,12 +18,15 @@ package org.apache.commons.configuration2.tree;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +48,8 @@ public class TestTrackedNodeModel {
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         selector = new NodeSelector("someKey");
-        final NodeKeyResolver<ImmutableNode> resolverMock = EasyMock.createMock(NodeKeyResolver.class);
-        EasyMock.replay(resolverMock);
+        @SuppressWarnings("unchecked")
+        final NodeKeyResolver<ImmutableNode> resolverMock = mock(NodeKeyResolver.class);
         resolver = resolverMock;
     }
 
@@ -61,18 +64,19 @@ public class TestTrackedNodeModel {
      *
      * @return the mock for the node handler
      */
-    private NodeHandler<ImmutableNode> expectGetNodeHandler() {
-        final NodeHandler<ImmutableNode> handler = EasyMock.createMock(NodeHandler.class);
-        EasyMock.expect(parentModel.getTrackedNodeHandler(selector)).andReturn(handler);
+    private NodeHandler<ImmutableNode> prepareGetNodeHandler() {
+        @SuppressWarnings("unchecked")
+        final NodeHandler<ImmutableNode> handler = mock(NodeHandler.class);
+        when(parentModel.getTrackedNodeHandler(selector)).thenReturn(handler);
         return handler;
     }
 
     @BeforeEach
     public void setUp() throws Exception {
-        parentModel = EasyMock.createMock(InMemoryNodeModel.class);
-        modelSupport = EasyMock.createMock(InMemoryNodeModelSupport.class);
-        EasyMock.expect(modelSupport.getNodeModel()).andReturn(parentModel).anyTimes();
-        EasyMock.replay(modelSupport);
+        parentModel = mock(InMemoryNodeModel.class);
+        modelSupport = mock(InMemoryNodeModelSupport.class);
+
+        when(modelSupport.getNodeModel()).thenReturn(parentModel);
     }
 
     /**
@@ -90,11 +94,11 @@ public class TestTrackedNodeModel {
     @Test
     public void testAddNodes() {
         final List<ImmutableNode> nodes = Arrays.asList(NodeStructureHelper.createNode("n1", 1), NodeStructureHelper.createNode("n2", 2));
-        parentModel.addNodes(KEY, selector, nodes, resolver);
-        EasyMock.replay(parentModel);
 
         setUpModel().addNodes(KEY, nodes, resolver);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).addNodes(KEY, selector, nodes, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -102,12 +106,12 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testAddProperty() {
-        final Iterable<?> values = EasyMock.createMock(Iterable.class);
-        parentModel.addProperty(KEY, selector, values, resolver);
-        EasyMock.replay(values, parentModel);
+        final Iterable<?> values = mock(Iterable.class);
 
         setUpModel().addProperty(KEY, values, resolver);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).addProperty(KEY, selector, values, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -115,11 +119,12 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testClear() {
-        EasyMock.expect(parentModel.clearTree(null, selector, resolver)).andReturn(null);
-        EasyMock.replay(parentModel);
+        when(parentModel.clearTree(null, selector, resolver)).thenReturn(null);
 
         setUpModel().clear(resolver);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).clearTree(null, selector, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -127,11 +132,10 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testClearProperty() {
-        parentModel.clearProperty(KEY, selector, resolver);
-        EasyMock.replay(parentModel);
-
         setUpModel().clearProperty(KEY, resolver);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).clearProperty(KEY, selector, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -141,11 +145,13 @@ public class TestTrackedNodeModel {
     public void testClearTree() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(NodeStructureHelper.createNode("test", null));
         final List<QueryResult<ImmutableNode>> removed = Collections.singletonList(result);
-        EasyMock.expect(parentModel.clearTree(KEY, selector, resolver)).andReturn(removed);
-        EasyMock.replay(parentModel);
+
+        when(parentModel.clearTree(KEY, selector, resolver)).thenReturn(removed);
 
         assertSame(removed, setUpModel().clearTree(KEY, resolver));
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).clearTree(KEY, selector, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -153,11 +159,10 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testClose() {
-        parentModel.untrackNode(selector);
-        EasyMock.replay(parentModel);
-
         setUpModel().close();
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).untrackNode(selector);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -165,13 +170,12 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testCloseMultipleTimes() {
-        parentModel.untrackNode(selector);
-        EasyMock.replay(parentModel);
-
         final TrackedNodeModel model = setUpModel();
         model.close();
         model.close();
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).untrackNode(selector);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -179,10 +183,10 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testGetInMemoryRepresentation() {
-        final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
+        final NodeHandler<ImmutableNode> handler = prepareGetNodeHandler();
         final ImmutableNode root = NodeStructureHelper.createNode("Root", null);
-        EasyMock.expect(handler.getRootNode()).andReturn(root);
-        EasyMock.replay(handler, parentModel);
+
+        when(handler.getRootNode()).thenReturn(root);
 
         final TrackedNodeModel model = setUpModel();
         assertSame(root, model.getInMemoryRepresentation());
@@ -193,11 +197,12 @@ public class TestTrackedNodeModel {
      */
     @Test
     public void testGetNodeHandler() {
-        final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
-        EasyMock.replay(handler, parentModel);
+        final NodeHandler<ImmutableNode> handler = prepareGetNodeHandler();
 
         assertSame(handler, setUpModel().getNodeHandler());
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).getTrackedNodeHandler(selector);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -222,11 +227,11 @@ public class TestTrackedNodeModel {
     @Test
     public void testSetProperty() {
         final Object value = 42;
-        parentModel.setProperty(KEY, selector, value, resolver);
-        EasyMock.replay(parentModel);
 
         setUpModel().setProperty(KEY, value, resolver);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).setProperty(KEY, selector, value, resolver);
+        verifyNoMoreInteractions(parentModel);
     }
 
     /**
@@ -235,11 +240,11 @@ public class TestTrackedNodeModel {
     @Test
     public void testSetRootNode() {
         final ImmutableNode root = NodeStructureHelper.createNode("root", null);
-        parentModel.replaceTrackedNode(selector, root);
-        EasyMock.replay(parentModel);
 
         final TrackedNodeModel model = setUpModel();
         model.setRootNode(root);
-        EasyMock.verify(parentModel);
+
+        verify(parentModel).replaceTrackedNode(selector, root);
+        verifyNoMoreInteractions(parentModel);
     }
 }

@@ -18,12 +18,15 @@ package org.apache.commons.configuration2.convert;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -107,11 +110,14 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeWithTransformer() {
-        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
-        EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
-        EasyMock.replay(trans);
+        final ValueTransformer trans = mock(ValueTransformer.class);
+
+        when(trans.transformValue("a\\,b")).thenReturn("ok");
+
         assertEquals("ok", handler.escape("a,b", trans));
-        EasyMock.verify(trans);
+
+        verify(trans).transformValue("a\\,b");
+        verifyNoMoreInteractions(trans);
     }
 
     /**

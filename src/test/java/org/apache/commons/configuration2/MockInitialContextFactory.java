@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration2;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -27,8 +30,6 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
-
-import org.mockito.Mockito;
 
 /**
  * A mock implementation of the {@code InitialContextFactory} interface. This implementation will return a mock context
@@ -113,7 +114,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @param value the value of the property
      */
     private void bind(final Context mockCtx, final String name, final String value) throws NamingException {
-        Mockito.when(mockCtx.lookup(name)).thenReturn(value);
+        when(mockCtx.lookup(name)).thenReturn(value);
         bindError(mockCtx, name + MISSING_PROP);
     }
 
@@ -124,7 +125,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @param name the name of the property
      */
     private void bindError(final Context mockCtx, final String name) throws NamingException {
-        Mockito.when(mockCtx.lookup(name)).thenThrow(new NameNotFoundException("unknown property"));
+        when(mockCtx.lookup(name)).thenThrow(new NameNotFoundException("unknown property"));
     }
 
     /**
@@ -134,7 +135,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @return the mock for the context
      */
     private Context createCtxMock(final String prefix) throws NamingException {
-        final Context mockCtx = Mockito.mock(Context.class);
+        final Context mockCtx = mock(Context.class);
         for (int i = 0; i < PROP_NAMES.length; i++) {
             bind(mockCtx, prefix + PROP_NAMES[i], PROP_VALUES[i]);
             final String errProp = prefix.isEmpty() ? PREFIX + PROP_NAMES[i] : PROP_NAMES[i];
@@ -188,24 +189,25 @@ public class MockInitialContextFactory implements InitialContextFactory {
         final Context mockTopCtx = createCtxMock(PREFIX);
         final Context mockCycleCtx = createCtxMock("");
         final Context mockPrfxCtx = createCtxMock("");
-        final Context mockBaseCtx = Mockito.mock(Context.class);
-        Mockito.when(mockBaseCtx.lookup("")).thenReturn(mockTopCtx);
-        Mockito.when(mockBaseCtx.lookup("test")).thenReturn(mockPrfxCtx);
-        Mockito.when(mockTopCtx.lookup("test")).thenReturn(mockPrfxCtx);
-        Mockito.when(mockPrfxCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(PROP_NAMES, PROP_VALUES));
+        final Context mockBaseCtx = mock(Context.class);
+
+        when(mockBaseCtx.lookup("")).thenReturn(mockTopCtx);
+        when(mockBaseCtx.lookup("test")).thenReturn(mockPrfxCtx);
+        when(mockTopCtx.lookup("test")).thenReturn(mockPrfxCtx);
+        when(mockPrfxCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(PROP_NAMES, PROP_VALUES));
 
         if (useCycles) {
-            Mockito.when(mockTopCtx.lookup("cycle")).thenReturn(mockCycleCtx);
-            Mockito.when(mockTopCtx.list("")).thenAnswer(invocation ->
+            when(mockTopCtx.lookup("cycle")).thenReturn(mockCycleCtx);
+            when(mockTopCtx.list("")).thenAnswer(invocation ->
                     createNamingEnumeration(new String[] {"test", "cycle"}, new Object[] {mockPrfxCtx, mockCycleCtx}));
-            Mockito.when(mockCycleCtx.list("")).thenAnswer(invocation -> {
+            when(mockCycleCtx.list("")).thenAnswer(invocation -> {
                 final List<NameClassPair> pairs = createNameClassPairs(PROP_NAMES, PROP_VALUES);
                 addEnumPair(pairs, "cycleCtx", mockCycleCtx);
                 return new ListBasedNamingEnumeration(pairs);
             });
-            Mockito.when(mockCycleCtx.lookup("cycleCtx")).thenReturn(mockCycleCtx);
+            when(mockCycleCtx.lookup("cycleCtx")).thenReturn(mockCycleCtx);
         } else {
-            Mockito.when(mockTopCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(new String[] {"test"}, new Object[] {mockPrfxCtx}));
+            when(mockTopCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(new String[] {"test"}, new Object[] {mockPrfxCtx}));
         }
         return mockBaseCtx;
     }

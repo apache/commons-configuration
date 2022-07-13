@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +45,6 @@ import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListenerTestImpl;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -732,8 +732,7 @@ public class TestCompositeConfiguration {
      */
     @Test
     public void testSetListDelimiterInMemoryConfigNonBaseConfig() {
-        final Configuration inMemoryConfig = EasyMock.createMock(Configuration.class);
-        EasyMock.replay(inMemoryConfig);
+        final Configuration inMemoryConfig = mock(Configuration.class);
         cc = new CompositeConfiguration(inMemoryConfig);
         assertDoesNotThrow(() -> cc.setListDelimiterHandler(new DefaultListDelimiterHandler(';')));
     }

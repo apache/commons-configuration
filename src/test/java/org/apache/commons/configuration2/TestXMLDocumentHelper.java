@@ -23,6 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -42,7 +45,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -188,10 +190,10 @@ public class TestXMLDocumentHelper {
      */
     @Test
     public void testCreateDocumentBuilderFromFactoryException() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory = EasyMock.createMock(DocumentBuilderFactory.class);
+        final DocumentBuilderFactory factory = mock(DocumentBuilderFactory.class);
         final ParserConfigurationException pcex = new ParserConfigurationException();
-        EasyMock.expect(factory.newDocumentBuilder()).andThrow(pcex);
-        EasyMock.replay(factory);
+
+        when(factory.newDocumentBuilder()).thenThrow(pcex);
 
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createDocumentBuilder(factory));
         assertEquals(pcex, cex.getCause());
@@ -210,10 +212,10 @@ public class TestXMLDocumentHelper {
      */
     @Test
     public void testCreateTransformerFactoryException() throws TransformerConfigurationException {
-        final TransformerFactory factory = EasyMock.createMock(TransformerFactory.class);
+        final TransformerFactory factory = mock(TransformerFactory.class);
         final TransformerConfigurationException cause = new TransformerConfigurationException();
-        EasyMock.expect(factory.newTransformer()).andThrow(cause);
-        EasyMock.replay(factory);
+
+        when(factory.newTransformer()).thenThrow(cause);
 
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createTransformer(factory));
         assertEquals(cause, cex.getCause());
@@ -269,13 +271,12 @@ public class TestXMLDocumentHelper {
      */
     @Test
     public void testTransformException() throws TransformerException {
-        final Transformer transformer = EasyMock.createMock(Transformer.class);
-        final Source src = EasyMock.createMock(Source.class);
-        final Result res = EasyMock.createMock(Result.class);
+        final Transformer transformer = mock(Transformer.class);
+        final Source src = mock(Source.class);
+        final Result res = mock(Result.class);
         final TransformerException tex = new TransformerException("Test Exception");
-        transformer.transform(src, res);
-        EasyMock.expectLastCall().andThrow(tex);
-        EasyMock.replay(transformer, src, res);
+
+        doThrow(tex).when(transformer).transform(src, res);
 
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.transform(transformer, src, res));
         assertEquals(tex, cex.getCause());

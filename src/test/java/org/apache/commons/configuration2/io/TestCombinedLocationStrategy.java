@@ -20,6 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -27,7 +31,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -80,8 +83,7 @@ public class TestCombinedLocationStrategy {
      */
     private FileSystem getFileSystem() {
         if (fileSystem == null) {
-            fileSystem = EasyMock.createMock(FileSystem.class);
-            EasyMock.replay(fileSystem);
+            fileSystem = mock(FileSystem.class);
         }
         return fileSystem;
     }
@@ -95,17 +97,10 @@ public class TestCombinedLocationStrategy {
         if (subStrategies == null) {
             subStrategies = new FileLocationStrategy[2];
             for (int i = 0; i < subStrategies.length; i++) {
-                subStrategies[i] = EasyMock.createMock(FileLocationStrategy.class);
+                subStrategies[i] = mock(FileLocationStrategy.class);
             }
         }
         return subStrategies;
-    }
-
-    /**
-     * Replays the mock objects for the sub strategies.
-     */
-    private void replaySubStrategies() {
-        EasyMock.replay((Object[]) getSubStrategies());
     }
 
     /**
@@ -135,7 +130,7 @@ public class TestCombinedLocationStrategy {
     public void testInitDefensiveCopy() {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         final CombinedLocationStrategy strategy = new CombinedLocationStrategy(col);
-        col.add(EasyMock.createMock(FileLocationStrategy.class));
+        col.add(mock(FileLocationStrategy.class));
         checkSubStrategies(strategy);
     }
 
@@ -152,12 +147,15 @@ public class TestCombinedLocationStrategy {
      */
     @Test
     public void testLocateFailed() {
-        EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator)).andReturn(null);
-        EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(null);
-        replaySubStrategies();
+        when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(null);
+        when(getSubStrategies()[1].locate(getFileSystem(), locator)).thenReturn(null);
+
         final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertNull(strategy.locate(getFileSystem(), locator));
-        verifySubStrategies();
+
+        verify(getSubStrategies()[0]).locate(getFileSystem(), locator);
+        verify(getSubStrategies()[1]).locate(getFileSystem(), locator);
+        verifyNoMoreSubCategoryInteractions();
     }
 
     /**
@@ -165,11 +163,13 @@ public class TestCombinedLocationStrategy {
      */
     @Test
     public void testLocateSuccessFirstSubStrategy() {
-        EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator)).andReturn(locateURL);
-        replaySubStrategies();
+        when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(locateURL);
+
         final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertSame(locateURL, strategy.locate(getFileSystem(), locator));
-        verifySubStrategies();
+
+        verify(getSubStrategies()[0]).locate(getFileSystem(), locator);
+        verifyNoMoreSubCategoryInteractions();
     }
 
     /**
@@ -177,18 +177,21 @@ public class TestCombinedLocationStrategy {
      */
     @Test
     public void testLocateSuccessSecondSubStrategy() {
-        EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator)).andReturn(null);
-        EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(locateURL);
-        replaySubStrategies();
+        when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(null);
+        when(getSubStrategies()[1].locate(getFileSystem(), locator)).thenReturn(locateURL);
+
         final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertSame(locateURL, strategy.locate(getFileSystem(), locator));
-        verifySubStrategies();
+
+        verify(getSubStrategies()[0]).locate(getFileSystem(), locator);
+        verify(getSubStrategies()[1]).locate(getFileSystem(), locator);
+        verifyNoMoreSubCategoryInteractions();
     }
 
     /**
-     * Verifies the mock objects for the sub strategies.
+     * Helper method for verifying that no more interactions have been performed on the sub categories.
      */
-    private void verifySubStrategies() {
-        EasyMock.verify((Object[]) getSubStrategies());
+    private void verifyNoMoreSubCategoryInteractions() {
+        verifyNoMoreInteractions((Object[]) getSubStrategies());
     }
 }

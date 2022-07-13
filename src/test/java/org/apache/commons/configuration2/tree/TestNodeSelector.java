@@ -21,13 +21,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -57,8 +57,7 @@ public class TestNodeSelector {
      */
     private static NodeKeyResolver<ImmutableNode> createResolver() {
         final NodeKeyResolver<ImmutableNode> resolver = NodeStructureHelper.createResolverMock();
-        NodeStructureHelper.expectResolveKeyForQueries(resolver);
-        EasyMock.replay(resolver);
+        NodeStructureHelper.prepareResolveKeyForQueries(resolver);
         return resolver;
     }
 
@@ -116,8 +115,8 @@ public class TestNodeSelector {
         final ImmutableNode target = NodeStructureHelper.nodeForKey(root, "tables/table(1)");
         results.add(QueryResult.createNodeResult(target));
         results.add(QueryResult.createAttributeResult(NodeStructureHelper.nodeForKey(root, "tables/table(0)/fields/field(1)"), "type"));
-        EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(results);
-        EasyMock.replay(resolverMock);
+        
+        when(resolverMock.resolveKey(root, KEY, handler)).thenReturn(results);
 
         final NodeSelector selector = new NodeSelector(KEY);
         assertSame(target, selector.select(root, resolverMock, handler));
@@ -138,8 +137,8 @@ public class TestNodeSelector {
     @Test
     public void testSelectSingleAttributeKey() {
         final NodeKeyResolver<ImmutableNode> resolverMock = NodeStructureHelper.createResolverMock();
-        EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(Collections.singletonList(QueryResult.createAttributeResult(root, KEY)));
-        EasyMock.replay(resolverMock);
+
+        when(resolverMock.resolveKey(root, KEY, handler)).thenReturn(Collections.singletonList(QueryResult.createAttributeResult(root, KEY)));
 
         final NodeSelector selector = new NodeSelector(KEY);
         assertNull(selector.select(root, resolverMock, handler));

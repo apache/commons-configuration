@@ -25,13 +25,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.commons.logging.impl.NoOpLog;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -80,13 +83,13 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testDebug() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.debug(MSG);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.debug(MSG);
-        EasyMock.verify(log);
+
+        verify(log).debug(MSG);
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -104,13 +107,13 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testError() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.error(MSG);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.error(MSG);
-        EasyMock.verify(log);
+
+        verify(log).error(MSG);
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -118,14 +121,14 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testErrorWithException() {
-        final Log log = EasyMock.createMock(Log.class);
+        final Log log = mock(Log.class);
         final Throwable ex = new Exception("Test exception");
-        log.error(MSG, ex);
-        EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.error(MSG, ex);
-        EasyMock.verify(log);
+
+        verify(log).error(MSG, ex);
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -133,13 +136,13 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testInfo() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.info(MSG);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.info(MSG);
-        EasyMock.verify(log);
+
+        verify(log).info(MSG);
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -179,13 +182,16 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testIsDebugEnabled() {
-        final Log log = EasyMock.createMock(Log.class);
-        EasyMock.expect(log.isDebugEnabled()).andReturn(Boolean.TRUE);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
+
+        when(log.isDebugEnabled()).thenReturn(Boolean.TRUE);
+
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         assertTrue(logger.isDebugEnabled());
-        EasyMock.verify(log);
+
+        verify(log).isDebugEnabled();
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -193,13 +199,16 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testIsInfoEnabled() {
-        final Log log = EasyMock.createMock(Log.class);
-        EasyMock.expect(log.isInfoEnabled()).andReturn(Boolean.FALSE);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
+
+        when(log.isInfoEnabled()).thenReturn(Boolean.FALSE);
+
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         assertFalse(logger.isInfoEnabled());
-        EasyMock.verify(log);
+
+        verify(log).isInfoEnabled();
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -225,13 +234,13 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testWarn() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.warn(MSG);
-        EasyMock.replay(log);
+        final Log log = mock(Log.class);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.warn(MSG);
-        EasyMock.verify(log);
+
+        verify(log).warn(MSG);
+        verifyNoMoreInteractions(log);
     }
 
     /**
@@ -239,13 +248,13 @@ public class TestConfigurationLogger {
      */
     @Test
     public void testWarnWithException() {
-        final Log log = EasyMock.createMock(Log.class);
+        final Log log = mock(Log.class);
         final Throwable ex = new Exception("Test exception");
-        log.warn(MSG, ex);
-        EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
         logger.warn(MSG, ex);
-        EasyMock.verify(log);
+
+        verify(log).warn(MSG, ex);
+        verifyNoMoreInteractions(log);
     }
 }

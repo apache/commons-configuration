@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +34,6 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -454,8 +454,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testInitWithBeanFactory() {
-        final BeanFactory factory = EasyMock.createMock(BeanFactory.class);
-        EasyMock.replay(factory);
+        final BeanFactory factory = mock(BeanFactory.class);
         helper = new BeanHelper(factory);
         assertSame(factory, helper.getDefaultBeanFactory());
     }

@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +37,6 @@ import org.apache.commons.configuration2.builder.combined.CombinedConfigurationB
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -261,8 +261,7 @@ public class TestSubsetConfiguration {
      */
     @Test
     public void testSetListDelimiterHandlerParentNotSupported() {
-        final Configuration config = EasyMock.createNiceMock(Configuration.class);
-        EasyMock.replay(config);
+        final Configuration config = mock(Configuration.class);
         final SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         subset.setListDelimiterHandler(listHandler);

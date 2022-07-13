@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -46,7 +47,6 @@ import org.apache.commons.configuration2.event.EventListenerTestImpl;
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -528,9 +528,8 @@ public class TestBaseConfiguration {
      */
     @Test
     public void testInstallInterpolator() {
-        final Lookup prefixLookup = EasyMock.createMock(Lookup.class);
-        final Lookup defLookup = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(prefixLookup, defLookup);
+        final Lookup prefixLookup = mock(Lookup.class);
+        final Lookup defLookup = mock(Lookup.class);
         final Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put("test", prefixLookup);
         final List<Lookup> defLookups = new ArrayList<>();
@@ -673,8 +672,7 @@ public class TestBaseConfiguration {
      */
     @Test
     public void testSetInterpolator() {
-        final ConfigurationInterpolator interpolator = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.replay(interpolator);
+        final ConfigurationInterpolator interpolator = mock(ConfigurationInterpolator.class);
         config.setInterpolator(interpolator);
         assertSame(interpolator, config.getInterpolator());
     }

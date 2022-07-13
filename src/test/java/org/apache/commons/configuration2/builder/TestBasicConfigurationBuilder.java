@@ -22,6 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,7 +59,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.reloading.ReloadingDetector;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -152,8 +155,9 @@ public class TestBasicConfigurationBuilder {
      *
      * @return the event listener mock
      */
+    @SuppressWarnings("unchecked")
     private static EventListener<ConfigurationEvent> createEventListener() {
-        return EasyMock.createMock(EventListener.class);
+        return mock(EventListener.class);
     }
 
     /**
@@ -180,7 +184,6 @@ public class TestBasicConfigurationBuilder {
     public void testAddConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = createEventListener();
         final EventListener<ConfigurationEvent> l2 = createEventListener();
-        EasyMock.replay(l1, l2);
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         final PropertiesConfiguration config = builder.getConfiguration();
@@ -253,18 +256,22 @@ public class TestBasicConfigurationBuilder {
      */
     @Test
     public void testConnectToReloadingController() throws ConfigurationException {
-        final ReloadingDetector detector = EasyMock.createNiceMock(ReloadingDetector.class);
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        EasyMock.replay(detector);
+        final ReloadingDetector detector = mock(ReloadingDetector.class);
         final ReloadingController controller = new ReloadingController(detector);
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         final Configuration configuration = builder.getConfiguration();
+
+        when(detector.isReloadingRequired()).thenReturn(Boolean.TRUE);
 
         builder.connectToReloadingController(controller);
         controller.checkForReloading(null);
         assertTrue(controller.isInReloadingState());
         assertNotSame(configuration, builder.getConfiguration());
         assertFalse(controller.isInReloadingState());
+
+        verify(detector).isReloadingRequired();
+        verify(detector).reloadingPerformed();
+        verifyNoMoreInteractions(detector);
     }
 
     /**
@@ -455,7 +462,6 @@ public class TestBasicConfigurationBuilder {
     public void testRemoveConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = createEventListener();
         final EventListener<ConfigurationEvent> l2 = createEventListener();
-        EasyMock.replay(l1, l2);
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l1);
         builder.addEventListener(ConfigurationEvent.ANY, l2);

@@ -24,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -37,7 +42,6 @@ import java.util.Map;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -98,8 +102,7 @@ public class TestFileLocatorUtils {
     @BeforeAll
     public static void setUpOnce() throws Exception {
         sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+        fileSystem = mock(FileSystem.class);
     }
 
     /**
@@ -336,9 +339,10 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testLocateOrThrowFailed() {
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.expect(strategy.locate(EasyMock.anyObject(FileSystem.class), EasyMock.anyObject(FileLocator.class))).andReturn(null);
-        EasyMock.replay(strategy);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
+
+        when(strategy.locate(any(), any())).thenReturn(null);
+
         final FileLocator locator = FileLocatorUtils.fileLocator().locationStrategy(strategy).create();
         assertThrows(ConfigurationException.class, () -> FileLocatorUtils.locateOrThrow(locator));
     }
@@ -357,13 +361,16 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testLocateSuccessWithStrategyAndFileSystem() throws ConfigurationException {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
+        final FileSystem fs = mock(FileSystem.class);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().fileSystem(fs).locationStrategy(strategy).create();
-        EasyMock.expect(strategy.locate(fs, locator)).andReturn(sourceURL);
-        EasyMock.replay(fs, strategy);
+
+        when(strategy.locate(fs, locator)).thenReturn(sourceURL);
+
         assertSame(sourceURL, FileLocatorUtils.locateOrThrow(locator));
-        EasyMock.verify(strategy);
+
+        verify(strategy).locate(fs, locator);
+        verifyNoMoreInteractions(strategy);
     }
 
     /**
@@ -371,12 +378,15 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testLocateSuccessWithStrategyDefaultFileSystem() throws ConfigurationException {
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().locationStrategy(strategy).create();
-        EasyMock.expect(strategy.locate(FileLocatorUtils.DEFAULT_FILE_SYSTEM, locator)).andReturn(sourceURL);
-        EasyMock.replay(strategy);
+
+        when(strategy.locate(FileLocatorUtils.DEFAULT_FILE_SYSTEM, locator)).thenReturn(sourceURL);
+
         assertSame(sourceURL, FileLocatorUtils.locateOrThrow(locator));
-        EasyMock.verify(strategy);
+
+        verify(strategy).locate(FileLocatorUtils.DEFAULT_FILE_SYSTEM, locator);
+        verifyNoMoreInteractions(strategy);
     }
 
     @Test
@@ -411,7 +421,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testObtainFileSystemSetInLocator() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final FileSystem fs = mock(FileSystem.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().fileSystem(fs).create();
         assertSame(fs, FileLocatorUtils.obtainFileSystem(locator));
     }
@@ -438,8 +448,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testObtainLocationStrategySetInLocator() {
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(strategy);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().locationStrategy(strategy).create();
         assertSame(strategy, FileLocatorUtils.obtainLocationStrategy(locator));
     }
@@ -468,8 +477,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testStoreFileLocatorInMap() {
-        final FileLocationStrategy strategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(strategy);
+        final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).encoding(ENCODING).fileName(FILE_NAME).fileSystem(fileSystem)
             .locationStrategy(strategy).sourceURL(sourceURL).create();
         final Map<String, Object> map = new HashMap<>();

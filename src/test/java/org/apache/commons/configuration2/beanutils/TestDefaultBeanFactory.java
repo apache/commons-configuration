@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -260,8 +260,7 @@ public class TestDefaultBeanFactory {
      */
     @Test
     public void testInitWithConversionHandler() {
-        final ConversionHandler handler = EasyMock.createMock(ConversionHandler.class);
-        EasyMock.replay(handler);
+        final ConversionHandler handler = mock(ConversionHandler.class);
         factory = new DefaultBeanFactory(handler);
         assertSame(handler, factory.getConversionHandler());
     }

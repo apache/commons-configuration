@@ -19,6 +19,7 @@ package org.apache.commons.configuration2.builder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
@@ -27,7 +28,6 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,8 +49,7 @@ public class TestPropertiesBuilderParametersImpl {
      */
     @Test
     public void testBeanPropertiesAccess() throws Exception {
-        final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        EasyMock.replay(factory);
+        final PropertiesConfiguration.IOFactory factory = mock(PropertiesConfiguration.IOFactory.class);
         BeanHelper.setProperty(params, "IOFactory", factory);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         BeanHelper.setProperty(params, "fileName", "test.properties");
@@ -65,8 +64,9 @@ public class TestPropertiesBuilderParametersImpl {
      */
     @Test
     public void testInheritFrom() {
-        final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        final ConfigurationConsumer<ConfigurationException> includeListener = EasyMock.createMock(ConfigurationConsumer.class);
+        final PropertiesConfiguration.IOFactory factory = mock(PropertiesConfiguration.IOFactory.class);
+        @SuppressWarnings("unchecked")
+        final ConfigurationConsumer<ConfigurationException> includeListener = mock(ConfigurationConsumer.class);
         params.setIOFactory(factory).setIncludeListener(includeListener).setIncludesAllowed(false).setLayout(new PropertiesConfigurationLayout())
             .setThrowExceptionOnMissing(true);
         final PropertiesBuilderParametersImpl params2 = new PropertiesBuilderParametersImpl();
@@ -85,8 +85,8 @@ public class TestPropertiesBuilderParametersImpl {
      */
     @Test
     public void testSetIncludeListener() {
-        final ConfigurationConsumer<ConfigurationException> includeListener = EasyMock.createMock(ConfigurationConsumer.class);
-        EasyMock.replay(includeListener);
+        @SuppressWarnings("unchecked")
+        final ConfigurationConsumer<ConfigurationException> includeListener = mock(ConfigurationConsumer.class);
         assertSame(params, params.setIncludeListener(includeListener));
         assertSame(includeListener, params.getParameters().get("includeListener"));
     }
@@ -118,8 +118,7 @@ public class TestPropertiesBuilderParametersImpl {
      */
     @Test
     public void testSetIOFactory() {
-        final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        EasyMock.replay(factory);
+        final PropertiesConfiguration.IOFactory factory = mock(PropertiesConfiguration.IOFactory.class);
         assertSame(params, params.setIOFactory(factory));
         assertSame(factory, params.getParameters().get("IOFactory"));
     }
