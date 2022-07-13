@@ -18,11 +18,16 @@
 package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -40,7 +45,6 @@ import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ErrorListenerTestImpl;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,14 +66,8 @@ public class TestDatabaseConfiguration {
         @Override
         public DataSource getDatasource() {
             if (failOnConnect) {
-                final DataSource ds = EasyMock.createMock(DataSource.class);
-                try {
-                    EasyMock.expect(ds.getConnection()).andThrow(new SQLException("Simulated DB error"));
-                } catch (final SQLException e) {
-                    // should not happen
-                    throw new AssertionError("Unexpected exception!");
-                }
-                EasyMock.replay(ds);
+                final DataSource ds = mock(DataSource.class);
+                assertDoesNotThrow(() -> when(ds.getConnection()).thenThrow(new SQLException("Simulated DB error")));
                 return ds;
             }
             return super.getDatasource();
@@ -338,16 +336,21 @@ public class TestDatabaseConfiguration {
      */
     @Test
     public void testExtractPropertyValueCLOB() throws ConfigurationException, SQLException {
-        final ResultSet rs = EasyMock.createMock(ResultSet.class);
-        final Clob clob = EasyMock.createMock(Clob.class);
+        final ResultSet rs = mock(ResultSet.class);
+        final Clob clob = mock(Clob.class);
         final String content = "This is the content of the test CLOB!";
-        EasyMock.expect(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE)).andReturn(clob);
-        EasyMock.expect(clob.length()).andReturn(Long.valueOf(content.length()));
-        EasyMock.expect(clob.getSubString(1, content.length())).andReturn(content);
-        EasyMock.replay(rs, clob);
+
+        when(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE)).thenReturn(clob);
+        when(clob.length()).thenReturn(Long.valueOf(content.length()));
+        when(clob.getSubString(1, content.length())).thenReturn(content);
+
         final DatabaseConfiguration config = helper.setUpConfig();
         assertEquals(content, config.extractPropertyValue(rs));
-        EasyMock.verify(rs, clob);
+
+        verify(rs).getObject(DatabaseConfigurationTestHelper.COL_VALUE);
+        verify(clob).length();
+        verify(clob).getSubString(1, content.length());
+        verifyNoMoreInteractions(rs, clob);
     }
 
     /**
@@ -355,14 +358,18 @@ public class TestDatabaseConfiguration {
      */
     @Test
     public void testExtractPropertyValueCLOBEmpty() throws ConfigurationException, SQLException {
-        final ResultSet rs = EasyMock.createMock(ResultSet.class);
-        final Clob clob = EasyMock.createMock(Clob.class);
-        EasyMock.expect(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE)).andReturn(clob);
-        EasyMock.expect(clob.length()).andReturn(0L);
-        EasyMock.replay(rs, clob);
+        final ResultSet rs = mock(ResultSet.class);
+        final Clob clob = mock(Clob.class);
+
+        when(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE)).thenReturn(clob);
+        when(clob.length()).thenReturn(0L);
+
         final DatabaseConfiguration config = helper.setUpConfig();
         assertEquals("", config.extractPropertyValue(rs));
-        EasyMock.verify(rs, clob);
+
+        verify(rs).getObject(DatabaseConfigurationTestHelper.COL_VALUE);
+        verify(clob).length();
+        verifyNoMoreInteractions(rs, clob);
     }
 
     @Test

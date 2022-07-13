@@ -18,12 +18,12 @@ package org.apache.commons.configuration2.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,8 +52,7 @@ public class TestBasePathLocationStrategy {
 
     @BeforeEach
     public void setUp() throws Exception {
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+        fileSystem = mock(FileSystem.class);
         strategy = new BasePathLocationStrategy();
     }
 

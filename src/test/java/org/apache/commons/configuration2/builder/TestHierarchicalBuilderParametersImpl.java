@@ -18,12 +18,12 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +45,7 @@ public class TestHierarchicalBuilderParametersImpl {
      */
     @Test
     public void testBeanPropertiesAccess() throws Exception {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = mock(ExpressionEngine.class);
         BeanHelper.setProperty(params, "expressionEngine", engine);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         final Map<String, Object> map = params.getParameters();
@@ -58,7 +58,7 @@ public class TestHierarchicalBuilderParametersImpl {
      */
     @Test
     public void testInheritFrom() {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = mock(ExpressionEngine.class);
         final HierarchicalBuilderParametersImpl params = new HierarchicalBuilderParametersImpl();
         params.setExpressionEngine(engine);
         params.setThrowExceptionOnMissing(true);
@@ -75,8 +75,7 @@ public class TestHierarchicalBuilderParametersImpl {
      */
     @Test
     public void testSetExpressionEngine() {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        EasyMock.replay(engine);
+        final ExpressionEngine engine = mock(ExpressionEngine.class);
         assertSame(params, params.setExpressionEngine(engine));
         assertSame(engine, params.getParameters().get("expressionEngine"));
     }

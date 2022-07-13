@@ -18,6 +18,8 @@
 package org.apache.commons.configuration2.web;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
@@ -30,7 +32,6 @@ import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 
 /**
  * Test case for the {@link ServletConfiguration} class.
@@ -45,9 +46,9 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
      * @return The created mock
      */
     private ServletConfig mockServletConfig(Properties parameters) {
-        final ServletConfig config = Mockito.mock(ServletConfig.class);
-        Mockito.when(config.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
-        Mockito.when(config.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
+        final ServletConfig config = mock(ServletConfig.class);
+        when(config.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
+        when(config.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
             final String name = invocation.getArgument(0, String.class);
             return parameters.getProperty(name);
         });

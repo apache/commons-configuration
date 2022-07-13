@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.interpol;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,6 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +48,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.commons.text.lookup.StringLookupFactory;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,14 +82,13 @@ public class TestConfigurationInterpolator {
      * @return the test lookup object
      */
     private static Lookup setUpTestLookup(final String var, final Object value) {
-        final Lookup lookup = EasyMock.createMock(Lookup.class);
-        EasyMock.expect(lookup.lookup(EasyMock.anyObject(String.class))).andAnswer(() -> {
-            if (var.equals(EasyMock.getCurrentArguments()[0])) {
+        final Lookup lookup = mock(Lookup.class);
+        when(lookup.lookup(any())).thenAnswer(invocation -> {
+            if (var.equals(invocation.getArgument(0))) {
                 return value;
             }
             return null;
-        }).anyTimes();
-        EasyMock.replay(lookup);
+        });
         return lookup;
     }
 
@@ -121,8 +127,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testDeregisterLookup() {
-        final Lookup lookup = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(lookup);
+        final Lookup lookup = mock(Lookup.class);
         interpolator.registerLookup(TEST_PREFIX, lookup);
         assertTrue(interpolator.deregisterLookup(TEST_PREFIX));
         assertFalse(interpolator.prefixSet().contains(TEST_PREFIX));
@@ -157,9 +162,8 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testFromSpecificationInterpolator() {
-        final ConfigurationInterpolator ci = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.replay(ci);
-        final InterpolatorSpecification spec = new InterpolatorSpecification.Builder().withDefaultLookup(EasyMock.createMock(Lookup.class))
+        final ConfigurationInterpolator ci = mock(ConfigurationInterpolator.class);
+        final InterpolatorSpecification spec = new InterpolatorSpecification.Builder().withDefaultLookup(mock(Lookup.class))
             .withParentInterpolator(interpolator).withInterpolator(ci).create();
         assertSame(ci, ConfigurationInterpolator.fromSpecification(spec));
     }
@@ -169,9 +173,8 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testFromSpecificationNewInstance() {
-        final Lookup defLookup = EasyMock.createMock(Lookup.class);
-        final Lookup preLookup = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(defLookup, preLookup);
+        final Lookup defLookup = mock(Lookup.class);
+        final Lookup preLookup = mock(Lookup.class);
         final Function<Object, String> stringConverter = obj -> Objects.toString(obj, null);
         final InterpolatorSpecification spec = new InterpolatorSpecification.Builder()
             .withDefaultLookup(defLookup)
@@ -235,8 +238,10 @@ public class TestConfigurationInterpolator {
     @Test
     public void testGetDefaultPrefixLookupsModify() {
         final Map<String, Lookup> lookups = ConfigurationInterpolator.getDefaultPrefixLookups();
-        final Lookup lookup = EasyMock.createMock(Lookup.class);
+        final Lookup lookup = mock(Lookup.class);
         assertThrows(UnsupportedOperationException.class, () -> lookups.put("test", lookup));
+
+        verifyNoInteractions(lookup);
     }
 
     /**
@@ -474,7 +479,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
         interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
         final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
-        assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
+        assertThat(result, matchesPattern("\\d{4}-\\d{2}-\\d{2}"));
     }
 
     /**
@@ -482,8 +487,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testNullSafeLookupExisting() {
-        final Lookup look = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(look);
+        final Lookup look = mock(Lookup.class);
         assertSame(look, ConfigurationInterpolator.nullSafeLookup(look));
     }
 
@@ -512,8 +516,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testRegisterLookup() {
-        final Lookup lookup = EasyMock.createMock(Lookup.class);
-        EasyMock.replay(lookup);
+        final Lookup lookup = mock(Lookup.class);
         interpolator.registerLookup(TEST_PREFIX, lookup);
         assertSame(lookup, interpolator.getLookups().get(TEST_PREFIX));
         assertTrue(interpolator.prefixSet().contains(TEST_PREFIX));
@@ -533,8 +536,10 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testRegisterLookupNullPrefix() {
-        final Lookup lookup = EasyMock.createMock(Lookup.class);
+        final Lookup lookup = mock(Lookup.class);
         assertThrows(IllegalArgumentException.class, () -> interpolator.registerLookup(null, lookup));
+
+        verifyNoInteractions(lookup);
     }
 
     /**
@@ -593,15 +598,19 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testResolveDefault() {
-        final Lookup l1 = EasyMock.createMock(Lookup.class);
-        final Lookup l2 = EasyMock.createMock(Lookup.class);
-        final Lookup l3 = EasyMock.createMock(Lookup.class);
-        EasyMock.expect(l1.lookup(TEST_NAME)).andReturn(null);
-        EasyMock.expect(l2.lookup(TEST_NAME)).andReturn(TEST_VALUE);
-        EasyMock.replay(l1, l2, l3);
+        final Lookup l1 = mock(Lookup.class);
+        final Lookup l2 = mock(Lookup.class);
+        final Lookup l3 = mock(Lookup.class);
+
+        when(l1.lookup(TEST_NAME)).thenReturn(null);
+        when(l2.lookup(TEST_NAME)).thenReturn(TEST_VALUE);
+
         interpolator.addDefaultLookups(Arrays.asList(l1, l2, l3));
         assertEquals(TEST_VALUE, interpolator.resolve(TEST_NAME));
-        EasyMock.verify(l1, l2, l3);
+
+        verify(l1).lookup(TEST_NAME);
+        verify(l2).lookup(TEST_NAME);
+        verifyNoMoreInteractions(l1, l2, l3);
     }
 
     /**
@@ -665,8 +674,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testResolveParentVariableFound() {
-        final ConfigurationInterpolator parent = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.replay(parent);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         interpolator.setParentInterpolator(parent);
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME));
@@ -677,12 +685,15 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testResolveParentVariableNotFound() {
-        final ConfigurationInterpolator parent = EasyMock.createMock(ConfigurationInterpolator.class);
-        EasyMock.expect(parent.resolve(TEST_NAME)).andReturn(TEST_VALUE);
-        EasyMock.replay(parent);
+        final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
+
+        when(parent.resolve(TEST_NAME)).thenReturn(TEST_VALUE);
+
         interpolator.setParentInterpolator(parent);
         assertEquals(TEST_VALUE, interpolator.resolve(TEST_NAME));
-        EasyMock.verify(parent);
+
+        verify(parent).resolve(TEST_NAME);
+        verifyNoMoreInteractions(parent);
     }
 
     /**

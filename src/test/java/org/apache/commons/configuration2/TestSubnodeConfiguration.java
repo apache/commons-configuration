@@ -22,6 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +45,6 @@ import org.apache.commons.configuration2.tree.NodeSelector;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.TrackedNodeModel;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -187,14 +190,16 @@ public class TestSubnodeConfiguration {
      */
     @Test
     public void testClose() {
-        final TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
-        EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
-        model.close();
-        EasyMock.replay(model);
+        final TrackedNodeModel model = mock(TrackedNodeModel.class);
+
+        when(model.getSelector()).thenReturn(SELECTOR);
 
         final SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
         config.close();
-        EasyMock.verify(model);
+
+        verify(model).getSelector();
+        verify(model).close();
+        verifyNoMoreInteractions(model);
     }
 
     /**

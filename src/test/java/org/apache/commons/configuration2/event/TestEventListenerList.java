@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -254,7 +254,8 @@ public class TestEventListenerList {
     public void testGetEventListenerRegistrationsForSuperType() {
         final ListenerTestImpl l1 = new ListenerTestImpl();
         final ListenerTestImpl l2 = new ListenerTestImpl();
-        final EventListener<Event> l3 = EasyMock.createMock(EventListener.class);
+        @SuppressWarnings("unchecked")
+        final EventListener<Event> l3 = mock(EventListener.class);
         list.addEventListener(typeSub1, l1);
         list.addEventListener(Event.ANY, l3);
         list.addEventListener(typeBase, l2);

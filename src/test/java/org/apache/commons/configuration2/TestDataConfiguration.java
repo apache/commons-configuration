@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -46,7 +49,6 @@ import java.util.NoSuchElementException;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConversionException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -377,13 +379,13 @@ public class TestDataConfiguration {
      */
     @Test
     public void testClearPropertyDirectNoAbstractConf() {
-        final Configuration wrapped = EasyMock.createMock(Configuration.class);
+        final Configuration wrapped = mock(Configuration.class);
         final String key = "test.property";
-        wrapped.clearProperty(key);
-        EasyMock.replay(wrapped);
         conf = new DataConfiguration(wrapped);
         conf.clearPropertyDirect(key);
-        EasyMock.verify(wrapped);
+
+        verify(wrapped).clearProperty(key);
+        verifyNoMoreInteractions(wrapped);
     }
 
     @Test

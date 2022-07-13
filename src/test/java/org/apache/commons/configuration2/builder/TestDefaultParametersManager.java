@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
@@ -30,7 +31,6 @@ import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParamet
 import org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +82,7 @@ public class TestDefaultParametersManager {
 
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        listHandler = EasyMock.createMock(ListDelimiterHandler.class);
+        listHandler = mock(ListDelimiterHandler.class);
     }
 
     /** An object for creating new parameters objects. */
@@ -115,9 +115,9 @@ public class TestDefaultParametersManager {
      */
     @Test
     public void testApplyDefaultsMultipleHandlers() {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = mock(ExpressionEngine.class);
         manager.registerDefaultsHandler(XMLBuilderParameters.class, parameters -> parameters.setThrowExceptionOnMissing(false)
-            .setListDelimiterHandler(EasyMock.createMock(ListDelimiterHandler.class)).setExpressionEngine(engine));
+            .setListDelimiterHandler(mock(ListDelimiterHandler.class)).setExpressionEngine(engine));
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class, new FileBasedDefaultsHandler());
         final XMLBuilderParameters params = parameters.xml();
         manager.initializeParameters(params);

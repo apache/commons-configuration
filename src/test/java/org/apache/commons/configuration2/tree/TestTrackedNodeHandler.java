@@ -17,8 +17,11 @@
 package org.apache.commons.configuration2.tree;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +46,9 @@ public class TestTrackedNodeHandler {
     private TrackedNodeHandler handler;
 
     @BeforeEach
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
-        parentHandler = EasyMock.createMock(NodeHandler.class);
+        parentHandler = mock(NodeHandler.class);
         handler = new TrackedNodeHandler(root, parentHandler);
     }
 
@@ -55,11 +59,13 @@ public class TestTrackedNodeHandler {
     public void testGetParent() {
         final ImmutableNode node = new ImmutableNode.Builder().name("node").create();
         final ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
-        EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
-        EasyMock.replay(parentHandler);
+
+        when(parentHandler.getParent(node)).thenReturn(parent);
 
         assertSame(parent, handler.getParent(node));
-        EasyMock.verify(parentHandler);
+
+        verify(parentHandler).getParent(node);
+        verifyNoMoreInteractions(parentHandler);
     }
 
     /**

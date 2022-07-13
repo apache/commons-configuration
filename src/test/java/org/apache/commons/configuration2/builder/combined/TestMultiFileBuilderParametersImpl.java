@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,6 @@ import java.util.Map;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,8 +50,7 @@ public class TestMultiFileBuilderParametersImpl {
      */
     @Test
     public void testBeanProperties() throws Exception {
-        final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(bp);
+        final BuilderParameters bp = mock(BuilderParameters.class);
         final String pattern = "testPattern";
         BeanHelper.setProperty(params, "filePattern", pattern);
         BeanHelper.setProperty(params, "managedBuilderParameters", bp);
@@ -120,8 +119,7 @@ public class TestMultiFileBuilderParametersImpl {
      */
     @Test
     public void testSetManagedBuilderParameters() {
-        final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(bp);
+        final BuilderParameters bp = mock(BuilderParameters.class);
         assertSame(params, params.setManagedBuilderParameters(bp));
         assertSame(bp, params.getManagedBuilderParameters());
     }

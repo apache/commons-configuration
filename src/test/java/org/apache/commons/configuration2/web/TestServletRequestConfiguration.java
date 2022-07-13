@@ -19,6 +19,8 @@ package org.apache.commons.configuration2.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +36,6 @@ import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
@@ -48,9 +49,9 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
      * @return the servlet request configuration
      */
     private ServletRequestConfiguration createConfiguration(final Configuration base) {
-        final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getParameterMap()).thenAnswer(invocation -> new ConfigurationMap(base));
-        Mockito.when(request.getParameterValues(ArgumentMatchers.any())).thenAnswer(invocation -> {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameterMap()).thenAnswer(invocation -> new ConfigurationMap(base));
+        when(request.getParameterValues(ArgumentMatchers.any())).thenAnswer(invocation -> {
             final String key = invocation.getArgument(0, String.class);
             return base.getStringArray(key);
         });
@@ -74,9 +75,9 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
 
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
-        final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getParameter(ArgumentMatchers.any())).thenReturn(null);
-        Mockito.when(request.getParameterMap()).thenAnswer(invocation -> new HashMap<>());
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(ArgumentMatchers.any())).thenReturn(null);
+        when(request.getParameterMap()).thenAnswer(invocation -> new HashMap<>());
 
         return new ServletRequestConfiguration(request);
     }

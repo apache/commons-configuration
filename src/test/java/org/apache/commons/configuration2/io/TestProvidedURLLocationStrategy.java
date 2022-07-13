@@ -18,11 +18,11 @@ package org.apache.commons.configuration2.io;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,8 +44,7 @@ public class TestProvidedURLLocationStrategy {
      */
     @Test
     public void testLocateFail() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fs);
+        final FileSystem fs = mock(FileSystem.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
         assertNull(strategy.locate(fs, locator));
     }
@@ -55,8 +54,7 @@ public class TestProvidedURLLocationStrategy {
      */
     @Test
     public void testLocateSuccess() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fs);
+        final FileSystem fs = mock(FileSystem.class);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();
         assertSame(url, strategy.locate(fs, locator));

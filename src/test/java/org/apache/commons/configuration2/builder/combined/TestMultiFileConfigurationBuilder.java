@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,7 +51,6 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.DefaultLookups;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXParseException;
 
@@ -98,8 +98,8 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testAddConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
-        final EventListener<Event> l2 = EasyMock.createMock(EventListener.class);
-        EasyMock.replay(l2);
+        @SuppressWarnings("unchecked")
+        final EventListener<Event> l2 = mock(EventListener.class);
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createTestBuilder(null);
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         switchToConfig(1);

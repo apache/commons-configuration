@@ -21,6 +21,10 @@ import static org.apache.commons.configuration2.TempDirUtils.newFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,7 +38,6 @@ import org.apache.commons.configuration2.io.VFSFileSystem;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -86,13 +89,14 @@ public class TestVFSFileHandlerReloadingDetector {
      */
     @Test
     public void testLastModificationDateFileSystemEx() throws FileSystemException {
-        final FileObject fo = EasyMock.createMock(FileObject.class);
-        final FileName name = EasyMock.createMock(FileName.class);
-        EasyMock.expect(fo.exists()).andReturn(Boolean.TRUE);
-        EasyMock.expect(fo.getContent()).andThrow(new FileSystemException("error"));
-        EasyMock.expect(fo.getName()).andReturn(name);
-        EasyMock.expect(name.getURI()).andReturn("someURI");
-        EasyMock.replay(fo, name);
+        final FileObject fo = mock(FileObject.class);
+        final FileName name = mock(FileName.class);
+
+        when(fo.exists()).thenReturn(Boolean.TRUE);
+        when(fo.getContent()).thenThrow(new FileSystemException("error"));
+        when(fo.getName()).thenReturn(name);
+        when(name.getURI()).thenReturn("someURI");
+
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector() {
             @Override
             protected FileObject getFileObject() {
@@ -100,7 +104,12 @@ public class TestVFSFileHandlerReloadingDetector {
             }
         };
         assertEquals(0, strategy.getLastModificationDate());
-        EasyMock.verify(fo);
+
+        verify(fo).exists();
+        verify(fo).getContent();
+        verify(fo).getName();
+        verify(name).getURI();
+        verifyNoMoreInteractions(fo, name);
     }
 
     /**

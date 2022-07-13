@@ -17,12 +17,15 @@
 package org.apache.commons.configuration2.sync;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -194,14 +197,17 @@ public class TestReadWriteSynchronizer {
      */
     @Test
     public void testInitLock() {
-        final ReadWriteLock lock = EasyMock.createMock(ReadWriteLock.class);
-        final Lock readLock = EasyMock.createMock(Lock.class);
-        EasyMock.expect(lock.readLock()).andReturn(readLock);
-        readLock.lock();
-        EasyMock.replay(lock, readLock);
+        final ReadWriteLock lock = mock(ReadWriteLock.class);
+        final Lock readLock = mock(Lock.class);
+
+        when(lock.readLock()).thenReturn(readLock);
+
         final ReadWriteSynchronizer sync = new ReadWriteSynchronizer(lock);
         sync.beginRead();
-        EasyMock.verify(lock, readLock);
+
+        verify(lock).readLock();
+        verify(readLock).lock();
+        verifyNoMoreInteractions(lock, readLock);
     }
 
     /**

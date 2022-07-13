@@ -21,6 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
@@ -28,7 +32,6 @@ import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,12 +50,22 @@ public class TestAbstractConfigurationSynchronization {
      * @return the mock configuration
      */
     private static Configuration prepareConfigurationMockForCopy() {
-        final Configuration config2 = EasyMock.createStrictMock(Configuration.class);
-        config2.lock(LockMode.READ);
-        EasyMock.expect(config2.getKeys()).andReturn(Collections.<String>emptySet().iterator());
-        config2.unlock(LockMode.READ);
-        EasyMock.replay(config2);
+        final Configuration config2 = mock(Configuration.class);
+
+        when(config2.getKeys()).thenReturn(Collections.<String>emptySet().iterator());
+
         return config2;
+    }
+
+    /**
+     * Verifies a mock configuration after a copy operation.
+     *
+     * @param mock the mock configuration
+     */
+    private static void verifyConfigurationMockAfterCopy(final Configuration mock) {
+        verify(mock).lock(LockMode.READ);
+        verify(mock).getKeys();
+        verify(mock).unlock(LockMode.READ);
     }
 
     /** The synchronizer used for testing. */
@@ -87,7 +100,9 @@ public class TestAbstractConfigurationSynchronization {
     public void testAppendSynchronized() {
         final Configuration config2 = prepareConfigurationMockForCopy();
         config.append(config2);
-        EasyMock.verify(config2);
+
+        verifyConfigurationMockAfterCopy(config2);
+        verifyNoMoreInteractions(config2);
     }
 
     /**
@@ -125,7 +140,9 @@ public class TestAbstractConfigurationSynchronization {
     public void testCopySynchronized() {
         final Configuration config2 = prepareConfigurationMockForCopy();
         config.copy(config2);
-        EasyMock.verify(config2);
+
+        verifyConfigurationMockAfterCopy(config2);
+        verifyNoMoreInteractions(config2);
     }
 
     /**

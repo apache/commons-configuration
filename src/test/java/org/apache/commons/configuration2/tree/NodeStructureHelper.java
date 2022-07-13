@@ -16,13 +16,15 @@
  */
 package org.apache.commons.configuration2.tree;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbunit.dataset.common.handlers.NoHandler;
-import org.easymock.EasyMock;
 
 /**
  * A helper class for tests related to hierarchies of {@code ImmutableNode} objects. This class provides functionality
@@ -189,8 +191,9 @@ public class NodeStructureHelper {
      *
      * @return the resolver mock
      */
+    @SuppressWarnings("unchecked")
     public static NodeKeyResolver<ImmutableNode> createResolverMock() {
-        return EasyMock.createMock(NodeKeyResolver.class);
+        return mock(NodeKeyResolver.class);
     }
 
     /**
@@ -235,14 +238,13 @@ public class NodeStructureHelper {
      *
      * @param resolver the {@code NodeKeyResolver} mock
      */
-    public static void expectResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
-        EasyMock.expect(resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyString(), EasyMock.anyObject(TreeData.class)))
-            .andAnswer(() -> {
-                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                final String key = (String) EasyMock.getCurrentArguments()[1];
-                final TreeData handler = (TreeData) EasyMock.getCurrentArguments()[2];
-                return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
-            }).anyTimes();
+    public static void prepareResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
+        when(resolver.resolveAddKey(any(), any(), any())).then(invocation -> {
+            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
+            final String key = invocation.getArgument(1, String.class);
+            final TreeData handler = invocation.getArgument(2, TreeData.class);
+            return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
+        });
     }
 
     /**
@@ -252,14 +254,13 @@ public class NodeStructureHelper {
      * @param resolver the mock resolver
      */
     @SuppressWarnings("unchecked")
-    public static void expectResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
-        EasyMock.expect(resolver.resolveKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyObject(String.class),
-            (NodeHandler<ImmutableNode>) EasyMock.anyObject(NoHandler.class))).andAnswer(() -> {
-                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                final String key = (String) EasyMock.getCurrentArguments()[1];
-                final NodeHandler<ImmutableNode> handler = (NodeHandler<ImmutableNode>) EasyMock.getCurrentArguments()[2];
-                return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
-            }).anyTimes();
+    public static void prepareResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
+        when(resolver.resolveKey(any(), any(), any())).thenAnswer(invocation -> {
+            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
+            final String key = invocation.getArgument(1, String.class);
+            final NodeHandler<ImmutableNode> handler = invocation.getArgument(2, NodeHandler.class);
+            return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
+        });
     }
 
     /**

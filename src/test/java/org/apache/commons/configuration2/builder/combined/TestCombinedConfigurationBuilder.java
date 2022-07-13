@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +86,6 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -603,7 +603,7 @@ public class TestCombinedConfigurationBuilder {
     public void testConfigurationBuilderProviderInheritBasicProperties() throws ConfigurationException {
         final File testFile = ConfigurationAssert.getTestFile("testCCCombinedChildBuilder.xml");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('*');
-        final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
+        final ConfigurationDecoder decoder = mock(ConfigurationDecoder.class);
         builder.configure(new CombinedBuilderParametersImpl().setDefinitionBuilderParameters(new XMLBuilderParametersImpl().setFile(testFile))
             .setListDelimiterHandler(listHandler).setConfigurationDecoder(decoder));
         final CombinedConfiguration cc = builder.getConfiguration();
@@ -630,9 +630,11 @@ public class TestCombinedConfigurationBuilder {
      */
     @Test
     public void testConfigurationBuilderProviderInheritEventListeners() throws ConfigurationException {
-        final EventListener<Event> l1 = EasyMock.createNiceMock(EventListener.class);
-        final EventListener<ConfigurationEvent> l2 = EasyMock.createNiceMock(EventListener.class);
-        EasyMock.replay(l1, l2);
+        @SuppressWarnings("unchecked")
+        final EventListener<Event> l1 = mock(EventListener.class);
+        @SuppressWarnings("unchecked")
+        final EventListener<ConfigurationEvent> l2 = mock(EventListener.class);
+
         final File testFile = ConfigurationAssert.getTestFile("testCCCombinedChildBuilder.xml");
         builder.configure(new XMLBuilderParametersImpl().setFile(testFile));
         builder.addEventListener(Event.ANY, l1);
@@ -655,7 +657,7 @@ public class TestCombinedConfigurationBuilder {
         final HierarchicalConfiguration<ImmutableNode> config = new BaseHierarchicalConfiguration();
         config.addProperty("header.entity-resolver[@config-class]", EntityResolverWithPropertiesTestImpl.class.getName());
         final XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final FileSystem fs = mock(FileSystem.class);
         final String baseDir = ConfigurationAssert.OUT_DIR_NAME;
         xmlParams.setBasePath(baseDir);
         xmlParams.setFileSystem(fs);

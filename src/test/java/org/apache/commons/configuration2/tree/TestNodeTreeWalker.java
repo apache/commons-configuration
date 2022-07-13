@@ -18,11 +18,11 @@ package org.apache.commons.configuration2.tree;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -98,8 +98,9 @@ public class TestNodeTreeWalker {
      *
      * @return the handler mock
      */
+    @SuppressWarnings("unchecked")
     private static NodeHandler<ImmutableNode> handlerMock() {
-        return EasyMock.createMock(NodeHandler.class);
+        return mock(NodeHandler.class);
     }
 
     /**
@@ -117,8 +118,9 @@ public class TestNodeTreeWalker {
      *
      * @return the visitor mock
      */
+    @SuppressWarnings("unchecked")
     private static ConfigurationNodeVisitor<ImmutableNode> visitorMock() {
-        return EasyMock.createMock(ConfigurationNodeVisitor.class);
+        return mock(ConfigurationNodeVisitor.class);
     }
 
     /**
@@ -188,7 +190,6 @@ public class TestNodeTreeWalker {
     public void testWalkBFSNoNode() {
         final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
         final NodeHandler<ImmutableNode> handler = handlerMock();
-        EasyMock.replay(visitor, handler);
         NodeTreeWalker.INSTANCE.walkBFS(null, visitor, handler);
     }
 
@@ -222,7 +223,6 @@ public class TestNodeTreeWalker {
     public void testWalkDFSNoNode() {
         final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
         final NodeHandler<ImmutableNode> handler = handlerMock();
-        EasyMock.replay(visitor, handler);
         NodeTreeWalker.INSTANCE.walkDFS(null, visitor, handler);
     }
 

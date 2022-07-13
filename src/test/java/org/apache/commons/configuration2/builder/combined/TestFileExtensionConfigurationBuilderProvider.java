@@ -30,8 +30,8 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 /**
  * Test class for {@code FileExtensionConfigurationBuilderProvider}.
@@ -62,9 +62,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * @return the mock object
      */
     private ConfigurationDeclaration setUpDecl() {
-        final ConfigurationDeclaration decl = EasyMock.createMock(ConfigurationDeclaration.class);
-        EasyMock.replay(decl);
-        return decl;
+        return Mockito.mock(ConfigurationDeclaration.class);
     }
 
     /**

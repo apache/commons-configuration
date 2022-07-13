@@ -18,12 +18,12 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
@@ -46,9 +46,8 @@ public class TestXMLBuilderParametersImpl {
      */
     @Test
     public void testBeanPropertiesAccess() throws Exception {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
-        EasyMock.replay(resolver, builder);
+        final EntityResolver resolver = mock(EntityResolver.class);
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         BeanHelper.setProperty(params, "fileName", "test.xml");
         BeanHelper.setProperty(params, "entityResolver", resolver);
@@ -65,8 +64,8 @@ public class TestXMLBuilderParametersImpl {
      */
     @Test
     public void testInheritFrom() {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
+        final EntityResolver resolver = mock(EntityResolver.class);
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
         params.setDocumentBuilder(builder).setEntityResolver(resolver).setSchemaValidation(true).setValidating(true);
         params.setThrowExceptionOnMissing(true);
         final XMLBuilderParametersImpl params2 = new XMLBuilderParametersImpl();
@@ -85,8 +84,7 @@ public class TestXMLBuilderParametersImpl {
      */
     @Test
     public void testSetDocumentBuilder() {
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
-        EasyMock.replay(builder);
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
         assertSame(params, params.setDocumentBuilder(builder));
         assertSame(builder, params.getParameters().get("documentBuilder"));
     }
@@ -96,8 +94,7 @@ public class TestXMLBuilderParametersImpl {
      */
     @Test
     public void testSetEntityResolver() {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        EasyMock.replay(resolver);
+        final EntityResolver resolver = mock(EntityResolver.class);
         assertSame(params, params.setEntityResolver(resolver));
         assertSame(resolver, params.getEntityResolver());
         assertSame(resolver, params.getParameters().get("entityResolver"));

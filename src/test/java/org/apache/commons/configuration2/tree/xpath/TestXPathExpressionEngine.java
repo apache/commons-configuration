@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +36,6 @@ import org.apache.commons.configuration2.tree.QueryResult;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -82,8 +83,7 @@ public class TestXPathExpressionEngine {
      * @param key the key
      */
     private void checkEmptyKey(final String key) {
-        final XPathContextFactory factory = EasyMock.createMock(XPathContextFactory.class);
-        EasyMock.replay(factory);
+        final XPathContextFactory factory = mock(XPathContextFactory.class);
         final XPathExpressionEngine engine = new XPathExpressionEngine(factory);
         final List<QueryResult<ImmutableNode>> results = engine.query(root, key, handler);
         assertEquals(1, results.size());
@@ -109,9 +109,10 @@ public class TestXPathExpressionEngine {
      * @return the mock context
      */
     private JXPathContext expectSelect(final Object... results) {
-        final JXPathContext ctx = EasyMock.createMock(JXPathContext.class);
-        EasyMock.expect(ctx.selectNodes(TEST_KEY)).andReturn(Arrays.asList(results));
-        EasyMock.replay(ctx);
+        final JXPathContext ctx = mock(JXPathContext.class);
+        
+        when(ctx.selectNodes(TEST_KEY)).thenReturn(Arrays.asList(results));
+
         return ctx;
     }
 
@@ -122,9 +123,10 @@ public class TestXPathExpressionEngine {
      * @return the test engine instance
      */
     private XPathExpressionEngine setUpEngine(final JXPathContext ctx) {
-        final XPathContextFactory factory = EasyMock.createMock(XPathContextFactory.class);
-        EasyMock.expect(factory.createContext(root, handler)).andReturn(ctx);
-        EasyMock.replay(factory);
+        final XPathContextFactory factory = mock(XPathContextFactory.class);
+        
+        when(factory.createContext(root, handler)).thenReturn(ctx);
+
         return new XPathExpressionEngine(factory);
     }
 
