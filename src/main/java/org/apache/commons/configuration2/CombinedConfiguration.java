@@ -42,6 +42,7 @@ import org.apache.commons.configuration2.tree.NodeTreeWalker;
 import org.apache.commons.configuration2.tree.QueryResult;
 import org.apache.commons.configuration2.tree.TreeUtils;
 import org.apache.commons.configuration2.tree.UnionCombiner;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -928,7 +929,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @return a collection with the names of the single components
          */
         private Collection<String> parseAt(final String at) {
-            if (at == null) {
+            if (StringUtils.isEmpty(at)) {
                 return null;
             }
 

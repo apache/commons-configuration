@@ -26,6 +26,9 @@
       <action issue="CONFIGURATION-815" type="fix" dev="ggregory" due-to="Gary Gregory">
         Replace optional Apache Log4j 1.2.17 with 2.18.0.
       </action>
+      <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Jarek Sacha, Gary Gregory">
+        CombinedConfiguration#getKeys() can throw NoSuchElementException.
+      </action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">

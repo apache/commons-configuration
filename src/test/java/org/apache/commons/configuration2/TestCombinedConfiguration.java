@@ -31,6 +31,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -758,6 +759,25 @@ public class TestCombinedConfiguration {
         assertNull("Got a conversion engine", config.getConversionExpressionEngine());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
+    }
+
+    /**
+     * Tests CONFIGURATION-799.
+     */
+    @Test
+    public void testGetKeys() {
+        // Set up
+        final BaseConfiguration conf1 = new BaseConfiguration();
+        final String key = "x1";
+        conf1.addProperty(key, 1);
+
+        final CombinedConfiguration conf2 = new CombinedConfiguration();
+        conf2.addConfiguration(conf1, null, "");
+
+        // Actual test
+        final Iterator<String> keys = conf2.getKeys();
+        assertEquals(key, keys.next());
+        assertFalse(keys.hasNext());
     }
 
     /**
