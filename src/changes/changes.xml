@@ -22,6 +22,12 @@
   </properties>
   <body>
     <release version="2.9.0" date="TBD" description="Minor release with new features and updated dependencies.">
+      <!-- FIX -->
+      <action issue="CONFIGURATION-815" type="fix" dev="ggregory" due-to="Gary Gregory">
+        Replace optional Apache Log4j 1.2.17 with 2.18.0.
+      </action>
+      <!-- ADD -->
+      <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 #193.
       </action>
