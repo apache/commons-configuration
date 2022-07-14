@@ -60,10 +60,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      */
     @Override
     public Collection<String> split(final String s, final boolean trim) {
-        if (s == null) {
-            return new ArrayList<>(0);
-        }
-        return splitString(s, trim);
+        return s == null ? new ArrayList<>(0) : splitString(s, trim);
     }
 
     /**
@@ -73,8 +70,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      */
     @Override
     public Object escape(final Object value, final ValueTransformer transformer) {
-        final Object escValue = value instanceof String ? escapeString((String) value) : value;
-        return transformer.transformValue(escValue);
+        return transformer.transformValue(value instanceof String ? escapeString((String) value) : value);
     }
 
     /**
@@ -112,7 +108,6 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
         if (value instanceof String) {
             return split((String) value, true);
         }
-
         final Collection<Object> result = new LinkedList<>();
         if (value instanceof Iterable) {
             flattenIterator(result, ((Iterable<?>) value).iterator(), limit);
@@ -127,7 +122,6 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
                 result.add(value);
             }
         }
-
         return result;
     }
 
@@ -146,13 +140,13 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * Flattens the given iterator. For each element in the iteration {@code flatten()} is called recursively.
      *
      * @param target the target collection
-     * @param it the iterator to process
+     * @param iterator the iterator to process
      * @param limit a limit for the number of elements to extract
      */
-    private void flattenIterator(final Collection<Object> target, final Iterator<?> it, final int limit) {
+    private void flattenIterator(final Collection<Object> target, final Iterator<?> iterator, final int limit) {
         int size = target.size();
-        while (size < limit && it.hasNext()) {
-            target.addAll(flatten(it.next(), limit - size));
+        while (size < limit && iterator.hasNext()) {
+            target.addAll(flatten(iterator.next(), limit - size));
             size = target.size();
         }
     }
