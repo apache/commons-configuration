@@ -343,11 +343,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public Collection<ConstructorArg> getConstructorArgs() {
-        final Collection<ConstructorArg> args = new LinkedList<>();
-        for (final NodeData<?> child : getNode().getChildren(ELEM_CTOR_ARG)) {
-            args.add(createConstructorArg(child));
-        }
-        return args;
+        return getNode().getChildren(ELEM_CTOR_ARG).stream().map(this::createConstructorArg).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**

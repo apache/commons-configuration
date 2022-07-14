@@ -21,8 +21,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -46,7 +47,7 @@ import java.util.Map;
 public class CombinedBeanDeclaration implements BeanDeclaration {
 
     /** A list with the child declarations. */
-    private final List<BeanDeclaration> childDeclarations;
+    private final ArrayList<BeanDeclaration> childDeclarations;
 
     /**
      * Constructs a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
@@ -65,13 +66,11 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public String getBeanFactoryName() {
-        for (final BeanDeclaration d : childDeclarations) {
-            final String factoryName = d.getBeanFactoryName();
-            if (factoryName != null) {
-                return factoryName;
-            }
-        }
-        return null;
+        return findFirst(BeanDeclaration::getBeanFactoryName);
+    }
+
+    private <T> T findFirst(final Function<? super BeanDeclaration, ? extends T> mapper) {
+        return childDeclarations.stream().map(mapper).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     /**
@@ -81,13 +80,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public Object getBeanFactoryParameter() {
-        for (final BeanDeclaration d : childDeclarations) {
-            final Object factoryParam = d.getBeanFactoryParameter();
-            if (factoryParam != null) {
-                return factoryParam;
-            }
-        }
-        return null;
+        return findFirst(BeanDeclaration::getBeanFactoryParameter);
     }
 
     /**
@@ -97,13 +90,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public String getBeanClassName() {
-        for (final BeanDeclaration d : childDeclarations) {
-            final String beanClassName = d.getBeanClassName();
-            if (beanClassName != null) {
-                return beanClassName;
-            }
-        }
-        return null;
+        return findFirst(BeanDeclaration::getBeanClassName);
     }
 
     /**
@@ -113,14 +100,14 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public Map<String, Object> getBeanProperties() {
-        final Map<String, Object> result = new HashMap<>();
-        for (int i = childDeclarations.size() - 1; i >= 0; i--) {
-            final Map<String, Object> props = childDeclarations.get(i).getBeanProperties();
-            if (props != null) {
-                result.putAll(props);
-            }
-        }
-        return result;
+        return get(BeanDeclaration::getBeanProperties);
+    }
+
+    private Map<String, Object> get(final Function<? super BeanDeclaration, ? extends Map<String, Object>> mapper) {
+        @SuppressWarnings("unchecked")
+        final ArrayList<BeanDeclaration> temp = (ArrayList<BeanDeclaration>) childDeclarations.clone();
+        Collections.reverse(temp);
+        return temp.stream().map(mapper).filter(Objects::nonNull).collect(HashMap::new, HashMap::putAll, HashMap::putAll);
     }
 
     /**
@@ -130,14 +117,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public Map<String, Object> getNestedBeanDeclarations() {
-        final Map<String, Object> result = new HashMap<>();
-        for (int i = childDeclarations.size() - 1; i >= 0; i--) {
-            final Map<String, Object> decls = childDeclarations.get(i).getNestedBeanDeclarations();
-            if (decls != null) {
-                result.putAll(decls);
-            }
-        }
-        return result;
+        return get(BeanDeclaration::getNestedBeanDeclarations);
     }
 
     /**

@@ -80,9 +80,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
 
         if (value instanceof Collection) {
             final Collection<?> collection = (Collection<?>) value;
-            for (final Object v : collection) {
-                getConfiguration().addProperty(name, v);
-            }
+            collection.forEach(v -> getConfiguration().addProperty(name, v));
         } else if (value.getClass().isArray()) {
             final int length = Array.getLength(value);
             for (int i = 0; i < length; i++) {

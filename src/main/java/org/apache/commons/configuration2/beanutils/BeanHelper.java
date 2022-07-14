@@ -175,33 +175,24 @@ public final class BeanHelper {
                         // correctly.
                         @SuppressWarnings("unchecked")
                         final List<BeanDeclaration> decls = (List<BeanDeclaration>) e.getValue();
-                        for (final BeanDeclaration decl : decls) {
-                            coll.add(createBean(decl, defaultClass));
-                        }
+                        decls.forEach(decl -> coll.add(createBean(decl, defaultClass)));
                     } else {
-                        final BeanDeclaration decl = (BeanDeclaration) e.getValue();
-                        coll.add(createBean(decl, defaultClass));
+                        coll.add(createBean((BeanDeclaration) e.getValue(), defaultClass));
                     }
                 }
             } else {
-                for (final Map.Entry<String, Object> e : nestedBeans.entrySet()) {
-                    final String propName = e.getKey();
+                nestedBeans.forEach((propName, prop) -> {
                     final Class<?> defaultClass = getDefaultClass(bean, propName);
-
-                    final Object prop = e.getValue();
-
                     if (prop instanceof Collection) {
                         final Collection<Object> beanCollection = createPropertyCollection(propName, defaultClass);
-
                         for (final Object elemDef : (Collection<?>) prop) {
                             beanCollection.add(createBean((BeanDeclaration) elemDef));
                         }
-
                         initProperty(bean, propName, beanCollection);
                     } else {
-                        initProperty(bean, propName, createBean((BeanDeclaration) e.getValue(), defaultClass));
+                        initProperty(bean, propName, createBean((BeanDeclaration) prop, defaultClass));
                     }
-                }
+                });
             }
         }
     }
@@ -216,10 +207,7 @@ public final class BeanHelper {
     public static void initBeanProperties(final Object bean, final BeanDeclaration data) {
         final Map<String, Object> properties = data.getBeanProperties();
         if (properties != null) {
-            for (final Map.Entry<String, Object> e : properties.entrySet()) {
-                final String propName = e.getKey();
-                initProperty(bean, propName, e.getValue());
-            }
+            properties.forEach((k, v) -> initProperty(bean, k, v));
         }
     }
 
