@@ -55,7 +55,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /** A helper object used for extracting values from complex objects. */
-    private static final AbstractListDelimiterHandler EXTRACTOR = (AbstractListDelimiterHandler) DisabledListDelimiterHandler.INSTANCE;
+    private static final ListDelimiterHandler EXTRACTOR = DisabledListDelimiterHandler.INSTANCE;
 
     /**
      * Constant for a default {@code ConfigurationInterpolator} to be used if none is provided by the caller.

@@ -16,7 +16,10 @@
  */
 package org.apache.commons.configuration2.convert;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -100,4 +103,38 @@ public interface ListDelimiterHandler {
      * @return a collection with all components extracted from the string
      */
     Collection<String> split(String s, boolean trim);
+
+    /**
+     * Extracts all values contained in the specified object up to the given limit. The passed in object is evaluated (if
+     * necessary in a recursive way). If it is a complex object (e.g. a collection or an array), all its elements are
+     * processed recursively and added to a target collection. The process stops if the limit is reached, but depending on
+     * the input object, it might be exceeded. (The limit is just an indicator to stop the process to avoid unnecessary work
+     * if the caller is only interested in a few values.)
+     *
+     * @param value the value to be processed
+     * @param limit the limit for aborting the processing
+     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
+     * @since 2.9.0
+     */
+    default Collection<?> flatten(final Object value, final int limit) {
+        if (value instanceof String) {
+            return split((String) value, true);
+        }
+        final Collection<Object> result = new LinkedList<>();
+        if (value instanceof Iterable) {
+            AbstractListDelimiterHandler.flattenIterator(this, result, ((Iterable<?>) value).iterator(), limit);
+        } else if (value instanceof Iterator) {
+            AbstractListDelimiterHandler.flattenIterator(this, result, (Iterator<?>) value, limit);
+        } else if (value != null) {
+            if (value.getClass().isArray()) {
+                for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
+                    result.addAll(flatten(Array.get(value, idx), limit - size));
+                }
+            } else {
+                result.add(value);
+            }
+        }
+        return result;
+    }
+
 }
