@@ -57,6 +57,28 @@ public interface ListDelimiterHandler {
     ValueTransformer NOOP_TRANSFORMER = value -> value;
 
     /**
+     * Escapes the specified single value object. This method is called for properties containing only a single value. So
+     * this method can rely on the fact that the passed in object is not a list. An implementation has to check whether the
+     * value contains list delimiter characters and - if so - escape them accordingly.
+     *
+     * @param value the value to be escaped
+     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
+     * @return the escaped value
+     */
+    Object escape(Object value, ValueTransformer transformer);
+
+    /**
+     * Escapes all values in the given list and concatenates them to a single string. This operation is required by
+     * configurations that have to represent properties with multiple values in a single line in their external
+     * configuration representation. This may require an advanced escaping in some cases.
+     *
+     * @param values the list with all the values to be converted to a single value
+     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
+     * @return the resulting escaped value
+     */
+    Object escapeList(List<?> values, ValueTransformer transformer);
+
+    /**
      * Parses the specified value for list delimiters and splits it if necessary. The passed in object can be either a
      * single value or a complex one, e.g. a collection, an array, or an {@code Iterable}. It is the responsibility of this
      * method to return an {@code Iterable} which contains all extracted values.
@@ -78,26 +100,4 @@ public interface ListDelimiterHandler {
      * @return a collection with all components extracted from the string
      */
     Collection<String> split(String s, boolean trim);
-
-    /**
-     * Escapes the specified single value object. This method is called for properties containing only a single value. So
-     * this method can rely on the fact that the passed in object is not a list. An implementation has to check whether the
-     * value contains list delimiter characters and - if so - escape them accordingly.
-     *
-     * @param value the value to be escaped
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
-     * @return the escaped value
-     */
-    Object escape(Object value, ValueTransformer transformer);
-
-    /**
-     * Escapes all values in the given list and concatenates them to a single string. This operation is required by
-     * configurations that have to represent properties with multiple values in a single line in their external
-     * configuration representation. This may require an advanced escaping in some cases.
-     *
-     * @param values the list with all the values to be converted to a single value
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
-     * @return the resulting escaped value
-     */
-    Object escapeList(List<?> values, ValueTransformer transformer);
 }
