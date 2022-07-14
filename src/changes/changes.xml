@@ -30,6 +30,9 @@
         CombinedConfiguration#getKeys() can throw NoSuchElementException.
       </action>
       <!-- ADD -->
+      <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
+        Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
+      </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 #193.

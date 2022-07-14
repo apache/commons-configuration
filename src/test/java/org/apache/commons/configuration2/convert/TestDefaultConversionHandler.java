@@ -76,7 +76,7 @@ public class TestDefaultConversionHandler {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         handler = new DefaultConversionHandler();
     }
 
@@ -86,6 +86,18 @@ public class TestDefaultConversionHandler {
     @Test
     public void testGetDateFormatNotSet() {
         assertEquals("Wrong date format", DefaultConversionHandler.DEFAULT_DATE_FORMAT, handler.getDateFormat());
+    }
+
+    @Test
+    public synchronized void testListDelimiterHandler() {
+        assertEquals(DefaultConversionHandler.LIST_DELIMITER_HANDLER, handler.getListDelimiterHandler());
+        handler.setListDelimiterHandler(null);
+        assertEquals(DefaultConversionHandler.LIST_DELIMITER_HANDLER, handler.getListDelimiterHandler());
+        final LegacyListDelimiterHandler legacyListDelimiterHandler = new LegacyListDelimiterHandler(',');
+        handler.setListDelimiterHandler(legacyListDelimiterHandler);
+        assertEquals(legacyListDelimiterHandler, handler.getListDelimiterHandler());
+        handler.setListDelimiterHandler(null);
+        assertEquals(DefaultConversionHandler.LIST_DELIMITER_HANDLER, handler.getListDelimiterHandler());
     }
 
     /**
