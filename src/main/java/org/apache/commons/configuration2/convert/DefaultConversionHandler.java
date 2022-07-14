@@ -118,9 +118,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @throws ConversionException if a conversion cannot be performed
      */
     private <T> void convertToCollection(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci, final Collection<T> dest) {
-        for (final Object o : extractValues(ci.interpolate(src))) {
-            dest.add(convert(o, elemClass, ci));
-        }
+        extractValues(ci.interpolate(src)).forEach(o -> dest.add(convert(o, elemClass, ci)));
     }
 
     /**
@@ -294,8 +292,7 @@ public class DefaultConversionHandler implements ConversionHandler {
         }
 
         if (src != null && !isEmptyElement(src)) {
-            final ConfigurationInterpolator interpolator = fetchInterpolator(ci);
-            convertToCollection(src, elemClass, interpolator, dest);
+            convertToCollection(src, elemClass, fetchInterpolator(ci), dest);
         }
     }
 
