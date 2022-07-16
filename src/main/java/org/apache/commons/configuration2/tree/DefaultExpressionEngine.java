@@ -362,9 +362,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart.clone(), subNodes.get(keyPart.getIndex()), nodes, handler);
             }
         } else {
-            for (final T node : subNodes) {
-                findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart.clone(), node, nodes, handler);
-            }
+            subNodes.forEach(node -> findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart.clone(), node, nodes, handler));
         }
     }
 
