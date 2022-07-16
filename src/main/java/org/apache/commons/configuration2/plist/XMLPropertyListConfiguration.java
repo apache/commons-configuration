@@ -312,9 +312,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
             }
         } else if (value instanceof List) {
             out.println(padding + "<array>");
-            for (final Object o : (List<?>) value) {
-                printValue(out, indentLevel + 1, o);
-            }
+            ((List<?>) value).forEach(o -> printValue(out, indentLevel + 1, o));
             out.println(padding + "</array>");
         } else if (value instanceof HierarchicalConfiguration) {
             // This is safe because we have created this configuration
