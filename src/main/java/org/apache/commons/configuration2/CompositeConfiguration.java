@@ -115,11 +115,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      */
     public CompositeConfiguration(final Configuration inMemoryConfiguration, final Collection<? extends Configuration> configurations) {
         this(inMemoryConfiguration);
-
         if (configurations != null) {
-            for (final Configuration c : configurations) {
-                addConfiguration(c);
-            }
+            configurations.forEach(this::addConfiguration);
         }
     }
 
@@ -299,53 +296,30 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     @Override
     protected Iterator<String> getKeysInternal() {
         final Set<String> keys = new LinkedHashSet<>();
-        for (final Configuration config : configList) {
-            for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
-                keys.add(it.next());
-            }
-        }
-
+        configList.forEach(config -> config.getKeys().forEachRemaining(keys::add));
         return keys.iterator();
     }
 
     @Override
     protected Iterator<String> getKeysInternal(final String key) {
         final Set<String> keys = new LinkedHashSet<>();
-        for (final Configuration config : configList) {
-            for (final Iterator<String> it = config.getKeys(key); it.hasNext();) {
-                keys.add(it.next());
-            }
-        }
-
+        configList.forEach(config -> config.getKeys(key).forEachRemaining(keys::add));
         return keys.iterator();
     }
 
     @Override
     protected boolean isEmptyInternal() {
-        for (final Configuration config : configList) {
-            if (!config.isEmpty()) {
-                return false;
-            }
-        }
-
-        return true;
+        return configList.stream().allMatch(Configuration::isEmpty);
     }
 
     @Override
     protected void clearPropertyDirect(final String key) {
-        for (final Configuration config : configList) {
-            config.clearProperty(key);
-        }
+        configList.forEach(config -> config.clearProperty(key));
     }
 
     @Override
     protected boolean containsKeyInternal(final String key) {
-        for (final Configuration config : configList) {
-            if (config.containsKey(key)) {
-                return true;
-            }
-        }
-        return false;
+        return configList.stream().anyMatch(config -> config.containsKey(key));
     }
 
     @Override
@@ -438,11 +412,11 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
             copy.inMemoryConfiguration = ConfigurationUtils.cloneConfiguration(getInMemoryConfiguration());
             copy.configList.add(copy.inMemoryConfiguration);
 
-            for (final Configuration config : configList) {
+            configList.forEach(config -> {
                 if (config != getInMemoryConfiguration()) {
                     copy.addConfiguration(ConfigurationUtils.cloneConfiguration(config));
                 }
-            }
+            });
 
             copy.cloneInterpolator(this);
             return copy;
