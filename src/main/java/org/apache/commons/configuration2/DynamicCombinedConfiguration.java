@@ -574,33 +574,25 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public void clearEventListeners() {
-        for (final CombinedConfiguration cc : configs.values()) {
-            cc.clearEventListeners();
-        }
+        configs.values().forEach(CombinedConfiguration::clearEventListeners);
         super.clearEventListeners();
     }
 
     @Override
     public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        for (final CombinedConfiguration cc : configs.values()) {
-            cc.addEventListener(eventType, listener);
-        }
+        configs.values().forEach(cc -> cc.addEventListener(eventType, listener));
         super.addEventListener(eventType, listener);
     }
 
     @Override
     public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        for (final CombinedConfiguration cc : configs.values()) {
-            cc.removeEventListener(eventType, listener);
-        }
+        configs.values().forEach(cc -> cc.removeEventListener(eventType, listener));
         return super.removeEventListener(eventType, listener);
     }
 
     @Override
     public void clearErrorListeners() {
-        for (final CombinedConfiguration cc : configs.values()) {
-            cc.clearErrorListeners();
-        }
+        configs.values().forEach(cc -> cc.clearErrorListeners());
         super.clearErrorListeners();
     }
 
@@ -616,9 +608,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     public void invalidateAll() {
-        for (final CombinedConfiguration cc : configs.values()) {
-            cc.invalidate();
-        }
+        configs.values().forEach(CombinedConfiguration::invalidate);
     }
 
     /**
@@ -733,9 +723,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         config.setConversionExpressionEngine(getConversionExpressionEngine());
         config.setListDelimiterHandler(getListDelimiterHandler());
         copyEventListeners(config);
-        for (final ConfigData data : configurations) {
-            config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());
-        }
+        configurations.forEach(data -> config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt()));
         config.setSynchronizer(getSynchronizer());
     }
 
