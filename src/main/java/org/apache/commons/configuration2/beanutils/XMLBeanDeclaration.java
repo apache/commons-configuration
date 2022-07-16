@@ -293,11 +293,11 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     @Override
     public Map<String, Object> getBeanProperties() {
         final Map<String, Object> props = new HashMap<>();
-        for (final String key : getAttributeNames()) {
+        getAttributeNames().forEach(key -> {
             if (!isReservedAttributeName(key)) {
                 props.put(key, interpolate(getNode().getAttribute(key)));
             }
-        }
+        });
 
         return props;
     }
@@ -311,7 +311,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     @Override
     public Map<String, Object> getNestedBeanDeclarations() {
         final Map<String, Object> nested = new HashMap<>();
-        for (final NodeData<?> child : getNode().getChildren()) {
+        getNode().getChildren().forEach(child -> {
             if (!isReservedChildName(child.nodeName())) {
                 if (nested.containsKey(child.nodeName())) {
                     final Object obj = nested.get(child.nodeName());
@@ -331,8 +331,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
                     nested.put(child.nodeName(), createBeanDeclaration(child));
                 }
             }
-        }
-
+        });
         return nested;
     }
 
