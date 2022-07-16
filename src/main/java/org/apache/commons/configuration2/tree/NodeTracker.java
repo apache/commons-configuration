@@ -103,7 +103,7 @@ class NodeTracker {
     public NodeTracker trackNodes(final Collection<NodeSelector> selectors, final Collection<ImmutableNode> nodes) {
         final Map<NodeSelector, TrackedNodeData> newState = new HashMap<>(trackedNodes);
         final Iterator<ImmutableNode> itNodes = nodes.iterator();
-        for (final NodeSelector selector : selectors) {
+        selectors.forEach(selector -> {
             final ImmutableNode node = itNodes.next();
             TrackedNodeData trackData = newState.get(selector);
             if (trackData == null) {
@@ -112,7 +112,7 @@ class NodeTracker {
                 trackData = trackData.observerAdded();
             }
             newState.put(selector, trackData);
-        }
+        });
 
         return new NodeTracker(newState);
     }
@@ -189,17 +189,14 @@ class NodeTracker {
      * @return the updated instance
      */
     public NodeTracker update(final ImmutableNode root, final NodeSelector txTarget, final NodeKeyResolver<ImmutableNode> resolver,
-        final NodeHandler<ImmutableNode> handler) {
+            final NodeHandler<ImmutableNode> handler) {
         if (trackedNodes.isEmpty()) {
             // there is not state to be updated
             return this;
         }
 
         final Map<NodeSelector, TrackedNodeData> newState = new HashMap<>();
-        for (final Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes.entrySet()) {
-            newState.put(e.getKey(), determineUpdatedTrackedNodeData(root, txTarget, resolver, handler, e));
-        }
-
+        trackedNodes.entrySet().forEach(e -> newState.put(e.getKey(), determineUpdatedTrackedNodeData(root, txTarget, resolver, handler, e)));
         return new NodeTracker(newState);
     }
 
