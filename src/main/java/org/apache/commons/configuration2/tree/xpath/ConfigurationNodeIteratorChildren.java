@@ -118,11 +118,11 @@ class ConfigurationNodeIteratorChildren<T> extends ConfigurationNodeIteratorBase
     private List<T> createSubNodeListForName(final T node, final QName name) {
         final String compareName = qualifiedName(name);
         final List<T> result = new ArrayList<>();
-        for (final T child : getNodeHandler().getChildren(node)) {
+        getNodeHandler().getChildren(node).forEach(child -> {
             if (StringUtils.equals(compareName, getNodeHandler().nodeName(child))) {
                 result.add(child);
             }
-        }
+        });
         return result;
     }
 
@@ -140,11 +140,11 @@ class ConfigurationNodeIteratorChildren<T> extends ConfigurationNodeIteratorBase
         }
         final List<T> prefixChildren = new ArrayList<>(children.size());
         final String prefix = prefixName(name.getPrefix(), null);
-        for (final T child : children) {
+        children.forEach(child -> {
             if (StringUtils.startsWith(getNodeHandler().nodeName(child), prefix)) {
                 prefixChildren.add(child);
             }
-        }
+        });
         return prefixChildren;
     }
 
