@@ -16,11 +16,11 @@
  */
 package org.apache.commons.configuration2.builder.combined;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -123,12 +123,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
         return new CombinedReloadingController(empty) {
             @Override
             public Collection<ReloadingController> getSubControllers() {
-                final Collection<FileBasedConfigurationBuilder<T>> builders = getManagedBuilders().values();
-                final Collection<ReloadingController> controllers = new ArrayList<>(builders.size());
-                for (final FileBasedConfigurationBuilder<T> b : builders) {
-                    controllers.add(((ReloadingControllerSupport) b).getReloadingController());
-                }
-                return controllers;
+                return getManagedBuilders().values().stream().map(b -> ((ReloadingControllerSupport) b).getReloadingController()).collect(Collectors.toList());
             }
         };
     }
