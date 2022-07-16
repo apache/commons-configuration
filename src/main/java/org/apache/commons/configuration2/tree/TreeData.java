@@ -19,6 +19,8 @@ package org.apache.commons.configuration2.tree;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * An internally used helper class for storing information about the managed node structure. An instance of this class
@@ -198,10 +200,6 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @return the inverse replacement mapping
      */
     private Map<ImmutableNode, ImmutableNode> createInverseMapping(final Map<ImmutableNode, ImmutableNode> replacements) {
-        final Map<ImmutableNode, ImmutableNode> inverseMapping = new HashMap<>();
-        for (final Map.Entry<ImmutableNode, ImmutableNode> e : replacements.entrySet()) {
-            inverseMapping.put(e.getValue(), e.getKey());
-        }
-        return inverseMapping;
+        return replacements.entrySet().stream().collect(Collectors.toMap(Entry::getValue, Entry::getKey));
     }
 }
