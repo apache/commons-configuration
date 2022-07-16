@@ -384,11 +384,11 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
         final Map<String, Object> dest = new HashMap<>();
-        for (final Map.Entry<?, ?> e : src.entrySet()) {
+        src.entrySet().forEach(e -> {
             if (e.getKey() instanceof String) {
                 dest.put((String) e.getKey(), e.getValue());
             }
-        }
+        });
         return dest;
     }
 
