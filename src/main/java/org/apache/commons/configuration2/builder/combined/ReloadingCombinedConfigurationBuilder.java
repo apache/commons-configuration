@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.configuration2.CombinedConfiguration;
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.BuilderParameters;
@@ -150,9 +149,7 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
         final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder = getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);
 
-        for (final ConfigurationBuilder<? extends Configuration> b : getChildBuilders()) {
-            obtainReloadingController(subControllers, b);
-        }
+        getChildBuilders().forEach(b -> obtainReloadingController(subControllers, b));
 
         final CombinedReloadingController ctrl = new CombinedReloadingController(subControllers);
         ctrl.resetInitialReloadingState();
