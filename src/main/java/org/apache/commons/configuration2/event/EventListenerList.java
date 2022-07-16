@@ -179,7 +179,7 @@ public class EventListenerList {
         final Map<EventType<?>, Set<EventType<?>>> superTypes = new HashMap<>();
         final List<EventListenerRegistrationData<? extends T>> results = new LinkedList<>();
 
-        for (final EventListenerRegistrationData<?> reg : listeners) {
+        listeners.forEach(reg -> {
             Set<EventType<?>> base = superTypes.get(reg.getEventType());
             if (base == null) {
                 base = EventType.fetchSuperEventTypes(reg.getEventType());
@@ -192,7 +192,7 @@ public class EventListenerList {
                 EventListenerRegistrationData<? extends T> result = (EventListenerRegistrationData<? extends T>) reg;
                 results.add(result);
             }
-        }
+        });
 
         return results;
     }
@@ -214,10 +214,7 @@ public class EventListenerList {
         if (c == null) {
             throw new IllegalArgumentException("List to be copied must not be null!");
         }
-
-        for (final EventListenerRegistrationData<?> regData : c.getRegistrations()) {
-            addEventListener(regData);
-        }
+        c.getRegistrations().forEach(this::addEventListener);
     }
 
     /**
@@ -330,8 +327,7 @@ public class EventListenerList {
          * @param event the event object
          */
         private void invokeNextListenerUnchecked(final Event event) {
-            final EventListener<? super T> listener = next();
-            callListener(listener, event);
+            callListener(next(), event);
         }
 
         /**
