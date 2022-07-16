@@ -698,10 +698,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param c the layout object to copy
      */
     private void copyFrom(final PropertiesConfigurationLayout c) {
-        for (final String key : c.getKeys()) {
-            final PropertyLayoutData data = c.layoutData.get(key);
-            layoutData.put(key, data.clone());
-        }
+        c.getKeys().forEach(key -> layoutData.put(key, c.layoutData.get(key).clone()));
 
         setHeaderComment(c.getHeaderComment());
         setFooterComment(c.getFooterComment());
