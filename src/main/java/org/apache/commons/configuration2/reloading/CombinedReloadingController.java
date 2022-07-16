@@ -157,9 +157,7 @@ public class CombinedReloadingController extends ReloadingController {
          */
         @Override
         public void reloadingPerformed() {
-            for (final ReloadingController rc : owner.getSubControllers()) {
-                rc.resetReloadingState();
-            }
+            owner.getSubControllers().forEach(ReloadingController::resetReloadingState);
         }
     }
 }
