@@ -17,16 +17,16 @@
 
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.io.ConfigurationLogger;
-import org.apache.commons.configuration2.tree.ImmutableNode;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 
 /**
  * <p>
@@ -77,10 +77,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      */
     protected Map<String, Object> constructMap(final ImmutableNode node) {
         final Map<String, Object> map = new HashMap<>(node.getChildren().size());
-        for (final ImmutableNode cNode : node) {
-            final Object value = cNode.getChildren().isEmpty() ? cNode.getValue() : constructMap(cNode);
-            addEntry(map, cNode.getNodeName(), value);
-        }
+        node.forEach(cNode -> addEntry(map, cNode.getNodeName(), cNode.getChildren().isEmpty() ? cNode.getValue() : constructMap(cNode)));
         return map;
     }
 
@@ -136,12 +133,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      */
     private static List<ImmutableNode> parseMap(final Map<String, Object> map, final String key) {
         final ImmutableNode.Builder subtree = new ImmutableNode.Builder().name(key);
-        for (final Map.Entry<String, Object> entry : map.entrySet()) {
-            final List<ImmutableNode> children = constructHierarchy(entry.getKey(), entry.getValue());
-            for (final ImmutableNode child : children) {
-                subtree.addChild(child);
-            }
-        }
+        map.forEach((k, v) -> constructHierarchy(k, v).forEach(subtree::addChild));
         return Collections.singletonList(subtree.create());
     }
 
@@ -154,9 +146,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      */
     private static List<ImmutableNode> parseCollection(final Collection<Object> col, final String key) {
         final List<ImmutableNode> nodes = new ArrayList<>(col.size());
-        for (final Object elem : col) {
-            nodes.addAll(constructHierarchy(key, elem));
-        }
+        col.forEach(elem -> nodes.addAll(constructHierarchy(key, elem)));
         return nodes;
     }
 
