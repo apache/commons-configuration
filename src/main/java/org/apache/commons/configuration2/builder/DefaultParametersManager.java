@@ -128,11 +128,11 @@ public class DefaultParametersManager {
      */
     public void unregisterDefaultsHandler(final DefaultParametersHandler<?> handler, final Class<?> startClass) {
         final Collection<DefaultHandlerData> toRemove = new LinkedList<>();
-        for (final DefaultHandlerData dhd : defaultHandlers) {
+        defaultHandlers.forEach(dhd -> {
             if (dhd.isOccurrence(handler, startClass)) {
                 toRemove.add(dhd);
             }
-        }
+        });
 
         defaultHandlers.removeAll(toRemove);
     }
@@ -146,9 +146,7 @@ public class DefaultParametersManager {
      */
     public void initializeParameters(final BuilderParameters params) {
         if (params != null) {
-            for (final DefaultHandlerData dhd : defaultHandlers) {
-                dhd.applyHandlerIfMatching(params);
-            }
+            defaultHandlers.forEach(dhd -> dhd.applyHandlerIfMatching(params));
         }
     }
 
