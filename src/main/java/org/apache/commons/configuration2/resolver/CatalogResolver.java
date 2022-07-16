@@ -129,11 +129,7 @@ public class CatalogResolver implements EntityResolver {
      * @param debug True if debugging should be enabled, false otherwise.
      */
     public void setDebug(final boolean debug) {
-        if (debug) {
-            manager.setVerbosity(DEBUG_ALL);
-        } else {
-            manager.setVerbosity(DEBUG_NONE);
-        }
+        manager.setVerbosity(debug ? DEBUG_ALL : DEBUG_NONE);
     }
 
     /**
