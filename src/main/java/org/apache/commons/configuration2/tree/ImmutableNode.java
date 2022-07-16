@@ -104,11 +104,11 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
         if (name == null) {
             return list;
         }
-        for (final ImmutableNode node : children) {
+        children.forEach(node -> {
             if (name.equals(node.getNodeName())) {
                 list.add(node);
             }
-        }
+        });
         return list;
     }
 
@@ -555,11 +555,11 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          */
         private static Collection<? extends ImmutableNode> filterNull(final Collection<? extends ImmutableNode> children) {
             final List<ImmutableNode> result = new ArrayList<>(children.size());
-            for (final ImmutableNode c : children) {
+            children.forEach(c -> {
                 if (c != null) {
                     result.add(c);
                 }
-            }
+            });
             return result;
         }
     }
