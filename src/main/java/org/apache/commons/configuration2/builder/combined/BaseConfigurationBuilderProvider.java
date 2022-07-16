@@ -206,9 +206,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * @param params the collection with (uninitialized) parameter objects
      */
     protected void inheritParentBuilderProperties(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) {
-        for (final BuilderParameters p : params) {
-            decl.getConfigurationBuilder().initChildBuilderParameters(p);
-        }
+        params.forEach(p -> decl.getConfigurationBuilder().initChildBuilderParameters(p));
     }
 
     /**
