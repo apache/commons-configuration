@@ -370,45 +370,35 @@ public class FileHandler {
      * Notifies the registered listeners about a completed load operation.
      */
     private void fireLoadedEvent() {
-        for (final FileHandlerListener l : listeners) {
-            l.loaded(this);
-        }
+        listeners.forEach(l -> l.loaded(this));
     }
 
     /**
      * Notifies the registered listeners about the start of a load operation.
      */
     private void fireLoadingEvent() {
-        for (final FileHandlerListener l : listeners) {
-            l.loading(this);
-        }
+        listeners.forEach(l -> l.loading(this));
     }
 
     /**
      * Notifies the registered listeners about a property update.
      */
     private void fireLocationChangedEvent() {
-        for (final FileHandlerListener l : listeners) {
-            l.locationChanged(this);
-        }
+        listeners.forEach(l -> l.locationChanged(this));
     }
 
     /**
      * Notifies the registered listeners about a completed save operation.
      */
     private void fireSavedEvent() {
-        for (final FileHandlerListener l : listeners) {
-            l.saved(this);
-        }
+        listeners.forEach(l -> l.saved(this));
     }
 
     /**
      * Notifies the registered listeners about the start of a save operation.
      */
     private void fireSavingEvent() {
-        for (final FileHandlerListener l : listeners) {
-            l.saving(this);
-        }
+        listeners.forEach(l -> l.saving(this));
     }
 
     /**
