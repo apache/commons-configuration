@@ -82,9 +82,7 @@ public class NodeSelector {
         while (itKeys.hasNext()) {
             final String currentKey = itKeys.next();
             final List<ImmutableNode> currentResults = new LinkedList<>();
-            for (final ImmutableNode currentRoot : nodes) {
-                getFilteredResults(currentRoot, resolver, handler, currentKey, currentResults);
-            }
+            nodes.forEach(currentRoot -> getFilteredResults(currentRoot, resolver, handler, currentKey, currentResults));
             nodes = currentResults;
         }
 
@@ -157,10 +155,10 @@ public class NodeSelector {
     private void getFilteredResults(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler,
         final String key, final List<ImmutableNode> nodes) {
         final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(root, key, handler);
-        for (final QueryResult<ImmutableNode> result : results) {
+        results.forEach(result -> {
             if (!result.isAttributeResult()) {
                 nodes.add(result.getNode());
             }
-        }
+        });
     }
 }
