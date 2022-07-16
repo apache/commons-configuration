@@ -16,9 +16,9 @@
  */
 package org.apache.commons.configuration2;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
@@ -140,15 +140,12 @@ final class XMLListReference {
         // cannot be null if the current node is a list node
         final ImmutableNode parent = nodeHandler.getParent(node);
         final List<ImmutableNode> items = nodeHandler.getChildren(parent, node.getNodeName());
-        final List<Object> values = new ArrayList<>(items.size());
-        for (final ImmutableNode n : items) {
-            values.add(n.getValue());
-        }
+        final List<Object> values = items.stream().map(ImmutableNode::getValue).collect(Collectors.toList());
         try {
             return String.valueOf(delimiterHandler.escapeList(values, ListDelimiterHandler.NOOP_TRANSFORMER));
         } catch (final UnsupportedOperationException e) {
             throw new ConfigurationRuntimeException("List handling not supported by " + "the current ListDelimiterHandler! Make sure that the same delimiter "
-                + "handler is used for loading and saving the configuration.", e);
+                    + "handler is used for loading and saving the configuration.", e);
         }
     }
 
