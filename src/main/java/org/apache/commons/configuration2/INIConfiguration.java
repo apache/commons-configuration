@@ -22,7 +22,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -370,9 +369,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     out.print("]");
                     out.println();
 
-                    for (final ImmutableNode child : node) {
-                        writeProperty(out, child.getNodeName(), child.getValue(), separator);
-                    }
+                    node.forEach(child -> writeProperty(out, child.getNodeName(), child.getValue(), separator));
                 } else {
                     writeProperty(out, node.getNodeName(), node.getValue(), separator);
                 }
@@ -412,9 +409,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @return the root node of the newly created hierarchy
      */
     private static ImmutableNode createNewRootNode(final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders) {
-        for (final Map.Entry<String, ImmutableNode.Builder> e : sectionBuilders.entrySet()) {
-            rootBuilder.addChild(e.getValue().name(e.getKey()).create());
-        }
+        sectionBuilders.entrySet().forEach(e -> rootBuilder.addChild(e.getValue().name(e.getKey()).create()));
         return rootBuilder.create();
     }
 
@@ -473,11 +468,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @param value the value string
      */
     private void createValueNodes(final ImmutableNode.Builder sectionBuilder, final String key, final String value) {
-        final Collection<String> values = getListDelimiterHandler().split(value, false);
-
-        for (final String v : values) {
-            sectionBuilder.addChild(new ImmutableNode.Builder().name(key).value(v).create());
-        }
+        getListDelimiterHandler().split(value, false).forEach(v -> sectionBuilder.addChild(new ImmutableNode.Builder().name(key).value(v).create()));
     }
 
     /**
@@ -902,11 +893,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     final List<ImmutableNode> filteredList;
                     if (node == getRootNode()) {
                         filteredList = new ArrayList<>(children.size());
-                        for (final ImmutableNode child : children) {
+                        children.forEach(child -> {
                             if (!isSectionNode(child)) {
                                 filteredList.add(child);
                             }
-                        }
+                        });
                     } else {
                         filteredList = children;
                     }
