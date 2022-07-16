@@ -242,11 +242,11 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
             throw new IllegalArgumentException("Parameters to merge must not be null!");
         }
 
-        for (final Map.Entry<String, Object> e : p.getParameters().entrySet()) {
+        p.getParameters().entrySet().forEach(e -> {
             if (!properties.containsKey(e.getKey()) && !e.getKey().startsWith(RESERVED_PARAMETER_PREFIX)) {
                 storeProperty(e.getKey(), e.getValue());
             }
-        }
+        });
     }
 
     /**
@@ -423,11 +423,11 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
             return null;
         }
 
-        for (final Map.Entry<?, ?> e : prefixes.entrySet()) {
+        prefixes.entrySet().forEach(e -> {
             if (!(e.getKey() instanceof String) || !(e.getValue() instanceof Lookup)) {
                 throw new IllegalArgumentException("Map with prefix lookups contains invalid data: " + prefixes);
             }
-        }
+        });
         return fetchPrefixLookups(params);
     }
 
@@ -460,10 +460,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
             return null;
         }
 
-        for (final Object o : col) {
-            if (!(o instanceof Lookup)) {
-                throw new IllegalArgumentException("Collection with default lookups contains invalid data: " + col);
-            }
+        if (col.stream().noneMatch(o -> o instanceof Lookup)) {
+            throw new IllegalArgumentException("Collection with default lookups contains invalid data: " + col);
         }
         return fetchDefaultLookups(params);
     }
