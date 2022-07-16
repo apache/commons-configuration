@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
@@ -266,11 +267,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(final InMemoryNodeModelSupport parentModelSupport,
-        final Collection<NodeSelector> selectors) {
+            final Collection<NodeSelector> selectors) {
         final List<HierarchicalConfiguration<ImmutableNode>> configs = new ArrayList<>(selectors.size());
-        for (final NodeSelector selector : selectors) {
-            configs.add(createSubConfigurationForTrackedNode(selector, parentModelSupport));
-        }
+        selectors.forEach(selector -> configs.add(createSubConfigurationForTrackedNode(selector, parentModelSupport)));
         return configs;
     }
 
@@ -360,14 +359,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         } finally {
             endRead();
         }
-
-        final List<HierarchicalConfiguration<ImmutableNode>> results = new ArrayList<>(nodes.size());
-        for (final ImmutableNode node : nodes) {
-            final BaseHierarchicalConfiguration sub = createIndependentSubConfigurationForNode(node);
-            results.add(sub);
-        }
-
-        return results;
+        return nodes.stream().map(this::createIndependentSubConfigurationForNode).collect(Collectors.toList());
     }
 
     /**
@@ -421,9 +413,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
 
         final ImmutableNode parent = nodes.get(0);
         final List<HierarchicalConfiguration<ImmutableNode>> subs = new ArrayList<>(parent.getChildren().size());
-        for (final ImmutableNode node : parent) {
-            subs.add(createIndependentSubConfigurationForNode(node));
-        }
+        parent.forEach(node -> subs.add(createIndependentSubConfigurationForNode(node)));
 
         return subs;
     }
@@ -523,11 +513,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return a list with corresponding immutable configurations
      */
     private static List<ImmutableHierarchicalConfiguration> toImmutable(final List<? extends HierarchicalConfiguration<?>> subs) {
-        final List<ImmutableHierarchicalConfiguration> res = new ArrayList<>(subs.size());
-        for (final HierarchicalConfiguration<?> sub : subs) {
-            res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
-        }
-        return res;
+        return subs.stream().map(ConfigurationUtils::unmodifiableConfiguration).collect(Collectors.toList());
     }
 
     /**
