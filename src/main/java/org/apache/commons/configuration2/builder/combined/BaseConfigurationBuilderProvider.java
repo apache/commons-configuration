@@ -290,9 +290,8 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * @return the newly created instance
      * @throws Exception if an error occurs
      */
-    private static BuilderParameters createParameterObject(final String paramcls) throws Exception {
-        final Class<?> cls = ConfigurationUtils.loadClass(paramcls);
-        return (BuilderParameters) cls.newInstance();
+    private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
+        return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).newInstance();
     }
 
     /**
