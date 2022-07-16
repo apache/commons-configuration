@@ -129,7 +129,6 @@ abstract class HierarchicalConfigurationConverter {
         for (final DefaultConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();) {
             list.add(it.nextKey());
         }
-
         Collections.reverse(list);
         return list.iterator();
     }
@@ -168,9 +167,7 @@ abstract class HierarchicalConfigurationConverter {
     protected void fireValue(final String name, final Object value) {
         if (value instanceof Collection) {
             final Collection<?> valueCol = (Collection<?>) value;
-            for (final Object v : valueCol) {
-                fireValue(name, v);
-            }
+            valueCol.forEach(v -> fireValue(name, v));
         } else {
             elementStart(name, value);
             elementEnd(name);
