@@ -53,22 +53,22 @@ public class OverrideCombiner extends NodeCombiner {
         result.name(node1.getNodeName());
 
         // Process nodes from the first structure, which override the second
-        for (final ImmutableNode child : node1) {
+        node1.forEach(child -> {
             final ImmutableNode child2 = canCombine(node1, node2, child);
             if (child2 != null) {
                 result.addChild(combine(child, child2));
             } else {
                 result.addChild(child);
             }
-        }
+        });
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (final ImmutableNode child : node2) {
+        node2.forEach(child ->  {
             if (HANDLER.getChildrenCount(node1, child.getNodeName()) < 1) {
                 result.addChild(child);
             }
-        }
+        });
 
         // Handle attributes and value
         addAttributes(result, node1, node2);
@@ -87,11 +87,11 @@ public class OverrideCombiner extends NodeCombiner {
      */
     protected void addAttributes(final ImmutableNode.Builder result, final ImmutableNode node1, final ImmutableNode node2) {
         result.addAttributes(node1.getAttributes());
-        for (final String attr : node2.getAttributes().keySet()) {
+        node2.getAttributes().keySet().forEach(attr -> {
             if (!node1.getAttributes().containsKey(attr)) {
                 result.addAttribute(attr, HANDLER.getAttributeValue(node2, attr));
             }
-        }
+        });
     }
 
     /**
