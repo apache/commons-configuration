@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
@@ -392,11 +393,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     public List<Configuration> getConfigurations() {
         beginRead(true);
         try {
-            final List<Configuration> list = new ArrayList<>(getNumberOfConfigurationsInternal());
-            for (final ConfigData cd : configurations) {
-                list.add(cd.getConfiguration());
-            }
-            return list;
+            return configurations.stream().map(ConfigData::getConfiguration).collect(Collectors.toList());
         } finally {
             endRead();
         }
@@ -412,11 +409,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     public List<String> getConfigurationNameList() {
         beginRead(true);
         try {
-            final List<String> list = new ArrayList<>(getNumberOfConfigurationsInternal());
-            for (final ConfigData cd : configurations) {
-                list.add(cd.getName());
-            }
-            return list;
+            return configurations.stream().map(ConfigData::getName).collect(Collectors.toList());
         } finally {
             endRead();
         }
@@ -535,9 +528,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         try {
             final CombinedConfiguration copy = (CombinedConfiguration) super.clone();
             copy.initChildCollections();
-            for (final ConfigData cd : configurations) {
-                copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd.getConfiguration()), cd.getName(), cd.getAt());
-            }
+            configurations.forEach(cd -> copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd.getConfiguration()), cd.getName(), cd.getAt()));
 
             return copy;
         } finally {
@@ -601,7 +592,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             final List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
             final Set<Configuration> sources = new HashSet<>();
 
-            for (final QueryResult<ImmutableNode> result : results) {
+            results.forEach(result -> {
                 final Set<Configuration> resultSources = findSourceConfigurations(result.getNode());
                 if (resultSources.isEmpty()) {
                     // key must be defined in combined configuration
@@ -609,7 +600,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                 } else {
                     sources.addAll(resultSources);
                 }
-            }
+            });
 
             return sources;
         } finally {
@@ -732,13 +723,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         final Set<Configuration> result = new HashSet<>();
         final FindNodeVisitor<ImmutableNode> visitor = new FindNodeVisitor<>(node);
 
-        for (final ConfigData cd : configurations) {
+        configurations.forEach(cd -> {
             NodeTreeWalker.INSTANCE.walkBFS(cd.getRootNode(), visitor, getModel().getNodeHandler());
             if (visitor.isFound()) {
                 result.add(cd.getConfiguration());
                 visitor.reset();
             }
-        }
+        });
 
         return result;
     }
@@ -771,9 +762,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void unregisterListenerAtChildren() {
         if (configurations != null) {
-            for (final ConfigData child : configurations) {
-                unregisterListenerAt(child.getConfiguration());
-            }
+            configurations.forEach(child -> unregisterListenerAt(child.getConfiguration()));
         }
     }
 
