@@ -185,9 +185,7 @@ public final class InterpolatorSpecification {
          */
         public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
             if (lookups != null) {
-                for (final Map.Entry<String, ? extends Lookup> e : lookups.entrySet()) {
-                    withPrefixLookup(e.getKey(), e.getValue());
-                }
+                lookups.forEach(this::withPrefixLookup);
             }
             return this;
         }
@@ -215,9 +213,7 @@ public final class InterpolatorSpecification {
          */
         public Builder withDefaultLookups(final Collection<? extends Lookup> lookups) {
             if (lookups != null) {
-                for (final Lookup l : lookups) {
-                    withDefaultLookup(l);
-                }
+                lookups.forEach(this::withDefaultLookup);
             }
             return this;
         }
