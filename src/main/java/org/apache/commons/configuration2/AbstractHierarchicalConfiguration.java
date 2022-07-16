@@ -245,12 +245,12 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         }
         final NodeHandler<T> handler = getModel().getNodeHandler();
         final List<Object> list = new ArrayList<>();
-        for (final QueryResult<T> result : results) {
+        results.forEach(result -> {
             final Object value = valueFromResult(result, handler);
             if (value != null) {
                 list.add(value);
             }
-        }
+        });
 
         if (list.size() < 1) {
             return null;
@@ -381,11 +381,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     public List<T> resolveNodeKey(final T root, final String key, final NodeHandler<T> handler) {
         final List<QueryResult<T>> results = resolveKey(root, key, handler);
         final List<T> targetNodes = new LinkedList<>();
-        for (final QueryResult<T> result : results) {
+        results.forEach(result -> {
             if (!result.isAttributeResult()) {
                 targetNodes.add(result.getNode());
             }
-        }
+        });
         return targetNodes;
     }
 
@@ -440,16 +440,16 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public String nodeKey(final T node, final Map<T, String> cache, final NodeHandler<T> handler) {
-        final List<T> path = new LinkedList<>();
+        final List<T> paths = new LinkedList<>();
         T currentNode = node;
         String key = cache.get(node);
         while (key == null && currentNode != null) {
-            path.add(0, currentNode);
+            paths.add(0, currentNode);
             currentNode = handler.getParent(currentNode);
             key = cache.get(currentNode);
         }
 
-        for (final T n : path) {
+        for (final T n : paths) {
             final String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
             cache.put(n, currentKey);
             key = currentKey;
@@ -564,14 +564,12 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         final List<QueryResult<T>> results = fetchNodeList(prefix);
         final NodeHandler<T> handler = getModel().getNodeHandler();
 
-        for (final QueryResult<T> result : results) {
+        results.forEach(result -> {
             if (!result.isAttributeResult()) {
-                for (final T c : handler.getChildren(result.getNode())) {
-                    NodeTreeWalker.INSTANCE.walkDFS(c, visitor, handler);
-                }
+                handler.getChildren(result.getNode()).forEach(c -> NodeTreeWalker.INSTANCE.walkDFS(c, visitor, handler));
                 visitor.handleAttributeKeys(prefix, result.getNode(), handler);
             }
-        }
+        });
 
         return visitor.getKeyList().iterator();
     }
@@ -793,9 +791,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * @param handler the {@code NodeHandler}
          */
         public void handleAttributeKeys(final String parentKey, final T node, final NodeHandler<T> handler) {
-            for (final String attr : handler.getAttributes(node)) {
-                keyList.add(getExpressionEngine().attributeKey(parentKey, attr));
-            }
+            handler.getAttributes(node).forEach(attr -> keyList.add(getExpressionEngine().attributeKey(parentKey, attr)));
         }
     }
 
