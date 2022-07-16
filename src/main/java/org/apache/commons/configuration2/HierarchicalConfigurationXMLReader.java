@@ -151,12 +151,12 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
         protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler) {
             final AttributesImpl attrs = new AttributesImpl();
 
-            for (final String attr : handler.getAttributes(node)) {
+            handler.getAttributes(node).forEach(attr -> {
                 final Object value = handler.getAttributeValue(node, attr);
                 if (value != null) {
                     attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE, value.toString());
                 }
-            }
+            });
 
             return attrs;
         }
