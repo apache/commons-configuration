@@ -122,7 +122,7 @@ public class UnionCombiner extends NodeCombiner {
 
         // Check if nodes can be combined
         final List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
-        for (final ImmutableNode child1 : node1) {
+        node1.forEach(child1 -> {
             final ImmutableNode child2 = findCombineNode(node1, node2, child1);
             if (child2 != null) {
                 result.addChild(combine(child1, child2));
@@ -130,12 +130,10 @@ public class UnionCombiner extends NodeCombiner {
             } else {
                 result.addChild(child1);
             }
-        }
+        });
 
         // Add remaining children of node 2
-        for (final ImmutableNode c : children2) {
-            result.addChild(c);
-        }
+        children2.forEach(result::addChild);
 
         return result.create();
     }
