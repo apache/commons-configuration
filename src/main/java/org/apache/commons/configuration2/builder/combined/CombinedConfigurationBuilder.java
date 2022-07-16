@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.CombinedConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -685,15 +686,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws ConfigurationException if an error occurs
      */
     protected void registerConfiguredLookups(final HierarchicalConfiguration<?> defConfig, final Configuration resultConfig) throws ConfigurationException {
-        final Map<String, Lookup> lookups = new HashMap<>();
-
-        final List<? extends HierarchicalConfiguration<?>> nodes = defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-        for (final HierarchicalConfiguration<?> config : nodes) {
-            final XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-            final String key = config.getString(KEY_LOOKUP_KEY);
-            final Lookup lookup = (Lookup) fetchBeanHelper().createBean(decl);
-            lookups.put(key, lookup);
-        }
+        final Map<String, Lookup> lookups = defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS).stream().collect(
+                Collectors.toMap(config -> config.getString(KEY_LOOKUP_KEY), config -> (Lookup) fetchBeanHelper().createBean(new XMLBeanDeclaration(config))));
 
         if (!lookups.isEmpty()) {
             final ConfigurationInterpolator defCI = defConfig.getInterpolator();
@@ -1003,12 +997,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param defConfig the definition configuration
      */
     private void registerConfiguredProviders(final HierarchicalConfiguration<?> defConfig) {
-        final List<? extends HierarchicalConfiguration<?>> nodes = defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-        for (final HierarchicalConfiguration<?> config : nodes) {
+        defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS).forEach(config -> {
             final XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             final String key = config.getString(KEY_PROVIDER_KEY);
             currentParameters.registerProvider(key, (ConfigurationBuilderProvider) fetchBeanHelper().createBean(decl));
-        }
+        });
     }
 
     /**
@@ -1045,11 +1038,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return a collection with corresponding declarations
      */
     private Collection<ConfigurationDeclaration> createDeclarations(final Collection<? extends HierarchicalConfiguration<?>> configs) {
-        final Collection<ConfigurationDeclaration> declarations = new ArrayList<>(configs.size());
-        for (final HierarchicalConfiguration<?> c : configs) {
-            declarations.add(new ConfigurationDeclaration(this, c));
-        }
-        return declarations;
+        return configs.stream().map(c -> new ConfigurationDeclaration(this, c)).collect(Collectors.toList());
     }
 
     /**
@@ -1061,10 +1050,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param key the key for the list nodes
      */
     private static void initNodeCombinerListNodes(final CombinedConfiguration cc, final HierarchicalConfiguration<?> defConfig, final String key) {
-        final List<Object> listNodes = defConfig.getList(key);
-        for (final Object listNode : listNodes) {
-            cc.getNodeCombiner().addListNode((String) listNode);
-        }
+        defConfig.getList(key).forEach(listNode -> cc.getNodeCombiner().addListNode((String) listNode));
     }
 
     /**
@@ -1171,9 +1157,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * Frees resources used by this object and performs clean up. This method is called when the owning builder is reset.
          */
         public void cleanUp() {
-            for (final ConfigurationBuilder<?> b : getChildBuilders()) {
-                b.removeEventListener(ConfigurationBuilderEvent.RESET, changeListener);
-            }
+            getChildBuilders().forEach(b -> b.removeEventListener(ConfigurationBuilderEvent.RESET, changeListener));
             namedBuilders.clear();
         }
 
