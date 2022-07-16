@@ -943,12 +943,12 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          * @param refHandler the {@code ReferenceNodeHandler}
          */
         public void handleRemovedNodes(final ReferenceNodeHandler refHandler) {
-            for (final Object ref : refHandler.removedReferences()) {
+            refHandler.removedReferences().forEach(ref -> {
                 if (ref instanceof Node) {
                     final Node removedElem = (Node) ref;
                     removeReference((Element) elementMapping.get(removedElem));
                 }
-            }
+            });
         }
 
         /**
@@ -1076,11 +1076,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         private static void updateAttributes(final ImmutableNode node, final Element elem) {
             if (node != null && elem != null) {
                 clearAttributes(elem);
-                for (final Map.Entry<String, Object> e : node.getAttributes().entrySet()) {
-                    if (e.getValue() != null) {
-                        elem.setAttribute(e.getKey(), e.getValue().toString());
+                node.getAttributes().forEach((k, v) -> {
+                    if (v != null) {
+                        elem.setAttribute(k, v.toString());
                     }
-                }
+                });
             }
         }
 
@@ -1127,9 +1127,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
             }
 
             // Remove all but the first Text node
-            for (final Node tn : textNodes) {
-                elem.removeChild(tn);
-            }
+            textNodes.forEach(elem::removeChild);
             return result;
         }
     }
