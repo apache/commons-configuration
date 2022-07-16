@@ -185,9 +185,7 @@ public final class BeanHelper {
                     final Class<?> defaultClass = getDefaultClass(bean, propName);
                     if (prop instanceof Collection) {
                         final Collection<Object> beanCollection = createPropertyCollection(propName, defaultClass);
-                        for (final Object elemDef : (Collection<?>) prop) {
-                            beanCollection.add(createBean((BeanDeclaration) elemDef));
-                        }
+                        ((Collection<BeanDeclaration>) prop).forEach(elemDef -> beanCollection.add(createBean(elemDef)));
                         initProperty(bean, propName, beanCollection);
                     } else {
                         initProperty(bean, propName, createBean((BeanDeclaration) prop, defaultClass));
