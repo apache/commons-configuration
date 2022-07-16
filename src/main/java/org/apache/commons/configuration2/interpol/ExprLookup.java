@@ -260,9 +260,7 @@ public class ExprLookup implements Lookup {
      * @param ctx the context to be initialized
      */
     private void initializeContext(final JexlContext ctx) {
-        for (final Variable var : variables) {
-            ctx.set(var.getName(), var.getValue());
-        }
+        variables.forEach(var -> ctx.set(var.getName(), var.getValue()));
     }
 
     /**
