@@ -301,11 +301,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 final List<Object> results = new ArrayList<>();
                 try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
                     while (rs.next()) {
-                        final Object value = extractPropertyValue(rs);
                         // Split value if it contains the list delimiter
-                        for (final Object o : getListDelimiterHandler().parse(value)) {
-                            results.add(o);
-                        }
+                        getListDelimiterHandler().parse(extractPropertyValue(rs)).forEach(results::add);
                     }
                 }
                 if (!results.isEmpty()) {
