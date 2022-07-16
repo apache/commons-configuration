@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
@@ -587,9 +588,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     protected void addPropertyInternal(final String key, final Object value) {
-        for (final Object obj : getListDelimiterHandler().parse(value)) {
-            addPropertyDirect(key, obj);
-        }
+        getListDelimiterHandler().parse(value).forEach(obj -> addPropertyDirect(key, obj));
     }
 
     /**
@@ -1183,9 +1182,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             final List<?> l = (List<?>) value;
 
             // add the interpolated elements in the new list
-            for (final Object elem : l) {
-                list.add(interpolate(elem));
-            }
+            l.forEach(elem -> list.add(interpolate(elem)));
         } else if (value == null) {
             // This is okay because we just return this list to the caller
             @SuppressWarnings("unchecked")
@@ -1299,11 +1296,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (c != null) {
             c.lock(LockMode.READ);
             try {
-                for (final Iterator<String> it = c.getKeys(); it.hasNext();) {
-                    final String key = it.next();
-                    final Object value = encodeForCopy(c.getProperty(key));
-                    setProperty(key, value);
-                }
+                c.getKeys().forEachRemaining(key -> setProperty(key, encodeForCopy(c.getProperty(key))));
             } finally {
                 c.unlock(LockMode.READ);
             }
@@ -1325,11 +1318,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (c != null) {
             c.lock(LockMode.READ);
             try {
-                for (final Iterator<String> it = c.getKeys(); it.hasNext();) {
-                    final String key = it.next();
-                    final Object value = encodeForCopy(c.getProperty(key));
-                    addProperty(key, value);
-                }
+                c.getKeys().forEachRemaining(key -> addProperty(key, encodeForCopy(c.getProperty(key))));
             } finally {
                 c.unlock(LockMode.READ);
             }
@@ -1353,11 +1342,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
         // now perform interpolation
         c.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        for (final Iterator<String> it = getKeys(); it.hasNext();) {
-            final String key = it.next();
-            c.setProperty(key, getList(key));
-        }
-
+        getKeys().forEachRemaining(key -> c.setProperty(key, getList(key)));
         c.setListDelimiterHandler(getListDelimiterHandler());
         return c;
     }
@@ -1396,11 +1381,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return a list with encoded elements
      */
     private Object encodeListForCopy(final Collection<?> values) {
-        final List<Object> result = new ArrayList<>(values.size());
-        for (final Object value : values) {
-            result.add(encodeForCopy(value));
-        }
-        return result;
+        return values.stream().map(this::encodeForCopy).collect(Collectors.toList());
     }
 
     /**
