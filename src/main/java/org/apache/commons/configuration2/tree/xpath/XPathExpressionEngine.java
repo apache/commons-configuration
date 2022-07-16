@@ -16,11 +16,11 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.NodeAddData;
@@ -410,12 +410,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * @return the result list
      */
     private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
-        final List<QueryResult<T>> queryResults = new ArrayList<>(results.size());
-        for (final Object res : results) {
-            final QueryResult<T> queryResult = createResult(res);
-            queryResults.add(queryResult);
-        }
-        return queryResults;
+        return results.stream().map(res -> (QueryResult<T>) createResult(res)).collect(Collectors.toList());
     }
 
     /**
