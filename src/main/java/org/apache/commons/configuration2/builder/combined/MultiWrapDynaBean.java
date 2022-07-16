@@ -57,7 +57,7 @@ class MultiWrapDynaBean implements DynaBean {
         propsToBeans = new HashMap<>();
         final Collection<DynaClass> beanClasses = new ArrayList<>(beans.size());
 
-        for (final Object bean : beans) {
+        beans.forEach(bean -> {
             final DynaBean dynaBean = createDynaBean(bean);
             final DynaClass beanClass = dynaBean.getDynaClass();
             for (final DynaProperty prop : beanClass.getDynaProperties()) {
@@ -67,7 +67,7 @@ class MultiWrapDynaBean implements DynaBean {
                 }
             }
             beanClasses.add(beanClass);
-        }
+        });
 
         dynaClass = new MultiWrapDynaClass(beanClasses);
     }
