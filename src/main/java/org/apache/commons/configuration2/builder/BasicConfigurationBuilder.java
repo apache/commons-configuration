@@ -534,9 +534,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private void registerEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (final EventListenerRegistrationData<?> regData : eventListeners.getRegistrations()) {
+        eventListeners.getRegistrations().forEach(regData -> {
             registerListener(evSrc, regData);
-        }
+        });
     }
 
     /**
@@ -547,9 +547,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private void removeEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (final EventListenerRegistrationData<?> regData : eventListeners.getRegistrations()) {
+        eventListeners.getRegistrations().forEach(regData -> {
             removeListener(evSrc, regData);
-        }
+        });
     }
 
     /**
