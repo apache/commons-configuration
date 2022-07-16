@@ -60,11 +60,11 @@ abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode
     @Override
     public <C> List<ImmutableNode> getMatchingChildren(final ImmutableNode node, final NodeMatcher<C> matcher, final C criterion) {
         final List<ImmutableNode> result = new ArrayList<>(node.getChildren().size());
-        for (final ImmutableNode c : node) {
+        node.forEach(c -> {
             if (matcher.matches(c, this, criterion)) {
                 result.add(c);
             }
-        }
+        });
         return Collections.unmodifiableList(result);
     }
 
