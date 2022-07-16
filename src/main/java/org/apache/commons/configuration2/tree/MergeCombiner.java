@@ -58,7 +58,7 @@ public class MergeCombiner extends NodeCombiner {
 
         // Check if nodes can be combined
         final List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
-        for (final ImmutableNode child1 : node1) {
+        node1.forEach(child1 -> {
             final ImmutableNode child2 = canCombine(node2, child1, children2);
             if (child2 != null) {
                 result.addChild(combine(child1, child2));
@@ -66,12 +66,10 @@ public class MergeCombiner extends NodeCombiner {
             } else {
                 result.addChild(child1);
             }
-        }
+        });
 
         // Add remaining children of node 2
-        for (final ImmutableNode c : children2) {
-            result.addChild(c);
-        }
+        children2.forEach(result::addChild);
         return result.create();
     }
 
@@ -85,11 +83,11 @@ public class MergeCombiner extends NodeCombiner {
      */
     protected void addAttributes(final ImmutableNode.Builder result, final ImmutableNode node1, final ImmutableNode node2) {
         final Map<String, Object> attributes = new HashMap<>(node1.getAttributes());
-        for (final Map.Entry<String, Object> e : node2.getAttributes().entrySet()) {
-            if (!attributes.containsKey(e.getKey())) {
-                attributes.put(e.getKey(), e.getValue());
+        node2.getAttributes().forEach((k, v) -> {
+            if (!attributes.containsKey(k)) {
+                attributes.put(k, v);
             }
-        }
+        });
         result.addAttributes(attributes);
     }
 
@@ -107,19 +105,17 @@ public class MergeCombiner extends NodeCombiner {
         final List<ImmutableNode> nodes = new ArrayList<>();
 
         final List<ImmutableNode> children = HANDLER.getChildren(node2, child.getNodeName());
-        for (final ImmutableNode node : children) {
+        children.forEach(node -> {
             if (matchAttributes(attrs1, node)) {
                 nodes.add(node);
             }
-        }
+        });
 
         if (nodes.size() == 1) {
             return nodes.get(0);
         }
         if (nodes.size() > 1 && !isListNode(child)) {
-            for (final ImmutableNode node : nodes) {
-                children2.remove(node);
-            }
+            nodes.forEach(children2::remove);
         }
 
         return null;

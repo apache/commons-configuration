@@ -356,10 +356,7 @@ class ModelTransaction {
     private void executeOperations() {
         while (!operations.isEmpty()) {
             final Integer level = operations.lastKey(); // start down in hierarchy
-            final Map<ImmutableNode, Operations> levelOps = operations.remove(level);
-            for (final Map.Entry<ImmutableNode, Operations> e : levelOps.entrySet()) {
-                e.getValue().apply(e.getKey(), level);
-            }
+            operations.remove(level).forEach((k, v) -> v.apply(k, level));
         }
     }
 
@@ -391,18 +388,14 @@ class ModelTransaction {
      * Adds newly added nodes and their children to the parent mapping.
      */
     private void updateParentMappingForAddedNodes() {
-        for (final ImmutableNode node : addedNodes) {
-            InMemoryNodeModel.updateParentMapping(parentMapping, node);
-        }
+        addedNodes.forEach(node -> InMemoryNodeModel.updateParentMapping(parentMapping, node));
     }
 
     /**
      * Removes nodes that have been removed during this transaction from the parent and replacement mappings.
      */
     private void updateParentMappingForRemovedNodes() {
-        for (final ImmutableNode node : removedNodes) {
-            removeNodesFromParentAndReplacementMapping(node);
-        }
+        removedNodes.forEach(node -> removeNodesFromParentAndReplacementMapping(node));
     }
 
     /**
@@ -905,10 +898,10 @@ class ModelTransaction {
          */
         private void handleAddedNodes(final ImmutableNode node) {
             if (addedNodesInOperation != null) {
-                for (final ImmutableNode child : addedNodesInOperation) {
+                addedNodesInOperation.forEach(child -> {
                     parentMapping.put(child, node);
                     addedNodes.add(child);
-                }
+                });
             }
         }
     }
