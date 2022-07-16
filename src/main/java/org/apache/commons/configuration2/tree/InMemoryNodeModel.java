@@ -568,9 +568,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
         NodeTreeWalker.INSTANCE.walkBFS(root, new ConfigurationNodeVisitorAdapter<ImmutableNode>() {
             @Override
             public void visitBeforeChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
-                for (final ImmutableNode c : node) {
-                    parents.put(c, node);
-                }
+                node.forEach(c -> parents.put(c, node));
             }
         }, DUMMY_HANDLER);
     }
@@ -686,9 +684,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      */
     private static Collection<ImmutableNode> createNodesToAdd(final String newNodeName, final Iterable<?> values) {
         final Collection<ImmutableNode> nodes = new LinkedList<>();
-        for (final Object value : values) {
-            nodes.add(new ImmutableNode.Builder().name(newNodeName).value(value).create());
-        }
+        values.forEach(value -> nodes.add(new ImmutableNode.Builder().name(newNodeName).value(value).create()));
         return nodes;
     }
 
@@ -733,13 +729,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @return a flag whether there are elements to be cleared
      */
     private static boolean initializeClearTransaction(final ModelTransaction tx, final Collection<QueryResult<ImmutableNode>> results) {
-        for (final QueryResult<ImmutableNode> result : results) {
+        results.forEach(result -> {
             if (result.isAttributeResult()) {
                 tx.addRemoveAttributeOperation(result.getNode(), result.getAttributeName());
             } else {
                 tx.addClearNodeValueOperation(result.getNode());
             }
-        }
+        });
 
         return !results.isEmpty();
     }
@@ -752,13 +748,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @return a flag whether there are elements to be updated
      */
     private static boolean initializeUpdateTransaction(final ModelTransaction tx, final Map<QueryResult<ImmutableNode>, Object> changedValues) {
-        for (final Map.Entry<QueryResult<ImmutableNode>, Object> e : changedValues.entrySet()) {
-            if (e.getKey().isAttributeResult()) {
-                tx.addAttributeOperation(e.getKey().getNode(), e.getKey().getAttributeName(), e.getValue());
+        changedValues.forEach((k, v) -> {
+            final ImmutableNode node = k.getNode();
+            if (k.isAttributeResult()) {
+                tx.addAttributeOperation(node, k.getAttributeName(), v);
             } else {
-                tx.addChangeNodeValueOperation(e.getKey().getNode(), e.getValue());
+                tx.addChangeNodeValueOperation(node, v);
             }
-        }
+        });
 
         return !changedValues.isEmpty();
     }
@@ -915,12 +912,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @return the updated {@code TreeData} object
      */
     private static TreeData createSelectorsForTrackedNodes(final Mutable<Collection<NodeSelector>> refSelectors, final List<ImmutableNode> nodes,
-        final TreeData current, final NodeKeyResolver<ImmutableNode> resolver) {
+            final TreeData current, final NodeKeyResolver<ImmutableNode> resolver) {
         final List<NodeSelector> selectors = new ArrayList<>(nodes.size());
         final Map<ImmutableNode, String> cache = new HashMap<>();
-        for (final ImmutableNode node : nodes) {
-            selectors.add(new NodeSelector(resolver.nodeKey(node, cache, current)));
-        }
+        nodes.forEach(node -> selectors.add(new NodeSelector(resolver.nodeKey(node, cache, current))));
         refSelectors.setValue(selectors);
         final NodeTracker newTracker = current.getNodeTracker().trackNodes(selectors, nodes);
         return current.updateNodeTracker(newTracker);
