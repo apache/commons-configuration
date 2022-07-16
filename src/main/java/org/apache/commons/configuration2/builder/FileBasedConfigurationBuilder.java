@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -112,16 +111,14 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
             return enc;
         }
 
-        final List<Class<?>> superclasses = ClassUtils.getAllSuperclasses(configClass);
-        for (final Class<?> cls : superclasses) {
+        for (final Class<?> cls : ClassUtils.getAllSuperclasses(configClass)) {
             enc = DEFAULT_ENCODINGS.get(cls);
             if (enc != null) {
                 return enc;
             }
         }
 
-        final List<Class<?>> interfaces = ClassUtils.getAllInterfaces(configClass);
-        for (final Class<?> cls : interfaces) {
+        for (final Class<?> cls : ClassUtils.getAllInterfaces(configClass)) {
             enc = DEFAULT_ENCODINGS.get(cls);
             if (enc != null) {
                 return enc;
