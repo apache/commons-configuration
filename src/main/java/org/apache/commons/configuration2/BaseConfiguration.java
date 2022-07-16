@@ -168,13 +168,13 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         copy.store = clonedStore;
 
         // Handle collections in the map; they have to be cloned, too
-        for (final Map.Entry<String, Object> e : store.entrySet()) {
-            if (e.getValue() instanceof Collection) {
+        store.forEach((k, v) -> {
+            if (v instanceof Collection) {
                 // This is safe because the collections were created by ourselves
                 @SuppressWarnings("unchecked")
-                final Collection<String> strList = (Collection<String>) e.getValue();
-                copy.store.put(e.getKey(), new ArrayList<>(strList));
+                final Collection<String> strList = (Collection<String>) v;
+                copy.store.put(k, new ArrayList<>(strList));
             }
-        }
+        });
     }
 }
