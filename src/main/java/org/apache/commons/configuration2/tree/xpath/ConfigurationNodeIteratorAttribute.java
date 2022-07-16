@@ -87,11 +87,11 @@ class ConfigurationNodeIteratorAttribute<T> extends ConfigurationNodeIteratorBas
         } else {
             final Set<String> names = new LinkedHashSet<>(parent.getNodeHandler().getAttributes(parent.getConfigurationNode()));
             final String prefix = name.getPrefix() != null ? prefixName(name.getPrefix(), null) : null;
-            for (final String n : names) {
+            names.forEach(n -> {
                 if (prefix == null || StringUtils.startsWith(n, prefix)) {
                     addAttributeData(parent, result, n);
                 }
-            }
+            });
         }
 
         return result;
