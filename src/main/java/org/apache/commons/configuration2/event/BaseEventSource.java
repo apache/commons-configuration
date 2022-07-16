@@ -82,9 +82,7 @@ public class BaseEventSource implements EventSource {
      */
     public <T extends Event> Collection<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
         final List<EventListener<? super T>> result = new LinkedList<>();
-        for (final EventListener<? super T> l : eventListeners.getEventListeners(eventType)) {
-            result.add(l);
-        }
+        eventListeners.getEventListeners(eventType).forEach(l -> result.add(l));
         return Collections.unmodifiableCollection(result);
     }
 
@@ -147,10 +145,7 @@ public class BaseEventSource implements EventSource {
      * @since 1.4
      */
     public void clearErrorListeners() {
-        for (final EventListenerRegistrationData<? extends ConfigurationErrorEvent> reg : eventListeners
-            .getRegistrationsForSuperType(ConfigurationErrorEvent.ANY)) {
-            eventListeners.removeEventListener(reg);
-        }
+        eventListeners.getRegistrationsForSuperType(ConfigurationErrorEvent.ANY).forEach(reg -> eventListeners.removeEventListener(reg));
     }
 
     /**
