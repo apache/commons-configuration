@@ -178,10 +178,7 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void copy(final ImmutableConfiguration source, final Configuration target) {
-        for (final Iterator<String> keys = source.getKeys(); keys.hasNext();) {
-            final String key = keys.next();
-            target.setProperty(key, source.getProperty(key));
-        }
+        source.getKeys().forEachRemaining(key -> target.setProperty(key, source.getProperty(key)));
     }
 
     /**
@@ -219,10 +216,7 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void append(final ImmutableConfiguration source, final Configuration target) {
-        for (final Iterator<String> keys = source.getKeys(); keys.hasNext();) {
-            final String key = keys.next();
-            target.addProperty(key, source.getProperty(key));
-        }
+        source.getKeys().forEachRemaining(key -> target.addProperty(key, source.getProperty(key)));
     }
 
     /**
