@@ -187,9 +187,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     public synchronized <E extends Event> void addEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
         super.addEventListener(eventType, l);
         if (isEventTypeForManagedBuilders(eventType)) {
-            for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders().values()) {
-                b.addEventListener(eventType, l);
-            }
+            getManagedBuilders().values().forEach(b -> b.addEventListener(eventType, l));
             configurationListeners.addEventListener(eventType, l);
         }
     }
@@ -202,9 +200,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     public synchronized <E extends Event> boolean removeEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
         final boolean result = super.removeEventListener(eventType, l);
         if (isEventTypeForManagedBuilders(eventType)) {
-            for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders().values()) {
-                b.removeEventListener(eventType, l);
-            }
+            getManagedBuilders().values().forEach(b -> b.removeEventListener(eventType, l));
             configurationListeners.removeEventListener(eventType, l);
         }
         return result;
@@ -215,9 +211,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      */
     @Override
     public synchronized void resetParameters() {
-        for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders().values()) {
-            b.removeEventListener(ConfigurationBuilderEvent.ANY, managedBuilderDelegationListener);
-        }
+        getManagedBuilders().values().forEach(b -> b.removeEventListener(ConfigurationBuilderEvent.ANY, managedBuilderDelegationListener));
         getManagedBuilders().clear();
         interpolator.set(null);
         super.resetParameters();
