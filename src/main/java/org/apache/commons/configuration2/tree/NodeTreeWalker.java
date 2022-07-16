@@ -89,9 +89,7 @@ public class NodeTreeWalker {
     private static <T> void dfs(final T node, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         if (!visitor.terminate()) {
             visitor.visitBeforeChildren(node, handler);
-            for (final T c : handler.getChildren(node)) {
-                dfs(c, visitor, handler);
-            }
+            handler.getChildren(node).forEach(c -> dfs(c, visitor, handler));
             if (!visitor.terminate()) {
                 visitor.visitAfterChildren(node, handler);
             }
