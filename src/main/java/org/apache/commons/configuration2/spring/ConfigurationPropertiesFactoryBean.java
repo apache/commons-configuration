@@ -17,8 +17,8 @@
 
 package org.apache.commons.configuration2.spring;
 
-import java.net.URL;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -106,16 +106,12 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         compositeConfiguration.setThrowExceptionOnMissing(throwExceptionOnMissing);
 
         if (configurations != null) {
-            for (final Configuration configuration : configurations) {
-                compositeConfiguration.addConfiguration(configuration);
-            }
+            Stream.of(configurations).forEach(compositeConfiguration::addConfiguration);
         }
 
         if (locations != null) {
             for (final Resource location : locations) {
-                final URL url = location.getURL();
-                final Configuration props = new Configurations().properties(url);
-                compositeConfiguration.addConfiguration(props);
+                compositeConfiguration.addConfiguration(new Configurations().properties(location.getURL()));
             }
         }
     }

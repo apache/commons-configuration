@@ -669,9 +669,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          */
         public ImmutableNode createNode() {
             final ImmutableNode.Builder nodeBuilder = new ImmutableNode.Builder(childBuilders.size());
-            for (final PListNodeBuilder child : childBuilders) {
-                nodeBuilder.addChild(child.createNode());
-            }
+            childBuilders.forEach(child -> nodeBuilder.addChild(child.createNode()));
             return nodeBuilder.name(name).value(getNodeValue()).create();
         }
 
