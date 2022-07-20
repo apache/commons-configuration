@@ -87,8 +87,7 @@ class MultiWrapDynaClass implements DynaClass {
      */
     private void initProperties(final Collection<? extends DynaClass> wrappedCls) {
         wrappedCls.forEach(cls -> {
-            final DynaProperty[] props = cls.getDynaProperties();
-            for (final DynaProperty p : props) {
+            for (final DynaProperty p : cls.getDynaProperties()) {
                 properties.add(p);
                 namedProperties.put(p.getName(), p);
             }

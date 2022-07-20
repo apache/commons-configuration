@@ -224,9 +224,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
      * @param values a list with all property values
      */
     private void writeProperty(final PrintWriter out, final String key, final List<?> values) {
-        for (final Object value : values) {
-            writeProperty(out, key, value);
-        }
+        values.forEach(value -> writeProperty(out, key, value));
     }
 
     /**
@@ -283,9 +281,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     private void writeProperty(final Document document, final Node properties, final String key, final List<?> values) {
-        for (final Object value : values) {
-            writeProperty(document, properties, key, value);
-        }
+        values.forEach(value -> writeProperty(document, properties, key, value));
     }
 
     /**

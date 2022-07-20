@@ -279,18 +279,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      */
     @Override
     protected Object getPropertyInternal(final String key) {
-        Configuration firstMatchingConfiguration = null;
-        for (final Configuration config : configList) {
-            if (config.containsKey(key)) {
-                firstMatchingConfiguration = config;
-                break;
-            }
-        }
-
-        if (firstMatchingConfiguration != null) {
-            return firstMatchingConfiguration.getProperty(key);
-        }
-        return null;
+        return configList.stream().filter(config -> config.containsKey(key)).findFirst().map(config -> config.getProperty(key)).orElse(null);
     }
 
     @Override

@@ -19,6 +19,7 @@ package org.apache.commons.configuration2.reloading;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * <p>
@@ -109,10 +110,8 @@ public class CombinedReloadingController extends ReloadingController {
             throw new IllegalArgumentException("Collection with sub controllers must not be null!");
         }
         final Collection<ReloadingController> ctrls = new ArrayList<>(subCtrls);
-        for (final ReloadingController rc : ctrls) {
-            if (rc == null) {
-                throw new IllegalArgumentException("Collection with sub controllers contains a null entry!");
-            }
+        if (ctrls.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Collection with sub controllers contains a null entry!");
         }
 
         return Collections.unmodifiableCollection(ctrls);

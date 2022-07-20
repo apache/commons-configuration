@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
@@ -211,14 +212,8 @@ class NodeTracker {
             // there is not state to be updated
             return this;
         }
-
-        final Map<NodeSelector, TrackedNodeData> newState = new HashMap<>();
-        for (final Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes.entrySet()) {
-            final TrackedNodeData newData = e.getValue().isDetached() ? e.getValue() : e.getValue().detach(null);
-            newState.put(e.getKey(), newData);
-        }
-
-        return new NodeTracker(newState);
+        return new NodeTracker(trackedNodes.entrySet().stream()
+            .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isDetached() ? e.getValue() : e.getValue().detach(null))));
     }
 
     /**
