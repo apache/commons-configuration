@@ -443,7 +443,7 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <!--  2.6.0 requires Java 11. -->
-      <version>2.5.2</version>
+      <version>2.7.0</version>
       <scope>test</scope>
     </dependency>
 
