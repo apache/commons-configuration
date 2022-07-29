@@ -40,6 +40,9 @@
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump org.springframework:spring-* 5.3.21 -> 5.3.22.
       </action>
+      <action type="update" dev="kinow" due-to="Dependabot">
+        Bump junit-jupiter from 5.8.2 to 5.9.0 #197.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
