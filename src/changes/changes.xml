@@ -35,7 +35,7 @@
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
-        Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 #193.
+        Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.1 #193, #195.
       </action>
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump org.springframework:spring-* 5.3.21 -> 5.3.22.
