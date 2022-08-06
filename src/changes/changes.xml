@@ -30,8 +30,11 @@
         CombinedConfiguration#getKeys() can throw NoSuchElementException.
       </action>
       <!-- ADD -->
-      <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
+      <action issue="CONFIGURATION-799" type="add" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
         Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
+      </action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">
+        Add ImmutableNode.stream().
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">

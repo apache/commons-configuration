@@ -64,11 +64,7 @@ public class OverrideCombiner extends NodeCombiner {
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        node2.forEach(child ->  {
-            if (HANDLER.getChildrenCount(node1, child.getNodeName()) < 1) {
-                result.addChild(child);
-            }
-        });
+        node2.stream().filter(child -> HANDLER.getChildrenCount(node1, child.getNodeName()) < 1).forEach(result::addChild);
 
         // Handle attributes and value
         addAttributes(result, node1, node2);

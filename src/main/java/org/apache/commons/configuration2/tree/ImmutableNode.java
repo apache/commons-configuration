@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * <p>
@@ -557,6 +559,16 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
             });
             return result;
         }
+    }
+
+    /**
+     * Returns a sequential {@code Stream} with this node as its source.
+     *
+     * @return a sequential {@code Stream} over the elements in this node.
+     * @since 2.9.0
+     */
+    public Stream<ImmutableNode> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
     @Override

@@ -16,10 +16,10 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -59,13 +59,7 @@ abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode
      */
     @Override
     public <C> List<ImmutableNode> getMatchingChildren(final ImmutableNode node, final NodeMatcher<C> matcher, final C criterion) {
-        final List<ImmutableNode> result = new ArrayList<>(node.getChildren().size());
-        node.forEach(c -> {
-            if (matcher.matches(c, this, criterion)) {
-                result.add(c);
-            }
-        });
-        return Collections.unmodifiableList(result);
+        return Collections.unmodifiableList(node.stream().filter(c -> matcher.matches(c, this, criterion)).collect(Collectors.toList()));
     }
 
     /**

@@ -582,4 +582,20 @@ public class TestImmutableNode {
         assertTrue(node.getChildren().isEmpty());
         assertTrue(node.getAttributes().isEmpty());
     }
+
+    /**
+     * Tests streaming children.
+     */
+    @Test
+    public void testStream() {
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child2 = new ImmutableNode.Builder().name("child2").create();
+        final ImmutableNode node2 = node.addChild(child2);
+        checkUpdatedNode(node, node2);
+        assertEquals(1, node.stream().count());
+        assertEquals(0, child2.stream().count());
+        assertEquals(2, node2.stream().count());
+        assertEquals(1, node.stream().count());
+    }
+
 }
