@@ -201,10 +201,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
         if (providers == null) {
             throw new IllegalArgumentException("Map with providers must not be null!");
         }
-
-        providers.entrySet().forEach(e -> {
-            if (!this.providers.containsKey(e.getKey())) {
-                registerProvider(e.getKey(), e.getValue());
+        providers.forEach((k, v) -> {
+            if (!this.providers.containsKey(k)) {
+                registerProvider(k, v);
             }
         });
         return this;

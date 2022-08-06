@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,8 +25,10 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
@@ -244,13 +245,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             return null;
         }
         final NodeHandler<T> handler = getModel().getNodeHandler();
-        final List<Object> list = new ArrayList<>();
-        results.forEach(result -> {
-            final Object value = valueFromResult(result, handler);
-            if (value != null) {
-                list.add(value);
-            }
-        });
+        final List<Object> list = results.stream().map(r -> valueFromResult(r, handler)).filter(Objects::nonNull).collect(Collectors.toList());
 
         if (list.size() < 1) {
             return null;
@@ -379,14 +374,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public List<T> resolveNodeKey(final T root, final String key, final NodeHandler<T> handler) {
-        final List<QueryResult<T>> results = resolveKey(root, key, handler);
-        final List<T> targetNodes = new LinkedList<>();
-        results.forEach(result -> {
-            if (!result.isAttributeResult()) {
-                targetNodes.add(result.getNode());
-            }
-        });
-        return targetNodes;
+        return resolveKey(root, key, handler).stream().filter(r -> !r.isAttributeResult()).map(QueryResult::getNode)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -417,17 +406,13 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         // Add additional nodes if necessary
         if (itValues.hasNext()) {
             additionalValues = new LinkedList<>();
-            while (itValues.hasNext()) {
-                additionalValues.add(itValues.next());
-            }
+            itValues.forEachRemaining(additionalValues::add);
         }
 
         // Remove remaining nodes
         if (itNodes.hasNext()) {
             removedItems = new LinkedList<>();
-            while (itNodes.hasNext()) {
-                removedItems.add(itNodes.next());
-            }
+            itNodes.forEachRemaining(removedItems::add);
         }
 
         return new NodeUpdateData<>(changedValues, additionalValues, removedItems, key);
@@ -479,8 +464,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         beginWrite(false);
         try {
             fireEvent(ConfigurationEvent.CLEAR_TREE, key, null, true);
-            final Object nodes = clearTreeInternal(key);
-            fireEvent(ConfigurationEvent.CLEAR_TREE, key, nodes, false);
+            fireEvent(ConfigurationEvent.CLEAR_TREE, key, clearTreeInternal(key), false);
         } finally {
             endWrite();
         }
@@ -522,7 +506,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns an iterator with all keys defined in this configuration. Note that the keys returned by this method will not
+     * Gets an iterator with all keys defined in this configuration. Note that the keys returned by this method will not
      * contain any indices. This means that some structure will be lost.
      *
      * @return an iterator with the defined keys in this configuration
@@ -545,7 +529,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns an iterator with all keys defined in this configuration that start with the given prefix. The returned keys
+     * Gets an iterator with all keys defined in this configuration that start with the given prefix. The returned keys
      * will not contain any indices. This implementation tries to locate a node whose key is the same as the passed in
      * prefix. Then the subtree of this node is traversed, and the keys of all nodes encountered (including attributes) are
      * added to the result set.
@@ -575,7 +559,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns the maximum defined index for the given key. This is useful if there are multiple values for this key. They
+     * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method. If the passed in
      * key is not contained in this configuration, result is -1.
      *
@@ -663,7 +647,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns the {@code NodeModel} used by this configuration. This method is intended for internal use only. Access to
+     * Gets the {@code NodeModel} used by this configuration. This method is intended for internal use only. Access to
      * the model is granted without any synchronization. This is in contrast to the &quot;official&quot;
      * {@code getNodeModel()} method which is guarded by the configuration's {@code Synchronizer}.
      *
@@ -691,6 +675,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param <T> the type of the nodes managed by this hierarchical configuration
      */
     private static class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
+
         /** Stores the defined flag. */
         private boolean defined;
 
@@ -728,6 +713,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * A specialized visitor that fills a list with keys that are defined in a node hierarchy.
      */
     private class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter<T> {
+
         /** Stores the list to be filled. */
         private final Set<String> keyList;
 
