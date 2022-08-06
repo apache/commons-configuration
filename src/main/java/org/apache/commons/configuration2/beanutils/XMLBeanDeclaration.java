@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
@@ -292,14 +293,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      */
     @Override
     public Map<String, Object> getBeanProperties() {
-        final Map<String, Object> props = new HashMap<>();
-        getAttributeNames().forEach(key -> {
-            if (!isReservedAttributeName(key)) {
-                props.put(key, interpolate(getNode().getAttribute(key)));
-            }
-        });
-
-        return props;
+        return getAttributeNames().stream().filter(e -> !isReservedAttributeName(e))
+            .collect(Collectors.toMap(Function.identity(), e -> interpolate(getNode().getAttribute(e))));
     }
 
     /**

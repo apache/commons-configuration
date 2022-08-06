@@ -241,10 +241,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
         if (p == null) {
             throw new IllegalArgumentException("Parameters to merge must not be null!");
         }
-
-        p.getParameters().entrySet().forEach(e -> {
-            if (!properties.containsKey(e.getKey()) && !e.getKey().startsWith(RESERVED_PARAMETER_PREFIX)) {
-                storeProperty(e.getKey(), e.getValue());
+        p.getParameters().forEach((k, v) -> {
+            if (!properties.containsKey(k) && !k.startsWith(RESERVED_PARAMETER_PREFIX)) {
+                storeProperty(k, v);
             }
         });
     }
@@ -422,9 +421,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
         if (prefixes == null) {
             return null;
         }
-
-        prefixes.entrySet().forEach(e -> {
-            if (!(e.getKey() instanceof String) || !(e.getValue() instanceof Lookup)) {
+        prefixes.forEach((k, v) -> {
+            if (!(k instanceof String) || !(v instanceof Lookup)) {
                 throw new IllegalArgumentException("Map with prefix lookups contains invalid data: " + prefixes);
             }
         });
