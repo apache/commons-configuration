@@ -395,7 +395,7 @@ class ModelTransaction {
      * Removes nodes that have been removed during this transaction from the parent and replacement mappings.
      */
     private void updateParentMappingForRemovedNodes() {
-        removedNodes.forEach(node -> removeNodesFromParentAndReplacementMapping(node));
+        removedNodes.forEach(this::removeNodesFromParentAndReplacementMapping);
     }
 
     /**
