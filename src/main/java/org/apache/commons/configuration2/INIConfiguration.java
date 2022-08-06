@@ -409,7 +409,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @return the root node of the newly created hierarchy
      */
     private static ImmutableNode createNewRootNode(final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders) {
-        sectionBuilders.entrySet().forEach(e -> rootBuilder.addChild(e.getValue().name(e.getKey()).create()));
+        sectionBuilders.forEach((k, v) -> rootBuilder.addChild(v.name(k).create()));
         return rootBuilder.create();
     }
 

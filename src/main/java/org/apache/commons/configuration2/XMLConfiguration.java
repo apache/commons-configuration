@@ -943,11 +943,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          * @param refHandler the {@code ReferenceNodeHandler}
          */
         public void handleRemovedNodes(final ReferenceNodeHandler refHandler) {
-            refHandler.removedReferences().forEach(ref -> {
-                if (ref instanceof Node) {
-                    removeReference((Element) elementMapping.get(ref));
-                }
-            });
+            refHandler.removedReferences().stream().filter(Node.class::isInstance).forEach(ref -> removeReference(elementMapping.get(ref)));
         }
 
         /**
@@ -1033,7 +1029,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          *
          * @param element the element to be removed
          */
-        private void removeReference(final Element element) {
+        private void removeReference(final Node element) {
             final Node parentElem = element.getParentNode();
             if (parentElem != null) {
                 parentElem.removeChild(element);

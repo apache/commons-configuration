@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -267,10 +266,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(final InMemoryNodeModelSupport parentModelSupport,
-            final Collection<NodeSelector> selectors) {
-        final List<HierarchicalConfiguration<ImmutableNode>> configs = new ArrayList<>(selectors.size());
-        selectors.forEach(selector -> configs.add(createSubConfigurationForTrackedNode(selector, parentModelSupport)));
-        return configs;
+        final Collection<NodeSelector> selectors) {
+        return selectors.stream().map(sel -> createSubConfigurationForTrackedNode(sel, parentModelSupport)).collect(Collectors.toList());
     }
 
     /**
@@ -411,11 +408,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             return Collections.emptyList();
         }
 
-        final ImmutableNode parent = nodes.get(0);
-        final List<HierarchicalConfiguration<ImmutableNode>> subs = new ArrayList<>(parent.getChildren().size());
-        parent.forEach(node -> subs.add(createIndependentSubConfigurationForNode(node)));
-
-        return subs;
+        return nodes.get(0).stream().map(this::createIndependentSubConfigurationForNode).collect(Collectors.toList());
     }
 
     /**
