@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
@@ -145,9 +146,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @return a node representing this collection
      */
     private static List<ImmutableNode> parseCollection(final Collection<Object> col, final String key) {
-        final List<ImmutableNode> nodes = new ArrayList<>(col.size());
-        col.forEach(elem -> nodes.addAll(constructHierarchy(key, elem)));
-        return nodes;
+        return col.stream().flatMap(elem -> constructHierarchy(key, elem).stream()).collect(Collectors.toList());
     }
 
     /**
