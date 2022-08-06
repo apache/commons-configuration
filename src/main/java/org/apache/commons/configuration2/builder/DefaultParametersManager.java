@@ -17,7 +17,6 @@
 package org.apache.commons.configuration2.builder;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -127,14 +126,7 @@ public class DefaultParametersManager {
      * @param startClass the start class for which this handler is to be removed
      */
     public void unregisterDefaultsHandler(final DefaultParametersHandler<?> handler, final Class<?> startClass) {
-        final Collection<DefaultHandlerData> toRemove = new LinkedList<>();
-        defaultHandlers.forEach(dhd -> {
-            if (dhd.isOccurrence(handler, startClass)) {
-                toRemove.add(dhd);
-            }
-        });
-
-        defaultHandlers.removeAll(toRemove);
+        defaultHandlers.removeIf(dhd -> dhd.isOccurrence(handler, startClass));
     }
 
     /**

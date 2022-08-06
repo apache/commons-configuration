@@ -384,9 +384,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
         final Map<String, Object> dest = new HashMap<>();
-        src.entrySet().forEach(e -> {
-            if (e.getKey() instanceof String) {
-                dest.put((String) e.getKey(), e.getValue());
+        src.forEach((k, v) -> {
+            if (k instanceof String) {
+                dest.put((String) k, v);
             }
         });
         return dest;

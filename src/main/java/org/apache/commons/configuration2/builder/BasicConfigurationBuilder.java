@@ -212,7 +212,6 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
             newParams.putAll(p.getParameters());
             handleEventListenerProviders(p);
         }
-
         return setParameters(newParams);
     }
 
@@ -534,9 +533,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private void registerEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        eventListeners.getRegistrations().forEach(regData -> {
-            registerListener(evSrc, regData);
-        });
+        eventListeners.getRegistrations().forEach(regData -> registerListener(evSrc, regData));
     }
 
     /**
@@ -547,9 +544,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private void removeEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        eventListeners.getRegistrations().forEach(regData -> {
-            removeListener(evSrc, regData);
-        });
+        eventListeners.getRegistrations().forEach(regData -> removeListener(evSrc, regData));
     }
 
     /**

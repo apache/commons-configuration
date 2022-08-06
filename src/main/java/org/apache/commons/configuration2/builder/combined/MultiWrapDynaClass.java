@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -86,11 +87,9 @@ class MultiWrapDynaClass implements DynaClass {
      * @param wrappedCls the collection with the wrapped classes
      */
     private void initProperties(final Collection<? extends DynaClass> wrappedCls) {
-        wrappedCls.forEach(cls -> {
-            for (final DynaProperty p : cls.getDynaProperties()) {
-                properties.add(p);
-                namedProperties.put(p.getName(), p);
-            }
-        });
+        wrappedCls.forEach(cls -> Stream.of(cls.getDynaProperties()).forEach(p -> {
+            properties.add(p);
+            namedProperties.put(p.getName(), p);
+        }));
     }
 }
