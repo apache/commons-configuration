@@ -129,10 +129,10 @@ public class CombinedReloadingController extends ReloadingController {
         /**
          * Creates a new instance of {@code MultiReloadingControllerDetector}.
          *
-         * @param o the owner
+         * @param owner the owner
          */
-        public MultiReloadingControllerDetector(final CombinedReloadingController o) {
-            owner = o;
+        public MultiReloadingControllerDetector(final CombinedReloadingController owner) {
+            this.owner = owner;
         }
 
         /**
@@ -142,13 +142,7 @@ public class CombinedReloadingController extends ReloadingController {
          */
         @Override
         public boolean isReloadingRequired() {
-            boolean result = false;
-            for (final ReloadingController rc : owner.getSubControllers()) {
-                if (rc.checkForReloading(null)) {
-                    result = true;
-                }
-            }
-            return result;
+            return owner.getSubControllers().stream().reduce(false, (b, rc) -> b | rc.checkForReloading(null), (t, u) -> t | u);
         }
 
         /**

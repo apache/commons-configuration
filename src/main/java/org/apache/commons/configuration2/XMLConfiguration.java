@@ -945,8 +945,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         public void handleRemovedNodes(final ReferenceNodeHandler refHandler) {
             refHandler.removedReferences().forEach(ref -> {
                 if (ref instanceof Node) {
-                    final Node removedElem = (Node) ref;
-                    removeReference((Element) elementMapping.get(removedElem));
+                    removeReference((Element) elementMapping.get((Node) ref));
                 }
             });
         }

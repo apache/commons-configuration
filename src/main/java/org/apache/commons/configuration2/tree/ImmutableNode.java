@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -100,16 +101,10 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * @return a list with the child nodes
      */
     public List<ImmutableNode> getChildren(final String name) {
-        final List<ImmutableNode> list = new ArrayList<>();
         if (name == null) {
-            return list;
+            return new ArrayList<>();
         }
-        children.forEach(node -> {
-            if (name.equals(node.getNodeName())) {
-                list.add(node);
-            }
-        });
-        return list;
+        return children.stream().filter(in -> name.equals(in.getNodeName())).collect(Collectors.toList());
     }
 
     /**
