@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -892,12 +892,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                 private List<ImmutableNode> filterChildrenOfGlobalSection(final ImmutableNode node, final List<ImmutableNode> children) {
                     final List<ImmutableNode> filteredList;
                     if (node == getRootNode()) {
-                        filteredList = new ArrayList<>(children.size());
-                        children.forEach(child -> {
-                            if (!isSectionNode(child)) {
-                                filteredList.add(child);
-                            }
-                        });
+                        filteredList = children.stream().filter(child -> !isSectionNode(child)).collect(Collectors.toList());
                     } else {
                         filteredList = children;
                     }
