@@ -55,11 +55,7 @@ public class OverrideCombiner extends NodeCombiner {
         // Process nodes from the first structure, which override the second
         node1.forEach(child -> {
             final ImmutableNode child2 = canCombine(node1, node2, child);
-            if (child2 != null) {
-                result.addChild(combine(child, child2));
-            } else {
-                result.addChild(child);
-            }
+            result.addChild(child2 != null ? combine(child, child2) : child);
         });
 
         // Process nodes from the second structure, which are not contained
