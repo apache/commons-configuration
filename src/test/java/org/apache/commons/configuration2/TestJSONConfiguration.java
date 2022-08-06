@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.FileReader;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -56,6 +58,13 @@ public class TestJSONConfiguration {
 
         jsonConfiguration = new JSONConfiguration(c);
         assertEquals("bar", jsonConfiguration.getString("foo"));
+    }
+
+    /**
+     * Tests CONFIGURATION-793.
+     */
+    public void testGetList_nested_with_list() {
+        assertEquals(Arrays.asList("col1", "col2"), jsonConfiguration.getList(String.class, "key4.key5"));
     }
 
     @Test
@@ -103,6 +112,26 @@ public class TestJSONConfiguration {
     public void testGetProperty_very_nested_properties() {
         final Object property = jsonConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
+    }
+
+    /**
+     * Tests CONFIGURATION-793.
+     */
+    @Disabled
+    @Test
+    public void testListOfObjects() {
+        final Configuration subset = jsonConfiguration.subset("capitals");
+        assertNotNull(subset);
+        assertEquals(2, subset.size());
+
+        final List<Object> list = jsonConfiguration.getList("capitals");
+        assertNotNull(list);
+        assertEquals(2, list.size());
+
+//        assertEquals(list.get(0).get("country"), "USA");
+//        assertEquals(list.get(0).get("capital"), "Washington");
+//        assertEquals(list.get(1).get("country"), "UK");
+//        assertEquals(list.get(1).get("capital"), "London");
     }
 
     @Test
