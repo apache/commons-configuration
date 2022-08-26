@@ -52,6 +52,9 @@
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump slf4j.version from 1.7.36 to 2.0.0 #202.
       </action>
+      <action type="update" dev="kinow" due-to="Dependabot">
+        Bump maven-checkstyle-plugin from 3.1.2 to 3.2.0 #201.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
