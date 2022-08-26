@@ -49,6 +49,9 @@
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump mockito-core from 4.6.1 to 4.7.0 #200.
       </action>
+      <action type="update" dev="kinow" due-to="Dependabot">
+        Bump slf4j.version from 1.7.36 to 2.0.0 #202.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
