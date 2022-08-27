@@ -47,6 +47,7 @@ Apache Commons Configuration
 [![Coverage Status](https://codecov.io/gh/apache/commons-configuration/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.8.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.8.0)
+[![CodeQL](https://github.com/apache/commons-configuration/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
 
 Tools to assist in the reading of configuration/preferences files in
         various formats
