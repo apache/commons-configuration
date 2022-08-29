@@ -77,7 +77,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * @param key the key (will be converted to a string)
      * @param value the value
      * @return the old value of this key or <b>null</b> if it is new
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     * @see java.util.Map#put(Object, Object)
      */
     @Override
     public Object put(final Object key, final Object value) {
@@ -93,7 +93,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      *
      * @param key the key
      * @return the value of this key
-     * @see java.util.Map#get(java.lang.Object)
+     * @see java.util.Map#get(Object)
      */
     @Override
     public Object get(final Object key) {
