@@ -165,7 +165,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * special.
  * </p>
  *
- * @since commons-configuration 1.0
+ * @since 1.0
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware, InputStreamSupport {
     /** Constant for the default indent size. */
