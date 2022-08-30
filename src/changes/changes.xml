@@ -58,6 +58,12 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump maven-javadoc-plugin from 3.4.0 to 3.4.1.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump maven-pmd-plugin 3.17.0 to 3.18.0.
+      </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump pmd from 6.47.0 to 6.48.0.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
