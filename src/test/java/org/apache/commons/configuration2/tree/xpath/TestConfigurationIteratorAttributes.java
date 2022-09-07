@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,16 +27,15 @@ import java.util.Set;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ConfigurationNodeIteratorAttributes}.
  *
  */
-public class TestConfigurationIteratorAttributes extends AbstractXPathTest
-{
-    /** Constant for the name of another test attribute.*/
+public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
+    /** Constant for the name of another test attribute. */
     private static final String TEST_ATTR = "test";
 
     /** Constant for a namespace prefix. */
@@ -45,109 +44,82 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     /** Constant for an attribute with a namespace prefix. */
     private static final String NS_ATTR = NAMESPACE + ":attr";
 
-    /** Stores the node pointer of the test node.*/
+    /** Stores the node pointer of the test node. */
     private ConfigurationNodePointer<ImmutableNode> pointer;
 
     @Override
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         super.setUp();
 
         // Adds further attributes to the test node
         final ImmutableNode orgNode = root.getChildren().get(1);
-        final ImmutableNode testNode =
-                orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR,
-                        "configuration");
-        pointer =
-                new ConfigurationNodePointer<>(testNode,
-                        Locale.getDefault(), handler);
+        final ImmutableNode testNode = orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR, "configuration");
+        pointer = new ConfigurationNodePointer<>(testNode, Locale.getDefault(), handler);
     }
 
     /**
      * Tests to iterate over all attributes.
      */
     @Test
-    public void testIterateAllAttributes()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, "*"));
-        assertEquals("Wrong number of attributes", 3, iteratorSize(it));
+    public void testIterateAllAttributes() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "*"));
+        assertEquals(3, iteratorSize(it));
         final List<NodePointer> attrs = iterationElements(it);
         final Set<String> attrNames = new HashSet<>();
-        for (final NodePointer np : attrs)
-        {
+        for (final NodePointer np : attrs) {
             attrNames.add(np.getName().getName());
         }
-        assertTrue("First attribute not found", attrNames.contains(ATTR_NAME));
-        assertTrue("Second attribute not found", attrNames.contains(TEST_ATTR));
-        assertTrue("Namespace attribute not found", attrNames.contains(NS_ATTR));
-    }
-
-    /**
-     * Tests to iterate over attributes with a specific name.
-     */
-    @Test
-    public void testIterateSpecificAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, TEST_ATTR));
-        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0)
-                .getName().getName());
-    }
-
-    /**
-     * Tests to iterate over non existing attributes.
-     */
-    @Test
-    public void testIterateUnknownAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, "unknown"));
-        assertEquals("Found attributes", 0, iteratorSize(it));
-    }
-
-    /**
-     * Tests iteration if an unknown namespace is specified.
-     */
-    @Test
-    public void testIterateNamespaceUnknown()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName("test", "*"));
-        assertEquals("Found attributes", 0, iteratorSize(it));
+        assertTrue(attrNames.contains(ATTR_NAME));
+        assertTrue(attrNames.contains(TEST_ATTR));
+        assertTrue(attrNames.contains(NS_ATTR));
     }
 
     /**
      * Tests whether a specific attribute with a namespace can be selected.
      */
     @Test
-    public void testIterateNamespaceAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(NAMESPACE, "attr"));
-        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
-                .getName().getName());
+    public void testIterateNamespaceAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "attr"));
+        assertEquals(1, iteratorSize(it));
+        assertEquals(NS_ATTR, iterationElements(it).get(0).getName().getName());
+    }
+
+    /**
+     * Tests iteration if an unknown namespace is specified.
+     */
+    @Test
+    public void testIterateNamespaceUnknown() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName("test", "*"));
+        assertEquals(0, iteratorSize(it));
     }
 
     /**
      * Tests whether a wildcard can be used together with a namespace.
      */
     @Test
-    public void testIterateNamespaceWildcard()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(NAMESPACE, "*"));
-        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
-                .getName().getName());
+    public void testIterateNamespaceWildcard() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "*"));
+        assertEquals(1, iteratorSize(it));
+        assertEquals(NS_ATTR, iterationElements(it).get(0).getName().getName());
+    }
+
+    /**
+     * Tests to iterate over attributes with a specific name.
+     */
+    @Test
+    public void testIterateSpecificAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, TEST_ATTR));
+        assertEquals(1, iteratorSize(it));
+        assertEquals(TEST_ATTR, iterationElements(it).get(0).getName().getName());
+    }
+
+    /**
+     * Tests to iterate over non existing attributes.
+     */
+    @Test
+    public void testIterateUnknownAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "unknown"));
+        assertEquals(0, iteratorSize(it));
     }
 }

@@ -25,150 +25,116 @@ import org.apache.commons.configuration2.io.FileLocatorUtils;
 
 /**
  * <p>
- * A specialized implementation of {@code ReloadingDetector} which monitors a
- * file specified by a {@link FileHandler}.
+ * A specialized implementation of {@code ReloadingDetector} which monitors a file specified by a {@link FileHandler}.
  * </p>
  * <p>
- * An instance of this class is passed a {@code FileHandler} at construction
- * time. Each time the {@code isReloadingRequired()} method is called, it checks
- * whether the {@code FileHandler} points to a valid location. If this is the
- * case, the file's last modification time is obtained and compared with the
- * last stored time. If it has changed, a reload operation should be performed.
+ * An instance of this class is passed a {@code FileHandler} at construction time. Each time the
+ * {@code isReloadingRequired()} method is called, it checks whether the {@code FileHandler} points to a valid location.
+ * If this is the case, the file's last modification time is obtained and compared with the last stored time. If it has
+ * changed, a reload operation should be performed.
  * </p>
  * <p>
- * Because file I/O may be expensive it is possible to configure a refresh delay
- * as a time in milliseconds. This is the minimum interval between two checks.
- * If the {@code isReloadingRequired()} method is called in shorter intervals,
- * it does not perform a check, but directly returns <b>false</b>.
+ * Because file I/O may be expensive it is possible to configure a refresh delay as a time in milliseconds. This is the
+ * minimum interval between two checks. If the {@code isReloadingRequired()} method is called in shorter intervals, it
+ * does not perform a check, but directly returns <b>false</b>.
  * </p>
  * <p>
- * To initialize an instance either {@code isReloadingRequired()} or
- * {@code reloadingPerformed()} can be called. The first call of
- * {@code isReloadingRequired} does not perform a check, but obtains the initial
- * modification date of the monitored file. {@code reloadingPerformed()} always
- * obtains the file's modification date and stores it internally.
+ * To initialize an instance either {@code isReloadingRequired()} or {@code reloadingPerformed()} can be called. The
+ * first call of {@code isReloadingRequired} does not perform a check, but obtains the initial modification date of the
+ * monitored file. {@code reloadingPerformed()} always obtains the file's modification date and stores it internally.
  * </p>
  *
  * @since 2.0
  */
-public class FileHandlerReloadingDetector implements ReloadingDetector
-{
+public class FileHandlerReloadingDetector implements ReloadingDetector {
     /** Constant for the jar URL protocol. */
     private static final String JAR_PROTOCOL = "jar";
 
     /** Constant for the default refresh delay. */
-    private static final int DEFAULT_REFRESH_DELAY = 5000;
+    private static final int DEFAULT_REFRESH_DELAY_MILLIS = 5000;
 
     /** The associated file handler. */
     private final FileHandler fileHandler;
 
     /** The refresh delay. */
-    private final long refreshDelay;
+    private final long refreshDelayMillis;
 
     /** The last time the configuration file was modified. */
-    private long lastModified;
+    private long lastModifiedMillis;
 
     /** The last time the file was checked for changes. */
-    private long lastChecked;
+    private long lastCheckedMillis;
 
     /**
-     * Creates a new instance of {@code FileHandlerReloadingDetector} and
-     * initializes it with the {@code FileHandler} to monitor and the refresh
-     * delay. The handler is directly used, no copy is created. So it is
-     * possible to change the location monitored by manipulating the
-     * {@code FileHandler} object.
+     * Creates a new instance of {@code FileHandlerReloadingDetector} and initializes it with the {@code FileHandler} to
+     * monitor and the refresh delay. The handler is directly used, no copy is created. So it is possible to change the
+     * location monitored by manipulating the {@code FileHandler} object.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can
-     *        be <b>null</b>)
-     * @param refreshDelay the refresh delay; a value of 0 means that a check is
-     *        performed in all cases
+     * @param handler the {@code FileHandler} associated with this detector (can be <b>null</b>)
+     * @param refreshDelayMillis the refresh delay; a value of 0 means that a check is performed in all cases
      */
-    public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay)
-    {
-        fileHandler = (handler != null) ? handler : new FileHandler();
-        this.refreshDelay = refreshDelay;
+    public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelayMillis) {
+        fileHandler = handler != null ? handler : new FileHandler();
+        this.refreshDelayMillis = refreshDelayMillis;
     }
 
     /**
-     * Creates a new instance of {@code FileHandlerReloadingDetector} and
-     * initializes it with the {@code FileHandler} to monitor and a default
-     * refresh delay.
+     * Creates a new instance of {@code FileHandlerReloadingDetector} and initializes it with the {@code FileHandler} to
+     * monitor and a default refresh delay.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can
-     *        be <b>null</b>)
+     * @param handler the {@code FileHandler} associated with this detector (can be <b>null</b>)
      */
-    public FileHandlerReloadingDetector(final FileHandler handler)
-    {
-        this(handler, DEFAULT_REFRESH_DELAY);
+    public FileHandlerReloadingDetector(final FileHandler handler) {
+        this(handler, DEFAULT_REFRESH_DELAY_MILLIS);
     }
 
     /**
-     * Creates a new instance of {@code FileHandlerReloadingDetector} with an
-     * uninitialized {@code FileHandler} object. The file to be monitored has to
-     * be set later by manipulating the handler object returned by
-     * {@code getFileHandler()}.
+     * Creates a new instance of {@code FileHandlerReloadingDetector} with an uninitialized {@code FileHandler} object. The
+     * file to be monitored has to be set later by manipulating the handler object returned by {@code getFileHandler()}.
      */
-    public FileHandlerReloadingDetector()
-    {
+    public FileHandlerReloadingDetector() {
         this(null);
     }
 
     /**
-     * Returns the {@code FileHandler} associated with this object. The
-     * underlying handler is directly returned, so changing its location also
-     * changes the file monitored by this detector.
+     * Returns the {@code FileHandler} associated with this object. The underlying handler is directly returned, so changing
+     * its location also changes the file monitored by this detector.
      *
      * @return the associated {@code FileHandler}
      */
-    public FileHandler getFileHandler()
-    {
+    public FileHandler getFileHandler() {
         return fileHandler;
     }
 
     /**
-     * Returns the refresh delay. This is a time in milliseconds. The
-     * {@code isReloadingRequired()} method first checks whether the time since
-     * the previous check is more than this value in the past. Otherwise, no
-     * check is performed. This is a means to limit file I/O caused by this
-     * class.
+     * Returns the refresh delay. This is a time in milliseconds. The {@code isReloadingRequired()} method first checks
+     * whether the time since the previous check is more than this value in the past. Otherwise, no check is performed. This
+     * is a means to limit file I/O caused by this class.
      *
      * @return the refresh delay used by this object
      */
-    public long getRefreshDelay()
-    {
-        return refreshDelay;
+    public long getRefreshDelay() {
+        return refreshDelayMillis;
     }
 
     /**
-     * {@inheritDoc} This implementation checks whether the associated
-     * {@link FileHandler} points to a valid file and whether the last
-     * modification time of this time has changed since the last check. The
-     * refresh delay is taken into account, too; a check is only performed if at
-     * least this time has passed since the last check.
+     * {@inheritDoc} This implementation checks whether the associated {@link FileHandler} points to a valid file and
+     * whether the last modification time of this time has changed since the last check. The refresh delay is taken into
+     * account, too; a check is only performed if at least this time has passed since the last check.
      */
     @Override
-    public boolean isReloadingRequired()
-    {
-        final long now = System.currentTimeMillis();
-        if (now >= lastChecked + getRefreshDelay())
-        {
-            lastChecked = now;
+    public boolean isReloadingRequired() {
+        final long nowMillis = System.currentTimeMillis();
+        if (nowMillis >= lastCheckedMillis + getRefreshDelay()) {
+            lastCheckedMillis = nowMillis;
 
-            final long modified = getLastModificationDate();
-            if (modified > 0)
-            {
-                if (lastModified == 0)
-                {
-                    // initialization
-                    updateLastModified(modified);
+            final long modifiedMillis = getLastModificationDate();
+            if (modifiedMillis > 0) {
+                if (lastModifiedMillis != 0) {
+                    return modifiedMillis != lastModifiedMillis;
                 }
-                else
-                {
-                    if (modified != lastModified)
-                    {
-                        return true;
-                    }
-                }
+                // initialization
+                updateLastModified(modifiedMillis);
             }
         }
 
@@ -176,61 +142,51 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     }
 
     /**
-     * {@inheritDoc} This implementation updates the internally stored last
-     * modification date with the current modification date of the monitored
-     * file. So the next change is detected when this file is changed again.
+     * {@inheritDoc} This implementation updates the internally stored last modification date with the current modification
+     * date of the monitored file. So the next change is detected when this file is changed again.
      */
     @Override
-    public void reloadingPerformed()
-    {
+    public void reloadingPerformed() {
         updateLastModified(getLastModificationDate());
     }
 
     /**
-     * Tells this implementation that the internally stored state should be
-     * refreshed. This method is intended to be called after the creation
-     * of an instance.
+     * Tells this implementation that the internally stored state should be refreshed. This method is intended to be called
+     * after the creation of an instance.
      */
-    public void refresh()
-    {
+    public void refresh() {
         updateLastModified(getLastModificationDate());
     }
 
     /**
-     * Returns the date of the last modification of the monitored file. A return
-     * value of 0 indicates, that the monitored file does not exist.
+     * Returns the date of the last modification of the monitored file. A return value of 0 indicates, that the monitored
+     * file does not exist.
      *
-     * @return the last modification date
+     * @return the last modification date in milliseconds.
      */
-    protected long getLastModificationDate()
-    {
+    protected long getLastModificationDate() {
         final File file = getExistingFile();
         return file != null ? file.lastModified() : 0;
     }
 
     /**
-     * Updates the last modification date of the monitored file. The need for a
-     * reload is detected only if the file's modification date is different from
-     * this value.
+     * Updates the last modification date of the monitored file. The need for a reload is detected only if the file's
+     * modification date is different from this value.
      *
-     * @param time the new last modification date
+     * @param timeMillis the new last modification date
      */
-    protected void updateLastModified(final long time)
-    {
-        lastModified = time;
+    protected void updateLastModified(final long timeMillis) {
+        lastModifiedMillis = timeMillis;
     }
 
     /**
-     * Returns the {@code File} object which is monitored by this object. This
-     * method is called every time the file's last modification time is needed.
-     * If it returns <b>null</b>, no check is performed. This base
-     * implementation obtains the {@code File} from the associated
-     * {@code FileHandler}. It can also deal with URLs to jar files.
+     * Returns the {@code File} object which is monitored by this object. This method is called every time the file's last
+     * modification time is needed. If it returns <b>null</b>, no check is performed. This base implementation obtains the
+     * {@code File} from the associated {@code FileHandler}. It can also deal with URLs to jar files.
      *
      * @return the {@code File} to be monitored (can be <b>null</b>)
      */
-    protected File getFile()
-    {
+    protected File getFile() {
         final URL url = getFileHandler().getURL();
         return url != null ? fileFromURL(url) : getFileHandler().getFile();
     }
@@ -240,11 +196,9 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      *
      * @return the monitored {@code File} or <b>null</b>
      */
-    private File getExistingFile()
-    {
+    private File getExistingFile() {
         File file = getFile();
-        if (file != null && !file.exists())
-        {
+        if (file != null && !file.exists()) {
             file = null;
         }
 
@@ -252,24 +206,17 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     }
 
     /**
-     * Helper method for transforming a URL into a file object. This method
-     * handles file: and jar: URLs.
+     * Helper method for transforming a URL into a file object. This method handles file: and jar: URLs.
      *
      * @param url the URL to be converted
      * @return the resulting file or <b>null </b>
      */
-    private static File fileFromURL(final URL url)
-    {
-        if (JAR_PROTOCOL.equals(url.getProtocol()))
-        {
+    private static File fileFromURL(final URL url) {
+        if (JAR_PROTOCOL.equals(url.getProtocol())) {
             final String path = url.getPath();
-            try
-            {
-                return FileLocatorUtils.fileFromURL(new URL(path.substring(0,
-                        path.indexOf('!'))));
-            }
-            catch (final MalformedURLException mex)
-            {
+            try {
+                return FileLocatorUtils.fileFromURL(new URL(path.substring(0, path.indexOf('!'))));
+            } catch (final MalformedURLException mex) {
                 return null;
             }
         }

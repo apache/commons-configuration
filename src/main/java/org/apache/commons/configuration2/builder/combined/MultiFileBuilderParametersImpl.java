@@ -27,38 +27,28 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * A specialized parameters object for {@link MultiFileConfigurationBuilder}.
  * </p>
  * <p>
- * A parameters object of this type is used by a configuration builder with
- * manages multiple file-based configurations. Such a builder is a bit special
- * because it does not create a configuration on its own, but delegates to a
- * file-based builder for this purpose. Therefore, parameters inherited from the
- * super class are treated differently:
+ * A parameters object of this type is used by a configuration builder with manages multiple file-based configurations.
+ * Such a builder is a bit special because it does not create a configuration on its own, but delegates to a file-based
+ * builder for this purpose. Therefore, parameters inherited from the super class are treated differently:
  * </p>
  * <ul>
- * <li>The {@link org.apache.commons.configuration2.interpol.ConfigurationInterpolator
- * ConfigurationInterpolator} is needed by a
- * {@code MultiFileConfigurationBuilder} to resolve the file pattern. It is
- * expected to be set and will not be passed to sub configurations created by
- * the builder.</li>
- * <li>All other parameters are evaluated when creating sub configurations.
- * However, it is preferred to use the
- * {@link #setManagedBuilderParameters(BuilderParameters)} method to define all
- * properties of sub configurations in a single place. If such a parameters
- * object is set, its properties take precedence.</li>
+ * <li>The {@link org.apache.commons.configuration2.interpol.ConfigurationInterpolator ConfigurationInterpolator} is
+ * needed by a {@code MultiFileConfigurationBuilder} to resolve the file pattern. It is expected to be set and will not
+ * be passed to sub configurations created by the builder.</li>
+ * <li>All other parameters are evaluated when creating sub configurations. However, it is preferred to use the
+ * {@link #setManagedBuilderParameters(BuilderParameters)} method to define all properties of sub configurations in a
+ * single place. If such a parameters object is set, its properties take precedence.</li>
  * </ul>
  * <p>
- * This class is not thread-safe. It is intended that an instance is constructed
- * and initialized by a single thread during configuration of a
- * {@code ConfigurationBuilder}.
+ * This class is not thread-safe. It is intended that an instance is constructed and initialized by a single thread
+ * during configuration of a {@code ConfigurationBuilder}.
  * </p>
  *
  * @since 2.0
  */
-public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
-        implements MultiFileBuilderProperties<MultiFileBuilderParametersImpl>
-{
+public class MultiFileBuilderParametersImpl extends BasicBuilderParameters implements MultiFileBuilderProperties<MultiFileBuilderParametersImpl> {
     /** Constant for the key in the parameters map used by this class. */
-    private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX
-            + MultiFileBuilderParametersImpl.class.getName();
+    private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX + MultiFileBuilderParametersImpl.class.getName();
 
     /** The parameters object for managed builders. */
     private BuilderParameters managedBuilderParameters;
@@ -67,60 +57,47 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
     private String filePattern;
 
     /**
-     * Obtains an instance of this class from the given map with parameters. If
-     * this map does not contain an instance, result is <b>null</b>. This is
-     * equivalent to {@code fromParameters(params, false)}.
+     * Obtains an instance of this class from the given map with parameters. If this map does not contain an instance,
+     * result is <b>null</b>. This is equivalent to {@code fromParameters(params, false)}.
      *
      * @param params the map with parameters (must not be <b>null</b>)
      * @return an instance of this class fetched from the map or <b>null</b>
      * @throws NullPointerException if the map with parameters is <b>null</b>
      */
-    public static MultiFileBuilderParametersImpl fromParameters(
-            final Map<String, Object> params)
-    {
+    public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params) {
         return fromParameters(params, false);
     }
 
     /**
-     * Obtains an instance of this class from the given map with parameters and
-     * creates a new object if such an instance cannot be found. This method can
-     * be used to obtain an instance from a map which has been created using the
-     * {@code getParameters()} method. If the map does not contain an instance
-     * under the expected key and the {@code createIfMissing} parameter is
-     * <b>true</b>, a new instance is created. Otherwise, result is <b>null</b>.
+     * Obtains an instance of this class from the given map with parameters and creates a new object if such an instance
+     * cannot be found. This method can be used to obtain an instance from a map which has been created using the
+     * {@code getParameters()} method. If the map does not contain an instance under the expected key and the
+     * {@code createIfMissing} parameter is <b>true</b>, a new instance is created. Otherwise, result is <b>null</b>.
      *
      * @param params the map with parameters (must not be <b>null</b>)
-     * @param createIfMissing a flag whether a new instance should be created if
-     *        necessary
+     * @param createIfMissing a flag whether a new instance should be created if necessary
      * @return an instance of this class fetched from the map or <b>null</b>
      * @throws NullPointerException if the map with parameters is <b>null</b>
      */
-    public static MultiFileBuilderParametersImpl fromParameters(
-            final Map<String, Object> params, final boolean createIfMissing)
-    {
-        MultiFileBuilderParametersImpl instance =
-                (MultiFileBuilderParametersImpl) params.get(PARAM_KEY);
-        if (instance == null && createIfMissing)
-        {
+    public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params, final boolean createIfMissing) {
+        MultiFileBuilderParametersImpl instance = (MultiFileBuilderParametersImpl) params.get(PARAM_KEY);
+        if (instance == null && createIfMissing) {
             instance = new MultiFileBuilderParametersImpl();
         }
         return instance;
     }
 
     /**
-     * Returns the pattern for determining file names for managed
-     * configurations.
+     * Returns the pattern for determining file names for managed configurations.
      *
      * @return the file pattern
      */
-    public String getFilePattern()
-    {
+    public String getFilePattern() {
         return filePattern;
     }
 
     @Override
-    public MultiFileBuilderParametersImpl setFilePattern(final String p)
-    {
+    public MultiFileBuilderParametersImpl setFilePattern(final String p) {
         filePattern = p;
         return this;
     }
@@ -130,42 +107,34 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
      *
      * @return the parameters for sub configurations
      */
-    public BuilderParameters getManagedBuilderParameters()
-    {
+    public BuilderParameters getManagedBuilderParameters() {
         return managedBuilderParameters;
     }
 
     @Override
-    public MultiFileBuilderParametersImpl setManagedBuilderParameters(
-            final BuilderParameters p)
-    {
+    public MultiFileBuilderParametersImpl setManagedBuilderParameters(final BuilderParameters p) {
         managedBuilderParameters = p;
         return this;
     }
 
     /**
-     * {@inheritDoc} This implementation puts a reference to this object under a
-     * reserved key in the resulting parameters map.
+     * {@inheritDoc} This implementation puts a reference to this object under a reserved key in the resulting parameters
+     * map.
      */
     @Override
-    public Map<String, Object> getParameters()
-    {
+    public Map<String, Object> getParameters() {
         final Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
     }
 
     /**
-     * {@inheritDoc} This implementation also tries to clone the parameters
-     * object for managed builders if possible.
+     * {@inheritDoc} This implementation also tries to clone the parameters object for managed builders if possible.
      */
     @Override
-    public MultiFileBuilderParametersImpl clone()
-    {
-        final MultiFileBuilderParametersImpl copy =
-                (MultiFileBuilderParametersImpl) super.clone();
-        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils
-                .cloneIfPossible(getManagedBuilderParameters()));
+    public MultiFileBuilderParametersImpl clone() {
+        final MultiFileBuilderParametersImpl copy = (MultiFileBuilderParametersImpl) super.clone();
+        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils.cloneIfPossible(getManagedBuilderParameters()));
         return copy;
     }
 }

@@ -37,7 +37,6 @@ import org.apache.commons.codec.binary.Hex;
  * JavaCC based parser for the PropertyList format.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 class PropertyListParser {
 

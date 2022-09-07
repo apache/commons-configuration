@@ -23,32 +23,26 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
- * A specialized implementation of {@code FileLocationStrategy} which checks
- * whether the provided file name is already an absolute file name.
+ * A specialized implementation of {@code FileLocationStrategy} which checks whether the provided file name is already
+ * an absolute file name.
  * </p>
  * <p>
- * This strategy ignores the URL and the base path stored in the passed in
- * {@link FileLocator}. It is only triggered by absolute names in the locator's
- * {@code fileName} component.
+ * This strategy ignores the URL and the base path stored in the passed in {@link FileLocator}. It is only triggered by
+ * absolute names in the locator's {@code fileName} component.
  * </p>
  *
  * @since 2.0
  */
-public class AbsoluteNameLocationStrategy implements FileLocationStrategy
-{
+public class AbsoluteNameLocationStrategy implements FileLocationStrategy {
     /**
-     * {@inheritDoc} This implementation constructs a {@code File} object from
-     * the locator's file name (if defined). If this results in an absolute file
-     * name pointing to an existing file, the corresponding URL is returned.
+     * {@inheritDoc} This implementation constructs a {@code File} object from the locator's file name (if defined). If this
+     * results in an absolute file name pointing to an existing file, the corresponding URL is returned.
      */
     @Override
-    public URL locate(final FileSystem fileSystem, final FileLocator locator)
-    {
-        if (StringUtils.isNotEmpty(locator.getFileName()))
-        {
+    public URL locate(final FileSystem fileSystem, final FileLocator locator) {
+        if (StringUtils.isNotEmpty(locator.getFileName())) {
             final File file = new File(locator.getFileName());
-            if (file.isAbsolute() && file.exists())
-            {
+            if (file.isAbsolute() && file.exists()) {
                 return FileLocatorUtils.convertFileToURL(file);
             }
         }

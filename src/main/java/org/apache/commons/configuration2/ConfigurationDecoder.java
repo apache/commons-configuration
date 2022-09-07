@@ -21,26 +21,23 @@ package org.apache.commons.configuration2;
  * An interface for decoding encoded values from a configuration source.
  * </p>
  * <p>
- * Using this interface it is possible to store encoded or encrypted values in a
- * configuration file. An implementing object can be assigned to a configuration
- * object. The {@code getEncodedString()} method of the
- * {@link ImmutableConfiguration} interface makes use of this instance to decode
- * the value read from the configuration file before it is passed to the caller.
+ * Using this interface it is possible to store encoded or encrypted values in a configuration file. An implementing
+ * object can be assigned to a configuration object. The {@code getEncodedString()} method of the
+ * {@link ImmutableConfiguration} interface makes use of this instance to decode the value read from the configuration
+ * file before it is passed to the caller.
  * </p>
  * <p>
- * By providing custom implementations of this interface an application can add
- * support for different kinds of encoded strings in configuration files.
+ * By providing custom implementations of this interface an application can add support for different kinds of encoded
+ * strings in configuration files.
  * </p>
  *
  * @since 2.0
  */
-public interface ConfigurationDecoder
-{
+public interface ConfigurationDecoder {
     /**
-     * Decodes the specified string. This method is called with a string in
-     * encoded form read from a configuration file. An implementation has to be
-     * perform an appropriate decoding and return the result. This result is
-     * passed to the calling application; so it should be in a readable form.
+     * Decodes the specified string. This method is called with a string in encoded form read from a configuration file. An
+     * implementation has to be perform an appropriate decoding and return the result. This result is passed to the calling
+     * application; so it should be in a readable form.
      *
      * @param s the string to be decoded (not <b>null</b>)
      * @return the decoded string

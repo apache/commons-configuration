@@ -25,47 +25,41 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 
 /**
- * A configuration wrapper around a {@link ServletConfig}. This configuration
- * is read only, adding or removing a property will throw an
- * UnsupportedOperationException.
+ * A configuration wrapper around a {@link ServletConfig}. This configuration is read only, adding or removing a
+ * property will throw an UnsupportedOperationException.
  *
  * @since 1.1
  */
-public class ServletConfiguration extends BaseWebConfiguration
-{
-    /** Stores a reference to the wrapped {@code ServletConfig}.*/
+public class ServletConfiguration extends BaseWebConfiguration {
+
+    /** Stores a reference to the wrapped {@code ServletConfig}. */
     protected ServletConfig config;
 
     /**
-     * Create a ServletConfiguration using the initialization parameter of
-     * the specified servlet.
+     * Creates a ServletConfiguration using the initialization parameter of the specified servlet.
      *
      * @param servlet the servlet
      */
-    public ServletConfiguration(final Servlet servlet)
-    {
+    public ServletConfiguration(final Servlet servlet) {
         this(servlet.getServletConfig());
     }
 
     /**
-     * Create a ServletConfiguration using the servlet initialization parameters.
+     * Creates a ServletConfiguration using the servlet initialization parameters.
      *
      * @param config the servlet configuration
      */
-    public ServletConfiguration(final ServletConfig config)
-    {
+    public ServletConfiguration(final ServletConfig config) {
         this.config = config;
     }
 
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         return handleDelimiters(config.getInitParameter(key));
     }
 
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
         final Enumeration<String> en = config.getInitParameterNames();

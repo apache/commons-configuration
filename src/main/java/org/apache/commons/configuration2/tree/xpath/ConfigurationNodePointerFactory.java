@@ -25,25 +25,20 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 
 /**
  * <p>
- * Implementation of the {@code NodePointerFactory} interface for configuration
- * nodes.
+ * Implementation of the {@code NodePointerFactory} interface for configuration nodes.
  * </p>
  * <p>
- * This class is able to create {@code NodePointer}s for the nodes of
- * hierarchical configurations. Because there is no common base class for
- * configuration nodes (any specific configuration implementation can use its
- * own node class) a trick is needed for activating this factory for a concrete
- * JXPath query: The {@code wrapNode()} method has to be called with the node
- * object and its corresponding {@code NodeHandler}. This creates a wrapper
- * object containing all information required by the factory for processing a
- * query. Then this wrapper object has to be passed to the query methods of the
- * JXPath context.
+ * This class is able to create {@code NodePointer}s for the nodes of hierarchical configurations. Because there is no
+ * common base class for configuration nodes (any specific configuration implementation can use its own node class) a
+ * trick is needed for activating this factory for a concrete JXPath query: The {@code wrapNode()} method has to be
+ * called with the node object and its corresponding {@code NodeHandler}. This creates a wrapper object containing all
+ * information required by the factory for processing a query. Then this wrapper object has to be passed to the query
+ * methods of the JXPath context.
  * </p>
  *
  * @since 1.3
  */
-public class ConfigurationNodePointerFactory implements NodePointerFactory
-{
+public class ConfigurationNodePointerFactory implements NodePointerFactory {
     /** Constant for the order of this factory. */
     public static final int CONFIGURATION_NODE_POINTER_FACTORY_ORDER = 200;
 
@@ -53,15 +48,13 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @return this order's factory
      */
     @Override
-    public int getOrder()
-    {
+    public int getOrder() {
         return CONFIGURATION_NODE_POINTER_FACTORY_ORDER;
     }
 
     /**
-     * Creates a node pointer for the specified bean. If the bean is a
-     * configuration node (indicated by a wrapper object), a corresponding
-     * pointer is returned.
+     * Creates a node pointer for the specified bean. If the bean is a configuration node (indicated by a wrapper object), a
+     * corresponding pointer is returned.
      *
      * @param name the name of the node
      * @param bean the bean
@@ -70,23 +63,21 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      */
     @Override
     @SuppressWarnings("unchecked")
-    /* Type casts are safe here; because of the way the NodeWrapper was
-       constructed the node handler must be compatible with the node.
+    /*
+     * Type casts are safe here; because of the way the NodeWrapper was constructed the node handler must be compatible with
+     * the node.
      */
-    public NodePointer createNodePointer(final QName name, final Object bean, final Locale locale)
-    {
-        if (bean instanceof NodeWrapper)
-        {
-            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
-            return new ConfigurationNodePointer(wrapper.getNode(),
-                    locale, wrapper.getNodeHandler());
+    public NodePointer createNodePointer(final QName name, final Object bean, final Locale locale) {
+        if (bean instanceof NodeWrapper) {
+            final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
+            return new ConfigurationNodePointer<>(wrapper.getNode(), locale, wrapper.getNodeHandler());
         }
         return null;
     }
 
     /**
-     * Creates a node pointer for the specified bean. If the bean is a
-     * configuration node, a corresponding pointer is returned.
+     * Creates a node pointer for the specified bean. If the bean is a configuration node, a corresponding pointer is
+     * returned.
      *
      * @param parent the parent node
      * @param name the name
@@ -95,44 +86,37 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      */
     @Override
     @SuppressWarnings("unchecked")
-    /* Type casts are safe here, see above. Also, the hierarchy of node
-       pointers is consistent, so a parent is compatible to a child.
+    /*
+     * Type casts are safe here, see above. Also, the hierarchy of node pointers is consistent, so a parent is compatible to
+     * a child.
      */
-    public NodePointer createNodePointer(final NodePointer parent, final QName name,
-            final Object bean)
-    {
-        if (bean instanceof NodeWrapper)
-        {
-            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
-            return new ConfigurationNodePointer((ConfigurationNodePointer) parent,
-                    wrapper.getNode(), wrapper.getNodeHandler());
+    public NodePointer createNodePointer(final NodePointer parent, final QName name, final Object bean) {
+        if (bean instanceof NodeWrapper) {
+            final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
+            return new ConfigurationNodePointer<>((ConfigurationNodePointer<Object>) parent, wrapper.getNode(), wrapper.getNodeHandler());
         }
         return null;
     }
 
     /**
-     * Creates a node wrapper for the specified node and its handler. This
-     * wrapper has to be passed to the JXPath context instead of the original
-     * node.
+     * Creates a node wrapper for the specified node and its handler. This wrapper has to be passed to the JXPath context
+     * instead of the original node.
      *
      * @param <T> the type of the node
      * @param node the node
      * @param handler the corresponding node handler
      * @return a wrapper for this node
      */
-    public static <T> Object wrapNode(final T node, final NodeHandler<T> handler)
-    {
+    public static <T> Object wrapNode(final T node, final NodeHandler<T> handler) {
         return new NodeWrapper<>(node, handler);
     }
 
     /**
-     * An internally used wrapper class that holds all information for
-     * processing a query for a specific node.
+     * An internally used wrapper class that holds all information for processing a query for a specific node.
      *
      * @param <T> the type of the nodes this class deals with
      */
-    static class NodeWrapper<T>
-    {
+    static class NodeWrapper<T> {
         /** Stores the node. */
         private final T node;
 
@@ -145,8 +129,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
          * @param nd the node
          * @param handler the node handler
          */
-        public NodeWrapper(final T nd, final NodeHandler<T> handler)
-        {
+        public NodeWrapper(final T nd, final NodeHandler<T> handler) {
             node = nd;
             nodeHandler = handler;
         }
@@ -156,8 +139,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
          *
          * @return the node
          */
-        public T getNode()
-        {
+        public T getNode() {
             return node;
         }
 
@@ -166,8 +148,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
          *
          * @return the node handler
          */
-        public NodeHandler<T> getNodeHandler()
-        {
+        public NodeHandler<T> getNodeHandler() {
             return nodeHandler;
         }
     }

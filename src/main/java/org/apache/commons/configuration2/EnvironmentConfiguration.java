@@ -20,17 +20,21 @@ package org.apache.commons.configuration2;
 import java.util.HashMap;
 
 /**
- * <p>A Configuration implementation that reads the platform specific
- * environment variables using the map returned by {@link System#getenv()}.</p>
+ * <p>
+ * A Configuration implementation that reads the platform specific environment variables using the map returned by
+ * {@link System#getenv()}.
+ * </p>
  *
- * <p>This configuration implementation is read-only. It allows read access to the
- * defined OS environment variables, but their values cannot be changed. Any
- * attempts to add or remove a property will throw an
- * {@link UnsupportedOperationException}</p>
+ * <p>
+ * This configuration implementation is read-only. It allows read access to the defined OS environment variables, but
+ * their values cannot be changed. Any attempts to add or remove a property will throw an
+ * {@link UnsupportedOperationException}
+ * </p>
  *
- * <p>Usage of this class is easy: After an instance has been created the get
- * methods provided by the {@code Configuration} interface can be used
- * for querying environment variables, e.g.:</p>
+ * <p>
+ * Usage of this class is easy: After an instance has been created the get methods provided by the {@code Configuration}
+ * interface can be used for querying environment variables, e.g.:
+ * </p>
  *
  * <pre>
  * Configuration envConfig = new EnvironmentConfiguration();
@@ -39,51 +43,45 @@ import java.util.HashMap;
  *
  * @since 1.5
  */
-public class EnvironmentConfiguration extends MapConfiguration
-{
+public class EnvironmentConfiguration extends MapConfiguration {
     /**
      * Create a Configuration based on the environment variables.
      *
      * @see System#getenv()
      */
-    public EnvironmentConfiguration()
-    {
-        super(new HashMap<String, Object>(System.getenv()));
+    public EnvironmentConfiguration() {
+        super(new HashMap<>(System.getenv()));
     }
 
     /**
-     * Adds a property to this configuration. Because this configuration is
-     * read-only, this operation is not allowed and will cause an exception.
+     * Adds a property to this configuration. Because this configuration is read-only, this operation is not allowed and
+     * will cause an exception.
      *
      * @param key the key of the property to be added
      * @param value the property value
      */
     @Override
-    protected void addPropertyDirect(final String key, final Object value)
-    {
+    protected void addPropertyDirect(final String key, final Object value) {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }
 
     /**
-     * Removes a property from this configuration. Because this configuration is
-     * read-only, this operation is not allowed and will cause an exception.
+     * Removes a property from this configuration. Because this configuration is read-only, this operation is not allowed
+     * and will cause an exception.
      *
      * @param key the key of the property to be removed
      */
     @Override
-    protected void clearPropertyDirect(final String key)
-    {
+    protected void clearPropertyDirect(final String key) {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }
 
     /**
-     * Removes all properties from this configuration. Because this
-     * configuration is read-only, this operation is not allowed and will cause
-     * an exception.
+     * Removes all properties from this configuration. Because this configuration is read-only, this operation is not
+     * allowed and will cause an exception.
      */
     @Override
-    protected void clearInternal()
-    {
+    protected void clearInternal() {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }
 }

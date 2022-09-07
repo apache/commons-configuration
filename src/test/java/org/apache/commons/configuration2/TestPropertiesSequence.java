@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,8 +15,10 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+package org.apache.commons.configuration2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,18 +27,15 @@ import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test that the configuration factory returns keys in the same
- * sequence as the properties configurator
+ * Test that the configuration factory returns keys in the same sequence as the properties configurator
  *
  */
-public class TestPropertiesSequence
-{
+public class TestPropertiesSequence {
     @Test
-    public void testConfigurationValuesInSameOrderFromFile() throws Exception
-    {
+    public void testConfigurationValuesInSameOrderFromFile() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
@@ -57,18 +54,12 @@ public class TestPropertiesSequence
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
-        assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
-
-        for (int i = 0; i < keysSimpleConfiguration.size(); i++)
-        {
-            assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
-        }
+        assertFalse(keysSimpleConfiguration.isEmpty());
+        assertEquals(keysSimpleConfiguration, keysCompositeConfiguration);
     }
 
     @Test
-    public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception
-    {
+    public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
@@ -93,18 +84,12 @@ public class TestPropertiesSequence
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
-        assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
-
-        for (int i = 0; i < keysSimpleConfiguration.size(); i++)
-        {
-            assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
-        }
+        assertFalse(keysSimpleConfiguration.isEmpty());
+        assertEquals(keysSimpleConfiguration, keysCompositeConfiguration);
     }
 
     @Test
-    public void testMappingInSameOrder() throws Exception
-    {
+    public void testMappingInSameOrder() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
@@ -120,33 +105,27 @@ public class TestPropertiesSequence
         final Configuration mapping = new BaseConfiguration();
         final Configuration mapping2 = new BaseConfiguration();
 
-        for (final Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();)
-        {
+        for (final Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();) {
             final String key = keys.next();
             final String[] keyParts = StringUtils.split(key, ".");
 
-            if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
-            {
+            if (keyParts.length == 3 && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
                 final String serviceKey = keyParts[1];
 
-                if (!mapping.containsKey(serviceKey))
-                {
+                if (!mapping.containsKey(serviceKey)) {
                     mapping.setProperty(serviceKey, simpleConfiguration.getString(key));
                 }
             }
         }
 
-        for (final Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();)
-        {
+        for (final Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();) {
             final String key = keys.next();
             final String[] keyParts = StringUtils.split(key, ".");
 
-            if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
-            {
+            if (keyParts.length == 3 && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
                 final String serviceKey = keyParts[1];
 
-                if (!mapping2.containsKey(serviceKey))
-                {
+                if (!mapping2.containsKey(serviceKey)) {
                     mapping2.setProperty(serviceKey, compositeConfiguration.getString(key));
                 }
             }

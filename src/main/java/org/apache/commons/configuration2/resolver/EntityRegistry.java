@@ -21,26 +21,22 @@ import java.util.Map;
 
 /**
  * Interface used for registering and retrieving PUBLICID to URL mappings.
+ *
  * @since 1.7
  */
-public interface EntityRegistry
-{
+public interface EntityRegistry {
     /**
      * <p>
      * Registers the specified URL for the specified public identifier.
      * </p>
      * <p>
-     * This implementation maps {@code PUBLICID}'s to URLs (from which
-     * the resource will be loaded). A common use case for this method is to
-     * register local URLs (possibly computed at runtime by a class loader) for
-     * DTDs and Schemas. This allows the performance advantage of using a local
-     * version without having to ensure every {@code SYSTEM} URI on every
-     * processed XML document is local. This implementation provides only basic
-     * functionality. If more sophisticated features are required, either calling
-     * {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
-     * {@code DocumentBuilder} (which also can be initialized with a
-     * custom {@code EntityResolver}) or creating a custom entity resolver
-     * and registering it with the XMLConfiguration is recommended.
+     * This implementation maps {@code PUBLICID}'s to URLs (from which the resource will be loaded). A common use case for
+     * this method is to register local URLs (possibly computed at runtime by a class loader) for DTDs and Schemas. This
+     * allows the performance advantage of using a local version without having to ensure every {@code SYSTEM} URI on every
+     * processed XML document is local. This implementation provides only basic functionality. If more sophisticated
+     * features are required, either calling {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
+     * {@code DocumentBuilder} (which also can be initialized with a custom {@code EntityResolver}) or creating a custom
+     * entity resolver and registering it with the XMLConfiguration is recommended.
      * </p>
      *
      * @param publicId Public identifier of the Entity to be resolved
@@ -50,8 +46,7 @@ public interface EntityRegistry
     void registerEntityId(String publicId, URL entityURL);
 
     /**
-     * Returns a map with the entity IDs that have been registered using the
-     * {@code registerEntityId()} method.
+     * Returns a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */

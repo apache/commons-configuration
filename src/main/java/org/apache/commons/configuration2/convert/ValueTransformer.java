@@ -16,37 +16,30 @@
  */
 package org.apache.commons.configuration2.convert;
 
-
 /**
  * <p>
- * Definition of an interface used by {@link ListDelimiterHandler} to perform
- * additional transformations on behalf of a configuration when a property value
- * is escaped.
+ * Definition of an interface used by {@link ListDelimiterHandler} to perform additional transformations on behalf of a
+ * configuration when a property value is escaped.
  * </p>
  * <p>
- * Some {@code Configuration} implementations require a special encoding of
- * their property values before they get written on disk. In some
- * constellations, e.g. when a property with multiple values is to be forced on
- * a single line, this encoding has to be done together with the escaping of
- * list delimiter characters - which is in the responsibility of
- * {@link ListDelimiterHandler}.
+ * Some {@code Configuration} implementations require a special encoding of their property values before they get
+ * written on disk. In some constellations, e.g. when a property with multiple values is to be forced on a single line,
+ * this encoding has to be done together with the escaping of list delimiter characters - which is in the responsibility
+ * of {@link ListDelimiterHandler}.
  * </p>
  * <p>
- * In order to allow a proper collaboration between the parties involved, this
- * interface was introduced. A configuration object provides an implementation
- * of {@code ValueTransformer} and passes it to the {@code ListDelimiterHandler}
- * when escaping of properties is needed. The delimiter handler can then call
- * back to perform the additional encoding as its pleasure.
+ * In order to allow a proper collaboration between the parties involved, this interface was introduced. A configuration
+ * object provides an implementation of {@code ValueTransformer} and passes it to the {@code ListDelimiterHandler} when
+ * escaping of properties is needed. The delimiter handler can then call back to perform the additional encoding as its
+ * pleasure.
  * </p>
  *
  * @since 2.0
  */
-public interface ValueTransformer
-{
+public interface ValueTransformer {
     /**
-     * Performs an arbitrary encoding of the passed in value object. This method
-     * is called by a {@link ListDelimiterHandler} implementation before or
-     * after list delimiters have been escaped.
+     * Performs an arbitrary encoding of the passed in value object. This method is called by a {@link ListDelimiterHandler}
+     * implementation before or after list delimiters have been escaped.
      *
      * @param value the property value to be transformed
      * @return the transformed property value

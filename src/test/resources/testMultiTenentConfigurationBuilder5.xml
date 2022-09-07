@@ -18,7 +18,6 @@
 <!-- Test configuration definition for testing DynamicCombinedConfiguration
      together with reloading. This file defines a configuration which will be
      rewritten during a test run. This should trigger a reload.
-     $Id$
 -->
 <configuration>
   <header>

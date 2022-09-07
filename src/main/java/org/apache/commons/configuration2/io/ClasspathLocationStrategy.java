@@ -22,27 +22,21 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
- * A specialized {@code FileLocationStrategy} implementation which searches for
- * files on the class path.
+ * A specialized {@code FileLocationStrategy} implementation which searches for files on the class path.
  * </p>
  * <p>
- * This strategy implementation ignores the URL and the base path components of
- * the passed in {@link FileLocator}. It tries to look up the file name on both
- * the class path and the system class path.
+ * This strategy implementation ignores the URL and the base path components of the passed in {@link FileLocator}. It
+ * tries to look up the file name on both the class path and the system class path.
  * </p>
  *
  * @since 2.0
  */
-public class ClasspathLocationStrategy implements FileLocationStrategy
-{
+public class ClasspathLocationStrategy implements FileLocationStrategy {
     /**
-     * {@inheritDoc} This implementation looks up the locator's file name as a
-     * resource on the class path.
+     * {@inheritDoc} This implementation looks up the locator's file name as a resource on the class path.
      */
     @Override
-    public URL locate(final FileSystem fileSystem, final FileLocator locator)
-    {
-        return StringUtils.isEmpty(locator.getFileName()) ? null
-                : FileLocatorUtils.locateFromClasspath(locator.getFileName());
+    public URL locate(final FileSystem fileSystem, final FileLocator locator) {
+        return StringUtils.isEmpty(locator.getFileName()) ? null : FileLocatorUtils.locateFromClasspath(locator.getFileName());
     }
 }

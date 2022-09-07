@@ -17,10 +17,9 @@
 
 /**
  * <p>
- * The Configuration main package. It contains the definition of the
- * <code>Configuration</code> interface and frequently used implementations
- * like <code>PropertiesConfiguration</code> (dealing with <code>.properties</code>
- * files) or <code>XMLConfiguration</code> that can load XML documents.
+ * The Configuration main package. It contains the definition of the {@code Configuration} interface and frequently used
+ * implementations like {@code PropertiesConfiguration} (dealing with {@code .properties} files) or
+ * {@code XMLConfiguration} that can load XML documents.
  * </p>
  *
  */

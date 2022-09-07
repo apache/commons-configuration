@@ -17,13 +17,16 @@
 
 package org.apache.commons.configuration2.web;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -31,19 +34,35 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationMap;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.junit.Test;
-
-import com.mockobjects.servlet.MockHttpServletRequest;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  */
-public class TestServletRequestConfiguration extends TestAbstractConfiguration
-{
+public class TestServletRequestConfiguration extends TestAbstractConfiguration {
+    /**
+     * Returns a new servlet request configuration that is backed by the passed in configuration.
+     *
+     * @param base the configuration with the underlying values
+     * @return the servlet request configuration
+     */
+    private ServletRequestConfiguration createConfiguration(final Configuration base) {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameterMap()).thenAnswer(invocation -> new ConfigurationMap(base));
+        when(request.getParameterValues(ArgumentMatchers.any())).thenAnswer(invocation -> {
+            final String key = invocation.getArgument(0, String.class);
+            return base.getStringArray(key);
+        });
+
+        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return config;
+    }
+
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final Configuration configuration = new BaseConfiguration();
         configuration.setProperty("key1", "value1");
         configuration.setProperty("key2", "value2");
@@ -55,91 +74,46 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
-        final ServletRequest request = new MockHttpServletRequest()
-        {
-            @Override
-            public String getParameter(final String key)
-            {
-                return null;
-            }
-
-            @Override
-            public Map<?, ?> getParameterMap()
-            {
-                return new HashMap<>();
-            }
-        };
+    protected AbstractConfiguration getEmptyConfiguration() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter(ArgumentMatchers.any())).thenReturn(null);
+        when(request.getParameterMap()).thenAnswer(invocation -> new HashMap<>());
 
         return new ServletRequestConfiguration(request);
     }
 
-    /**
-     * Returns a new servlet request configuration that is backed by the passed
-     * in configuration.
-     *
-     * @param base the configuration with the underlying values
-     * @return the servlet request configuration
-     */
-    private ServletRequestConfiguration createConfiguration(final Configuration base)
-    {
-        final ServletRequest request = new MockHttpServletRequest()
-        {
-            @Override
-            public String[] getParameterValues(final String key)
-            {
-                return base.getStringArray(key);
-            }
-
-            @Override
-            public Map<?, ?> getParameterMap()
-            {
-                return new ConfigurationMap(base);
-            }
-        };
-
-        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        return config;
+    @Override
+    @Test
+    public void testAddPropertyDirect() {
+        assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect);
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
-        super.testAddPropertyDirect();
-    }
-
-    @Override
-    @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
-        super.testClearProperty();
+    @Test
+    public void testClearProperty() {
+        assertThrows(UnsupportedOperationException.class, super::testClearProperty);
     }
 
     /**
      * Tests a list with elements that contain an escaped list delimiter.
      */
     @Test
-    public void testListWithEscapedElements()
-    {
-        final String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
+    public void testListWithEscapedElements() {
+        final String[] values = {"test1", "test2\\,test3", "test4\\,test5"};
         final String listKey = "test.list";
 
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(listKey, values);
 
-        assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
+        assertEquals(values.length, config.getList(listKey).size());
 
         final Configuration c = createConfiguration(config);
         final List<?> v = c.getList(listKey);
 
-        assertEquals("Wrong number of elements in list", values.length, v.size());
-
-        for (int i = 0; i < values.length; i++)
-        {
-            assertEquals("Wrong value at index " + i, values[i].replaceAll("\\\\", ""), v.get(i));
+        final List<String> expected = new ArrayList<>();
+        for (int i = 0; i < values.length; i++) {
+            expected.add(values[i].replace("\\", ""));
         }
+        assertEquals(expected, v);
     }
 }

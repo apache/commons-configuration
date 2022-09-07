@@ -20,37 +20,30 @@ import org.apache.commons.configuration2.interpol.Lookup;
 
 /**
  * <p>
- * A specialized implementation of the {@code Lookup} interface which uses a
- * {@code Configuration} object to resolve variables.
+ * A specialized implementation of the {@code Lookup} interface which uses a {@code Configuration} object to resolve
+ * variables.
  * </p>
  * <p>
- * This class is passed an {@link ImmutableConfiguration} object at construction
- * time. In its implementation of the {@code lookup()} method it simply queries
- * this configuration for the passed in variable name. So the keys passed to
+ * This class is passed an {@link ImmutableConfiguration} object at construction time. In its implementation of the
+ * {@code lookup()} method it simply queries this configuration for the passed in variable name. So the keys passed to
  * {@code lookup()} are mapped directly to configuration properties.
  * </p>
  *
  * @since 2.0
  */
-public class ConfigurationLookup implements Lookup
-{
+public class ConfigurationLookup implements Lookup {
     /** The configuration to which lookups are delegated. */
     private final ImmutableConfiguration configuration;
 
     /**
-     * Creates a new instance of {@code ConfigurationLookup} and sets the
-     * associated {@code ImmutableConfiguration}.
+     * Creates a new instance of {@code ConfigurationLookup} and sets the associated {@code ImmutableConfiguration}.
      *
-     * @param config the configuration to use for lookups (must not be
-     *        <b>null</b>)
+     * @param config the configuration to use for lookups (must not be <b>null</b>)
      * @throws IllegalArgumentException if the configuration is <b>null</b>
      */
-    public ConfigurationLookup(final ImmutableConfiguration config)
-    {
-        if (config == null)
-        {
-            throw new IllegalArgumentException(
-                    "Configuration must not be null!");
+    public ConfigurationLookup(final ImmutableConfiguration config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Configuration must not be null!");
         }
         configuration = config;
     }
@@ -60,19 +53,16 @@ public class ConfigurationLookup implements Lookup
      *
      * @return the associated {@code ImmutableConfiguration}
      */
-    public ImmutableConfiguration getConfiguration()
-    {
+    public ImmutableConfiguration getConfiguration() {
         return configuration;
     }
 
     /**
-     * {@inheritDoc} This implementation calls {@code getProperty()} on the
-     * associated configuration. The return value is directly returned. Note
-     * that this may be a complex object, e.g. a collection or an array.
+     * {@inheritDoc} This implementation calls {@code getProperty()} on the associated configuration. The return value is
+     * directly returned. Note that this may be a complex object, e.g. a collection or an array.
      */
     @Override
-    public Object lookup(final String variable)
-    {
+    public Object lookup(final String variable) {
         return getConfiguration().getProperty(variable);
     }
 }

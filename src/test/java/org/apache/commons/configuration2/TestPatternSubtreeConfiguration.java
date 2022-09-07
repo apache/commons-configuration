@@ -17,7 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -26,68 +27,62 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple MultiConfigurationTest.
  *
  */
-public class TestPatternSubtreeConfiguration
-{
-    private static File CONFIG_FILE = ConfigurationAssert.getTestFile("testPatternSubtreeConfig.xml");
-    private static String PATTERN = "BusinessClient[@name='${sys:Id}']";
+public class TestPatternSubtreeConfiguration {
+    private static final File CONFIG_FILE = ConfigurationAssert.getTestFile("testPatternSubtreeConfig.xml");
+    private static final String PATTERN = "BusinessClient[@name='${sys:Id}']";
     private XMLConfiguration conf;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         conf = new XMLConfiguration();
         new FileHandler(conf).load(CONFIG_FILE);
     }
 
     /**
-     * Rigourous Test :-)
+     * Rigorous Test :-)
      */
     @Test
-    public void testMultiConfiguration()
-    {
+    public void testMultiConfiguration() {
         final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(this.conf, PATTERN);
         config.setExpressionEngine(new XPathExpressionEngine());
 
         System.setProperty("Id", "1001");
-        assertTrue(config.getInt("rowsPerPage") == 15);
+        assertEquals(15, config.getInt("rowsPerPage"));
 
         System.setProperty("Id", "1002");
-        assertTrue(config.getInt("rowsPerPage") == 25);
+        assertEquals(25, config.getInt("rowsPerPage"));
 
         System.setProperty("Id", "1003");
-        assertTrue(config.getInt("rowsPerPage") == 35);
+        assertEquals(35, config.getInt("rowsPerPage"));
     }
 
     /**
-     * Tests a read operation if the wrapped configuration does not implement
-     * FileBased.
+     * Tests a read operation if the wrapped configuration does not implement FileBased.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testReadNotFileBased() throws ConfigurationException
-    {
+    @Test
+    public void testReadNotFileBased() {
         final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
-        final PatternSubtreeConfigurationWrapper config =
-                new PatternSubtreeConfigurationWrapper(hc, PATTERN);
-        new FileHandler(config).load(CONFIG_FILE);
+        final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(hc, PATTERN);
+        final FileHandler fileHandler = new FileHandler(config);
+        assertThrows(ConfigurationException.class, () -> fileHandler.load(CONFIG_FILE));
     }
 
     /**
-     * Tests a write operation if the wrapped configuration does not implement
-     * FileBased.
+     * Tests a write operation if the wrapped configuration does not implement FileBased.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testSaveNotFileBased() throws ConfigurationException
-    {
+    @Test
+    public void testSaveNotFileBased() {
         final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
-        final PatternSubtreeConfigurationWrapper config =
-                new PatternSubtreeConfigurationWrapper(hc, PATTERN);
-        new FileHandler(config).save(new StringWriter());
+        final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(hc, PATTERN);
+        final FileHandler fileHandler = new FileHandler(config);
+        final StringWriter writer = new StringWriter();
+        assertThrows(ConfigurationException.class, () -> fileHandler.save(writer));
     }
 }

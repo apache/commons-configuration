@@ -20,16 +20,14 @@ import org.apache.commons.configuration2.io.FileBased;
 
 /**
  * <p>
- * An interface which combines the {@code FileBased} and {@code Configuration}
- * interfaces.
+ * An interface which combines the {@code FileBased} and {@code Configuration} interfaces.
  * </p>
  * <p>
- * This interface is used to parameterize {@code ConfigurationBuilder}
- * implementations which produce configurations read from a {@code FileHandler}.
+ * This interface is used to parameterize {@code ConfigurationBuilder} implementations which produce configurations read
+ * from a {@code FileHandler}.
  * </p>
  *
  * @since 2.0
  */
-public interface FileBasedConfiguration extends FileBased, Configuration
-{
+public interface FileBasedConfiguration extends FileBased, Configuration {
 }

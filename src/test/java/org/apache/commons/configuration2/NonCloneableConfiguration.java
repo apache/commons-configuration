@@ -19,37 +19,27 @@ package org.apache.commons.configuration2;
 import java.util.Iterator;
 
 /**
- * A specialized configuration implementation that does not support cloning.
- * This class is only used in some test cases for testing implementations of
- * clone() methods. It does not make much sense otherwise; all methods are just
- * dummies.
+ * A specialized configuration implementation that does not support cloning. This class is only used in some test cases
+ * for testing implementations of clone() methods. It does not make much sense otherwise; all methods are just dummies.
  *
  */
-public class NonCloneableConfiguration extends AbstractConfiguration
-{
+public class NonCloneableConfiguration extends AbstractConfiguration {
     /**
      * Dummy implementation of this method.
      */
     @Override
-    protected void addPropertyDirect(final String key, final Object value)
-    {
+    protected void addPropertyDirect(final String key, final Object value) {
+    }
+
+    @Override
+    protected void clearPropertyDirect(final String key) {
     }
 
     /**
      * Dummy implementation of this method.
      */
     @Override
-    protected boolean isEmptyInternal()
-    {
-        return true;
-    }
-
-    /**
-     * Dummy implementation of this method.
-     */
-    @Override
-    protected boolean containsKeyInternal(final String key)
-    {
+    protected boolean containsKeyInternal(final String key) {
         return false;
     }
 
@@ -57,8 +47,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration
      * Dummy implementation of this method.
      */
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         return null;
     }
 
@@ -66,13 +55,15 @@ public class NonCloneableConfiguration extends AbstractConfiguration
      * Dummy implementation of this method.
      */
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         return null;
     }
 
+    /**
+     * Dummy implementation of this method.
+     */
     @Override
-    protected void clearPropertyDirect(final String key)
-    {
+    protected boolean isEmptyInternal() {
+        return true;
     }
 }

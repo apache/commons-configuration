@@ -16,7 +16,6 @@
    limitations under the License.
 -->
 <!-- ===================================================================== -->
-<!-- $Id$ -->
 <!-- ===================================================================== -->
 
 <document>
@@ -35,41 +34,11 @@
             "mvn install". This will compile the source and tests, run the tests, and then
             package the jar. The jar will also be copied into the local maven repository
             for use by other builds. According to the minimum Java version of
-            Commons Configuration, this build requires a JDK 1.6 or higher.
+            Commons Configuration, this build requires a JDK 8 or higher.
           </p>
           <p>
             To build the web site run "mvn site". When it completes the web site will reside in
             the target/site directory and may be viewed by opening target/site/index.html.
-            Note that due to a dependency to a maven reporting plugin, the build of the site
-            requires JDK 1.7 or higher.
-          </p>
-        </section>
-        <section name="Running Functional Tests">
-          <p>
-            <code>TestWebdavConfigurationBuilder</code> is a functional test that tests
-            DefaultConfigurationBuilder with the configuration files stored in a WebDAV
-            server. To run the test, execute the steps that follow
-            <ol>
-              <li>Copy all the files in the conf directory to the WebDAV server. Not all the
-              files are required but it is generally easier to use a tool like cadaver
-              and do an mput than try to copy the required files individually.</li>
-              <li>Add the following to the profiles section of settings.xml in the Maven home
-              directory. Modify the urls to match your setup.
-<source><![CDATA[
-   <profile>
-    <profile>
-      <id>webdav</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <test.webdav.base>webdav://vfsusr:vfstest@192.168.10.133:80/conf</test.webdav.base>
-      </properties>
-    </profile>]]></source></li>
-              <li>run "mvn -P webdav test -Dtest=TestWebdavConfigurationBuilder". The test
-              can also be run using "mvn -P webdav test" but this will run all the unit tests
-              in addition to the WebDAV test.</li>
-            </ol>
           </p>
         </section>
     </body>

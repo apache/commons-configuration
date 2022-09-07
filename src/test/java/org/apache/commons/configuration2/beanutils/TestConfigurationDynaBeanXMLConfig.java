@@ -20,22 +20,18 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 
 /**
- * An additional test class for ConfigurationDynaBean. This test class performs
- * the same tests as the default test class, but uses a XMLConfiguration as
- * underlying configuration object.
+ * An additional test class for ConfigurationDynaBean. This test class performs the same tests as the default test
+ * class, but uses a XMLConfiguration as underlying configuration object.
  *
  */
-public class TestConfigurationDynaBeanXMLConfig extends
-        TestConfigurationDynaBean
-{
+public class TestConfigurationDynaBeanXMLConfig extends TestConfigurationDynaBean {
     /**
-     * Creates the underlying configuration object. This implementation will
-     * create a XMLConfiguration.
+     * Creates the underlying configuration object. This implementation will create a XMLConfiguration.
+     *
      * @return the underlying configuration
      */
     @Override
-    protected Configuration createConfiguration()
-    {
+    protected Configuration createConfiguration() {
         return new XMLConfiguration();
     }
 }

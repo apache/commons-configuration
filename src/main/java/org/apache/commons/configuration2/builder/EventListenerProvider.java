@@ -20,32 +20,25 @@ import org.apache.commons.configuration2.event.EventListenerList;
 
 /**
  * <p>
- * Definition of an interface that is evaluated by a
- * {@link ConfigurationBuilder} to initialize event listeners.
+ * Definition of an interface that is evaluated by a {@link ConfigurationBuilder} to initialize event listeners.
  * </p>
  * <p>
- * This interface allows a convenient initialization of a configuration builder
- * with event listeners to be registered at the managed configuration object.
- * The {@code configure()} method of {@link BasicConfigurationBuilder} checks
- * whether a parameters object passed to it implements this interface. If this
- * is the case, all event listeners defined by the object are added to the
- * internal list managed by the builder. They are then automatically registered
- * at the managed configuration when it is created. When using a corresponding
- * implementation the configuration of event listeners can be done in the same
- * fluent API style as the other initialization of the configuration builder.
+ * This interface allows a convenient initialization of a configuration builder with event listeners to be registered at
+ * the managed configuration object. The {@code configure()} method of {@link BasicConfigurationBuilder} checks whether
+ * a parameters object passed to it implements this interface. If this is the case, all event listeners defined by the
+ * object are added to the internal list managed by the builder. They are then automatically registered at the managed
+ * configuration when it is created. When using a corresponding implementation the configuration of event listeners can
+ * be done in the same fluent API style as the other initialization of the configuration builder.
  * </p>
  *
  * @since 2.0
  */
-public interface EventListenerProvider
-{
+public interface EventListenerProvider {
     /**
-     * Returns an {@code EventListenerList} object with information about event
-     * listener registrations. All listeners contained in this object are added
-     * to the processing {@code ConfigurationBuilder}.
+     * Returns an {@code EventListenerList} object with information about event listener registrations. All listeners
+     * contained in this object are added to the processing {@code ConfigurationBuilder}.
      *
-     * @return the {@code EventListenerList} with event listener registrations
-     *         (must not be <b>null</b>)
+     * @return the {@code EventListenerList} with event listener registrations (must not be <b>null</b>)
      */
     EventListenerList getListeners();
 }

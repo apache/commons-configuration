@@ -18,7 +18,6 @@
 <!-- Test configuration definition file that contains a declaration of a
      custom Lookup object. It is also tested whether the Lookup can be
      directly accessed for referencing configuration files.
-     $Id$
 -->
 <configuration>
   <header>

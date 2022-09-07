@@ -26,10 +26,10 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * Abstract layer to allow various types of file systems.
+ *
  * @since 1.7
  */
-public abstract class FileSystem
-{
+public abstract class FileSystem {
     /** Constant for the default logger. */
     private static final ConfigurationLogger DEFAULT_LOG = ConfigurationLogger.newDummyLogger();
 
@@ -39,59 +39,68 @@ public abstract class FileSystem
     /** FileSystem options provider */
     private volatile FileOptionsProvider optionsProvider;
 
-    /**
-     * Returns the logger used by this FileSystem.
-     *
-     * @return the logger
-     */
-    public ConfigurationLogger getLogger()
-    {
-        final ConfigurationLogger result = log;
-        return (result != null) ? result : DEFAULT_LOG;
-    }
+    public abstract String getBasePath(String path);
 
-    /**
-     * Allows setting the logger to be used by this FileSystem. This
-     * method makes it possible for clients to exactly control logging behavior.
-     * Per default a logger is set that will ignore all log messages. Derived
-     * classes that want to enable logging should call this method during their
-     * initialization with the logger to be used. Passing in a <b>null</b> argument
-     * disables logging.
-     *
-     * @param log the new logger
-     */
-    public void setLogger(final ConfigurationLogger log)
-    {
-        this.log = log;
-    }
+    public abstract String getFileName(String path);
 
-    /**
-     * Set the FileOptionsProvider
-     * @param provider The FileOptionsProvider
-     */
-    public void setFileOptionsProvider(final FileOptionsProvider provider)
-    {
-        this.optionsProvider = provider;
-    }
-
-    public FileOptionsProvider getFileOptionsProvider()
-    {
+    public FileOptionsProvider getFileOptionsProvider() {
         return this.optionsProvider;
     }
 
     public abstract InputStream getInputStream(URL url) throws ConfigurationException;
 
-    public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
+    /**
+     * Not abstract for binary compatibility.
+     *
+     * @param url TODO
+     * @param urlConnectionOptions Ignored.
+     * @return TODO
+     * @throws ConfigurationException TODO
+     *
+     * @since 2.8.0
+     */
+    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException {
+        return getInputStream(url);
+    }
+
+    /**
+     * Returns the logger used by this FileSystem.
+     *
+     * @return the logger
+     */
+    public ConfigurationLogger getLogger() {
+        final ConfigurationLogger result = log;
+        return result != null ? result : DEFAULT_LOG;
+    }
 
     public abstract OutputStream getOutputStream(File file) throws ConfigurationException;
 
+    public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
+
     public abstract String getPath(File file, URL url, String basePath, String fileName);
 
-    public abstract String getBasePath(String path);
-
-    public abstract String getFileName(String path);
+    public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
 
     public abstract URL locateFromURL(String basePath, String fileName);
 
-    public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
+    /**
+     * Set the FileOptionsProvider
+     *
+     * @param provider The FileOptionsProvider
+     */
+    public void setFileOptionsProvider(final FileOptionsProvider provider) {
+        this.optionsProvider = provider;
+    }
+
+    /**
+     * Allows setting the logger to be used by this FileSystem. This method makes it possible for clients to exactly control
+     * logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that want to enable
+     * logging should call this method during their initialization with the logger to be used. Passing in a <b>null</b>
+     * argument disables logging.
+     *
+     * @param log the new logger
+     */
+    public void setLogger(final ConfigurationLogger log) {
+        this.log = log;
+    }
 }

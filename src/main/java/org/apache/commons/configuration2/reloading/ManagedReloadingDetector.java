@@ -21,13 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A strategy to reload configuration based on management requests. Designed for
- * JMX management.
+ * A strategy to reload configuration based on management requests. Designed for JMX management.
  *
  */
-public class ManagedReloadingDetector implements ReloadingDetector,
-        ManagedReloadingDetectorMBean
-{
+public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloadingDetectorMBean {
     /** The logger. */
     private final Log log = LogFactory.getLog(ManagedReloadingDetector.class);
 
@@ -35,37 +32,32 @@ public class ManagedReloadingDetector implements ReloadingDetector,
     private volatile boolean reloadingRequired;
 
     /**
-     * {@inheritDoc} This implementation resets the internal flag indicating
-     * that a reload should be performed.
+     * {@inheritDoc} This implementation resets the internal flag indicating that a reload should be performed.
      */
     @Override
-    public void reloadingPerformed()
-    {
+    public void reloadingPerformed() {
         reloadingRequired = false;
     }
 
     /**
-     * Checks whether reloading is required. This implementation checks whether
-     * the {@code refresh()} method has been invoked.
+     * Checks whether reloading is required. This implementation checks whether the {@code refresh()} method has been
+     * invoked.
      *
      * @return a flag whether reloading is required
      */
     @Override
-    public boolean isReloadingRequired()
-    {
+    public boolean isReloadingRequired() {
         return reloadingRequired;
     }
 
     /**
-     * Tells this strategy that the monitored configuration file should be
-     * refreshed. This method will typically be called from outside (through an
-     * exposed MBean) on behalf of an administrator.
+     * Tells this strategy that the monitored configuration file should be refreshed. This method will typically be called
+     * from outside (through an exposed MBean) on behalf of an administrator.
      *
      * @see org.apache.commons.configuration2.reloading.ManagedReloadingDetectorMBean#refresh()
      */
     @Override
-    public void refresh()
-    {
+    public void refresh() {
         log.info("Reloading configuration.");
         reloadingRequired = true;
     }

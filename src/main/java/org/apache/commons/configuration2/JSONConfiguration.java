@@ -31,15 +31,12 @@ import java.util.Map;
 
 /**
  * <p>
- * A specialized hierarchical configuration class that is able to parse JSON
- * documents.
+ * A specialized hierarchical configuration class that is able to parse JSON documents.
  * </p>
  *
  * @since 2.2
  */
-public class JSONConfiguration extends AbstractYAMLBasedConfiguration
-        implements FileBasedConfiguration, InputStreamSupport
-{
+public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements FileBasedConfiguration, InputStreamSupport {
 
     /**
      * The object mapper used by the {@code JSONConfiguration}.
@@ -49,47 +46,35 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
     /**
      * The {@code MapType} used to convert types.
      */
-    private final MapType type = mapper.getTypeFactory()
-            .constructMapType(Map.class, String.class, Object.class);
+    private final MapType type = mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class);
 
     /**
      * Creates a new instance of {@code JSONConfiguration}.
      */
-    public JSONConfiguration()
-    {
-        super();
+    public JSONConfiguration() {
     }
 
     /**
-     * Creates a new instance of {@code JSONConfiguration} as a copy of the
-     * specified configuration.
+     * Creates a new instance of {@code JSONConfiguration} as a copy of the specified configuration.
      *
      * @param c the configuration to be copied
      */
-    public JSONConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
-    {
+    public JSONConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
     }
 
     @Override
-    public void read(final Reader in) throws ConfigurationException
-    {
-        try
-        {
-            final Map<String, Object> map = mapper.readValue(in, this.type);
-            load(map);
-        }
-        catch (final Exception e)
-        {
+    public void read(final Reader in) throws ConfigurationException {
+        try {
+            load(mapper.readValue(in, this.type));
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }
 
     @Override
-    public void write(final Writer out) throws ConfigurationException, IOException
-    {
-        this.mapper.writer().writeValue(out, constructMap(
-                this.getNodeModel().getNodeHandler().getRootNode()));
+    public void write(final Writer out) throws ConfigurationException, IOException {
+        this.mapper.writer().writeValue(out, constructMap(this.getNodeModel().getNodeHandler().getRootNode()));
     }
 
     /**
@@ -99,15 +84,10 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
      * @throws ConfigurationException if an error occurs
      */
     @Override
-    public void read(final InputStream in) throws ConfigurationException
-    {
-        try
-        {
-            final Map<String, Object> map = mapper.readValue(in, this.type);
-            load(map);
-        }
-        catch (final Exception e)
-        {
+    public void read(final InputStream in) throws ConfigurationException {
+        try {
+            load(mapper.readValue(in, this.type));
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }

@@ -16,28 +16,26 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.reloading.FileHandlerReloadingDetector;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultReloadingDetectorFactory}.
  *
  */
-public class TestDefaultReloadingDetectorFactory
-{
+public class TestDefaultReloadingDetectorFactory {
     /** The factory to be tested. */
     private DefaultReloadingDetectorFactory factory;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         factory = new DefaultReloadingDetectorFactory();
     }
 
@@ -45,34 +43,24 @@ public class TestDefaultReloadingDetectorFactory
      * Tests whether a reloading detector is created correctly.
      */
     @Test
-    public void testCreateReloadingDetector() throws ConfigurationException
-    {
+    public void testCreateReloadingDetector() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
-        final FileBasedBuilderParametersImpl params =
-                new FileBasedBuilderParametersImpl();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final Long refreshDelay = 10000L;
         params.setReloadingRefreshDelay(refreshDelay);
-        final FileHandlerReloadingDetector detector =
-                (FileHandlerReloadingDetector) factory.createReloadingDetector(
-                        handler, params);
-        assertSame("Wrong file handler", handler, detector.getFileHandler());
-        assertEquals("Wrong refresh delay", refreshDelay.longValue(),
-                detector.getRefreshDelay());
+        final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);
+        assertSame(handler, detector.getFileHandler());
+        assertEquals(refreshDelay.longValue(), detector.getRefreshDelay());
     }
 
     /**
      * Tests whether an undefined refresh delay is handled correctly.
      */
     @Test
-    public void testCreateReloadingDetectorDefaultRefreshDelay()
-            throws ConfigurationException
-    {
+    public void testCreateReloadingDetectorDefaultRefreshDelay() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
-        final FileBasedBuilderParametersImpl params =
-                new FileBasedBuilderParametersImpl();
-        final FileHandlerReloadingDetector detector =
-                (FileHandlerReloadingDetector) factory.createReloadingDetector(
-                        handler, params);
-        assertTrue("No default refresh delay", detector.getRefreshDelay() != 0);
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);
+        assertNotEquals(0, detector.getRefreshDelay());
     }
 }

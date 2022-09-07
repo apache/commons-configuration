@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration2.web;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -26,17 +28,43 @@ import javax.servlet.ServletContext;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  */
-public class TestServletFilterConfiguration extends TestAbstractConfiguration
-{
+public class TestServletFilterConfiguration extends TestAbstractConfiguration {
+    private static class MockFilterConfig implements FilterConfig {
+        private final Properties parameters = new Properties();
+
+        @Override
+        public String getFilterName() {
+            return null;
+        }
+
+        @Override
+        public String getInitParameter(final String key) {
+            return parameters.getProperty(key);
+        }
+
+        @Override
+        public Enumeration<?> getInitParameterNames() {
+            return parameters.keys();
+        }
+
+        @Override
+        public ServletContext getServletContext() {
+            return null;
+        }
+
+        public void setInitParameter(final String key, final String value) {
+            parameters.setProperty(key, value);
+        }
+    }
+
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final MockFilterConfig config = new MockFilterConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
@@ -49,56 +77,19 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
+    protected AbstractConfiguration getEmptyConfiguration() {
         return new ServletFilterConfiguration(new MockFilterConfig());
     }
 
-    private class MockFilterConfig implements FilterConfig
-    {
-        private final Properties parameters = new Properties();
-
-        @Override
-        public String getFilterName()
-        {
-            return null;
-        }
-
-        @Override
-        public ServletContext getServletContext()
-        {
-            return null;
-        }
-
-        @Override
-        public String getInitParameter(final String key)
-        {
-            return parameters.getProperty(key);
-        }
-
-        @Override
-        public Enumeration<?> getInitParameterNames()
-        {
-            return parameters.keys();
-        }
-
-        public void setInitParameter(final String key, final String value)
-        {
-            parameters.setProperty(key, value);
-        }
+    @Override
+    @Test
+    public void testAddPropertyDirect() {
+        assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect);
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
-        super.testAddPropertyDirect();
-    }
-
-    @Override
-    @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
-        super.testClearProperty();
+    @Test
+    public void testClearProperty() {
+        assertThrows(UnsupportedOperationException.class, super::testClearProperty);
     }
 }

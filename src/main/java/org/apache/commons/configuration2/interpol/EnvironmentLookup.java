@@ -16,16 +16,13 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-
 /**
  * <p>
- * A specialized lookup implementation that allows access to environment
- * variables.
+ * A specialized lookup implementation that allows access to environment variables.
  * </p>
  * <p>
- * This implementation relies on {@link System#getenv()} to resolve
- * environment variables. It can be used for referencing environment variables
- * in configuration files in an easy way, for instance:
+ * This implementation relies on {@link System#getenv()} to resolve environment variables. It can be used for
+ * referencing environment variables in configuration files in an easy way, for instance:
  * </p>
  *
  * <pre>
@@ -33,26 +30,22 @@ package org.apache.commons.configuration2.interpol;
  * </pre>
  *
  * <p>
- * {@code EnvironmentLookup} is one of the standard lookups that is
- * registered per default for each configuration.
+ * {@code EnvironmentLookup} is one of the standard lookups that is registered per default for each configuration.
  * </p>
  *
  * @since 1.7
  * @deprecated Use {@link DefaultLookups#ENVIRONMENT}.
  */
 @Deprecated
-public class EnvironmentLookup implements Lookup
-{
+public class EnvironmentLookup implements Lookup {
     /**
-     * Performs a lookup for the specified variable. This implementation
-     * directly delegates to a {@code System.getenv()}.
+     * Performs a lookup for the specified variable. This implementation directly delegates to a {@code System.getenv()}.
      *
      * @param key the key to lookup
      * @return the value of this key or <b>null</b> if it cannot be resolved
      */
     @Override
-    public String lookup(final String key)
-    {
+    public String lookup(final String key) {
         return System.getenv(key);
     }
 }

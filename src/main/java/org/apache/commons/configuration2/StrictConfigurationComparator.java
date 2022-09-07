@@ -25,13 +25,11 @@ import java.util.Iterator;
  * @since 1.0
  *
  */
-public class StrictConfigurationComparator implements ConfigurationComparator
-{
+public class StrictConfigurationComparator implements ConfigurationComparator {
     /**
      * Create a new strict comparator.
      */
-    public StrictConfigurationComparator()
-    {
+    public StrictConfigurationComparator() {
     }
 
     /**
@@ -39,38 +37,30 @@ public class StrictConfigurationComparator implements ConfigurationComparator
      *
      * @param a the first configuration
      * @param b the second configuration
-     * @return true if keys from a are found in b and keys from b are
-     *         found in a and for each key in a, the corresponding value
-     *         is the sale in for the same key in b
+     * @return true if keys from a are found in b and keys from b are found in a and for each key in a, the corresponding
+     *         value is the sale in for the same key in b
      */
     @Override
-    public boolean compare(final Configuration a, final Configuration b)
-    {
-        if (a == null && b == null)
-        {
+    public boolean compare(final Configuration a, final Configuration b) {
+        if (a == null && b == null) {
             return true;
         }
-        else if (a == null || b == null)
-        {
+        if (a == null || b == null) {
             return false;
         }
 
-        for (final Iterator<String> keys = a.getKeys(); keys.hasNext();)
-        {
+        for (final Iterator<String> keys = a.getKeys(); keys.hasNext();) {
             final String key = keys.next();
             final Object value = a.getProperty(key);
-            if (!value.equals(b.getProperty(key)))
-            {
+            if (!value.equals(b.getProperty(key))) {
                 return false;
             }
         }
 
-        for (final Iterator<String> keys = b.getKeys(); keys.hasNext();)
-        {
+        for (final Iterator<String> keys = b.getKeys(); keys.hasNext();) {
             final String key = keys.next();
             final Object value = b.getProperty(key);
-            if (!value.equals(a.getProperty(key)))
-            {
+            if (!value.equals(a.getProperty(key))) {
                 return false;
             }
         }

@@ -16,28 +16,26 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.configuration2.tree.NodeHandler;
 import org.apache.commons.jxpath.JXPathContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code XPathContextFactory}.
  *
  */
-public class TestXPathContextFactory
-{
+public class TestXPathContextFactory {
     /** The factory to be tested. */
     private XPathContextFactory factory;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         factory = new XPathContextFactory();
     }
 
@@ -45,19 +43,14 @@ public class TestXPathContextFactory
      * Tests whether a correct context is created.
      */
     @Test
-    public void testCreateContext()
-    {
-        final ImmutableNode node =
-                new ImmutableNode.Builder().name("testRoot").create();
-        final NodeHandler<ImmutableNode> handler =
-                new InMemoryNodeModel(node).getNodeHandler();
+    public void testCreateContext() {
+        final ImmutableNode node = new ImmutableNode.Builder().name("testRoot").create();
+        final NodeHandler<ImmutableNode> handler = new InMemoryNodeModel(node).getNodeHandler();
         final JXPathContext context = factory.createContext(node, handler);
 
-        assertTrue("No lenient mode", context.isLenient());
-        final ConfigurationNodePointerFactory.NodeWrapper<?> wrapper =
-                (ConfigurationNodePointerFactory.NodeWrapper<?>) context
-                        .getContextBean();
-        assertSame("Wrong node", node, wrapper.getNode());
-        assertSame("Wrong handler", handler, wrapper.getNodeHandler());
+        assertTrue(context.isLenient());
+        final ConfigurationNodePointerFactory.NodeWrapper<?> wrapper = (ConfigurationNodePointerFactory.NodeWrapper<?>) context.getContextBean();
+        assertSame(node, wrapper.getNode());
+        assertSame(handler, wrapper.getNodeHandler());
     }
 }

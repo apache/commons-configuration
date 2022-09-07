@@ -20,41 +20,34 @@ package org.apache.commons.configuration2.beanutils;
  * A simple bean class used for testing bean creation operations.
  *
  */
-public class BeanCreationTestBean
-{
+public class BeanCreationTestBean {
     private String stringValue;
 
     private int intValue;
 
     private BeanCreationTestBean buddy;
 
-    public BeanCreationTestBean getBuddy()
-    {
+    public BeanCreationTestBean getBuddy() {
         return buddy;
     }
 
-    public void setBuddy(final BeanCreationTestBean buddy)
-    {
-        this.buddy = buddy;
-    }
-
-    public int getIntValue()
-    {
+    public int getIntValue() {
         return intValue;
     }
 
-    public void setIntValue(final int intValue)
-    {
-        this.intValue = intValue;
-    }
-
-    public String getStringValue()
-    {
+    public String getStringValue() {
         return stringValue;
     }
 
-    public void setStringValue(final String stringValue)
-    {
+    public void setBuddy(final BeanCreationTestBean buddy) {
+        this.buddy = buddy;
+    }
+
+    public void setIntValue(final int intValue) {
+        this.intValue = intValue;
+    }
+
+    public void setStringValue(final String stringValue) {
         this.stringValue = stringValue;
     }
 }

@@ -16,22 +16,21 @@
  */
 package org.apache.commons.configuration2.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A base class for different types of event listeners which can be used in unit
- * tests. This class provides functionality for testing the received events.
+ * A base class for different types of event listeners which can be used in unit tests. This class provides
+ * functionality for testing the received events.
  *
  * @param <T> the type of events supported by this listener
  */
-public abstract class AbstractEventListenerTestImpl<T extends Event> implements
-        EventListener<T>
-{
+public abstract class AbstractEventListenerTestImpl<T extends Event> implements EventListener<T> {
     /** The expected event source. */
     private final Object expectedSource;
 
@@ -39,22 +38,13 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
     private final List<T> events;
 
     /**
-     * Creates a new instance of {@code AbstractEventListenerTestImpl} and sets
-     * the expected event source.
+     * Creates a new instance of {@code AbstractEventListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<b>null</b> if the source need not to be
-     *        checked)
+     * @param source the event source (<b>null</b> if the source need not to be checked)
      */
-    protected AbstractEventListenerTestImpl(final Object source)
-    {
+    protected AbstractEventListenerTestImpl(final Object source) {
         expectedSource = source;
         events = new LinkedList<>();
-    }
-
-    @Override
-    public void onEvent(final T event)
-    {
-        events.add(event);
     }
 
     /**
@@ -62,9 +52,15 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      *
      * @param minEvents the minimum number of expected events
      */
-    public void checkEventCount(final int minEvents)
-    {
-        assertTrue("Too view events received", events.size() >= minEvents);
+    public void checkEventCount(final int minEvents) {
+        assertTrue(events.size() >= minEvents);
+    }
+
+    /**
+     * Checks if all events has been processed.
+     */
+    public void done() {
+        assertTrue(events.isEmpty());
     }
 
     /**
@@ -73,39 +69,31 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      * @param expectedType the expected type of the event
      * @return the event object
      */
-    public T nextEvent(final EventType<?> expectedType)
-    {
-        assertFalse("Too few events received", events.isEmpty());
+    public T nextEvent(final EventType<?> expectedType) {
+        assertFalse(events.isEmpty());
         final T e = events.remove(0);
-        if (expectedSource != null)
-        {
-            assertEquals("Wrong event source", expectedSource, e.getSource());
+        if (expectedSource != null) {
+            assertEquals(expectedSource, e.getSource());
         }
-        assertEquals("Wrong event type", expectedType, e.getEventType());
+        assertEquals(expectedType, e.getEventType());
         return e;
     }
 
-    /**
-     * Skips to the last received event and checks that no events of the given
-     * type have been received. This method is used by checks for detail events
-     * to ignore the detail events.
-     *
-     * @param type the event type
-     */
-    public void skipToLast(final EventType<?> type)
-    {
-        while (events.size() > 1)
-        {
-            final T e = events.remove(0);
-            assertTrue("Found end event in details", type != e.getEventType());
-        }
+    @Override
+    public void onEvent(final T event) {
+        events.add(event);
     }
 
     /**
-     * Checks if all events has been processed.
+     * Skips to the last received event and checks that no events of the given type have been received. This method is used
+     * by checks for detail events to ignore the detail events.
+     *
+     * @param type the event type
      */
-    public void done()
-    {
-        assertTrue("Too many events received", events.isEmpty());
+    public void skipToLast(final EventType<?> type) {
+        while (events.size() > 1) {
+            final T e = events.remove(0);
+            assertNotSame(type, e.getEventType());
+        }
     }
 }

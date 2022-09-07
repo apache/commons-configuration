@@ -22,33 +22,28 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
- * Definition of an interface for objects that can create {@link ImmutableConfiguration}
- * or {@link org.apache.commons.configuration2.Configuration Configuration} objects of a
- * specific type.
+ * Definition of an interface for objects that can create {@link ImmutableConfiguration} or
+ * {@link org.apache.commons.configuration2.Configuration Configuration} objects of a specific type.
  * </p>
  * <p>
- * This interface defines an abstract way of creating a {@code ImmutableConfiguration}
- * object. It does not assume any specific way of how this is done; this is
- * completely in the responsibility of an implementation class. There is just a
- * single method that returns the configuration constructed by this builder.
+ * This interface defines an abstract way of creating a {@code ImmutableConfiguration} object. It does not assume any
+ * specific way of how this is done; this is completely in the responsibility of an implementation class. There is just
+ * a single method that returns the configuration constructed by this builder.
  * </p>
  * <p>
- * Note: {@code ImmutableConfiguration} is just the base interface for all configuration
- * objects. So that the return type of the {@code getConfiguration()} method is
- * {@code ImmutableConfiguration} does not mean that only immutable configurations can
- * be created.
+ * Note: {@code ImmutableConfiguration} is just the base interface for all configuration objects. So that the return
+ * type of the {@code getConfiguration()} method is {@code ImmutableConfiguration} does not mean that only immutable
+ * configurations can be created.
  * </p>
  *
  * @since 2.0
- * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by
- *        this builder
+ * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by this builder
  */
-public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource
-{
+public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource {
+
     /**
-     * Returns the configuration provided by this builder. An implementation has
-     * to perform all necessary steps for creating and initializing a
-     * {@code ImmutableConfiguration} object.
+     * Gets the configuration provided by this builder. An implementation has to perform all necessary steps for creating
+     * and initializing a {@code ImmutableConfiguration} object.
      *
      * @return the configuration
      * @throws ConfigurationException if an error occurs

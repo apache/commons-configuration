@@ -16,153 +16,125 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
-import javax.xml.parsers.DocumentBuilder;
 import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
 
 /**
  * Test class for {@code XMLBuilderParametersImpl}.
  *
  */
-public class TestXMLBuilderParametersImpl
-{
+public class TestXMLBuilderParametersImpl {
     /** The parameters object to be tested. */
     private XMLBuilderParametersImpl params;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         params = new XMLBuilderParametersImpl();
-    }
-
-    /**
-     * Tests whether an entity resolver can be set.
-     */
-    @Test
-    public void testSetEntityResolver()
-    {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        EasyMock.replay(resolver);
-        assertSame("Wrong result", params, params.setEntityResolver(resolver));
-        assertSame("Resolver not set", resolver, params.getEntityResolver());
-        assertSame("Resolver not in parameters", resolver, params
-                .getParameters().get("entityResolver"));
-    }
-
-    /**
-     * Tests whether a document builder can be set.
-     */
-    @Test
-    public void testSetDocumentBuilder()
-    {
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
-        EasyMock.replay(builder);
-        assertSame("Wrong result", params, params.setDocumentBuilder(builder));
-        assertSame("Builder not in parameters", builder, params.getParameters()
-                .get("documentBuilder"));
-    }
-
-    /**
-     * Tests whether a public ID can be set.
-     */
-    @Test
-    public void testSetPublicID()
-    {
-        final String pubID = "testPublicID";
-        assertSame("Wrong result", params, params.setPublicID(pubID));
-        assertEquals("ID not in parameters", pubID,
-                params.getParameters().get("publicID"));
-    }
-
-    /**
-     * Tests whether a system ID can be set.
-     */
-    @Test
-    public void testSetSystemID()
-    {
-        final String sysID = "testSystemID";
-        assertSame("Wrong result", params, params.setSystemID(sysID));
-        assertEquals("ID not in parameters", sysID,
-                params.getParameters().get("systemID"));
-    }
-
-    /**
-     * Tests whether validating property can be set.
-     */
-    @Test
-    public void testSetValidating()
-    {
-        assertSame("Wrong result", params, params.setValidating(true));
-        assertEquals("Flag not in parameters", Boolean.TRUE, params
-                .getParameters().get("validating"));
-    }
-
-    /**
-     * Tests whether the schema validation flag can be set.
-     */
-    @Test
-    public void testSetSchemaValidation()
-    {
-        assertSame("Wrong result", params, params.setSchemaValidation(false));
-        assertEquals("Flag not in parameters", Boolean.FALSE, params
-                .getParameters().get("schemaValidation"));
     }
 
     /**
      * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testBeanPropertiesAccess() throws Exception
-    {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
-        EasyMock.replay(resolver, builder);
-        BeanHelper.setProperty(params, "throwExceptionOnMissing",
-                Boolean.TRUE);
+    public void testBeanPropertiesAccess() throws Exception {
+        final EntityResolver resolver = mock(EntityResolver.class);
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
+        BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         BeanHelper.setProperty(params, "fileName", "test.xml");
         BeanHelper.setProperty(params, "entityResolver", resolver);
         BeanHelper.setProperty(params, "documentBuilder", builder);
-        assertEquals("Wrong file name", "test.xml", params.getFileHandler()
-                .getFileName());
+        assertEquals("test.xml", params.getFileHandler().getFileName());
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals("Wrong exception flag", Boolean.TRUE,
-                paramsMap.get("throwExceptionOnMissing"));
-        assertSame("Wrong resolver", resolver, paramsMap.get("entityResolver"));
-        assertSame("Wrong builder", builder, paramsMap.get("documentBuilder"));
+        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"));
+        assertSame(resolver, paramsMap.get("entityResolver"));
+        assertSame(builder, paramsMap.get("documentBuilder"));
     }
 
     /**
      * Tests whether properties can be inherited.
      */
     @Test
-    public void testInheritFrom()
-    {
-        final EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
-        final DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
-        params.setDocumentBuilder(builder).setEntityResolver(resolver)
-                .setSchemaValidation(true).setValidating(true);
+    public void testInheritFrom() {
+        final EntityResolver resolver = mock(EntityResolver.class);
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
+        params.setDocumentBuilder(builder).setEntityResolver(resolver).setSchemaValidation(true).setValidating(true);
         params.setThrowExceptionOnMissing(true);
         final XMLBuilderParametersImpl params2 = new XMLBuilderParametersImpl();
 
         params2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = params2.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE,
-                parameters.get("throwExceptionOnMissing"));
-        assertEquals("Entity resolver not set", resolver,
-                parameters.get("entityResolver"));
-        assertEquals("Document builder not set", builder,
-                parameters.get("documentBuilder"));
-        assertEquals("Validation flag not set", Boolean.TRUE,
-                parameters.get("validating"));
-        assertEquals("Schema flag not set", Boolean.TRUE,
-                parameters.get("schemaValidation"));
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals(resolver, parameters.get("entityResolver"));
+        assertEquals(builder, parameters.get("documentBuilder"));
+        assertEquals(Boolean.TRUE, parameters.get("validating"));
+        assertEquals(Boolean.TRUE, parameters.get("schemaValidation"));
+    }
+
+    /**
+     * Tests whether a document builder can be set.
+     */
+    @Test
+    public void testSetDocumentBuilder() {
+        final DocumentBuilder builder = mock(DocumentBuilder.class);
+        assertSame(params, params.setDocumentBuilder(builder));
+        assertSame(builder, params.getParameters().get("documentBuilder"));
+    }
+
+    /**
+     * Tests whether an entity resolver can be set.
+     */
+    @Test
+    public void testSetEntityResolver() {
+        final EntityResolver resolver = mock(EntityResolver.class);
+        assertSame(params, params.setEntityResolver(resolver));
+        assertSame(resolver, params.getEntityResolver());
+        assertSame(resolver, params.getParameters().get("entityResolver"));
+    }
+
+    /**
+     * Tests whether a public ID can be set.
+     */
+    @Test
+    public void testSetPublicID() {
+        final String pubID = "testPublicID";
+        assertSame(params, params.setPublicID(pubID));
+        assertEquals(pubID, params.getParameters().get("publicID"));
+    }
+
+    /**
+     * Tests whether the schema validation flag can be set.
+     */
+    @Test
+    public void testSetSchemaValidation() {
+        assertSame(params, params.setSchemaValidation(false));
+        assertEquals(Boolean.FALSE, params.getParameters().get("schemaValidation"));
+    }
+
+    /**
+     * Tests whether a system ID can be set.
+     */
+    @Test
+    public void testSetSystemID() {
+        final String sysID = "testSystemID";
+        assertSame(params, params.setSystemID(sysID));
+        assertEquals(sysID, params.getParameters().get("systemID"));
+    }
+
+    /**
+     * Tests whether validating property can be set.
+     */
+    @Test
+    public void testSetValidating() {
+        assertSame(params, params.setValidating(true));
+        assertEquals(Boolean.TRUE, params.getParameters().get("validating"));
     }
 }

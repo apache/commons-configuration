@@ -23,20 +23,16 @@ import javax.sql.DataSource;
  * A specialized parameters object for database configurations.
  * </p>
  * <p>
- * This class has properties for defining the database structures the
- * configuration operates on.
+ * This class has properties for defining the database structures the configuration operates on.
  * </p>
  * <p>
- * This class is not thread-safe. It is intended that an instance is constructed
- * and initialized by a single thread during configuration of a
- * {@code ConfigurationBuilder}.
+ * This class is not thread-safe. It is intended that an instance is constructed and initialized by a single thread
+ * during configuration of a {@code ConfigurationBuilder}.
  * </p>
  *
  * @since 2.0
  */
-public class DatabaseBuilderParametersImpl extends BasicBuilderParameters
-        implements DatabaseBuilderProperties<DatabaseBuilderParametersImpl>
-{
+public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implements DatabaseBuilderProperties<DatabaseBuilderParametersImpl> {
     /** Constant for the data source property. */
     private static final String PROP_DATA_SOURCE = "dataSource";
 
@@ -50,8 +46,7 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters
     private static final String PROP_VALUE_COLUMN = "valueColumn";
 
     /** Constant for the configuration name column property. */
-    private static final String PROP_CONFIG_NAME_COLUMN =
-            "configurationNameColumn";
+    private static final String PROP_CONFIG_NAME_COLUMN = "configurationNameColumn";
 
     /** Constant for the configuration name property. */
     private static final String PROP_CONFIG_NAME = "configurationName";
@@ -60,50 +55,43 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters
     private static final String PROP_AUTO_COMMIT = "autoCommit";
 
     @Override
-    public DatabaseBuilderParametersImpl setDataSource(final DataSource src)
-    {
+    public DatabaseBuilderParametersImpl setDataSource(final DataSource src) {
         storeProperty(PROP_DATA_SOURCE, src);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setTable(final String tname)
-    {
+    public DatabaseBuilderParametersImpl setTable(final String tname) {
         storeProperty(PROP_TABLE, tname);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setKeyColumn(final String name)
-    {
+    public DatabaseBuilderParametersImpl setKeyColumn(final String name) {
         storeProperty(PROP_KEY_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setValueColumn(final String name)
-    {
+    public DatabaseBuilderParametersImpl setValueColumn(final String name) {
         storeProperty(PROP_VALUE_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setConfigurationNameColumn(final String name)
-    {
+    public DatabaseBuilderParametersImpl setConfigurationNameColumn(final String name) {
         storeProperty(PROP_CONFIG_NAME_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setConfigurationName(final String name)
-    {
+    public DatabaseBuilderParametersImpl setConfigurationName(final String name) {
         storeProperty(PROP_CONFIG_NAME, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setAutoCommit(final boolean f)
-    {
+    public DatabaseBuilderParametersImpl setAutoCommit(final boolean f) {
         storeProperty(PROP_AUTO_COMMIT, Boolean.valueOf(f));
         return this;
     }

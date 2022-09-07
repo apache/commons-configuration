@@ -26,20 +26,17 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Configuration converter. Helper class to convert between Configuration,
- * ExtendedProperties and standard Properties.
+ * Configuration converter. Helper class to convert between Configuration, ExtendedProperties and standard Properties.
  *
  */
-public final class ConfigurationConverter
-{
+public final class ConfigurationConverter {
     /** Constant for the default separator for properties with multiple values. */
     private static final char DEFAULT_SEPARATOR = ',';
 
     /**
      * Private constructor prevents instances from being created.
      */
-    private ConfigurationConverter()
-    {
+    private ConfigurationConverter() {
         // to prevent instanciation...
     }
 
@@ -49,61 +46,45 @@ public final class ConfigurationConverter
      * @param props properties object to convert
      * @return Configuration configuration created from the Properties
      */
-    public static Configuration getConfiguration(final Properties props)
-    {
+    public static Configuration getConfiguration(final Properties props) {
         return new MapConfiguration(props);
     }
 
     /**
-     * Convert a Configuration class into a Properties class. List properties
-     * are joined into a string using either the list delimiter handler of the
-     * configuration (if it extends AbstractConfiguration) or with a comma as
-     * delimiter otherwise.
+     * Convert a Configuration class into a Properties class. List properties are joined into a string using either the list
+     * delimiter handler of the configuration (if it extends AbstractConfiguration) or with a comma as delimiter otherwise.
      *
      * @param config ImmutableConfiguration object to convert
      * @return Properties created from the Configuration
      * @since 2.2
      */
-    public static Properties getProperties(final ImmutableConfiguration config)
-    {
+    public static Properties getProperties(final ImmutableConfiguration config) {
         final Properties props = new Properties();
-        ListDelimiterHandler listHandler;
+        final ListDelimiterHandler listHandler;
         boolean useDelimiterHandler;
 
-        if (config instanceof AbstractConfiguration)
-        {
+        if (config instanceof AbstractConfiguration) {
             listHandler = ((AbstractConfiguration) config).getListDelimiterHandler();
             useDelimiterHandler = true;
-        }
-        else
-        {
+        } else {
             listHandler = null;
             useDelimiterHandler = false;
         }
 
-        for (final Iterator<String> keys = config.getKeys(); keys.hasNext();)
-        {
+        for (final Iterator<String> keys = config.getKeys(); keys.hasNext();) {
             final String key = keys.next();
             final List<Object> list = config.getList(key);
 
             String propValue;
-            if (useDelimiterHandler)
-            {
-                try
-                {
-                    propValue =
-                            String.valueOf(listHandler.escapeList(list,
-                                    ListDelimiterHandler.NOOP_TRANSFORMER));
-                }
-                catch (final Exception ex)
-                {
+            if (useDelimiterHandler) {
+                try {
+                    propValue = String.valueOf(listHandler.escapeList(list, ListDelimiterHandler.NOOP_TRANSFORMER));
+                } catch (final Exception ex) {
                     // obviously, the list handler does not support splitting
                     useDelimiterHandler = false;
                     propValue = listToString(list);
                 }
-            }
-            else
-            {
+            } else {
                 propValue = listToString(list);
             }
 
@@ -114,17 +95,14 @@ public final class ConfigurationConverter
     }
 
     /**
-     * Convert a Configuration class into a Properties class. List properties
-     * are joined into a string using either the list delimiter handler of the
-     * configuration (if it extends AbstractConfiguration) or with a comma as
-     * delimiter otherwise.
+     * Convert a Configuration class into a Properties class. List properties are joined into a string using either the list
+     * delimiter handler of the configuration (if it extends AbstractConfiguration) or with a comma as delimiter otherwise.
      * This version of the method exists only for backwards compatibility reason.
      *
      * @param config Configuration object to convert
      * @return Properties created from the Configuration
      */
-    public static Properties getProperties(final Configuration config)
-    {
+    public static Properties getProperties(final Configuration config) {
         return getProperties((ImmutableConfiguration) config);
     }
 
@@ -134,20 +112,17 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Map created from the Configuration
      */
-    public static Map<Object, Object> getMap(final Configuration config)
-    {
+    public static Map<Object, Object> getMap(final Configuration config) {
         return new ConfigurationMap(config);
     }
 
     /**
-     * Helper method for joining all elements of a list to a string using the
-     * default value separator.
+     * Helper method for joining all elements of a list to a string using the default value separator.
      *
      * @param list the list
      * @return the resulting string
      */
-    private static String listToString(final List<?> list)
-    {
+    private static String listToString(final List<?> list) {
         return StringUtils.join(list, DEFAULT_SEPARATOR);
     }
 }

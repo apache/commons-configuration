@@ -21,14 +21,12 @@ import org.apache.commons.configuration2.tree.NodeHandler;
 
 /**
  * <p>
- * A specialized {@code NodeVisitor} implementation which searches for a
- * specific node in a hierarchy.
+ * A specialized {@code NodeVisitor} implementation which searches for a specific node in a hierarchy.
  * </p>
  *
  * @param <T> the type of the nodes to be visited
  */
-class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T>
-{
+class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
     /** The node to be searched for. */
     private final T searchNode;
 
@@ -36,53 +34,43 @@ class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T>
     private boolean found;
 
     /**
-     * Creates a new instance of {@code FindNodeVisitor} and sets the node to be
-     * searched for.
+     * Creates a new instance of {@code FindNodeVisitor} and sets the node to be searched for.
      *
      * @param node the search node
      */
-    public FindNodeVisitor(final T node)
-    {
+    public FindNodeVisitor(final T node) {
         searchNode = node;
     }
 
     @Override
-    public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
-    {
-        if (node.equals(searchNode))
-        {
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+        if (node.equals(searchNode)) {
             found = true;
         }
     }
 
     /**
-     * {@inheritDoc} This implementation returns <b>true</b> as soon as the node
-     * was found.
+     * {@inheritDoc} This implementation returns <b>true</b> as soon as the node was found.
      */
     @Override
-    public boolean terminate()
-    {
+    public boolean terminate() {
         return found;
     }
 
     /**
-     * Returns a flag whether the search node was found in the last search
-     * operation.
+     * Returns a flag whether the search node was found in the last search operation.
      *
      * @return <b>true</b> if the search node was found; <b>false</b> otherwise
      */
-    public boolean isFound()
-    {
+    public boolean isFound() {
         return found;
     }
 
     /**
-     * Resets this visitor. This method sets the {@code found} property to
-     * <b>false</b> again, so that this instance can be used to inspect another
-     * nodes hierarchy.
+     * Resets this visitor. This method sets the {@code found} property to <b>false</b> again, so that this instance can be
+     * used to inspect another nodes hierarchy.
      */
-    public void reset()
-    {
+    public void reset() {
         found = false;
     }
 }

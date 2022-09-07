@@ -20,46 +20,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple bean class used for testing bean creation operations that has
- * a list of children of a different bean type.
+ * A simple bean class used for testing bean creation operations that has a list of children of a different bean type.
  *
  */
-public class BeanCreationTestBeanWithListChild
-{
+public class BeanCreationTestBeanWithListChild {
     private String stringValue;
 
     private int intValue;
 
     private final List<BeanCreationTestBean> children = new ArrayList<>();
 
-    public List<BeanCreationTestBean> getChildren()
-    {
+    public List<BeanCreationTestBean> getChildren() {
         return children;
     }
 
-    public void setChildren(final List<BeanCreationTestBean> buddies)
-    {
+    public int getIntValue() {
+        return intValue;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public void setChildren(final List<BeanCreationTestBean> buddies) {
         this.children.clear();
         this.children.addAll(buddies);
     }
 
-    public int getIntValue()
-    {
-        return intValue;
-    }
-
-    public void setIntValue(final int intValue)
-    {
+    public void setIntValue(final int intValue) {
         this.intValue = intValue;
     }
 
-    public String getStringValue()
-    {
-        return stringValue;
-    }
-
-    public void setStringValue(final String stringValue)
-    {
+    public void setStringValue(final String stringValue) {
         this.stringValue = stringValue;
     }
 }

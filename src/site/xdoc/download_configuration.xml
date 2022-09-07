@@ -66,7 +66,7 @@ limitations under the License.
     <subsection name="Using a Mirror">
       <p>
         We recommend you use a mirror to download our release
-        builds, but you <strong>must</strong> <a href="http://www.apache.org/info/verification.html">verify the integrity</a> of
+        builds, but you <strong>must</strong> <a href="https://www.apache.org/info/verification.html">verify the integrity</a> of
         the downloaded files using signatures downloaded from our main
         distribution directories. Recent releases (48 hours) may not yet
         be available from all the mirrors.
@@ -113,32 +113,32 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons Configuration 2.5 (reworked 2.x version)">
+    <section name="Apache Commons Configuration 2.8.0 (reworked 2.x version)">
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.5-bin.tar.gz">commons-configuration2-2.5-bin.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.5-bin.tar.gz.sha512">sha512</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.5-bin.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.8.0-bin.tar.gz">commons-configuration2-2.8.0-bin.tar.gz</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.8.0-bin.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.8.0-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.5-bin.zip">commons-configuration2-2.5-bin.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.5-bin.zip.sha512">sha512</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.5-bin.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.8.0-bin.zip">commons-configuration2-2.8.0-bin.zip</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.8.0-bin.zip.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.8.0-bin.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.5-src.tar.gz">commons-configuration2-2.5-src.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.5-src.tar.gz.sha512">sha512</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.5-src.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.8.0-src.tar.gz">commons-configuration2-2.8.0-src.tar.gz</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.8.0-src.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.8.0-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.5-src.zip">commons-configuration2-2.5-src.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.5-src.zip.sha512">sha512</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.5-src.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.8.0-src.zip">commons-configuration2-2.8.0-src.zip</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.8.0-src.zip.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.8.0-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>

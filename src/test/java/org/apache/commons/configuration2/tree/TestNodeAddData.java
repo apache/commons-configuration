@@ -16,22 +16,23 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for NodeAddData.
  *
  */
-public class TestNodeAddData
-{
+public class TestNodeAddData {
     /** Constant for the name of the new node. */
     private static final String TEST_NODENAME = "testNewNode";
 
@@ -41,66 +42,49 @@ public class TestNodeAddData
     /** A default parent node. */
     private static ImmutableNode parentNode;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
         parentNode = new ImmutableNode.Builder().name("testParent").create();
+    }
+
+    /**
+     * Tests whether a defensive copy of the collection with path nodes is created.
+     */
+    @Test
+    public void testInitPathNodesDefensiveCopy() {
+        final List<String> pathNodes = new ArrayList<>();
+        pathNodes.add(PATH_NODE_NAME);
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, pathNodes);
+        pathNodes.add("anotherNode");
+        assertEquals(Arrays.asList(PATH_NODE_NAME), data.getPathNodes());
+    }
+
+    /**
+     * Tests that the collection with path nodes cannot be modified if data is available.
+     */
+    @Test
+    public void testPathNodesDefinedModify() {
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, Collections.singleton(PATH_NODE_NAME));
+        final List<String> pathNodes = data.getPathNodes();
+        assertThrows(UnsupportedOperationException.class, () -> pathNodes.add("anotherNode"));
     }
 
     /**
      * Tests whether the constructor can handle a null collection of path nodes.
      */
     @Test
-    public void testPathNodesNull()
-    {
-        final NodeAddData<ImmutableNode> data =
-                new NodeAddData<>(parentNode, TEST_NODENAME,
-                        false, null);
-        assertTrue("Got path nodes", data.getPathNodes().isEmpty());
+    public void testPathNodesNull() {
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
+        assertTrue(data.getPathNodes().isEmpty());
     }
 
     /**
-     * Tests whether the collection with path nodes cannot be modified if no
-     * data is available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testPathNodesNullModify()
-    {
-        final NodeAddData<ImmutableNode> data =
-                new NodeAddData<>(parentNode, TEST_NODENAME,
-                        false, null);
-        data.getPathNodes().add("test");
-    }
-
-    /**
-     * Tests whether a defensive copy of the collection with path nodes is
-     * created.
+     * Tests whether the collection with path nodes cannot be modified if no data is available.
      */
     @Test
-    public void testInitPathNodesDefensiveCopy()
-    {
-        final List<String> pathNodes = new ArrayList<>();
-        pathNodes.add(PATH_NODE_NAME);
-        final NodeAddData<ImmutableNode> data =
-                new NodeAddData<>(parentNode, TEST_NODENAME,
-                        false, pathNodes);
-        pathNodes.add("anotherNode");
-        assertEquals("Wrong number of path nodes", 1, data.getPathNodes()
-                .size());
-        assertEquals("Wrong path node", PATH_NODE_NAME, data.getPathNodes()
-                .get(0));
-    }
-
-    /**
-     * Tests that the collection with path nodes cannot be modified if data is
-     * available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testPathNodesDefinedModify()
-    {
-        final NodeAddData<ImmutableNode> data =
-                new NodeAddData<>(parentNode, TEST_NODENAME,
-                        false, Collections.singleton(PATH_NODE_NAME));
-        data.getPathNodes().add("anotherNode");
+    public void testPathNodesNullModify() {
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
+        final List<String> pathNodes = data.getPathNodes();
+        assertThrows(UnsupportedOperationException.class, () -> pathNodes.add("test"));
     }
 }

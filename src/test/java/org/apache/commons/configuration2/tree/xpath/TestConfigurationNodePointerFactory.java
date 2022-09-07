@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,78 +24,78 @@ import java.util.List;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test class for ConfigurationNodePointerFactory. This class does not directly
- * call the factory's methods, but rather checks if it can be installed in a
- * {@code JXPathContext} and if XPath expressions can be evaluated.
+ * Test class for ConfigurationNodePointerFactory. This class does not directly call the factory's methods, but rather
+ * checks if it can be installed in a {@code JXPathContext} and if XPath expressions can be evaluated.
  *
  */
-public class TestConfigurationNodePointerFactory extends AbstractXPathTest
-{
+public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        JXPathContextReferenceImpl.addNodePointerFactory(new ConfigurationNodePointerFactory());
+    }
+
     /** Stores the JXPathContext used for testing. */
     private JXPathContext context;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
-        JXPathContextReferenceImpl
-                .addNodePointerFactory(new ConfigurationNodePointerFactory());
-    }
-
     @Override
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         super.setUp();
         context = new XPathContextFactory().createContext(root, handler);
     }
 
     /**
-     * Tests simple XPath expressions.
+     * Tests accessing the following sibling axis.
      */
     @Test
-    public void testSimpleXPath()
-    {
-        List<?> results = context.selectNodes(CHILD_NAME1);
-        assertEquals("Incorrect number of results", 2, results.size());
-        for (final Object result : results) {
-            final ImmutableNode node = (ImmutableNode) result;
-            assertEquals("Incorrect node name", CHILD_NAME1, node.getNodeName());
-        }
-
-        results = context.selectNodes("/" + CHILD_NAME1);
-        assertEquals("Incorrect number of results", 2, results.size());
-
-        results = context.selectNodes(CHILD_NAME2 + "/" + CHILD_NAME1 + "/"
-                + CHILD_NAME2);
-        assertEquals("Incorrect number of results", 18, results.size());
+    public void testFollowingSiblingAxis() {
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[2]/following-sibling::*");
+        assertEquals(1, nodes.size());
+        final ImmutableNode node = (ImmutableNode) nodes.get(0);
+        assertEquals(CHILD_NAME2, node.getNodeName());
+        assertEquals(String.valueOf(CHILD_COUNT), node.getValue());
     }
 
     /**
      * Tests using indices to specify elements.
      */
     @Test
-    public void testIndices()
-    {
-        assertEquals("Incorrect value", "1.2.3", context.getValue("/"
-                + CHILD_NAME2 + "[1]/" + CHILD_NAME1 + "[1]/" + CHILD_NAME2
-                + "[2]"));
-        assertEquals("Incorrect value of last node", String
-                .valueOf(CHILD_COUNT), context.getValue(CHILD_NAME2
-                + "[last()]"));
+    public void testIndices() {
+        assertEquals("1.2.3", context.getValue("/" + CHILD_NAME2 + "[1]/" + CHILD_NAME1 + "[1]/" + CHILD_NAME2 + "[2]"));
+        assertEquals(String.valueOf(CHILD_COUNT), context.getValue(CHILD_NAME2 + "[last()]"));
 
         final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[1]/*");
-        assertEquals("Wrong number of children", CHILD_COUNT, nodes.size());
+        assertEquals(CHILD_COUNT, nodes.size());
         int index = 1;
-        for (final Iterator<?> it = nodes.iterator(); it.hasNext(); index++)
-        {
+        for (final Iterator<?> it = nodes.iterator(); it.hasNext(); index++) {
             final ImmutableNode node = (ImmutableNode) it.next();
-            assertEquals("Wrong node value for child " + index, "2." + index,
-                    node.getValue());
+            assertEquals("2." + index, node.getValue(), "Wrong node value for child " + index);
+        }
+    }
+
+    /**
+     * Tests accessing the parent axis.
+     */
+    @Test
+    public void testParentAxis() {
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME2 + "/parent::*");
+        assertEquals(1, nodes.size());
+    }
+
+    /**
+     * Tests accessing the preceding sibling axis.
+     */
+    @Test
+    public void testPrecedingSiblingAxis() {
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[2]/preceding-sibling::*");
+        assertEquals(3, nodes.size());
+        for (int index = 0, value = 3; index < nodes.size(); index++, value--) {
+            assertEquals(String.valueOf(value), ((ImmutableNode) nodes.get(index)).getValue());
         }
     }
 
@@ -103,71 +103,43 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
      * Tests whether the attribute of a node can be queried.
      */
     @Test
-    public void testQueryAttribute()
-    {
-        assertEquals("Incorrect attribute value", "1", context.getValue("/"
-                + CHILD_NAME2 + "[1]/@" + ATTR_NAME));
+    public void testQueryAttribute() {
+        assertEquals("1", context.getValue("/" + CHILD_NAME2 + "[1]/@" + ATTR_NAME));
     }
 
     /**
      * Tests whether an attribute of the root node can be queried.
      */
     @Test
-    public void testQueryRootAttribute()
-    {
-        assertEquals("Did not find attribute of root node", "true", context
-                .getValue("@" + ATTR_ROOT));
+    public void testQueryRootAttribute() {
+        assertEquals("true", context.getValue("@" + ATTR_ROOT));
+    }
+
+    /**
+     * Tests simple XPath expressions.
+     */
+    @Test
+    public void testSimpleXPath() {
+        List<?> results = context.selectNodes(CHILD_NAME1);
+        assertEquals(2, results.size());
+        for (final Object result : results) {
+            final ImmutableNode node = (ImmutableNode) result;
+            assertEquals(CHILD_NAME1, node.getNodeName());
+        }
+
+        results = context.selectNodes("/" + CHILD_NAME1);
+        assertEquals(2, results.size());
+
+        results = context.selectNodes(CHILD_NAME2 + "/" + CHILD_NAME1 + "/" + CHILD_NAME2);
+        assertEquals(18, results.size());
     }
 
     /**
      * Tests accessing a node's text.
      */
     @Test
-    public void testText()
-    {
-        final List<?> nodes = context.selectNodes("//" + CHILD_NAME2
-                + "[text()='1.1.1']");
-        assertEquals("Incorrect number of result nodes", 1, nodes.size());
-    }
-
-    /**
-     * Tests accessing the parent axis.
-     */
-    @Test
-    public void testParentAxis()
-    {
-        final List<?> nodes = context.selectNodes("/" + CHILD_NAME2 + "/parent::*");
-        assertEquals("Wrong number of parent nodes", 1, nodes.size());
-    }
-
-    /**
-     * Tests accessing the following sibling axis.
-     */
-    @Test
-    public void testFollowingSiblingAxis()
-    {
-        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1
-                + "[2]/following-sibling::*");
-        assertEquals("Wrong number of following siblings", 1, nodes.size());
-        final ImmutableNode node = (ImmutableNode) nodes.get(0);
-        assertEquals("Wrong node type", CHILD_NAME2, node.getNodeName());
-        assertEquals("Wrong index", String.valueOf(CHILD_COUNT), node
-                .getValue());
-    }
-
-    /**
-     * Tests accessing the preceding sibling axis.
-     */
-    @Test
-    public void testPrecedingSiblingAxis()
-    {
-        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1
-                + "[2]/preceding-sibling::*");
-        assertEquals("Wrong number of preceding siblings", 3, nodes.size());
-        for (int index = 0, value = 3; index < nodes.size(); index++, value--)
-        {
-            assertEquals("Wrong node index", String.valueOf(value),
-                    ((ImmutableNode) nodes.get(index)).getValue());
-        }
+    public void testText() {
+        final List<?> nodes = context.selectNodes("//" + CHILD_NAME2 + "[text()='1.1.1']");
+        assertEquals(1, nodes.size());
     }
 }

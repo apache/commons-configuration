@@ -23,35 +23,27 @@ import java.util.Map;
  * A specialized parameters class for INI configuration.
  * </p>
  * <p>
- * This parameters class defines some properties which allow customizing the
- * parsing and writing of INI documents.
+ * This parameters class defines some properties which allow customizing the parsing and writing of INI documents.
  * </p>
  * <p>
- * This class is not thread-safe. It is intended that an instance is constructed
- * and initialized by a single thread during configuration of a
- * {@code ConfigurationBuilder}.
+ * This class is not thread-safe. It is intended that an instance is constructed and initialized by a single thread
+ * during configuration of a {@code ConfigurationBuilder}.
  * </p>
  *
  * @since 2.2
  */
-public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
-        implements INIBuilderProperties<INIBuilderParametersImpl>
-{
+public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl implements INIBuilderProperties<INIBuilderParametersImpl> {
     /** The key for the separatorUsedInINIOutput property. */
-    private static final String PROP_SEPARATOR_USED_IN_INI_OUTPUT
-        = "separatorUsedInOutput";
+    private static final String PROP_SEPARATOR_USED_IN_INI_OUTPUT = "separatorUsedInOutput";
 
     /** The key for the separatorUsedInInput property. */
-    private static final String PROP_SEPARATOR_USED_IN_INI_INPUT
-        = "separatorUsedInInput";
+    private static final String PROP_SEPARATOR_USED_IN_INI_INPUT = "separatorUsedInInput";
 
     /** The key for the commentLeadingCharsUsedInInput property. */
-    private static final String PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT
-        = "commentLeadingCharsUsedInInput";
+    private static final String PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT = "commentLeadingCharsUsedInInput";
 
     @Override
-    public void inheritFrom(final Map<String, ?> source)
-    {
+    public void inheritFrom(final Map<String, ?> source) {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_OUTPUT);
         copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_INPUT);
@@ -59,22 +51,19 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
     }
 
     @Override
-    public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator)
-    {
+    public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator) {
         storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
         return this;
     }
 
     @Override
-    public INIBuilderParametersImpl setSeparatorUsedInInput(final String separator)
-    {
+    public INIBuilderParametersImpl setSeparatorUsedInInput(final String separator) {
         storeProperty(PROP_SEPARATOR_USED_IN_INI_INPUT, separator);
         return this;
     }
 
     @Override
-    public INIBuilderParametersImpl setCommentLeadingCharsUsedInInput(final String separator)
-    {
+    public INIBuilderParametersImpl setCommentLeadingCharsUsedInInput(final String separator) {
         storeProperty(PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT, separator);
         return this;
     }

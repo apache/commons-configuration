@@ -18,46 +18,38 @@ package org.apache.commons.configuration2.sync;
 
 /**
  * <p>
- * An implementation of the {@code Synchronizer} interface which does not
- * perform any synchronization.
+ * An implementation of the {@code Synchronizer} interface which does not perform any synchronization.
  * </p>
  * <p>
- * This class is the option of choice for applications that do not access
- * configuration concurrently. All methods required by the {@code Synchronizer}
- * interface are just empty dummies. Therefore, this class does not have any
- * synchronization overhead. Of course, configurations using this
- * {@code Synchronizer} implementation are not thread-safe!
+ * This class is the option of choice for applications that do not access configuration concurrently. All methods
+ * required by the {@code Synchronizer} interface are just empty dummies. Therefore, this class does not have any
+ * synchronization overhead. Of course, configurations using this {@code Synchronizer} implementation are not
+ * thread-safe!
  * </p>
  * <p>
- * Implementation note: This class is an enumeration because only a single
- * instance needs to exist. This instance can be shared between arbitrary
- * configurations.
+ * Implementation note: This class is an enumeration because only a single instance needs to exist. This instance can be
+ * shared between arbitrary configurations.
  * </p>
  *
  * @since 2.0
  */
-public enum NoOpSynchronizer implements Synchronizer
-{
+public enum NoOpSynchronizer implements Synchronizer {
     /** The single shared instance of this class. */
     INSTANCE;
 
     @Override
-    public void beginRead()
-    {
+    public void beginRead() {
     }
 
     @Override
-    public void endRead()
-    {
+    public void endRead() {
     }
 
     @Override
-    public void beginWrite()
-    {
+    public void beginWrite() {
     }
 
     @Override
-    public void endWrite()
-    {
+    public void endWrite() {
     }
 }

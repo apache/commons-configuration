@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.1//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+    "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/configuration_1_2.dtd">
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -20,7 +20,6 @@
 -->
 <!-- ===================================================================== -->
 <!-- Checkstyle configuration that checks the commons-configuration coding conventions -->
-<!-- $Id$ -->
 <!-- ===================================================================== -->
 
 <module name="Checker">
@@ -59,22 +58,20 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
     <module name="FileLength"/>
+    <module name="LineLength">
+        <property name="max" value="160"/>
+    </module>
 
     <module name="TreeWalker">
-
-        <property name="cacheFile" value="${checkstyle.cache.file}"/>
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
-            <property name="scope" value="public"/>
-            <property name="allowUndeclaredRTE" value="true"/>
-	    <property name="allowMissingJavadoc" value="true"/>
+            <property name="accessModifiers" value="public"/>
         </module>
         <module name="JavadocType">
         </module>
         <module name="JavadocVariable"/>
-
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -88,10 +85,8 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
-
         <!-- Following interprets the header file as regular expressions. -->
         <!-- <module name="RegexpHeader"/>                                -->
-
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
@@ -100,15 +95,10 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
-
 
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
@@ -120,7 +110,6 @@
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
 
-
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
         <module name="ModifierOrder"/>
@@ -128,19 +117,13 @@
             <property name="tokens" value="METHOD_DEF, VARIABLE_DEF, ANNOTATION_FIELD_DEF, INTERFACE_DEF, CLASS_DEF, ENUM_DEF"/>
         </module>
 
-
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
-        <module name="LeftCurly">
-            <property name="option" value="nl"/>
-        </module>
         <module name="NeedBraces"/>
-        <module name="RightCurly">
-            <property name="option" value="alone"/>
-        </module>
-
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
@@ -160,7 +143,6 @@
         <module name="DefaultComesLast"/>
         <module name="FallThrough"/>
         <module name="MultipleVariableDeclarations"/>
-        <module name="UnnecessaryParentheses"/>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
@@ -170,8 +152,6 @@
         <module name="VisibilityModifier">
             <property name="protectedAllowed" value="true"/>
         </module>
-
-
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->

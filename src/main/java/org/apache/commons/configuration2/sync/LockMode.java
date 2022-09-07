@@ -18,33 +18,27 @@ package org.apache.commons.configuration2.sync;
 
 /**
  * <p>
- * An enumeration used by {@link SynchronizerSupport} to specify how an object
- * is locked.
+ * An enumeration used by {@link SynchronizerSupport} to specify how an object is locked.
  * </p>
  * <p>
- * The {@code SynchronizerSupport} interface allows locking an object. This can
- * be done in different ways controlling the level of concurrency still possible
- * with the object. One of the constants defined here can be passed in when
- * calling the {@code lock()} method of a {@code SynchronizerSupport} object.
- * (Note that at the end of the day it is up to a concrete implementation of
- * {@link Synchronizer} how these lock modes are interpreted.)
+ * The {@code SynchronizerSupport} interface allows locking an object. This can be done in different ways controlling
+ * the level of concurrency still possible with the object. One of the constants defined here can be passed in when
+ * calling the {@code lock()} method of a {@code SynchronizerSupport} object. (Note that at the end of the day it is up
+ * to a concrete implementation of {@link Synchronizer} how these lock modes are interpreted.)
  * </p>
  *
  * @since 2.0
  */
-public enum LockMode
-{
+public enum LockMode {
     /**
-     * Lock mode <em>READ</em>. The object is accessed in a read-only manner.
-     * Typically, this means that other read locks can be granted while
-     * concurrent writes are not permitted.
+     * Lock mode <em>READ</em>. The object is accessed in a read-only manner. Typically, this means that other read locks
+     * can be granted while concurrent writes are not permitted.
      */
     READ,
 
     /**
-     * Lock mode <em>WRITE</em>. The object is updated. This usually means that
-     * this object is exclusively locked. Attempts of other readers or writers
-     * will block until the current update operation is complete.
+     * Lock mode <em>WRITE</em>. The object is updated. This usually means that this object is exclusively locked. Attempts
+     * of other readers or writers will block until the current update operation is complete.
      */
     WRITE
 }

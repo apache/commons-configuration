@@ -16,21 +16,28 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code TrackedNodeHandler}.
  *
  */
-public class TestTrackedNodeHandler
-{
+public class TestTrackedNodeHandler {
     /** A test root node. */
     private static ImmutableNode root;
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        root = new ImmutableNode.Builder().name("ROOT").create();
+    }
 
     /** A mock node handler. */
     private NodeHandler<ImmutableNode> parentHandler;
@@ -38,43 +45,34 @@ public class TestTrackedNodeHandler
     /** The handler to be tested. */
     private TrackedNodeHandler handler;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
-        root = new ImmutableNode.Builder().name("ROOT").create();
-    }
-
-    @Before
-    public void setUp() throws Exception
-    {
-        @SuppressWarnings("unchecked")
-        final
-        NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
-        parentHandler = h;
+    @BeforeEach
+    @SuppressWarnings("unchecked")
+    public void setUp() throws Exception {
+        parentHandler = mock(NodeHandler.class);
         handler = new TrackedNodeHandler(root, parentHandler);
-    }
-
-    /**
-     * Tests whether the correct root node is returned.
-     */
-    @Test
-    public void testGetRootNode()
-    {
-        assertSame("Wrong root node", root, handler.getRootNode());
     }
 
     /**
      * Tests whether a parent node can be queried.
      */
     @Test
-    public void testGetParent()
-    {
+    public void testGetParent() {
         final ImmutableNode node = new ImmutableNode.Builder().name("node").create();
         final ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
-        EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
-        EasyMock.replay(parentHandler);
 
-        assertSame("Wrong parent node", parent, handler.getParent(node));
-        EasyMock.verify(parentHandler);
+        when(parentHandler.getParent(node)).thenReturn(parent);
+
+        assertSame(parent, handler.getParent(node));
+
+        verify(parentHandler).getParent(node);
+        verifyNoMoreInteractions(parentHandler);
+    }
+
+    /**
+     * Tests whether the correct root node is returned.
+     */
+    @Test
+    public void testGetRootNode() {
+        assertSame(root, handler.getRootNode());
     }
 }

@@ -23,24 +23,19 @@ import javax.naming.Context;
  * A specialized parameters object for JNDI configurations.
  * </p>
  * <p>
- * In addition to the basic properties common to all configuration
- * implementations, a JNDI configuration has some special properties defining
- * the subset of the JNDI tree to be managed. This class provides fluent methods
- * for setting these. The {@code getParameters()} method puts all properties
- * defined by the user in a map from where they can be accessed by a builder for
- * JNDI configurations.
+ * In addition to the basic properties common to all configuration implementations, a JNDI configuration has some
+ * special properties defining the subset of the JNDI tree to be managed. This class provides fluent methods for setting
+ * these. The {@code getParameters()} method puts all properties defined by the user in a map from where they can be
+ * accessed by a builder for JNDI configurations.
  * </p>
  * <p>
- * This class is not thread-safe. It is intended that an instance is constructed
- * and initialized by a single thread during configuration of a
- * {@code ConfigurationBuilder}.
+ * This class is not thread-safe. It is intended that an instance is constructed and initialized by a single thread
+ * during configuration of a {@code ConfigurationBuilder}.
  * </p>
  *
  * @since 2.0
  */
-public class JndiBuilderParametersImpl extends BasicBuilderParameters implements
-        JndiBuilderProperties<JndiBuilderParametersImpl>
-{
+public class JndiBuilderParametersImpl extends BasicBuilderParameters implements JndiBuilderProperties<JndiBuilderParametersImpl> {
     /** Constant for the name of the context property. */
     private static final String PROP_CONTEXT = "context";
 
@@ -48,15 +43,13 @@ public class JndiBuilderParametersImpl extends BasicBuilderParameters implements
     private static final String PROP_PREFIX = "prefix";
 
     @Override
-    public JndiBuilderParametersImpl setContext(final Context ctx)
-    {
+    public JndiBuilderParametersImpl setContext(final Context ctx) {
         storeProperty(PROP_CONTEXT, ctx);
         return this;
     }
 
     @Override
-    public JndiBuilderParametersImpl setPrefix(final String p)
-    {
+    public JndiBuilderParametersImpl setPrefix(final String p) {
         storeProperty(PROP_PREFIX, p);
         return this;
     }

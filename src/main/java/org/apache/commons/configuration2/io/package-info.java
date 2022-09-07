@@ -20,12 +20,10 @@
  * A package with classes related to I/O operations.
  * </p>
  * <p>
- * Most of the interfaces and classes contained in this package are related to
- * file-based configurations. For instance, the basic interfaces for reading and
- * writing data or for managing a reference to a file are defined here. This
- * package also contains various strategy classes for locating files. They can be
- * used to construct a location strategy for the configuration sources of a
- * specific application.
+ * Most of the interfaces and classes contained in this package are related to file-based configurations. For instance,
+ * the basic interfaces for reading and writing data or for managing a reference to a file are defined here. This
+ * package also contains various strategy classes for locating files. They can be used to construct a location strategy
+ * for the configuration sources of a specific application.
  * </p>
  *
  */

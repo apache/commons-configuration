@@ -17,22 +17,18 @@
 
 /**
  * <p>
- * A package containing the implementation of the builder for combined
- * configurations.
+ * A package containing the implementation of the builder for combined configurations.
  * </p>
  * <p>
- * The {@code CombinedConfigurationBuilder} class defined in this package can
- * create a {@code CombinedConfiguration} object from various configuration
- * sources that are declared in a so-called <em>configuration definition
- * file</em>. This is a convenient means to collect distributed configuration
- * information and access them as a single logic source.
+ * The {@code CombinedConfigurationBuilder} class defined in this package can create a {@code CombinedConfiguration}
+ * object from various configuration sources that are declared in a so-called <em>configuration definition file</em>.
+ * This is a convenient means to collect distributed configuration information and access them as a single logic source.
  * </p>
  * <p>
- * In addition, the {@code MultiFileConfigurationBuilder} class is located in
- * this package. This builder class selects one file-based configuration out of
- * a set based on dynamic variable substitution. A typical use case would be
- * the definition of multiple configuration files for the different stages of a
- * project: development, integration test, production, etc.
+ * In addition, the {@code MultiFileConfigurationBuilder} class is located in this package. This builder class selects
+ * one file-based configuration out of a set based on dynamic variable substitution. A typical use case would be the
+ * definition of multiple configuration files for the different stages of a project: development, integration test,
+ * production, etc.
  * </p>
  *
  */

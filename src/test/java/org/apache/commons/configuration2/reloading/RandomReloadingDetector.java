@@ -19,23 +19,19 @@ package org.apache.commons.configuration2.reloading;
 import java.util.Random;
 
 /**
- * An implementation of {@code ReloadingDetector} which randomly returns
- * true or false.
+ * An implementation of {@code ReloadingDetector} which randomly returns true or false.
  *
  */
-public class RandomReloadingDetector implements ReloadingDetector
-{
-    /** The random object.*/
+public class RandomReloadingDetector implements ReloadingDetector {
+    /** The random object. */
     private final Random random = new Random();
 
     @Override
-    public boolean isReloadingRequired()
-    {
+    public boolean isReloadingRequired() {
         return random.nextBoolean();
     }
 
     @Override
-    public void reloadingPerformed()
-    {
+    public void reloadingPerformed() {
     }
 }

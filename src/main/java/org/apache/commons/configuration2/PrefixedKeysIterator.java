@@ -21,14 +21,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * * A specialized iterator implementation used by {@link AbstractConfiguration}
- * to return an iteration over all keys starting with a specified prefix.
+ * * A specialized iterator implementation used by {@link AbstractConfiguration} to return an iteration over all keys
+ * starting with a specified prefix.
  *
- * <p>This class is basically a stripped-down version of the
- * {@code FilterIterator} class of Commons Collections</p>
+ * <p>
+ * This class is basically a stripped-down version of the {@code FilterIterator} class of Commons Collections
+ * </p>
  */
-class PrefixedKeysIterator implements Iterator<String>
-{
+class PrefixedKeysIterator implements Iterator<String> {
     /** Stores the wrapped iterator. */
     private final Iterator<String> iterator;
 
@@ -42,14 +42,13 @@ class PrefixedKeysIterator implements Iterator<String>
     private boolean nextElementSet;
 
     /**
-     * Creates a new instance of {@code PrefixedKeysIterator} and sets
-     * the wrapped iterator and the prefix for the accepted keys.
+     * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix for the accepted
+     * keys.
      *
      * @param wrappedIterator the wrapped iterator
      * @param keyPrefix the prefix of the allowed keys
      */
-    public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix)
-    {
+    public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix) {
         iterator = wrappedIterator;
         prefix = keyPrefix;
     }
@@ -60,23 +59,19 @@ class PrefixedKeysIterator implements Iterator<String>
      * @return a flag if there is a next element
      */
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return nextElementSet || setNextElement();
     }
 
     /**
-     * Returns the next element in the iteration. This is the next key that
-     * matches the specified prefix.
+     * Returns the next element in the iteration. This is the next key that matches the specified prefix.
      *
      * @return the next element in the iteration
      * @throws NoSuchElementException if there is no next element
      */
     @Override
-    public String next()
-    {
-        if (!nextElementSet && !setNextElement())
-        {
+    public String next() {
+        if (!nextElementSet && !setNextElement()) {
             throw new NoSuchElementException();
         }
         nextElementSet = false;
@@ -84,37 +79,29 @@ class PrefixedKeysIterator implements Iterator<String>
     }
 
     /**
-     * Removes from the underlying collection of the base iterator the last
-     * element returned by this iterator. This method can only be called if
-     * {@code next()} was called, but not after {@code hasNext()},
-     * because the {@code hasNext()} call changes the base iterator.
+     * Removes from the underlying collection of the base iterator the last element returned by this iterator. This method
+     * can only be called if {@code next()} was called, but not after {@code hasNext()}, because the {@code hasNext()} call
+     * changes the base iterator.
      *
-     * @throws IllegalStateException if {@code hasNext()} has already
-     *         been called.
+     * @throws IllegalStateException if {@code hasNext()} has already been called.
      */
     @Override
-    public void remove()
-    {
-        if (nextElementSet)
-        {
+    public void remove() {
+        if (nextElementSet) {
             throw new IllegalStateException("remove() cannot be called");
         }
         iterator.remove();
     }
 
     /**
-     * Determines the next element in the iteration. The return value indicates
-     * whether such an element can be found.
+     * Determines the next element in the iteration. The return value indicates whether such an element can be found.
      *
      * @return a flag whether a next element exists
      */
-    private boolean setNextElement()
-    {
-        while (iterator.hasNext())
-        {
+    private boolean setNextElement() {
+        while (iterator.hasNext()) {
             final String key = iterator.next();
-            if (key.startsWith(prefix + ".") || key.equals(prefix))
-            {
+            if (key.startsWith(prefix + ".") || key.equals(prefix)) {
                 nextElement = key;
                 nextElementSet = true;
                 return true;

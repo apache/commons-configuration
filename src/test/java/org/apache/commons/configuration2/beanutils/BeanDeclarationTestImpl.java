@@ -20,14 +20,11 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * A test implementation of the BeanDeclaration interface. This implementation
- * allows setting the values directly, which should be returned by the methods
- * required by the BeanDeclaration interface. It is used by multiple test
- * classes.
+ * A test implementation of the BeanDeclaration interface. This implementation allows setting the values directly, which
+ * should be returned by the methods required by the BeanDeclaration interface. It is used by multiple test classes.
  *
  */
-class BeanDeclarationTestImpl implements BeanDeclaration
-{
+class BeanDeclarationTestImpl implements BeanDeclaration {
     private String beanClassName;
 
     private String beanFactoryName;
@@ -41,69 +38,56 @@ class BeanDeclarationTestImpl implements BeanDeclaration
     private Collection<ConstructorArg> constructorArgs;
 
     @Override
-    public String getBeanClassName()
-    {
+    public String getBeanClassName() {
         return beanClassName;
     }
 
-    public void setBeanClassName(final String beanClassName)
-    {
-        this.beanClassName = beanClassName;
-    }
-
     @Override
-    public String getBeanFactoryName()
-    {
+    public String getBeanFactoryName() {
         return beanFactoryName;
     }
 
-    public void setBeanFactoryName(final String beanFactoryName)
-    {
-        this.beanFactoryName = beanFactoryName;
-    }
-
     @Override
-    public Object getBeanFactoryParameter()
-    {
+    public Object getBeanFactoryParameter() {
         return beanFactoryParameter;
     }
 
-    public void setBeanFactoryParameter(final Object beanFactoryParameter)
-    {
-        this.beanFactoryParameter = beanFactoryParameter;
-    }
-
     @Override
-    public Map<String, Object> getBeanProperties()
-    {
+    public Map<String, Object> getBeanProperties() {
         return beanProperties;
     }
 
-    public void setBeanProperties(final Map<String, Object> beanProperties)
-    {
-        this.beanProperties = beanProperties;
-    }
-
     @Override
-    public Map<String, Object> getNestedBeanDeclarations()
-    {
-        return nestedBeanDeclarations;
-    }
-
-    public void setNestedBeanDeclarations(
-            final Map<String, Object> nestedBeanDeclarations)
-    {
-        this.nestedBeanDeclarations = nestedBeanDeclarations;
-    }
-
-    @Override
-    public Collection<ConstructorArg> getConstructorArgs()
-    {
+    public Collection<ConstructorArg> getConstructorArgs() {
         return constructorArgs;
     }
 
-    public void setConstructorArgs(final Collection<ConstructorArg> args)
-    {
+    @Override
+    public Map<String, Object> getNestedBeanDeclarations() {
+        return nestedBeanDeclarations;
+    }
+
+    public void setBeanClassName(final String beanClassName) {
+        this.beanClassName = beanClassName;
+    }
+
+    public void setBeanFactoryName(final String beanFactoryName) {
+        this.beanFactoryName = beanFactoryName;
+    }
+
+    public void setBeanFactoryParameter(final Object beanFactoryParameter) {
+        this.beanFactoryParameter = beanFactoryParameter;
+    }
+
+    public void setBeanProperties(final Map<String, Object> beanProperties) {
+        this.beanProperties = beanProperties;
+    }
+
+    public void setConstructorArgs(final Collection<ConstructorArg> args) {
         constructorArgs = args;
+    }
+
+    public void setNestedBeanDeclarations(final Map<String, Object> nestedBeanDeclarations) {
+        this.nestedBeanDeclarations = nestedBeanDeclarations;
     }
 }

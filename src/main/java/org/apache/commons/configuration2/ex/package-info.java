@@ -20,9 +20,8 @@
  * This package contains all exception classes used by this library.
  * </p>
  * <p>
- * <em>Commons Configuration</em> defines a small number of exception classes.
- * Because these classes are referenced by multiple other packages, they are
- * located in their own package to avoid cyclic dependencies.
+ * <em>Commons Configuration</em> defines a small number of exception classes. Because these classes are referenced by
+ * multiple other packages, they are located in their own package to avoid cyclic dependencies.
  * </p>
  *
  */

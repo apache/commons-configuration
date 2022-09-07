@@ -21,26 +21,22 @@ package org.apache.commons.configuration2.tree;
  * An interface for matching nodes based on specific criteria.
  * </p>
  * <p>
- * This interface is used by {@link NodeHandler} to support advanced filtering
- * on the child nodes of a given parent node. This is useful for instance for
- * special {@link ExpressionEngine} implementations which do no direct or strict
- * matches based on node names. An example could be an expression engine that
- * treats the passed in node keys in a case-insensitive manner. Such an engine
- * would use a special case-insensitive matcher when resolving configuration
+ * This interface is used by {@link NodeHandler} to support advanced filtering on the child nodes of a given parent
+ * node. This is useful for instance for special {@link ExpressionEngine} implementations which do no direct or strict
+ * matches based on node names. An example could be an expression engine that treats the passed in node keys in a
+ * case-insensitive manner. Such an engine would use a special case-insensitive matcher when resolving configuration
  * keys.
  * </p>
  * <p>
- * The idea behind this interface is that a matcher has to match a property of a
- * node against a given criterion. This criterion is passed to the matching
- * function so that matchers can be implemented in a state-less fashion and
- * shared between multiple components.
+ * The idea behind this interface is that a matcher has to match a property of a node against a given criterion. This
+ * criterion is passed to the matching function so that matchers can be implemented in a state-less fashion and shared
+ * between multiple components.
  * </p>
  *
  * @since 2.0
  * @param <C> the type of the criterion evaluated by this matcher
  */
-public interface NodeMatcher<C>
-{
+public interface NodeMatcher<C> {
     /**
      * Tests whether the passed in node matches the given criterion.
      *
@@ -48,8 +44,7 @@ public interface NodeMatcher<C>
      * @param handler the corresponding {@code NodeHandler}
      * @param criterion the criterion to match against
      * @param <T> the type of the node
-     * @return <b>true</b> if this node matches the criterion, <b>false</b>
-     *         otherwise
+     * @return <b>true</b> if this node matches the criterion, <b>false</b> otherwise
      */
     <T> boolean matches(T node, NodeHandler<T> handler, C criterion);
 }

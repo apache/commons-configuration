@@ -17,26 +17,21 @@
 package org.apache.commons.configuration2.tree;
 
 /**
- * Test class for {@code NodeHandlerDecorator}. This class uses the abstract
- * base class for NodeHandler tests to verify that all methods defined by the
- * {@code NodeHandler} interface are correctly delegated to the wrapped handler.
+ * Test class for {@code NodeHandlerDecorator}. This class uses the abstract base class for NodeHandler tests to verify
+ * that all methods defined by the {@code NodeHandler} interface are correctly delegated to the wrapped handler.
  *
  */
-public class TestNodeHandlerDecorator extends AbstractImmutableNodeHandlerTest
-{
+public class TestNodeHandlerDecorator extends AbstractImmutableNodeHandlerTest {
     /**
-     * {@inheritDoc} This implementation returns a {@code NodeHandlerDecorator}
-     * which wraps a {@code TreeData} object acting as the actual node handler.
+     * {@inheritDoc} This implementation returns a {@code NodeHandlerDecorator} which wraps a {@code TreeData} object acting
+     * as the actual node handler.
      */
     @Override
-    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root)
-    {
+    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root) {
         final InMemoryNodeModel model = new InMemoryNodeModel(root);
-        return new NodeHandlerDecorator<ImmutableNode>()
-        {
+        return new NodeHandlerDecorator<ImmutableNode>() {
             @Override
-            protected NodeHandler<ImmutableNode> getDecoratedNodeHandler()
-            {
+            protected NodeHandler<ImmutableNode> getDecoratedNodeHandler() {
                 return model.getNodeHandler();
             }
         };

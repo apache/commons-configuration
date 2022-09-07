@@ -18,19 +18,17 @@ package org.apache.commons.configuration2.reloading;
 
 /**
  * <p>
- * Definition of an interface to be implemented by components which support
- * reloading operations managed by a {@link ReloadingController}.
+ * Definition of an interface to be implemented by components which support reloading operations managed by a
+ * {@link ReloadingController}.
  * </p>
  * <p>
- * Classes implementing this interface have to provide access to a
- * {@link ReloadingController} instance. This object can then be used to trigger
- * reloading checks.
+ * Classes implementing this interface have to provide access to a {@link ReloadingController} instance. This object can
+ * then be used to trigger reloading checks.
  * </p>
  *
  * @since 2.0
  */
-public interface ReloadingControllerSupport
-{
+public interface ReloadingControllerSupport {
     /**
      * Returns the {@code ReloadingController} associated with this object.
      *

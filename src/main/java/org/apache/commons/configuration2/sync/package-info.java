@@ -17,19 +17,15 @@
 
 /**
  * <p>
- * A package containing interfaces and classes related to synchronization of
- * configurations.
+ * A package containing interfaces and classes related to synchronization of configurations.
  * </p>
  * <p>
- * Whether a configuration object has to be thread-safe or not is application-specific.
- * Therefore, this library allows an application to adapt configuration objects to
- * their requirements regarding thread-safety by assigning them so-called
- * {@code Synchronizer} objects. A configuration invokes its
- * {@code Synchronizer} every time it is accessed (in read or write mode).
- * If configurations are not accessed concurrently by multiple threads, a simple
- * dummy {@code Synchronizer} can be used - this is also the default
- * setting. To ensure thread-safety, a fully functional implementation has to be
- * set.
+ * Whether a configuration object has to be thread-safe or not is application-specific. Therefore, this library allows
+ * an application to adapt configuration objects to their requirements regarding thread-safety by assigning them
+ * so-called {@code Synchronizer} objects. A configuration invokes its {@code Synchronizer} every time it is accessed
+ * (in read or write mode). If configurations are not accessed concurrently by multiple threads, a simple dummy
+ * {@code Synchronizer} can be used - this is also the default setting. To ensure thread-safety, a fully functional
+ * implementation has to be set.
  * </p>
  *
  */

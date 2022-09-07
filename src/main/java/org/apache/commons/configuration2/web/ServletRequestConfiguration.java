@@ -25,15 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A configuration wrapper to read the parameters of a servlet request. This
- * configuration is read only, adding or removing a property will throw an
- * UnsupportedOperationException.
+ * A configuration wrapper to read the parameters of a servlet request. This configuration is read only, adding or
+ * removing a property will throw an UnsupportedOperationException.
  *
  * @since 1.1
  */
-public class ServletRequestConfiguration extends BaseWebConfiguration
-{
-    /** Stores the wrapped request.*/
+public class ServletRequestConfiguration extends BaseWebConfiguration {
+    /** Stores the wrapped request. */
     protected ServletRequest request;
 
     /**
@@ -41,47 +39,35 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
      *
      * @param request the servlet request
      */
-    public ServletRequestConfiguration(final ServletRequest request)
-    {
+    public ServletRequestConfiguration(final ServletRequest request) {
         this.request = request;
     }
 
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         final String[] values = request.getParameterValues(key);
 
-        if (values == null || values.length == 0)
-        {
+        if (values == null || values.length == 0) {
             return null;
         }
-        else if (values.length == 1)
-        {
+        if (values.length == 1) {
             return handleDelimiters(values[0]);
         }
-        else
-        {
-            // ensure that escape characters in all list elements are removed
-            final List<Object> result = new ArrayList<>(values.length);
-            for (final String value : values)
-            {
-                final Object val = handleDelimiters(value);
-                if (val instanceof Collection)
-                {
-                    result.addAll((Collection<?>) val);
-                }
-                else
-                {
-                    result.add(val);
-                }
+        // ensure that escape characters in all list elements are removed
+        final List<Object> result = new ArrayList<>(values.length);
+        for (final String value : values) {
+            final Object val = handleDelimiters(value);
+            if (val instanceof Collection) {
+                result.addAll((Collection<?>) val);
+            } else {
+                result.add(val);
             }
-            return result;
         }
+        return result;
     }
 
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         // According to the documentation of getParameterMap(), keys are Strings.
         final Map<String, ?> parameterMap = request.getParameterMap();
         return parameterMap.keySet().iterator();

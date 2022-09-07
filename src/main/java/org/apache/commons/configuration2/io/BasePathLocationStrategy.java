@@ -23,36 +23,27 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
- * A specialized implementation of {@code FileLocationStrategy} which tries to
- * construct a file path from the locator's base path and file name.
+ * A specialized implementation of {@code FileLocationStrategy} which tries to construct a file path from the locator's
+ * base path and file name.
  * </p>
  * <p>
- * This strategies ignores the URL stored in the passed in {@link FileLocator}.
- * It generates a path by concatenating the base path (if present) and the file
- * name. If the resulting path points to a valid file, the corresponding URL is
+ * This strategies ignores the URL stored in the passed in {@link FileLocator}. It generates a path by concatenating the
+ * base path (if present) and the file name. If the resulting path points to a valid file, the corresponding URL is
  * returned.
  * </p>
  *
  * @since 2.0
  */
-public class BasePathLocationStrategy implements FileLocationStrategy
-{
+public class BasePathLocationStrategy implements FileLocationStrategy {
     /**
-     * {@inheritDoc} This implementation uses utility methods from
-     * {@code FileLocatorUtils} to generate a {@code File} from the locator's
-     * base path and file name. If this {@code File} exists, its URL is
-     * returned.
+     * {@inheritDoc} This implementation uses utility methods from {@code FileLocatorUtils} to generate a {@code File} from
+     * the locator's base path and file name. If this {@code File} exists, its URL is returned.
      */
     @Override
-    public URL locate(final FileSystem fileSystem, final FileLocator locator)
-    {
-        if (StringUtils.isNotEmpty(locator.getFileName()))
-        {
-            final File file =
-                    FileLocatorUtils.constructFile(locator.getBasePath(),
-                            locator.getFileName());
-            if (file.isFile())
-            {
+    public URL locate(final FileSystem fileSystem, final FileLocator locator) {
+        if (StringUtils.isNotEmpty(locator.getFileName())) {
+            final File file = FileLocatorUtils.constructFile(locator.getBasePath(), locator.getFileName());
+            if (file.isFile()) {
                 return FileLocatorUtils.convertFileToURL(file);
             }
         }

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,23 +15,23 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+package org.apache.commons.configuration2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * test if properties that contain a "=" will be loaded correctly.
  *
  */
-public class TestEqualsProperty
-{
+public class TestEqualsProperty {
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Test
-    public void testEquals() throws Exception
-    {
+    public void testEquals() throws Exception {
         final PropertiesConfiguration conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.setFileName(testProperties);

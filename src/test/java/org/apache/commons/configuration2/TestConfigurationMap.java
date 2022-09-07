@@ -17,48 +17,31 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class TestConfigurationMap
-{
+public class TestConfigurationMap {
 
     ConfigurationMap map;
 
-    String[] properties = {
-            "booleanProperty",
-            "doubleProperty",
-            "floatProperty",
-            "intProperty",
-            "longProperty",
-            "shortProperty",
-            "stringProperty"
-    };
+    String[] properties = {"booleanProperty", "doubleProperty", "floatProperty", "intProperty", "longProperty", "shortProperty", "stringProperty"};
 
-    Object[] values = {
-            Boolean.TRUE,
-            new Double(Double.MAX_VALUE),
-            new Float(Float.MAX_VALUE),
-            new Integer(Integer.MAX_VALUE),
-            new Long(Long.MAX_VALUE),
-            new Short(Short.MAX_VALUE),
-            "This is a string"
-    };
+    Object[] values = {Boolean.TRUE, Double.valueOf(Double.MAX_VALUE), Float.valueOf(Float.MAX_VALUE), Integer.valueOf(Integer.MAX_VALUE),
+        Long.valueOf(Long.MAX_VALUE), Short.valueOf(Short.MAX_VALUE), "This is a string"};
 
     /**
      * Set up instance variables required by this test case.
      */
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         final BaseConfiguration configuration = new BaseConfiguration();
-        for(int i = 0; i < properties.length ; i++) {
+        for (int i = 0; i < properties.length; i++) {
             configuration.setProperty(properties[i], values[i]);
         }
         map = new ConfigurationMap(configuration);
@@ -67,9 +50,8 @@ public class TestConfigurationMap
     /**
      * Tear down instance variables required by this test case.
      */
-    @After
-    public void tearDown()
-    {
+    @AfterEach
+    public void tearDown() {
         map = null;
     }
 
@@ -77,15 +59,14 @@ public class TestConfigurationMap
      * Class under test for Object put(Object, Object)
      */
     @Test
-    public void testPut()
-    {
-        for(int i = 0; i < properties.length; i++) {
+    public void testPut() {
+        for (int i = 0; i < properties.length; i++) {
             Object object = map.put(properties[i], values[i]);
-            assertNotNull("Returned null from put.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull(object);
+            assertEquals(values[i], object);
             object = map.get(properties[i]);
-            assertNotNull("Returned null from get.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull(object);
+            assertEquals(values[i], object);
         }
     }
 

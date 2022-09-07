@@ -25,27 +25,21 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
- * A specialized parameter class for configuring {@code PropertiesConfiguration}
- * instances.
+ * A specialized parameter class for configuring {@code PropertiesConfiguration} instances.
  * </p>
  * <p>
- * This class allows setting of some properties specific to properties
- * configuration, e.g. the layout object. By inheriting from
- * {@link FileBasedBuilderParametersImpl}, basic properties and properties
- * related to file-based configurations are available, too.
+ * This class allows setting of some properties specific to properties configuration, e.g. the layout object. By
+ * inheriting from {@link FileBasedBuilderParametersImpl}, basic properties and properties related to file-based
+ * configurations are available, too.
  * </p>
  * <p>
- * This class is not thread-safe. It is intended that an instance is constructed
- * and initialized by a single thread during configuration of a
- * {@code ConfigurationBuilder}.
+ * This class is not thread-safe. It is intended that an instance is constructed and initialized by a single thread
+ * during configuration of a {@code ConfigurationBuilder}.
  * </p>
  *
  * @since 2.0
  */
-public class PropertiesBuilderParametersImpl extends
-        FileBasedBuilderParametersImpl implements
-        PropertiesBuilderProperties<PropertiesBuilderParametersImpl>
-{
+public class PropertiesBuilderParametersImpl extends FileBasedBuilderParametersImpl implements PropertiesBuilderProperties<PropertiesBuilderParametersImpl> {
     /** The key for the include listener property. */
     private static final String PROP_INCLUDE_LISTENER = "includeListener";
 
@@ -59,42 +53,34 @@ public class PropertiesBuilderParametersImpl extends
     private static final String PROP_IO_FACTORY = "IOFactory";
 
     @Override
-    public PropertiesBuilderParametersImpl setIncludeListener(
-            final ConfigurationConsumer<ConfigurationException> includeListener)
-    {
+    public PropertiesBuilderParametersImpl setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener) {
         storeProperty(PROP_INCLUDE_LISTENER, includeListener);
         return this;
     }
 
     @Override
-    public PropertiesBuilderParametersImpl setIncludesAllowed(final boolean f)
-    {
+    public PropertiesBuilderParametersImpl setIncludesAllowed(final boolean f) {
         storeProperty(PROP_INCLUDES_ALLOWED, Boolean.valueOf(f));
         return this;
     }
 
     /**
-     * {@inheritDoc} This implementation takes some more properties into account
-     * that are defined in this class.
+     * {@inheritDoc} This implementation takes some more properties into account that are defined in this class.
      */
     @Override
-    public void inheritFrom(final Map<String, ?> source)
-    {
+    public void inheritFrom(final Map<String, ?> source) {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_INCLUDE_LISTENER, PROP_IO_FACTORY);
     }
 
     @Override
-    public PropertiesBuilderParametersImpl setLayout(
-            final PropertiesConfigurationLayout layout)
-    {
+    public PropertiesBuilderParametersImpl setLayout(final PropertiesConfigurationLayout layout) {
         storeProperty(PROP_LAYOUT, layout);
         return this;
     }
 
     @Override
-    public PropertiesBuilderParametersImpl setIOFactory(final IOFactory factory)
-    {
+    public PropertiesBuilderParametersImpl setIOFactory(final IOFactory factory) {
         storeProperty(PROP_IO_FACTORY, factory);
         return this;
     }

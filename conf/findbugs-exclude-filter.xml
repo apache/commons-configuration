@@ -19,10 +19,13 @@
   This file contains some false positive bugs detected by findbugs. Their
   false positive nature has been analyzed individually and they have been
   put here to instruct findbugs it must ignore them.
-  $Id$
 -->
 
-<FindBugsFilter>
+<FindBugsFilter
+    xmlns="https://github.com/spotbugs/filter/3.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+
   <!-- Reason: The reliance on default encoding is only in debug code. -->
   <Match>
     <Class name="org.apache.commons.configuration2.CombinedConfiguration" />
@@ -94,4 +97,15 @@
     <Field name="attributeResult" />
     <Bug pattern="SE_BAD_FIELD" />
   </Match>
+  
+  <!-- Reason: TODO, perhaps? -->
+  <Match>
+    <Class name="~.*" />
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="MS_EXPOSE_REP" />
+    </Or>
+  </Match>
+  
 </FindBugsFilter>

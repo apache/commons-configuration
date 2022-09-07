@@ -17,58 +17,44 @@
 package org.apache.commons.configuration2.tree;
 
 import java.io.PrintStream;
-import java.util.Map;
 
 /**
  * Utility methods.
  *
  * @since 1.7
  */
-public final class TreeUtils
-{
+public final class TreeUtils {
     /** Prevent creating this class. */
-    private TreeUtils()
-    {
+    private TreeUtils() {
     }
 
     /**
      * Print out the data in the configuration.
+     *
      * @param stream The OutputStream.
      * @param result The root node of the tree.
      */
-    public static void printTree(final PrintStream stream, final ImmutableNode result)
-    {
-        if (stream != null)
-        {
+    public static void printTree(final PrintStream stream, final ImmutableNode result) {
+        if (stream != null) {
             printTree(stream, "", result);
         }
     }
 
-    private static void printTree(final PrintStream stream, final String indent, final ImmutableNode result)
-    {
+    private static void printTree(final PrintStream stream, final String indent, final ImmutableNode result) {
         final StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getNodeName());
-        for (final Map.Entry<String, Object> e : result.getAttributes().entrySet())
-        {
-            buffer.append(' ').append(e.getKey()).append("='").append(e.getValue()).append("'");
-        }
+        result.getAttributes().forEach((k, v) -> buffer.append(' ').append(k).append("='").append(v).append("'"));
         buffer.append(">");
         stream.print(buffer.toString());
-        if (result.getValue() != null)
-        {
+        if (result.getValue() != null) {
             stream.print(result.getValue());
         }
         boolean newline = false;
-        if (!result.getChildren().isEmpty())
-        {
+        if (!result.getChildren().isEmpty()) {
             stream.print("\n");
-            for (final ImmutableNode child : result.getChildren())
-            {
-                printTree(stream, indent + "  ", child);
-            }
+            result.forEach(child -> printTree(stream, indent + "  ", child));
             newline = true;
         }
-        if (newline)
-        {
+        if (newline) {
             stream.print(indent);
         }
         stream.println("</" + result.getNodeName() + ">");

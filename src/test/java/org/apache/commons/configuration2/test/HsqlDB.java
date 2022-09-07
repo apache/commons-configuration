@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2.test;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,6 +15,8 @@ package org.apache.commons.configuration2.test;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration2.test;
+
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,57 +32,55 @@ import org.apache.commons.logging.LogFactory;
  *
  */
 
-public class HsqlDB
-{
-    private Connection connection = null;
-    private static Log log = LogFactory.getLog(HsqlDB.class);
+public class HsqlDB {
+    private static final Log log = LogFactory.getLog(HsqlDB.class);
+    private final Connection connection;
 
-    public HsqlDB(final String uri, final String databaseDriver, final String loadFile)
-            throws Exception
-    {
+    public HsqlDB(final String uri, final String databaseDriver, final String loadFile) throws Exception {
         Class.forName(databaseDriver);
 
         this.connection = DriverManager.getConnection(uri, "sa", "");
 
-            if (StringUtils.isNotEmpty(loadFile))
-            {
-                loadSqlFile(loadFile);
-            }
+        if (StringUtils.isNotEmpty(loadFile)) {
+            loadSqlFile(loadFile);
+        }
         this.connection.commit();
     }
 
-    public Connection getConnection()
-    {
+    public void close() {
+        try {
+            connection.close();
+        } catch (final Exception e) {
+        }
+    }
+
+    public Connection getConnection() {
         return connection;
     }
 
-    public void close()
-    {
-        try
-        {
-            connection.close();
-        }
-        catch (final Exception e)
-        {
+    private String getFileContents(final String fileName) throws Exception {
+        try (FileReader fr = new FileReader(fileName)) {
+
+            final char fileBuf[] = new char[1024];
+            final StringBuilder sb = new StringBuilder(1000);
+            int res = -1;
+
+            while ((res = fr.read(fileBuf, 0, 1024)) > -1) {
+                sb.append(fileBuf, 0, res);
+            }
+            return sb.toString();
         }
     }
 
-    private void loadSqlFile(final String fileName)
-            throws Exception
-    {
-        try (Statement statement = connection.createStatement())
-        {
+    private void loadSqlFile(final String fileName) throws Exception {
+        try (Statement statement = connection.createStatement()) {
             String commands = getFileContents(fileName);
 
-            for (int targetPos = commands.indexOf(';'); targetPos > -1; targetPos = commands.indexOf(';'))
-            {
+            for (int targetPos = commands.indexOf(';'); targetPos > -1; targetPos = commands.indexOf(';')) {
                 final String cmd = commands.substring(0, targetPos + 1);
-                try
-                {
+                try {
                     statement.execute(cmd);
-                }
-                catch (final SQLException sqle)
-                {
+                } catch (final SQLException sqle) {
                     log.warn("Statement: " + cmd + ": " + sqle.getMessage());
                 }
 
@@ -90,22 +88,4 @@ public class HsqlDB
             }
         }
     }
-
-    private String getFileContents(final String fileName)
-            throws Exception
-    {
-        try (final FileReader fr = new FileReader(fileName)) {
-
-            final char fileBuf[]  = new char[1024];
-            final StringBuffer sb = new StringBuffer(1000);
-            int res = -1;
-
-            while ((res = fr.read(fileBuf, 0, 1024)) > -1)
-            {
-                sb.append(fileBuf, 0, res);
-            }
-            return sb.toString();
-            }
-        }
 }
-

@@ -20,28 +20,25 @@ import java.util.List;
 
 /**
  * <p>
- * An extension of the {@link NodeHandler} interface which allows access to
- * so-called <em>references</em> stored for a node.
+ * An extension of the {@link NodeHandler} interface which allows access to so-called <em>references</em> stored for a
+ * node.
  * </p>
  * <p>
- * Some specialized configuration implementations needs to store additional data
- * for the nodes representing configuration properties. This interface provides
- * methods for querying this data. For instance, it is possible to query a
- * reference object stored for a specific node.
+ * Some specialized configuration implementations needs to store additional data for the nodes representing
+ * configuration properties. This interface provides methods for querying this data. For instance, it is possible to
+ * query a reference object stored for a specific node.
  * </p>
  * <p>
- * {@link InMemoryNodeModel} supports references. It can be queried for a
- * {@code ReferenceNodeHandler} which can then be used for dealing with
- * references.
+ * {@link InMemoryNodeModel} supports references. It can be queried for a {@code ReferenceNodeHandler} which can then be
+ * used for dealing with references.
  * </p>
  *
  * @since 2.0
  */
-public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode>
-{
+public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
     /**
-     * Returns the reference object associated with the specified node. If no
-     * reference data is associated with this node, result is <b>null</b>.
+     * Returns the reference object associated with the specified node. If no reference data is associated with this node,
+     * result is <b>null</b>.
      *
      * @param node the node in question
      * @return the reference object for this node or <b>null</b>
@@ -49,13 +46,10 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode>
     Object getReference(ImmutableNode node);
 
     /**
-     * Returns a list with the reference objects for nodes which have been
-     * removed. Whenever a node associated with a reference object is removed
-     * from the nodes structure managed by the owning model, the reference
-     * object is recorded. This is necessary for instance to free some
-     * resources. With this method all recorded reference objects can be
-     * queried. They are typically returned in the order in which they have been
-     * removed.
+     * Returns a list with the reference objects for nodes which have been removed. Whenever a node associated with a
+     * reference object is removed from the nodes structure managed by the owning model, the reference object is recorded.
+     * This is necessary for instance to free some resources. With this method all recorded reference objects can be
+     * queried. They are typically returned in the order in which they have been removed.
      *
      * @return a list with reference objects for nodes removed from the model
      */

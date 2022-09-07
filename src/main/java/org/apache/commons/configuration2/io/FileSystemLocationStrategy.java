@@ -20,28 +20,23 @@ import java.net.URL;
 
 /**
  * <p>
- * A specialized implementation of {@code FileLocationStrategy} which uses the
- * passed in {@link FileSystem} to locate a file.
+ * A specialized implementation of {@code FileLocationStrategy} which uses the passed in {@link FileSystem} to locate a
+ * file.
  * </p>
  * <p>
- * This strategy implementation ignores the URL of the passed in
- * {@link FileLocator} and operates on its base path and file name. These
- * properties are passed to the {@code locateFromURL()} method of
- * {@code FileSystem}. So the burden of resolving the file is delegated to the
- * {@code FileSystem}.
+ * This strategy implementation ignores the URL of the passed in {@link FileLocator} and operates on its base path and
+ * file name. These properties are passed to the {@code locateFromURL()} method of {@code FileSystem}. So the burden of
+ * resolving the file is delegated to the {@code FileSystem}.
  * </p>
  *
  * @since 2.0
  */
-public class FileSystemLocationStrategy implements FileLocationStrategy
-{
+public class FileSystemLocationStrategy implements FileLocationStrategy {
     /**
      * {@inheritDoc} This implementation delegates to the {@code FileSystem}.
      */
     @Override
-    public URL locate(final FileSystem fileSystem, final FileLocator locator)
-    {
-        return fileSystem.locateFromURL(locator.getBasePath(),
-                locator.getFileName());
+    public URL locate(final FileSystem fileSystem, final FileLocator locator) {
+        return fileSystem.locateFromURL(locator.getBasePath(), locator.getFileName());
     }
 }

@@ -17,7 +17,6 @@
    limitations under the License.
 -->
 <!-- Test configuration file with an invalid date property.
-     $Id$
 -->
 <plist version="1.0">
     <dict>

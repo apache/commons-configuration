@@ -47,6 +47,10 @@
         configuration values. These various sources include:
         <ul>
           <li>
+              <strong>EnvironmentConfiguration</strong>
+              Reads the plattform specific environment variables.
+          </li>
+          <li>
               <strong>PropertiesConfiguration</strong>
               Loads configuration values from a properties file.
           </li>

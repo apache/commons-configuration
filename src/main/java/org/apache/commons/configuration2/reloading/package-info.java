@@ -20,10 +20,9 @@
  * This package contains classes and interfaces related to the reloading mechanism.
  * </p>
  * <p>
- * Using these classes it is possible to monitor configuration sources for
- * external changes. When a change is detected notifications are sent out.
- * In collaboration with a <em>configuration builder</em> reloading can happen
- * transparently in background.
+ * Using these classes it is possible to monitor configuration sources for external changes. When a change is detected
+ * notifications are sent out. In collaboration with a <em>configuration builder</em> reloading can happen transparently
+ * in background.
  * </p>
  *
  */

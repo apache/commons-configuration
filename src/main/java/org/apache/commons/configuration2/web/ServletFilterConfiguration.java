@@ -24,15 +24,13 @@ import java.util.Iterator;
 import javax.servlet.FilterConfig;
 
 /**
- * A configuration wrapper around a {@link FilterConfig}. This configuration is
- * read only, adding or removing a property will throw an
- * UnsupportedOperationException.
+ * A configuration wrapper around a {@link FilterConfig}. This configuration is read only, adding or removing a property
+ * will throw an UnsupportedOperationException.
  *
  * @since 1.1
  */
-public class ServletFilterConfiguration extends BaseWebConfiguration
-{
-    /** Stores the wrapped filter config.*/
+public class ServletFilterConfiguration extends BaseWebConfiguration {
+    /** Stores the wrapped filter config. */
     protected FilterConfig config;
 
     /**
@@ -40,20 +38,17 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
      *
      * @param config the filter configuration
      */
-    public ServletFilterConfiguration(final FilterConfig config)
-    {
+    public ServletFilterConfiguration(final FilterConfig config) {
         this.config = config;
     }
 
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         return handleDelimiters(config.getInitParameter(key));
     }
 
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
         final Enumeration<String> en = config.getInitParameterNames();

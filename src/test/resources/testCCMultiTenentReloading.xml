@@ -17,7 +17,6 @@
 -->
 <!-- Test configuration definition file that includes a builder for
      multiple configuration files that is configured to support reloading.
-     $Id$
 -->
 <configuration>
   <header>

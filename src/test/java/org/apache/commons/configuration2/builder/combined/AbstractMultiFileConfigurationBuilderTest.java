@@ -20,16 +20,14 @@ import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.DefaultLookups;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 /**
- * A base class for test classes for {@code MultiFileConfigurationBuilder} and
- * derived classes. This class provides some common functionality related to
- * file name pattern which can be used by concrete tests.
+ * A base class for test classes for {@code MultiFileConfigurationBuilder} and derived classes. This class provides some
+ * common functionality related to file name pattern which can be used by concrete tests.
  *
  */
-public class AbstractMultiFileConfigurationBuilderTest
-{
+public class AbstractMultiFileConfigurationBuilderTest {
     /** The system property which selects a sub configuration. */
     private static final String PROP = "Id";
 
@@ -37,72 +35,54 @@ public class AbstractMultiFileConfigurationBuilderTest
     protected static String PATTERN_VAR = "${sys:Id}";
 
     /** The pattern for file names. */
-    protected static String PATTERN =
-            "target/test-classes/testMultiConfiguration_" + PATTERN_VAR
-                    + ".xml";
+    protected static String PATTERN = "target/test-classes/testMultiConfiguration_" + PATTERN_VAR + ".xml";
 
     /**
-     * Sets a system property for accessing a specific configuration file from
-     * the test builder. The passed in id can be null, then the system property
-     * is removed.
+     * Creates a {@code ConfigurationInterpolator} to be used by tests. This object contains a lookup for system properties.
      *
-     * @param id the ID of the managed configuration to load
+     * @return the new {@code ConfigurationInterpolator}
      */
-    protected static void switchToConfig(final String id)
-    {
-        if (id != null)
-        {
-            System.setProperty(PROP, id);
-        }
-        else
-        {
-            System.getProperties().remove(PROP);
-        }
+    protected static ConfigurationInterpolator createInterpolator() {
+        final ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.registerLookup(DefaultLookups.SYSTEM_PROPERTIES.getPrefix(), DefaultLookups.SYSTEM_PROPERTIES.getLookup());
+        return ci;
     }
 
-    @After
-    public void tearDown() throws Exception
-    {
-        switchToConfig(null);
+    /**
+     * Creates a parameters object with default settings for a test builder instance.
+     *
+     * @param managedParams the parameters for managed configurations
+     * @return the test parameters
+     */
+    protected static BasicBuilderParameters createTestBuilderParameters(final BuilderParameters managedParams) {
+        return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN).setManagedBuilderParameters(managedParams).setInterpolator(createInterpolator());
     }
 
     /**
      * Selects a specific configuration to be obtained from the builder.
      *
-     * @param index the index of the configuration to be accessed (valid indices
-     *        are 1-3)
+     * @param index the index of the configuration to be accessed (valid indices are 1-3)
      */
-    protected static void switchToConfig(final int index)
-    {
+    protected static void switchToConfig(final int index) {
         switchToConfig("100" + index);
     }
 
     /**
-     * Creates a {@code ConfigurationInterpolator} to be used by tests. This
-     * object contains a lookup for system properties.
+     * Sets a system property for accessing a specific configuration file from the test builder. The passed in id can be
+     * null, then the system property is removed.
      *
-     * @return the new {@code ConfigurationInterpolator}
+     * @param id the ID of the managed configuration to load
      */
-    protected static ConfigurationInterpolator createInterpolator()
-    {
-        final ConfigurationInterpolator ci = new ConfigurationInterpolator();
-        ci.registerLookup(DefaultLookups.SYSTEM_PROPERTIES.getPrefix(),
-                DefaultLookups.SYSTEM_PROPERTIES.getLookup());
-        return ci;
+    protected static void switchToConfig(final String id) {
+        if (id != null) {
+            System.setProperty(PROP, id);
+        } else {
+            System.getProperties().remove(PROP);
+        }
     }
 
-    /**
-     * Creates a parameters object with default settings for a test builder
-     * instance.
-     *
-     * @param managedParams the parameters for managed configurations
-     * @return the test parameters
-     */
-    protected static BasicBuilderParameters createTestBuilderParameters(
-            final BuilderParameters managedParams)
-    {
-        return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
-                .setManagedBuilderParameters(managedParams)
-                .setInterpolator(createInterpolator());
+    @AfterEach
+    public void tearDown() throws Exception {
+        switchToConfig(null);
     }
 }

@@ -154,7 +154,7 @@ colors.pie = #0000FF;
         </p>
 <source>
 PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setProperty("colors.background", "#000000);
+config.setProperty("colors.background", "#000000");
 config.save();
 </source>
         <p>
@@ -162,7 +162,7 @@ config.save();
         </p>
 <source>
 PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setProperty("colors.background", "#000000);
+config.setProperty("colors.background", "#000000");
 config.save("usergui.backup.properties);
 </source>
         <p>

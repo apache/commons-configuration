@@ -21,65 +21,42 @@ import java.net.URL;
 
 import org.apache.commons.configuration2.io.FileLocationStrategy;
 import org.apache.commons.configuration2.io.FileSystem;
+import org.apache.commons.configuration2.io.URLConnectionOptions;
 
 /**
  * <p>
  * Definition of a properties interface for parameters of file-based configurations.
  * </p>
  * <p>
- * This interface defines a set of properties which can be used to specify the
- * location of a configuration source.
+ * This interface defines a set of properties which can be used to specify the location of a configuration source.
  * </p>
  *
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface FileBasedBuilderProperties<T>
-{
+public interface FileBasedBuilderProperties<T> {
     /**
-     * Sets the refresh delay for reloading support
+     * Sets the base path of the associated {@code FileHandler}.
      *
-     * @param reloadingRefreshDelay the refresh delay (in milliseconds)
+     * @param path the base path
      * @return a reference to this object for method chaining
      */
-    T setReloadingRefreshDelay(Long reloadingRefreshDelay);
+    T setBasePath(String path);
 
     /**
-     * Sets the factory for creating {@code ReloadingDetector} objects. With
-     * this method a custom factory for reloading detectors can be installed.
-     * Per default, a factory creating {@code FileHandlerReloadingDetector}
-     * objects is used.
+     * Sets the encoding of the associated {@code FileHandler}.
      *
-     * @param factory the {@code ReloadingDetectorFactory}
+     * @param enc the encoding
      * @return a reference to this object for method chaining
      */
-    T setReloadingDetectorFactory(ReloadingDetectorFactory factory);
+    T setEncoding(String enc);
 
     /**
-     * Sets the location of the associated {@code FileHandler} as a {@code File}
-     * object.
+     * Sets the location of the associated {@code FileHandler} as a {@code File} object.
      *
      * @param file the {@code File} location
      * @return a reference to this object for method chaining
      */
     T setFile(File file);
-
-    /**
-     * Sets the location of the associated {@code FileHandler} as a {@code URL}
-     * object.
-     *
-     * @param url the {@code URL} location
-     * @return a reference to this object for method chaining
-     */
-    T setURL(URL url);
-
-    /**
-     * Sets the location of the associated {@code FileHandler} as an absolute
-     * file path.
-     *
-     * @param path the path location
-     * @return a reference to this object for method chaining
-     */
-    T setPath(String path);
 
     /**
      * Sets the file name of the associated {@code FileHandler}.
@@ -88,14 +65,6 @@ public interface FileBasedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setFileName(String name);
-
-    /**
-     * Sets the base path of the associated {@code FileHandler}.
-     *
-     * @param path the base path
-     * @return a reference to this object for method chaining
-     */
-    T setBasePath(String path);
 
     /**
      * Sets the {@code FileSystem} of the associated {@code FileHandler}.
@@ -114,10 +83,47 @@ public interface FileBasedBuilderProperties<T>
     T setLocationStrategy(FileLocationStrategy strategy);
 
     /**
-     * Sets the encoding of the associated {@code FileHandler}.
+     * Sets the location of the associated {@code FileHandler} as an absolute file path.
      *
-     * @param enc the encoding
+     * @param path the path location
      * @return a reference to this object for method chaining
      */
-    T setEncoding(String enc);
+    T setPath(String path);
+
+    /**
+     * Sets the factory for creating {@code ReloadingDetector} objects. With this method a custom factory for reloading
+     * detectors can be installed. Per default, a factory creating {@code FileHandlerReloadingDetector} objects is used.
+     *
+     * @param factory the {@code ReloadingDetectorFactory}
+     * @return a reference to this object for method chaining
+     */
+    T setReloadingDetectorFactory(ReloadingDetectorFactory factory);
+
+    /**
+     * Sets the refresh delay for reloading support
+     *
+     * @param reloadingRefreshDelay the refresh delay (in milliseconds)
+     * @return a reference to this object for method chaining
+     */
+    T setReloadingRefreshDelay(Long reloadingRefreshDelay);
+
+    /**
+     * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
+     *
+     * @param url the {@code URL} location
+     * @return a reference to this object for method chaining
+     */
+    T setURL(URL url);
+
+    /**
+     * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
+     *
+     * @param url the {@code URL} location
+     * @param urlConnectionOptions options
+     * @return a reference to this object for method chaining
+     * @since 2.8.0
+     */
+    default T setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
+        return setURL(url);
+    }
 }

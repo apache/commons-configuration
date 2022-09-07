@@ -16,7 +16,6 @@
    limitations under the License.
 -->
 <!-- ===================================================================== -->
-<!-- $Id$ -->
 <!-- ===================================================================== -->
 
 <document>
@@ -33,12 +32,12 @@
               Commons Configuration requires Java 8 or later.
             </p>
             <p>
-              A lot of dependencies are declared in the Maven POM. These are all
-              needed during compile time. On runtime however you only need to
-              add the dependencies to your classpath that are required by the
-              parts of the Commons Configuration package you are using. The
-              following table helps you to determine which dependencies you
-              have to include based on the components you intend to use:
+              Many dependencies are declared in the Maven POM, all of which
+              are required to build the project. However, at runtime, you only 
+              need to add the dependencies to your classpath that are required 
+              by the parts of the Commons Configuration package you are using. 
+              The following table can help determine which dependencies are required
+              based on the components in use.
             </p>
 
             <table>
@@ -52,56 +51,60 @@
                     <tr>
                         <td>Core</td>
                         <td>
-                            commons-lang<br/>
-                            commons-logging
+                            <a href="https://commons.apache.org/proper/commons-lang/">commons-lang3</a><br/>
+                            <a href="https://commons.apache.org/proper/commons-text/">commons-text</a><br />
+                            <a href="https://commons.apache.org/proper/commons-logging/">commons-logging</a>
                         </td>
                     </tr>
                     <tr>
                         <td>Configuration builders</td>
-                        <td>commons-beanutils</td>
+                        <td><a href="https://commons.apache.org/proper/commons-beanutils/">commons-beanutils</a></td>
                     </tr>
                     <tr>
                         <td>
                           PropertyListConfiguration<br/>
                           XMLPropertyListConfiguration
                         </td>
-                        <td>commons-codec</td>
+                        <td><a href="https://commons.apache.org/proper/commons-codec/">commons-codec</a></td>
                     </tr>
                     <tr>
                         <td>JSONConfiguration</td>
-                        <td>com.fasterxml.jackson.core:jackson-databind</td>
+                        <td><a href="https://github.com/FasterXML/jackson-databind">com.fasterxml.jackson.core:jackson-databind</a></td>
                     </tr>
                     <tr>
                         <td>YAMLConfiguration</td>
-                        <td>org.yaml:snakeyaml</td>
+                        <td><a href="https://github.com/snakeyaml/snakeyaml">org.yaml:snakeyaml</a></td>
                     </tr>
                     <tr>
                         <td>ConfigurationDynaBean</td>
-                        <td>commons-beanutils</td>
+                        <td><a href="https://commons.apache.org/proper/commons-beanutils/">commons-beanutils</a></td>
                     </tr>
                     <tr>
                         <td>XPathExpressionEngine</td>
-                        <td>commons-jxpath</td>
+                        <td><a href="https://commons.apache.org/proper/commons-jxpath/">commons-jxpath</a></td>
                     </tr>
                     <tr>
                         <td>CatalogResolver</td>
-                        <td>xml-resolver</td>
+                        <td><a href="https://xerces.apache.org/xml-commons/components/resolver/">xml-resolver</a></td>
                     </tr>
                     <tr>
                         <td>Web configurations</td>
-                        <td>servlet-api</td>
+                        <td><a href="https://javaee.github.io/servlet-spec/">servlet-api</a></td>
                     </tr>
                     <tr>
                         <td>ExprLookup</td>
-                        <td>commons-jexl</td>
+                        <td><a href="https://commons.apache.org/proper/commons-jexl/">commons-jexl</a></td>
                     </tr>
                     <tr>
-                        <td>VFSFileSystem, VFSFileChangedReloadingStrategy</td>
-                        <td>commons-vfs</td>
+                        <td>
+                            VFSFileSystem<br />
+                            VFSFileChangedReloadingStrategy
+                        </td>
+                        <td><a href="https://commons.apache.org/proper/commons-vfs/">commons-vfs2</a></td>
                     </tr>
                     <tr>
                         <td>ConfigPropertySource</td>
-                        <td>spring-core</td>
+                        <td><a href="https://spring.io/projects/spring-framework">spring-core</a></td>
                     </tr>
                 </tbody>
             </table>

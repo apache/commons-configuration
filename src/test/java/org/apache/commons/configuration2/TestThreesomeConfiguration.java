@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,28 +15,26 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+package org.apache.commons.configuration2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- * A base class for testing {@link
- * org.apache.commons.configuration2.BasePropertiesConfiguration}
- * extensions.
+ * A base class for testing {@link org.apache.commons.configuration2.BaseHierarchicalConfiguration} extensions.
  *
  */
-public class TestThreesomeConfiguration
-{
+public class TestThreesomeConfiguration {
     protected Configuration conf;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         final PropertiesConfiguration c = new PropertiesConfiguration();
         c.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         final FileHandler handler = new FileHandler(c);
@@ -48,24 +44,21 @@ public class TestThreesomeConfiguration
     }
 
     @Test
-    public void testList1() throws Exception
-    {
+    public void testList1() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.one");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList2() throws Exception
-    {
+    public void testList2() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.two");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList3() throws Exception
-    {
+    public void testList3() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());

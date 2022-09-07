@@ -20,28 +20,23 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
 
 /**
  * <p>
- * Definition of a properties interface for the parameters of a multiple file
- * configuration builder.
+ * Definition of a properties interface for the parameters of a multiple file configuration builder.
  * </p>
  * <p>
- * This interface defines a number of properties for configuring a builder
- * managing multiple file-based configurations which are selected by a pattern.
- * Properties can be set in a fluent style.
+ * This interface defines a number of properties for configuring a builder managing multiple file-based configurations
+ * which are selected by a pattern. Properties can be set in a fluent style.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  * @param <T> the return type of all methods for allowing method chaining
  */
-public interface MultiFileBuilderProperties<T>
-{
+public interface MultiFileBuilderProperties<T> {
     /**
-     * Sets the pattern string. Based on this pattern the configuration file to
-     * be loaded is determined.
+     * Sets the pattern string. Based on this pattern the configuration file to be loaded is determined.
      *
      * @param p the pattern string
      * @return a reference to this object for method chaining
@@ -49,8 +44,8 @@ public interface MultiFileBuilderProperties<T>
     T setFilePattern(String p);
 
     /**
-     * Sets a parameters object to be used when creating a managed
-     * configuration. These parameters configure sub configurations.
+     * Sets a parameters object to be used when creating a managed configuration. These parameters configure sub
+     * configurations.
      *
      * @param p the parameters object for a sub configuration
      * @return a reference to this object for method chaining

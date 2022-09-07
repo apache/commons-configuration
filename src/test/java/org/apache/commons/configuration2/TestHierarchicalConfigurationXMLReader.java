@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -27,8 +27,8 @@ import javax.xml.transform.sax.SAXSource;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.jxpath.JXPathContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -37,16 +37,13 @@ import org.xml.sax.InputSource;
  * Test class for HierarchicalConfigurationXMLReader.
  *
  */
-public class TestHierarchicalConfigurationXMLReader
-{
-    private static final String TEST_FILE = ConfigurationAssert.getTestFile(
-            "testHierarchicalXMLConfiguration.xml").getAbsolutePath();
+public class TestHierarchicalConfigurationXMLReader {
+    private static final String TEST_FILE = ConfigurationAssert.getTestFile("testHierarchicalXMLConfiguration.xml").getAbsolutePath();
 
     private HierarchicalConfigurationXMLReader<ImmutableNode> parser;
 
-    @Before
-    public void setUp() throws Exception
-    {
+    @BeforeEach
+    public void setUp() throws Exception {
         final XMLConfiguration config = new XMLConfiguration();
         final FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
@@ -54,8 +51,7 @@ public class TestHierarchicalConfigurationXMLReader
     }
 
     @Test
-    public void testParse() throws Exception
-    {
+    public void testParse() throws Exception {
         final SAXSource source = new SAXSource(parser, new InputSource());
         final DOMResult result = new DOMResult();
         final Transformer trans = TransformerFactory.newInstance().newTransformer();
@@ -63,16 +59,11 @@ public class TestHierarchicalConfigurationXMLReader
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);
 
-        assertEquals("Wrong name of root element", "database", root.getNodeName());
-        assertEquals("Wrong number of children of root", 1, ctx.selectNodes(
-                "/*").size());
-        assertEquals("Wrong number of tables", 2, ctx.selectNodes(
-                "/tables/table").size());
-        assertEquals("Wrong name of first table", "users", ctx
-                .getValue("/tables/table[1]/name"));
-        assertEquals("Wrong number of fields in first table", 5, ctx
-                .selectNodes("/tables/table[1]/fields/field").size());
-        assertEquals("Wrong attribute value", "system", ctx
-                .getValue("/tables/table[1]/@tableType"));
+        assertEquals("database", root.getNodeName());
+        assertEquals(1, ctx.selectNodes("/*").size());
+        assertEquals(2, ctx.selectNodes("/tables/table").size());
+        assertEquals("users", ctx.getValue("/tables/table[1]/name"));
+        assertEquals(5, ctx.selectNodes("/tables/table[1]/fields/field").size());
+        assertEquals("system", ctx.getValue("/tables/table[1]/@tableType"));
     }
 }

@@ -28,8 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </p>
  *
  */
-class XPathContextFactory
-{
+class XPathContextFactory {
     /**
      * Creates a new {@code JXPathContext} based on the passed in arguments.
      *
@@ -38,11 +37,8 @@ class XPathContextFactory
      * @param <T> the type of the nodes to be handled
      * @return the newly created context
      */
-    public <T> JXPathContext createContext(final T root, final NodeHandler<T> handler)
-    {
-        final JXPathContext context =
-                JXPathContext.newContext(ConfigurationNodePointerFactory
-                        .wrapNode(root, handler));
+    public <T> JXPathContext createContext(final T root, final NodeHandler<T> handler) {
+        final JXPathContext context = JXPathContext.newContext(ConfigurationNodePointerFactory.wrapNode(root, handler));
         context.setLenient(true);
         return context;
     }

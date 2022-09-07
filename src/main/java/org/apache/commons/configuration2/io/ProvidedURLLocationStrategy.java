@@ -20,28 +20,23 @@ import java.net.URL;
 
 /**
  * <p>
- * A specialized implementation of {@code FileLocationStrategy} which checks
- * whether a passed in {@link FileLocator} already has a defined URL.
+ * A specialized implementation of {@code FileLocationStrategy} which checks whether a passed in {@link FileLocator}
+ * already has a defined URL.
  * </p>
  * <p>
- * {@code FileLocator} objects that have a URL already reference a file in an
- * unambiguous way. Therefore, this strategy just returns the URL of the passed
- * in {@code FileLocator}. It can be used as a first step of the file resolving
- * process. If it fails, more sophisticated attempts for resolving the file can
- * be made.
+ * {@code FileLocator} objects that have a URL already reference a file in an unambiguous way. Therefore, this strategy
+ * just returns the URL of the passed in {@code FileLocator}. It can be used as a first step of the file resolving
+ * process. If it fails, more sophisticated attempts for resolving the file can be made.
  * </p>
  *
  * @since 2.0
  */
-public class ProvidedURLLocationStrategy implements FileLocationStrategy
-{
+public class ProvidedURLLocationStrategy implements FileLocationStrategy {
     /**
-     * {@inheritDoc} This implementation just returns the URL stored in the
-     * given {@code FileLocator}.
+     * {@inheritDoc} This implementation just returns the URL stored in the given {@code FileLocator}.
      */
     @Override
-    public URL locate(final FileSystem fileSystem, final FileLocator locator)
-    {
+    public URL locate(final FileSystem fileSystem, final FileLocator locator) {
         return locator.getSourceURL();
     }
 }

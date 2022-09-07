@@ -21,21 +21,19 @@ package org.apache.commons.configuration2.event;
  * A data class holding information about an event listener registration.
  * </p>
  * <p>
- * An instance of this class stores all information required to determine
- * whether a specific event listener is to be invoked for a given event. The
- * class is used internally by {@link EventListenerList}, but is also useful in
- * general when information about event listeners is to be stored.
+ * An instance of this class stores all information required to determine whether a specific event listener is to be
+ * invoked for a given event. The class is used internally by {@link EventListenerList}, but is also useful in general
+ * when information about event listeners is to be stored.
  * </p>
  * <p>
- * Implementation note: Instances of this class are immutable and can safely be
- * shared between multiple threads or components.
+ * Implementation note: Instances of this class are immutable and can safely be shared between multiple threads or
+ * components.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of events processed by the listener
  */
-public final class EventListenerRegistrationData<T extends Event>
-{
+public final class EventListenerRegistrationData<T extends Event> {
     /** Constant for the factor used by the calculation of the hash code. */
     private static final int HASH_FACTOR = 31;
 
@@ -52,17 +50,12 @@ public final class EventListenerRegistrationData<T extends Event>
      * @param lstnr the event listener (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public EventListenerRegistrationData(final EventType<T> type,
-            final EventListener<? super T> lstnr)
-    {
-        if (type == null)
-        {
+    public EventListenerRegistrationData(final EventType<T> type, final EventListener<? super T> lstnr) {
+        if (type == null) {
             throw new IllegalArgumentException("Event type must not be null!");
         }
-        if (lstnr == null)
-        {
-            throw new IllegalArgumentException(
-                    "Listener to be registered must not be null!");
+        if (lstnr == null) {
+            throw new IllegalArgumentException("Listener to be registered must not be null!");
         }
 
         eventType = type;
@@ -74,8 +67,7 @@ public final class EventListenerRegistrationData<T extends Event>
      *
      * @return the event type
      */
-    public EventType<T> getEventType()
-    {
+    public EventType<T> getEventType() {
         return eventType;
     }
 
@@ -84,42 +76,34 @@ public final class EventListenerRegistrationData<T extends Event>
      *
      * @return the event listener
      */
-    public EventListener<? super T> getListener()
-    {
+    public EventListener<? super T> getListener() {
         return listener;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = eventType.hashCode();
         result = HASH_FACTOR * result + listener.hashCode();
         return result;
     }
 
     /**
-     * Compares this object with another one. Two instances of
-     * {@code EventListenerRegistrationData} are considered equal if they
-     * reference the same listener and event type.
+     * Compares this object with another one. Two instances of {@code EventListenerRegistrationData} are considered equal if
+     * they reference the same listener and event type.
      *
      * @param obj the object to be compared to
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof EventListenerRegistrationData))
-        {
+        if (!(obj instanceof EventListenerRegistrationData)) {
             return false;
         }
 
-        final EventListenerRegistrationData<?> c =
-                (EventListenerRegistrationData<?>) obj;
-        return getListener() == c.getListener()
-                && getEventType().equals(c.getEventType());
+        final EventListenerRegistrationData<?> c = (EventListenerRegistrationData<?>) obj;
+        return getListener() == c.getListener() && getEventType().equals(c.getEventType());
     }
 }

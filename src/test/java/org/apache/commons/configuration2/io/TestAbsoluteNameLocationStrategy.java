@@ -16,84 +16,70 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code AbsoluteNameLocationStrategy}.
  *
  */
-public class TestAbsoluteNameLocationStrategy
-{
+public class TestAbsoluteNameLocationStrategy {
     /** A mock for the file system. */
     private FileSystem fileSystem;
 
     /** The strategy to be tested. */
     private AbsoluteNameLocationStrategy strategy;
 
-    @Before
-    public void setUp() throws Exception
-    {
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+    @BeforeEach
+    public void setUp() throws Exception {
+        fileSystem = mock(FileSystem.class);
         strategy = new AbsoluteNameLocationStrategy();
-    }
-
-    /**
-     * Tests a locate() operation if no file name is provided.
-     */
-    @Test
-    public void testNoFileName()
-    {
-        final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertNull("Got a URL", strategy.locate(fileSystem, locator));
-    }
-
-    /**
-     * Tests a locate() operation if no absolute file name is provided.
-     */
-    @Test
-    public void testNoAbsoluteFileName()
-    {
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName("test.xml").create();
-        assertNull("Got a URL", strategy.locate(fileSystem, locator));
-    }
-
-    /**
-     * Tests a locate() operation if an absolute file name is provided, but this
-     * file does not exist.
-     */
-    @Test
-    public void testNonExistingAbsoluteFile()
-    {
-        final File file = ConfigurationAssert.getOutFile("NotExistingFile.tst");
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath())
-                        .create();
-        assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 
     /**
      * Tests a successful locate() operation.
      */
     @Test
-    public void testExistingAbsoluteFile()
-    {
+    public void testExistingAbsoluteFile() {
         final File file = ConfigurationAssert.getTestFile("test.xml");
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath())
-                        .create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
         final URL url = strategy.locate(fileSystem, locator);
-        assertEquals("Wrong URL", file.getAbsoluteFile(), FileLocatorUtils
-                .fileFromURL(url).getAbsoluteFile());
+        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
+    }
+
+    /**
+     * Tests a locate() operation if no absolute file name is provided.
+     */
+    @Test
+    public void testNoAbsoluteFileName() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName("test.xml").create();
+        assertNull(strategy.locate(fileSystem, locator));
+    }
+
+    /**
+     * Tests a locate() operation if no file name is provided.
+     */
+    @Test
+    public void testNoFileName() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().create();
+        assertNull(strategy.locate(fileSystem, locator));
+    }
+
+    /**
+     * Tests a locate() operation if an absolute file name is provided, but this file does not exist.
+     */
+    @Test
+    public void testNonExistingAbsoluteFile() {
+        final File file = ConfigurationAssert.getOutFile("NotExistingFile.tst");
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
+        assertNull(strategy.locate(fileSystem, locator));
     }
 }

@@ -21,169 +21,115 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * <p>
- * A special implementation of the {@code BeanDeclaration} interface which
- * allows combining multiple {@code BeanDeclaration} objects.
+ * A special implementation of the {@code BeanDeclaration} interface which allows combining multiple
+ * {@code BeanDeclaration} objects.
  * </p>
  * <p>
- * An instance of this class can be used if a bean is defined using multiple
- * sources. For instance, there can be one definition with default values and
- * one with actual values; if actual values are provided, they are used;
- * otherwise, the default values apply.
+ * An instance of this class can be used if a bean is defined using multiple sources. For instance, there can be one
+ * definition with default values and one with actual values; if actual values are provided, they are used; otherwise,
+ * the default values apply.
  * </p>
  * <p>
- * When constructing an instance an arbitrary number of child
- * {@code BeanDeclaration} objects can be specified. The implementations of the
- * {@code BeanDeclaration} methods implement a logical combination of the data
- * returned by these child declarations. The order in which child declarations
- * are added is relevant; first entries take precedence over later ones. The
- * comments of the single methods explain in which way a combination of the
- * child declarations is built.
+ * When constructing an instance an arbitrary number of child {@code BeanDeclaration} objects can be specified. The
+ * implementations of the {@code BeanDeclaration} methods implement a logical combination of the data returned by these
+ * child declarations. The order in which child declarations are added is relevant; first entries take precedence over
+ * later ones. The comments of the single methods explain in which way a combination of the child declarations is built.
  * </p>
  *
  * @since 2.0
  */
-public class CombinedBeanDeclaration implements BeanDeclaration
-{
+public class CombinedBeanDeclaration implements BeanDeclaration {
+
     /** A list with the child declarations. */
-    private final List<BeanDeclaration> childDeclarations;
+    private final ArrayList<BeanDeclaration> childDeclarations;
 
     /**
-     * Creates a new instance of {@code CombinedBeanDeclaration} and initializes
-     * it with the given child declarations.
+     * Constructs a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
      *
      * @param decl the child declarations
-     * @throws NullPointerException if the array with child declarations is
-     *         <b>null</b>
+     * @throws NullPointerException if the array with child declarations is <b>null</b>
      */
-    public CombinedBeanDeclaration(final BeanDeclaration... decl)
-    {
+    public CombinedBeanDeclaration(final BeanDeclaration... decl) {
         childDeclarations = new ArrayList<>(Arrays.asList(decl));
     }
 
     /**
-     * {@inheritDoc} This implementation iterates over the list of child
-     * declarations and asks them for a bean factory name. The first
-     * non-<b>null</b> value is returned. If none of the child declarations have
-     * a defined bean factory name, result is <b>null</b>.
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory name.
+     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory name,
+     * result is <b>null</b>.
      */
     @Override
-    public String getBeanFactoryName()
-    {
-        for (final BeanDeclaration d : childDeclarations)
-        {
-            final String factoryName = d.getBeanFactoryName();
-            if (factoryName != null)
-            {
-                return factoryName;
-            }
-        }
-        return null;
+    public String getBeanFactoryName() {
+        return findFirst(BeanDeclaration::getBeanFactoryName);
+    }
+
+    private <T> T findFirst(final Function<? super BeanDeclaration, ? extends T> mapper) {
+        return childDeclarations.stream().map(mapper).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     /**
-     * {@inheritDoc} This implementation iterates over the list of child
-     * declarations and asks them for a bean factory parameter. The first
-     * non-<b>null</b> value is returned. If none of the child declarations have
-     * a defined bean factory parameter, result is <b>null</b>.
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory
+     * parameter. The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory
+     * parameter, result is <b>null</b>.
      */
     @Override
-    public Object getBeanFactoryParameter()
-    {
-        for (final BeanDeclaration d : childDeclarations)
-        {
-            final Object factoryParam = d.getBeanFactoryParameter();
-            if (factoryParam != null)
-            {
-                return factoryParam;
-            }
-        }
-        return null;
+    public Object getBeanFactoryParameter() {
+        return findFirst(BeanDeclaration::getBeanFactoryParameter);
     }
 
     /**
-     * {@inheritDoc} This implementation iterates over the list of child
-     * declarations and asks them for the bean class name. The first
-     * non-<b>null</b> value is returned. If none of the child declarations have
-     * a defined bean class, result is <b>null</b>.
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for the bean class name.
+     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean class, result is
+     * <b>null</b>.
      */
     @Override
-    public String getBeanClassName()
-    {
-        for (final BeanDeclaration d : childDeclarations)
-        {
-            final String beanClassName = d.getBeanClassName();
-            if (beanClassName != null)
-            {
-                return beanClassName;
-            }
-        }
-        return null;
+    public String getBeanClassName() {
+        return findFirst(BeanDeclaration::getBeanClassName);
     }
 
     /**
-     * {@inheritDoc} This implementation creates a union of the properties
-     * returned by all child declarations. If a property is defined in multiple
-     * child declarations, the declaration that comes before in the list of
+     * {@inheritDoc} This implementation creates a union of the properties returned by all child declarations. If a property
+     * is defined in multiple child declarations, the declaration that comes before in the list of children takes
+     * precedence.
+     */
+    @Override
+    public Map<String, Object> getBeanProperties() {
+        return get(BeanDeclaration::getBeanProperties);
+    }
+
+    private Map<String, Object> get(final Function<? super BeanDeclaration, ? extends Map<String, Object>> mapper) {
+        @SuppressWarnings("unchecked")
+        final ArrayList<BeanDeclaration> temp = (ArrayList<BeanDeclaration>) childDeclarations.clone();
+        Collections.reverse(temp);
+        return temp.stream().map(mapper).filter(Objects::nonNull).collect(HashMap::new, HashMap::putAll, HashMap::putAll);
+    }
+
+    /**
+     * {@inheritDoc} This implementation creates a union of the nested bean declarations returned by all child declarations.
+     * If a complex property is defined in multiple child declarations, the declaration that comes before in the list of
      * children takes precedence.
      */
     @Override
-    public Map<String, Object> getBeanProperties()
-    {
-        final Map<String, Object> result = new HashMap<>();
-        for (int i = childDeclarations.size() - 1; i >= 0; i--)
-        {
-            final Map<String, Object> props =
-                    childDeclarations.get(i).getBeanProperties();
-            if (props != null)
-            {
-                result.putAll(props);
-            }
-        }
-        return result;
+    public Map<String, Object> getNestedBeanDeclarations() {
+        return get(BeanDeclaration::getNestedBeanDeclarations);
     }
 
     /**
-     * {@inheritDoc} This implementation creates a union of the nested bean
-     * declarations returned by all child declarations. If a complex property is
-     * defined in multiple child declarations, the declaration that comes before
-     * in the list of children takes precedence.
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for constructor
+     * arguments. The first non-<b>null</b> and non empty collection is returned. If none of the child declarations provide
+     * constructor arguments, result is an empty collection.
      */
     @Override
-    public Map<String, Object> getNestedBeanDeclarations()
-    {
-        final Map<String, Object> result = new HashMap<>();
-        for (int i = childDeclarations.size() - 1; i >= 0; i--)
-        {
-            final Map<String, Object> decls =
-                    childDeclarations.get(i).getNestedBeanDeclarations();
-            if (decls != null)
-            {
-                result.putAll(decls);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * {@inheritDoc} This implementation iterates over the list of child
-     * declarations and asks them for constructor arguments. The first
-     * non-<b>null</b> and non empty collection is returned. If none of the
-     * child declarations provide constructor arguments, result is an empty
-     * collection.
-     */
-    @Override
-    public Collection<ConstructorArg> getConstructorArgs()
-    {
-        for (final BeanDeclaration d : childDeclarations)
-        {
+    public Collection<ConstructorArg> getConstructorArgs() {
+        for (final BeanDeclaration d : childDeclarations) {
             final Collection<ConstructorArg> args = d.getConstructorArgs();
-            if (args != null && !args.isEmpty())
-            {
+            if (args != null && !args.isEmpty()) {
                 return args;
             }
         }
