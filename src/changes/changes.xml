@@ -52,8 +52,8 @@
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump junit-jupiter from 5.8.2 to 5.9.0 #197.
       </action>
-      <action type="update" dev="kinow" due-to="Dependabot">
-        Bump mockito-core from 4.6.1 to 4.7.0 #200.
+      <action type="update" dev="kinow" due-to="Dependabot, Gary Gregory">
+        Bump mockito-core from 4.6.1 to 4.8.0 #200.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump slf4j.version from 1.7.36 to 2.0.0 #202.
@@ -68,10 +68,7 @@
         Bump maven-pmd-plugin 3.17.0 to 3.19.0.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump pmd 6.48.0 to 6.49.0.
-      </action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump pmd from 6.47.0 to 6.48.0.
+        Bump pmd from 6.47.0 to 6.49.0.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump snakeyaml from 1.30 to 1.31 #203.
