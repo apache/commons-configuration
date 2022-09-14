@@ -111,8 +111,8 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         final List<?> v = c.getList(listKey);
 
         final List<String> expected = new ArrayList<>();
-        for (int i = 0; i < values.length; i++) {
-            expected.add(values[i].replace("\\", ""));
+        for (String value : values) {
+            expected.add(value.replace("\\", ""));
         }
         assertEquals(expected, v);
     }
