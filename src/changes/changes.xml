@@ -76,6 +76,9 @@
       <action type="update" dev="kinow" due-to="Gary Gregory">
         Bump jackson-databind from 2.13.3 to 2.13.4.
       </action>
+      <action type="update" dev="kinow" due-to="Dependabot">
+        Bump spring.version from 5.3.22 to 5.3.23 #211.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">

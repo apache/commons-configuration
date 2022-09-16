@@ -557,7 +557,7 @@
     </commons.osgi.import>
     <log4j.version>2.18.0</log4j.version>
     <slf4j.version>2.0.0</slf4j.version>
-    <spring.version>5.3.22</spring.version>
+    <spring.version>5.3.23</spring.version>
 
     <commons.japicmp.version>0.15.7</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
