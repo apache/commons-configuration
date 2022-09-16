@@ -71,7 +71,7 @@
         Bump pmd from 6.47.0 to 6.49.0.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump snakeyaml from 1.30 to 1.31 #203.
+        Bump snakeyaml from 1.30 to 1.32 #203, #212.
       </action>
       <action type="update" dev="kinow" due-to="Gary Gregory">
         Bump jackson-databind from 2.13.3 to 2.13.4.
