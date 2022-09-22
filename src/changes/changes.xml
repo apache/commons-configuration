@@ -50,7 +50,7 @@
         Bump org.springframework:spring-* 5.3.21 -> 5.3.22.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump junit-jupiter from 5.8.2 to 5.9.0 #197.
+        Bump junit-jupiter from 5.8.2 to 5.9.1 #197, #217.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot, Gary Gregory">
         Bump mockito-core from 4.6.1 to 4.8.0 #200.
