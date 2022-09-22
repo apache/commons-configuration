@@ -555,7 +555,7 @@
       org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <log4j.version>2.18.0</log4j.version>
+    <log4j.version>2.19.0</log4j.version>
     <slf4j.version>2.0.1</slf4j.version>
     <spring.version>5.3.23</spring.version>
 
