@@ -94,6 +94,9 @@
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump commons-text from 1.9 to 1.10.0 #221.
       </action>
+      <action type="update" dev="kinow" due-to="Dependabot">
+        Bump actions/cache from 3.0.8 to 3.0.9 #223.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
