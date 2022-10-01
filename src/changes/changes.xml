@@ -40,6 +40,9 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump actions/checkout from 3 to 3.0.2.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump actions/setup-java from 3 to 3.5.1.
+      </action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
         Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.2.0 #193, #195.
       </action>
