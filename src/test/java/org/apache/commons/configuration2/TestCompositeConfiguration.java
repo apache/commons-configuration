@@ -220,7 +220,7 @@ public class TestCompositeConfiguration {
         // assertInstanceOf(IteratorChain.class, i);
         // IteratorChain ic = (IteratorChain)i;
         // assertEquals(2,i.size());
-        for (; i.hasNext();) {
+        while (i.hasNext()) {
             final String key = i.next();
             if (key.equals(TEST_KEY)) {
                 foundTestKey = true;
