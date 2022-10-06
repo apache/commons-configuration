@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import java.util.Iterator;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -79,7 +80,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * @return the key as to be used by the parent
      */
     protected String getParentKey(final String key) {
-        if ("".equals(key) || key == null) {
+        if (StringUtils.isEmpty(key)) {
             return prefix;
         }
         return delimiter == null ? prefix + key : prefix + delimiter + key;

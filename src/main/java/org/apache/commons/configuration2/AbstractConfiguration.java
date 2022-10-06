@@ -51,6 +51,7 @@ import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -922,7 +923,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                 final String pkey = token.substring(0, equalSign).trim();
                 final String pvalue = token.substring(equalSign + 1).trim();
                 props.put(pkey, pvalue);
-            } else if (tokens.length == 1 && "".equals(token)) {
+            } else if (tokens.length == 1 && StringUtils.isEmpty(key)) {
                 // Semantically equivalent to an empty Properties
                 // object.
                 break;
