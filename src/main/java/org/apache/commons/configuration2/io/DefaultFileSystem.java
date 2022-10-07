@@ -78,7 +78,7 @@ public class DefaultFileSystem extends FileSystem {
 
             out = connection.getOutputStream();
 
-            // check the response code for http URLs and throw an exception if an error occured
+            // check the response code for http URLs and throw an exception if an error occurred
             if (connection instanceof HttpURLConnection) {
                 out = new HttpOutputStream(out, (HttpURLConnection) connection);
             }

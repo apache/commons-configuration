@@ -511,7 +511,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 stmt.close();
             }
         } catch (final SQLException e) {
-            getLogger().error("An error occured on closing the statement", e);
+            getLogger().error("An error occurred on closing the statement", e);
         }
 
         try {
@@ -519,7 +519,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 conn.close();
             }
         } catch (final SQLException e) {
-            getLogger().error("An error occured on closing the connection", e);
+            getLogger().error("An error occurred on closing the connection", e);
         }
     }
 
