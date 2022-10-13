@@ -29,6 +29,7 @@
     <menu name="Configuration">
       <item name="Overview"                             href="/index.html"/>
       <item name="Download"                             href="https://commons.apache.org/configuration/download_configuration.cgi"/>
+      <item name="Security"                             href="security.html"/>
       <item name="Issue Tracking"                       href="issue-tracking.html"/>
     </menu>
 
@@ -48,7 +49,6 @@
         <item name="Runtime Dependencies"               href="/dependencies_1_10.html"/>
       </item>
     </menu>
-
   </body>
 
 </project>
