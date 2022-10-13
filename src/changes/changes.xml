@@ -37,8 +37,8 @@
         Add ImmutableNode.stream().
       </action>
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump actions/checkout from 3 to 3.0.2.
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
+        Bump actions/checkout from 3 to 3.1.0 #224.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump actions/setup-java from 3 to 3.5.1.
@@ -95,7 +95,7 @@
         Bump commons-text from 1.9 to 1.10.0 #221.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump actions/cache from 3.0.8 to 3.0.9 #223.
+        Bump actions/cache from 3.0.8 to 3.0.10 #223, #225.
       </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
