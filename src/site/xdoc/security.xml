@@ -1,92 +1,54 @@
 <?xml version="1.0"?>
-<!--
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
--->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file 
+    distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to You under 
+    the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may 
+    obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to 
+    in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+    ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under 
+    the License. -->
 <document>
     <properties>
         <title>Apache Commons Configuration Security Reports</title>
         <author email="dev@commons.apache.org">Commons Team</author>
     </properties>
     <body>
-        <section name="General Information">
+        <section name="Security Vulnerabilities">
             <p>
                 For information about reporting or asking questions about
-                security problems, please see the
+                security, please see the
                 <a href="https://commons.apache.org/security.html">security page</a>
                 of the Apache Commons project.
             </p>
-        </section>
-
-        <section name="Apache Commons Configuration Security Vulnerabilities">
-            <p>This page lists all security vulnerabilities fixed in
-                released versions of Apache Commons Configuration.
-            </p>
-
-            <p>Please note that binary patches are never provided. If you
-                need to apply a source code patch, use the building
-                instructions for the Commons Configuration version that you are
-                using.
+            <p>
+                This page lists all security vulnerabilities fixed in released versions of this component.
             </p>
 
             <p>
-                If you need help on building Commons Configuration or other help
-                on following the instructions to mitigate the known
-                vulnerabilities listed here, please send your questions to the
-                public
-                <a href="mail-lists.html">Compress Users mailing
-                    list
-                </a>
-                .
+                Please note that binary patches are never provided. If you need to apply a source code patch, use the
+                building instructions for the Commons Configuration version that you are using.
             </p>
 
-            <p>If you have encountered an unlisted security vulnerability
-                or other unexpected behavior that has security impact, or if
-                the descriptions here are incomplete, please report them
-                privately to the Apache Security Team. Thank you.
+            <p>
+                If you need help on building Commons Configuration or other help on following the instructions to
+                mitigate the known vulnerabilities listed here, please send your questions to the public
+                <a href="mail-lists.html">user mailing list</a>.
+            </p>
+
+            <p>
+                If you have encountered an unlisted security vulnerability or other unexpected behavior that has security
+                impact, or if the descriptions here are incomplete, please report them privately to the Apache Security
+                Team. Thank you.
             </p>
 
             <subsection name="Fixed in Apache Commons Configuration 2.8.0">
                 <ul>
-                    <p>
+                    <li>
                         <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-33980">CVE-2022-33980</a>
-                    </p>
-                    <p>
-                        Apache Commons Configuration performs variable interpolation, allowing properties to be dynamically evaluated and
-                        expanded. The standard format for interpolation is "${prefix:name}", where "prefix" is used to
-                        locate an instance of org.apache.commons.configuration2.interpol.Lookup that performs the
-                        interpolation. Starting with version 2.4 and continuing through 2.7, the set of default Lookup
-                        instances included interpolators that could result in arbitrary code execution or contact with
-                        remote servers. These lookups are: - "script" - execute expressions using the JVM script
-                        execution engine (javax.script) - "dns" - resolve dns records - "url" - load values from urls,
-                        including from remote servers Applications using the interpolation defaults in the affected
-                        versions may be vulnerable to remote code execution or unintentional contact with remote servers
-                        if untrusted configuration values are used. Users are recommended to upgrade to Apache Commons
-                        Configuration 2.8.0, which disables the problematic interpolators by default.
-                    </p>
+                        Variable interpolation can cause arbitrary code execution.
+                    </li>
                 </ul>
 
             </subsection>
-        </section>
-
-        <section name="Errors and Omissions">
-            <p>
-                Please report any errors or omissions to
-                <a href="mail-lists.html">the dev mailing list</a>
-                .
-            </p>
         </section>
     </body>
 </document>
