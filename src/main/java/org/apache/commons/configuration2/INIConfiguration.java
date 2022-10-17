@@ -430,7 +430,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             line = line.trim();
             if (!isCommentLine(line)) {
                 if (isSectionLine(line)) {
-                    final String section = line.substring(1, line.length() - 1);
+                    final String section = line.substring(1, line.indexOf("]"));
                     sectionBuilder = sectionBuilders.get(section);
                     if (sectionBuilder == null) {
                         sectionBuilder = new ImmutableNode.Builder();
@@ -736,7 +736,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         if (line == null) {
             return false;
         }
-        return line.startsWith("[") && line.endsWith("]");
+        // line contains closing bracket, which is not preceding opening bracket
+        return line.startsWith("[") && line.contains("]");
     }
 
     /**

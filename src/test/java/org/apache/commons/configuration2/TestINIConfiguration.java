@@ -119,6 +119,10 @@ public class TestINIConfiguration {
     private static final String INI_DATA4 = "[section6]" + LINE_SEPARATOR + "key1{0}value1" + LINE_SEPARATOR + "key2{0}value2" + LINE_SEPARATOR + LINE_SEPARATOR
         + "[section7]" + LINE_SEPARATOR + "key3{0}value3" + LINE_SEPARATOR;
 
+    /** Constant for the content of an ini file - with section inline comment */
+    private static final String INI_DATA5 = "[section1]; main section" + LINE_SEPARATOR + "var1 = foo" + LINE_SEPARATOR + LINE_SEPARATOR
+        + "[section11] ; sub-section related to [section1]" + LINE_SEPARATOR + "var1 = 123.45" + LINE_SEPARATOR;
+
     private static final String INI_DATA_SEPARATORS = "[section]" + LINE_SEPARATOR + "var1 = value1" + LINE_SEPARATOR + "var2 : value2" + LINE_SEPARATOR
         + "var3=value3" + LINE_SEPARATOR + "var4:value4" + LINE_SEPARATOR + "var5 : value=5" + LINE_SEPARATOR + "var:6=value" + LINE_SEPARATOR
         + "var:7=\"value7\"" + LINE_SEPARATOR + "var:8 =  \"value8\"" + LINE_SEPARATOR;
@@ -1023,6 +1027,15 @@ public class TestINIConfiguration {
         config2.read(new StringReader(writer.toString()));
 
         assertEquals("1;2;3", config2.getString("section.key1"));
+    }
+
+    /**
+     * Tests whether a section with inline comment is correctly parsed.
+     */
+    @Test
+    public void testGetSectionsWithInLineComment() throws ConfigurationException {
+        final INIConfiguration config = setUpConfig(INI_DATA5);
+        checkSectionNames(config, new String[] {"section1", "section11"});
     }
 
     /**
