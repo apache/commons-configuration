@@ -251,7 +251,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Create a new empty INI Configuration with option to allow inline comments on the section line.
      *
      * @param sectionInLineCommentsAllowed when true inline comments on the section line are allowed
-     * @since
+     * @since 2.9.0
      */
     public INIConfiguration(boolean sectionInLineCommentsAllowed) {
         this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
