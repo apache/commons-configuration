@@ -40,15 +40,76 @@
                 Team. Thank you.
             </p>
 
-            <subsection name="Fixed in Apache Commons Configuration 2.8.0">
-                <ul>
-                    <li>
-                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-33980">CVE-2022-33980</a>
-                        Variable interpolation can cause arbitrary code execution.
-                    </li>
-                </ul>
-
-            </subsection>
+            <subsection name="CVE-2022-33980 prior to 2.8.0, RCE when applied to untrusted input">
+                <p>
+                    On 2022-07-06, the Apache Commons Configuration team disclosed
+                    <a href="https://www.cve.org/CVERecord?id=CVE-2022-33980">CVE-2022-33980</a>
+                    . Key takeaways:
+                    <ul>
+                        <li>
+                            If you rely on software that uses a version of commons-configuration prior to 2.8.0, you are likely
+                            still not vulnerable: only if this software loads configuration
+                            files from untrusted sources, which is likely rare.
+                        </li>
+                        <li>
+                            If your own software uses commons-configuration, double-check whether it loads
+                            configuration files from untrusted sources. If so, an update to 2.8.0 could be a
+                            quick workaround, but the recommended solution is to also properly validate and sanitize the
+                            untrusted input.
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    Apache Commons Configuration is a library to read configuration data from a variety of sources.
+                    It supports variable interpolation with lookups using various mechanisms, such as system properties
+                    or environment variables. Some of the available interpolators can trigger network
+                    access or code execution. This is intended, but it also means an application that includes user
+                    input in the configuration passed to Commons Configuration without properly sanitizing it would allow an
+                    attacker to trigger those interpolators.
+                </p>
+                <p>
+                    For that reason the Apache Commons Configuration team have decided to update the list of interpolators
+                    that are enabled by default to be more
+                    conservative, so that the impact of a failure to validate inputs is mitigated and will not
+                    give an attacker access to these interpolators. However, it is still recommended that users treat
+                    untrusted input with care.
+                </p>
+                <p>
+                    We're not currently aware of any applications that load untrusted input as configuration
+                    and thus would have been impacted by this problem prior to Apache Commons Configuration 2.8.0.
+                </p>
+                <p>
+                    This issue is different from
+                    <a href="https://logging.apache.org/log4j/2.x/security.html#log4j-2.15.0">Log4Shell (CVE-2021-44228)</a>
+                    because in Log4Shell, string interpolation was possible from the log message body, which commonly
+                    contains untrusted input. In the Apache Common Configuration issue, the processed configuration data
+                    is much less likely to come from an untrusted source.
+                </p>
+                <p>
+                    Credit: this issue was reported by
+                    <a href="https://github.com/pwntester">@pwntester (Alvaro Muñoz)</a>
+                    of the
+                    <a href="https://securitylab.github.com">GitHub Security Lab team</a>
+                    . Thank you!
+                </p>
+                <p>
+                    References:
+                    <ul>
+                        <li>
+                            <a href="https://lists.apache.org/thread/tdf5n7j80lfxdhs2764vn0xmpfodm87s">Announcement on dev@commons.apache.org</a>
+                        </li>
+                        <li>
+                            <a href="https://www.openwall.com/lists/oss-security/2022/07/06/5">Announcement on oss-security</a>
+                        </li>
+                        <li>
+                            <a href="https://www.cve.org/CVERecord?id=CVE-2022-33980">Advisory on cve.org</a>
+                        </li>
+                        <li>
+                            <a href="https://securitylab.github.com/advisories/GHSL-2022-017_Apache_Commons_Configuration/">GHSL advisory</a>
+                        </li>
+                    </ul>
+                </p>
+             </subsection>
         </section>
     </body>
 </document>
