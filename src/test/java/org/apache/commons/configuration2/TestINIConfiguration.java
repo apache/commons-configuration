@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
@@ -56,6 +57,9 @@ import org.apache.commons.configuration2.tree.NodeHandler;
 import org.apache.commons.configuration2.tree.NodeNameMatchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test class for {@code INIConfiguration}.
@@ -119,9 +123,17 @@ public class TestINIConfiguration {
     private static final String INI_DATA4 = "[section6]" + LINE_SEPARATOR + "key1{0}value1" + LINE_SEPARATOR + "key2{0}value2" + LINE_SEPARATOR + LINE_SEPARATOR
         + "[section7]" + LINE_SEPARATOR + "key3{0}value3" + LINE_SEPARATOR;
 
-    /** Constant for the content of an ini file - with section inline comment */
-    private static final String INI_DATA5 = "[section1]; main section" + LINE_SEPARATOR + "var1 = foo" + LINE_SEPARATOR + LINE_SEPARATOR
+    private static final String INI_DATA5 = "[section4]" + LINE_SEPARATOR + "var1 = \"quoted value\"" + LINE_SEPARATOR
+        + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"" + LINE_SEPARATOR + "var3 = 123 # comment" + LINE_SEPARATOR + "var4 = \"1#2;3\" # comment"
+        + LINE_SEPARATOR + "var5 = '\\'quoted\\' \"value\"' # comment" + LINE_SEPARATOR + "var6 = \"\"" + LINE_SEPARATOR;
+
+    /** Constant for the content of an ini file - with section inline comment defined with semicolon */
+    private static final String INI_DATA6 = "[section1]; main section" + LINE_SEPARATOR + "var1 = foo" + LINE_SEPARATOR + LINE_SEPARATOR
         + "[section11] ; sub-section related to [section1]" + LINE_SEPARATOR + "var1 = 123.45" + LINE_SEPARATOR;
+
+    /** Constant for the content of an ini file - with section inline comment defined with number sign */
+    private static final String INI_DATA7 = "[section1]# main section" + LINE_SEPARATOR + "var1 = foo" + LINE_SEPARATOR + LINE_SEPARATOR
+        + "[section11] # sub-section related to [section1]" + LINE_SEPARATOR + "var1 = 123.45" + LINE_SEPARATOR;
 
     private static final String INI_DATA_SEPARATORS = "[section]" + LINE_SEPARATOR + "var1 = value1" + LINE_SEPARATOR + "var2 : value2" + LINE_SEPARATOR
         + "var3=value3" + LINE_SEPARATOR + "var4:value4" + LINE_SEPARATOR + "var5 : value=5" + LINE_SEPARATOR + "var:6=value" + LINE_SEPARATOR
@@ -137,7 +149,7 @@ public class TestINIConfiguration {
      * Loads the specified content into the given configuration instance.
      *
      * @param instance the configuration
-     * @param data the data to be loaded
+     * @param data     the data to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final INIConfiguration instance, final String data) throws ConfigurationException {
@@ -174,7 +186,19 @@ public class TestINIConfiguration {
      * @throws ConfigurationException if an error occurs
      */
     private static INIConfiguration setUpConfig(final String data) throws ConfigurationException {
-        final INIConfiguration instance = new INIConfiguration();
+        return setUpConfig(data, false);
+    }
+
+    /**
+     * Creates a INIConfiguration object that is initialized from the given data.
+     *
+     * @param data                  the data of the configuration (an ini file as string)
+     * @param inLineCommentsAllowed when true, inline comments on section line are allowed
+     * @return the initialized configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private static INIConfiguration setUpConfig(final String data, boolean inLineCommentsAllowed) throws ConfigurationException {
+        final INIConfiguration instance = new INIConfiguration(inLineCommentsAllowed);
         instance.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         load(instance, data);
         return instance;
@@ -225,18 +249,18 @@ public class TestINIConfiguration {
     /**
      * Tests whether the specified configuration contains exactly the expected sections.
      *
-     * @param config the configuration to check
+     * @param config   the configuration to check
      * @param expected an array with the expected sections
      */
     private void checkSectionNames(final INIConfiguration config, final String[] expected) {
         final Set<String> sectionNames = config.getSections();
-        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames); 
+        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames);
     }
 
     /**
      * Tests the names of the sections returned by the configuration.
      *
-     * @param data the data of the ini configuration
+     * @param data     the data of the ini configuration
      * @param expected the expected section names
      * @return the configuration instance
      */
@@ -341,7 +365,7 @@ public class TestINIConfiguration {
      * Tests concurrent access to the global section.
      */
     @Test
-    public void testGetSectionGloabalMultiThreaded() throws ConfigurationException, InterruptedException {
+    public void testGetSectionGlobalMultiThreaded() throws ConfigurationException, InterruptedException {
         final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         config.setSynchronizer(new ReadWriteSynchronizer());
         final int threadCount = 10;
@@ -971,10 +995,25 @@ public class TestINIConfiguration {
         assertEquals(expectedOutput, result);
     }
 
-    @Test
-    public void testValueWithComment() throws Exception {
-        final INIConfiguration config = setUpConfig(INI_DATA2);
-        assertEquals("123", config.getString("section4.var3"));
+    /**
+     * Test correct handling of in line comments on value line
+     */
+    @ParameterizedTest
+    @MethodSource("provideValuesWithComments")
+    public void testValueWithComment(String source, String key, String value) throws Exception {
+        final INIConfiguration config = setUpConfig(source);
+        assertEquals(value, config.getString(key));
+    }
+
+    private static Stream<Arguments> provideValuesWithComments() {
+        return Stream.of(
+                Arguments.of(INI_DATA2, "section4.var3", "123"),
+                Arguments.of(INI_DATA2, "section4.var4", "1;2;3"),
+                Arguments.of(INI_DATA2, "section4.var5", "'quoted' \"value\""),
+                Arguments.of(INI_DATA5, "section4.var3", "123"),
+                Arguments.of(INI_DATA5, "section4.var4", "1#2;3"),
+                Arguments.of(INI_DATA5, "section4.var5", "'quoted' \"value\"")
+        );
     }
 
     /**
@@ -1032,10 +1071,20 @@ public class TestINIConfiguration {
     /**
      * Tests whether a section with inline comment is correctly parsed.
      */
-    @Test
-    public void testGetSectionsWithInLineComment() throws ConfigurationException {
-        final INIConfiguration config = setUpConfig(INI_DATA5);
-        checkSectionNames(config, new String[] {"section1", "section11"});
+    @ParameterizedTest
+    @MethodSource("provideSectionsWithComments")
+    public void testGetSectionsWithInLineComment(String source, boolean allowComments, String[] results) throws ConfigurationException {
+        final INIConfiguration config = setUpConfig(source, allowComments);
+        checkSectionNames(config, results);
+    }
+
+    private static Stream<Arguments> provideSectionsWithComments() {
+        return Stream.of(
+                Arguments.of(INI_DATA6, false, new String[]{null, "section11] ; sub-section related to [section1"}),
+                Arguments.of(INI_DATA7, false, new String[]{null, "section11] # sub-section related to [section1"}),
+                Arguments.of(INI_DATA6, true, new String[]{"section1", "section11"}),
+                Arguments.of(INI_DATA7, true, new String[]{"section1", "section11"})
+        );
     }
 
     /**
