@@ -149,7 +149,7 @@ public class TestINIConfiguration {
      * Loads the specified content into the given configuration instance.
      *
      * @param instance the configuration
-     * @param data     the data to be loaded
+     * @param data the data to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final INIConfiguration instance, final String data) throws ConfigurationException {
@@ -192,7 +192,7 @@ public class TestINIConfiguration {
     /**
      * Creates a INIConfiguration object that is initialized from the given data.
      *
-     * @param data                  the data of the configuration (an ini file as string)
+     * @param data the data of the configuration (an ini file as string)
      * @param inLineCommentsAllowed when true, inline comments on section line are allowed
      * @return the initialized configuration
      * @throws ConfigurationException if an error occurs
@@ -249,7 +249,7 @@ public class TestINIConfiguration {
     /**
      * Tests whether the specified configuration contains exactly the expected sections.
      *
-     * @param config   the configuration to check
+     * @param config the configuration to check
      * @param expected an array with the expected sections
      */
     private void checkSectionNames(final INIConfiguration config, final String[] expected) {
@@ -260,7 +260,7 @@ public class TestINIConfiguration {
     /**
      * Tests the names of the sections returned by the configuration.
      *
-     * @param data     the data of the ini configuration
+     * @param data the data of the ini configuration
      * @param expected the expected section names
      * @return the configuration instance
      */
