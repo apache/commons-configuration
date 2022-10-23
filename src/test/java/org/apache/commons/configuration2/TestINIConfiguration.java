@@ -254,7 +254,7 @@ public class TestINIConfiguration {
      */
     private void checkSectionNames(final INIConfiguration config, final String[] expected) {
         final Set<String> sectionNames = config.getSections();
-        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames);
+        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames); 
     }
 
     /**
@@ -365,7 +365,7 @@ public class TestINIConfiguration {
      * Tests concurrent access to the global section.
      */
     @Test
-    public void testGetSectionGlobalMultiThreaded() throws ConfigurationException, InterruptedException {
+    public void testGetSectionGloabalMultiThreaded() throws ConfigurationException, InterruptedException {
         final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         config.setSynchronizer(new ReadWriteSynchronizer());
         final int threadCount = 10;
