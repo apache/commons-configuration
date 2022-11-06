@@ -153,6 +153,7 @@ import org.apache.commons.configuration2.tree.QueryResult;
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {
+
     /** The model for managing the data stored in this configuration. */
     private NodeModel<T> model;
 

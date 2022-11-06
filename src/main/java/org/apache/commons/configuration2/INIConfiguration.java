@@ -196,6 +196,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * @since 1.6
  */
 public class INIConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
+
     /**
      * The default characters that signal the start of a comment line.
      */
@@ -248,16 +249,6 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Create a new empty INI Configuration with option to allow inline comments on the section line.
-     *
-     * @param sectionInLineCommentsAllowed when true inline comments on the section line are allowed
-     * @since 2.9.0
-     */
-    public INIConfiguration(boolean sectionInLineCommentsAllowed) {
-        this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
-    }
-
-    /**
      * Creates a new instance of {@code INIConfiguration} with the content of the specified
      * {@code HierarchicalConfiguration}.
      *
@@ -266,6 +257,48 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      */
     public INIConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
+    }
+
+    /**
+     * Create a new empty INI Configuration with option to allow inline comments on the section line.
+     *
+     * @param sectionInLineCommentsAllowed when true inline comments on the section line are allowed
+     */
+    private INIConfiguration(final boolean sectionInLineCommentsAllowed) {
+        this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
+    }
+
+    /**
+     * Creates a new builder.
+     *
+     * @return a new builder.
+     * @since 2.9.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builds instances of INIConfiguration.
+     *
+     * @since 2.9.0
+     */
+    public static class Builder {
+
+        /**
+         * The flag for decision, whether inline comments on the section line are allowed.
+         */
+        private boolean sectionInLineCommentsAllowed;
+
+        public Builder setSectionInLineCommentsAllowed(final boolean sectionInLineCommentsAllowed) {
+            this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
+            return this;
+        }
+
+        public INIConfiguration build() {
+            return new INIConfiguration(sectionInLineCommentsAllowed);
+        }
+
     }
 
     /**
@@ -445,7 +478,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             line = line.trim();
             if (!isCommentLine(line)) {
                 if (isSectionLine(line)) {
-                    int length = sectionInLineCommentsAllowed ? line.indexOf("]") : line.length() - 1;
+                    final int length = sectionInLineCommentsAllowed ? line.indexOf("]") : line.length() - 1;
                     final String section = line.substring(1, length);
                     sectionBuilder = sectionBuilders.get(section);
                     if (sectionBuilder == null) {
@@ -761,7 +794,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @param line The line to check.
      * @return true if the entire line is a section
      */
-    private static boolean isStrictSection(String line) {
+    private static boolean isStrictSection(final String line) {
         return line.startsWith("[") && line.endsWith("]");
     }
 
@@ -771,7 +804,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @param line The line to check.
      * @return true if the line contains a section
      */
-    private static boolean isNonStrictSection(String line) {
+    private static boolean isNonStrictSection(final String line) {
         return line.startsWith("[") && line.contains("]");
     }
 

@@ -63,13 +63,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test class for {@code INIConfiguration}.
- *
  */
 public class TestINIConfiguration {
+
     /**
      * A thread class for testing concurrent access to the global section.
      */
     private static class GlobalSectionTestThread extends Thread {
+
         /** The configuration. */
         private final INIConfiguration config;
 
@@ -198,7 +199,11 @@ public class TestINIConfiguration {
      * @throws ConfigurationException if an error occurs
      */
     private static INIConfiguration setUpConfig(final String data, boolean inLineCommentsAllowed) throws ConfigurationException {
-        final INIConfiguration instance = new INIConfiguration(inLineCommentsAllowed);
+        // @formatter:off
+        final INIConfiguration instance = INIConfiguration.builder()
+                .setSectionInLineCommentsAllowed(inLineCommentsAllowed)
+                .build();
+        // @formatter:on
         instance.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         load(instance, data);
         return instance;

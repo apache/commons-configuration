@@ -51,6 +51,7 @@ import org.apache.commons.lang3.ObjectUtils;
  *
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode> implements InMemoryNodeModelSupport {
+
     /** A listener for reacting on changes caused by sub configurations. */
     private final EventListener<ConfigurationEvent> changeListener;
 

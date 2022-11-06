@@ -91,6 +91,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public abstract class AbstractConfiguration extends BaseEventSource implements Configuration {
+
     /** The list delimiter handler. */
     private ListDelimiterHandler listDelimiterHandler;
 
@@ -127,7 +128,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the {@code ListDelimiterHandler} used by this instance.
+     * Gets the {@code ListDelimiterHandler} used by this instance.
      *
      * @return the {@code ListDelimiterHandler}
      * @since 2.0
@@ -163,7 +164,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the {@code ConversionHandler} used by this instance.
+     * Gets the {@code ConversionHandler} used by this instance.
      *
      * @return the {@code ConversionHandler}
      * @since 2.0
@@ -212,7 +213,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the {@code ConfigurationInterpolator} object that manages the lookup objects for resolving variables.
+     * Gets the {@code ConfigurationInterpolator} object that manages the lookup objects for resolving variables.
      * Unless a custom interpolator has been set or the instance has been modified, the returned interpolator will
      * resolve values from this configuration instance and support the
      * {@link ConfigurationInterpolator#getDefaultPrefixLookups() default prefix lookups}.
