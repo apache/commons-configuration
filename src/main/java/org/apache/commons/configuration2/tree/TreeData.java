@@ -76,7 +76,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
     }
 
     /**
-     * Returns the {@code NodeTracker}
+     * Gets the {@code NodeTracker}
      *
      * @return the {@code NodeTracker}
      */
@@ -85,7 +85,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
     }
 
     /**
-     * Returns the {@code ReferenceTracker}.
+     * Gets the {@code ReferenceTracker}.
      *
      * @return the {@code ReferenceTracker}
      */
@@ -94,7 +94,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
     }
 
     /**
-     * Returns the parent node of the specified node. Result is <b>null</b> for the root node. If the passed in node cannot
+     * Gets the parent node of the specified node. Result is <b>null</b> for the root node. If the passed in node cannot
      * be resolved, an exception is thrown.
      *
      * @param node the node in question

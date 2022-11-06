@@ -132,7 +132,7 @@ class ReferenceTracker {
     }
 
     /**
-     * Returns the reference object associated with the given node.
+     * Gets the reference object associated with the given node.
      *
      * @param node the node
      * @return the reference object for this node or <b>null</b>
@@ -142,7 +142,7 @@ class ReferenceTracker {
     }
 
     /**
-     * Returns the list with removed references. This list is immutable.
+     * Gets the list with removed references. This list is immutable.
      *
      * @return the list with removed references
      */

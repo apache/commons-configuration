@@ -394,7 +394,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         }
 
         /**
-         * Returns the builder for the result node.
+         * Gets the builder for the result node.
          *
          * @return the result node builder
          */
@@ -674,7 +674,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         }
 
         /**
-         * Returns the final value for the node to be created. This method is called when the represented configuration node is
+         * Gets the final value for the node to be created. This method is called when the represented configuration node is
          * actually created.
          *
          * @return the value of the resulting configuration node

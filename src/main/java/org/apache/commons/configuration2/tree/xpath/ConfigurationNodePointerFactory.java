@@ -43,7 +43,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
     public static final int CONFIGURATION_NODE_POINTER_FACTORY_ORDER = 200;
 
     /**
-     * Returns the order of this factory between other factories.
+     * Gets the order of this factory between other factories.
      *
      * @return this order's factory
      */
@@ -135,7 +135,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
         }
 
         /**
-         * Returns the wrapped node.
+         * Gets the wrapped node.
          *
          * @return the node
          */
@@ -144,7 +144,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
         }
 
         /**
-         * Returns the node handler for the wrapped node.
+         * Gets the node handler for the wrapped node.
          *
          * @return the node handler
          */

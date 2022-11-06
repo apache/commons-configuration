@@ -64,7 +64,7 @@ public class CombinedLocationStrategy implements FileLocationStrategy {
     }
 
     /**
-     * Returns a (unmodifiable) collection with the sub strategies managed by this object.
+     * Gets a (unmodifiable) collection with the sub strategies managed by this object.
      *
      * @return the sub {@code FileLocationStrategy} objects
      */

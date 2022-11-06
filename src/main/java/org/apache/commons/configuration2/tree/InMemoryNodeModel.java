@@ -73,7 +73,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     }
 
     /**
-     * Returns the root node of this mode. Note: This method should be used with care. The model may be updated concurrently
+     * Gets the root node of this mode. Note: This method should be used with care. The model may be updated concurrently
      * which causes the root node to be replaced. If the root node is to be processed further (e.g. by executing queries on
      * it), the model should be asked for its {@code NodeHandler}, and the root node should be obtained from there. The
      * connection between a node handler and its root node remain constant because an update of the model causes the whole
@@ -453,7 +453,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     }
 
     /**
-     * Returns the current {@code ImmutableNode} instance associated with the given {@code NodeSelector}. The node must be a
+     * Gets the current {@code ImmutableNode} instance associated with the given {@code NodeSelector}. The node must be a
      * tracked node, i.e. {@link #trackNode(NodeSelector, NodeKeyResolver)} must have been called before with the given
      * selector.
      *
@@ -488,7 +488,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     }
 
     /**
-     * Returns a {@code NodeHandler} for a tracked node. Such a handler may be required for operations on a sub tree of the
+     * Gets a {@code NodeHandler} for a tracked node. Such a handler may be required for operations on a sub tree of the
      * model. The handler to be returned depends on the current state of the tracked node. If it is still active, a handler
      * is used which shares some data (especially the parent mapping) with this model. Detached track nodes in contrast have
      * their own separate model; in this case a handler associated with this model is returned.
@@ -538,7 +538,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     }
 
     /**
-     * Returns a {@code ReferenceNodeHandler} object for this model. This extended node handler can be used to query
+     * Gets a {@code ReferenceNodeHandler} object for this model. This extended node handler can be used to query
      * references objects stored for this model.
      *
      * @return the {@code ReferenceNodeHandler}
@@ -548,7 +548,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     }
 
     /**
-     * Returns the current {@code TreeData} object. This object contains all information about the current node structure.
+     * Gets the current {@code TreeData} object. This object contains all information about the current node structure.
      *
      * @return the current {@code TreeData} object
      */

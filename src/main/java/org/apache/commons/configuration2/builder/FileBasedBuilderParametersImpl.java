@@ -148,7 +148,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     }
 
     /**
-     * Returns the {@code FileHandler} managed by this object. This object is updated every time the file location is
+     * Gets the {@code FileHandler} managed by this object. This object is updated every time the file location is
      * changed.
      *
      * @return the managed {@code FileHandler}
@@ -170,7 +170,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     }
 
     /**
-     * Returns the {@code ReloadingDetectorFactory}. Result may be <b>null</b> which means that the default factory is to be
+     * Gets the {@code ReloadingDetectorFactory}. Result may be <b>null</b> which means that the default factory is to be
      * used.
      *
      * @return the {@code ReloadingDetectorFactory}
@@ -180,7 +180,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     }
 
     /**
-     * Returns the refresh delay for reload operations. Result may be <b>null</b> if this value has not been set.
+     * Gets the refresh delay for reload operations. Result may be <b>null</b> if this value has not been set.
      *
      * @return the reloading refresh delay
      */

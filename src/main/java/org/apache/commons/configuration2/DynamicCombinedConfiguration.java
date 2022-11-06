@@ -123,7 +123,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the node combiner that is used for creating the combined node structure.
+     * Gets the node combiner that is used for creating the combined node structure.
      *
      * @return the node combiner
      */
@@ -178,7 +178,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the number of configurations that are contained in this combined configuration.
+     * Gets the number of configurations that are contained in this combined configuration.
      *
      * @return the number of contained configurations
      */
@@ -193,7 +193,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the configuration at the specified index. The contained configurations are numbered in the order they were
+     * Gets the configuration at the specified index. The contained configurations are numbered in the order they were
      * added to this combined configuration. The index of the first configuration is 0.
      *
      * @param index the index
@@ -211,7 +211,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the configuration with the given name. This can be <b>null</b> if no such configuration exists.
+     * Gets the configuration with the given name. This can be <b>null</b> if no such configuration exists.
      *
      * @param name the name of the configuration
      * @return the configuration with this name
@@ -227,7 +227,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns a set with the names of all configurations contained in this combined configuration. Of course here are only
+     * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
      * @return a set with the names of the contained configurations (never <b>null</b>)
@@ -547,7 +547,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the configuration source, in which the specified key is defined. This method will determine the configuration
+     * Gets the configuration source, in which the specified key is defined. This method will determine the configuration
      * node that is identified by the given key. The following constellations are possible:
      * <ul>
      * <li>If no node object is found for this key, <b>null</b> is returned.</li>
@@ -677,7 +677,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns the current configuration. This configuration was initialized at the beginning of an operation and stored in
+     * Gets the current configuration. This configuration was initialized at the beginning of an operation and stored in
      * a thread-local variable. Some methods of this class call this method directly without requesting a lock before. To
      * deal with this, we always request an additional read lock.
      *
@@ -788,7 +788,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
 
         /**
-         * Returns the stored configuration.
+         * Gets the stored configuration.
          *
          * @return the configuration
          */
@@ -797,7 +797,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
 
         /**
-         * Returns the configuration's name.
+         * Gets the configuration's name.
          *
          * @return the name
          */
@@ -806,7 +806,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
 
         /**
-         * Returns the at position of this configuration.
+         * Gets the at position of this configuration.
          *
          * @return the at position
          */
@@ -841,7 +841,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
 
         /**
-         * Returns the current configuration.
+         * Gets the current configuration.
          *
          * @return the current configuration
          */
@@ -859,7 +859,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
 
         /**
-         * Returns the current key.
+         * Gets the current key.
          *
          * @return the current key
          */

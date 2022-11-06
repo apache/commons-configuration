@@ -72,7 +72,7 @@ public class CombinedReloadingController extends ReloadingController {
     }
 
     /**
-     * Returns a (unmodifiable) collection with the sub controllers managed by this combined controller.
+     * Gets a (unmodifiable) collection with the sub controllers managed by this combined controller.
      *
      * @return a collection with sub controllers
      */

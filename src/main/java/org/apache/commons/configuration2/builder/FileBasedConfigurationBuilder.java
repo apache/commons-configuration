@@ -99,7 +99,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns the default encoding for the specified configuration class. If an encoding has been set for the specified
+     * Gets the default encoding for the specified configuration class. If an encoding has been set for the specified
      * class (or one of its super classes), it is returned. Otherwise, result is <b>null</b>.
      *
      * @param configClass the configuration class in question
@@ -160,7 +160,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns the {@code FileHandler} associated with this builder. If already a result object has been created, this
+     * Gets the {@code FileHandler} associated with this builder. If already a result object has been created, this
      * {@code FileHandler} can be used to save it. Otherwise, the {@code FileHandler} from the initialization parameters is
      * returned (which is not associated with a {@code FileBased} object). Result is never <b>null</b>.
      *
@@ -194,7 +194,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns a flag whether auto save mode is currently active.
+     * Gets a flag whether auto save mode is currently active.
      *
      * @return <b>true</b> if auto save is enabled, <b>false</b> otherwise
      */

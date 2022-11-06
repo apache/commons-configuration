@@ -69,7 +69,7 @@ public abstract class NodeCombiner {
     }
 
     /**
-     * Returns a set with the names of nodes that are known to be list nodes.
+     * Gets a set with the names of nodes that are known to be list nodes.
      *
      * @return a set with the names of list nodes
      */

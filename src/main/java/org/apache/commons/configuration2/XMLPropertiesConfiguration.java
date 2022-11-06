@@ -100,7 +100,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Returns the header comment of this configuration.
+     * Gets the header comment of this configuration.
      *
      * @return the header comment
      */

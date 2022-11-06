@@ -96,7 +96,7 @@ public final class Parameters {
     }
 
     /**
-     * Returns the {@code DefaultParametersManager} associated with this object.
+     * Gets the {@code DefaultParametersManager} associated with this object.
      *
      * @return the {@code DefaultParametersManager}
      */

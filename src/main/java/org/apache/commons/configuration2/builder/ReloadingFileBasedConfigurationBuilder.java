@@ -106,7 +106,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     }
 
     /**
-     * Returns the {@code ReloadingController} associated with this builder. This controller is directly created. However,
+     * Gets the {@code ReloadingController} associated with this builder. This controller is directly created. However,
      * it becomes active (i.e. associated with a meaningful reloading detector) not before a result object was created.
      *
      * @return the {@code ReloadingController}

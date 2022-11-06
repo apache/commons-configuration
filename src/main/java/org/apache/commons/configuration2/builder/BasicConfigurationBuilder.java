@@ -153,7 +153,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     }
 
     /**
-     * Returns the result class of this builder. The objects produced by this builder have the class returned here.
+     * Gets the result class of this builder. The objects produced by this builder have the class returned here.
      *
      * @return the result class of this builder
      */
@@ -379,7 +379,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     }
 
     /**
-     * Returns the {@code BeanDeclaration} that is used to create and initialize result objects. The declaration is created
+     * Gets the {@code BeanDeclaration} that is used to create and initialize result objects. The declaration is created
      * on first access (by invoking {@link #createResultDeclaration(Map)}) based on the current initialization parameters.
      *
      * @return the {@code BeanDeclaration} for dynamically creating a result object
@@ -393,7 +393,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     }
 
     /**
-     * Returns a (unmodifiable) map with the current initialization parameters set for this builder. The map is populated
+     * Gets a (unmodifiable) map with the current initialization parameters set for this builder. The map is populated
      * with the parameters set using the various configuration options.
      *
      * @return a map with the current set of initialization parameters
@@ -583,7 +583,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     }
 
     /**
-     * Returns a map with initialization parameters where all parameters starting with the reserved prefix have been
+     * Gets a map with initialization parameters where all parameters starting with the reserved prefix have been
      * filtered out.
      *
      * @return the filtered parameters map

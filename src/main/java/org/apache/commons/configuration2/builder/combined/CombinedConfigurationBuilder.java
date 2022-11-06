@@ -437,7 +437,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the {@code ConfigurationBuilder} which creates the definition configuration.
+     * Gets the {@code ConfigurationBuilder} which creates the definition configuration.
      *
      * @return the builder for the definition configuration
      * @throws ConfigurationException if an error occurs
@@ -461,7 +461,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * <p>
-     * Returns the configuration builder with the given name. With this method a builder of a child configuration which was
+     * Gets the configuration builder with the given name. With this method a builder of a child configuration which was
      * given a name in the configuration definition file can be accessed directly.
      * </p>
      * <p>
@@ -571,7 +571,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the configuration containing the definition of the combined configuration to be created. This method only
+     * Gets the configuration containing the definition of the combined configuration to be created. This method only
      * returns a defined result during construction of the result configuration. The definition configuration is obtained
      * from the definition builder at first access and then stored temporarily to ensure that during result construction
      * always the same configuration instance is used. (Otherwise, it would be possible that the definition builder returns
@@ -588,7 +588,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns a collection with the builders for all child configuration sources. This method can be used by derived
+     * Gets a collection with the builders for all child configuration sources. This method can be used by derived
      * classes providing additional functionality on top of the declared configuration sources. It only returns a defined
      * value during construction of the result configuration instance.
      *
@@ -810,7 +810,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the configuration object that is currently constructed. This method can be called during construction of the
+     * Gets the configuration object that is currently constructed. This method can be called during construction of the
      * result configuration. It is intended for internal usage, e.g. some specialized builder providers need access to this
      * configuration to perform advanced initialization.
      *
@@ -982,7 +982,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the current base path of this configuration builder. This is used for instance by all file-based child
+     * Gets the current base path of this configuration builder. This is used for instance by all file-based child
      * configurations.
      *
      * @return the base path
@@ -1162,7 +1162,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
 
         /**
-         * Returns a collection containing the builders for all child configuration sources.
+         * Gets a collection containing the builders for all child configuration sources.
          *
          * @return the child configuration builders
          */
@@ -1171,7 +1171,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
 
         /**
-         * Returns a collection with all configuration source declarations defined in the override section.
+         * Gets a collection with all configuration source declarations defined in the override section.
          *
          * @return the override configuration builders
          */
@@ -1180,7 +1180,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
 
         /**
-         * Returns a collection with all configuration source declarations defined in the union section.
+         * Gets a collection with all configuration source declarations defined in the union section.
          *
          * @return the union configuration builders
          */
@@ -1189,7 +1189,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
 
         /**
-         * Returns the {@code ConfigurationBuilder} with the given name. If no such builder is defined in the definition
+         * Gets the {@code ConfigurationBuilder} with the given name. If no such builder is defined in the definition
          * configuration, result is <b>null</b>.
          *
          * @param name the name of the builder in question

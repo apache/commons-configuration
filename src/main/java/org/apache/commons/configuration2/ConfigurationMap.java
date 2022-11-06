@@ -51,7 +51,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     }
 
     /**
-     * Returns the wrapped {@code Configuration} object.
+     * Gets the wrapped {@code Configuration} object.
      *
      * @return the wrapped configuration
      * @since 1.2
@@ -88,7 +88,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     }
 
     /**
-     * Returns the value of the specified key. The key is converted to a string and then passed to the underlying
+     * Gets the value of the specified key. The key is converted to a string and then passed to the underlying
      * configuration.
      *
      * @param key the key

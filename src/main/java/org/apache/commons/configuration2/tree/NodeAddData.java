@@ -85,7 +85,7 @@ public class NodeAddData<T> {
     }
 
     /**
-     * Returns the name of the new node.
+     * Gets the name of the new node.
      *
      * @return the new node's name
      */
@@ -94,7 +94,7 @@ public class NodeAddData<T> {
     }
 
     /**
-     * Returns the parent node.
+     * Gets the parent node.
      *
      * @return the parent node
      */
@@ -103,7 +103,7 @@ public class NodeAddData<T> {
     }
 
     /**
-     * Returns a list with further nodes that must be added. This is needed if a complete branch is to be added at once. For
+     * Gets a list with further nodes that must be added. This is needed if a complete branch is to be added at once. For
      * instance, imagine that there exists only a node {@code database}. Now the key
      * {@code database.connection.settings.username} (assuming the syntax of the default expression engine) is to be added.
      * Then {@code username} is the name of the new node, but the nodes {@code connection} and {@code settings} must be

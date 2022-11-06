@@ -35,7 +35,7 @@ import org.apache.commons.configuration2.event.EventListenerList;
  */
 public interface EventListenerProvider {
     /**
-     * Returns an {@code EventListenerList} object with information about event listener registrations. All listeners
+     * Gets an {@code EventListenerList} object with information about event listener registrations. All listeners
      * contained in this object are added to the processing {@code ConfigurationBuilder}.
      *
      * @return the {@code EventListenerList} with event listener registrations (must not be <b>null</b>)

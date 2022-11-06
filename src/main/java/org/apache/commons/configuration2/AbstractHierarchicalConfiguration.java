@@ -208,7 +208,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
+     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
      * @return the current expression engine
@@ -740,7 +740,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         }
 
         /**
-         * Returns the list with all defined keys.
+         * Gets the list with all defined keys.
          *
          * @return the list with the defined keys
          */

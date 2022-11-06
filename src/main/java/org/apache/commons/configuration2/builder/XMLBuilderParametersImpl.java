@@ -75,7 +75,7 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     }
 
     /**
-     * Returns the {@code EntityResolver} stored in this parameters object. Result is <b>null</b> if no such object has been
+     * Gets the {@code EntityResolver} stored in this parameters object. Result is <b>null</b> if no such object has been
      * set.
      *
      * @return the {@code EntityResolver} or <b>null</b>

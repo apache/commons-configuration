@@ -112,7 +112,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns the actually set content handler.
+     * Gets the actually set content handler.
      *
      * @return the content handler
      */
@@ -132,7 +132,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns the DTD handler. This class does not support DTD handlers, so this method always returns <b>null</b>.
+     * Gets the DTD handler. This class does not support DTD handlers, so this method always returns <b>null</b>.
      *
      * @return the DTD handler
      */
@@ -151,7 +151,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns the entity resolver. This class does not support an entity resolver, so this method always returns
+     * Gets the entity resolver. This class does not support an entity resolver, so this method always returns
      * <b>null</b>.
      *
      * @return the entity resolver
@@ -171,7 +171,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns the error handler. This class does not support an error handler, so this method always returns <b>null</b>.
+     * Gets the error handler. This class does not support an error handler, so this method always returns <b>null</b>.
      *
      * @return the error handler
      */
@@ -212,7 +212,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns the name to be used for the root element.
+     * Gets the name to be used for the root element.
      *
      * @return the name for the root element
      */
@@ -278,7 +278,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns a reference to an exception that occurred during parsing.
+     * Gets a reference to an exception that occurred during parsing.
      *
      * @return a SAXExcpetion or <b>null</b> if none occurred
      */
@@ -309,7 +309,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Returns a reference to the configuration that is parsed by this object.
+     * Gets a reference to the configuration that is parsed by this object.
      *
      * @return the parsed configuration
      */

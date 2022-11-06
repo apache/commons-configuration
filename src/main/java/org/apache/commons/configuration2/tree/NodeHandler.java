@@ -41,7 +41,7 @@ public interface NodeHandler<T> {
     String nodeName(T node);
 
     /**
-     * Returns the value of the specified node.
+     * Gets the value of the specified node.
      *
      * @param node the node
      * @return the value of this node
@@ -49,7 +49,7 @@ public interface NodeHandler<T> {
     Object getValue(T node);
 
     /**
-     * Returns the parent of the specified node.
+     * Gets the parent of the specified node.
      *
      * @param node the node
      * @return the parent node
@@ -57,7 +57,7 @@ public interface NodeHandler<T> {
     T getParent(T node);
 
     /**
-     * Returns an unmodifiable list with all children of the specified node.
+     * Gets an unmodifiable list with all children of the specified node.
      *
      * @param node the node
      * @return a list with the child nodes of this node
@@ -65,7 +65,7 @@ public interface NodeHandler<T> {
     List<T> getChildren(T node);
 
     /**
-     * Returns an unmodifiable list of all children of the specified node with the given name.
+     * Gets an unmodifiable list of all children of the specified node with the given name.
      *
      * @param node the node
      * @param name the name of the desired child nodes
@@ -74,7 +74,7 @@ public interface NodeHandler<T> {
     List<T> getChildren(T node, String name);
 
     /**
-     * Returns an unmodifiable list of all children of the specified node which are matched by the passed in
+     * Gets an unmodifiable list of all children of the specified node which are matched by the passed in
      * {@code NodeMatcher} against the provided criterion. This method allows for advanced queries on a node's children.
      *
      * @param node the node
@@ -86,7 +86,7 @@ public interface NodeHandler<T> {
     <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher, C criterion);
 
     /**
-     * Returns the child with the given index of the specified node.
+     * Gets the child with the given index of the specified node.
      *
      * @param node the node
      * @param index the index (0-based)
@@ -107,7 +107,7 @@ public interface NodeHandler<T> {
     int indexOfChild(T parent, T child);
 
     /**
-     * Returns the number of children of the specified node with the given name. This method exists for performance reasons:
+     * Gets the number of children of the specified node with the given name. This method exists for performance reasons:
      * for some node implementations it may be by far more efficient to count the children than to query a list of all
      * children and determine its size. A concrete implementation can choose the most efficient way to determine the number
      * of children. If a child name is passed in, only the children with this name are taken into account. If the name
@@ -120,7 +120,7 @@ public interface NodeHandler<T> {
     int getChildrenCount(T node, String name);
 
     /**
-     * Returns the number of children of the specified node which are matched by the given {@code NodeMatcher}. This is a
+     * Gets the number of children of the specified node which are matched by the given {@code NodeMatcher}. This is a
      * more generic version of {@link #getChildrenCount(Object, String)}. It allows checking for arbitrary filter
      * conditions.
      *
@@ -133,7 +133,7 @@ public interface NodeHandler<T> {
     <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher, C criterion);
 
     /**
-     * Returns an unmodifiable set with the names of all attributes of the specified node.
+     * Gets an unmodifiable set with the names of all attributes of the specified node.
      *
      * @param node the node
      * @return a set with the names of all attributes of this node
@@ -149,7 +149,7 @@ public interface NodeHandler<T> {
     boolean hasAttributes(T node);
 
     /**
-     * Returns the value of the specified attribute from the given node. If a concrete {@code NodeHandler} supports
+     * Gets the value of the specified attribute from the given node. If a concrete {@code NodeHandler} supports
      * attributes with multiple values, result might be a collection.
      *
      * @param node the node
@@ -168,7 +168,7 @@ public interface NodeHandler<T> {
     boolean isDefined(T node);
 
     /**
-     * Returns the root node of the underlying hierarchy.
+     * Gets the root node of the underlying hierarchy.
      *
      * @return the current root node
      */

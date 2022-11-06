@@ -372,7 +372,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Returns the &quot;in memory configuration&quot;. In this configuration changes are stored.
+     * Gets the &quot;in memory configuration&quot;. In this configuration changes are stored.
      *
      * @return the in memory configuration
      */
@@ -427,7 +427,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Returns the configuration source, in which the specified key is defined. This method will iterate over all existing
+     * Gets the configuration source, in which the specified key is defined. This method will iterate over all existing
      * child configurations and check whether they contain the specified key. The following constellations are possible:
      * <ul>
      * <li>If exactly one child configuration contains the key, this configuration is returned as the source configuration.

@@ -335,7 +335,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the {@code ConfigurationDecoder} used by this instance.
+     * Gets the {@code ConfigurationDecoder} used by this instance.
      *
      * @return the {@code ConfigurationDecoder}
      * @since 2.0
@@ -408,7 +408,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the logger used by this configuration object.
+     * Gets the logger used by this configuration object.
      *
      * @return the logger
      * @since 2.0
@@ -442,7 +442,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the object responsible for synchronizing this configuration. All access to this configuration - both read and
+     * Gets the object responsible for synchronizing this configuration. All access to this configuration - both read and
      * write access - is controlled by this object. This implementation never returns <b>null</b>. If no
      * {@code Synchronizer} has been set, a {@link NoOpSynchronizer} is returned. So, per default, instances of
      * {@code AbstractConfiguration} are not thread-safe unless a suitable {@code Synchronizer} is set!
@@ -781,7 +781,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected abstract Iterator<String> getKeysInternal();
 
     /**
-     * Returns an {@code Iterator} with all property keys starting with the specified prefix. This method is called by
+     * Gets an {@code Iterator} with all property keys starting with the specified prefix. This method is called by
      * {@link #getKeys(String)}. It is fully implemented by delegating to {@code getKeysInternal()} and returning a special
      * iterator which filters for the passed in prefix. Subclasses can override it if they can provide a more efficient way
      * to iterate over specific keys only.

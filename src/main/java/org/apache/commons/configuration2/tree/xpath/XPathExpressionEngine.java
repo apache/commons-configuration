@@ -330,7 +330,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
     }
 
     /**
-     * Returns the {@code XPathContextFactory} used by this instance.
+     * Gets the {@code XPathContextFactory} used by this instance.
      *
      * @return the {@code XPathContextFactory}
      */

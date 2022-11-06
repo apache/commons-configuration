@@ -132,7 +132,7 @@ class XMLDocumentHelper {
     }
 
     /**
-     * Returns the {@code Document} managed by this helper.
+     * Gets the {@code Document} managed by this helper.
      *
      * @return the wrapped {@code Document}
      */
@@ -141,7 +141,7 @@ class XMLDocumentHelper {
     }
 
     /**
-     * Returns the element mapping to the source document. This map can be used to obtain elements in the managed document
+     * Gets the element mapping to the source document. This map can be used to obtain elements in the managed document
      * which correspond to elements in the source document. If this instance has not been created from a source document,
      * the mapping is empty.
      *
@@ -152,7 +152,7 @@ class XMLDocumentHelper {
     }
 
     /**
-     * Returns the public ID of the source document.
+     * Gets the public ID of the source document.
      *
      * @return the public ID of the source document
      */
@@ -161,7 +161,7 @@ class XMLDocumentHelper {
     }
 
     /**
-     * Returns the system ID of the source document.
+     * Gets the system ID of the source document.
      *
      * @return the system ID of the source document
      */

@@ -838,7 +838,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns a configuration with the content of the specified section. This provides an easy way of working with a single
+     * Gets a configuration with the content of the specified section. This provides an easy way of working with a single
      * section only. The way this configuration is structured internally, this method is very similar to calling
      * {@link HierarchicalConfiguration#configurationAt(String)} with the name of the section in question. There are the
      * following differences however:

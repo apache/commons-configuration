@@ -246,7 +246,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the base path stored in this locator or <b>null</b> if it is undefined.
+     * Gets the base path stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the base path
      */
@@ -255,7 +255,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the encoding stored in this locator or <b>null</b> if it is undefined.
+     * Gets the encoding stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the encoding
      */
@@ -264,7 +264,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the file name stored in this locator or <b>null</b> if it is undefined.
+     * Gets the file name stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the file name
      */
@@ -273,7 +273,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the {@code FileSystem} to be used for accessing the file referenced by this locator or <b>null</b> if it is
+     * Gets the {@code FileSystem} to be used for accessing the file referenced by this locator or <b>null</b> if it is
      * undefined.
      *
      * @return the {@code FileSystem}
@@ -283,7 +283,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the {@code FileLocationStrategy} to be used for locating the referenced file. If no specific
+     * Gets the {@code FileLocationStrategy} to be used for locating the referenced file. If no specific
      * {@code FileLocationStrategy} has been set, result is <b>null</b>. This means that the default strategy should be
      * used.
      *
@@ -294,7 +294,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the URL pointing to the referenced source file or <b>null</b> if it is undefined.
+     * Gets the URL pointing to the referenced source file or <b>null</b> if it is undefined.
      *
      * @return the source URL
      */
@@ -303,7 +303,7 @@ public final class FileLocator {
     }
 
     /**
-     * Returns the URLConnectionOptions
+     * Gets the URLConnectionOptions
      *
      * @return the URLConnectionOptions
      */

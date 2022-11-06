@@ -140,7 +140,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     }
 
     /**
-     * Returns the {@code DefaultExpressionEngineSymbols} object associated with this instance.
+     * Gets the {@code DefaultExpressionEngineSymbols} object associated with this instance.
      *
      * @return the {@code DefaultExpressionEngineSymbols} used by this engine
      * @since 2.0

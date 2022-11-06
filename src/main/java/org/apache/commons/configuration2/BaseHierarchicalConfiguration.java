@@ -195,7 +195,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Returns the {@code InMemoryNodeModel} to be used as parent model for a new sub configuration. This method is called
+     * Gets the {@code InMemoryNodeModel} to be used as parent model for a new sub configuration. This method is called
      * whenever a sub configuration is to be created. This base implementation returns the model of this configuration. Sub
      * classes with different requirements for the parent models of sub configurations have to override it.
      *
@@ -206,7 +206,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Returns the {@code NodeSelector} to be used for a sub configuration based on the passed in key. This method is called
+     * Gets the {@code NodeSelector} to be used for a sub configuration based on the passed in key. This method is called
      * whenever a sub configuration is to be created. This base implementation returns a new {@code NodeSelector}
      * initialized with the passed in key. Sub classes may override this method if they have a different strategy for
      * creating a selector.
@@ -656,7 +656,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         /**
-         * Returns the result of this builder: the root node of the interpolated nodes hierarchy.
+         * Gets the result of this builder: the root node of the interpolated nodes hierarchy.
          *
          * @return the resulting root node
          */

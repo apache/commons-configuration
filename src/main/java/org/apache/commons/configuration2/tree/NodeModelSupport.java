@@ -29,7 +29,7 @@ package org.apache.commons.configuration2.tree;
  */
 public interface NodeModelSupport<T> {
     /**
-     * Returns the {@code NodeModel} supported by this object.
+     * Gets the {@code NodeModel} supported by this object.
      *
      * @return the {@code NodeModel}
      */

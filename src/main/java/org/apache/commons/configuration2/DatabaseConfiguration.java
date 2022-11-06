@@ -160,7 +160,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the {@code DataSource} for obtaining database connections.
+     * Gets the {@code DataSource} for obtaining database connections.
      *
      * @return the {@code DataSource}
      */
@@ -178,7 +178,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the name of the table containing configuration data.
+     * Gets the name of the table containing configuration data.
      *
      * @return the name of the table to be queried
      */
@@ -196,7 +196,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the name of the table column with the configuration name.
+     * Gets the name of the table column with the configuration name.
      *
      * @return the name of the configuration name column
      */
@@ -214,7 +214,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the name of the column containing the configuration keys.
+     * Gets the name of the column containing the configuration keys.
      *
      * @return the name of the key column
      */
@@ -232,7 +232,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the name of the column containing the configuration values.
+     * Gets the name of the column containing the configuration values.
      *
      * @return the name of the value column
      */
@@ -250,7 +250,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the name of this configuration instance.
+     * Gets the name of this configuration instance.
      *
      * @return the name of this configuration
      */
@@ -286,7 +286,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the value of the specified property. If this causes a database error, an error event will be generated of
+     * Gets the value of the specified property. If this causes a database error, an error event will be generated of
      * type {@code READ} with the causing exception. The event's {@code propertyName} is set to the passed in property key,
      * the {@code propertyValue} is undefined.
      *
@@ -481,7 +481,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the used {@code DataSource} object.
+     * Gets the used {@code DataSource} object.
      *
      * @return the data source
      * @since 1.4
@@ -625,7 +625,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         }
 
         /**
-         * Returns the current connection. This method can be called while {@code execute()} is running. It returns <b>null</b>
+         * Gets the current connection. This method can be called while {@code execute()} is running. It returns <b>null</b>
          * otherwise.
          *
          * @return the current connection

@@ -38,7 +38,7 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  */
 public interface ImmutableHierarchicalConfiguration extends ImmutableConfiguration {
     /**
-     * Returns the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
+     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
      * @return the current expression engine
@@ -46,7 +46,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     ExpressionEngine getExpressionEngine();
 
     /**
-     * Returns the maximum defined index for the given key. This is useful if there are multiple values for this key. They
+     * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method.
      *
      * @param key the key to be checked
@@ -55,7 +55,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     int getMaxIndex(String key);
 
     /**
-     * Returns the name of the root element of this configuration. This information may be of use in some cases, e.g. for
+     * Gets the name of the root element of this configuration. This information may be of use in some cases, e.g. for
      * sub configurations created using the {@code immutableConfigurationsAt()} method. The exact meaning of the string
      * returned by this method is specific to a concrete implementation. For instance, an XML configuration might return the
      * name of the document element.

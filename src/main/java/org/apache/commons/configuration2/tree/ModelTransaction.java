@@ -136,7 +136,7 @@ class ModelTransaction {
     }
 
     /**
-     * Returns the {@code NodeKeyResolver} used by this transaction.
+     * Gets the {@code NodeKeyResolver} used by this transaction.
      *
      * @return the {@code NodeKeyResolver}
      */
@@ -145,7 +145,7 @@ class ModelTransaction {
     }
 
     /**
-     * Returns the root node to be used within queries. This is not necessarily the current root node of the model. If the
+     * Gets the root node to be used within queries. This is not necessarily the current root node of the model. If the
      * operation is executed on a tracked node, this node has to be passed as root nodes to the expression engine.
      *
      * @return the root node for queries and calls to the expression engine
@@ -284,7 +284,7 @@ class ModelTransaction {
     }
 
     /**
-     * Returns the current {@code TreeData} object this transaction operates on.
+     * Gets the current {@code TreeData} object this transaction operates on.
      *
      * @return the associated {@code TreeData} object
      */
@@ -293,7 +293,7 @@ class ModelTransaction {
     }
 
     /**
-     * Returns the parent node of the given node.
+     * Gets the parent node of the given node.
      *
      * @param node the node in question
      * @return the parent of this node

@@ -61,7 +61,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     }
 
     /**
-     * Returns the configuration object to be parsed.
+     * Gets the configuration object to be parsed.
      *
      * @return the configuration object to be parsed
      */
@@ -79,7 +79,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     }
 
     /**
-     * Returns the configuration object to be processed.
+     * Gets the configuration object to be processed.
      *
      * @return the actual configuration object
      */

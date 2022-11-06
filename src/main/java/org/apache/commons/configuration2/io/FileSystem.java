@@ -64,7 +64,7 @@ public abstract class FileSystem {
     }
 
     /**
-     * Returns the logger used by this FileSystem.
+     * Gets the logger used by this FileSystem.
      *
      * @return the logger
      */

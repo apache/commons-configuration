@@ -96,7 +96,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns this node's length. This is always 1.
+     * Gets this node's length. This is always 1.
      *
      * @return the node's length
      */
@@ -116,7 +116,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns this node's name.
+     * Gets this node's name.
      *
      * @return the name
      */
@@ -126,7 +126,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns this node's base value. This is the associated configuration node.
+     * Gets this node's base value. This is the associated configuration node.
      *
      * @return the base value
      */
@@ -136,7 +136,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the immediate node. This is the associated configuration node.
+     * Gets the immediate node. This is the associated configuration node.
      *
      * @return the immediate node
      */
@@ -146,7 +146,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the value of this node.
+     * Gets the value of this node.
      *
      * @return the represented node's value
      */
@@ -227,7 +227,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the {@code NodeHandler} used by this instance.
+     * Gets the {@code NodeHandler} used by this instance.
      *
      * @return the {@code NodeHandler}
      */
@@ -236,7 +236,7 @@ class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the wrapped configuration node.
+     * Gets the wrapped configuration node.
      *
      * @return the wrapped node
      */

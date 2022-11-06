@@ -63,7 +63,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     }
 
     /**
-     * Returns the event type for this listener registration.
+     * Gets the event type for this listener registration.
      *
      * @return the event type
      */
@@ -72,7 +72,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     }
 
     /**
-     * Returns the listener this registration is about.
+     * Gets the listener this registration is about.
      *
      * @return the event listener
      */

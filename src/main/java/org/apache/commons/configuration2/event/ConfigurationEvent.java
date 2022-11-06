@@ -157,7 +157,7 @@ public class ConfigurationEvent extends Event {
     }
 
     /**
-     * Returns the name of the affected property. This can be <b>null</b> if no property change has lead to this event.
+     * Gets the name of the affected property. This can be <b>null</b> if no property change has lead to this event.
      *
      * @return the name of the property
      */
@@ -166,7 +166,7 @@ public class ConfigurationEvent extends Event {
     }
 
     /**
-     * Returns the value of the affected property if available.
+     * Gets the value of the affected property if available.
      *
      * @return the value of the property; can be <b>null</b>
      */

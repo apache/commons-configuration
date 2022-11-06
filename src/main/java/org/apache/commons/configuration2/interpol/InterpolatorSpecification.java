@@ -81,7 +81,7 @@ public final class InterpolatorSpecification {
     }
 
     /**
-     * Returns the {@code ConfigurationInterpolator} instance to be used directly.
+     * Gets the {@code ConfigurationInterpolator} instance to be used directly.
      *
      * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
      */
@@ -90,7 +90,7 @@ public final class InterpolatorSpecification {
     }
 
     /**
-     * Returns the parent {@code ConfigurationInterpolator} object.
+     * Gets the parent {@code ConfigurationInterpolator} object.
      *
      * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
      */
@@ -99,7 +99,7 @@ public final class InterpolatorSpecification {
     }
 
     /**
-     * Returns a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
+     * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
      * {@code Lookup} objects.
      *
      * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
@@ -109,7 +109,7 @@ public final class InterpolatorSpecification {
     }
 
     /**
-     * Returns a collection with the default lookups.
+     * Gets a collection with the default lookups.
      *
      * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
      */
@@ -118,7 +118,7 @@ public final class InterpolatorSpecification {
     }
 
     /**
-     * Returns the function used to convert interpolated values to strings or {@code null}
+     * Gets the function used to convert interpolated values to strings or {@code null}
      * if the default conversion function is to be used.
      *
      * @return function used to convert interpolated values to strings or {@code null} if

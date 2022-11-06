@@ -182,7 +182,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Returns a map containing the default prefix lookups. Every configuration object derived from
+     * Gets a map containing the default prefix lookups. Every configuration object derived from
      * {@code AbstractConfiguration} is by default initialized with a {@code ConfigurationInterpolator} containing
      * these {@code Lookup} objects and their prefixes. The map cannot be modified.
      *
@@ -355,7 +355,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Returns a collection with the default {@code Lookup} objects added to this {@code ConfigurationInterpolator}. These
+     * Gets a collection with the default {@code Lookup} objects added to this {@code ConfigurationInterpolator}. These
      * objects are not associated with a variable prefix. The returned list is a snapshot copy of the internal collection of
      * default lookups; so manipulating it does not affect this instance.
      *
@@ -366,7 +366,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Returns a map with the currently registered {@code Lookup} objects and their prefixes. This is a snapshot copy of the
+     * Gets a map with the currently registered {@code Lookup} objects and their prefixes. This is a snapshot copy of the
      * internally used map. So modifications of this map do not effect this instance.
      *
      * @return a copy of the map with the currently registered {@code Lookup} objects
@@ -376,7 +376,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Returns the parent {@code ConfigurationInterpolator}.
+     * Gets the parent {@code ConfigurationInterpolator}.
      *
      * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
      */

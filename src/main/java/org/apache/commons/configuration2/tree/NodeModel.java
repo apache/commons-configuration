@@ -47,7 +47,7 @@ public interface NodeModel<T> {
     void setRootNode(T newRoot);
 
     /**
-     * Returns a {@code NodeHandler} for dealing with the nodes managed by this model.
+     * Gets a {@code NodeHandler} for dealing with the nodes managed by this model.
      *
      * @return the {@code NodeHandler}
      */
@@ -117,7 +117,7 @@ public interface NodeModel<T> {
     void clear(NodeKeyResolver<T> resolver);
 
     /**
-     * Returns a representation of the data stored in this model in form of a nodes hierarchy of {@code ImmutableNode}
+     * Gets a representation of the data stored in this model in form of a nodes hierarchy of {@code ImmutableNode}
      * objects. A concrete model implementation can use an arbitrary means to store its data. When a model's data is to be
      * used together with other functionality of the <em>Configuration</em> library (e.g. when combining multiple
      * configuration sources) it has to be transformed into a common format. This is done by this method.

@@ -132,7 +132,7 @@ public class EventListenerList {
     }
 
     /**
-     * Returns an {@code Iterable} allowing access to all event listeners stored in this list which are compatible with the
+     * Gets an {@code Iterable} allowing access to all event listeners stored in this list which are compatible with the
      * specified event type.
      *
      * @param eventType the event type object
@@ -144,7 +144,7 @@ public class EventListenerList {
     }
 
     /**
-     * Returns a specialized iterator for obtaining all event listeners stored in this list which are compatible with the
+     * Gets a specialized iterator for obtaining all event listeners stored in this list which are compatible with the
      * specified event type.
      *
      * @param eventType the event type object
@@ -156,7 +156,7 @@ public class EventListenerList {
     }
 
     /**
-     * Returns an (unmodifiable) list with registration information about all event listeners registered at this object.
+     * Gets an (unmodifiable) list with registration information about all event listeners registered at this object.
      *
      * @return a list with event listener registration information
      */
@@ -165,7 +165,7 @@ public class EventListenerList {
     }
 
     /**
-     * Returns a list with {@code EventListenerRegistrationData} objects for all event listener registrations of the
+     * Gets a list with {@code EventListenerRegistrationData} objects for all event listener registrations of the
      * specified event type or an event type having this type as super type (directly or indirectly). Note that this is the
      * opposite direction than querying event types for firing events: in this case event listener registrations are
      * searched which are super event types from a given type. This method in contrast returns event listener registrations

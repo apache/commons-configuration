@@ -102,7 +102,7 @@ public class ConfigurationErrorEvent extends Event {
     }
 
     /**
-     * Returns the {@code EventType} of the operation which caused this error.
+     * Gets the {@code EventType} of the operation which caused this error.
      *
      * @return the event type of the operation causing this error
      */
@@ -111,7 +111,7 @@ public class ConfigurationErrorEvent extends Event {
     }
 
     /**
-     * Returns the name of the property that was accessed when this error occurred.
+     * Gets the name of the property that was accessed when this error occurred.
      *
      * @return the property name related to this error (may be <b>null</b>)
      */
@@ -120,7 +120,7 @@ public class ConfigurationErrorEvent extends Event {
     }
 
     /**
-     * Returns the value of the property that was accessed when this error occurred.
+     * Gets the value of the property that was accessed when this error occurred.
      *
      * @return the property value related this error (may be <b>null</b>)
      */
@@ -129,7 +129,7 @@ public class ConfigurationErrorEvent extends Event {
     }
 
     /**
-     * Returns the cause of this error event. This is the {@code Throwable} object that caused this event to be fired.
+     * Gets the cause of this error event. This is the {@code Throwable} object that caused this event to be fired.
      *
      * @return the cause of this error event
      */

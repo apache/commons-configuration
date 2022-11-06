@@ -72,7 +72,7 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Returns a collection with all event listeners of the specified event type that are currently registered at this
+     * Gets a collection with all event listeners of the specified event type that are currently registered at this
      * object.
      *
      * @param eventType the event type object
@@ -87,7 +87,7 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Returns a list with all {@code EventListenerRegistrationData} objects currently contained for this event source. This
+     * Gets a list with all {@code EventListenerRegistrationData} objects currently contained for this event source. This
      * method allows access to all registered event listeners, independent on their type.
      *
      * @return a list with information about all registered event listeners

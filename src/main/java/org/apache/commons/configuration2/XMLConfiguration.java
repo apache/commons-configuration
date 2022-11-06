@@ -238,7 +238,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the name of the root element. If this configuration was loaded from a XML document, the name of this
+     * Gets the name of the root element. If this configuration was loaded from a XML document, the name of this
      * document's root element is returned. Otherwise it is possible to set a name for the root element that will be used
      * when this configuration is stored.
      *
@@ -275,7 +275,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the {@code DocumentBuilder} object that is used for loading documents. If no specific builder has been set,
+     * Gets the {@code DocumentBuilder} object that is used for loading documents. If no specific builder has been set,
      * this method returns <b>null</b>.
      *
      * @return the {@code DocumentBuilder} for loading new documents
@@ -298,7 +298,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the public ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
+     * Gets the public ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a public ID.
      *
      * @return the public ID
@@ -330,7 +330,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the system ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
+     * Gets the system ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a system ID.
      *
      * @return the system ID
@@ -420,7 +420,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the EntityResolver.
+     * Gets the EntityResolver.
      *
      * @return The EntityResolver.
      * @since 1.7
@@ -430,7 +430,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the XML document this configuration was loaded from. The return value is <b>null</b> if this configuration
+     * Gets the XML document this configuration was loaded from. The return value is <b>null</b> if this configuration
      * was not loaded from a XML document.
      *
      * @return the XML document this configuration was loaded from
@@ -441,7 +441,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the helper object for managing the underlying document.
+     * Gets the helper object for managing the underlying document.
      *
      * @return the {@code XMLDocumentHelper}
      */
@@ -451,7 +451,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Returns the extended node handler with support for references.
+     * Gets the extended node handler with support for references.
      *
      * @return the {@code ReferenceNodeHandler}
      */

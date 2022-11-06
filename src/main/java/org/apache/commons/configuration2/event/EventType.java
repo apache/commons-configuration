@@ -65,7 +65,7 @@ public class EventType<T extends Event> implements Serializable {
     }
 
     /**
-     * Returns the super event type. Result is <b>null</b> for the root event type.
+     * Gets the super event type. Result is <b>null</b> for the root event type.
      *
      * @return the super event type
      */
@@ -74,7 +74,7 @@ public class EventType<T extends Event> implements Serializable {
     }
 
     /**
-     * Returns the name of this event type. The name has no specific semantic meaning. It is just used for debugging
+     * Gets the name of this event type. The name has no specific semantic meaning. It is just used for debugging
      * purposes and also part of the string representation of this event type.
      *
      * @return the event type name

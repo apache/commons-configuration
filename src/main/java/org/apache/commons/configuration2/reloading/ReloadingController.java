@@ -81,7 +81,7 @@ public class ReloadingController implements EventSource {
     }
 
     /**
-     * Returns the {@code ReloadingDetector} used by this controller.
+     * Gets the {@code ReloadingDetector} used by this controller.
      *
      * @return the {@code ReloadingDetector}
      */

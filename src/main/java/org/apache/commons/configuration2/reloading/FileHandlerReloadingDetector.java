@@ -97,7 +97,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Returns the {@code FileHandler} associated with this object. The underlying handler is directly returned, so changing
+     * Gets the {@code FileHandler} associated with this object. The underlying handler is directly returned, so changing
      * its location also changes the file monitored by this detector.
      *
      * @return the associated {@code FileHandler}
@@ -107,7 +107,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Returns the refresh delay. This is a time in milliseconds. The {@code isReloadingRequired()} method first checks
+     * Gets the refresh delay. This is a time in milliseconds. The {@code isReloadingRequired()} method first checks
      * whether the time since the previous check is more than this value in the past. Otherwise, no check is performed. This
      * is a means to limit file I/O caused by this class.
      *
@@ -159,7 +159,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Returns the date of the last modification of the monitored file. A return value of 0 indicates, that the monitored
+     * Gets the date of the last modification of the monitored file. A return value of 0 indicates, that the monitored
      * file does not exist.
      *
      * @return the last modification date in milliseconds.
@@ -180,7 +180,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Returns the {@code File} object which is monitored by this object. This method is called every time the file's last
+     * Gets the {@code File} object which is monitored by this object. This method is called every time the file's last
      * modification time is needed. If it returns <b>null</b>, no check is performed. This base implementation obtains the
      * {@code File} from the associated {@code FileHandler}. It can also deal with URLs to jar files.
      *
@@ -192,7 +192,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Returns the monitored {@code File} or <b>null</b> if it does not exist.
+     * Gets the monitored {@code File} or <b>null</b> if it does not exist.
      *
      * @return the monitored {@code File} or <b>null</b>
      */

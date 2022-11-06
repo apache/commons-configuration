@@ -50,7 +50,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns the associated configuration builder.
+     * Gets the associated configuration builder.
      *
      * @return the configuration builder
      */
@@ -59,7 +59,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns the value of the {@code at} attribute.
+     * Gets the value of the {@code at} attribute.
      *
      * @return the value of the {@code at} attribute (can be <b>null</b>)
      */
@@ -69,7 +69,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns a flag whether this is an optional configuration.
+     * Gets a flag whether this is an optional configuration.
      *
      * @return a flag if this declaration points to an optional configuration
      */
@@ -82,7 +82,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns a flag whether this configuration should always be created and added to the resulting combined configuration.
+     * Gets a flag whether this configuration should always be created and added to the resulting combined configuration.
      * This flag is evaluated only for optional configurations whose normal creation has caused an error. If for such a
      * configuration the {@code forceCreate} attribute is set and the corresponding configuration provider supports this
      * mode, an empty configuration will be created and added to the resulting combined configuration.
@@ -104,7 +104,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns the name for the represented configuration source. The name is optional, so this method can return
+     * Gets the name for the represented configuration source. The name is optional, so this method can return
      * <b>null</b>.
      *
      * @return the name of the associated configuration source or <b>null</b>
@@ -114,7 +114,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns the name of the bean factory. For configuration source declarations always a reserved factory is used. This
+     * Gets the name of the bean factory. For configuration source declarations always a reserved factory is used. This
      * factory's name is returned by this implementation.
      *
      * @return the name of the bean factory
@@ -125,7 +125,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Returns the bean's class name. This implementation will always return <b>null</b>.
+     * Gets the bean's class name. This implementation will always return <b>null</b>.
      *
      * @return the name of the bean's class
      */

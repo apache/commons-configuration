@@ -140,7 +140,7 @@ class NodeTracker {
     }
 
     /**
-     * Returns the current {@code ImmutableNode} instance associated with the given selector.
+     * Gets the current {@code ImmutableNode} instance associated with the given selector.
      *
      * @param selector the {@code NodeSelector}
      * @return the {@code ImmutableNode} selected by this selector
@@ -162,7 +162,7 @@ class NodeTracker {
     }
 
     /**
-     * Returns the detached node model for the specified tracked node. When a node becomes detached, operations on it are
+     * Gets the detached node model for the specified tracked node. When a node becomes detached, operations on it are
      * independent from the original model. To implement this, a separate node model is created wrapping this tracked node.
      * This model can be queried by this method. If the node affected is not detached, result is <b>null</b>.
      *
@@ -363,7 +363,7 @@ class NodeTracker {
         }
 
         /**
-         * Returns the tracked node.
+         * Gets the tracked node.
          *
          * @return the tracked node
          */
@@ -372,7 +372,7 @@ class NodeTracker {
         }
 
         /**
-         * Returns the node model to be used in detached mode. This is <b>null</b> if the represented tracked node is not
+         * Gets the node model to be used in detached mode. This is <b>null</b> if the represented tracked node is not
          * detached.
          *
          * @return the node model in detached mode

@@ -182,7 +182,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     }
 
     /**
-     * Returns the date format used by this conversion handler.
+     * Gets the date format used by this conversion handler.
      *
      * @return the date format
      */

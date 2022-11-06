@@ -132,7 +132,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
     void clear();
 
     /**
-     * Returns the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
+     * Gets the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
      * for variable substitution.
      *
      * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)

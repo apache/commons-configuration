@@ -149,7 +149,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns an iterator with all property keys stored in this configuration.
+     * Gets an iterator with all property keys stored in this configuration.
      *
      * @return an iterator with all keys
      */
@@ -159,7 +159,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns an iterator with all property keys starting with the given prefix.
+     * Gets an iterator with all property keys starting with the given prefix.
      *
      * @param prefix the prefix
      * @return an iterator with the selected keys
@@ -312,7 +312,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the prefix.
+     * Gets the prefix.
      *
      * @return the prefix
      */
@@ -333,7 +333,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the value of the specified property.
+     * Gets the value of the specified property.
      *
      * @param key the key of the property
      * @return the value of this property

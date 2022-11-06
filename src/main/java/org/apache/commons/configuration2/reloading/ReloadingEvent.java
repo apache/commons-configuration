@@ -54,7 +54,7 @@ public class ReloadingEvent extends Event {
     }
 
     /**
-     * Returns the {@code ReloadingController} which caused this event.
+     * Gets the {@code ReloadingController} which caused this event.
      *
      * @return the responsible {@code ReloadingController}
      */
@@ -63,7 +63,7 @@ public class ReloadingEvent extends Event {
     }
 
     /**
-     * Returns an object with additional data about the reload operation. This is the object that was passed to the
+     * Gets an object with additional data about the reload operation. This is the object that was passed to the
      * {@link ReloadingController} when it was asked to do a reloading check. This is a generic mechanism to pass arbitrary
      * data to reloading listeners.
      *

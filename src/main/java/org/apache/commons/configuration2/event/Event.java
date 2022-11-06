@@ -70,7 +70,7 @@ public class Event extends EventObject {
     }
 
     /**
-     * Returns the type of this event.
+     * Gets the type of this event.
      *
      * @return the event type
      */

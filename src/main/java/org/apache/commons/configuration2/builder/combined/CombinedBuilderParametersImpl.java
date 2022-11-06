@@ -143,7 +143,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns the {@code ConfigurationBuilder} object for obtaining the definition configuration.
+     * Gets the {@code ConfigurationBuilder} object for obtaining the definition configuration.
      *
      * @return the definition {@code ConfigurationBuilder}
      */
@@ -226,7 +226,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns an (unmodifiable) map with the currently registered {@code ConfigurationBuilderProvider} objects.
+     * Gets an (unmodifiable) map with the currently registered {@code ConfigurationBuilderProvider} objects.
      *
      * @return the map with {@code ConfigurationBuilderProvider} objects (the keys are the tag names)
      */
@@ -246,7 +246,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns the base path for relative names of configuration sources. Result may be <b>null</b> if no base path has been
+     * Gets the base path for relative names of configuration sources. Result may be <b>null</b> if no base path has been
      * set.
      *
      * @return the base path for resolving relative file names
@@ -271,7 +271,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns the parameters object for the definition configuration builder if present.
+     * Gets the parameters object for the definition configuration builder if present.
      *
      * @return the parameters object for the definition configuration builder or <b>null</b>
      */
@@ -294,7 +294,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns a collection with default parameter objects for child configuration sources. This collection contains the
+     * Gets a collection with default parameter objects for child configuration sources. This collection contains the
      * same objects (in the same order) that were passed to {@code addChildParameters()}. The returned collection is a
      * defensive copy; it can be modified, but this has no effect on the parameters stored in this object.
      *
@@ -305,7 +305,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns the {@code DefaultParametersManager} object for initializing parameter objects for child configuration
+     * Gets the {@code DefaultParametersManager} object for initializing parameter objects for child configuration
      * sources. This method never returns <b>null</b>. If no manager was set, a new instance is created right now.
      *
      * @return the {@code DefaultParametersManager} for child configuration sources

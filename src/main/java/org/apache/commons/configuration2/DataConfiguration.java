@@ -1247,7 +1247,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the date format specified by the user in the DATE_FORMAT_KEY property, or the default format otherwise.
+     * Gets the date format specified by the user in the DATE_FORMAT_KEY property, or the default format otherwise.
      *
      * @return the default date format
      */
@@ -1416,7 +1416,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Returns the original conversion handler set for this configuration. If this is not a
+     * Gets the original conversion handler set for this configuration. If this is not a
      * {@code DefaultConversionHandler}, result is <b>null</b>.
      *
      * @return the original conversion handler or <b>null</b>

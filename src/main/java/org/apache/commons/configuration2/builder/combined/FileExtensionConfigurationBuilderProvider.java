@@ -83,7 +83,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     }
 
     /**
-     * Returns the name of the matching configuration class. This class is used if the file extension matches the extension
+     * Gets the name of the matching configuration class. This class is used if the file extension matches the extension
      * of this provider.
      *
      * @return the matching configuration class
@@ -93,7 +93,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     }
 
     /**
-     * Returns the file extension of this provider.
+     * Gets the file extension of this provider.
      *
      * @return the file extension to match
      */

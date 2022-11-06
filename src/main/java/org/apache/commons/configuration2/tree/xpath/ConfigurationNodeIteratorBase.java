@@ -65,7 +65,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the position of the iteration.
+     * Gets the position of the iteration.
      *
      * @return the position
      */
@@ -87,7 +87,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the current node pointer.
+     * Gets the current node pointer.
      *
      * @return the current pointer in this iteration
      */
@@ -101,7 +101,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the parent node pointer.
+     * Gets the parent node pointer.
      *
      * @return the parent node pointer
      */
@@ -110,7 +110,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the node handler for the managed nodes. This is a convenience method.
+     * Gets the node handler for the managed nodes. This is a convenience method.
      *
      * @return the node handler
      */
@@ -119,7 +119,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the start offset of the iteration.
+     * Gets the start offset of the iteration.
      *
      * @return the start offset
      */
@@ -142,7 +142,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     }
 
     /**
-     * Returns the maximum position for this iterator.
+     * Gets the maximum position for this iterator.
      *
      * @return the maximum allowed position
      */

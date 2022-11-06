@@ -50,7 +50,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     }
 
     /**
-     * Returns the actual configuration to be processed.
+     * Gets the actual configuration to be processed.
      *
      * @return the actual configuration
      */
@@ -68,7 +68,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     }
 
     /**
-     * Returns the configuration to be processed.
+     * Gets the configuration to be processed.
      *
      * @return the actual configuration
      */

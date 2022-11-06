@@ -208,7 +208,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the node combiner that is used for creating the combined node structure.
+     * Gets the node combiner that is used for creating the combined node structure.
      *
      * @return the node combiner
      */
@@ -243,7 +243,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones.
+     * Gets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones.
      *
      * @return the conversion expression engine
      * @since 1.6
@@ -339,7 +339,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the number of configurations that are contained in this combined configuration.
+     * Gets the number of configurations that are contained in this combined configuration.
      *
      * @return the number of contained configurations
      */
@@ -353,7 +353,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the configuration at the specified index. The contained configurations are numbered in the order they were
+     * Gets the configuration at the specified index. The contained configurations are numbered in the order they were
      * added to this combined configuration. The index of the first configuration is 0.
      *
      * @param index the index
@@ -370,7 +370,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the configuration with the given name. This can be <b>null</b> if no such configuration exists.
+     * Gets the configuration with the given name. This can be <b>null</b> if no such configuration exists.
      *
      * @param name the name of the configuration
      * @return the configuration with this name
@@ -385,7 +385,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns a List of all the configurations that have been added.
+     * Gets a List of all the configurations that have been added.
      *
      * @return A List of all the configurations.
      * @since 1.7
@@ -400,7 +400,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns a List of the names of all the configurations that have been added in the order they were added. A NULL value
+     * Gets a List of the names of all the configurations that have been added in the order they were added. A NULL value
      * will be present in the list for each configuration that was added without a name.
      *
      * @return A List of all the configuration names.
@@ -463,7 +463,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns a set with the names of all configurations contained in this combined configuration. Of course here are only
+     * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
      * @return a set with the names of the contained configurations (never <b>null</b>)
@@ -537,7 +537,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the configuration source, in which the specified key is defined. This method will determine the configuration
+     * Gets the configuration source, in which the specified key is defined. This method will determine the configuration
      * node that is identified by the given key. The following constellations are possible:
      * <ul>
      * <li>If no node object is found for this key, <b>null</b> is returned.</li>
@@ -573,7 +573,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns a set with the configuration sources, in which the specified key is defined. This method determines the
+     * Gets a set with the configuration sources, in which the specified key is defined. This method determines the
      * configuration nodes that are identified by the given key. It then determines the configuration sources to which these
      * nodes belong and adds them to the result set. Note the following points:
      * <ul>
@@ -767,7 +767,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the number of child configurations in this combined configuration. The internal list of child configurations
+     * Gets the number of child configurations in this combined configuration. The internal list of child configurations
      * is accessed without synchronization.
      *
      * @return the number of child configurations
@@ -810,7 +810,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         /**
-         * Returns the stored configuration.
+         * Gets the stored configuration.
          *
          * @return the configuration
          */
@@ -819,7 +819,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         /**
-         * Returns the configuration's name.
+         * Gets the configuration's name.
          *
          * @return the name
          */
@@ -828,7 +828,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         /**
-         * Returns the at position of this configuration.
+         * Gets the at position of this configuration.
          *
          * @return the at position
          */
@@ -837,7 +837,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         /**
-         * Returns the root node for this child configuration.
+         * Gets the root node for this child configuration.
          *
          * @return the root node of this child configuration
          * @since 1.5
@@ -847,7 +847,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         /**
-         * Returns the transformed root node of the stored configuration. The term &quot;transformed&quot; means that an
+         * Gets the transformed root node of the stored configuration. The term &quot;transformed&quot; means that an
          * eventually defined at path has been applied.
          *
          * @return the transformed root node

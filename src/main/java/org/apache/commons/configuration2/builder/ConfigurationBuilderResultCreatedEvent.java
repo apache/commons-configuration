@@ -73,7 +73,7 @@ public class ConfigurationBuilderResultCreatedEvent extends ConfigurationBuilder
     }
 
     /**
-     * Returns the newly created {@code ImmutableConfiguration} object.
+     * Gets the newly created {@code ImmutableConfiguration} object.
      *
      * @return the newly created {@code ImmutableConfiguration}
      */

@@ -69,7 +69,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     }
 
     /**
-     * Returns the name of this node.
+     * Gets the name of this node.
      *
      * @return the name of this node
      */
@@ -78,7 +78,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     }
 
     /**
-     * Returns the value of this node.
+     * Gets the value of this node.
      *
      * @return the value of this node
      */
@@ -87,7 +87,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     }
 
     /**
-     * Returns a list with the children of this node. This list cannot be modified.
+     * Gets a list with the children of this node. This list cannot be modified.
      *
      * @return a list with the child nodes
      */
@@ -110,7 +110,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     }
 
     /**
-     * Returns a map with the attributes of this node. This map cannot be modified.
+     * Gets a map with the attributes of this node. This map cannot be modified.
      *
      * @return a map with this node's attributes
      */

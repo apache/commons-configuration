@@ -52,7 +52,7 @@ final class XMLListReference {
     }
 
     /**
-     * Returns the associated element.
+     * Gets the associated element.
      *
      * @return the associated XML element
      */

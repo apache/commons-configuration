@@ -35,7 +35,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  */
 public interface ConfigurationBuilderProvider {
     /**
-     * Returns the builder for the configuration source managed by this provider. This method is called during processing of
+     * Gets the builder for the configuration source managed by this provider. This method is called during processing of
      * the combined configuration definition file.
      *
      * @param decl the bean declaration with initialization parameters for the configuration builder

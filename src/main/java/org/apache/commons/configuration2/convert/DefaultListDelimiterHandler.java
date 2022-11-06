@@ -78,7 +78,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
     }
 
     /**
-     * Returns the list delimiter character used by this instance.
+     * Gets the list delimiter character used by this instance.
      *
      * @return the list delimiter character
      */

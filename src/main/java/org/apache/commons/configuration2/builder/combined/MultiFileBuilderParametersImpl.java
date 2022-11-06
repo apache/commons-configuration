@@ -88,7 +88,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     }
 
     /**
-     * Returns the pattern for determining file names for managed configurations.
+     * Gets the pattern for determining file names for managed configurations.
      *
      * @return the file pattern
      */
@@ -103,7 +103,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     }
 
     /**
-     * Returns the parameters object for managed configuration builders.
+     * Gets the parameters object for managed configuration builders.
      *
      * @return the parameters for sub configurations
      */

@@ -116,7 +116,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
-     * Returns the parent configuration of this subnode configuration.
+     * Gets the parent configuration of this subnode configuration.
      *
      * @return the parent configuration
      */
@@ -125,7 +125,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
-     * Returns the selector to the root node of this configuration.
+     * Gets the selector to the root node of this configuration.
      *
      * @return the {@code NodeSelector} to the root node
      */
@@ -155,7 +155,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
-     * Returns the node model of the root configuration. {@code SubnodeConfiguration} instances created from a hierarchical
+     * Gets the node model of the root configuration. {@code SubnodeConfiguration} instances created from a hierarchical
      * configuration operate on the same node model, using different nodes as their local root nodes. With this method the
      * top-level node model can be obtained. It works even in constellations where a {@code SubnodeConfiguration} has been
      * created from another {@code SubnodeConfiguration}.

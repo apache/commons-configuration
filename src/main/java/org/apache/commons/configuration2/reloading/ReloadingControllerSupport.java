@@ -30,7 +30,7 @@ package org.apache.commons.configuration2.reloading;
  */
 public interface ReloadingControllerSupport {
     /**
-     * Returns the {@code ReloadingController} associated with this object.
+     * Gets the {@code ReloadingController} associated with this object.
      *
      * @return the associated {@code ReloadingController}
      */

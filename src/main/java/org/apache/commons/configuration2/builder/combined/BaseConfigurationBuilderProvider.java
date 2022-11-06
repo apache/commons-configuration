@@ -98,7 +98,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Returns the name of the class of the builder created by this provider.
+     * Gets the name of the class of the builder created by this provider.
      *
      * @return the builder class
      */
@@ -107,7 +107,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Returns the name of the class of the builder created by this provider if the reload flag is set. If this method
+     * Gets the name of the class of the builder created by this provider if the reload flag is set. If this method
      * returns <b>null</b>, reloading builders are not supported by this provider.
      *
      * @return the reloading builder class
@@ -117,7 +117,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Returns the name of the configuration class created by the builder produced by this provider.
+     * Gets the name of the configuration class created by the builder produced by this provider.
      *
      * @return the configuration class
      */
@@ -126,7 +126,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Returns an unmodifiable collection with the names of parameter classes supported by this provider.
+     * Gets an unmodifiable collection with the names of parameter classes supported by this provider.
      *
      * @return the parameter classes
      */

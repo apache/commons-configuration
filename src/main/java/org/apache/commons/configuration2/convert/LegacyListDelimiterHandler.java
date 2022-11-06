@@ -69,7 +69,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     }
 
     /**
-     * Returns the list delimiter character.
+     * Gets the list delimiter character.
      *
      * @return the list delimiter character
      */

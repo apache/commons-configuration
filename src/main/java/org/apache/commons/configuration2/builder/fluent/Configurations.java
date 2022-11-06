@@ -91,7 +91,7 @@ public class Configurations {
     }
 
     /**
-     * Returns the {@code Parameters} instance associated with this object.
+     * Gets the {@code Parameters} instance associated with this object.
      *
      * @return the associated {@code Parameters} object
      */

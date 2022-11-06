@@ -420,7 +420,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the {@code FileBased} object associated with this {@code FileHandler}.
+     * Gets the {@code FileBased} object associated with this {@code FileHandler}.
      *
      * @return the associated {@code FileBased} object
      */
@@ -429,7 +429,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the encoding of the associated file. Result can be <b>null</b> if no encoding has been set.
+     * Gets the encoding of the associated file. Result can be <b>null</b> if no encoding has been set.
      *
      * @return the encoding of the associated file
      */
@@ -438,7 +438,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the location of the associated file as a {@code File} object. If the base path is a URL with a protocol
+     * Gets the location of the associated file as a {@code File} object. If the base path is a URL with a protocol
      * different than &quot;file&quot;, or the file is within a compressed archive, the return value will not point to a
      * valid file object.
      *
@@ -449,7 +449,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns a {@code FileLocator} object with the specification of the file stored by this {@code FileHandler}. Note that
+     * Gets a {@code FileLocator} object with the specification of the file stored by this {@code FileHandler}. Note that
      * this method returns the internal data managed by this {@code FileHandler} as it was defined. This is not necessarily
      * the same as the data returned by the single access methods like {@code getFileName()} or {@code getURL()}: These
      * methods try to derive missing data from other values that have been set.
@@ -479,7 +479,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the {@code FileSystem} to be used by this object when locating files. Result is never <b>null</b>; if no file
+     * Gets the {@code FileSystem} to be used by this object when locating files. Result is never <b>null</b>; if no file
      * system has been set, the default file system is returned.
      *
      * @return the used {@code FileSystem}
@@ -489,7 +489,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the {@code FileLocationStrategy} to be applied when accessing the associated file. This method never returns
+     * Gets the {@code FileLocationStrategy} to be applied when accessing the associated file. This method never returns
      * <b>null</b>. If a {@code FileLocationStrategy} has been set, it is returned. Otherwise, result is the default
      * {@code FileLocationStrategy}.
      *
@@ -500,7 +500,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the full path to the associated file. The return value is a valid {@code File} path only if this location is
+     * Gets the full path to the associated file. The return value is a valid {@code File} path only if this location is
      * based on a file on the local disk. If the file was loaded from a packed archive, the returned value is the string
      * form of the URL from which the file was loaded.
      *
@@ -513,7 +513,7 @@ public class FileHandler {
     }
 
     /**
-     * Returns the location of the associated file as a URL. If a URL is set, it is directly returned. Otherwise, an attempt
+     * Gets the location of the associated file as a URL. If a URL is set, it is directly returned. Otherwise, an attempt
      * to locate the referenced file is made.
      *
      * @return a URL to the associated file; can be <b>null</b> if the location is unspecified

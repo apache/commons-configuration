@@ -83,7 +83,7 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Returns the associated default expression engine.
+     * Gets the associated default expression engine.
      *
      * @return the associated expression engine
      */
@@ -415,7 +415,7 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Returns the symbols object from the associated expression engine.
+     * Gets the symbols object from the associated expression engine.
      *
      * @return the {@code DefaultExpressionEngineSymbols}
      */
@@ -576,7 +576,7 @@ public class DefaultConfigurationKey {
         }
 
         /**
-         * Returns the index value of the current key. If the current key does not have an index, return value is -1. This
+         * Gets the index value of the current key. If the current key does not have an index, return value is -1. This
          * method can be called after {@code next()}.
          *
          * @return the index value of the current key

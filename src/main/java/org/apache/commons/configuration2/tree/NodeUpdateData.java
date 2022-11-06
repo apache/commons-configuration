@@ -70,7 +70,7 @@ public class NodeUpdateData<T> {
     }
 
     /**
-     * Returns an unmodifiable map with the values to be changed. The keys of the map are the query results for the nodes
+     * Gets an unmodifiable map with the values to be changed. The keys of the map are the query results for the nodes
      * affected, the values are the new values to be assigned to these nodes.
      *
      * @return the map with values to be changed
@@ -80,7 +80,7 @@ public class NodeUpdateData<T> {
     }
 
     /**
-     * Returns a collection with the values to be newly added. For these values new nodes have to be created and added under
+     * Gets a collection with the values to be newly added. For these values new nodes have to be created and added under
      * the key stored in this object.
      *
      * @return the collection with new values
@@ -100,7 +100,7 @@ public class NodeUpdateData<T> {
     }
 
     /**
-     * Returns the key for this update operation.
+     * Gets the key for this update operation.
      *
      * @return the key for this operation
      */

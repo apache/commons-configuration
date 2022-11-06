@@ -42,7 +42,7 @@ public interface BuilderParameters {
     String RESERVED_PARAMETER_PREFIX = "config-";
 
     /**
-     * Returns a map with all parameters defined by this objects. The keys of the map correspond to concrete properties
+     * Gets a map with all parameters defined by this objects. The keys of the map correspond to concrete properties
      * supported by the {@code Configuration} implementation class the builder produces. The values are the corresponding
      * property values. The return value must not be <b>null</b>.
      *

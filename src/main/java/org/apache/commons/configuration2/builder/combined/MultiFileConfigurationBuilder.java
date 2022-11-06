@@ -149,7 +149,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns the managed {@code FileBasedConfigurationBuilder} for the current file name pattern. It is determined based
+     * Gets the managed {@code FileBasedConfigurationBuilder} for the current file name pattern. It is determined based
      * on the evaluation of the file name pattern using the configured {@code ConfigurationInterpolator}. If this is the
      * first access to this configuration file, the builder is created.
      *
@@ -218,7 +218,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns the {@code ConfigurationInterpolator} used by this instance. This is the object used for evaluating the file
+     * Gets the {@code ConfigurationInterpolator} used by this instance. This is the object used for evaluating the file
      * name pattern. It is created on demand.
      *
      * @return the {@code ConfigurationInterpolator}
@@ -303,7 +303,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * Returns the map with the managed builders created so far by this {@code MultiFileConfigurationBuilder}. This map is
+     * Gets the map with the managed builders created so far by this {@code MultiFileConfigurationBuilder}. This map is
      * exposed to derived classes so they can access managed builders directly. However, derived classes are not expected to
      * manipulate this map.
      *

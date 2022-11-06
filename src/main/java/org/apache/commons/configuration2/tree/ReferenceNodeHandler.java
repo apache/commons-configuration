@@ -37,7 +37,7 @@ import java.util.List;
  */
 public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
     /**
-     * Returns the reference object associated with the specified node. If no reference data is associated with this node,
+     * Gets the reference object associated with the specified node. If no reference data is associated with this node,
      * result is <b>null</b>.
      *
      * @param node the node in question

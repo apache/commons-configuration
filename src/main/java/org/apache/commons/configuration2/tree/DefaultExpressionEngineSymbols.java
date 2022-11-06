@@ -92,7 +92,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string used as delimiter in property keys.
+     * Gets the string used as delimiter in property keys.
      *
      * @return the property delimiter
      */
@@ -101,7 +101,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string representing an escaped property delimiter.
+     * Gets the string representing an escaped property delimiter.
      *
      * @return the escaped property delimiter
      */
@@ -110,7 +110,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string representing an attribute start marker.
+     * Gets the string representing an attribute start marker.
      *
      * @return the attribute start marker
      */
@@ -119,7 +119,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string representing an attribute end marker.
+     * Gets the string representing an attribute end marker.
      *
      * @return the attribute end marker
      */
@@ -128,7 +128,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string representing the start of an index in a property key.
+     * Gets the string representing the start of an index in a property key.
      *
      * @return the index start marker
      */
@@ -137,7 +137,7 @@ public final class DefaultExpressionEngineSymbols {
     }
 
     /**
-     * Returns the string representing the end of an index in a property key.
+     * Gets the string representing the end of an index in a property key.
      *
      * @return the index end marker
      */

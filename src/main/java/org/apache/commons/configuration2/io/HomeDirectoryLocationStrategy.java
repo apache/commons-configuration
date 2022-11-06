@@ -80,7 +80,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
     }
 
     /**
-     * Returns the home directory. In this directory the strategy searches for files.
+     * Gets the home directory. In this directory the strategy searches for files.
      *
      * @return the home directory used by this object
      */

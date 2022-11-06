@@ -158,7 +158,7 @@ public class PeriodicReloadingTrigger {
     }
 
     /**
-     * Returns the {@code ScheduledExecutorService} used by this object.
+     * Gets the {@code ScheduledExecutorService} used by this object.
      *
      * @return the associated {@code ScheduledExecutorService}
      */

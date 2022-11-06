@@ -58,7 +58,7 @@ public class CopyObjectDefaultHandler implements DefaultParametersHandler<Object
     }
 
     /**
-     * Returns the source object of this handler. This is the object whose properties are copied on the objects to be
+     * Gets the source object of this handler. This is the object whose properties are copied on the objects to be
      * initialized.
      *
      * @return the source object of this {@code CopyObjectDefaultHandler}

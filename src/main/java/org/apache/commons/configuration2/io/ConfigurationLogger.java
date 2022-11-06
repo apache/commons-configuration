@@ -172,7 +172,7 @@ public class ConfigurationLogger {
     }
 
     /**
-     * Returns the internal logger.
+     * Gets the internal logger.
      *
      * @return the internal logger
      */

@@ -152,7 +152,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the comment for the specified property key in a canonical form. &quot;Canonical&quot; means that either all
+     * Gets the comment for the specified property key in a canonical form. &quot;Canonical&quot; means that either all
      * lines start with a comment character or none. If the {@code commentChar} parameter is <b>false</b>, all comment
      * characters are removed, so that the result is only the plain text of the comment. Otherwise it is ensured that each
      * line of the comment starts with a comment character. Also, line breaks in the comment are normalized to the line
@@ -167,7 +167,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the comment for the specified property key. The comment is returned as it was set (either manually by calling
+     * Gets the comment for the specified property key. The comment is returned as it was set (either manually by calling
      * {@code setComment()} or when it was loaded from a properties file). No modifications are performed.
      *
      * @param key the key of the property
@@ -190,7 +190,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the number of blank lines before this property key. If this key does not exist, 0 will be returned.
+     * Gets the number of blank lines before this property key. If this key does not exist, 0 will be returned.
      *
      * @param key the property key
      * @return the number of blank lines before the property definition for this key
@@ -202,7 +202,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the number of blank lines before this property key. If this key does not exist, 0 will be returned.
+     * Gets the number of blank lines before this property key. If this key does not exist, 0 will be returned.
      *
      * @param key the property key
      * @return the number of blank lines before the property definition for this key
@@ -235,7 +235,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the header comment of the represented properties file in a canonical form. With the {@code commentChar}
+     * Gets the header comment of the represented properties file in a canonical form. With the {@code commentChar}
      * parameter it can be specified whether comment characters should be stripped or be always present.
      *
      * @param commentChar determines the presence of comment characters
@@ -246,7 +246,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the header comment of the represented properties file. This method returns the header comment exactly as it
+     * Gets the header comment of the represented properties file. This method returns the header comment exactly as it
      * was set using {@code setHeaderComment()} or extracted from the loaded properties file.
      *
      * @return the header comment (can be <b>null</b>)
@@ -265,7 +265,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the footer comment of the represented properties file in a canonical form. This method works like
+     * Gets the footer comment of the represented properties file in a canonical form. This method works like
      * {@code getCanonicalHeaderComment()}, but reads the footer comment.
      *
      * @param commentChar determines the presence of comment characters
@@ -278,7 +278,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the footer comment of the represented properties file. This method returns the footer comment exactly as it
+     * Gets the footer comment of the represented properties file. This method returns the footer comment exactly as it
      * was set using {@code setFooterComment()} or extracted from the loaded properties file.
      *
      * @return the footer comment (can be <b>null</b>)
@@ -344,7 +344,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the separator for the property with the given key.
+     * Gets the separator for the property with the given key.
      *
      * @param key the property key
      * @return the property separator for this property
@@ -371,7 +371,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the global separator.
+     * Gets the global separator.
      *
      * @return the global properties separator
      * @since 1.7
@@ -396,7 +396,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the line separator.
+     * Gets the line separator.
      *
      * @return the line separator
      * @since 1.7
@@ -417,7 +417,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns a set with all property keys managed by this object.
+     * Gets a set with all property keys managed by this object.
      *
      * @return a set with all contained property keys
      */
@@ -755,7 +755,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
 
         /**
-         * Returns the number of blank lines before this property.
+         * Gets the number of blank lines before this property.
          *
          * @return the number of blank lines before this property
          * @deprecated Use {#link {@link #getBlankLines()}}.
@@ -766,7 +766,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
 
         /**
-         * Returns the number of blank lines before this property.
+         * Gets the number of blank lines before this property.
          *
          * @return the number of blank lines before this property
          * @since 2.8.0
@@ -843,7 +843,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
 
         /**
-         * Returns the comment for this property. The comment is returned as it is, without processing of comment characters.
+         * Gets the comment for this property. The comment is returned as it is, without processing of comment characters.
          *
          * @return the comment (can be <b>null</b>)
          */
@@ -852,7 +852,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
 
         /**
-         * Returns the separator that was used for this property.
+         * Gets the separator that was used for this property.
          *
          * @return the property separator
          */

@@ -99,7 +99,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
     }
 
     /**
-     * Returns a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
+     * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */

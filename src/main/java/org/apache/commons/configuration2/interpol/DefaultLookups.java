@@ -211,7 +211,7 @@ public enum DefaultLookups {
     }
 
     /**
-     * Returns the standard {@code Lookup} instance of this kind.
+     * Gets the standard {@code Lookup} instance of this kind.
      *
      * @return the associated {@code Lookup} object
      */
@@ -220,7 +220,7 @@ public enum DefaultLookups {
     }
 
     /**
-     * Returns the standard prefix for the lookup object of this kind.
+     * Gets the standard prefix for the lookup object of this kind.
      *
      * @return the prefix
      */

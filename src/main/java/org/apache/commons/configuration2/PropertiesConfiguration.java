@@ -529,7 +529,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the comment lines that have been read for the last property.
+         * Gets the comment lines that have been read for the last property.
          *
          * @return the comment lines for the last property returned by {@code readProperty()}
          * @since 1.3
@@ -539,7 +539,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the name of the last read property. This method can be called after {@link #nextProperty()} was invoked and
+         * Gets the name of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <b>true</b>.
          *
          * @return the name of the last read property
@@ -550,7 +550,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the separator that was used for the last read property. The separator can be stored so that it can later be
+         * Gets the separator that was used for the last read property. The separator can be stored so that it can later be
          * restored when saving the configuration.
          *
          * @return the separator for the last read property
@@ -561,7 +561,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the value of the last read property. This method can be called after {@link #nextProperty()} was invoked and
+         * Gets the value of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <b>true</b>.
          *
          * @return the value of the last read property
@@ -813,7 +813,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the current property separator.
+         * Gets the current property separator.
          *
          * @return the current property separator
          * @since 1.7
@@ -823,7 +823,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the delimiter handler for properties with multiple values. This object is used to escape property values so
+         * Gets the delimiter handler for properties with multiple values. This object is used to escape property values so
          * that they can be read in correctly the next time they are loaded.
          *
          * @return the delimiter handler for properties with multiple values
@@ -834,7 +834,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the global property separator.
+         * Gets the global property separator.
          *
          * @return the global property separator
          * @since 1.7
@@ -844,7 +844,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Returns the line separator.
+         * Gets the line separator.
          *
          * @return the line separator
          * @since 1.7
@@ -1279,7 +1279,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     }
 
     /**
-     * Returns the footer comment. This is a comment at the very end of the file.
+     * Gets the footer comment. This is a comment at the very end of the file.
      *
      * @return the footer comment
      * @since 2.0
@@ -1319,7 +1319,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     }
 
     /**
-     * Returns the {@code IOFactory} to be used for creating readers and writers when loading or saving this configuration.
+     * Gets the {@code IOFactory} to be used for creating readers and writers when loading or saving this configuration.
      *
      * @return the {@code IOFactory}
      * @since 1.7
@@ -1329,7 +1329,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     }
 
     /**
-     * Returns the associated layout object.
+     * Gets the associated layout object.
      *
      * @return the associated layout object
      * @since 1.3

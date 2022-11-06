@@ -151,7 +151,7 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Returns the list of Variables that are accessible within expressions. This method returns a copy of the variables
+     * Gets the list of Variables that are accessible within expressions. This method returns a copy of the variables
      * managed by this lookup; so modifying this object has no impact on this lookup.
      *
      * @return the List of Variables that are accessible within expressions.
@@ -161,7 +161,7 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Returns the logger used by this object.
+     * Gets the logger used by this object.
      *
      * @return the {@code Log}
      * @since 2.0
@@ -181,7 +181,7 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Returns the {@code ConfigurationInterpolator} used by this object.
+     * Gets the {@code ConfigurationInterpolator} used by this object.
      *
      * @return the {@code ConfigurationInterpolator}
      * @since 2.0

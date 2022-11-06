@@ -67,7 +67,7 @@ public class ConfigurationBuilderEvent extends Event {
     }
 
     /**
-     * Returns the source of this event as a {@code ConfigurationBuilder}.
+     * Gets the source of this event as a {@code ConfigurationBuilder}.
      *
      * @return the {@code ConfigurationBuilder} which generated this event
      */

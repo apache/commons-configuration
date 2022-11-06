@@ -54,7 +54,7 @@ class TrackedNodeHandler extends AbstractImmutableNodeHandler {
     }
 
     /**
-     * Returns the parent handler. This is the {@code NodeHandler} which is consulted for determining a node's parent node.
+     * Gets the parent handler. This is the {@code NodeHandler} which is consulted for determining a node's parent node.
      *
      * @return the parent {@code NodeHandler}
      */

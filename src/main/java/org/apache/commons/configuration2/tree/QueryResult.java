@@ -80,7 +80,7 @@ public final class QueryResult<T> {
     }
 
     /**
-     * Returns the node referenced by this object. Depending on the result type, this is either the result node or the
+     * Gets the node referenced by this object. Depending on the result type, this is either the result node or the
      * parent node of the represented attribute.
      *
      * @return the referenced node
@@ -90,7 +90,7 @@ public final class QueryResult<T> {
     }
 
     /**
-     * Returns the name of the attribute. This method is defined only for results of type attribute.
+     * Gets the name of the attribute. This method is defined only for results of type attribute.
      *
      * @return the attribute name
      */
@@ -109,7 +109,7 @@ public final class QueryResult<T> {
     }
 
     /**
-     * Returns the attribute value if this is an attribute result. If this is not an attribute result, an exception is
+     * Gets the attribute value if this is an attribute result. If this is not an attribute result, an exception is
      * thrown.
      *
      * @param handler the {@code NodeHandler}

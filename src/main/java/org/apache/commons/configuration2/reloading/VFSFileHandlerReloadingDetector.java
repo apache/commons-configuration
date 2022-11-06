@@ -94,7 +94,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     }
 
     /**
-     * Returns the file that is monitored by this strategy. Note that the return value can be <b>null </b> under some
+     * Gets the file that is monitored by this strategy. Note that the return value can be <b>null </b> under some
      * circumstances.
      *
      * @return the monitored file

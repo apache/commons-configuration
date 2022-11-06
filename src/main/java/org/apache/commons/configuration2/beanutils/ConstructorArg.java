@@ -109,7 +109,7 @@ public final class ConstructorArg {
     }
 
     /**
-     * Returns the {@code BeanDeclaration} referenced by this constructor argument. A return value of <b>null</b> means that
+     * Gets the {@code BeanDeclaration} referenced by this constructor argument. A return value of <b>null</b> means that
      * this constructor argument does not have a bean declaration as value; in this case, the value can be queried using the
      * {@link #getValue()} method.
      *
@@ -173,7 +173,7 @@ public final class ConstructorArg {
     }
 
     /**
-     * Returns a string representation of this object. This string contains the value of this constructor argument and the
+     * Gets a string representation of this object. This string contains the value of this constructor argument and the
      * explicit type if provided.
      *
      * @return a string for this object

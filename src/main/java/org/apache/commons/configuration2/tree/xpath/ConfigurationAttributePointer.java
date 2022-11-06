@@ -53,7 +53,7 @@ class ConfigurationAttributePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns a reference to the parent node pointer.
+     * Gets a reference to the parent node pointer.
      *
      * @return the parent pointer
      */
@@ -78,7 +78,7 @@ class ConfigurationAttributePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the base value. We return the value.
+     * Gets the base value. We return the value.
      *
      * @return the base value
      */
@@ -88,7 +88,7 @@ class ConfigurationAttributePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the immediate node. This is actually a {@link QueryResult} object describing the represented attribute.
+     * Gets the immediate node. This is actually a {@link QueryResult} object describing the represented attribute.
      *
      * @return the immediate node
      */
@@ -98,7 +98,7 @@ class ConfigurationAttributePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the length of the represented node. This is always 1.
+     * Gets the length of the represented node. This is always 1.
      *
      * @return the length
      */
@@ -108,7 +108,7 @@ class ConfigurationAttributePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns the name of this node. This is the attribute name.
+     * Gets the name of this node. This is the attribute name.
      *
      * @return the name of this node
      */

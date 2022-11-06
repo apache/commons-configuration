@@ -35,7 +35,7 @@ package org.apache.commons.configuration2.sync;
  */
 public interface SynchronizerSupport {
     /**
-     * Returns the {@code Synchronizer} used by this object. An implementation must not return <b>null</b>. If no
+     * Gets the {@code Synchronizer} used by this object. An implementation must not return <b>null</b>. If no
      * {@code Synchronizer} has been set so far, a meaningful default {@code Synchronizer} has to be returned.
      *
      * @return the {@code Synchronizer} used by this object
