@@ -237,9 +237,24 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     private String commentCharsUsedInInput = COMMENT_CHARS;
 
     /**
+     * The flag for decision, whether inline comments on the section line are allowed.
+     */
+    private boolean sectionInLineCommentsAllowed;
+
+    /**
      * Create a new empty INI Configuration.
      */
     public INIConfiguration() {
+    }
+
+    /**
+     * Create a new empty INI Configuration with option to allow inline comments on the section line.
+     *
+     * @param sectionInLineCommentsAllowed when true inline comments on the section line are allowed
+     * @since 2.9.0
+     */
+    public INIConfiguration(boolean sectionInLineCommentsAllowed) {
+        this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
     }
 
     /**
@@ -430,7 +445,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             line = line.trim();
             if (!isCommentLine(line)) {
                 if (isSectionLine(line)) {
-                    final String section = line.substring(1, line.length() - 1);
+                    int length = sectionInLineCommentsAllowed ? line.indexOf("]") : line.length() - 1;
+                    final String section = line.substring(1, length);
                     sectionBuilder = sectionBuilders.get(section);
                     if (sectionBuilder == null) {
                         sectionBuilder = new ImmutableNode.Builder();
@@ -736,7 +752,27 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         if (line == null) {
             return false;
         }
+        return sectionInLineCommentsAllowed ? isNonStrictSection(line) : isStrictSection(line);
+    }
+
+    /**
+     * Determine if the entire given line is a section - inline comments are not allowed.
+     *
+     * @param line The line to check.
+     * @return true if the entire line is a section
+     */
+    private static boolean isStrictSection(String line) {
         return line.startsWith("[") && line.endsWith("]");
+    }
+
+    /**
+     * Determine if the given line contains a section - inline comments are allowed.
+     *
+     * @param line The line to check.
+     * @return true if the line contains a section
+     */
+    private static boolean isNonStrictSection(String line) {
+        return line.startsWith("[") && line.contains("]");
     }
 
     /**
