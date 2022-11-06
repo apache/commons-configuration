@@ -29,6 +29,9 @@
       <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Jarek Sacha, Gary Gregory">
         CombinedConfiguration#getKeys() can throw NoSuchElementException.
       </action>
+      <action issue="CONFIGURATION-822" type="fix" dev="ggregory" due-to="Branislav Beňo, Gary Gregory, Bruno P. Kinoshita">
+        Fix ambiguity on the section determining #229.
+      </action>
       <!-- ADD -->
       <action issue="CONFIGURATION-799" type="add" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
         Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
