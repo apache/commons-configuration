@@ -555,7 +555,7 @@
       *
     </commons.osgi.import>
     <log4j.version>2.19.0</log4j.version>
-    <slf4j.version>2.0.2</slf4j.version>
+    <slf4j.version>2.0.4</slf4j.version>
     <spring.version>5.3.23</spring.version>
     <commons.junit.version>5.9.1</commons.junit.version>
 
