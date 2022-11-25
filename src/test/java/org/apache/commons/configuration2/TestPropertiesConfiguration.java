@@ -969,11 +969,7 @@ public class TestPropertiesConfiguration {
             @Override
             public InputStream getInputStream(final URL url) throws ConfigurationException {
                 if (url.toString().endsWith("include.properties")) {
-                    try {
-                        return new ByteArrayInputStream("test.outcome = success".getBytes("UTF-8"));
-                    } catch (final UnsupportedEncodingException e) {
-                        throw new ConfigurationException("Unsupported encoding", e);
-                    }
+                    return new ByteArrayInputStream("test.outcome = success".getBytes(StandardCharsets.UTF_8));
                 }
                 return super.getInputStream(url);
             }
