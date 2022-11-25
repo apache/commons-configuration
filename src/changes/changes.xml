@@ -101,7 +101,7 @@
         Bump actions/cache from 3.0.8 to 3.0.10 #223, #225.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump slf4j.version from 2.0.2 to 2.0.4 #238.
+        Bump slf4j.version from 2.0.2 to 2.0.5 #238, #241.
       </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
