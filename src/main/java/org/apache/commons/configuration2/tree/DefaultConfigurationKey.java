@@ -430,7 +430,7 @@ public class DefaultConfigurationKey {
      * @return the escaped key
      */
     private String escapeDelimiters(final String key) {
-        return getSymbols().getEscapedDelimiter() == null || key.indexOf(getSymbols().getPropertyDelimiter()) < 0 ? key
+        return getSymbols().getEscapedDelimiter() == null || !key.contains(getSymbols().getPropertyDelimiter()) ? key
             : StringUtils.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
     }
 

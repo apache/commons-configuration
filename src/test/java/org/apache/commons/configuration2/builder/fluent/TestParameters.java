@@ -289,7 +289,7 @@ public class TestParameters {
     public void testProxyObjectMethods() {
         final FileBasedBuilderParameters params = new Parameters().fileBased();
         final String s = params.toString();
-        assertTrue(s.indexOf(FileBasedBuilderParametersImpl.class.getSimpleName()) >= 0);
+        assertTrue(s.contains(FileBasedBuilderParametersImpl.class.getSimpleName()));
         assertNotEquals(0, params.hashCode());
     }
 

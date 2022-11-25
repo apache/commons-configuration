@@ -358,7 +358,7 @@ public class TestXMLPropertyListConfiguration {
     public void testSaveNoEncoding() throws ConfigurationException {
         final StringWriter writer = new StringWriter();
         new FileHandler(config).save(writer);
-        assertTrue(writer.toString().indexOf("<?xml version=\"1.0\"?>") >= 0);
+        assertTrue(writer.toString().contains("<?xml version=\"1.0\"?>"));
     }
 
     /**
@@ -371,7 +371,7 @@ public class TestXMLPropertyListConfiguration {
         handler.setEncoding(encoding);
         final StringWriter writer = new StringWriter();
         handler.save(writer);
-        assertTrue(writer.toString().indexOf("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>") >= 0);
+        assertTrue(writer.toString().contains("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>"));
     }
 
     /**

@@ -193,7 +193,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     protected String escapeBackslashs(final Object value, final boolean inList) {
         String strValue = String.valueOf(value);
 
-        if (inList && strValue.indexOf(DOUBLE_ESC) >= 0) {
+        if (inList && strValue.contains(DOUBLE_ESC)) {
             strValue = StringUtils.replace(strValue, DOUBLE_ESC, QUAD_ESC);
         }
 
