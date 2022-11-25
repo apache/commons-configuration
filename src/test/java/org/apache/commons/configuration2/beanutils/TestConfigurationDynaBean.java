@@ -192,9 +192,9 @@ public class TestConfigurationDynaBean {
      */
     @Test
     public void testGetDescriptors() {
-        final DynaProperty pd[] = bean.getDynaClass().getDynaProperties();
+        final DynaProperty[] pd = bean.getDynaClass().getDynaProperties();
         assertNotNull(pd);
-        final int count[] = new int[properties.length];
+        final int[] count = new int[properties.length];
         for (final DynaProperty element : pd) {
             final String name = element.getName();
             for (int j = 0; j < properties.length; j++) {

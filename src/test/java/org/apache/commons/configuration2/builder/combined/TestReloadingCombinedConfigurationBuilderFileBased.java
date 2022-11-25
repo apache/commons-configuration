@@ -223,8 +223,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
 
         assertEquals("100", builder.getConfiguration().getString("/property[@name='config']/@value"));
 
-        final Thread testThreads[] = new Thread[threadCount];
-        final int failures[] = new int[threadCount];
+        final Thread[] testThreads = new Thread[threadCount];
+        final int[] failures = new int[threadCount];
 
         for (int i = 0; i < testThreads.length; ++i) {
             testThreads[i] = new ReloadThread(builder, failures, i, loopCount);
