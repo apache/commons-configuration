@@ -589,7 +589,7 @@ public class TestXMLConfiguration {
         XMLConfiguration config = builder.getConfiguration();
         assertNotNull(config.getProperty("test.short"));
 
-        final Thread testThreads[] = new Thread[THREAD_COUNT];
+        final Thread[] testThreads = new Thread[THREAD_COUNT];
         for (int i = 0; i < testThreads.length; ++i) {
             testThreads[i] = new ReloadThread(builder);
             testThreads[i].start();
