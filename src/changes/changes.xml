@@ -32,6 +32,9 @@
       <action issue="CONFIGURATION-822" type="fix" dev="ggregory" due-to="Branislav Beňo, Gary Gregory, Bruno P. Kinoshita">
         Fix ambiguity on the section determining #229.
       </action>
+      <action type="fix" dev="ggregory" due-to="Arturo Bernal">
+        Use Java style array decelerations #244.
+      </action>
       <!-- ADD -->
       <action issue="CONFIGURATION-799" type="add" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
         Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
