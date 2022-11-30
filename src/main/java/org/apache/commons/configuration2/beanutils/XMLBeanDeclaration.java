@@ -308,8 +308,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         final Map<String, Object> nested = new HashMap<>();
         getNode().getChildren().forEach(child -> {
             if (!isReservedChildName(child.nodeName())) {
-                if (nested.containsKey(child.nodeName())) {
-                    final Object obj = nested.get(child.nodeName());
+                final Object obj = nested.get(child.nodeName());
+                if (obj != null) {
                     final List<BeanDeclaration> list;
                     if (obj instanceof List) {
                         // Safe because we created the lists ourselves.

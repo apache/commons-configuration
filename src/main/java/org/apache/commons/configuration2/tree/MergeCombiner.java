@@ -83,11 +83,7 @@ public class MergeCombiner extends NodeCombiner {
      */
     protected void addAttributes(final ImmutableNode.Builder result, final ImmutableNode node1, final ImmutableNode node2) {
         final Map<String, Object> attributes = new HashMap<>(node1.getAttributes());
-        node2.getAttributes().forEach((k, v) -> {
-            if (!attributes.containsKey(k)) {
-                attributes.put(k, v);
-            }
-        });
+        node2.getAttributes().forEach(attributes::putIfAbsent);
         result.addAttributes(attributes);
     }
 
