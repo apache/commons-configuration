@@ -62,7 +62,7 @@
         Bump junit-jupiter from 5.8.2 to 5.9.1 #197, #217.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot, Gary Gregory">
-        Bump mockito-core from 4.6.1 to 4.10.0 #200, #235, #249, #257.
+        Bump mockito-core from 4.6.1 to 4.11.0 #200, #235, #249, #257, #259.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump slf4j.version from 1.7.36 to 2.0.2 #202, #210, #215.
