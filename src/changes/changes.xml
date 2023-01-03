@@ -88,8 +88,8 @@
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump spring.version from 5.3.22 to 5.3.23 #211.
       </action>
-      <action type="update" dev="kinow" due-to="Dependabot">
-        Bump commons-parent from 53 to 55 #216, #253.
+      <action type="update" dev="kinow" due-to="Dependabot, Gary Gregory">
+        Bump commons-parent from 53 to 56 #216, #253.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump log4j.version from 2.18.0 to 2.19.0 #213.
