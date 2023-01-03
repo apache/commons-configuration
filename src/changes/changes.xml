@@ -55,8 +55,8 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump spotbugs from 4.7.0 to 4.7.2.
       </action>
-      <action type="update" dev="ggregory" due-to="Dependabot">
-        Bump org.springframework:spring-* from 5.3.21 to 5.3.22.
+      <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+        Bump org.springframework:spring-* from 5.3.21 to 5.3.24.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump junit-jupiter from 5.8.2 to 5.9.1 #197, #217.
