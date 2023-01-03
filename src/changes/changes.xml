@@ -77,7 +77,7 @@
         Bump maven-pmd-plugin 3.17.0 to 3.19.0.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump pmd from 6.47.0 to 6.52.0.
+        Bump pmd from 6.47.0 to 6.53.0.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump snakeyaml from 1.30 to 1.33 #203, #212, #219.
