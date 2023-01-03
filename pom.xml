@@ -560,7 +560,7 @@
     <spring.version>5.3.24</spring.version>
     <commons.junit.version>5.9.1</commons.junit.version>
 
-    <commons.japicmp.version>0.16.0</commons.japicmp.version>
+    <commons.japicmp.version>0.17.1</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.jacoco.version>0.8.8</commons.jacoco.version>
     <commons.spotbugs.version>4.7.3.0</commons.spotbugs.version>
