@@ -53,7 +53,7 @@
         Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.3.0 #193, #195, #228, #237.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump spotbugs from 4.7.0 to 4.7.2.
+        Bump spotbugs from 4.7.0 to 4.7.3.
       </action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
         Bump org.springframework:spring-* from 5.3.21 to 5.3.24.
