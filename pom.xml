@@ -560,7 +560,6 @@
     <spring.version>5.3.24</spring.version>
 
     <japicmp.skip>false</japicmp.skip>
-    <commons.jacoco.version>0.8.8</commons.jacoco.version>
     <commons.spotbugs.version>4.7.3.0</commons.spotbugs.version>
     <commons.spotbugs.impl.version>4.7.3</commons.spotbugs.impl.version>
     <commons.pmd.version>3.19.0</commons.pmd.version>
