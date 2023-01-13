@@ -243,7 +243,7 @@ public interface ImmutableConfiguration {
      * {@link #getCollection(Class, String, Collection, Collection)} passing in <b>null</b> as default value.
      *
      * @param <T> the element type of the result list
-     * @param cls the the element class of the result list
+     * @param cls the element class of the result list
      * @param key the configuration key
      * @param target the target collection (may be <b>null</b>)
      * @return the collection to which data was added
@@ -268,7 +268,7 @@ public interface ImmutableConfiguration {
      * </ul>
      *
      * @param <T> the element type of the result list
-     * @param cls the the element class of the result list
+     * @param cls the element class of the result list
      * @param key the configuration key
      * @param target the target collection (may be <b>null</b>)
      * @param defaultValue the default value (may be <b>null</b>)
