@@ -569,7 +569,6 @@
     
     <commons.site-plugin.version>3.10.0</commons.site-plugin.version>
 
-    <checkstyle.version>9.3</checkstyle.version>
     <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
     <commons.animal-sniffer.version>1.20</commons.animal-sniffer.version>
 
@@ -618,7 +617,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.2.0</version>
           <configuration>
             <configLocation>${basedir}/conf/checkstyle.xml</configLocation>
             <suppressionsLocation>${basedir}/conf/checkstyle-suppressions.xml</suppressionsLocation>
@@ -631,13 +629,6 @@
             </sourceDirectories>
             <excludes>**/org/apache/commons/configuration2/plist/*.java</excludes>
           </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>com.puppycrawl.tools</groupId>
-              <artifactId>checkstyle</artifactId>
-              <version>${checkstyle.version}</version>
-            </dependency>
-          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
