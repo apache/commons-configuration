@@ -312,7 +312,7 @@ config.dirs = \\\\share2
         allows setting the property separator for a specific property.</li>
         <li><code>setLineSeparator()</code><br/>
         Using this method the line separator can be specified. Per default the
-        platform-specific line separator is used (e.g. <code>\n</code> on unix).
+        platform-specific line separator is used (e.g. <code>\n</code> on Unix).
         </li>
         </ul>
         The default settings of <code>PropertiesConfigurationLayout</code> are
