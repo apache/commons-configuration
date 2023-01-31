@@ -70,7 +70,7 @@
                     </tr>
                     <tr>
                         <td>YAMLConfiguration</td>
-                        <td><a href="https://github.com/snakeyaml/snakeyaml">org.yaml:snakeyaml</a></td>
+                        <td><a href="https://bitbucket.org/snakeyaml/snakeyaml-engine">org.snakeyaml:snakeyaml-engine</a></td>
                     </tr>
                     <tr>
                         <td>ConfigurationDynaBean</td>
