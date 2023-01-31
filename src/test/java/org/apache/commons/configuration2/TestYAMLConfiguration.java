@@ -37,7 +37,8 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.yaml.snakeyaml.Yaml;
+import org.snakeyaml.engine.v2.api.Load;
+import org.snakeyaml.engine.v2.api.LoadSettings;
 
 /**
  * Unit test for {@link YAMLConfiguration}
@@ -135,8 +136,9 @@ public class TestYAMLConfiguration {
         yamlConfiguration.write(sw);
         final String output = sw.toString();
 
-        // ..and then try parsing it back as using SnakeYAML
-        final Map<?, ?> parsed = new Yaml().loadAs(output, Map.class);
+        // ..and then try parsing it back as using SnakeYAML Engine
+        Load load = new Load(LoadSettings.builder().build());
+        final Map<?, ?> parsed = (Map<?, ?>) load.loadFromString(output);
         assertEquals(6, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 

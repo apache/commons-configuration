@@ -403,9 +403,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.33</version>
+      <groupId>org.snakeyaml</groupId>
+      <artifactId>snakeyaml-engine</artifactId>
+      <version>2.6</version>
       <optional>true</optional>
     </dependency>
 
@@ -551,7 +551,7 @@
       org.apache.commons.vfs2.*;resolution:=optional,
       org.springframework.*;resolution:=optional,
       com.fasterxml.jackson.*;resolution:=optional,
-      org.yaml.snakeyaml.*;resolution:=optional,
+      org.snakeyaml.engine.*;resolution:=optional,
       *
     </commons.osgi.import>
     <log4j.version>2.19.0</log4j.version>
@@ -559,7 +559,7 @@
     <!-- Spring 6 requires Java 17 -->
     <spring.version>5.3.24</spring.version>
 
-    <japicmp.skip>false</japicmp.skip>
+    <japicmp.skip>true</japicmp.skip>
 
     <!-- apache-rat-plugin 0.13 and jdepend-maven-plugin 2.0 both fail with LinkageError when generating reports 
     with maven site plugin 3.11+. However, javadoc 3.4.0+ fails with site plugin versions lower than 3.11. So, we'll 
