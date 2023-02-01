@@ -102,8 +102,6 @@ public class TestExprLookup {
 
     @Test
     public void testLookup() throws Exception {
-        final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
-        final Log log = LogFactory.getLog("TestLogger");
         //final Logger logger = ((Log4JLogger) log).getLogger();
         //logger.addAppender(app);
         //logger.setLevel(Level.DEBUG);
