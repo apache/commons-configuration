@@ -83,7 +83,7 @@
         Bump snakeyaml from 1.30 to 1.33 #203, #212, #219.
       </action>
       <action type="update" dev="kinow" due-to="Gary Gregory">
-        Bump jackson-databind from 2.13.3 to 2.14.1 #227, #246.
+        Bump jackson-databind from 2.13.3 to 2.14.2 #227, #246, #274.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump spring.version from 5.3.22 to 5.3.23 #211.
