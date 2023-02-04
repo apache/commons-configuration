@@ -24,7 +24,7 @@
     <release version="2.9.0" date="TBD" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
       <action issue="CONFIGURATION-815" type="fix" dev="ggregory" due-to="Gary Gregory">
-        Replace optional Apache Log4j 1.2.17 with 2.18.0.
+        Replace optional Apache Log4j 1.2.17 with 2.19.0.
       </action>
       <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Jarek Sacha, Gary Gregory">
         CombinedConfiguration#getKeys() can throw NoSuchElementException.
