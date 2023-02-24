@@ -92,7 +92,7 @@
         Bump commons-parent from 53 to 56 #216, #253.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump log4j.version from 2.18.0 to 2.19.0 #213.
+        Bump log4j.version from 2.18.0 to 2.20.0 #213, #281.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump japicmp-maven-plugin from 0.15.7 to 0.17.1.
