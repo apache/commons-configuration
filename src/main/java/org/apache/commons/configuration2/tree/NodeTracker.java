@@ -213,7 +213,7 @@ class NodeTracker {
             return this;
         }
         return new NodeTracker(trackedNodes.entrySet().stream()
-            .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().isDetached() ? e.getValue() : e.getValue().detach(null))));
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().isDetached() ? e.getValue() : e.getValue().detach(null))));
     }
 
     /**

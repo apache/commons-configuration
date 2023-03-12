@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.commons.configuration2.event.BaseEventSource;
 import org.apache.commons.configuration2.event.Event;
 import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventType;
@@ -592,7 +593,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public void clearErrorListeners() {
-        configs.values().forEach(cc -> cc.clearErrorListeners());
+        configs.values().forEach(BaseEventSource::clearErrorListeners);
         super.clearErrorListeners();
     }
 
