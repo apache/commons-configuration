@@ -67,7 +67,7 @@
         Bump mockito-core from 4.6.1 to 4.11.0 #200, #235, #249, #257, #259.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
-        Bump slf4j.version from 1.7.36 to 2.0.2 #202, #210, #215.
+        Bump slf4j.version from 1.7.36 to 2.0.7 #202, #210, #215, #238, #241, #291.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump maven-checkstyle-plugin from 3.1.2 to 3.2.0 #201.
@@ -104,9 +104,6 @@
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump actions/cache from 3.0.8 to 3.0.10 #223, #225.
-      </action>
-      <action type="update" dev="kinow" due-to="Dependabot">
-        Bump slf4j.version from 2.0.2 to 2.0.5 #238, #241.
       </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
