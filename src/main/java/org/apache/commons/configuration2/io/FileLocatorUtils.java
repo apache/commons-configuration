@@ -308,6 +308,35 @@ public final class FileLocatorUtils {
     }
 
     /**
+     * Tries to find a resource with the given name in the classpath.
+     *
+     * @param resourceName the name of the resource
+     * @return the URL to the found resource or <b>null</b> if the resource cannot be found
+     */
+    static URL getClasspathResource(final String resourceName) {
+        URL url = null;
+        // attempt to load from the context classpath
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader != null) {
+            url = loader.getResource(resourceName);
+
+            if (url != null) {
+                LOG.debug("Loading configuration from the context classpath (" + resourceName + ")");
+            }
+        }
+
+        // attempt to load from the system classpath
+        if (url == null) {
+            url = ClassLoader.getSystemResource(resourceName);
+
+            if (url != null) {
+                LOG.debug("Loading configuration from the system classpath (" + resourceName + ")");
+            }
+        }
+        return url;
+    }
+
+    /**
      * Tries to convert the specified base path and file name into a file object. This method is called e.g. by the save()
      * methods of file based configurations. The parameter strings can be relative files, absolute files and URLs as well.
      * This implementation checks first whether the passed in file name is absolute. If this is the case, it is returned.
@@ -457,35 +486,6 @@ public final class FileLocatorUtils {
         }
 
         return getLocationStrategy(locator).locate(getFileSystem(locator), locator);
-    }
-
-    /**
-     * Tries to find a resource with the given name in the classpath.
-     *
-     * @param resourceName the name of the resource
-     * @return the URL to the found resource or <b>null</b> if the resource cannot be found
-     */
-    static URL locateFromClasspath(final String resourceName) {
-        URL url = null;
-        // attempt to load from the context classpath
-        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        if (loader != null) {
-            url = loader.getResource(resourceName);
-
-            if (url != null) {
-                LOG.debug("Loading configuration from the context classpath (" + resourceName + ")");
-            }
-        }
-
-        // attempt to load from the system classpath
-        if (url == null) {
-            url = ClassLoader.getSystemResource(resourceName);
-
-            if (url != null) {
-                LOG.debug("Loading configuration from the system classpath (" + resourceName + ")");
-            }
-        }
-        return url;
     }
 
     /**
