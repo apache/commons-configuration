@@ -485,7 +485,7 @@ public class FileHandler {
      * @return the used {@code FileSystem}
      */
     public FileSystem getFileSystem() {
-        return FileLocatorUtils.obtainFileSystem(getFileLocator());
+        return FileLocatorUtils.getFileSystem(getFileLocator());
     }
 
     /**
@@ -496,7 +496,7 @@ public class FileHandler {
      * @return the {@code FileLocationStrategy} to be used
      */
     public FileLocationStrategy getLocationStrategy() {
-        return FileLocatorUtils.obtainLocationStrategy(getFileLocator());
+        return FileLocatorUtils.getLocationStrategy(getFileLocator());
     }
 
     /**
@@ -509,7 +509,7 @@ public class FileHandler {
     public String getPath() {
         final FileLocator locator = getFileLocator();
         final File file = createFile(locator);
-        return FileLocatorUtils.obtainFileSystem(locator).getPath(file, locator.getSourceURL(), locator.getBasePath(), locator.getFileName());
+        return FileLocatorUtils.getFileSystem(locator).getPath(file, locator.getSourceURL(), locator.getBasePath(), locator.getFileName());
     }
 
     /**
@@ -687,7 +687,7 @@ public class FileHandler {
         InputStream in = null;
 
         try {
-            final FileSystem obtainFileSystem = FileLocatorUtils.obtainFileSystem(locator);
+            final FileSystem obtainFileSystem = FileLocatorUtils.getFileSystem(locator);
             final URLConnectionOptions urlConnectionOptions = locator.getURLConnectionOptions();
             in = urlConnectionOptions == null ? obtainFileSystem.getInputStream(url) : obtainFileSystem.getInputStream(url, urlConnectionOptions);
             loadFromStream(in, locator.getEncoding(), url);
@@ -872,7 +872,7 @@ public class FileHandler {
         OutputStream out = null;
 
         try {
-            out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(file);
+            out = FileLocatorUtils.getFileSystem(locator).getOutputStream(file);
             saveToStream(out, locator.getEncoding(), file.toURI().toURL());
         } catch (final MalformedURLException muex) {
             throw new ConfigurationException(muex);
@@ -953,7 +953,7 @@ public class FileHandler {
     private void save(final String fileName, final FileLocator locator) throws ConfigurationException {
         final URL url;
         try {
-            url = FileLocatorUtils.obtainFileSystem(locator).getURL(locator.getBasePath(), fileName);
+            url = FileLocatorUtils.getFileSystem(locator).getURL(locator.getBasePath(), fileName);
         } catch (final MalformedURLException e) {
             throw new ConfigurationException(e);
         }
@@ -985,7 +985,7 @@ public class FileHandler {
     private void save(final URL url, final FileLocator locator) throws ConfigurationException {
         OutputStream out = null;
         try {
-            out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(url);
+            out = FileLocatorUtils.getFileSystem(locator).getOutputStream(url);
             saveToStream(out, locator.getEncoding(), url);
             if (out instanceof VerifiableOutputStream) {
                 try {

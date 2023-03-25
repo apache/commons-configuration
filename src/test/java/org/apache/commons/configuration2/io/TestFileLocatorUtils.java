@@ -404,7 +404,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testObtainFileSystemNotSetInLocator() {
-        assertSame(FileLocatorUtils.DEFAULT_FILE_SYSTEM, FileLocatorUtils.obtainFileSystem(FileLocatorUtils.fileLocator().create()));
+        assertSame(FileLocatorUtils.DEFAULT_FILE_SYSTEM, FileLocatorUtils.getFileSystem(FileLocatorUtils.fileLocator().create()));
     }
 
     /**
@@ -412,7 +412,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testObtainFileSystemNullLocator() {
-        assertSame(FileLocatorUtils.DEFAULT_FILE_SYSTEM, FileLocatorUtils.obtainFileSystem(null));
+        assertSame(FileLocatorUtils.DEFAULT_FILE_SYSTEM, FileLocatorUtils.getFileSystem(null));
     }
 
     /**
@@ -422,7 +422,7 @@ public class TestFileLocatorUtils {
     public void testObtainFileSystemSetInLocator() {
         final FileSystem fs = mock(FileSystem.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().fileSystem(fs).create();
-        assertSame(fs, FileLocatorUtils.obtainFileSystem(locator));
+        assertSame(fs, FileLocatorUtils.getFileSystem(locator));
     }
 
     /**
@@ -431,7 +431,7 @@ public class TestFileLocatorUtils {
     @Test
     public void testObtainLocationStrategyNotSetInLocator() {
         final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertSame(FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, FileLocatorUtils.obtainLocationStrategy(locator));
+        assertSame(FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, FileLocatorUtils.getLocationStrategy(locator));
     }
 
     /**
@@ -439,7 +439,7 @@ public class TestFileLocatorUtils {
      */
     @Test
     public void testObtainLocationStrategyNullLocator() {
-        assertSame(FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, FileLocatorUtils.obtainLocationStrategy(null));
+        assertSame(FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, FileLocatorUtils.getLocationStrategy(null));
     }
 
     /**
@@ -449,7 +449,7 @@ public class TestFileLocatorUtils {
     public void testObtainLocationStrategySetInLocator() {
         final FileLocationStrategy strategy = mock(FileLocationStrategy.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().locationStrategy(strategy).create();
-        assertSame(strategy, FileLocatorUtils.obtainLocationStrategy(locator));
+        assertSame(strategy, FileLocatorUtils.getLocationStrategy(locator));
     }
 
     /**

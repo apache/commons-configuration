@@ -99,12 +99,6 @@ public final class FileLocatorUtils {
     private static final String PROP_SOURCE_URL = "sourceURL";
 
     /**
-     * Private constructor so that no instances can be created.
-     */
-    private FileLocatorUtils() {
-    }
-
-    /**
      * Extends a path by another component. The given extension is added to the already existing path adding a separator if
      * necessary.
      *
@@ -380,6 +374,30 @@ public final class FileLocatorUtils {
     }
 
     /**
+     * Obtains a non-<b>null</b> {@code FileSystem} object from the passed in {@code FileLocator}. If the passed in
+     * {@code FileLocator} has a {@code FileSystem} object, it is returned. Otherwise, result is the default
+     * {@code FileSystem}.
+     *
+     * @param locator the {@code FileLocator} (may be <b>null</b>)
+     * @return the {@code FileSystem} to be used for this {@code FileLocator}
+     */
+    static FileSystem getFileSystem(final FileLocator locator) {
+        return locator != null ? ObjectUtils.defaultIfNull(locator.getFileSystem(), DEFAULT_FILE_SYSTEM) : DEFAULT_FILE_SYSTEM;
+    }
+
+    /**
+     * Gets a non <b>null</b> {@code FileLocationStrategy} object from the passed in {@code FileLocator}. If the
+     * {@code FileLocator} is not <b>null</b> and has a {@code FileLocationStrategy} defined, this strategy is returned.
+     * Otherwise, result is the default {@code FileLocationStrategy}.
+     *
+     * @param locator the {@code FileLocator}
+     * @return the {@code FileLocationStrategy} for this {@code FileLocator}
+     */
+    static FileLocationStrategy getLocationStrategy(final FileLocator locator) {
+        return locator != null ? ObjectUtils.defaultIfNull(locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY) : DEFAULT_LOCATION_STRATEGY;
+    }
+
+    /**
      * Creates the default location strategy. This method creates a combined location strategy as described in the comment
      * of the {@link #DEFAULT_LOCATION_STRATEGY} member field.
      *
@@ -438,7 +456,7 @@ public final class FileLocatorUtils {
             return null;
         }
 
-        return obtainLocationStrategy(locator).locate(obtainFileSystem(locator), locator);
+        return getLocationStrategy(locator).locate(getFileSystem(locator), locator);
     }
 
     /**
@@ -487,30 +505,6 @@ public final class FileLocatorUtils {
     }
 
     /**
-     * Obtains a non-<b>null</b> {@code FileSystem} object from the passed in {@code FileLocator}. If the passed in
-     * {@code FileLocator} has a {@code FileSystem} object, it is returned. Otherwise, result is the default
-     * {@code FileSystem}.
-     *
-     * @param locator the {@code FileLocator} (may be <b>null</b>)
-     * @return the {@code FileSystem} to be used for this {@code FileLocator}
-     */
-    static FileSystem obtainFileSystem(final FileLocator locator) {
-        return locator != null ? ObjectUtils.defaultIfNull(locator.getFileSystem(), DEFAULT_FILE_SYSTEM) : DEFAULT_FILE_SYSTEM;
-    }
-
-    /**
-     * Obtains a non <b>null</b> {@code FileLocationStrategy} object from the passed in {@code FileLocator}. If the
-     * {@code FileLocator} is not <b>null</b> and has a {@code FileLocationStrategy} defined, this strategy is returned.
-     * Otherwise, result is the default {@code FileLocationStrategy}.
-     *
-     * @param locator the {@code FileLocator}
-     * @return the {@code FileLocationStrategy} for this {@code FileLocator}
-     */
-    static FileLocationStrategy obtainLocationStrategy(final FileLocator locator) {
-        return locator != null ? ObjectUtils.defaultIfNull(locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY) : DEFAULT_LOCATION_STRATEGY;
-    }
-
-    /**
      * Stores the specified {@code FileLocator} in the given map. With the {@link #fromMap(Map)} method a new
      * {@code FileLocator} with the same properties as the original one can be created.
      *
@@ -546,6 +540,12 @@ public final class FileLocatorUtils {
      */
     static URL toURL(final File file) throws MalformedURLException {
         return file.toURI().toURL();
+    }
+
+    /**
+     * Private constructor so that no instances can be created.
+     */
+    private FileLocatorUtils() {
     }
 
 }
