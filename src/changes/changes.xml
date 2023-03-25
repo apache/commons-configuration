@@ -36,7 +36,7 @@
       </action>
       <action type="fix" dev="ggregory" due-to="Arturo Bernal">
         Use Java style array decelerations #244.
-      </action>org.apache.commons.configuration2.web.AppletConfiguration.getKeysInternal()
+      </action>
       <!-- ADD -->
       <action issue="CONFIGURATION-799" type="add" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
         Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
