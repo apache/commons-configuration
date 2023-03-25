@@ -36,13 +36,16 @@
       </action>
       <action type="fix" dev="ggregory" due-to="Arturo Bernal">
         Use Java style array decelerations #244.
-      </action>
+      </action>org.apache.commons.configuration2.web.AppletConfiguration.getKeysInternal()
       <!-- ADD -->
       <action issue="CONFIGURATION-799" type="add" dev="ggregory" due-to="Xinshiyou, Gary Gregory">
         Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler).
       </action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">
         Add ImmutableNode.stream().
+      </action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">
+        Avoid NullPointerException in org.apache.commons.configuration2.web.AppletConfiguration.getKeysInternal().
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
