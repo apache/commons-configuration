@@ -39,7 +39,6 @@ import org.dbunit.operation.DatabaseOperation;
  * A helper class for performing tests for {@link DatabaseConfiguration}. This class maintains an in-process database
  * that stores configuration data and can be accessed from a {@link DatabaseConfiguration} instance. Constants for table
  * and column names and database connection settings are provided, too.
- *
  */
 public class DatabaseConfigurationTestHelper {
     /** Constant for the configuration table. */
