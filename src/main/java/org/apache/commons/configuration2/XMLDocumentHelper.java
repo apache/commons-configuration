@@ -16,6 +16,10 @@
  */
 package org.apache.commons.configuration2;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,9 +31,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.w3c.dom.Document;

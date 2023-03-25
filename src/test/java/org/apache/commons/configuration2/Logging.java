@@ -17,11 +17,11 @@
 package org.apache.commons.configuration2;
 
 import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.Priority;
-import org.apache.log4j.Level;
 import org.apache.log4j.Appender;
-import org.apache.log4j.PatternLayout;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Priority;
 
 /**
  * Configures logging for tests.

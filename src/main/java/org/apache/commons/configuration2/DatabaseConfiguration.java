@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration2;
 
-import javax.sql.DataSource;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;

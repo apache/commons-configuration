@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
