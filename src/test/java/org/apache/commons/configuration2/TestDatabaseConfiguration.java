@@ -52,7 +52,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for database stored configurations. Note, when running this Unit Test in Eclipse it sometimes takes a couple
  * tries. Otherwise you may get database is already in use by another process errors.
- *
  */
 public class TestDatabaseConfiguration {
     /**
