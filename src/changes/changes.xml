@@ -58,7 +58,7 @@
         Bump spotbugs from 4.7.0 to 4.7.3.
       </action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-        Bump org.springframework:spring-* from 5.3.21 to 5.3.25.
+        Bump org.springframework:spring-* from 5.3.21 to 5.3.26.
       </action>
       <action type="update" dev="kinow" due-to="Dependabot">
         Bump junit-jupiter from 5.8.2 to 5.9.1 #197, #217.
@@ -160,7 +160,7 @@
        <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
        </action>
-       <action issues="CONFIGURATION-794" type="update" dev="ggregory" due-to="Robin Jansohn, Gary Gregory, Rob Spoor">
+       <action issue="CONFIGURATION-794" type="update" dev="ggregory" due-to="Robin Jansohn, Gary Gregory, Rob Spoor">
          Unclosed file handle when reading config from JAR file URL.
          Add and use FileBasedBuilderProperties.setURL(URL, URLConnectionOptions).
        </action>
