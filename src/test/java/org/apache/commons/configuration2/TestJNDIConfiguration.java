@@ -44,7 +44,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test to see if the JNDIConfiguration works properly.
- *
  */
 public class TestJNDIConfiguration {
 

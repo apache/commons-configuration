@@ -18,7 +18,6 @@ package org.apache.commons.configuration2.builder;
 
 /**
  * A test bean used to check whether all properties can be found.
- *
  */
 public class ParametersBeanTestImpl extends BasicBuilderParameters {
     private int intProperty;

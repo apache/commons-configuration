@@ -19,6 +19,5 @@
  * <p>
  * A package containing EntityResolvers.
  * </p>
- *
  */
 package org.apache.commons.configuration2.resolver;

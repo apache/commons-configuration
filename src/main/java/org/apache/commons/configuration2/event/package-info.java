@@ -19,6 +19,5 @@
  * <p>
  * This package contains interfaces and classes for receiving notifications about changes at configurations.
  * </p>
- *
  */
 package org.apache.commons.configuration2.event;

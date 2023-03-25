@@ -30,7 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * A base class for testing classes of the XPath package. This base class creates a hierarchy of nodes in its setUp()
  * method that can be used for test cases.
- *
  */
 public abstract class AbstractXPathTest {
     /** Constant for the name of the counter attribute. */

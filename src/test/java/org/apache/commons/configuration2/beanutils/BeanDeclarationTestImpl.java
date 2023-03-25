@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * A test implementation of the BeanDeclaration interface. This implementation allows setting the values directly, which
  * should be returned by the methods required by the BeanDeclaration interface. It is used by multiple test classes.
- *
  */
 class BeanDeclarationTestImpl implements BeanDeclaration {
     private String beanClassName;

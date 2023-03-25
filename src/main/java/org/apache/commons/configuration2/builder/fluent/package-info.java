@@ -31,6 +31,5 @@
  * features are added to the represented configuration classes corresponding new methods will be added to them. This can
  * happen even in minor releases.</strong>
  * </p>
- *
  */
 package org.apache.commons.configuration2.builder.fluent;

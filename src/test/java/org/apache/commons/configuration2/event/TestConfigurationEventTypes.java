@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * A test class which tests whether the types of basic configuration events are correctly defined.
- *
  */
 public class TestConfigurationEventTypes {
     /**

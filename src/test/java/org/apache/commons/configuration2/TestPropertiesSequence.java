@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test that the configuration factory returns keys in the same sequence as the properties configurator
- *
  */
 public class TestPropertiesSequence {
     @Test

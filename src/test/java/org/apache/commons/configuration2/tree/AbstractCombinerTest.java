@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 /**
  * A base class for testing combiner implementations. This base class provides some functionality for loading the test
  * configurations, which are to be combined. Concrete sub classes only need to create the correct combiner object.
- *
  */
 public abstract class AbstractCombinerTest {
     /** Constant for the first test configuration. */

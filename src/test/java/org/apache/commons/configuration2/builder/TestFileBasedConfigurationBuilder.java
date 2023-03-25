@@ -60,7 +60,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test class for {@code FileBasedConfigurationBuilder}.
- *
  */
 public class TestFileBasedConfigurationBuilder {
     /** Constant for a test property name. */

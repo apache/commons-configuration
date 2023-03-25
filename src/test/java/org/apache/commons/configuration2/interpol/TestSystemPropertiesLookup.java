@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code SystemPropertiesLookup}.
- *
  */
 public class TestSystemPropertiesLookup {
     /** The lookup object to be tested. */

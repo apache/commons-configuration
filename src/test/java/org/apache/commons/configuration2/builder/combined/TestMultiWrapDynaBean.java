@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code MultiWrapDynaBean} and {@code MultiWrapDynaClass}.
- *
  */
 public class TestMultiWrapDynaBean {
     /**

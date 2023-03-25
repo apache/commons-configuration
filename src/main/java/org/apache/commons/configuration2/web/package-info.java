@@ -20,6 +20,5 @@
  * This package contains some implementations of the {@code Configuration} interface that are useful in web
  * environments.
  * </p>
- *
  */
 package org.apache.commons.configuration2.web;

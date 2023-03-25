@@ -45,7 +45,6 @@ import org.junit.jupiter.api.Test;
 /**
  * A test class for {@code BaseHierarchicalConfiguration} which checks whether the Synchronizer is called correctly by
  * the methods specific for hierarchical configurations.
- *
  */
 public class TestBaseHierarchicalConfigurationSynchronization {
     /**

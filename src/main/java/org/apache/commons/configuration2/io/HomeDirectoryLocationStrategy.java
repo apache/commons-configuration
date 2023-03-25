@@ -38,7 +38,6 @@ import org.apache.commons.lang3.StringUtils;
  * select a specific sub directory of the user's home directory. If this option is set to <b>false</b>, the base path is
  * always ignored, and only the file name is evaluated.
  * </p>
- *
  */
 public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
     /** Constant for the system property with the user's home directory. */

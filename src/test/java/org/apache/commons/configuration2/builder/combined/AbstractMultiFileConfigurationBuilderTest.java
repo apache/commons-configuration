@@ -25,7 +25,6 @@ import org.junit.jupiter.api.AfterEach;
 /**
  * A base class for test classes for {@code MultiFileConfigurationBuilder} and derived classes. This class provides some
  * common functionality related to file name pattern which can be used by concrete tests.
- *
  */
 public class AbstractMultiFileConfigurationBuilderTest {
     /** The system property which selects a sub configuration. */

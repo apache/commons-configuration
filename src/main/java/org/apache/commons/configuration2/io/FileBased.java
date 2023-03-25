@@ -39,7 +39,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * {@code FileBased} object may implement); this functionality is not available on a direct method invocation, so this
  * may lead to unpredictable results.
  * </p>
- *
  */
 public interface FileBased {
     /**

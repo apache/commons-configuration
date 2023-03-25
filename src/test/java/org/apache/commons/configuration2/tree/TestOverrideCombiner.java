@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for OverrideCombiner.
- *
  */
 public class TestOverrideCombiner extends AbstractCombinerTest {
     /**

@@ -21,7 +21,6 @@ package org.apache.commons.configuration2.ex;
  * A configuration related runtime exception.
  *
  * @since 1.0
- *
  */
 public class ConfigurationRuntimeException extends RuntimeException {
     /**

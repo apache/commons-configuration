@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for MapConfiguration.
- *
  */
 public class TestMapConfiguration extends TestAbstractConfiguration {
     /** Constant for a test key. */

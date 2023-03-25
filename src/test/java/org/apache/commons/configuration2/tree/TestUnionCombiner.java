@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for UnionCombiner.
- *
  */
 public class TestUnionCombiner extends AbstractCombinerTest {
     /**

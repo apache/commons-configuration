@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests the StrintConfigurationComparator class
- *
  */
 public class TestStrictConfigurationComparator {
     /**

@@ -48,7 +48,6 @@ import org.apache.commons.lang3.ObjectUtils;
  * A specialized hierarchical configuration implementation that is based on a structure of {@link ImmutableNode}
  * objects.
  * </p>
- *
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode> implements InMemoryNodeModelSupport {
 

@@ -82,7 +82,6 @@ import org.apache.commons.lang3.StringUtils;
  * </pre>
  *
  * @since 1.2
- *
  */
 public class PropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
     /** Constant for the separator parser for the date part. */

@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DisabledListDelimiterHandler}. Note that some functionality of the base class is tested, too.
- *
  */
 public class TestDisabledListDelimiterHandler {
     /** An array with some test values. */

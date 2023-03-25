@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ConfigurationNodePointer}.
- *
  */
 public class TestConfigurationNodePointer extends AbstractXPathTest {
     /** Stores the node pointer to be tested. */

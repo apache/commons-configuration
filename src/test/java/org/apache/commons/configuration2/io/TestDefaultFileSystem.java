@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@code DefaultFileSystem}. Note: This class tests only basic functionality. Other parts are tested by
  * actual access to configuration files in other test classes.
- *
  */
 public class TestDefaultFileSystem {
     /** The file system to be tested. */

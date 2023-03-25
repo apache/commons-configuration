@@ -32,7 +32,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  *
  * This class extends normal Java properties by adding the possibility to use the same key many times concatenating the
  * value strings instead of overwriting them.
- *
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable {
     /** stores the configuration key-value pairs */

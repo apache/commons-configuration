@@ -62,7 +62,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test class for {@code FileHandler}.
- *
  */
 public class TestFileHandler {
     /**

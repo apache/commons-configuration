@@ -18,7 +18,6 @@ package org.apache.commons.configuration2.beanutils;
 
 /**
  * Another test bean class for bean creation operations which defines some constructors.
- *
  */
 public class BeanCreationTestCtorBean extends BeanCreationTestBean {
     public BeanCreationTestCtorBean() {

@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Configuration converter. Helper class to convert between Configuration, ExtendedProperties and standard Properties.
- *
  */
 public final class ConfigurationConverter {
     /** Constant for the default separator for properties with multiple values. */

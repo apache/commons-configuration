@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReloadingCombinedConfigurationBuilder}.
- *
  */
 public class TestReloadingCombinedConfigurationBuilder {
     /** The builder to be tested. */

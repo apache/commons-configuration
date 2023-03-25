@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code CompositeConfiguration}.
- *
  */
 public class TestCompositeConfiguration {
     /** Constant for a test property to be checked. */

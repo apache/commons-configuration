@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Test if non-string properties are handled correctly.
- *
  */
 public class TestNonStringProperties extends BaseNonStringProperties {
     /** The File that we test with */

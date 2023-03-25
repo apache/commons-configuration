@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * A base class for testing {@link org.apache.commons.configuration2.BaseHierarchicalConfiguration} extensions.
- *
  */
 public class TestThreesomeConfiguration {
     protected Configuration conf;

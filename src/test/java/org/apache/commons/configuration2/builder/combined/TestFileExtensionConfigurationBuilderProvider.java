@@ -35,7 +35,6 @@ import org.mockito.Mockito;
 
 /**
  * Test class for {@code FileExtensionConfigurationBuilderProvider}.
- *
  */
 public class TestFileExtensionConfigurationBuilderProvider {
     /** Constant for the name of the default configuration class. */

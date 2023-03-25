@@ -64,7 +64,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BasicConfigurationBuilder}.
- *
  */
 public class TestBasicConfigurationBuilder {
     /**

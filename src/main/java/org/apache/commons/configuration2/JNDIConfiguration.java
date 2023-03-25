@@ -39,7 +39,6 @@ import org.apache.commons.lang3.StringUtils;
  * This Configuration class allows you to interface with a JNDI datasource. A JNDIConfiguration is read-only, write
  * operations will throw an UnsupportedOperationException. The clear operations are supported but the underlying JNDI
  * data source is not changed.
- *
  */
 public class JNDIConfiguration extends AbstractConfiguration {
     /** The prefix of the context. */

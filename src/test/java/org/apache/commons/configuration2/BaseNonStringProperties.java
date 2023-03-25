@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test if non-string properties are handled correctly.
- *
  */
 public abstract class BaseNonStringProperties {
 

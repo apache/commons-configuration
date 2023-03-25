@@ -19,6 +19,5 @@
  * <p>
  * A package with helper classes used for interpolation (variable substitution).
  * </p>
- *
  */
 package org.apache.commons.configuration2.interpol;

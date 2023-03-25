@@ -23,6 +23,5 @@
  * <em>Commons Configuration</em> defines a small number of exception classes. Because these classes are referenced by
  * multiple other packages, they are located in their own package to avoid cyclic dependencies.
  * </p>
- *
  */
 package org.apache.commons.configuration2.ex;

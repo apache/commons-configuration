@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * A test class for XPathExpressionEngine that tests the engine integrated into a hierarchical configuration.
- *
  */
 public class TestXPathExpressionEngineInConfig {
     /** Constant for a test key. */

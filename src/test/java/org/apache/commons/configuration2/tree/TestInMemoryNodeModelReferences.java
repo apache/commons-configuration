@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
  * A test class for {@code InMemoryNodeModel} which tests functionality related to node references. This test class
  * creates a model for the test structure with authors data. Each node is associated a string reference object with the
  * node name. It can then be checked whether updates of the hierarchy do not affect the references.
- *
  */
 public class TestInMemoryNodeModelReferences {
     /** A mock resolver. */

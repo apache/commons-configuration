@@ -44,7 +44,6 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
  * </p>
  *
  * @see HierarchicalConfiguration
- *
  */
 abstract class HierarchicalConfigurationConverter {
     /**

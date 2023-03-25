@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultListDelimiterHandler}.
- *
  */
 public class TestDefaultListDelimiterHandler {
     /** The handler to be tested. */

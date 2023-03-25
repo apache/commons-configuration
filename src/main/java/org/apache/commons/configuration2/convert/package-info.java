@@ -30,6 +30,5 @@
  * containing multiple values. In this package there are classes implementing different strategies for list delimiter
  * handling. Client code can choose the one which is most suitable for the current use case.
  * </p>
- *
  */
 package org.apache.commons.configuration2.convert;

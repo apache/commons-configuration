@@ -85,7 +85,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test for loading and saving properties files.
- *
  */
 public class TestPropertiesConfiguration {
     /**

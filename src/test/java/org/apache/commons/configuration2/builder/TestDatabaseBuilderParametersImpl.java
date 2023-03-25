@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DatabaseBuilderParametersImpl}.
- *
  */
 public class TestDatabaseBuilderParametersImpl {
     /** The parameters object to be tested. */

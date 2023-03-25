@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code AbsoluteNameLocationStrategy}.
- *
  */
 public class TestAbsoluteNameLocationStrategy {
     /** A mock for the file system. */

@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Stolen from Turbine
- *
  */
 
 public class HsqlDB {

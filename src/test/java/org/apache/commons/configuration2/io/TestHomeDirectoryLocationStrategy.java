@@ -34,7 +34,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test class for {@code HomeDirectoryLocationStrategy}.
- *
  */
 public class TestHomeDirectoryLocationStrategy {
     /** Constant for a test file name. */

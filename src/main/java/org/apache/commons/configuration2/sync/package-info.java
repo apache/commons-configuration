@@ -27,6 +27,5 @@
  * {@code Synchronizer} can be used - this is also the default setting. To ensure thread-safety, a fully functional
  * implementation has to be set.
  * </p>
- *
  */
 package org.apache.commons.configuration2.sync;

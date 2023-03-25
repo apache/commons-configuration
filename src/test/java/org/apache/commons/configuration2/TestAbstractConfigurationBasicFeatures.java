@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * A test class for some of the basic functionality implemented by AbstractConfiguration.
- *
  */
 public class TestAbstractConfigurationBasicFeatures {
     /**

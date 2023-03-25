@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code InterpolatorSpecification}.
- *
  */
 public class TestInterpolatorSpecification {
     /** Constant for a prefix for a prefix lookup. */

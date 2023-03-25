@@ -39,7 +39,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReloadingFileBasedConfigurationBuilder}.
- *
  */
 public class TestReloadingFileBasedConfigurationBuilder {
     /**

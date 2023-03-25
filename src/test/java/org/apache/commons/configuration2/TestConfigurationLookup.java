@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ConfigurationLookup}.
- *
  */
 public class TestConfigurationLookup {
     /** Constant for a test variable name. */

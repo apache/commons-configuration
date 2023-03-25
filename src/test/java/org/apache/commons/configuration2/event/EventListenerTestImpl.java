@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A test event listener class that can be used for testing whether event sources generated correct events.
- *
  */
 public class EventListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationEvent> {
     /**

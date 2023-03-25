@@ -56,7 +56,6 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Test class for {@code MultiFileConfigurationBuilder}.
- *
  */
 public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest {
     /**

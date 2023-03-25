@@ -36,7 +36,6 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  * Test class for XMLConfiguration. In addition to TestXMLConfiguration this class especially tests the hierarchical
  * nature of this class and structured data access.
- *
  */
 public class TestHierarchicalXMLConfiguration {
     /** Test resources directory. */

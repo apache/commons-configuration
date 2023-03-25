@@ -21,7 +21,6 @@ package org.apache.commons.configuration2.ex;
  * Thrown when a property is incompatible with the type requested.
  *
  * @since 1.0
- *
  */
 public class ConversionException extends ConfigurationRuntimeException {
     /**

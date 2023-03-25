@@ -19,6 +19,5 @@
  * <p>
  * Configuration classes supporting NeXT / OpenStep /GNUStep style configuration.
  * </p>
- *
  */
 package org.apache.commons.configuration2.plist;

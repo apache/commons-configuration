@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A test event listener implementation for error events.
- *
  */
 public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationErrorEvent> {
     /**

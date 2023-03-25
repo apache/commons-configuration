@@ -23,7 +23,6 @@ import java.util.Iterator;
  * Strict comparator for configurations.
  *
  * @since 1.0
- *
  */
 public class StrictConfigurationComparator implements ConfigurationComparator {
     /**

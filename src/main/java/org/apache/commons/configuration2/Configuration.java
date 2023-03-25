@@ -50,7 +50,6 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  * the values of properties can be changed. With {@code clearProperty()} a property can be removed. Other methods allow
  * to iterate over the contained properties or to create a subset configuration.
  * </p>
- *
  */
 public interface Configuration extends ImmutableConfiguration, SynchronizerSupport {
     /**

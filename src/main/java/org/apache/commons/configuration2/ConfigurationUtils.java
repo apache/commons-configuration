@@ -41,7 +41,6 @@ import org.apache.commons.logging.LogFactory;
  * Miscellaneous utility methods for configurations.
  *
  * @see ConfigurationConverter Utility methods to convert configurations.
- *
  */
 public final class ConfigurationUtils {
     /** Constant for the name of the clone() method. */

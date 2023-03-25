@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code Parameters}.
- *
  */
 public class TestParameters {
     /** A default encoding. */

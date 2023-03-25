@@ -26,7 +26,6 @@ import java.util.List;
 
 /**
  * Pulling out the calls to do the tests so both JUnit and Cactus tests can share.
- *
  */
 public class NonStringTestHolder {
     private Configuration configuration;

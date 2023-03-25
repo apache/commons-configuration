@@ -38,7 +38,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * This class provides dummy implementations for most of the methods defined in the {@code XMLReader} interface that are
  * not used for this special purpose. There will be concrete sub classes that process specific configuration classes.
  * </p>
- *
  */
 public abstract class ConfigurationXMLReader implements XMLReader {
     /** Constant for the namespace URI. */

@@ -51,7 +51,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BasicBuilderParameters}.
- *
  */
 public class TestBasicBuilderParameters {
     /** The instance to be tested. */

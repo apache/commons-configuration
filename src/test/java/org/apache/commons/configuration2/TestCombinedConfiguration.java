@@ -60,7 +60,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for CombinedConfiguration.
- *
  */
 public class TestCombinedConfiguration {
     /**

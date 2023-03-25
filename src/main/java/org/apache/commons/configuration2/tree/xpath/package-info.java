@@ -20,6 +20,5 @@
  * This package contains the {@code XPathExpressionEngine} class which enables XPATH support for querying configuration
  * properties.
  * </p>
- *
  */
 package org.apache.commons.configuration2.tree.xpath;

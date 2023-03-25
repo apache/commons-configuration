@@ -44,7 +44,6 @@ import java.util.Map;
  * Implementation note: This class is intended to work in a concurrent environment. Instances are immutable. The
  * represented state can be updated by creating new instances which are then stored by the owning node model.
  * </p>
- *
  */
 class ReferenceTracker {
     /** A map with reference data. */

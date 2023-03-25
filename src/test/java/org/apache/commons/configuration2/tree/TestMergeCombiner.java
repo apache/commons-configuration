@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for MergeCombiner.
- *
  */
 public class TestMergeCombiner extends AbstractCombinerTest {
     /**

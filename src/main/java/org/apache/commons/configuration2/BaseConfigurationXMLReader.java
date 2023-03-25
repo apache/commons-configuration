@@ -27,7 +27,6 @@ package org.apache.commons.configuration2;
  * to generate corresponding SAX events. By registering a {@code ContentHandler} at an instance it is possible to
  * perform XML processing on a configuration object.
  * </p>
- *
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     /** Stores the actual configuration. */

@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for SubnodeConfiguration.
- *
  */
 public class TestSubnodeConfiguration {
     /** The key used for the SubnodeConfiguration. */

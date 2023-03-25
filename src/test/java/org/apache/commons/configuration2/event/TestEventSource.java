@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for BaseEventSource.
- *
  */
 public class TestEventSource {
     /**

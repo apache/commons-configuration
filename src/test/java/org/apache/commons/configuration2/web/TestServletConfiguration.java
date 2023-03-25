@@ -35,7 +35,6 @@ import org.mockito.ArgumentMatchers;
 
 /**
  * Test case for the {@link ServletConfiguration} class.
- *
  */
 public class TestServletConfiguration extends TestAbstractConfiguration {
 

@@ -53,7 +53,6 @@ import java.util.TreeMap;
  * in a single transaction, the resulting operation is more efficient.</li>
  * </ul>
  * </p>
- *
  */
 class ModelTransaction {
 

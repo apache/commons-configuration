@@ -47,7 +47,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code FileLocatorUtils}.
- *
  */
 public class TestFileLocatorUtils {
     /** Constant for a file name. */

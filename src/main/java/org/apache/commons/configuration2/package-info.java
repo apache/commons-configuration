@@ -21,6 +21,5 @@
  * implementations like {@code PropertiesConfiguration} (dealing with {@code .properties} files) or
  * {@code XMLConfiguration} that can load XML documents.
  * </p>
- *
  */
 package org.apache.commons.configuration2;

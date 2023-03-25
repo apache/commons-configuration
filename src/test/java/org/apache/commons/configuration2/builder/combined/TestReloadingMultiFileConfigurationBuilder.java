@@ -44,7 +44,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReloadingMultiFileConfigurationBuilder}.
- *
  */
 public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest {
     /**

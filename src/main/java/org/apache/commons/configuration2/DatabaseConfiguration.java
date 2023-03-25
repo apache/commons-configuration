@@ -112,7 +112,6 @@ import org.apache.commons.lang3.StringUtils;
  * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
  *
  * @since 1.0
- *
  */
 public class DatabaseConfiguration extends AbstractConfiguration {
     /** Constant for the statement used by getProperty. */

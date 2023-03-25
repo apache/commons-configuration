@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code TrackedNodeModel}.
- *
  */
 public class TestTrackedNodeModel {
     /** Constant for a test key. */

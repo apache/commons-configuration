@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code FileBasedBuilderParametersImpl}.
- *
  */
 public class TestFileBasedBuilderParameters {
     /**

@@ -58,7 +58,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * data delegate to the list of child configurations, the thread-safety of a {@code CompositeConfiguration} object also
  * depends on the {@code Synchronizer} objects used by these children.
  * </p>
- *
  */
 public class CompositeConfiguration extends AbstractConfiguration implements Cloneable {
     /** List holding all the configuration */

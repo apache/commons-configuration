@@ -41,7 +41,6 @@ import org.xml.sax.InputSource;
 
 /**
  * Test class for {@code XMLPropertiesConfiguration}.
- *
  */
 public class TestXMLPropertiesConfiguration {
     /** Constant for the name of the test file. */

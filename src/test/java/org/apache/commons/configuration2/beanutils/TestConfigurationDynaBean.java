@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Test;
  * Test Case for the {@code ConfigurationDynaBean} implementation class. These tests were based on the ones in
  * {@code BasicDynaBeanTestCase} because the two classes provide similar levels of functionality.
  * </p>
- *
  */
 public class TestConfigurationDynaBean {
     /**

@@ -42,7 +42,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Test class for BaseConfigurationXMLReader.
- *
  */
 public class TestBaseConfigurationXMLReader {
     // A ContentHandler that raises an exception

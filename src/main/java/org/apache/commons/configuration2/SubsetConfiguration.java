@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
  * It is usually not necessary to use this class directly. Instead the {@link Configuration#subset(String)} method
  * should be used, which will return a correctly initialized instance.
  * </p>
- *
  */
 public class SubsetConfiguration extends AbstractConfiguration {
     /** The parent configuration. */

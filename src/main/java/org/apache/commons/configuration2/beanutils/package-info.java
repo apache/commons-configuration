@@ -21,6 +21,5 @@
  * It allows to access or modify a configuration using the classes from the Commons Beanutils package. There are also
  * classes for declaring beans in configuration files, from which then instances can be created.
  * </p>
- *
  */
 package org.apache.commons.configuration2.beanutils;

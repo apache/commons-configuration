@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for ConfigurationNodePointerFactory. This class does not directly call the factory's methods, but rather
  * checks if it can be installed in a {@code JXPathContext} and if XPath expressions can be evaluated.
- *
  */
 public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
     @BeforeAll

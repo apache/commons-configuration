@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for CatalogResolver.
- *
  */
 public class TestCatalogResolver {
     private static final String CATALOG_FILES = "catalog.xml";

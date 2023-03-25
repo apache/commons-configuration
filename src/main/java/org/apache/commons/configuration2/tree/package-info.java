@@ -19,6 +19,5 @@
  * <p>
  * A package with helper and utility classes used by hierarchical configurations.
  * </p>
- *
  */
 package org.apache.commons.configuration2.tree;

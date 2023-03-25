@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the {@link SubsetConfiguration} class.
- *
  */
 public class TestSubsetConfiguration {
     static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;

@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code EventListenerParameters}.
- *
  */
 public class TestEventListenerParameters {
     /**

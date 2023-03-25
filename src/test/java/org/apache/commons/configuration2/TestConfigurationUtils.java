@@ -50,7 +50,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests the ConfigurationUtils class
- *
  */
 public class TestConfigurationUtils {
     /**

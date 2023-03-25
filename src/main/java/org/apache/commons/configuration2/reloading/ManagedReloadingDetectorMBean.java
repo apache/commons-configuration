@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.reloading;
 
 /**
  * MBean definition for managing configuration reload.
- *
  */
 public interface ManagedReloadingDetectorMBean {
     /**

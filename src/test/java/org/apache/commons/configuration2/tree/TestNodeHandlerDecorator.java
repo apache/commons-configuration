@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.tree;
 /**
  * Test class for {@code NodeHandlerDecorator}. This class uses the abstract base class for NodeHandler tests to verify
  * that all methods defined by the {@code NodeHandler} interface are correctly delegated to the wrapped handler.
- *
  */
 public class TestNodeHandlerDecorator extends AbstractImmutableNodeHandlerTest {
     /**

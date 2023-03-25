@@ -24,6 +24,5 @@
  * notifications are sent out. In collaboration with a <em>configuration builder</em> reloading can happen transparently
  * in background.
  * </p>
- *
  */
 package org.apache.commons.configuration2.reloading;

@@ -35,7 +35,6 @@ import org.xml.sax.InputSource;
 
 /**
  * Test class for HierarchicalConfigurationXMLReader.
- *
  */
 public class TestHierarchicalConfigurationXMLReader {
     private static final String TEST_FILE = ConfigurationAssert.getTestFile("testHierarchicalXMLConfiguration.xml").getAbsolutePath();

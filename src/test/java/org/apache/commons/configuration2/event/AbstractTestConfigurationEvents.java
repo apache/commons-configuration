@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
  * {@code createConfiguration()} method for creating an instance of a specific configuration class. Because tests for
  * detail events depend on a concrete implementation an exact sequence of events cannot be checked. Instead the
  * corresponding test methods check whether the enclosing events (not the detail events) are of the expected type.
- *
  */
 public abstract class AbstractTestConfigurationEvents {
     /** Constant for a test property name. */

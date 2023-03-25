@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReloadingController}.
- *
  */
 public class TestReloadingController {
     /**

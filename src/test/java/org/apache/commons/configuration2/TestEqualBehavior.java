@@ -34,7 +34,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Compare the behavior of various methods between CompositeConfiguration and normal (Properties) Configuration
- *
  */
 public class TestEqualBehavior {
     /**

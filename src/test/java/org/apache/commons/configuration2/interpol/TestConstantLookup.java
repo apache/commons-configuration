@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for ConstantLookup.
- *
  */
 public class TestConstantLookup {
     /** A public field that can be read by the lookup. */

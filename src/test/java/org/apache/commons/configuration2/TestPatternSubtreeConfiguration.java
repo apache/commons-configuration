@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple MultiConfigurationTest.
- *
  */
 public class TestPatternSubtreeConfiguration {
     private static final File CONFIG_FILE = ConfigurationAssert.getTestFile("testPatternSubtreeConfig.xml");

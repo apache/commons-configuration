@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DummyLookup}.
- *
  */
 public class TestDummyLookup {
     /**

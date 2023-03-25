@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code CopyObjectDefaultHandler}.
- *
  */
 public class TestCopyObjectDefaultHandler {
     /**

@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for NodeAddData.
- *
  */
 public class TestNodeAddData {
     /** Constant for the name of the new node. */

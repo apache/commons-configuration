@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests some basic functions of the BaseConfiguration class. Missing keys might return null.
- *
  */
 public class TestBaseNullConfiguration {
     protected BaseConfiguration config;

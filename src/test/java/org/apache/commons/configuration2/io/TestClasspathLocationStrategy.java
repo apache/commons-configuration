@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ClasspathLocationStrategy}.
- *
  */
 public class TestClasspathLocationStrategy {
     /** Constant for a test file name. */

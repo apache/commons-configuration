@@ -38,7 +38,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test loading multiple configurations.
- *
  */
 public class TestNullCompositeConfiguration {
     protected PropertiesConfiguration conf1;

@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for XPathExpressionEngine.
- *
  */
 public class TestXPathExpressionEngine {
     /** Constant for the valid test key. */

@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the ManagedReloadingDetector class.
- *
  */
 public class TestManagedReloadingDetector {
     /** The instance to be tested. */

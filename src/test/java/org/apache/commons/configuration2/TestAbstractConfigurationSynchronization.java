@@ -38,7 +38,6 @@ import org.junit.jupiter.api.Test;
 /**
  * A test class for the synchronization capabilities of {@code AbstractConfiguration}. This class mainly checks the
  * collaboration between a configuration object and its {@code Synchronizer}.
- *
  */
 public class TestAbstractConfigurationSynchronization {
     /** Constant for the test property accessed by all tests. */

@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
 /**
  * A specialized test class for {@code CombinedConfigurationBuilder} which uses a VFS file system for accessing
  * file-based configurations.
- *
  */
 public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurationBuilder {
     /**

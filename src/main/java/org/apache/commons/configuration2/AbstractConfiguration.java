@@ -88,7 +88,6 @@ import org.apache.commons.lang3.StringUtils;
  * other (protected) methods executing the actual work. Subclasses override these protected methods to define or adapt
  * behavior. The public entry point methods are final to prevent subclasses from breaking basic functionality.
  * </p>
- *
  */
 public abstract class AbstractConfiguration extends BaseEventSource implements Configuration {
 

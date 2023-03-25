@@ -21,7 +21,6 @@ package org.apache.commons.configuration2;
  * Comparator for configurations interface.
  *
  * @since 1.0
- *
  */
 public interface ConfigurationComparator {
     /**

@@ -126,7 +126,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * </pre>
  *
  * @since 1.2
- *
  */
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware {
     /** Size of the indentation for the generated file. */

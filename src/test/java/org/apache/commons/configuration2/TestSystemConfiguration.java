@@ -34,7 +34,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@code SystemConfiguration}.
- *
  */
 public class TestSystemConfiguration {
     /** A folder for temporary files. */

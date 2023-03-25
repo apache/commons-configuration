@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BasePathLocationStrategy}.
- *
  */
 public class TestBasePathLocationStrategy {
     /** Constant for the name of the test file. */

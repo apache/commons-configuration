@@ -22,7 +22,6 @@ import org.apache.commons.configuration2.XMLConfiguration;
 /**
  * An additional test class for ConfigurationDynaBean. This test class performs the same tests as the default test
  * class, but uses a XMLConfiguration as underlying configuration object.
- *
  */
 public class TestConfigurationDynaBeanXMLConfig extends TestConfigurationDynaBean {
     /**

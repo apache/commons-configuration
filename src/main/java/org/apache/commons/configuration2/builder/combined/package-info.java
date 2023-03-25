@@ -30,6 +30,5 @@
  * definition of multiple configuration files for the different stages of a project: development, integration test,
  * production, etc.
  * </p>
- *
  */
 package org.apache.commons.configuration2.builder.combined;

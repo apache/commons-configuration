@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for DefaultConfigurationKey.
- *
  */
 public class TestDefaultConfigurationKey {
     /** Constant for a test key. */

@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 /**
  * A base test class for {@code NodeHandler} implementations for immutable nodes. Concrete sub classes have to implement
  * a method which creates a new handler object for a given nodes structure.
- *
  */
 public abstract class AbstractImmutableNodeHandlerTest {
     /**

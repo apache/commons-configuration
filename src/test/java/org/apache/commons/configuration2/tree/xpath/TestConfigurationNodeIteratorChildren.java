@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class for ConfigurationNodeIteratorChildren.
- *
  */
 public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
     /** Constant for a namespace prefix. */

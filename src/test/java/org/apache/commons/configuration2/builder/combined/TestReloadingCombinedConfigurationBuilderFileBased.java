@@ -53,7 +53,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test class for {@code ReloadingCombinedConfigurationBuilder} which actually accesses files to be reloaded.
- *
  */
 public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**

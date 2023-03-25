@@ -25,6 +25,5 @@
  * package also contains various strategy classes for locating files. They can be used to construct a location strategy
  * for the configuration sources of a specific application.
  * </p>
- *
  */
 package org.apache.commons.configuration2.io;

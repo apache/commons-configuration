@@ -52,7 +52,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests some basic functions of the BaseConfiguration class. Missing keys will throw Exceptions
- *
  */
 public class TestBaseConfiguration {
     /** Constant for the number key. */
