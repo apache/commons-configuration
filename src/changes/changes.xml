@@ -23,7 +23,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.9.0" date="TBD" description="Minor release with new features and updated dependencies.">
+    <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
       <action issue="CONFIGURATION-815" type="fix" dev="ggregory" due-to="Gary Gregory">
         Replace optional Apache Log4j 1.2.17 with 2.20.0.
