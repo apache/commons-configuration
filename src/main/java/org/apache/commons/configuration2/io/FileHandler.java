@@ -687,9 +687,9 @@ public class FileHandler {
         InputStream in = null;
 
         try {
-            final FileSystem obtainFileSystem = FileLocatorUtils.getFileSystem(locator);
+            final FileSystem fileSystem = FileLocatorUtils.getFileSystem(locator);
             final URLConnectionOptions urlConnectionOptions = locator.getURLConnectionOptions();
-            in = urlConnectionOptions == null ? obtainFileSystem.getInputStream(url) : obtainFileSystem.getInputStream(url, urlConnectionOptions);
+            in = urlConnectionOptions == null ? fileSystem.getInputStream(url) : fileSystem.getInputStream(url, urlConnectionOptions);
             loadFromStream(in, locator.getEncoding(), url);
         } catch (final ConfigurationException e) {
             throw e;
