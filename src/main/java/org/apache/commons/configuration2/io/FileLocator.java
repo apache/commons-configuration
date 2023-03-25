@@ -99,7 +99,7 @@ public final class FileLocator {
         /**
          * Creates a new immutable {@code FileLocatorImpl} object based on the properties set so far for this builder.
          *
-         * @return the newly created {@code FileLocator} object
+         * @return the newly created {@code FileLocator} object, never null.
          */
         public FileLocator create() {
             return new FileLocator(this);
