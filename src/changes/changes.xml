@@ -47,6 +47,9 @@
       <action type="fix" dev="ggregory" due-to="Gary Gregory">
         Avoid NullPointerException in org.apache.commons.configuration2.web.AppletConfiguration.getKeysInternal().
       </action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">
+        Fix JDBC prepared statements leak in org.apache.commons.configuration2.DatabaseConfiguration.clearPropertyDirect(String).
+      </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
         Bump actions/checkout from 3 to 3.1.0 #224.

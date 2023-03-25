@@ -448,7 +448,9 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR, null, null) {
             @Override
             protected Void performOperation() throws SQLException {
-                initStatement(String.format(SQL_CLEAR, table), true).executeUpdate();
+                try (PreparedStatement statement = initStatement(String.format(SQL_CLEAR, table), true)) {
+                    statement.executeUpdate();
+                }
                 return null;
             }
         }.execute();
