@@ -46,7 +46,7 @@ Apache Commons Configuration
 [![GitHub Actions Status](https://github.com/apache/commons-configuration/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-configuration/actions)
 [![Coverage Status](https://codecov.io/gh/apache/commons-configuration/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/?gav=true)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.8.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.8.0)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.9.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.9.0)
 [![CodeQL](https://github.com/apache/commons-configuration/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration)
 
@@ -70,7 +70,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.8.0</version>
+  <version>2.9.0</version>
 </dependency>
 ```
 

@@ -23,7 +23,6 @@ New features:
 o CONFIGURATION-799:  Add DefaultConversionHandler#setListDelimiterHandler(ListDelimiterHandler). Thanks to Xinshiyou, Gary Gregory.
 
 Fixed Bugs:
-o CONFIGURATION-815:  Replace optional Apache Log4j 1.2.17 with 2.20.0. Thanks to Gary Gregory.
 o CONFIGURATION-799:  CombinedConfiguration#getKeys() can throw NoSuchElementException. Thanks to Jarek Sacha, Gary Gregory.
 o CONFIGURATION-822:  Fix ambiguity on the section determining #229. Thanks to Branislav Be?o, Gary Gregory, Bruno P. Kinoshita.
 o                     Use Java style array decelerations #244. Thanks to Arturo Bernal.
@@ -32,6 +31,7 @@ o                     Avoid NullPointerException in org.apache.commons.configura
 o                     Fix JDBC prepared statements leak in org.apache.commons.configuration2.DatabaseConfiguration.clearPropertyDirect(String). Thanks to Gary Gregory.
 
 Changes:
+o CONFIGURATION-815:  Bump optional Apache Log4j 1.2.17 with 2.20.0. Thanks to Gary Gregory.
 o                     Bump actions/checkout from 3 to 3.1.0 #224. Thanks to Gary Gregory, Dependabot.
 o                     Bump actions/setup-java from 3 to 3.5.1. Thanks to Gary Gregory.
 o                     Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.3.0 #193, #195, #228, #237. Thanks to Dependabot, Gary Gregory.

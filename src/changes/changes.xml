@@ -25,9 +25,6 @@
   <body>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
-      <action issue="CONFIGURATION-815" type="fix" dev="ggregory" due-to="Gary Gregory">
-        Replace optional Apache Log4j 1.2.17 with 2.20.0.
-      </action>
       <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Jarek Sacha, Gary Gregory">
         CombinedConfiguration#getKeys() can throw NoSuchElementException.
       </action>
@@ -51,6 +48,9 @@
         Fix JDBC prepared statements leak in org.apache.commons.configuration2.DatabaseConfiguration.clearPropertyDirect(String).
       </action>
       <!-- UPDATE -->
+      <action issue="CONFIGURATION-815" type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump optional Apache Log4j 1.2.17 with 2.20.0.
+      </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
         Bump actions/checkout from 3 to 3.1.0 #224.
       </action>
