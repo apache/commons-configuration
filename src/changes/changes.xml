@@ -23,6 +23,12 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
+    <release version="2.9.1" date="20YY-MM-DD" description="Minor release with new features and updated dependencies.">
+      <!-- UPDATE -->
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump jackson-databind from 2.14.2 to 2.15.0 #297.
+      </action>
+    </release>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
       <action issue="CONFIGURATION-799" type="fix" dev="ggregory" due-to="Jarek Sacha, Gary Gregory">
