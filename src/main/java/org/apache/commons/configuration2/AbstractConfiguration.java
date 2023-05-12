@@ -771,6 +771,21 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * {@inheritDoc} This implementation returns keys that either match the prefix or start with the prefix followed by the delimiter.
+     * So the call {@code getKeys("db");} will find the keys {@code db}, {@code db@user}, or {@code db@password},
+     * but not the key {@code dbdriver}.
+     */
+    @Override
+    public final Iterator<String> getKeys(final String prefix, final String delimiter) {
+        beginRead(false);
+        try {
+            return getKeysInternal(prefix, delimiter);
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
      * Actually creates an iterator for iterating over the keys in this configuration. This method is called by
      * {@code getKeys()}, it has to be defined by concrete subclasses.
      *
@@ -791,6 +806,21 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected Iterator<String> getKeysInternal(final String prefix) {
         return new PrefixedKeysIterator(getKeysInternal(), prefix);
+    }
+
+    /**
+     * Gets an {@code Iterator} with all property keys starting with the specified prefix and specified delimiter. This method is called by
+     * {@link #getKeys(String)}. It is fully implemented by delegating to {@code getKeysInternal()} and returning a special
+     * iterator which filters for the passed in prefix. Subclasses can override it if they can provide a more efficient way
+     * to iterate over specific keys only.
+     *
+     * @param prefix the prefix for the keys to be taken into account
+     * @param delimiter the prefix delimiter
+     * @return an {@code Iterator} returning the filtered keys
+     * @since 2.0
+     */
+    protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
+        return new PrefixedKeysIterator(getKeysInternal(), prefix, delimiter);
     }
 
     /**

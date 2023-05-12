@@ -170,7 +170,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
 
     @Override
     protected Iterator<String> getKeysInternal() {
-        return new SubsetIterator(parent.getKeys(prefix));
+        return new SubsetIterator(parent.getKeys(prefix, delimiter));
     }
 
     /**
