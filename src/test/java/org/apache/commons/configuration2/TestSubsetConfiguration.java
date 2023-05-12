@@ -307,4 +307,23 @@ public class TestSubsetConfiguration {
         subset.setThrowExceptionOnMissing(true);
         assertThrows(NoSuchElementException.class, () -> config.getString("foo"));
     }
+
+    @Test
+    public void testPrefixDelimiter(){
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setProperty("part1.part2@test.key1", "value1");
+        config.setProperty("part1.part2", "value2");
+        config.setProperty("part3.part4@testing.key2", "value3");
+
+        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@");
+        // Check subset properties
+        assertEquals("value1", subset.getString("test.key1"));
+        assertEquals("value2", subset.getString(""));
+        assertNull(subset.getString("testing.key2"));
+
+        // Check for empty subset configuration and iterator
+        assertEquals(2, subset.size());
+        assertFalse(subset.isEmpty());
+        assertTrue(subset.getKeys().hasNext());
+    }
 }
