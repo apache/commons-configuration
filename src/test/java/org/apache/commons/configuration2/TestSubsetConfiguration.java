@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -325,5 +326,43 @@ public class TestSubsetConfiguration {
         assertEquals(2, subset.size());
         assertFalse(subset.isEmpty());
         assertTrue(subset.getKeys().hasNext());
+    }
+
+    @Test
+    public void testPrefixDelimiterNegativeTest(){
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setProperty("part1.part2@test.key1", "value1");
+        config.setProperty("part3.part4@testing.key2", "value2");
+
+        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@") {
+            // Anonymous inner class declaration to override SubsetConfiguration.getKeysInternal() - Call
+            // ImutableConfiguration.getKeys(String) on the parent configuration of the SubsetConfiguration in order to
+            // not consequently pass the prefix delimiter
+            @Override
+            protected Iterator<String> getKeysInternal() {
+                Class<?> subsetIteratorClass;
+                try {
+                    subsetIteratorClass = Class
+                            .forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
+                    Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
+                            Iterator.class);
+                    ctor.setAccessible(true);
+
+                    return (Iterator<String>) ctor.newInstance(this, parent.getKeys("part1.part2"));
+                } catch (Exception ex) {
+                    throw new IllegalArgumentException(ex);
+                }
+            }
+        };
+        
+        // Check subset properties - contains one property
+        assertEquals("value1", subset.getString("test.key1"));
+        assertNull(subset.getString("testing.key2"));
+
+        // Check for empty subset configuration and iterator - even if the SubsetConfiguration contains properties, like
+        // checked previously its states that it is empty
+        assertEquals(0, subset.size());
+        assertTrue(subset.isEmpty());
+        assertFalse(subset.getKeys().hasNext());
     }
 }
