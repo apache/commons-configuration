@@ -34,6 +34,9 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump spring.version from 5.3.26 to 5.3.27.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons-parent from 57 to 58.
+      </action>
     </release>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
