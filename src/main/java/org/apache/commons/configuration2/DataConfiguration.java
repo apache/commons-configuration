@@ -100,7 +100,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration {
-    /** The key of the property storing the user defined date format. */
+    /** The key of the property storing the user-defined date format. */
     public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
 
     /** The default format for dates. */
