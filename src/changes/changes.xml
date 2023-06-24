@@ -37,6 +37,9 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump commons-parent from 57 to 58.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump commons-codec:commons-codec: from 1.15 to 1.16.0.
+      </action>
     </release>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
