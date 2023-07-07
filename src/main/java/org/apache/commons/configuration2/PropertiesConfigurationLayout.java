@@ -555,14 +555,8 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             throw new IllegalArgumentException("Property key must not be null!");
         }
 
-        PropertyLayoutData data = layoutData.get(key);
-        if (data == null) {
-            data = new PropertyLayoutData();
-            data.setSingleLine(true);
-            layoutData.put(key, data);
-        }
-
-        return data;
+        // PropertyLayoutData defaults to singleLine = true
+        return layoutData.computeIfAbsent(key, k -> new PropertyLayoutData());
     }
 
     /**
