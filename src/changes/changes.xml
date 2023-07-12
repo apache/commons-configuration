@@ -29,7 +29,7 @@
         [StepSecurity] ci: Harden GitHub Actions #307.
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-834" due-to="Keith Barlow, Gary Gregory">
-         ConfirgurationPropertySource doesn't supply resolved values #309.
+        ConfirgurationPropertySource doesn't supply resolved values #309.
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
