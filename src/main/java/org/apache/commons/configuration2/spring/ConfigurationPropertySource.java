@@ -18,10 +18,10 @@
 package org.apache.commons.configuration2.spring;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.env.EnumerablePropertySource;
 
 /**
@@ -40,11 +40,8 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     @Override
     public String[] getPropertyNames() {
         final List<String> keys = new ArrayList<>();
-        final Iterator<String> keysIterator = source.getKeys();
-        while (keysIterator.hasNext()) {
-            keys.add(keysIterator.next());
-        }
-        return keys.toArray(new String[keys.size()]);
+        source.getKeys().forEachRemaining(keys::add);
+        return keys.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     @Override
