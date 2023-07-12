@@ -28,6 +28,9 @@
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">
         [StepSecurity] ci: Harden GitHub Actions #307.
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-834" due-to="Keith Barlow, Gary Gregory">
+         ConfirgurationPropertySource doesn't supply resolved values #309.
+      </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump jackson-databind from 2.14.2 to 2.15.2 #297, #303.
