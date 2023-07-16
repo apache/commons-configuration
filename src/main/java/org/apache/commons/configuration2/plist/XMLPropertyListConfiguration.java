@@ -19,10 +19,11 @@ package org.apache.commons.configuration2.plist;
 
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -132,7 +133,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     private static final int INDENT_SIZE = 4;
 
     /** Constant for the encoding for binary data. */
-    private static final String DATA_ENCODING = "UTF-8";
+    private static final Charset DATA_ENCODING = StandardCharsets.UTF_8;
 
     /** Temporarily stores the current file location. */
     private FileLocator locator;
@@ -342,13 +343,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
             final Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         } else if (value instanceof byte[]) {
-            final String base64;
-            try {
-                base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
-            } catch (final UnsupportedEncodingException e) {
-                // Cannot happen as UTF-8 is a standard encoding
-                throw new AssertionError(e);
-            }
+            final String base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
             out.println(padding + "<data>" + StringEscapeUtils.escapeXml10(base64) + "</data>");
         } else if (value != null) {
             out.println(padding + "<string>" + StringEscapeUtils.escapeXml10(String.valueOf(value)) + "</string>");
@@ -594,12 +589,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * @param value the value to be added
          */
         public void addDataValue(final String value) {
-            try {
-                addValue(Base64.decodeBase64(value.getBytes(DATA_ENCODING)));
-            } catch (final UnsupportedEncodingException e) {
-                // Cannot happen as UTF-8 is a default encoding
-                throw new AssertionError(e);
-            }
+            addValue(Base64.decodeBase64(value.getBytes(DATA_ENCODING)));
         }
 
         /**
