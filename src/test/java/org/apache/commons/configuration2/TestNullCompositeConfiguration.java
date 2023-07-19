@@ -33,6 +33,7 @@ import java.util.List;
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -396,7 +397,7 @@ public class TestNullCompositeConfiguration {
         cc.addConfiguration(ConfigurationConverter.getConfiguration(System.getProperties()));
 
         final Configuration subset = cc.subset("subset");
-        assertEquals(System.getProperty("java.io.tmpdir") + "/file.tmp", subset.getString("tempfile"));
+        assertEquals(FileUtils.getTempDirectoryPath() + "/file.tmp", subset.getString("tempfile"));
     }
 
     @Test
