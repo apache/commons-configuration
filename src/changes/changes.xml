@@ -42,7 +42,7 @@
         Bump spring.version from 5.3.26 to 5.3.28.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump commons-parent from 57 to 58.
+        Bump commons-parent from 57 to 59.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump commons-codec:commons-codec: from 1.15 to 1.16.0.
