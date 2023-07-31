@@ -45,7 +45,7 @@
         Bump commons-parent from 57 to 58.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
-        Bump commons-codec:commons-codec: from 1.15 to 1.16.0.
+        Bump commons-codec:commons-codec from 1.15 to 1.16.0.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump commons-lang3 from 3.11 to 3.13.0.
