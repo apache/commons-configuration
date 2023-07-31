@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>58</version>
+    <version>59</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
@@ -370,6 +370,12 @@
       <artifactId>spring-core</artifactId>
       <version>${spring.version}</version>
       <optional>true</optional>
+      <exclusions>
+		  <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jcl</artifactId>
+		  </exclusion>
+	  </exclusions>
     </dependency>
 
     <dependency>
