@@ -295,7 +295,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected Object getPropertyInternal(final String key) {
-        final JdbcOperation<Object> op = new JdbcOperation<Object>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null) {
+        final AbstractJdbcOperation<Object> op = new AbstractJdbcOperation<Object>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null) {
             @Override
             protected Object performOperation() throws SQLException {
                 final List<Object> results = new ArrayList<>();
@@ -325,7 +325,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected void addPropertyDirect(final String key, final Object obj) {
-        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, key, obj) {
+        new AbstractJdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, key, obj) {
             @Override
             protected Void performOperation() throws SQLException {
                 final StringBuilder query = new StringBuilder("INSERT INTO ");
@@ -383,7 +383,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected boolean isEmptyInternal() {
-        final JdbcOperation<Integer> op = new JdbcOperation<Integer>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
+        final AbstractJdbcOperation<Integer> op = new AbstractJdbcOperation<Integer>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
             @Override
             protected Integer performOperation() throws SQLException {
                 try (ResultSet rs = openResultSet(String.format(SQL_IS_EMPTY, table), true)) {
@@ -406,7 +406,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected boolean containsKeyInternal(final String key) {
-        final JdbcOperation<Boolean> op = new JdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null) {
+        final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null) {
             @Override
             protected Boolean performOperation() throws SQLException {
                 try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
@@ -428,7 +428,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected void clearPropertyDirect(final String key) {
-        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR_PROPERTY, key, null) {
+        new AbstractJdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR_PROPERTY, key, null) {
             @Override
             protected Void performOperation() throws SQLException {
                 try (PreparedStatement ps = initStatement(String.format(SQL_CLEAR_PROPERTY, table, keyColumn), true, key)) {
@@ -446,7 +446,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     @Override
     protected void clearInternal() {
-        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR, null, null) {
+        new AbstractJdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR, null, null) {
             @Override
             protected Void performOperation() throws SQLException {
                 try (PreparedStatement statement = initStatement(String.format(SQL_CLEAR, table), true)) {
@@ -467,7 +467,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     @Override
     protected Iterator<String> getKeysInternal() {
         final Collection<String> keys = new ArrayList<>();
-        new JdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
+        new AbstractJdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
             @Override
             protected Collection<String> performOperation() throws SQLException {
                 try (ResultSet rs = openResultSet(String.format(SQL_GET_KEYS, keyColumn, table), true)) {
@@ -562,7 +562,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      *
      * @param <T> the type of the results produced by a JDBC operation
      */
-    private abstract class JdbcOperation<T> {
+    private abstract class AbstractJdbcOperation<T> {
         /** Stores the connection. */
         private Connection conn;
 
@@ -592,7 +592,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param errPropName the property configurationName for the error event
          * @param errPropVal the property value for the error event
          */
-        protected JdbcOperation(final EventType<? extends ConfigurationErrorEvent> errEvType, final EventType<?> opType, final String errPropName,
+        protected AbstractJdbcOperation(final EventType<? extends ConfigurationErrorEvent> errEvType, final EventType<?> opType, final String errPropName,
             final Object errPropVal) {
             errorEventType = errEvType;
             operationEventType = opType;

@@ -34,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
  */
-abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
+abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /** Constant for the prefix separator. */
     private static final String PREFIX_SEPARATOR = ":";
 
@@ -59,7 +59,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
      * @param parent the parent pointer
      * @param reverse the reverse flag
      */
-    protected ConfigurationNodeIteratorBase(final ConfigurationNodePointer<T> parent, final boolean reverse) {
+    protected AbstractConfigurationNodeIterator(final ConfigurationNodePointer<T> parent, final boolean reverse) {
         this.parent = parent;
         this.reverse = reverse;
     }

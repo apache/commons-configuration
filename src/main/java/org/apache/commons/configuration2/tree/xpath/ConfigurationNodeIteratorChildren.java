@@ -34,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
  */
-class ConfigurationNodeIteratorChildren<T> extends ConfigurationNodeIteratorBase<T> {
+class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNodeIterator<T> {
 
     /** The list with the sub nodes to iterate over. */
     private final List<T> subNodes;

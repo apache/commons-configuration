@@ -108,7 +108,7 @@ public class FileHandler {
      * {@code FileLocator} instance stored in an atomic reference by a manipulated instance. (If we already had lambdas,
      * this could be done without a class in a more elegant way.)
      */
-    private abstract class Updater {
+    private abstract class AbstractUpdater {
         /**
          * Performs an update of the enclosing file handler's {@code FileLocator} object.
          */
@@ -332,7 +332,7 @@ public class FileHandler {
      * Clears the location of this {@code FileHandler}. Afterwards this handler does not point to any valid file.
      */
     public void clearLocation() {
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.basePath(null).fileName(null).sourceURL(null);
@@ -1076,7 +1076,7 @@ public class FileHandler {
      */
     public void setBasePath(final String basePath) {
         final String path = normalizeFileURL(basePath);
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.basePath(path);
@@ -1092,7 +1092,7 @@ public class FileHandler {
      * @param encoding the encoding of the associated file
      */
     public void setEncoding(final String encoding) {
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.encoding(encoding);
@@ -1109,7 +1109,7 @@ public class FileHandler {
     public void setFile(final File file) {
         final String fileName = file.getName();
         final String basePath = file.getParentFile() != null ? file.getParentFile().getAbsolutePath() : null;
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.fileName(fileName).basePath(basePath).sourceURL(null);
@@ -1141,7 +1141,7 @@ public class FileHandler {
      */
     public void setFileName(final String fileName) {
         final String name = normalizeFileURL(fileName);
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.fileName(name);
@@ -1157,7 +1157,7 @@ public class FileHandler {
      * @param fileSystem the {@code FileSystem}
      */
     public void setFileSystem(final FileSystem fileSystem) {
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.fileSystem(fileSystem);
@@ -1174,7 +1174,7 @@ public class FileHandler {
      * @see FileLocatorUtils#DEFAULT_LOCATION_STRATEGY
      */
     public void setLocationStrategy(final FileLocationStrategy strategy) {
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.locationStrategy(strategy);
@@ -1216,7 +1216,7 @@ public class FileHandler {
      * @since 2.8.0
      */
     public void setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
-        new Updater() {
+        new AbstractUpdater() {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder) {
                 builder.sourceURL(url);
