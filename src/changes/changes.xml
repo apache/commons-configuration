@@ -53,6 +53,9 @@
       <action type="update" dev="ggregory" due-to="Dependabot">
         Bump org.yaml:snakeyaml from 2.0 to 2.2 #312, #315.
       </action>
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump slf4j.version from 2.0.7 to 2.0.9 #316.
+      </action>
     </release>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
