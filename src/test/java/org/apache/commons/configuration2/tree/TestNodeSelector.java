@@ -114,7 +114,7 @@ public class TestNodeSelector {
         final ImmutableNode target = NodeStructureHelper.nodeForKey(root, "tables/table(1)");
         results.add(QueryResult.createNodeResult(target));
         results.add(QueryResult.createAttributeResult(NodeStructureHelper.nodeForKey(root, "tables/table(0)/fields/field(1)"), "type"));
-        
+
         when(resolverMock.resolveKey(root, KEY, handler)).thenReturn(results);
 
         final NodeSelector selector = new NodeSelector(KEY);

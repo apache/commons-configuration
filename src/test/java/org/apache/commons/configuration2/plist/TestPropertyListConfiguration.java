@@ -127,7 +127,7 @@ public class TestPropertyListConfiguration {
 
     @Test
     public void testData() {
-        byte[] bytes = assertInstanceOf(byte[].class, config.getProperty("data"));
+        final byte[] bytes = assertInstanceOf(byte[].class, config.getProperty("data"));
         assertArrayEquals("foo bar".getBytes(), bytes);
     }
 

@@ -1180,7 +1180,7 @@ public class TestFileHandler {
     @Test
     public void testSaveToWriterNoContent() {
         final FileHandler handler = new FileHandler();
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         assertThrows(ConfigurationException.class, () -> handler.save(writer));
     }
 

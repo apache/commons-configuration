@@ -336,7 +336,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createTestBuilder(
             new XMLBuilderParametersImpl().setValidating(true).setSchemaValidation(true));
         switchToConfig("2001");
-        ConfigurationException ex = assertThrows(ConfigurationException.class, builder::getConfiguration);
+        final ConfigurationException ex = assertThrows(ConfigurationException.class, builder::getConfiguration);
         Throwable cause = ex.getCause();
         while (cause != null && !(cause instanceof SAXParseException)) {
             cause = cause.getCause();

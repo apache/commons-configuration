@@ -812,7 +812,7 @@ public class TestConfigurationInterpolator {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
 
-        Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
+        final Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
         assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
     }
 

@@ -109,7 +109,7 @@ public class TestXPathExpressionEngine {
      */
     private JXPathContext expectSelect(final Object... results) {
         final JXPathContext ctx = mock(JXPathContext.class);
-        
+
         when(ctx.selectNodes(TEST_KEY)).thenReturn(Arrays.asList(results));
 
         return ctx;
@@ -123,7 +123,7 @@ public class TestXPathExpressionEngine {
      */
     private XPathExpressionEngine setUpEngine(final JXPathContext ctx) {
         final XPathContextFactory factory = mock(XPathContextFactory.class);
-        
+
         when(factory.createContext(root, handler)).thenReturn(ctx);
 
         return new XPathExpressionEngine(factory);

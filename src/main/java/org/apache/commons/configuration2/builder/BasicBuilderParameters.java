@@ -458,7 +458,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
             return null;
         }
 
-        if (col.stream().noneMatch(o -> o instanceof Lookup)) {
+        if (col.stream().noneMatch(Lookup.class::isInstance)) {
             throw new IllegalArgumentException("Collection with default lookups contains invalid data: " + col);
         }
         return fetchDefaultLookups(params);

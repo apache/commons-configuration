@@ -93,7 +93,7 @@ public class TestFileBasedConfigurationBuilder {
      */
     private File createTestFile(final int value) {
         return assertDoesNotThrow(() -> {
-            File file = newFile(tempFolder);
+            final File file = newFile(tempFolder);
             try (Writer out = new FileWriter(file)) {
                 out.write(String.format("%s=%d", PROP, value));
             }

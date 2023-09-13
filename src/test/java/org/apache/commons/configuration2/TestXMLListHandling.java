@@ -143,7 +143,7 @@ public class TestXMLListHandling {
     @Test
     public void testIncompatibleListDelimiterOnSaving() {
         config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-        assertThrows(ConfigurationRuntimeException.class, () -> saveToString());
+        assertThrows(ConfigurationRuntimeException.class, this::saveToString);
     }
 
     /**

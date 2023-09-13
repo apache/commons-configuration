@@ -180,7 +180,7 @@ public class EventListenerList {
         final List<EventListenerRegistrationData<? extends T>> results = new LinkedList<>();
 
         listeners.forEach(reg -> {
-            Set<EventType<?>> base = superTypes.computeIfAbsent(reg.getEventType(), EventType::fetchSuperEventTypes);
+            final Set<EventType<?>> base = superTypes.computeIfAbsent(reg.getEventType(), EventType::fetchSuperEventTypes);
             if (base.contains(eventType)) {
                 @SuppressWarnings("unchecked")
                 final

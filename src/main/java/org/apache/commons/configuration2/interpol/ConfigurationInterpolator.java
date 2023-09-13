@@ -720,7 +720,8 @@ public class ConfigurationInterpolator {
             if (!(obj instanceof String)) {
                 if (obj instanceof Iterable) {
                    return nextOrNull(((Iterable<?>) obj).iterator());
-                } else if (obj instanceof Iterator) {
+                }
+                if (obj instanceof Iterator) {
                     return nextOrNull((Iterator<?>) obj);
                 } else if (obj.getClass().isArray()) {
                     return Array.getLength(obj) > 0

@@ -198,7 +198,7 @@ public class TestINIConfiguration {
      * @return the initialized configuration
      * @throws ConfigurationException if an error occurs
      */
-    private static INIConfiguration setUpConfig(final String data, boolean inLineCommentsAllowed) throws ConfigurationException {
+    private static INIConfiguration setUpConfig(final String data, final boolean inLineCommentsAllowed) throws ConfigurationException {
         // @formatter:off
         final INIConfiguration instance = INIConfiguration.builder()
                 .setSectionInLineCommentsAllowed(inLineCommentsAllowed)
@@ -259,7 +259,7 @@ public class TestINIConfiguration {
      */
     private void checkSectionNames(final INIConfiguration config, final String[] expected) {
         final Set<String> sectionNames = config.getSections();
-        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames); 
+        assertEquals(new HashSet<>(Arrays.asList(expected)), sectionNames);
     }
 
     /**
@@ -1005,7 +1005,7 @@ public class TestINIConfiguration {
      */
     @ParameterizedTest
     @MethodSource("provideValuesWithComments")
-    public void testValueWithComment(String source, String key, String value) throws Exception {
+    public void testValueWithComment(final String source, final String key, final String value) throws Exception {
         final INIConfiguration config = setUpConfig(source);
         assertEquals(value, config.getString(key));
     }
@@ -1078,7 +1078,7 @@ public class TestINIConfiguration {
      */
     @ParameterizedTest
     @MethodSource("provideSectionsWithComments")
-    public void testGetSectionsWithInLineComment(String source, boolean allowComments, String[] results) throws ConfigurationException {
+    public void testGetSectionsWithInLineComment(final String source, final boolean allowComments, final String[] results) throws ConfigurationException {
         final INIConfiguration config = setUpConfig(source, allowComments);
         checkSectionNames(config, results);
     }

@@ -197,7 +197,7 @@ public class TestDefaultConversionHandler {
      */
     @Test
     public void testToCollectionNullCollection() {
-        List<Integer> src = Arrays.asList(1, 2, 3);
+        final List<Integer> src = Arrays.asList(1, 2, 3);
         assertThrows(IllegalArgumentException.class, () -> handler.toCollection(src, Integer.class, null, null));
     }
 

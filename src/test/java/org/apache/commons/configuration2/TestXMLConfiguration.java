@@ -1264,7 +1264,7 @@ public class TestXMLConfiguration {
     public void testSaveWithInvalidTransformerFactory() {
         System.setProperty(PROP_FACTORY, "an.invalid.Class");
         try {
-            assertThrows(TransformerFactoryConfigurationError.class, () -> saveTestConfig());
+            assertThrows(TransformerFactoryConfigurationError.class, this::saveTestConfig);
         } finally {
             System.getProperties().remove(PROP_FACTORY);
         }

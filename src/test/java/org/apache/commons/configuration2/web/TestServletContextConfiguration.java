@@ -45,7 +45,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
      * @param parameters the init parameters to use
      * @return The created mock
      */
-    private ServletContext mockServletConfig(Properties parameters) {
+    private ServletContext mockServletConfig(final Properties parameters) {
         final ServletContext context = mock(ServletContext.class);
         when(context.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
         when(context.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {

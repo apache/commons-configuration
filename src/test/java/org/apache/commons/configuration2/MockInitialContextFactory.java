@@ -44,7 +44,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
 
         private final Iterator<NameClassPair> iterator;
 
-        private ListBasedNamingEnumeration(List<NameClassPair> pairs) {
+        private ListBasedNamingEnumeration(final List<NameClassPair> pairs) {
             this.iterator = pairs.iterator();
         }
 

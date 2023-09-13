@@ -356,7 +356,7 @@ public class TestEventListenerList {
     @Test
     public void testGetRegistrationsModify() {
         final EventListenerRegistrationData<EventBase> registrationData = new EventListenerRegistrationData<>(typeBase, new ListenerTestImpl());
-        List<EventListenerRegistrationData<?>> registrations = list.getRegistrations();
+        final List<EventListenerRegistrationData<?>> registrations = list.getRegistrations();
         assertThrows(UnsupportedOperationException.class, () -> registrations.add(registrationData));
     }
 
@@ -455,7 +455,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testRegisterEventTypeNull() {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         assertThrows(IllegalArgumentException.class, () -> list.addEventListener(null, listener));
     }
 
