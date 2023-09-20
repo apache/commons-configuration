@@ -36,7 +36,7 @@ public final class ConfigurationConverter {
      * Private constructor prevents instances from being created.
      */
     private ConfigurationConverter() {
-        // to prevent instanciation...
+        // to prevent instantiation
     }
 
     /**
