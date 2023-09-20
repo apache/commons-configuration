@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -609,8 +610,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return returns the key name with the ${key} substituted
      */
     protected String interpolate(final String base) {
-        final Object result = interpolate((Object) base);
-        return result == null ? null : result.toString();
+        return Objects.toString(interpolate((Object) base), null);
     }
 
     /**
