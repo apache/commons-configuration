@@ -289,7 +289,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * @throws Exception if an error occurs
      */
     private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
-        return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).newInstance();
+        return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).getConstructor().newInstance();
     }
 
     /**

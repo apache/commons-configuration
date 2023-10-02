@@ -333,7 +333,7 @@ public class ExprLookup implements Lookup {
                 final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
                 final Class<?> clazz = ClassUtils.getClass(name);
                 if (name.length() == val.length()) {
-                    this.value = clazz.newInstance();
+                    this.value = clazz.getConstructor().newInstance();
                 } else {
                     this.value = clazz;
                 }

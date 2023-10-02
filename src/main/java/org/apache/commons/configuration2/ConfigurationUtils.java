@@ -377,7 +377,7 @@ public final class ConfigurationUtils {
         }
 
         try {
-            return sync.getClass().newInstance();
+            return sync.getClass().getConstructor().newInstance();
         } catch (final Exception ex) {
             LOG.info("Cannot create new instance of " + sync.getClass());
         }
