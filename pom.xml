@@ -581,8 +581,6 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
-    <commons.releaseManagerName>Matt Juntunen</commons.releaseManagerName>
-    <commons.releaseManagerKey>7DD53AEFEDF1C3D392B51EBE346F4FCECFB70B1A</commons.releaseManagerKey>
   </properties>
 
   <build>
