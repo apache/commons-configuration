@@ -1431,7 +1431,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * takes care that the format pattern can be defined as a property of the wrapped configuration or temporarily passed
      * when calling a conversion method.
      */
-    private class DataConversionHandler extends DefaultConversionHandler {
+    private final class DataConversionHandler extends DefaultConversionHandler {
         /**
          * {@inheritDoc} This implementation checks for a defined data format in the following order:
          * <ul>

@@ -567,7 +567,7 @@ class ModelTransaction {
      * operation is frequently used because each update of a node causes updates of the children of all parent nodes.
      * Therefore, it is treated in a special way and allows adding further sub operations dynamically.
      */
-    private class ChildrenUpdateOperation extends Operation {
+    private final class ChildrenUpdateOperation extends Operation {
         /** A collection with new nodes to be added. */
         private Collection<ImmutableNode> newNodes;
 
@@ -676,7 +676,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for adding an attribute to a target node.
      */
-    private static class AddAttributeOperation extends Operation {
+    private static final class AddAttributeOperation extends Operation {
         /** The attribute name. */
         private final String attributeName;
 
@@ -703,7 +703,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for adding multiple attributes to a target node.
      */
-    private static class AddAttributesOperation extends Operation {
+    private static final class AddAttributesOperation extends Operation {
         /** The map with attributes. */
         private final Map<String, Object> attributes;
 
@@ -725,7 +725,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for removing an attribute from a target node.
      */
-    private static class RemoveAttributeOperation extends Operation {
+    private static final class RemoveAttributeOperation extends Operation {
         /** The attribute name. */
         private final String attributeName;
 
@@ -747,7 +747,7 @@ class ModelTransaction {
     /**
      * A specialized operation class which changes the value of a node.
      */
-    private static class ChangeNodeValueOperation extends Operation {
+    private static final class ChangeNodeValueOperation extends Operation {
         /** The new value for the affected node. */
         private final Object newValue;
 
@@ -769,7 +769,7 @@ class ModelTransaction {
     /**
      * A specialized operation class which changes the name of a node.
      */
-    private static class ChangeNodeNameOperation extends Operation {
+    private static final class ChangeNodeNameOperation extends Operation {
         /** The new node name. */
         private final String newName;
 
@@ -791,7 +791,7 @@ class ModelTransaction {
     /**
      * A helper class which collects multiple update operations to be executed on a single node.
      */
-    private class Operations {
+    private final class Operations {
         /** An operation for manipulating child nodes. */
         private ChildrenUpdateOperation childrenOperation;
 

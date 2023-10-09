@@ -100,7 +100,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     /**
      * A specialized visitor class for generating SAX events for a hierarchical node structure.
      */
-    private class SAXVisitor extends ConfigurationNodeVisitorAdapter<T> {
+    private final class SAXVisitor extends ConfigurationNodeVisitorAdapter<T> {
         /** Constant for the attribute type. */
         private static final String ATTR_TYPE = "CDATA";
 

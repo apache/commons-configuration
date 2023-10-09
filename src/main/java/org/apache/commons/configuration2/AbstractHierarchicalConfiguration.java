@@ -675,7 +675,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param <T> the type of the nodes managed by this hierarchical configuration
      */
-    private static class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
+    private static final class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
 
         /** Stores the defined flag. */
         private boolean defined;
@@ -713,7 +713,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * A specialized visitor that fills a list with keys that are defined in a node hierarchy.
      */
-    private class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter<T> {
+    private final class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter<T> {
 
         /** Stores the list to be filled. */
         private final Set<String> keyList;

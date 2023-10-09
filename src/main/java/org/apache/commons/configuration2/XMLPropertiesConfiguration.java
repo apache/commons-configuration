@@ -300,7 +300,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
      *
      * @since 1.2
      */
-    private class XMLPropertiesHandler extends DefaultHandler {
+    private final class XMLPropertiesHandler extends DefaultHandler {
         /** The key of the current entry being parsed. */
         private String key;
 
