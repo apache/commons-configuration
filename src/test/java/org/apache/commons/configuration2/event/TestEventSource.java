@@ -37,7 +37,7 @@ public class TestEventSource {
      * the {@code fireEvent()} methods only creates event objects if necessary. It also allows testing the clone()
      * operation.
      */
-    private static class CountingEventSource extends BaseEventSource implements Cloneable {
+    private static final class CountingEventSource extends BaseEventSource implements Cloneable {
         int eventCount;
 
         int errorCount;

@@ -58,7 +58,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * A test builder class which always returns the same configuration.
      */
-    private static class ConstantConfigurationBuilder extends BasicConfigurationBuilder<BaseHierarchicalConfiguration> {
+    private static final class ConstantConfigurationBuilder extends BasicConfigurationBuilder<BaseHierarchicalConfiguration> {
         private final BaseHierarchicalConfiguration configuration;
 
         public ConstantConfigurationBuilder(final BaseHierarchicalConfiguration conf) {
@@ -75,7 +75,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * A thread class for testing concurrent reload operations.
      */
-    private static class ReloadThread extends Thread {
+    private static final class ReloadThread extends Thread {
         /** The builder to be queried. */
         private final ReloadingCombinedConfigurationBuilder builder;
 

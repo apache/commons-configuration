@@ -73,7 +73,7 @@ public class TestXMLConfiguration {
     /**
      * A thread used for testing concurrent access to a builder.
      */
-    private static class ReloadThread extends Thread {
+    private static final class ReloadThread extends Thread {
         private final FileBasedConfigurationBuilder<?> builder;
 
         ReloadThread(final FileBasedConfigurationBuilder<?> confBulder) {

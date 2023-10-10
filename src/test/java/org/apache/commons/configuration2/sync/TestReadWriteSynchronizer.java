@@ -35,7 +35,7 @@ public class TestReadWriteSynchronizer {
     /**
      * A class representing an account.
      */
-    private static class Account {
+    private static final class Account {
         /** The amount stored in this account. */
         private long amount;
 
@@ -62,7 +62,7 @@ public class TestReadWriteSynchronizer {
      * A thread which performs a number of read operations on the bank's accounts and checks whether the amount of money is
      * consistent.
      */
-    private static class ReaderThread extends Thread {
+    private static final class ReaderThread extends Thread {
         /** The acounts to monitor. */
         private final Account[] accounts;
 
@@ -118,7 +118,7 @@ public class TestReadWriteSynchronizer {
      * transaction determines the account containing more money. Then a random number of money is transferred from this
      * account to the other one.
      */
-    private static class UpdateThread extends Thread {
+    private static final class UpdateThread extends Thread {
         /** The synchronizer. */
         private final Synchronizer sync;
 

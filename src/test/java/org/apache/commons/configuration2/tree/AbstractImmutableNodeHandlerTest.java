@@ -40,7 +40,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     /**
      * A dummy NodeMatcher implementation that will simply accept all passed in nodes.
      */
-    private static class DummyNodeMatcher implements NodeMatcher<Object> {
+    private static final class DummyNodeMatcher implements NodeMatcher<Object> {
         @Override
         public <T> boolean matches(final T node, final NodeHandler<T> handler, final Object criterion) {
             return true;

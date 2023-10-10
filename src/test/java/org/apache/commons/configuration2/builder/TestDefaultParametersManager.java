@@ -43,7 +43,7 @@ public class TestDefaultParametersManager {
      * A test defaults handler implementation for testing the initialization of parameters objects with default values. This
      * class sets some hard-coded default values.
      */
-    private static class FileBasedDefaultsHandler implements DefaultParametersHandler<FileBasedBuilderParameters> {
+    private static final class FileBasedDefaultsHandler implements DefaultParametersHandler<FileBasedBuilderParameters> {
         @Override
         public void initializeDefaults(final FileBasedBuilderParameters parameters) {
             parameters.setThrowExceptionOnMissing(true).setEncoding(DEF_ENCODING).setListDelimiterHandler(listHandler);

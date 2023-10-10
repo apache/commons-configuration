@@ -43,7 +43,7 @@ public class TestXMLBeanDeclaration {
     /**
      * A helper class used for testing the createBeanDeclaration() factory method.
      */
-    private static class XMLBeanDeclarationTestImpl extends XMLBeanDeclaration {
+    private static final class XMLBeanDeclarationTestImpl extends XMLBeanDeclaration {
         public XMLBeanDeclarationTestImpl(final HierarchicalConfiguration<?> config, final NodeData<?> node) {
             super(config, node);
         }

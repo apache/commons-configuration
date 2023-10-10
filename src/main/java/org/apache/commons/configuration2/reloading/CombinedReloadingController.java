@@ -122,7 +122,7 @@ public class CombinedReloadingController extends ReloadingController {
      * {@code ReloadingController} objects. The methods defined by the {@code ReloadingDetector} interface are delegated to
      * the managed controllers.
      */
-    private static class MultiReloadingControllerDetector implements ReloadingDetector {
+    private static final class MultiReloadingControllerDetector implements ReloadingDetector {
         /** A reference to the owning combined reloading controller. */
         private final CombinedReloadingController owner;
 

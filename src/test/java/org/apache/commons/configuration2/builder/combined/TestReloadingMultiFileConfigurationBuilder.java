@@ -51,7 +51,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
      * builders.
      *
      */
-    private static class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
+    private static final class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
         /**
          * A list with mocks for reloading controllers created by this instance.
          */

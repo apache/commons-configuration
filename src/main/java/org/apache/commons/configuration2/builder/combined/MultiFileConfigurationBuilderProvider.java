@@ -156,7 +156,7 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      * wrapped builder implements {@code ReloadingControllerSupport}. So the reloading controller can be obtained from this
      * object.
      */
-    private static class ReloadableWrapperBuilder extends WrapperBuilder implements ReloadingControllerSupport {
+    private static final class ReloadableWrapperBuilder extends WrapperBuilder implements ReloadingControllerSupport {
         /** The object for obtaining the reloading controller. */
         private final ReloadingControllerSupport ctrlSupport;
 

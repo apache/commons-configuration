@@ -60,7 +60,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * A concrete test implementation of {@code AbstractHierarchicalConfiguration}.
      */
-    private static class AbstractHierarchicalConfigurationTestImpl extends AbstractHierarchicalConfiguration<ImmutableNode> {
+    private static final class AbstractHierarchicalConfigurationTestImpl extends AbstractHierarchicalConfiguration<ImmutableNode> {
         public AbstractHierarchicalConfigurationTestImpl(final InMemoryNodeModel model) {
             super(model);
         }

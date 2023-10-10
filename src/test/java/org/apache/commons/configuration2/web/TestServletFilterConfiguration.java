@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  * Test case for the {@link ServletFilterConfiguration} class.
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration {
-    private static class MockFilterConfig implements FilterConfig {
+    private static final class MockFilterConfig implements FilterConfig {
         private final Properties parameters = new Properties();
 
         @Override

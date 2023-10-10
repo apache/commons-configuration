@@ -55,7 +55,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * An event listener implementation that simply collects all received configuration events.
      */
-    private static class CollectingConfigurationListener implements EventListener<ConfigurationEvent> {
+    private static final class CollectingConfigurationListener implements EventListener<ConfigurationEvent> {
         final List<ConfigurationEvent> events = new ArrayList<>();
 
         @Override

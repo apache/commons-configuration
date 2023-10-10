@@ -69,7 +69,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * A test thread class for testing whether the builder's result object can be requested concurrently.
      */
-    private static class AccessBuilderThread extends Thread {
+    private static final class AccessBuilderThread extends Thread {
         /** A latch for controlling the start of the thread. */
         private final CountDownLatch startLatch;
 
@@ -111,7 +111,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * A builder test implementation which allows checking exception handling when creating new configuration objects.
      */
-    private static class BasicConfigurationBuilderInitFailImpl extends BasicConfigurationBuilder<PropertiesConfiguration> {
+    private static final class BasicConfigurationBuilderInitFailImpl extends BasicConfigurationBuilder<PropertiesConfiguration> {
         public BasicConfigurationBuilderInitFailImpl(final boolean allowFailOnInit) {
             super(PropertiesConfiguration.class, null, allowFailOnInit);
         }

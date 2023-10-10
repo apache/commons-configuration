@@ -330,7 +330,7 @@ class NodeTracker {
     /**
      * A simple data class holding information about a tracked node.
      */
-    private static class TrackedNodeData {
+    private static final class TrackedNodeData {
         /** The current instance of the tracked node. */
         private final ImmutableNode node;
 

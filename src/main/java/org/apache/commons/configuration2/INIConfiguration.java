@@ -897,7 +897,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * This is a regular {@code TrackedNodeModel} with one exception: The {@code NodeHandler} used by this model applies a
      * filter on the children of the root node so that only nodes are visible that are no sub sections.
      */
-    private static class GlobalSectionNodeModel extends TrackedNodeModel {
+    private static final class GlobalSectionNodeModel extends TrackedNodeModel {
         /**
          * Creates a new instance of {@code GlobalSectionNodeModel} and initializes it with the given underlying model.
          *

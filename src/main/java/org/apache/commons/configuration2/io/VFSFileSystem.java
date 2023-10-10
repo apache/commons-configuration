@@ -50,7 +50,7 @@ public class VFSFileSystem extends DefaultFileSystem {
     /**
      * Stream handler required to create URL.
      */
-    private static class VFSURLStreamHandler extends URLStreamHandler {
+    private static final class VFSURLStreamHandler extends URLStreamHandler {
         /** The Protocol used */
         private final String protocol;
 

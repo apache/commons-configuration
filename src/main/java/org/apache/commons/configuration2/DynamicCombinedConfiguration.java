@@ -820,7 +820,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * A simple data class holding information about the current configuration while an operation for a thread is processed.
      */
-    private static class CurrentConfigHolder {
+    private static final class CurrentConfigHolder {
         /** Stores the current configuration of the current thread. */
         private CombinedConfiguration currentConfiguration;
 

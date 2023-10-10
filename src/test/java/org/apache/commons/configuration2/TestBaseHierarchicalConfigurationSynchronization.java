@@ -50,7 +50,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     /**
      * A thread class for testing concurrent access to SubNode configurations.
      */
-    private static class SubNodeAccessThread extends Thread {
+    private static final class SubNodeAccessThread extends Thread {
         /** The test configuration. */
         private final HierarchicalConfiguration<ImmutableNode> config;
 

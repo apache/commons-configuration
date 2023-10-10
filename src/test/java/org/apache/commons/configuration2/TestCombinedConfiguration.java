@@ -65,7 +65,7 @@ public class TestCombinedConfiguration {
     /**
      * Test event listener class for checking if the expected invalidate events are fired.
      */
-    private static class CombinedListener implements EventListener<ConfigurationEvent> {
+    private static final class CombinedListener implements EventListener<ConfigurationEvent> {
         int invalidateEvents;
 
         int otherEvents;
@@ -95,7 +95,7 @@ public class TestCombinedConfiguration {
      * A test thread performing reads on a combined configuration. This thread reads a certain property from the
      * configuration. If everything works well, this property should have at least one and at most two values.
      */
-    private static class ReadThread extends Thread {
+    private static final class ReadThread extends Thread {
         /** The configuration to be accessed. */
         private final Configuration config;
 
@@ -165,7 +165,7 @@ public class TestCombinedConfiguration {
      * another one (which contained it before). So if concurrent reads are performed, the test property should always have
      * between 1 and 2 values.
      */
-    private static class WriteThread extends Thread {
+    private static final class WriteThread extends Thread {
         /** The list with the child configurations. */
         private final List<Configuration> testConfigs;
 

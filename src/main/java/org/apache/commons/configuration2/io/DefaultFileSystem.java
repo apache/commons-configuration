@@ -213,7 +213,7 @@ public class DefaultFileSystem extends FileSystem {
      *
      * @since 1.7
      */
-    private static class HttpOutputStream extends VerifiableOutputStream {
+    private static final class HttpOutputStream extends VerifiableOutputStream {
         /** The wrapped OutputStream */
         private final OutputStream stream;
 

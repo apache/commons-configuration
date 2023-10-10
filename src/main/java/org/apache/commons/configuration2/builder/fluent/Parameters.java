@@ -252,7 +252,7 @@ public final class Parameters {
      * approach is required. A special handling is required for the method of the {@code BuilderParameters} interface
      * because here no fluent return value is used.
      */
-    private static class ParametersIfcInvocationHandler implements InvocationHandler {
+    private static final class ParametersIfcInvocationHandler implements InvocationHandler {
         /** The target object of reflection calls. */
         private final Object target;
 

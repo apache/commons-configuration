@@ -37,7 +37,7 @@ public class TestFileHandlerReloadingDetector {
     /**
      * A test implementation which allows mocking the monitored file.
      */
-    private static class FileHandlerReloadingDetectorTestImpl extends FileHandlerReloadingDetector {
+    private static final class FileHandlerReloadingDetectorTestImpl extends FileHandlerReloadingDetector {
         /** The mock file. */
         private final File mockFile;
 

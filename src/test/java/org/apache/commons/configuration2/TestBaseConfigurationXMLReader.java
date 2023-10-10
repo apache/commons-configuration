@@ -45,7 +45,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class TestBaseConfigurationXMLReader {
     // A ContentHandler that raises an exception
-    private static class TestContentHandler extends DefaultHandler {
+    private static final class TestContentHandler extends DefaultHandler {
         @Override
         public void characters(final char[] ch, final int start, final int length) throws SAXException {
             throw new SAXException("Test exception during parsing");

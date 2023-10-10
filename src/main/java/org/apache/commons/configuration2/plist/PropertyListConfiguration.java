@@ -449,7 +449,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * A specialized date component parser implementation that deals with numeric calendar fields. The class is able to
      * extract fields from a string literal and to format a literal from a calendar.
      */
-    private static class DateFieldParser extends DateComponentParser {
+    private static final class DateFieldParser extends DateComponentParser {
         /** Stores the calendar field to be processed. */
         private final int calendarField;
 
@@ -502,7 +502,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * A specialized date component parser implementation that deals with separator characters.
      */
-    private static class DateSeparatorParser extends DateComponentParser {
+    private static final class DateSeparatorParser extends DateComponentParser {
         /** Stores the separator. */
         private final String separator;
 
@@ -533,7 +533,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * A specialized date component parser implementation that deals with the time zone part of a date component.
      */
-    private static class DateTimeZoneParser extends DateComponentParser {
+    private static final class DateTimeZoneParser extends DateComponentParser {
         @Override
         public void formatComponent(final StringBuilder buf, final Calendar cal) {
             final TimeZone tz = cal.getTimeZone();

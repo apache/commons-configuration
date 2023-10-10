@@ -44,7 +44,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
     /**
      * A test builder implementation which allows mocking the underlying reloading detector.
      */
-    private static class ReloadingFileBasedConfigurationBuilderTestImpl extends ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> {
+    private static final class ReloadingFileBasedConfigurationBuilderTestImpl extends ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> {
         /** The mock for the reloading detector. */
         private final ReloadingDetector mockDetector;
 

@@ -172,7 +172,7 @@ public class TestPropertiesConfiguration {
      * A test PropertiesReader for testing whether a custom reader can be injected. This implementation creates a
      * configurable number of synthetic test properties.
      */
-    private static class PropertiesReaderTestImpl extends PropertiesConfiguration.PropertiesReader {
+    private static final class PropertiesReaderTestImpl extends PropertiesConfiguration.PropertiesReader {
         /** The number of test properties to be created. */
         private final int maxProperties;
 
@@ -205,7 +205,7 @@ public class TestPropertiesConfiguration {
      * A test PropertiesWriter for testing whether a custom writer can be injected. This implementation simply redirects all
      * output into a test file.
      */
-    private static class PropertiesWriterTestImpl extends PropertiesConfiguration.PropertiesWriter {
+    private static final class PropertiesWriterTestImpl extends PropertiesConfiguration.PropertiesWriter {
         public PropertiesWriterTestImpl(final ListDelimiterHandler handler) throws IOException {
             super(new FileWriter(testSavePropertiesFile), handler);
         }

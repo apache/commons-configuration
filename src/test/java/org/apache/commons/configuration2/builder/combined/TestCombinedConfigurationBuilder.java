@@ -127,7 +127,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * A test builder class which always returns the same configuration.
      */
-    private static class ConstantConfigurationBuilder extends BasicConfigurationBuilder<BaseHierarchicalConfiguration> {
+    private static final class ConstantConfigurationBuilder extends BasicConfigurationBuilder<BaseHierarchicalConfiguration> {
         private final BaseHierarchicalConfiguration configuration;
 
         public ConstantConfigurationBuilder(final BaseHierarchicalConfiguration conf) {
@@ -195,7 +195,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * A thread class for testing concurrent read access to a newly created configuration.
      */
-    private static class ReadThread extends Thread {
+    private static final class ReadThread extends Thread {
         /** The configuration to access. */
         private final CombinedConfiguration config;
 

@@ -63,7 +63,7 @@ public class TestEventListenerList {
     /**
      * A test event class derived from the base test event class.
      */
-    private static class EventSub1 extends EventBase {
+    private static final class EventSub1 extends EventBase {
         private static final long serialVersionUID = 1L;
 
         public EventSub1(final Object source, final EventType<? extends EventSub1> type, final String msg) {
@@ -74,7 +74,7 @@ public class TestEventListenerList {
     /**
      * Another test event class derived from the base class.
      */
-    private static class EventSub2 extends EventBase {
+    private static final class EventSub2 extends EventBase {
         private static final long serialVersionUID = 1L;
 
         public EventSub2(final Object source, final EventType<? extends EventSub2> type, final String msg) {
@@ -86,7 +86,7 @@ public class TestEventListenerList {
      * A test event listener implementation. This listener class expects that it receives at most a single event. This event
      * is stored for further evaluation.
      */
-    private static class ListenerTestImpl implements EventListener<EventBase> {
+    private static final class ListenerTestImpl implements EventListener<EventBase> {
         /** The event received by this object. */
         private EventBase receivedEvent;
 

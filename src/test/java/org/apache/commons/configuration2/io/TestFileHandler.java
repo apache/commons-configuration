@@ -101,6 +101,9 @@ public class TestFileHandler {
 
     /**
      * A test implementation of FileBased which can also read from input streams.
+     * <p>
+     * Cannot be final for Mockito.
+     * </p>
      */
     private static class FileBasedInputStreamSupportTestImpl extends FileBasedTestImpl implements InputStreamSupport {
         @Override
@@ -154,7 +157,7 @@ public class TestFileHandler {
     /**
      * A test listener implementation.
      */
-    private static class FileHandlerListenerTestImpl extends FileHandlerListenerAdapter {
+    private static final class FileHandlerListenerTestImpl extends FileHandlerListenerAdapter {
         /** The expected file handler. */
         private final FileHandler expHandler;
 

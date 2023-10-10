@@ -55,7 +55,7 @@ public class TestConfigurationUtils {
     /**
      * A test Synchronizer implementation which can be cloned.
      */
-    private static class CloneableSynchronizer extends NonCloneableSynchronizer implements Cloneable {
+    private static final class CloneableSynchronizer extends NonCloneableSynchronizer implements Cloneable {
         /** A flag whether clone() was called. */
         private final boolean cloned;
 

@@ -147,7 +147,7 @@ public class DefaultParametersManager {
      * Using this class it is possible to find out which default handlers apply for a given parameters object and to invoke
      * them.
      */
-    private static class DefaultHandlerData {
+    private static final class DefaultHandlerData {
         /** The handler object. */
         private final DefaultParametersHandler<?> handler;
 

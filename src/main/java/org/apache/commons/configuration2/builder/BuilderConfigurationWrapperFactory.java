@@ -173,7 +173,7 @@ public class BuilderConfigurationWrapperFactory {
      * A specialized {@code InvocationHandler} implementation for wrapper configurations. Here the logic of accessing a
      * wrapped builder is implemented.
      */
-    private static class BuilderConfigurationWrapperInvocationHandler implements InvocationHandler {
+    private static final class BuilderConfigurationWrapperInvocationHandler implements InvocationHandler {
 
         /** The wrapped builder. */
         private final ConfigurationBuilder<? extends ImmutableConfiguration> builder;

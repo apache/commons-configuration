@@ -69,7 +69,7 @@ public class TestINIConfiguration {
     /**
      * A thread class for testing concurrent access to the global section.
      */
-    private static class GlobalSectionTestThread extends Thread {
+    private static final class GlobalSectionTestThread extends Thread {
 
         /** The configuration. */
         private final INIConfiguration config;
