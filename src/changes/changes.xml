@@ -33,7 +33,7 @@
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
-        Bump jackson-databind from 2.14.2 to 2.15.2 #297, #303.
+        Bump jackson-databind from 2.14.2 to 2.15.3 #297, #303, #326.
       </action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump commons-io:commons-io from 2.11.0 to 2.14.0.
