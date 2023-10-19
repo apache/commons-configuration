@@ -247,11 +247,11 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing a delimiter for properties.
          *
-         * @param d the property delimiter
+         * @param propertyDelimiter the property delimiter
          * @return a reference to this object for method chaining
          */
-        public Builder setPropertyDelimiter(final String d) {
-            propertyDelimiter = d;
+        public Builder setPropertyDelimiter(final String propertyDelimiter) {
+            this.propertyDelimiter = propertyDelimiter;
             return this;
         }
 
@@ -260,11 +260,11 @@ public final class DefaultExpressionEngineSymbols {
          * property can be escaped. If for instance &quot;.&quot; is used as property delimiter, you can set the escaped
          * delimiter to &quot;\.&quot; and can then escape the delimiter with a back slash.
          *
-         * @param ed the escaped property delimiter
+         * @param escapedDelimiter the escaped property delimiter
          * @return a reference to this object for method chaining
          */
-        public Builder setEscapedDelimiter(final String ed) {
-            escapedDelimiter = ed;
+        public Builder setEscapedDelimiter(final String escapedDelimiter) {
+            this.escapedDelimiter = escapedDelimiter;
             return this;
         }
 
@@ -276,18 +276,18 @@ public final class DefaultExpressionEngineSymbols {
          * @return a reference to this object for method chaining
          */
         public Builder setIndexStart(final String is) {
-            indexStart = is;
+            this.indexStart = is;
             return this;
         }
 
         /**
          * Sets the string representing the end of an index in a property key.
          *
-         * @param ie the index end
+         * @param indexEnd the index end
          * @return a reference to this object for method chaining
          */
-        public Builder setIndexEnd(final String ie) {
-            indexEnd = ie;
+        public Builder setIndexEnd(final String indexEnd) {
+            this.indexEnd = indexEnd;
             return this;
         }
 
@@ -295,22 +295,22 @@ public final class DefaultExpressionEngineSymbols {
          * Sets the string representing the start marker of an attribute in a property key. Attribute start and end marker are
          * used together to detect attributes in a property key.
          *
-         * @param as the attribute start marker
+         * @param attributeStart the attribute start marker
          * @return a reference to this object for method chaining
          */
-        public Builder setAttributeStart(final String as) {
-            attributeStart = as;
+        public Builder setAttributeStart(final String attributeStart) {
+            this.attributeStart = attributeStart;
             return this;
         }
 
         /**
          * Sets the string representing the end marker of an attribute in a property key.
          *
-         * @param ae the attribute end marker
+         * @param attributeEnd the attribute end marker
          * @return a reference to this object for method chaining
          */
-        public Builder setAttributeEnd(final String ae) {
-            attributeEnd = ae;
+        public Builder setAttributeEnd(final String attributeEnd) {
+            this.attributeEnd = attributeEnd;
             return this;
         }
 
