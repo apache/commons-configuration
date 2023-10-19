@@ -61,8 +61,8 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setTable(final String tname) {
-        storeProperty(PROP_TABLE, tname);
+    public DatabaseBuilderParametersImpl setTable(final String tableName) {
+        storeProperty(PROP_TABLE, tableName);
         return this;
     }
 

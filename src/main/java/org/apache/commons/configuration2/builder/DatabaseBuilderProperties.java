@@ -49,10 +49,10 @@ public interface DatabaseBuilderProperties<T> {
      * Sets the name of the table containing configuration data. Database configuration will access this database table.
      * This is a mandatory property.
      *
-     * @param tname the name of the table with configuration data
+     * @param name the name of the table with configuration data
      * @return a reference to this object for method chaining
      */
-    T setTable(String tname);
+    T setTable(String name);
 
     /**
      * Sets the name of the table column containing configuration keys. This is a mandatory property.
