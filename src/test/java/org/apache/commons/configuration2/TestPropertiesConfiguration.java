@@ -1181,7 +1181,7 @@ public class TestPropertiesConfiguration {
     }
 
     @Test
-    public void testSaveMissingFilename() {
+    public void testSaveMissingFileName() {
         final FileHandler handler = new FileHandler(conf);
         assertThrows(ConfigurationException.class, handler::save);
     }
