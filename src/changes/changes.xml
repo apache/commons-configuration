@@ -62,6 +62,9 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">
         Bump org.apache.commons:commons-pool2 from 2.11.1 to 2.12.0.
       </action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">
+        Bump org.apache.logging.log4j:log4j-1.2-* from 2.20.0 to 2.21.0.
+      </action>
     </release>
     <release version="2.9.0" date="2023-03-25" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->

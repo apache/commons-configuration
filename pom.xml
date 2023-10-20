@@ -560,7 +560,7 @@
       org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <log4j.version>2.20.0</log4j.version>
+    <log4j.version>2.21.0</log4j.version>
     <slf4j.version>2.0.9</slf4j.version>
     <!-- Spring 6 requires Java 17 -->
     <spring.version>5.3.30</spring.version>
