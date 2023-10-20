@@ -665,23 +665,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Uncomment to instrument with Clover
-        <plugin>
-        <groupId>com.atlassian.maven.plugins</groupId>
-        <artifactId>maven-clover2-plugin</artifactId>
-        <version>2.4.2</version>
-        <configuration>
-        <jdk>1.4</jdk>
-        </configuration>
-        <executions>
-        <execution>
-        <phase>pre-site</phase>
-        <goals>
-        <goal>instrument</goal>
-        </goals>
-        </execution>
-        </executions>
-        </plugin> -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
