@@ -43,11 +43,11 @@
 Apache Commons Configuration
 ===================
 
-[![GitHub Actions Status](https://github.com/apache/commons-configuration/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-configuration/actions)
+[![Java CI](https://github.com/apache/commons-configuration/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/maven.yml)
 [![Coverage Status](https://codecov.io/gh/apache/commons-configuration/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/?gav=true)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.9.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.9.0)
-[![CodeQL](https://github.com/apache/commons-configuration/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
+[![CodeQL](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration)
 
 Tools to assist in the reading of configuration/preferences files in
