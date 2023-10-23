@@ -23,7 +23,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.9.1" date="20YY-MM-DD" description="Minor release with new features and updated dependencies.">
+    <release version="2.10.0" date="20YY-MM-DD" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">
         [StepSecurity] ci: Harden GitHub Actions #307.
@@ -33,6 +33,16 @@
       </action>
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">
         Take prefix delimiter into account when SubsetConfiguration.getKeysInternal() is called #300.
+      </action>
+      <!-- ADD -->
+      <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">
+        Add AbstractConfiguration.getKeysInternal(String, String) #300.
+      </action>
+      <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">
+        Add ImmutableConfiguration.getKeys(String, String) #300.
+      </action>
+      <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">
+        Add PrefixedKeysIterator.PrefixedKeysIterator(Iterator&lt;String%gt;, String, String) #300.
       </action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">
