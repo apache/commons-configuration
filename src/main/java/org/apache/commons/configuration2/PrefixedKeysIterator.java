@@ -62,6 +62,7 @@ class PrefixedKeysIterator implements Iterator<String> {
      * @param wrappedIterator the wrapped iterator
      * @param keyPrefix the prefix of the allowed keys
      * @param prefixDelimiter the prefix delimiter
+     * @since 2.10.0
      */
     public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix, final String prefixDelimiter) {
         iterator = wrappedIterator;
