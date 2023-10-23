@@ -35,6 +35,9 @@ class PrefixedKeysIterator implements Iterator<String> {
     /** Stores the prefix. */
     private final String prefix;
 
+    /** Stores the prefix delimiter. Default delimiter is "." */
+    private final String delimiter;
+
     /** Stores the next element in the iteration. */
     private String nextElement;
 
@@ -49,8 +52,22 @@ class PrefixedKeysIterator implements Iterator<String> {
      * @param keyPrefix the prefix of the allowed keys
      */
     public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix) {
+        this(wrappedIterator, keyPrefix, ".");
+    }
+
+     /**
+     * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix as well as
+     * the delimiter for the preix for the accepted keys.
+     *
+     * @param wrappedIterator the wrapped iterator
+     * @param keyPrefix the prefix of the allowed keys
+     * @param prefixDelimiter the prefix delimiter
+     * @since 2.10.0
+     */
+    public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix, final String prefixDelimiter) {
         iterator = wrappedIterator;
         prefix = keyPrefix;
+        delimiter = prefixDelimiter;
     }
 
     /**
@@ -101,7 +118,7 @@ class PrefixedKeysIterator implements Iterator<String> {
     private boolean setNextElement() {
         while (iterator.hasNext()) {
             final String key = iterator.next();
-            if (key.startsWith(prefix + ".") || key.equals(prefix)) {
+            if (key.startsWith(prefix + delimiter) || key.equals(prefix)) {
                 nextElement = key;
                 nextElementSet = true;
                 return true;
