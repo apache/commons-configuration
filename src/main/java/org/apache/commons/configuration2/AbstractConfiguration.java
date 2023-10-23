@@ -817,7 +817,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param prefix the prefix for the keys to be taken into account
      * @param delimiter the prefix delimiter
      * @return an {@code Iterator} returning the filtered keys
-     * @since 2.0
+     * @since 2.10.0
      */
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
         return new PrefixedKeysIterator(getKeysInternal(), prefix, delimiter);
