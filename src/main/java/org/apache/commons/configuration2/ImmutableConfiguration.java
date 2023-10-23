@@ -522,6 +522,7 @@ public interface ImmutableConfiguration {
      * @param delimiter The prefix delimiter.
      * @return An Iterator of keys that match the prefix.
      * @see #getKeys()
+     * @since 2.10.0
      */
     default Iterator<String> getKeys(String prefix, String delimiter) {
         return null;
