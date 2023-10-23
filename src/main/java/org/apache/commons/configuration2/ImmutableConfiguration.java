@@ -509,6 +509,26 @@ public interface ImmutableConfiguration {
     Iterator<String> getKeys(String prefix);
 
     /**
+     * Gets the list of the keys contained in the configuration that match the specified prefix. For instance, if the
+     * configuration contains the following keys:<br>
+     * {@code db@user, db@pwd, db@url, window.xpos, window.ypos},<br>
+     * an invocation of {@code getKeys("db","@");}<br>
+     * will return the keys below:<br>
+     * {@code db@user, db@pwd, db@url}.<br>
+     * Note that the prefix itself is included in the result set if there is a matching key. The exact behavior - how the
+     * prefix is actually interpreted - depends on a concrete implementation.
+     *
+     * @param prefix The prefix to test against.
+     * @param delimiter The prefix delimiter.
+     * @return An Iterator of keys that match the prefix.
+     * @see #getKeys()
+     * @since 2.10.0
+     */
+    default Iterator<String> getKeys(String prefix, String delimiter) {
+        return null;
+    }
+
+    /**
      * Gets a list of typed objects associated with the given configuration key returning a null if the key doesn't map to
      * an existing object.
      *
