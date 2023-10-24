@@ -535,6 +535,7 @@
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
     <commons.release.version>2.10.0</commons.release.version>
+    <commons.release.next>2.10.1</commons.release.next>
     <commons.release.desc>(Java 8)</commons.release.desc>
     <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
     <commons.release.2.version>1.10</commons.release.2.version>
@@ -560,7 +561,7 @@
       org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <log4j.version>2.21.0</log4j.version>
+    <log4j.version>2.21.1</log4j.version>
     <slf4j.version>2.0.9</slf4j.version>
     <!-- Spring 6 requires Java 17 -->
     <spring.version>5.3.30</spring.version>
