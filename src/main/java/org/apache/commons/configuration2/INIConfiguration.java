@@ -103,8 +103,9 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * Because this is a hierarchical configuration you can change this by setting a different
  * {@link org.apache.commons.configuration2.tree.ExpressionEngine}.)
  * </p>
- * <h3>Implementation Details:</h3> Consider the following ini file:
- *
+ * <p>
+ * <strong>Implementation Details:</strong> Consider the following ini file:
+ * </p>
  * <pre>
  *  default = ok
  *

@@ -124,23 +124,23 @@ import org.xml.sax.EntityResolver;
  * <th>Meaning</th>
  * </tr>
  * <tr>
- * <td valign="top">{@code config-name}</td>
+ * <td>{@code config-name}</td>
  * <td>Allows specifying a name for this configuration. This name can be used to obtain a reference to the configuration
  * from the resulting combined configuration (see below). It can also be passed to the {@link #getNamedBuilder(String)}
  * method.</td>
  * </tr>
  * <tr>
- * <td valign="top">{@code config-at}</td>
+ * <td>{@code config-at}</td>
  * <td>With this attribute an optional prefix can be specified for the properties of the corresponding
  * configuration.</td>
  * </tr>
  * <tr>
- * <td valign="top">{@code config-optional}</td>
+ * <td>{@code config-optional}</td>
  * <td>Declares a configuration source as optional. This means that errors that occur when creating the configuration
  * are ignored.</td>
  * </tr>
  * <tr>
- * <td valign="top">{@code config-reload}</td>
+ * <td>{@code config-reload}</td>
  * <td>Many configuration sources support a reloading mechanism. For those sources it is possible to enable reloading by
  * providing this attribute with a value of <strong>true</strong>.</td>
  * </tr>

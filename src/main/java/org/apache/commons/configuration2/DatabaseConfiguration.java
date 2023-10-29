@@ -109,8 +109,9 @@ import org.apache.commons.lang3.StringUtils;
  * {@code commits} parameter of the constructors to <b>true</b>. If commits should not be performed (which is the
  * default behavior), it should be ensured that the connections returned by the {@code DataSource} are in auto-commit
  * mode.
- *
- * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
+ * <p>
+ * <strong>Note: Like JDBC itself, protection against SQL injection is left to the user.</strong>
+ * </p>
  *
  * @since 1.0
  */
