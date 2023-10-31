@@ -459,7 +459,7 @@ public class ConfigurationInterpolator {
         return stringConverter;
     }
 
-    /** Set the function used to convert interpolated values to strings. Pass
+    /** Sets the function used to convert interpolated values to strings. Pass
      * {@code null} to use the default conversion function.
      * @param stringConverter function used to convert interpolated values to strings
      *      or {@code null} to use the default conversion function

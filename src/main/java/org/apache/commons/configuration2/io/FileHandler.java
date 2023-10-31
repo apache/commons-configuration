@@ -1133,7 +1133,7 @@ public class FileHandler {
     }
 
     /**
-     * Set the name of the file. The passed in file name can contain a relative path. It must be used when referring files
+     * Sets the name of the file. The passed in file name can contain a relative path. It must be used when referring files
      * with relative paths from classpath. Use {@code setPath()} to set a full qualified file name. The URL is set to
      * <b>null</b> as it has to be determined anew based on the file name and the base path.
      *

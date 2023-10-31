@@ -122,7 +122,7 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Set the prefix to use to identify subordinate expressions. This cannot be the same as the prefix used for the primary
+     * Sets the prefix to use to identify subordinate expressions. This cannot be the same as the prefix used for the primary
      * expression.
      *
      * @param prefix The String identifying the beginning of the expression.
@@ -132,7 +132,7 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Set the suffix to use to identify subordinate expressions. This cannot be the same as the suffix used for the primary
+     * Sets the suffix to use to identify subordinate expressions. This cannot be the same as the suffix used for the primary
      * expression.
      *
      * @param suffix The String identifying the end of the expression.

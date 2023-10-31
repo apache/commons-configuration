@@ -125,7 +125,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Set the prefix used to select the properties in the parent configuration.
+     * Sets the prefix used to select the properties in the parent configuration.
      *
      * @param prefix the prefix
      */

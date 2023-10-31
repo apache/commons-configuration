@@ -101,7 +101,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     }
 
     /**
-     * Set of entries in the map.
+     * Sets of entries in the map.
      */
     static class ConfigurationSet extends AbstractSet<Map.Entry<Object, Object>> {
         /** The configuration mapped to this entry set. */

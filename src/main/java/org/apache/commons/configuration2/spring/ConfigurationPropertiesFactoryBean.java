@@ -121,7 +121,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     }
 
     /**
-     * Set the commons configurations objects which will be used as properties.
+     * Sets the commons configurations objects which will be used as properties.
      *
      * @param configurations commons configurations objects which will be used as properties.
      */
@@ -148,7 +148,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     }
 
     /**
-     * Set the underlying Commons CompositeConfiguration throwExceptionOnMissing flag.
+     * Sets the underlying Commons CompositeConfiguration throwExceptionOnMissing flag.
      *
      * @see org.apache.commons.configuration2.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
      * @param throwExceptionOnMissing The new value for the property

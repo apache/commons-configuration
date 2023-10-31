@@ -84,7 +84,7 @@ public abstract class FileSystem {
     public abstract URL locateFromURL(String basePath, String fileName);
 
     /**
-     * Set the FileOptionsProvider
+     * Sets the FileOptionsProvider
      *
      * @param provider The FileOptionsProvider
      */

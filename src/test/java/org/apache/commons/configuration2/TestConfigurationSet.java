@@ -39,7 +39,7 @@ public class TestConfigurationSet {
         Long.valueOf(Long.MAX_VALUE), Short.valueOf(Short.MAX_VALUE), "This is a string"};
 
     /**
-     * Set up instance variables required by this test case.
+     * Sets up instance variables required by this test case.
      */
     @BeforeEach
     public void setUp() throws Exception {

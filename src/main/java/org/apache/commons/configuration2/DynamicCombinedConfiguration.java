@@ -115,7 +115,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Set the name of the Logger to use on each CombinedConfiguration.
+     * Sets the name of the Logger to use on each CombinedConfiguration.
      *
      * @param name The Logger name.
      */

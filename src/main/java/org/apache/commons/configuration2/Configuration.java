@@ -110,7 +110,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
     void addProperty(String key, Object value);
 
     /**
-     * Set a property, this will replace any previously set values. Set values is implicitly a call to clearProperty(key),
+     * Sets a property, this will replace any previously set values. Set values is implicitly a call to clearProperty(key),
      * addProperty(key, value).
      *
      * @param key The key of the property to change

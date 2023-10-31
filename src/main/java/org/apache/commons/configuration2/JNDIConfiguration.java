@@ -394,7 +394,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Set the initial context of the configuration.
+     * Sets the initial context of the configuration.
      *
      * @param context the context
      */

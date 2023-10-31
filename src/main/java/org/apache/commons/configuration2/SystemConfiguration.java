@@ -74,7 +74,7 @@ public class SystemConfiguration extends MapConfiguration {
     }
 
     /**
-     * Set System properties from a configuration object.
+     * Sets System properties from a configuration object.
      *
      * @param systemConfig The configuration containing the properties to be set.
      * @since 1.6
