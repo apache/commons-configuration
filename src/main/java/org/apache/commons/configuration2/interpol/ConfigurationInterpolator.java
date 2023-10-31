@@ -452,7 +452,7 @@ public class ConfigurationInterpolator {
         return substitutor.isEnableSubstitutionInVariables();
     }
 
-    /** Get the function used to convert interpolated values to strings.
+    /** Gets the function used to convert interpolated values to strings.
      * @return function used to convert interpolated values to strings
      */
     public Function<Object, String> getStringConverter() {
@@ -630,7 +630,7 @@ public class ConfigurationInterpolator {
         }
 
         /**
-         * Get the default prefix lookups map.
+         * Gets the default prefix lookups map.
          * @return default prefix lookups map
          */
         Map<String, Lookup> getDefaultPrefixLookups() {

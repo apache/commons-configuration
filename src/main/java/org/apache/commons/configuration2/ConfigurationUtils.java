@@ -138,7 +138,7 @@ public final class ConfigurationUtils {
     }
 
     /**
-     * Get a string representation of the key/value mappings of a configuration.
+     * Gets a string representation of the key/value mappings of a configuration.
      *
      * @param configuration the configuration
      * @return a string representation of the configuration
@@ -151,7 +151,7 @@ public final class ConfigurationUtils {
     }
 
     /**
-     * Get a string representation of the key/value mappings of a configuration. This version of the method exists only for
+     * Gets a string representation of the key/value mappings of a configuration. This version of the method exists only for
      * backwards compatibility reason.
      *
      * @param configuration the configuration

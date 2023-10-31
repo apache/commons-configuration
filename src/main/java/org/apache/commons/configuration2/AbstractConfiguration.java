@@ -926,7 +926,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Get a list of properties associated with the given configuration key.
+     * Gets a list of properties associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaults Any default values for the returned {@code Properties} object. Ignored if {@code null}.
@@ -1173,7 +1173,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Get an array of strings associated with the given configuration key. If the key doesn't map to an existing object, an
+     * Gets an array of strings associated with the given configuration key. If the key doesn't map to an existing object, an
      * empty array is returned. When a property is added to a configuration, it is checked whether it contains multiple
      * values. This is obvious if the added object is a list or an array. For strings the association
      * {@link ListDelimiterHandler} is consulted to find out whether the string can be split into multiple values.

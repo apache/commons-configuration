@@ -124,7 +124,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     /**
-     * Get the list of the keys contained in the configuration repository.
+     * Gets the list of the keys contained in the configuration repository.
      *
      * @return An Iterator.
      */

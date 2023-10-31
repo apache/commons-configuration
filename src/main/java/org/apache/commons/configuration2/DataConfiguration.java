@@ -211,7 +211,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Boolean objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Boolean objects associated with the given configuration key. If the key doesn't map to an existing
      * object an empty list is returned.
      *
      * @param key The configuration key.
@@ -224,7 +224,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Boolean objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Boolean objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -238,7 +238,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of boolean primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of boolean primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -251,7 +251,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of boolean primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of boolean primitives associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -265,7 +265,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Byte objects associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of Byte objects associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -278,7 +278,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Byte objects associated with the given configuration key. If the key doesn't map to an existing object,
+     * Gets a list of Byte objects associated with the given configuration key. If the key doesn't map to an existing object,
      * the default value is returned.
      *
      * @param key The configuration key.
@@ -292,7 +292,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of byte primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of byte primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -305,7 +305,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of byte primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of byte primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -319,7 +319,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Short objects associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of Short objects associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -332,7 +332,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Short objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Short objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -346,7 +346,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of short primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of short primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -359,7 +359,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of short primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of short primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -373,7 +373,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Integer objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Integer objects associated with the given configuration key. If the key doesn't map to an existing
      * object an empty list is returned.
      *
      * @param key The configuration key.
@@ -386,7 +386,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Integer objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Integer objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -400,7 +400,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of int primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of int primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -413,7 +413,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of int primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of int primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -427,7 +427,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Long objects associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of Long objects associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -440,7 +440,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Long objects associated with the given configuration key. If the key doesn't map to an existing object,
+     * Gets a list of Long objects associated with the given configuration key. If the key doesn't map to an existing object,
      * the default value is returned.
      *
      * @param key The configuration key.
@@ -454,7 +454,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of long primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of long primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -467,7 +467,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of long primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of long primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -481,7 +481,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Float objects associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of Float objects associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -494,7 +494,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Float objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Float objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -508,7 +508,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of float primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of float primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -521,7 +521,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of float primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of float primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -535,7 +535,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Double objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Double objects associated with the given configuration key. If the key doesn't map to an existing
      * object an empty list is returned.
      *
      * @param key The configuration key.
@@ -548,7 +548,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Double objects associated with the given configuration key. If the key doesn't map to an existing
+     * Gets a list of Double objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
      * @param key The configuration key.
@@ -562,7 +562,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of double primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of double primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -575,7 +575,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of double primitives associated with the given configuration key. If the key doesn't map to an existing
+     * Gets an array of double primitives associated with the given configuration key. If the key doesn't map to an existing
      * object an empty array is returned.
      *
      * @param key The configuration key.
@@ -589,7 +589,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -602,7 +602,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object,
+     * Gets a list of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object,
      * the default value is returned.
      *
      * @param key The configuration key.
@@ -616,7 +616,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets an array of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.
      *
      * @param key The configuration key.
@@ -629,7 +629,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets an array of BigIntegers associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.
      *
      * @param key The configuration key.
@@ -643,7 +643,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets a list of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
      *
      * @param key The configuration key.
@@ -656,7 +656,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object,
+     * Gets a list of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object,
      * the default value is returned.
      *
      * @param key The configuration key.
@@ -670,7 +670,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.
      *
      * @param key The configuration key.
@@ -683,7 +683,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
+     * Gets an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.
      *
      * @param key The configuration key.
@@ -697,7 +697,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an URI associated with the given configuration key.
+     * Gets an URI associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated URI.
@@ -709,7 +709,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an URI associated with the given configuration key. If the key doesn't map to an existing object, the default
+     * Gets an URI associated with the given configuration key. If the key doesn't map to an existing object, the default
      * value is returned.
      *
      * @param key The configuration key.
@@ -723,7 +723,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of URIs associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of URIs associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -736,7 +736,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of URIs associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of URIs associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -750,7 +750,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of URIs associated with the given configuration key. If the key doesn't map to an existing object an empty
+     * Gets a list of URIs associated with the given configuration key. If the key doesn't map to an existing object an empty
      * list is returned.
      *
      * @param key The configuration key.
@@ -763,7 +763,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of URIs associated with the given configuration key. If the key doesn't map to an existing object, the
+     * Gets a list of URIs associated with the given configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
      *
      * @param key The configuration key.
@@ -777,7 +777,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an URL associated with the given configuration key.
+     * Gets an URL associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated URL.
@@ -789,7 +789,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an URL associated with the given configuration key. If the key doesn't map to an existing object, the default
+     * Gets an URL associated with the given configuration key. If the key doesn't map to an existing object, the default
      * value is returned.
      *
      * @param key The configuration key.
@@ -803,7 +803,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of URLs associated with the given configuration key. If the key doesn't map to an existing object an empty
+     * Gets a list of URLs associated with the given configuration key. If the key doesn't map to an existing object an empty
      * list is returned.
      *
      * @param key The configuration key.
@@ -816,7 +816,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of URLs associated with the given configuration key. If the key doesn't map to an existing object, the
+     * Gets a list of URLs associated with the given configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
      *
      * @param key The configuration key.
@@ -830,7 +830,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of URLs associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of URLs associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -843,7 +843,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of URLs associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of URLs associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -857,7 +857,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Date associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Date associated with the given configuration key. If the property is a String, it will be parsed with the
      * format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern.
      *
@@ -871,7 +871,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Date associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Date associated with the given configuration key. If the property is a String, it will be parsed with the
      * specified format pattern.
      *
      * @param key The configuration key.
@@ -892,7 +892,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Date associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Date associated with the given configuration key. If the property is a String, it will be parsed with the
      * format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, the default value is returned.
      *
@@ -907,7 +907,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Date associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Date associated with the given configuration key. If the property is a String, it will be parsed with the
      * specified format pattern. If the key doesn't map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -931,7 +931,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the specified format pattern. If the key doesn't map to an existing object an empty list is returned.
      *
      * @param key The configuration key.
@@ -945,7 +945,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, the default value is returned.
      *
@@ -960,7 +960,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the specified format pattern. If the key doesn't map to an existing object, the default value is
      * returned.
      *
@@ -981,7 +981,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty array is returned.
      *
@@ -995,7 +995,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the specified format pattern. If the key doesn't map to an existing object an empty array is returned.
      *
      * @param key The configuration key.
@@ -1009,7 +1009,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty array is returned.
      *
@@ -1024,7 +1024,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * Gets an array of Dates associated with the given configuration key. If the property is a list of Strings, they will be
      * parsed with the specified format pattern. If the key doesn't map to an existing object, the default value is
      * returned.
      *
@@ -1045,7 +1045,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
      * format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern.
      *
@@ -1059,7 +1059,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
      * specified format pattern.
      *
      * @param key The configuration key.
@@ -1080,7 +1080,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
      * format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, the default value is returned.
      *
@@ -1095,7 +1095,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
+     * Gets a Calendar associated with the given configuration key. If the property is a String, it will be parsed with the
      * specified format pattern. If the key doesn't map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -1115,7 +1115,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
+     * Gets a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
      * be parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with
      * the {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty list is returned.
      *
@@ -1129,7 +1129,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
+     * Gets a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
      * be parsed with the specified format pattern. If the key doesn't map to an existing object an empty list is returned.
      *
      * @param key The configuration key.
@@ -1143,7 +1143,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
+     * Gets a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
      * be parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with
      * the {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, the default value is
      * returned.
@@ -1159,7 +1159,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
+     * Gets a list of Calendars associated with the given configuration key. If the property is a list of Strings, they will
      * be parsed with the specified format pattern. If the key doesn't map to an existing object, the default value is
      * returned.
      *
@@ -1180,7 +1180,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
+     * Gets an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
      * will be parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined
      * with the {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty array is
      * returned.
@@ -1195,7 +1195,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
+     * Gets an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
      * will be parsed with the specified format pattern. If the key doesn't map to an existing object an empty array is
      * returned.
      *
@@ -1210,7 +1210,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
+     * Gets an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
      * will be parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined
      * with the {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty array is
      * returned.
@@ -1226,7 +1226,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
+     * Gets an array of Calendars associated with the given configuration key. If the property is a list of Strings, they
      * will be parsed with the specified format pattern. If the key doesn't map to an existing object, the default value is
      * returned.
      *
@@ -1256,7 +1256,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Locale associated with the given configuration key.
+     * Gets a Locale associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated Locale.
@@ -1268,7 +1268,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Locale associated with the given configuration key. If the key doesn't map to an existing object, the default
+     * Gets a Locale associated with the given configuration key. If the key doesn't map to an existing object, the default
      * value is returned.
      *
      * @param key The configuration key.
@@ -1282,7 +1282,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Locales associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets a list of Locales associated with the given configuration key. If the key doesn't map to an existing object an
      * empty list is returned.
      *
      * @param key The configuration key.
@@ -1295,7 +1295,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Locales associated with the given configuration key. If the key doesn't map to an existing object, the
+     * Gets a list of Locales associated with the given configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
      *
      * @param key The configuration key.
@@ -1309,7 +1309,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Locales associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of Locales associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -1322,7 +1322,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Locales associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of Locales associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -1336,7 +1336,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Color associated with the given configuration key.
+     * Gets a Color associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated Color.
@@ -1348,7 +1348,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a Color associated with the given configuration key. If the key doesn't map to an existing object, the default
+     * Gets a Color associated with the given configuration key. If the key doesn't map to an existing object, the default
      * value is returned.
      *
      * @param key The configuration key.
@@ -1362,7 +1362,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Colors associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets a list of Colors associated with the given configuration key. If the key doesn't map to an existing object an
      * empty list is returned.
      *
      * @param key The configuration key.
@@ -1375,7 +1375,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get a list of Colors associated with the given configuration key. If the key doesn't map to an existing object, the
+     * Gets a list of Colors associated with the given configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
      *
      * @param key The configuration key.
@@ -1389,7 +1389,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Colors associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of Colors associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.
@@ -1402,7 +1402,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Get an array of Colors associated with the given configuration key. If the key doesn't map to an existing object an
+     * Gets an array of Colors associated with the given configuration key. If the key doesn't map to an existing object an
      * empty array is returned.
      *
      * @param key The configuration key.

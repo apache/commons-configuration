@@ -303,7 +303,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Get separator used in INI output. see {@code setSeparatorUsedInOutput} for further explanation
+     * Gets separator used in INI output. see {@code setSeparatorUsedInOutput} for further explanation
      *
      * @return the current separator for writing the INI output
      * @since 2.2
@@ -333,7 +333,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Get separator used in INI reading. see {@code setSeparatorUsedInInput} for further explanation
+     * Gets separator used in INI reading. see {@code setSeparatorUsedInInput} for further explanation
      *
      * @return the current separator for reading the INI input
      * @since 2.5
@@ -363,7 +363,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Get comment leading separator used in INI reading. see {@code setCommentLeadingCharsUsedInInput} for further
+     * Gets comment leading separator used in INI reading. see {@code setCommentLeadingCharsUsedInInput} for further
      * explanation
      *
      * @return the current separator for reading the INI input
