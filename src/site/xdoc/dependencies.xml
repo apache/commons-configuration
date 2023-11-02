@@ -26,7 +26,7 @@
         <section name="Runtime dependencies for Commons Configuration">
 
             <p>
-              Commons Configuration requires Java 8 or later.
+              Commons Configuration requires Java 8 or above.
             </p>
             <p>
               Many dependencies are declared in the Maven POM, all of which
