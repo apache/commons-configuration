@@ -235,7 +235,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * A specialized iterator to be returned by the {@code getKeys()} methods. This implementation wraps an iterator from
      * the parent configuration. The keys returned by this iterator are correspondingly transformed.
      */
-    private class SubsetIterator implements Iterator<String> {
+    private final class SubsetIterator implements Iterator<String> {
         /** Stores the wrapped iterator. */
         private final Iterator<String> parentIterator;
 

@@ -372,7 +372,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     /**
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
-    private class XMLPropertyListHandler extends DefaultHandler {
+    private final class XMLPropertyListHandler extends DefaultHandler {
         /** The buffer containing the text node being read */
         private final StringBuilder buffer = new StringBuilder();
 

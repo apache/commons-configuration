@@ -54,7 +54,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 public class TestDynamicCombinedConfiguration {
-    private class ReaderThread extends Thread {
+    private final class ReaderThread extends Thread {
         private volatile boolean running = true;
         private volatile boolean failed;
         private final CombinedConfigurationBuilder builder;

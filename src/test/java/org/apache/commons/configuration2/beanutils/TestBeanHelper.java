@@ -47,7 +47,7 @@ public class TestBeanHelper {
      * An implementation of the BeanFactory interface used for testing. This implementation is really simple: If the
      * BeanCreationTestBean class is provided, a new instance will be created. Otherwise an exception is thrown.
      */
-    private class TestBeanFactory implements BeanFactory {
+    private final class TestBeanFactory implements BeanFactory {
         Object parameter;
 
         boolean supportsDefaultClass;

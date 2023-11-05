@@ -779,7 +779,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * An internal helper class for storing information about contained configurations.
      */
-    private class ConfigData {
+    private final class ConfigData {
         /** Stores a reference to the configuration. */
         private final Configuration configuration;
 

@@ -640,7 +640,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * A specialized visitor implementation which constructs the root node of a configuration with all variables replaced by
      * their interpolated values.
      */
-    private class InterpolatedVisitor extends ConfigurationNodeVisitorAdapter<ImmutableNode> {
+    private final class InterpolatedVisitor extends ConfigurationNodeVisitorAdapter<ImmutableNode> {
         /** A stack for managing node builder instances. */
         private final List<ImmutableNode.Builder> builderStack;
 
