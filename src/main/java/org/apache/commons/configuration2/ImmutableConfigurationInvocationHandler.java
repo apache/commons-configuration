@@ -41,7 +41,7 @@ import java.util.Objects;
  *
  * @since 2.0
  */
-class ImmutableConfigurationInvocationHandler implements InvocationHandler {
+final class ImmutableConfigurationInvocationHandler implements InvocationHandler {
     /** The underlying configuration object. */
     private final Configuration wrappedConfiguration;
 

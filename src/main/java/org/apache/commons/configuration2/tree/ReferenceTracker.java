@@ -45,7 +45,7 @@ import java.util.Map;
  * represented state can be updated by creating new instances which are then stored by the owning node model.
  * </p>
  */
-class ReferenceTracker {
+final class ReferenceTracker {
     /** A map with reference data. */
     private final Map<ImmutableNode, Object> references;
 

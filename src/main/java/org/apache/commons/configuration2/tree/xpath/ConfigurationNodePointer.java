@@ -37,7 +37,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * @since 1.3
  * @param <T> the type of the nodes this pointer deals with
  */
-class ConfigurationNodePointer<T> extends NodePointer {
+final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * The serial version UID.
      */

@@ -53,7 +53,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  *
  * @since 2.0
  */
-class NodeTracker {
+final class NodeTracker {
     /** A map with data about tracked nodes. */
     private final Map<NodeSelector, TrackedNodeData> trackedNodes;
 

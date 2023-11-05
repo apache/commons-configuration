@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @since 2.0
  */
-class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHandler {
+final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHandler {
     /** The root node of the tree. */
     private final ImmutableNode root;
 

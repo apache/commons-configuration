@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @since 2.0
  */
-class AutoSaveListener extends FileHandlerListenerAdapter implements EventListener<ConfigurationEvent> {
+final class AutoSaveListener extends FileHandlerListenerAdapter implements EventListener<ConfigurationEvent> {
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
 

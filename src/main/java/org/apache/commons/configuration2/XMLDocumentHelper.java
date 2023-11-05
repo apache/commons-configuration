@@ -58,7 +58,7 @@ import org.w3c.dom.NodeList;
  *
  * @since 2.0
  */
-class XMLDocumentHelper {
+final class XMLDocumentHelper {
     /** Stores the document managed by this instance. */
     private final Document document;
 

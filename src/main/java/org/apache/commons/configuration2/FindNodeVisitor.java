@@ -26,7 +26,7 @@ import org.apache.commons.configuration2.tree.NodeHandler;
  *
  * @param <T> the type of the nodes to be visited
  */
-class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
+final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
     /** The node to be searched for. */
     private final T searchNode;
 

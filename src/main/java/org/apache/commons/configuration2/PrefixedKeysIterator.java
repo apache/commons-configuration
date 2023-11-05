@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
  * This class is basically a stripped-down version of the {@code FilterIterator} class of Commons Collections
  * </p>
  */
-class PrefixedKeysIterator implements Iterator<String> {
+final class PrefixedKeysIterator implements Iterator<String> {
     /** Stores the wrapped iterator. */
     private final Iterator<String> iterator;
 

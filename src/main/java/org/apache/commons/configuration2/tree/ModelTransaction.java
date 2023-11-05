@@ -54,7 +54,7 @@ import java.util.TreeMap;
  * </ul>
  * </p>
  */
-class ModelTransaction {
+final class ModelTransaction {
 
     /**
      * Constant for the maximum number of entries in the replacement mapping. If this number is exceeded, the parent mapping

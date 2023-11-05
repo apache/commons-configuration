@@ -28,6 +28,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </p>
  */
 class XPathContextFactory {
+
     /**
      * Creates a new {@code JXPathContext} based on the passed in arguments.
      *

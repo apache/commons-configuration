@@ -25,7 +25,7 @@ import org.apache.commons.text.lookup.StringLookup;
  *
  * @since 2.4
  */
-class StringLookupAdapter implements Lookup {
+final class StringLookupAdapter implements Lookup {
 
     /**
      * The StringLookup delegate.

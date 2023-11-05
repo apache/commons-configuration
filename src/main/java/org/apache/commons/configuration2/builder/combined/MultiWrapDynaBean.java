@@ -40,7 +40,7 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
  *
  * @since 2.0
  */
-class MultiWrapDynaBean implements DynaBean {
+final class MultiWrapDynaBean implements DynaBean {
     /** Stores the class of this DynaBean. */
     private final DynaClass dynaClass;
 
