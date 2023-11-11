@@ -617,7 +617,7 @@ public class ConfigurationInterpolator {
         private final Map<String, Lookup> defaultLookups;
 
         /**
-         * Construct a new instance initialized with the given properties.
+         * Constructs a new instance initialized with the given properties.
          * @param props initialization properties
          */
         DefaultPrefixLookupsHolder(final Properties props) {
@@ -663,7 +663,7 @@ public class ConfigurationInterpolator {
         }
 
         /**
-         * Construct a lookup map by parsing the given string. The string is expected to contain
+         * Constructs a lookup map by parsing the given string. The string is expected to contain
          * comma or space-separated names of values from the {@link DefaultLookups} enum.
          * @param str string to parse; not null
          * @return lookup map parsed from the given string
