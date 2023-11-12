@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * &lt;/properties&gt;
  * </pre>
  *
- * The Java 5.0 runtime is not required to use this class. The default encoding for this configuration format is UTF-8.
+ * The Java runtime is not required to use this class. The default encoding for this configuration format is UTF-8.
  * Note that unlike {@code PropertiesConfiguration}, {@code XMLPropertiesConfiguration} does not support includes.
  *
  * <em>Note:</em>Configuration objects of this type can be read concurrently by multiple threads. However if one of
@@ -65,7 +65,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLPropertiesConfiguration extends BaseConfiguration implements FileBasedConfiguration, FileLocatorAware {
     /**
-     * The default encoding (UTF-8 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     * The default encoding (UTF-8 as specified by https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
      */
     public static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -139,7 +139,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
 
     /**
      * Parses a DOM element containing the properties. The DOM element has to follow the XML properties format introduced in
-     * Java 5.0, see http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html
+     * Java, see https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html
      *
      * @param element The DOM element
      * @throws ConfigurationException Error while interpreting the DOM

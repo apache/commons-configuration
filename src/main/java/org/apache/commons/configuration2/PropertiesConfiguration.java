@@ -993,7 +993,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e -> { /* noop */ };
 
     /**
-     * The default encoding (ISO-8859-1 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     * The default encoding (ISO-8859-1 as specified by https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
      */
     public static final String DEFAULT_ENCODING = "ISO-8859-1";
 
