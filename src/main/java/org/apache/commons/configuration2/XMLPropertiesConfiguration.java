@@ -41,8 +41,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This configuration implements the XML properties format introduced in Java 5.0, see
- * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html. An XML properties file looks like this:
+ * This configuration implements the XML properties format introduced in Java, see
+ * https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html. An XML properties file looks like this:
  *
  * <pre>
  * &lt;?xml version="1.0"?&gt;
