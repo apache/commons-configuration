@@ -81,7 +81,6 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
         fileHandler = handler != null ? handler : new FileHandler();
     }
 
-
     /**
      * Creates a new {@code FileBasedBuilderParametersImpl} object from the content of the given map. While
      * {@code fromParameters()} expects that an object already exists and is stored in the given map, this method creates a

@@ -255,7 +255,6 @@ public final class InterpolatorSpecification {
             return this;
         }
 
-
         /**
          * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
          * instance is reset so that it can be reused for creating further specification objects.
