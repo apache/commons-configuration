@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  * <li>{@link java.net.InetAddress}</li>
  * <li>{@code javax.mail.internet.InternetAddress} (requires Javamail in the classpath)</li>
  * <li>{@code jakarta.mail.internet.InternetAddress} (requires Javamail 2.+ in the classpath)</li>
- * <li>{@link java.lang.Enum} (Java 5 enumeration types)</li>
+ * <li>{@link Enum} (Java 5 enumeration types)</li>
  * </ul>
  *
  * Lists and arrays are available for all types.<br>
