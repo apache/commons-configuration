@@ -47,6 +47,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -828,7 +829,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         final FileHandlerListenerTestImpl listener = new FileHandlerListenerTestImpl(handler);
         handler.addFileHandlerListener(listener);
-        handler.setEncoding("UTF-8");
+        handler.setEncoding(StandardCharsets.UTF_8.name());
         listener.checkMethods("locationChanged");
     }
 

@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -366,7 +367,7 @@ public class TestXMLPropertyListConfiguration {
      */
     @Test
     public void testSaveWithEncoding() throws ConfigurationException {
-        final String encoding = "UTF-8";
+        final String encoding = StandardCharsets.UTF_8.name();
         final FileHandler handler = new FileHandler(config);
         handler.setEncoding(encoding);
         final StringWriter writer = new StringWriter();

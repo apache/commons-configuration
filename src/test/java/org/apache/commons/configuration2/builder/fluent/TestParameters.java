@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestParameters {
     /** A default encoding. */
-    private static final String DEF_ENCODING = "UTF-8";
+    private static final String DEF_ENCODING = StandardCharsets.UTF_8.name();
 
     /** A test list delimiter handler. */
     private static ListDelimiterHandler listHandler;

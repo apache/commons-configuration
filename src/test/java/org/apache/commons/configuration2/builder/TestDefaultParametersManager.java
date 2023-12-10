@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
@@ -51,7 +52,7 @@ public class TestDefaultParametersManager {
     }
 
     /** Constant for the default encoding. */
-    private static final String DEF_ENCODING = "UTF-8";
+    private static final String DEF_ENCODING = StandardCharsets.UTF_8.name();
 
     /** A test list delimiter handler. */
     private static ListDelimiterHandler listHandler;
