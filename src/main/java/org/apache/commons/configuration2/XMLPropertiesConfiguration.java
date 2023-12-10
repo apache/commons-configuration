@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,10 +65,11 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 1.1
  */
 public class XMLPropertiesConfiguration extends BaseConfiguration implements FileBasedConfiguration, FileLocatorAware {
+
     /**
      * The default encoding (UTF-8 as specified by https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
      */
-    public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = StandardCharsets.UTF_8.name();
 
     /**
      * Default string used when the XML is malformed
