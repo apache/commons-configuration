@@ -313,7 +313,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     public static class JupPropertiesReader extends PropertiesReader {
 
         /**
-         * Constructor.
+         * Constructs a new instance.
          *
          * @param reader A Reader.
          */
@@ -481,7 +481,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         private String propertySeparator = DEFAULT_SEPARATOR;
 
         /**
-         * Constructor.
+         * Constructs a new instance.
          *
          * @param reader A Reader.
          */
