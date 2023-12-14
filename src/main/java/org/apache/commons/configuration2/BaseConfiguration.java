@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * value strings instead of overwriting them.
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable {
-    /** stores the configuration key-value pairs */
+    /** Stores the configuration key-value pairs */
     private Map<String, Object> store = new LinkedHashMap<>();
 
     /**

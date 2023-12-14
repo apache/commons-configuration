@@ -74,7 +74,7 @@ public final class DefaultExpressionEngineSymbols {
     /** Stores the index start marker. */
     private final String indexStart;
 
-    /** stores the index end marker. */
+    /** Stores the index end marker. */
     private final String indexEnd;
 
     /**
@@ -219,7 +219,7 @@ public final class DefaultExpressionEngineSymbols {
         /** Stores the index start marker. */
         private String indexStart;
 
-        /** stores the index end marker. */
+        /** Stores the index end marker. */
         private String indexEnd;
 
         /**

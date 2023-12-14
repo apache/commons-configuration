@@ -46,10 +46,10 @@ import org.springframework.util.Assert;
  */
 public class ConfigurationPropertiesFactoryBean implements InitializingBean, FactoryBean<Properties> {
 
-    /** internal CompositeConfiguration containing the merged configuration objects **/
+    /** Internal CompositeConfiguration containing the merged configuration objects **/
     private CompositeConfiguration compositeConfiguration;
 
-    /** supplied configurations that will be merged in compositeConfiguration **/
+    /** Supplied configurations that will be merged in compositeConfiguration **/
     private Configuration[] configurations;
 
     /** Spring resources for loading configurations **/
