@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -193,7 +194,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testInheritFromSkipMissingProperties() {
-        final String encoding = "UTF-16";
+        final String encoding = StandardCharsets.UTF_16.name();
         final ReloadingDetectorFactory factory = mock(ReloadingDetectorFactory.class);
         final Long refreshDelay = 20160213172611L;
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setEncoding(encoding).setReloadingDetectorFactory(factory)
