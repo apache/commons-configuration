@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,7 +42,7 @@ public class TestFileLocator {
     private static final String BASE_PATH = "/etc/test/path/";
 
     /** Constant for a test encoding. */
-    private static final String ENCODING = "utf-8";
+    private static final String ENCODING = StandardCharsets.UTF_8.name();
 
     /** A test URL. */
     private static URL sourceURL;

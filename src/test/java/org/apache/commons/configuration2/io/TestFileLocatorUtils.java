@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class TestFileLocatorUtils {
     private static final String BASE_PATH = "/etc/test/path/";
 
     /** Constant for a test encoding. */
-    private static final String ENCODING = "utf-8";
+    private static final String ENCODING = StandardCharsets.UTF_8.name();
 
     /** A test URL. */
     private static URL sourceURL;
