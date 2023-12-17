@@ -1005,7 +1005,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
     /**
      * A string with special characters that need to be unescaped when reading a properties file.
-     * {@code java.util.Properties} escapes these characters when writing out a properties file.
+     * {@link java.util.Properties} escapes these characters when writing out a properties file.
      */
     private static final String UNESCAPE_CHARACTERS = ":#=!\\\'\"";
 

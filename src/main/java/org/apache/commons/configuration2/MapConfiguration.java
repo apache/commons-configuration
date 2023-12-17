@@ -31,14 +31,14 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * A Map based Configuration.
  * </p>
  * <p>
- * This implementation of the {@code Configuration} interface is initialized with a {@code java.util.Map}. The methods
+ * This implementation of the {@code Configuration} interface is initialized with a {@link java.util.Map}. The methods
  * of the {@code Configuration} interface are implemented on top of the content of this map. The following storage
  * scheme is used:
  * </p>
  * <p>
  * Property keys are directly mapped to map keys, i.e. the {@code getProperty()} method directly performs a
  * {@code get()} on the map. Analogously, {@code setProperty()} or {@code addProperty()} operations write new data into
- * the map. If a value is added to an existing property, a {@code java.util.List} is created, which stores the values of
+ * the map. If a value is added to an existing property, a {@link java.util.List} is created, which stores the values of
  * this property.
  * </p>
  * <p>

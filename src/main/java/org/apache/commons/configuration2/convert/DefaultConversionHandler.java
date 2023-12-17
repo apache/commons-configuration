@@ -233,7 +233,7 @@ public class DefaultConversionHandler implements ConversionHandler {
 
     /**
      * Sets the date format to be used by this conversion handler. This format is applied by conversions to {@code Date} or
-     * {@code Calendar} objects. The string is passed to the {@code java.text.SimpleDateFormat} class, so it must be
+     * {@code Calendar} objects. The string is passed to the {@link java.text.SimpleDateFormat} class, so it must be
      * compatible with this class. If no date format has been set, a default format is used.
      *
      * @param dateFormat the date format string

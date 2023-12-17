@@ -30,7 +30,7 @@ import java.util.List;
  * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration} supports list delimiters in
  * property values. If such a delimiter is found, the value actually contains multiple values and has to be split. This
  * is useful for instance for {@link org.apache.commons.configuration2.PropertiesConfiguration PropertiesConfiguration}:
- * properties files that have to be compatible with the {@code java.util.Properties} class cannot have multiple
+ * properties files that have to be compatible with the {@link java.util.Properties} class cannot have multiple
  * occurrences of a single property key, therefore a different storage scheme for multi-valued properties is needed. A
  * possible storage scheme could look as follows:
  * </p>
