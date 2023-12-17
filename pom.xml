@@ -624,6 +624,27 @@
             <excludes>**/org/apache/commons/configuration2/plist/*.java</excludes>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <!--
+            The below setting for not failing upon error stems from the fact that javacc's generated
+            code.
+
+            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
+            and only generates a portion of the package. Furthermore, the javacc parser generator
+            generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
+            sake of releasing commons-configuration-2.4.
+            -->
+            <source>${maven.compiler.source}</source>
+            <failOnError>false</failOnError>
+            <links>
+              <link>${commons.javadoc8.java.link}</link>
+              <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
+              <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
+            </links>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -710,24 +731,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <!--
-            The below setting for not failing upon error stems from the fact that javacc's generated
-            code.
-
-            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
-            and only generates a portion of the package. Furthermore, the javacc parser generator
-            generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
-            sake of releasing commons-configuration-2.4.
-          -->
-          <source>${maven.compiler.source}</source>
-          <failOnError>false</failOnError>
-          <links>
-            <link>https://docs.oracle.com/javase/8/docs/api/</link>
-            <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
-            <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
-          </links>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
@@ -839,26 +842,6 @@
             <reports>
               <report>javadoc</report>
             </reports>
-            <configuration>
-              <!--
-                The below setting for not failing upon error stems from the fact that javacc's generated
-                code.
-
-                Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
-                and only generates a portion of the package. Furthermore, the javacc parser generator
-                generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
-                sake of releasing commons-configuration-2.4.
-              -->
-              <source>${maven.compiler.source}</source>
-              <failOnError>false</failOnError>
-              <links>
-                <link>https://docs.oracle.com/javase/8/docs/api/</link>
-                <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
-                <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
-              </links>
-              <!-- Disable Doclint since the Javadoc in the generated code does not comply. -->
-              <doclint>none</doclint>
-            </configuration>
           </reportSet>
         </reportSets>
         <configuration>
