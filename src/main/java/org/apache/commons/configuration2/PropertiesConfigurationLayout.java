@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -334,7 +335,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
 
     /**
      * Sets the &quot;force single line&quot; flag. If this flag is set, all properties with multiple values are written on
-     * single lines. This mode provides more compatibility with {@code java.lang.Properties}, which cannot deal with
+     * single lines. This mode provides more compatibility with {@link Properties}, which cannot deal with
      * multiple definitions of a single property. This mode has no effect if the list delimiter parsing is disabled.
      *
      * @param f the force single line flag

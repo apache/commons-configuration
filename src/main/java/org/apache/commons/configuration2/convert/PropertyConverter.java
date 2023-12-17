@@ -354,7 +354,7 @@ public final class PropertyConverter {
      * created.
      *
      * @param value the value to be converted (must not be <b>null</b>)
-     * @param targetClass the target class of the conversion (must be derived from {@code java.lang.Number})
+     * @param targetClass the target class of the conversion (must be derived from {@link Number})
      * @return the converted number
      * @throws ConversionException if the object cannot be converted
      */

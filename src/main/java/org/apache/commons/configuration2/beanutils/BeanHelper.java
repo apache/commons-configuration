@@ -370,7 +370,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Loads a {@code java.lang.Class} object for the specified name. Because class loading can be tricky in some
+     * Loads a {@code Class} object for the specified name. Because class loading can be tricky in some
      * environments the code for retrieving a class by its name was extracted into this helper method. So if changes are
      * necessary, they can be made at a single place.
      *
