@@ -32,7 +32,7 @@ public interface FileOptionsProvider {
     String CURRENT_USER = "currentUser";
 
     /**
-     * Key used to indicate whether Webdav versioning support should be enabled. The value associated with this key is a
+     * Key used to indicate whether WebDAV versioning support should be enabled. The value associated with this key is a
      * Boolean where True indicates versioning should be enabled.
      */
     String VERSIONING = "versioning";
