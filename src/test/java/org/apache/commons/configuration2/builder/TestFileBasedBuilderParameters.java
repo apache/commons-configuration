@@ -242,7 +242,7 @@ public class TestFileBasedBuilderParameters {
      */
     @Test
     public void testSetEncoding() {
-        final String enc = "ISO-8859-1";
+        final String enc = StandardCharsets.ISO_8859_1.name();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame(params, params.setEncoding(enc));
         assertSame(enc, params.getFileHandler().getEncoding());

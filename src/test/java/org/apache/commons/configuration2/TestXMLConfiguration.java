@@ -92,7 +92,7 @@ public class TestXMLConfiguration {
     private static final String CATALOG_FILES = ConfigurationAssert.getTestFile("catalog.xml").getAbsolutePath();
 
     /** Constant for the used encoding. */
-    static final String ENCODING = "ISO-8859-1";
+    static final String ENCODING = StandardCharsets.ISO_8859_1.name();
 
     /** Constant for the test system ID. */
     static final String SYSTEM_ID = "properties.dtd";

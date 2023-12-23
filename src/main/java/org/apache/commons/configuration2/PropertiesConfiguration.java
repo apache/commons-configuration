@@ -24,6 +24,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -995,7 +996,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * The default encoding (ISO-8859-1 as specified by https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
      */
-    public static final String DEFAULT_ENCODING = "ISO-8859-1";
+    public static final String DEFAULT_ENCODING = StandardCharsets.ISO_8859_1.name();
 
     /** Constant for the supported comment characters. */
     static final String COMMENT_CHARS = "#!";
