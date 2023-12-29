@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Property list file (plist) in XML FORMAT as used by Mac OS X (http://www.apple.com/DTDs/PropertyList-1.0.dtd). This
+ * Property list file (plist) in XML FORMAT as used by macOS X (http://www.apple.com/DTDs/PropertyList-1.0.dtd). This
  * configuration doesn't support the binary FORMAT used in OS X 10.4.
  *
  * <p>
