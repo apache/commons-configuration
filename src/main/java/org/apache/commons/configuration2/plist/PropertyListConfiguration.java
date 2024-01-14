@@ -49,7 +49,7 @@ import org.apache.commons.lang3.StringUtils;
  * References:
  * <ul>
  * <li><a href=
- * "http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html"> Apple
+ * "https://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html"> Apple
  * Documentation - Old-Style ASCII Property Lists</a></li>
  * <li><a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html"> GNUStep
  * Documentation</a></li>

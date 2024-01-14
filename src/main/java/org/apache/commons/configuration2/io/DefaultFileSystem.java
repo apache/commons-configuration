@@ -59,7 +59,7 @@ public class DefaultFileSystem extends FileSystem {
     @Override
     public OutputStream getOutputStream(final URL url) throws ConfigurationException {
         // file URLs have to be converted to Files since FileURLConnection is
-        // read only (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
+        // read only (https://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
         final File file = FileLocatorUtils.fileFromURL(url);
         if (file != null) {
             return getOutputStream(file);
