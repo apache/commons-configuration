@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class TestAbstractConfiguration {
     /**
-     * Return an abstract configuration with the following data:<br>
+     * Gets an abstract configuration with the following data:<br>
      *
      * <pre>
      * key1 = value1
@@ -55,7 +55,7 @@ public abstract class TestAbstractConfiguration {
     protected abstract AbstractConfiguration getConfiguration();
 
     /**
-     * Return an empty configuration.
+     * Gets an empty configuration.
      */
     protected abstract AbstractConfiguration getEmptyConfiguration();
 

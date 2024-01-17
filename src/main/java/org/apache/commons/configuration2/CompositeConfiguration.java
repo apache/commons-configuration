@@ -230,7 +230,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Return the number of configurations.
+     * Gets the number of configurations.
      *
      * @return the number of configuration
      */
@@ -356,7 +356,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Return the configuration at the specified index.
+     * Gets the configuration at the specified index.
      *
      * @param index The index of the configuration to retrieve
      * @return the configuration at this index

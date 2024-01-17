@@ -402,7 +402,7 @@ public class FileHandler {
     }
 
     /**
-     * Return the base path. If no base path is defined, but a URL, the base path is derived from there.
+     * Gets the base path. If no base path is defined, but a URL, the base path is derived from there.
      *
      * @return the base path
      */
@@ -461,7 +461,7 @@ public class FileHandler {
     }
 
     /**
-     * Return the name of the file. If only a URL is defined, the file name is derived from there.
+     * Gets the name of the file. If only a URL is defined, the file name is derived from there.
      *
      * @return the file name
      */

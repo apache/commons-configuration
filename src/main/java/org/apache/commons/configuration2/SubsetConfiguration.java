@@ -73,7 +73,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the key in the parent configuration associated to the specified key in this subset.
+     * Gets the key in the parent configuration associated to the specified key in this subset.
      *
      * @param key The key in the subset.
      * @return the key as to be used by the parent
@@ -86,7 +86,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the key in the subset configuration associated to the specified key in the parent configuration.
+     * Gets the key in the subset configuration associated to the specified key in the parent configuration.
      *
      * @param key The key in the parent configuration.
      * @return the key in the context of this subset configuration
@@ -107,7 +107,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the parent configuration for this subset.
+     * Gets the parent configuration for this subset.
      *
      * @return the parent configuration
      */
@@ -116,7 +116,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the prefix used to select the properties in the parent configuration.
+     * Gets the prefix used to select the properties in the parent configuration.
      *
      * @return the prefix used by this subset
      */

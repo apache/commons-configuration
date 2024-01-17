@@ -104,7 +104,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     }
 
     /**
-     * Return the Map decorated by this configuration.
+     * Gets the Map decorated by this configuration.
      *
      * @return the map this configuration is based onto
      */

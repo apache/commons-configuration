@@ -371,7 +371,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the base context with the prefix applied.
+     * Gets the base context with the prefix applied.
      *
      * @return the base context
      * @throws NamingException if an error occurs
@@ -385,7 +385,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the initial context used by this configuration. This context is independent of the prefix specified.
+     * Gets the initial context used by this configuration. This context is independent of the prefix specified.
      *
      * @return the initial context
      */

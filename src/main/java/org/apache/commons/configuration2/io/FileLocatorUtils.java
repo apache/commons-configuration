@@ -292,7 +292,7 @@ public final class FileLocatorUtils {
     }
 
     /**
-     * Return the path without the file name, for example https://xyz.net/foo/bar.xml results in https://xyz.net/foo/
+     * Gets the path without the file name, for example https://xyz.net/foo/bar.xml results in https://xyz.net/foo/
      *
      * @param url the URL from which to extract the path
      * @return the path component of the passed in URL

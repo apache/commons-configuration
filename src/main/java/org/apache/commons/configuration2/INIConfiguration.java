@@ -806,7 +806,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Return a set containing the sections in this ini configuration. Note that changes to this set do not affect the
+     * Gets a set containing the sections in this ini configuration. Note that changes to this set do not affect the
      * configuration.
      *
      * @return a set containing the sections.

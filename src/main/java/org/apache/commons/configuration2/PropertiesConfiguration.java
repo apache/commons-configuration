@@ -1295,7 +1295,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     }
 
     /**
-     * Return the comment header.
+     * Gets the comment header.
      *
      * @return the comment header
      * @since 1.1

@@ -150,7 +150,7 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Return the configuration decorated by this DataConfiguration.
+     * Gets the configuration decorated by this DataConfiguration.
      *
      * @return the wrapped configuration
      */
