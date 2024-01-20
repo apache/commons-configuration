@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for XMLBeanDeclaration.
  *
- * @since 1.3
  */
 public class TestXMLBeanDeclaration {
     /**

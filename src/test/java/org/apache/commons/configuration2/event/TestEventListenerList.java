@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@code EventListenerList.}
  *
- * @since 2.0
  */
 public class TestEventListenerList {
     /**

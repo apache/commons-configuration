@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for BeanHelper.
  *
- * @since 1.3
  */
 public class TestBeanHelper {
     /**

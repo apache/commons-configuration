@@ -44,7 +44,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for DefaultBeanFactory.
  *
- * @since 1.3
  */
 public class TestDefaultBeanFactory {
     /** Constant for the test value of the string property. */
