@@ -49,7 +49,6 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
     /**
      * A test implementation of the class under test which allows access to reloading controllers of managed configuration
      * builders.
-     *
      */
     private static final class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
         /**
