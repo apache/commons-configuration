@@ -28,6 +28,7 @@
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] ci: Harden GitHub Actions #307.</action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-834" due-to="Keith Barlow, Gary Gregory">ConfirgurationPropertySource doesn't supply resolved values #309.</action>
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">Take prefix delimiter into account when SubsetConfiguration.getKeysInternal() is called #300.</action>
+      <action dev="ggregory" type="fix" due-to="Heewon Lee, Gary Gregory">Guard ConfigurationMap against null configuration #355.</action>
       <!-- ADD -->
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">Add AbstractConfiguration.getKeysInternal(String, String) #300.</action>
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">Add ImmutableConfiguration.getKeys(String, String) #300.</action>
