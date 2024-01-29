@@ -57,6 +57,14 @@ public class TestConfigurationMap {
     }
 
     /**
+     * Attempts to create a ConfigurationMap with null configuration. This should cause an exception.
+     */
+    @Test
+    public void testNullConfig() {
+        assertThrows(NullPointerException.class, () -> new ConfigurationMap(null));
+    }
+
+    /**
      * Class under test for Object put(Object, Object)
      */
     @Test
@@ -69,18 +77,6 @@ public class TestConfigurationMap {
             assertNotNull(object);
             assertEquals(values[i], object);
         }
-    }
-
-    /**
-     * Attempts to create a ConfigurationMap with null configuration.
-     * This should cause an exception.
-     */
-    @Test
-    public void testNullConfig() {
-        assertThrows(NullPointerException.class, () -> {
-            final Configuration cf = null;
-            new ConfigurationMap(cf);
-        });
     }
 
 }
