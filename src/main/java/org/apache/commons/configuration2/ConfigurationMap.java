@@ -21,6 +21,7 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -47,7 +48,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * @param configuration {@code Configuration} instance.
      */
     public ConfigurationMap(final Configuration configuration) {
-        this.configuration = configuration;
+        this.configuration = Objects.requireNonNull(configuration);
     }
 
     /**
