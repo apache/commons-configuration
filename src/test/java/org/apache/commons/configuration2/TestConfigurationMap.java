@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,18 @@ public class TestConfigurationMap {
             assertNotNull(object);
             assertEquals(values[i], object);
         }
+    }
+
+    /**
+     * Attempts to create a ConfigurationMap with null configuration.
+     * This should cause an exception.
+     */
+    @Test
+    public void testNullConfig() {
+        assertThrows(NullPointerException.class, () -> {
+            final Configuration cf = null;
+            new ConfigurationMap(cf);
+        });
     }
 
 }
