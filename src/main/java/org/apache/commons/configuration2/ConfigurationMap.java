@@ -48,7 +48,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * @param configuration {@code Configuration} instance.
      */
     public ConfigurationMap(final Configuration configuration) {
-        this.configuration = Objects.requireNonNull(configuration);
+        this.configuration = Objects.requireNonNull(configuration, "configuration");
     }
 
     /**
