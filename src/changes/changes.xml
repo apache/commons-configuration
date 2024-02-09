@@ -39,7 +39,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.11.0 to 2.15.1.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump spring-* from 5.3.26 to 5.3.31.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 57 to 66.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.15 to 1.16.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.15 to 1.16.1.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-lang3 from 3.11 to 3.14.0.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump org.yaml:snakeyaml from 2.0 to 2.2 #312, #315.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump slf4j.version from 2.0.7 to 2.0.11.</action>
