@@ -344,17 +344,17 @@ public class TestSubsetConfiguration {
                 try {
                     subsetIteratorClass = Class
                             .forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
-                    Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
+                    final Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
                             Iterator.class);
                     ctor.setAccessible(true);
 
                     return (Iterator<String>) ctor.newInstance(this, parent.getKeys("part1.part2"));
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     throw new IllegalArgumentException(ex);
                 }
             }
         };
-        
+
         // Check subset properties - contains one property
         assertEquals("value1", subset.getString("test.key1"));
         assertNull(subset.getString("testing.key2"));
