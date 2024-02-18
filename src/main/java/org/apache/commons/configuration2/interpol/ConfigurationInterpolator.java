@@ -679,7 +679,7 @@ public class ConfigurationInterpolator {
                         addLookup(DefaultLookups.valueOf(lookupName.toUpperCase()), lookupMap);
                     }
                 }
-            } catch (IllegalArgumentException exc) {
+            } catch (final IllegalArgumentException exc) {
                 throw new IllegalArgumentException("Invalid default lookups definition: " + str, exc);
             }
 
@@ -723,7 +723,8 @@ public class ConfigurationInterpolator {
                 }
                 if (obj instanceof Iterator) {
                     return nextOrNull((Iterator<?>) obj);
-                } else if (obj.getClass().isArray()) {
+                }
+                if (obj.getClass().isArray()) {
                     return Array.getLength(obj) > 0
                             ? Array.get(obj, 0)
                             : null;

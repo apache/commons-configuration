@@ -524,7 +524,7 @@ public interface ImmutableConfiguration {
      * @see #getKeys()
      * @since 2.10.0
      */
-    default Iterator<String> getKeys(String prefix, String delimiter) {
+    default Iterator<String> getKeys(final String prefix, final String delimiter) {
         return null;
     }
 
