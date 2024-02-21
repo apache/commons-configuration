@@ -56,6 +56,7 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -488,6 +489,16 @@ public class TestPropertiesConfiguration {
         handler.load(new StringReader("\\u0066\\u006f\\u006f=bar"));
 
         assertEquals("bar", conf.getString("foo"));
+    }
+
+    @Test
+    public void testLargeKey() throws Exception {
+        conf.clear();
+        String key = String.join("", Collections.nCopies(10000, "x"));
+        final FileHandler handler = new FileHandler(conf);
+        handler.load(new StringReader(key));
+
+        assertEquals("", conf.getString(key));
     }
 
     /**
