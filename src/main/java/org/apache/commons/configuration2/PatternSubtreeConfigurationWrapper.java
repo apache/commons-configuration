@@ -63,7 +63,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * @param path The base path pattern.
      */
     public PatternSubtreeConfigurationWrapper(final HierarchicalConfiguration<ImmutableNode> config, final String path) {
-        this.config = config;
+        this.config = Objects.requireNonNull(config, "config");
         this.path = path;
         this.trailing = path.endsWith("/");
         this.init = true;
