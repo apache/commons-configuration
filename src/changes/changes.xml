@@ -34,6 +34,7 @@
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">Add ImmutableConfiguration.getKeys(String, String) #300.</action>
       <action dev="ggregory" type="fix" due-to="KeijoB, Gary Gregory">Add PrefixedKeysIterator.PrefixedKeysIterator(Iterator&lt;String%gt;, String, String) #300.</action>
       <action dev="ggregory" type="add" due-to="Gary Gregory">Add Maven property project.build.outputTimestamp for build reproducibility.</action>
+      <action dev="ggregory" type="add" due-to="Heewon Lee">Guard PatternSubtreeConfigurationWrapper constructor against null #365.</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.14.2 to 2.16.1 #297, #303, #326, #331, #340.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.11.0 to 2.15.1.</action>
