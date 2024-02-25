@@ -463,11 +463,14 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * error, an error event will be generated of type {@code READ} with the causing exception. Both the event's
      * {@code propertyName} and the {@code propertyValue} will be undefined.
      *
-     * @return an iterator with the contained keys (an empty iterator in case of an error)
+     * @return an iterator with the contained keys (an empty iterator in case of an error or if Datasource is not set)
      */
     @Override
     protected Iterator<String> getKeysInternal() {
         final Collection<String> keys = new ArrayList<>();
+        if (getDatasource() == null) {
+            return keys.iterator();
+        }
         new AbstractJdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
             @Override
             protected Collection<String> performOperation() throws SQLException {

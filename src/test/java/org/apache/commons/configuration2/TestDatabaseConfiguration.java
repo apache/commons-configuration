@@ -393,6 +393,11 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
+    public void testGetKeysInternalNoDatasource() throws Exception {
+        ConfigurationUtils.toString(new DatabaseConfiguration());
+    }
+
+    @Test
     public void testGetKeysMultiple() throws ConfigurationException {
         final Configuration config = helper.setUpMultiConfig();
         final Iterator<String> it = config.getKeys();
