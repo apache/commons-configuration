@@ -83,8 +83,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     @Override
     public int hashCode() {
         int result = eventType.hashCode();
-        result = HASH_FACTOR * result + listener.hashCode();
-        return result;
+        return HASH_FACTOR * result + listener.hashCode();
     }
 
     /**
