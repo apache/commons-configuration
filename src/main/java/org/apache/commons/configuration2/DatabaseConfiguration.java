@@ -611,17 +611,19 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         public T execute() {
             T result = null;
 
-            try {
-                conn = getDatasource().getConnection();
-                result = performOperation();
+            if (getDatasource() != null) {
+                try {
+                    conn = getDatasource().getConnection();
+                    result = performOperation();
 
-                if (isAutoCommit()) {
-                    conn.commit();
+                    if (isAutoCommit()) {
+                        conn.commit();
+                    }
+                } catch (final SQLException e) {
+                    fireError(errorEventType, operationEventType, errorPropertyName, errorPropertyValue, e);
+                } finally {
+                    close(conn, pstmt, resultSet);
                 }
-            } catch (final SQLException e) {
-                fireError(errorEventType, operationEventType, errorPropertyName, errorPropertyValue, e);
-            } finally {
-                close(conn, pstmt, resultSet);
             }
 
             return result;
