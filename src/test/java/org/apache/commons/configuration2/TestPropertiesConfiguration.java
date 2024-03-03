@@ -494,7 +494,7 @@ public class TestPropertiesConfiguration {
     @Test
     public void testLargeKey() throws Exception {
         conf.clear();
-        String key = String.join("", Collections.nCopies(10000, "x"));
+        final String key = String.join("", Collections.nCopies(10000, "x"));
         final FileHandler handler = new FileHandler(conf);
         handler.load(new StringReader(key));
 
