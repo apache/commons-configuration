@@ -15,13 +15,12 @@
 ## specific language governing permissions and limitations
 ## under the License.
 ##
-                        Apache Commons Configuration
-                        Version ${version}
-                        Release Notes
+Apache Commons Configuration
+Version ${version}
+Release Notes
 
-
-INTRODUCTION:
-=============
+Introducing Apache Commons Configuration
+----------------------------------------
 
 This document contains the release notes for this version of the Commons
 Configuration component. It describes the changes since the previous version.
@@ -70,7 +69,7 @@ $release.description.replaceAll("  ", "
 #else
 #set($dueto="")
 #end
-o $issue ${action}$dueto
+* $issue ${action}$dueto
 #set($action="")
 #set($issue="")
 #set($dueto="")
@@ -82,28 +81,36 @@ No changes defined in this version.
 Changes in this version include:
 
 #if ($release.getActions('add').size() !=0)
-New features:
+New features
+------------
+
 #foreach($actionItem in $release.getActions('add'))
 #processaction()
 #end 
 #end
 
 #if ($release.getActions('fix').size() !=0)
-Fixed Bugs:
+Fixed Bugs
+----------
+
 #foreach($actionItem in $release.getActions('fix'))
 #processaction()
 #end
 #end
 
 #if ($release.getActions('update').size() !=0)
-Changes:
+Changes
+-------
+
 #foreach($actionItem in $release.getActions('update'))
 #processaction()
 #end
 #end
 
 #if ($release.getActions('remove').size() !=0)
-Removed:
+Removed
+-------
+
 #foreach($actionItem in $release.getActions('remove'))
 #processaction()
 #end
@@ -120,3 +127,4 @@ ${project.url}
 
 Download it from ${project.url}/download_configuration.cgi
 
+-----------------------------------------------------------------------------

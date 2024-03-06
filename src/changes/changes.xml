@@ -23,7 +23,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.10.0" date="20YY-MM-DD" description="Minor release with new features and updated dependencies.">
+    <release version="2.10.0" date="2024-03-06" description="Minor release with new features and updated dependencies.">
       <!-- FIX -->
       <action dev="ggregory" type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] ci: Harden GitHub Actions #307.</action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-834" due-to="Keith Barlow, Gary Gregory">ConfirgurationPropertySource doesn't supply resolved values #309.</action>
