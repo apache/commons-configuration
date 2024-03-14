@@ -491,16 +491,6 @@ public class TestPropertiesConfiguration {
         assertEquals("bar", conf.getString("foo"));
     }
 
-    @Test
-    public void testLargeKey() throws Exception {
-        conf.clear();
-        final String key = String.join("", Collections.nCopies(10000, "x"));
-        final FileHandler handler = new FileHandler(conf);
-        handler.load(new StringReader(key));
-
-        assertEquals("", conf.getString(key));
-    }
-
     /**
      * Check that key/value separators can be part of a key.
      */
@@ -909,6 +899,16 @@ public class TestPropertiesConfiguration {
         assertEquals("foo", conf.getProperty("test.separator.tab"));
         assertEquals("foo", conf.getProperty("test.separator.formfeed"));
         assertEquals("foo", conf.getProperty("test.separator.whitespace"));
+    }
+
+    @Test
+    public void testLargeKey() throws Exception {
+        conf.clear();
+        final String key = String.join("", Collections.nCopies(10000, "x"));
+        final FileHandler handler = new FileHandler(conf);
+        handler.load(new StringReader(key));
+
+        assertEquals("", conf.getString(key));
     }
 
     /**
