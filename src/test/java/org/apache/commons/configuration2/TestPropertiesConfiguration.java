@@ -51,7 +51,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -431,6 +433,20 @@ public class TestPropertiesConfiguration {
     public void testComment() {
         assertFalse(conf.containsKey("#comment"));
         assertFalse(conf.containsKey("!comment"));
+    }
+
+    @Test
+    public void testCompress840() {
+        final PropertiesConfiguration configuration = new PropertiesConfiguration();
+        final Path path = FileSystems.getDefault().getPath("bar");
+        final ListDelimiterHandler listDelimiterHandler = configuration.getListDelimiterHandler();
+        listDelimiterHandler.flatten(path, 0);
+        // Stack overflow:
+        listDelimiterHandler.flatten(path, 1);
+        listDelimiterHandler.flatten(path, Integer.MAX_VALUE);
+        listDelimiterHandler.parse(path);
+        configuration.addProperty("foo", path);
+        configuration.toString();
     }
 
     /**
