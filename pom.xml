@@ -402,10 +402,12 @@
     </dependency>
 
     <dependency>
+	  <!-- For org.apache.commons.configuration2.web -->
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.5</version>
       <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
