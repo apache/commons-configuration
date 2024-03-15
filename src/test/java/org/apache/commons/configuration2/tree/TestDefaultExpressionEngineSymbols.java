@@ -62,6 +62,20 @@ public class TestDefaultExpressionEngineSymbols {
     }
 
     /**
+     * Tests the instance created with empty builder.
+     */
+    @Test
+    public void testEmptyBuilder() {
+        DefaultExpressionEngineSymbols engine = new DefaultExpressionEngineSymbols.Builder().create();
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER, engine.getPropertyDelimiter());
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_ESCAPED_DELIMITER, engine.getEscapedDelimiter());
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_INDEX_START, engine.getIndexStart());
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_INDEX_END, engine.getIndexEnd());
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START, engine.getAttributeStart());
+        assertEquals(DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END, engine.getAttributeEnd());
+    }
+
+    /**
      * Tests the instance with default symbols.
      */
     @Test

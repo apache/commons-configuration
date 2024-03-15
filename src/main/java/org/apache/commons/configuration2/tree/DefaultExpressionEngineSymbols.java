@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.tree;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -83,12 +85,12 @@ public final class DefaultExpressionEngineSymbols {
      * @param b the builder for defining the properties of this instance
      */
     private DefaultExpressionEngineSymbols(final Builder b) {
-        propertyDelimiter = b.propertyDelimiter;
-        escapedDelimiter = b.escapedDelimiter;
-        indexStart = b.indexStart;
-        indexEnd = b.indexEnd;
-        attributeStart = b.attributeStart;
-        attributeEnd = b.attributeEnd;
+        propertyDelimiter = b.propertyDelimiter != null ? b.propertyDelimiter : DEFAULT_PROPERTY_DELIMITER;
+        escapedDelimiter = b.escapedDelimiter != null ? b.escapedDelimiter : DEFAULT_ESCAPED_DELIMITER;
+        indexStart = b.indexStart != null ? b.indexStart : DEFAULT_INDEX_START;
+        indexEnd = b.indexEnd != null ? b.indexEnd : DEFAULT_INDEX_END;
+        attributeStart = b.attributeStart != null ? b.attributeStart : DEFAULT_ATTRIBUTE_START;
+        attributeEnd = b.attributeEnd != null ? b.attributeEnd : DEFAULT_ATTRIBUTE_END;
     }
 
     /**
