@@ -33,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.beans.beancontext.BeanContextServicesSupport;
+import java.beans.beancontext.BeanContextSupport;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -53,8 +55,9 @@ import java.net.URLStreamHandler;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +65,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Properties;
 import java.util.Set;
 
@@ -435,18 +439,54 @@ public class TestPropertiesConfiguration {
         assertFalse(conf.containsKey("!comment"));
     }
 
-    @Test
-    public void testCompress840() {
+    private void testCompress840(final Iterable<?> object) {
         final PropertiesConfiguration configuration = new PropertiesConfiguration();
-        final Path path = FileSystems.getDefault().getPath("bar");
         final ListDelimiterHandler listDelimiterHandler = configuration.getListDelimiterHandler();
-        listDelimiterHandler.flatten(path, 0);
+        listDelimiterHandler.flatten(object, 0);
         // Stack overflow:
-        listDelimiterHandler.flatten(path, 1);
-        listDelimiterHandler.flatten(path, Integer.MAX_VALUE);
-        listDelimiterHandler.parse(path);
-        configuration.addProperty("foo", path);
+        listDelimiterHandler.flatten(object, 1);
+        listDelimiterHandler.flatten(object, Integer.MAX_VALUE);
+        listDelimiterHandler.parse(object);
+        configuration.addProperty("foo", object);
         configuration.toString();
+    }
+
+    @Test
+    public void testCompress840BeanContextServicesSupport() {
+        testCompress840(new BeanContextServicesSupport());
+        testCompress840(new BeanContextServicesSupport(new BeanContextServicesSupport()));
+        final BeanContextSupport bcs = new BeanContextSupport();
+        final BeanContextServicesSupport bcss = new BeanContextServicesSupport();
+        bcs.add(FileSystems.getDefault().getPath("bar"));
+        bcss.add(bcs);
+        testCompress840(bcss);
+        bcss.add(FileSystems.getDefault().getPath("bar"));
+        testCompress840(bcss);
+        bcss.add(bcss);
+        testCompress840(bcss);
+    }
+
+    @Test
+    public void testCompress840BeanContextSupport() {
+        testCompress840(new BeanContextSupport());
+        testCompress840(new BeanContextSupport(new BeanContextSupport()));
+        final BeanContextSupport bcs = new BeanContextSupport();
+        bcs.add(FileSystems.getDefault().getPath("bar"));
+        testCompress840(bcs);
+        bcs.add(bcs);
+        testCompress840(bcs);
+    }
+
+    @Test
+    public void testCompress840Path() {
+        testCompress840(FileSystems.getDefault().getPath("foo"));
+        testCompress840(FileSystems.getDefault().getPath("foo", "bar"));
+    }
+
+    @Test
+    public void testCompress840PriorityQueue() {
+        testCompress840(new PriorityQueue<>());
+        testCompress840(new PriorityQueue<>(Arrays.asList(FileSystems.getDefault().getPath("foo"))));
     }
 
     /**

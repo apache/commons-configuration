@@ -16,9 +16,13 @@
  */
 package org.apache.commons.configuration2.convert;
 
+import java.lang.reflect.Array;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * <p>
@@ -42,13 +46,43 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * @param target the target collection
      * @param iterator the iterator to process
      * @param limit a limit for the number of elements to extract
+     * @param dejaVue Previously visited objects.
      */
-    static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit) {
+    static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
+            Set<Object> dejaVue) {
         int size = target.size();
         while (size < limit && iterator.hasNext()) {
-            target.addAll(handler.flatten(iterator.next(), limit - size));
-            size = target.size();
+            final Object next = iterator.next();
+            if (!dejaVue.contains(next)) {
+                target.addAll(flatten(handler, next, limit - size, dejaVue));
+                size = target.size();
+            }
         }
+    }
+
+    static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
+        dejaVu.add(value);
+        if (value instanceof String) {
+            return handler.split((String) value, true);
+        }
+        final Collection<Object> result = new LinkedList<>();
+        if (value instanceof Path) {
+            // Don't handle as an Iterable.
+            result.add(value);
+        } else if (value instanceof Iterable) {
+            AbstractListDelimiterHandler.flattenIterator(handler, result, ((Iterable<?>) value).iterator(), limit, dejaVu);
+        } else if (value instanceof Iterator) {
+            AbstractListDelimiterHandler.flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
+        } else if (value != null) {
+            if (value.getClass().isArray()) {
+                for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
+                    result.addAll(handler.flatten(Array.get(value, idx), limit - size));
+                }
+            } else {
+                result.add(value);
+            }
+        }
+        return result;
     }
 
     /**

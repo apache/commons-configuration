@@ -16,12 +16,11 @@
  */
 package org.apache.commons.configuration2.convert;
 
-import java.lang.reflect.Array;
-import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -118,27 +117,9 @@ public interface ListDelimiterHandler {
      * @since 2.9.0
      */
     default Collection<?> flatten(final Object value, final int limit) {
-        if (value instanceof String) {
-            return split((String) value, true);
-        }
-        final Collection<Object> result = new LinkedList<>();
-        if (value instanceof Path) {
-            // Don't handle as an Iterable.
-            result.add(value);
-        } else if (value instanceof Iterable) {
-            AbstractListDelimiterHandler.flattenIterator(this, result, ((Iterable<?>) value).iterator(), limit);
-        } else if (value instanceof Iterator) {
-            AbstractListDelimiterHandler.flattenIterator(this, result, (Iterator<?>) value, limit);
-        } else if (value != null) {
-            if (value.getClass().isArray()) {
-                for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
-                    result.addAll(flatten(Array.get(value, idx), limit - size));
-                }
-            } else {
-                result.add(value);
-            }
-        }
-        return result;
+        final Set<Object> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
+        dejaVu.add(value);
+        return AbstractListDelimiterHandler.flatten(this, value, limit, dejaVu);
     }
 
 }
