@@ -56,11 +56,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -88,6 +87,8 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test for loading and saving properties files.
@@ -439,7 +440,7 @@ public class TestPropertiesConfiguration {
         assertFalse(conf.containsKey("!comment"));
     }
 
-    private void testCompress840(final Iterable<?> object) {
+    private Collection<?> testCompress840(final Iterable<?> object) {
         final PropertiesConfiguration configuration = new PropertiesConfiguration();
         final ListDelimiterHandler listDelimiterHandler = configuration.getListDelimiterHandler();
         listDelimiterHandler.flatten(object, 0);
@@ -449,6 +450,20 @@ public class TestPropertiesConfiguration {
         listDelimiterHandler.parse(object);
         configuration.addProperty("foo", object);
         configuration.toString();
+        return listDelimiterHandler.flatten(object, Integer.MAX_VALUE);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4, 8, 16 })
+    public void testCompress840ArrayList(final int size) {
+        final ArrayList<Object> object = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            object.add(i);
+        }
+        final Collection<?> result = testCompress840(object);
+        assertNotNull(result);
+        assertEquals(size, result.size());
+        assertEquals(object, result);
     }
 
     @Test
@@ -477,16 +492,25 @@ public class TestPropertiesConfiguration {
         testCompress840(bcs);
     }
 
-    @Test
-    public void testCompress840Path() {
-        testCompress840(FileSystems.getDefault().getPath("foo"));
-        testCompress840(FileSystems.getDefault().getPath("foo", "bar"));
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4, 8, 16 })
+    public void testCompress840Path(final int size) {
+        final PriorityQueue<Object> object = new PriorityQueue<>();
+        for (int i = 0; i < size; i++) {
+            object.add(FileSystems.getDefault().getPath("foo"));
+            object.add(FileSystems.getDefault().getPath("foo", "bar"));
+        }
+        testCompress840(object);
     }
 
-    @Test
-    public void testCompress840PriorityQueue() {
-        testCompress840(new PriorityQueue<>());
-        testCompress840(new PriorityQueue<>(Arrays.asList(FileSystems.getDefault().getPath("foo"))));
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4, 8, 16 })
+    public void testCompress840PriorityQueue(final int size) {
+        final PriorityQueue<Object> object = new PriorityQueue<>();
+        for (int i = 0; i < size; i++) {
+            object.add(FileSystems.getDefault().getPath("foo"));
+        }
+        testCompress840(object);
     }
 
     /**
