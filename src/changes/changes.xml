@@ -31,6 +31,7 @@
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.16.1 to 2.17.0 #297, #303, #326, #331, #340, #378.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump log4j.version from 2.23.0 to 2.23.1 #379.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump spring.version from 5.3.32 to 5.3.33 #380.</action>
     </release>
     <release version="2.10.0" date="2024-03-06" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->
