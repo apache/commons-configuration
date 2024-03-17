@@ -155,7 +155,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {
 
     /** The model for managing the data stored in this configuration. */
-    private NodeModel<T> model;
+    private NodeModel<T> nodeModel;
 
     /** Stores the expression engine for this instance. */
     private ExpressionEngine expressionEngine;
@@ -166,7 +166,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param nodeModel the {@code NodeModel}
      */
     protected AbstractHierarchicalConfiguration(final NodeModel<T> nodeModel) {
-        model = nodeModel;
+        this.nodeModel = nodeModel;
     }
 
     /**
@@ -605,7 +605,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
             copy.cloneInterpolator(this);
             copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
-            copy.model = cloneNodeModel();
+            copy.nodeModel = cloneNodeModel();
 
             return copy;
         } catch (final CloneNotSupportedException cex) {
@@ -655,7 +655,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the node model
      */
     protected NodeModel<T> getModel() {
-        return model;
+        return nodeModel;
     }
 
     /**
