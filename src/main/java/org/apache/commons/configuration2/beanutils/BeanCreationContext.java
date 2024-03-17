@@ -31,6 +31,15 @@ package org.apache.commons.configuration2.beanutils;
 public interface BeanCreationContext {
 
     /**
+     * Creates a bean based on the given {@code BeanDeclaration}. This method can be used to create dependent beans needed
+     * for the initialization of the bean that is actually created.
+     *
+     * @param data the {@code BeanDeclaration} describing the bean
+     * @return the bean created based on this declaration
+     */
+    Object createBean(BeanDeclaration data);
+
+    /**
      * Gets the class of the bean to be created.
      *
      * @return the bean class
@@ -60,13 +69,4 @@ public interface BeanCreationContext {
      * @param data the {@code BeanDeclaration} with initialization data for this bean
      */
     void initBean(Object bean, BeanDeclaration data);
-
-    /**
-     * Creates a bean based on the given {@code BeanDeclaration}. This method can be used to create dependent beans needed
-     * for the initialization of the bean that is actually created.
-     *
-     * @param data the {@code BeanDeclaration} describing the bean
-     * @return the bean created based on this declaration
-     */
-    Object createBean(BeanDeclaration data);
 }

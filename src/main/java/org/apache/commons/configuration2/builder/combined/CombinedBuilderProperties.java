@@ -40,72 +40,6 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  */
 public interface CombinedBuilderProperties<T> {
     /**
-     * Sets a flag whether the child configurations created by a {@code CombinedConfigurationBuilder} should inherit the
-     * settings defined for the builder. This is typically useful because for configurations coming from homogeneous sources
-     * often similar conventions are used. Therefore, this flag is <b>true</b> per default.
-     *
-     * @param f the flag whether settings should be inherited by child configurations
-     * @return a reference to this object for method chaining
-     */
-    T setInheritSettings(boolean f);
-
-    /**
-     * Sets the {@code ConfigurationBuilder} for the definition configuration. This is the configuration which contains the
-     * configuration sources that form the combined configuration.
-     *
-     * @param builder the definition {@code ConfigurationBuilder}
-     * @return a reference to this object for method chaining
-     */
-    T setDefinitionBuilder(ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder);
-
-    /**
-     * Registers the given {@code ConfigurationBuilderProvider} for the specified tag name. This means that whenever this
-     * tag is encountered in a configuration definition file, the corresponding builder provider is invoked.
-     *
-     * @param tagName the name of the tag (must not be <b>null</b>)
-     * @param provider the {@code ConfigurationBuilderProvider} (must not be <b>null</b>)
-     * @return a reference to this object for method chaining
-     * @throws IllegalArgumentException if a required parameter is missing
-     */
-    T registerProvider(String tagName, ConfigurationBuilderProvider provider);
-
-    /**
-     * Sets the base path for this combined configuration builder. Normally it it not necessary to set the base path
-     * explicitly. Per default, relative file names of configuration sources are resolved based on the location of the
-     * definition file. If this is not desired or if the definition configuration is loaded by a different means, the base
-     * path for relative file names can be specified using this method.
-     *
-     * @param path the base path for resolving relative file names
-     * @return a reference to this object for method chaining
-     */
-    T setBasePath(String path);
-
-    /**
-     * Sets the parameters object for the definition configuration builder. This property is evaluated only if the
-     * definition configuration builder is not set explicitly (using the {@link #setDefinitionBuilder(ConfigurationBuilder)}
-     * method). In this case, a builder for an XML configuration is created and configured with this parameters object.
-     *
-     * @param params the parameters object for the definition configuration builder
-     * @return a reference to this object for method chaining
-     */
-    T setDefinitionBuilderParameters(BuilderParameters params);
-
-    /**
-     * Sets a {@code DefaultParametersManager} object responsible for managing the default parameter handlers to be applied
-     * on child configuration sources. When creating builders for child configuration sources their parameters are
-     * initialized using this {@code DefaultParametersManager} instance. This way, meaningful defaults can be set. Note that
-     * calling this method overrides all {@code DefaultParametersHandler} objects previously set by one of the
-     * {@code registerChildDefaultsHandler()} methods! So either use this method if a pre-configured manager object is to be
-     * set or call the {@code registerChildDefaultHandler()} methods with the handlers to be registered (in the latter case,
-     * it is not necessary to set a {@code DefaultParametersManager} explicitly; a default one is created behind the
-     * scenes).
-     *
-     * @param manager the {@code DefaultParametersManager}
-     * @return a reference to this object for method chaining
-     */
-    T setChildDefaultParametersManager(DefaultParametersManager manager);
-
-    /**
      * Registers a {@code DefaultParametersHandler} for child configuration sources. With this method an arbitrary number of
      * handler objects can be set. When creating builders for child configuration sources their parameters are initialized
      * by invoking all matching {@code DefaultParametersHandler}s on them. So, basically the same mechanism is used for the
@@ -133,4 +67,70 @@ public interface CombinedBuilderProperties<T> {
      * @see DefaultParametersManager#registerDefaultsHandler(Class, DefaultParametersHandler, Class)
      */
     <D> T registerChildDefaultsHandler(Class<D> paramClass, DefaultParametersHandler<? super D> handler, Class<?> startClass);
+
+    /**
+     * Registers the given {@code ConfigurationBuilderProvider} for the specified tag name. This means that whenever this
+     * tag is encountered in a configuration definition file, the corresponding builder provider is invoked.
+     *
+     * @param tagName the name of the tag (must not be <b>null</b>)
+     * @param provider the {@code ConfigurationBuilderProvider} (must not be <b>null</b>)
+     * @return a reference to this object for method chaining
+     * @throws IllegalArgumentException if a required parameter is missing
+     */
+    T registerProvider(String tagName, ConfigurationBuilderProvider provider);
+
+    /**
+     * Sets the base path for this combined configuration builder. Normally it it not necessary to set the base path
+     * explicitly. Per default, relative file names of configuration sources are resolved based on the location of the
+     * definition file. If this is not desired or if the definition configuration is loaded by a different means, the base
+     * path for relative file names can be specified using this method.
+     *
+     * @param path the base path for resolving relative file names
+     * @return a reference to this object for method chaining
+     */
+    T setBasePath(String path);
+
+    /**
+     * Sets a {@code DefaultParametersManager} object responsible for managing the default parameter handlers to be applied
+     * on child configuration sources. When creating builders for child configuration sources their parameters are
+     * initialized using this {@code DefaultParametersManager} instance. This way, meaningful defaults can be set. Note that
+     * calling this method overrides all {@code DefaultParametersHandler} objects previously set by one of the
+     * {@code registerChildDefaultsHandler()} methods! So either use this method if a pre-configured manager object is to be
+     * set or call the {@code registerChildDefaultHandler()} methods with the handlers to be registered (in the latter case,
+     * it is not necessary to set a {@code DefaultParametersManager} explicitly; a default one is created behind the
+     * scenes).
+     *
+     * @param manager the {@code DefaultParametersManager}
+     * @return a reference to this object for method chaining
+     */
+    T setChildDefaultParametersManager(DefaultParametersManager manager);
+
+    /**
+     * Sets the {@code ConfigurationBuilder} for the definition configuration. This is the configuration which contains the
+     * configuration sources that form the combined configuration.
+     *
+     * @param builder the definition {@code ConfigurationBuilder}
+     * @return a reference to this object for method chaining
+     */
+    T setDefinitionBuilder(ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder);
+
+    /**
+     * Sets the parameters object for the definition configuration builder. This property is evaluated only if the
+     * definition configuration builder is not set explicitly (using the {@link #setDefinitionBuilder(ConfigurationBuilder)}
+     * method). In this case, a builder for an XML configuration is created and configured with this parameters object.
+     *
+     * @param params the parameters object for the definition configuration builder
+     * @return a reference to this object for method chaining
+     */
+    T setDefinitionBuilderParameters(BuilderParameters params);
+
+    /**
+     * Sets a flag whether the child configurations created by a {@code CombinedConfigurationBuilder} should inherit the
+     * settings defined for the builder. This is typically useful because for configurations coming from homogeneous sources
+     * often similar conventions are used. Therefore, this flag is <b>true</b> per default.
+     *
+     * @param f the flag whether settings should be inherited by child configurations
+     * @return a reference to this object for method chaining
+     */
+    T setInheritSettings(boolean f);
 }

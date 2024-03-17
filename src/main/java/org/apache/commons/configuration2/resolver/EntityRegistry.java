@@ -26,6 +26,13 @@ import java.util.Map;
  */
 public interface EntityRegistry {
     /**
+     * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
+     *
+     * @return a map with the registered entity IDs
+     */
+    Map<String, URL> getRegisteredEntities();
+
+    /**
      * <p>
      * Registers the specified URL for the specified public identifier.
      * </p>
@@ -44,11 +51,4 @@ public interface EntityRegistry {
      * @throws IllegalArgumentException if the public ID is undefined
      */
     void registerEntityId(String publicId, URL entityURL);
-
-    /**
-     * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
-     *
-     * @return a map with the registered entity IDs
-     */
-    Map<String, URL> getRegisteredEntities();
 }

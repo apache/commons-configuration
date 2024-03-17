@@ -42,6 +42,14 @@ import java.util.Map;
 public interface BeanDeclaration {
 
     /**
+     * Gets the name of the bean class, from which an instance is to be created. This value must be defined unless a
+     * default class is provided for the bean creation operation.
+     *
+     * @return the name of the bean class
+     */
+    String getBeanClassName();
+
+    /**
      * Gets the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
      * <b>null</b>, then a default factory will be used.
      *
@@ -59,14 +67,6 @@ public interface BeanDeclaration {
     Object getBeanFactoryParameter();
 
     /**
-     * Gets the name of the bean class, from which an instance is to be created. This value must be defined unless a
-     * default class is provided for the bean creation operation.
-     *
-     * @return the name of the bean class
-     */
-    String getBeanClassName();
-
-    /**
      * Gets a map with properties that should be initialized on the newly created bean. The map's keys are the names of
      * the properties; the corresponding values are the properties' values. The return value can be <b>null</b> if no
      * properties should be set.
@@ -74,6 +74,15 @@ public interface BeanDeclaration {
      * @return a map with properties to be initialized
      */
     Map<String, Object> getBeanProperties();
+
+    /**
+     * Gets a collection with constructor arguments. This data is used to determine the constructor of the bean class to
+     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <b>null</b> or an
+     * empty collection; then the standard constructor of the bean class is called.
+     *
+     * @return a collection with the arguments to be passed to the bean class's constructor
+     */
+    Collection<ConstructorArg> getConstructorArgs();
 
     /**
      * Gets a map with declarations for beans that should be set as properties of the newly created bean. This allows for
@@ -86,13 +95,4 @@ public interface BeanDeclaration {
      * @return a map with nested bean declarations
      */
     Map<String, Object> getNestedBeanDeclarations();
-
-    /**
-     * Gets a collection with constructor arguments. This data is used to determine the constructor of the bean class to
-     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <b>null</b> or an
-     * empty collection; then the standard constructor of the bean class is called.
-     *
-     * @return a collection with the arguments to be passed to the bean class's constructor
-     */
-    Collection<ConstructorArg> getConstructorArgs();
 }

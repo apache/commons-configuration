@@ -34,6 +34,31 @@ import java.util.Map;
  */
 public interface NodeKeyResolver<T> {
     /**
+     * Generates a unique key for the specified node. This method is used if keys have to be generated for nodes received as
+     * query results. An implementation must generate a canonical key which is compatible with the current expression
+     * engine. The passed in map can be used by an implementation as cache. It is created initially by the caller and then
+     * passed in subsequent calls. An implementation may use this to avoid that keys for nodes already encountered have to
+     * be generated again.
+     *
+     * @param node the node in question
+     * @param cache a map serving as cache
+     * @param handler the {@code NodeHandler}
+     * @return a key for the specified node
+     */
+    String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler);
+
+    /**
+     * Resolves a key of an add operation. Result is a {@code NodeAddData} object containing all information for actually
+     * performing the add operation at the specified key.
+     *
+     * @param root the root node
+     * @param key the key to be resolved
+     * @param handler the {@code NodeHandler}
+     * @return a {@code NodeAddData} object to be used for the add operation
+     */
+    NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
+
+    /**
      * Performs a query for the specified key on the given root node. This is a thin wrapper over the {@code query()} method
      * of an {@link ExpressionEngine}.
      *
@@ -57,17 +82,6 @@ public interface NodeKeyResolver<T> {
     List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler);
 
     /**
-     * Resolves a key of an add operation. Result is a {@code NodeAddData} object containing all information for actually
-     * performing the add operation at the specified key.
-     *
-     * @param root the root node
-     * @param key the key to be resolved
-     * @param handler the {@code NodeHandler}
-     * @return a {@code NodeAddData} object to be used for the add operation
-     */
-    NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
-
-    /**
      * Resolves a key for an update operation. Result is a {@code NodeUpdateData} object containing all information for
      * actually performing the update operation at the specified key using the provided new value object.
      *
@@ -79,18 +93,4 @@ public interface NodeKeyResolver<T> {
      * @return a {@code NodeUpdateData} object to be used for this update operation
      */
     NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue, NodeHandler<T> handler);
-
-    /**
-     * Generates a unique key for the specified node. This method is used if keys have to be generated for nodes received as
-     * query results. An implementation must generate a canonical key which is compatible with the current expression
-     * engine. The passed in map can be used by an implementation as cache. It is created initially by the caller and then
-     * passed in subsequent calls. An implementation may use this to avoid that keys for nodes already encountered have to
-     * be generated again.
-     *
-     * @param node the node in question
-     * @param cache a map serving as cache
-     * @param handler the {@code NodeHandler}
-     * @return a key for the specified node
-     */
-    String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler);
 }

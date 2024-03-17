@@ -59,15 +59,6 @@ public interface PropertiesBuilderProperties<T> {
     T setIncludesAllowed(boolean f);
 
     /**
-     * Sets the layout object for the properties configuration object. With this method a custom layout object can be set.
-     * If no layout is provided, the configuration will use a default layout.
-     *
-     * @param layout the {@code PropertiesConfigurationLayout} object to be used by the configuration
-     * @return a reference to this object for method chaining
-     */
-    T setLayout(PropertiesConfigurationLayout layout);
-
-    /**
      * Sets the {@code IOFactory} to be used by the properties configuration object. With this method a custom factory for
      * input and output streams can be set. This allows customizing the format of properties read or written by the
      * configuration. If no {@code IOFactory} is provided, the configuration uses a default one.
@@ -76,4 +67,13 @@ public interface PropertiesBuilderProperties<T> {
      * @return a reference to this object for method chaining
      */
     T setIOFactory(IOFactory factory);
+
+    /**
+     * Sets the layout object for the properties configuration object. With this method a custom layout object can be set.
+     * If no layout is provided, the configuration will use a default layout.
+     *
+     * @param layout the {@code PropertiesConfigurationLayout} object to be used by the configuration
+     * @return a reference to this object for method chaining
+     */
+    T setLayout(PropertiesConfigurationLayout layout);
 }

@@ -62,6 +62,14 @@ public interface XMLBuilderProperties<T> {
     T setPublicID(String pubID);
 
     /**
+     * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
+     *
+     * @param f the flag value, <b>true</b> for schema validation, <b>false</b> for DTD validation
+     * @return a reference to this object for method chaining
+     */
+    T setSchemaValidation(boolean f);
+
+    /**
      * Sets the system ID of the DOCTYPE declaration.
      *
      * @param sysID the system ID
@@ -76,12 +84,4 @@ public interface XMLBuilderProperties<T> {
      * @return a reference to this object for method chaining
      */
     T setValidating(boolean f);
-
-    /**
-     * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
-     *
-     * @param f the flag value, <b>true</b> for schema validation, <b>false</b> for DTD validation
-     * @return a reference to this object for method chaining
-     */
-    T setSchemaValidation(boolean f);
 }

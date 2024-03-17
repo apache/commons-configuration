@@ -52,17 +52,17 @@ public interface Synchronizer {
     void beginRead();
 
     /**
-     * Notifies this {@code Synchronizer} that the current thread has finished its read operation. This may cause other
-     * waiting threads to be granted access to the managed configuration.
-     */
-    void endRead();
-
-    /**
      * Notifies this {@code Synchronizer} that the current thread is going to start a write operation on the managed
      * configuration. This call may block. For instance, a concrete implementation may suspend the thread until all read
      * operations currently active are finished,
      */
     void beginWrite();
+
+    /**
+     * Notifies this {@code Synchronizer} that the current thread has finished its read operation. This may cause other
+     * waiting threads to be granted access to the managed configuration.
+     */
+    void endRead();
 
     /**
      * Notifies this {@code Synchronizer} that the current thread has finished its write operation. This may cause other

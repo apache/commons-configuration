@@ -65,6 +65,27 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     String getRootElementName();
 
     /**
+     * Returns a list of immutable configurations for all direct child elements of the node selected by the given key. With
+     * this method it is possible to inspect the content of a hierarchical structure; all children of a given node can be
+     * queried without having to know their exact names. If the passed in key does not point to a single node, an empty list
+     * is returned. This is also the result if the node referred to by the key does not have child elements.
+     *
+     * @param key the key for selecting the desired parent node
+     * @return a collection with immutable configurations for all child nodes of the selected parent node
+     */
+    List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(String key);
+
+    /**
+     * Returns an immutable hierarchical configuration for the node specified by the given key. This is a short form for
+     * {@code immutableConfigurationAt(key,
+     * <b>false</b>)}.
+     *
+     * @param key the key that selects the sub tree
+     * @return a hierarchical configuration that contains this sub tree
+     */
+    ImmutableHierarchicalConfiguration immutableConfigurationAt(String key);
+
+    /**
      * <p>
      * Returns an immutable hierarchical configuration object that wraps the configuration node specified by the given key.
      * This method provides an easy means of accessing sub trees of a hierarchical configuration. In the returned
@@ -85,16 +106,6 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * @return a hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key, boolean supportUpdates);
-
-    /**
-     * Returns an immutable hierarchical configuration for the node specified by the given key. This is a short form for
-     * {@code immutableConfigurationAt(key,
-     * <b>false</b>)}.
-     *
-     * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
-     */
-    ImmutableHierarchicalConfiguration immutableConfigurationAt(String key);
 
     /**
      * Returns a list of immutable configurations for all configuration nodes selected by the given key. This method will
@@ -122,15 +133,4 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      *         selected by the passed in key
      */
     List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(String key);
-
-    /**
-     * Returns a list of immutable configurations for all direct child elements of the node selected by the given key. With
-     * this method it is possible to inspect the content of a hierarchical structure; all children of a given node can be
-     * queried without having to know their exact names. If the passed in key does not point to a single node, an empty list
-     * is returned. This is also the result if the node referred to by the key does not have child elements.
-     *
-     * @param key the key for selecting the desired parent node
-     * @return a collection with immutable configurations for all child nodes of the selected parent node
-     */
-    List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(String key);
 }

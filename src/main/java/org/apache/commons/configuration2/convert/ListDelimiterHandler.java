@@ -82,6 +82,24 @@ public interface ListDelimiterHandler {
     Object escapeList(List<?> values, ValueTransformer transformer);
 
     /**
+     * Extracts all values contained in the specified object up to the given limit. The passed in object is evaluated (if
+     * necessary in a recursive way). If it is a complex object (e.g. a collection or an array), all its elements are
+     * processed recursively and added to a target collection. The process stops if the limit is reached, but depending on
+     * the input object, it might be exceeded. (The limit is just an indicator to stop the process to avoid unnecessary work
+     * if the caller is only interested in a few values.)
+     *
+     * @param value the value to be processed
+     * @param limit the limit for aborting the processing
+     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
+     * @since 2.9.0
+     */
+    default Collection<?> flatten(final Object value, final int limit) {
+        final Set<Object> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
+        dejaVu.add(value);
+        return AbstractListDelimiterHandler.flatten(this, value, limit, dejaVu);
+    }
+
+    /**
      * Parses the specified value for list delimiters and splits it if necessary. The passed in object can be either a
      * single value or a complex one, e.g. a collection, an array, or an {@code Iterable}. It is the responsibility of this
      * method to return an {@code Iterable} which contains all extracted values.
@@ -103,23 +121,5 @@ public interface ListDelimiterHandler {
      * @return a collection with all components extracted from the string
      */
     Collection<String> split(String s, boolean trim);
-
-    /**
-     * Extracts all values contained in the specified object up to the given limit. The passed in object is evaluated (if
-     * necessary in a recursive way). If it is a complex object (e.g. a collection or an array), all its elements are
-     * processed recursively and added to a target collection. The process stops if the limit is reached, but depending on
-     * the input object, it might be exceeded. (The limit is just an indicator to stop the process to avoid unnecessary work
-     * if the caller is only interested in a few values.)
-     *
-     * @param value the value to be processed
-     * @param limit the limit for aborting the processing
-     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
-     * @since 2.9.0
-     */
-    default Collection<?> flatten(final Object value, final int limit) {
-        final Set<Object> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
-        dejaVu.add(value);
-        return AbstractListDelimiterHandler.flatten(this, value, limit, dejaVu);
-    }
 
 }

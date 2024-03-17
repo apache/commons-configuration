@@ -42,11 +42,11 @@ public enum NoOpSynchronizer implements Synchronizer {
     }
 
     @Override
-    public void endRead() {
+    public void beginWrite() {
     }
 
     @Override
-    public void beginWrite() {
+    public void endRead() {
     }
 
     @Override

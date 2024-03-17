@@ -44,34 +44,6 @@ import java.util.List;
  */
 public interface ExpressionEngine {
     /**
-     * Finds the nodes and/or attributes that are matched by the specified key. This is the main method for interpreting
-     * property keys. An implementation must traverse the given root node and its children to find all results that are
-     * matched by the given key. If the key is not correct in the syntax provided by that implementation, it is free to
-     * throw a (runtime) exception indicating this error condition. The passed in {@code NodeHandler} can be used to gather
-     * the required information from the node object.
-     *
-     * @param <T> the type of the node to be processed
-     * @param root the root node of a hierarchy of nodes
-     * @param key the key to be evaluated
-     * @param handler the {@code NodeHandler} for accessing the node
-     * @return a list with the results that are matched by the key (should never be <b>null</b>)
-     */
-    <T> List<QueryResult<T>> query(T root, String key, NodeHandler<T> handler);
-
-    /**
-     * Returns the key for the specified node in the expression language supported by an implementation. This method is
-     * called whenever a property key for a node has to be constructed, e.g. by the
-     * {@link org.apache.commons.configuration2.Configuration#getKeys() getKeys()} method.
-     *
-     * @param <T> the type of the node to be processed
-     * @param node the node, for which the key must be constructed
-     * @param parentKey the key of this node's parent (can be <b>null</b> for the root node)
-     * @param handler the {@code NodeHandler} for accessing the node
-     * @return this node's key
-     */
-    <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler);
-
-    /**
      * Returns the key of an attribute. The passed in {@code parentKey} must reference the parent node of the attribute. A
      * concrete implementation must concatenate this parent key with the attribute name to a valid key for this attribute.
      *
@@ -96,6 +68,19 @@ public interface ExpressionEngine {
     <T> String canonicalKey(T node, String parentKey, NodeHandler<T> handler);
 
     /**
+     * Returns the key for the specified node in the expression language supported by an implementation. This method is
+     * called whenever a property key for a node has to be constructed, e.g. by the
+     * {@link org.apache.commons.configuration2.Configuration#getKeys() getKeys()} method.
+     *
+     * @param <T> the type of the node to be processed
+     * @param node the node, for which the key must be constructed
+     * @param parentKey the key of this node's parent (can be <b>null</b> for the root node)
+     * @param handler the {@code NodeHandler} for accessing the node
+     * @return this node's key
+     */
+    <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler);
+
+    /**
      * Returns information needed for an add operation. This method gets called when new properties are to be added to a
      * configuration. An implementation has to interpret the specified key, find the parent node for the new elements, and
      * provide all information about new nodes to be added.
@@ -107,4 +92,19 @@ public interface ExpressionEngine {
      * @return an object with all information needed for the add operation
      */
     <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler);
+
+    /**
+     * Finds the nodes and/or attributes that are matched by the specified key. This is the main method for interpreting
+     * property keys. An implementation must traverse the given root node and its children to find all results that are
+     * matched by the given key. If the key is not correct in the syntax provided by that implementation, it is free to
+     * throw a (runtime) exception indicating this error condition. The passed in {@code NodeHandler} can be used to gather
+     * the required information from the node object.
+     *
+     * @param <T> the type of the node to be processed
+     * @param root the root node of a hierarchy of nodes
+     * @param key the key to be evaluated
+     * @param handler the {@code NodeHandler} for accessing the node
+     * @return a list with the results that are matched by the key (should never be <b>null</b>)
+     */
+    <T> List<QueryResult<T>> query(T root, String key, NodeHandler<T> handler);
 }

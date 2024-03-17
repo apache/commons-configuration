@@ -35,12 +35,14 @@ package org.apache.commons.configuration2.tree;
  */
 public interface ConfigurationNodeVisitor<T> {
     /**
-     * Visits the specified node before the children of this node - if existing - are processed.
+     * Returns a flag whether the current visit process should be aborted. This method allows a visitor implementation to
+     * state that it does not need any further data. It may be used e.g. by visitors that search for a certain node in the
+     * hierarchy. After that node was found, there is no need to process the remaining nodes, too. This method is called
+     * after each visited node. A result of <strong>true</strong> indicates that the current iteration is to be aborted.
      *
-     * @param node the node to be visited
-     * @param handler the {@code NodeHandler}
+     * @return a flag if the visit process should be stopped
      */
-    void visitBeforeChildren(T node, NodeHandler<T> handler);
+    boolean terminate();
 
     /**
      * Visits the specified node after after its children - if existing - have been processed.
@@ -51,12 +53,10 @@ public interface ConfigurationNodeVisitor<T> {
     void visitAfterChildren(T node, NodeHandler<T> handler);
 
     /**
-     * Returns a flag whether the current visit process should be aborted. This method allows a visitor implementation to
-     * state that it does not need any further data. It may be used e.g. by visitors that search for a certain node in the
-     * hierarchy. After that node was found, there is no need to process the remaining nodes, too. This method is called
-     * after each visited node. A result of <strong>true</strong> indicates that the current iteration is to be aborted.
+     * Visits the specified node before the children of this node - if existing - are processed.
      *
-     * @return a flag if the visit process should be stopped
+     * @param node the node to be visited
+     * @param handler the {@code NodeHandler}
      */
-    boolean terminate();
+    void visitBeforeChildren(T node, NodeHandler<T> handler);
 }

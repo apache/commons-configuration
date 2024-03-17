@@ -53,6 +53,83 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  */
 public interface Configuration extends ImmutableConfiguration, SynchronizerSupport {
     /**
+     * Add a property to the configuration. If it already exists then the value stated here will be added to the
+     * configuration entry. For example, if the property:
+     *
+     * <pre>
+     * resource.loader = file
+     * </pre>
+     *
+     * is already present in the configuration and you call
+     *
+     * <pre>
+     * addProperty("resource.loader", "classpath")
+     * </pre>
+     *
+     * Then you will end up with a List like the following:
+     *
+     * <pre>
+     * ["file", "classpath"]
+     * </pre>
+     *
+     * @param key The key to add the property to.
+     * @param value The value to add.
+     */
+    void addProperty(String key, Object value);
+
+    /**
+     * Remove all properties from the configuration.
+     */
+    void clear();
+
+    /**
+     * Remove a property from the configuration.
+     *
+     * @param key the key to remove along with corresponding value.
+     */
+    void clearProperty(String key);
+
+    /**
+     * Gets the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
+     * for variable substitution.
+     *
+     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
+     */
+    ConfigurationInterpolator getInterpolator();
+
+    /**
+     * Creates and installs a new {@code ConfigurationInterpolator} for this {@code Configuration} based on the passed in
+     * arguments. This method creates a default {@code ConfigurationInterpolator} instance and initializes it with the
+     * passed in {@code Lookup} objects. It also adds a special default {@code Lookup} object that tries to resolve
+     * variables by matching them with properties contained in this {@code Configuration}. This is also the main difference
+     * to the {@link #setInterpolator(ConfigurationInterpolator)} method which sets the passed in object as is without
+     * adding this special lookup.
+     *
+     * @param prefixLookups the map with {@code Lookup} objects associated with specific prefixes (can be <b>null</b>)
+     * @param defLookups a collection with default {@code Lookup} objects (can be <b>null</b>)
+     * @see ConfigurationInterpolator
+     */
+    void installInterpolator(Map<String, ? extends Lookup> prefixLookups, Collection<? extends Lookup> defLookups);
+
+    /**
+     * Sets the {@code ConfigurationInterpolator} object to be used by this {@code Configuration}. This object is invoked
+     * for each access of a string property in order to substitute variables which may be contained. The argument can be
+     * <b>null</b> to disable interpolation at all.
+     *
+     * @param ci the new {@code ConfigurationInterpolator}
+     */
+    void setInterpolator(ConfigurationInterpolator ci);
+
+    /**
+     * Sets a property, this will replace any previously set values. Set values is implicitly a call to clearProperty(key),
+     * addProperty(key, value).
+     *
+     * @param key The key of the property to change
+     * @param value The new value
+     */
+    void setProperty(String key, Object value);
+
+    /**
      * Return a decorator Configuration containing every key from the current Configuration that starts with the specified
      * prefix. The prefix is removed from the keys in the subset. For example, if the configuration contains the following
      * properties:
@@ -83,81 +160,4 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * @see SubsetConfiguration
      */
     Configuration subset(String prefix);
-
-    /**
-     * Add a property to the configuration. If it already exists then the value stated here will be added to the
-     * configuration entry. For example, if the property:
-     *
-     * <pre>
-     * resource.loader = file
-     * </pre>
-     *
-     * is already present in the configuration and you call
-     *
-     * <pre>
-     * addProperty("resource.loader", "classpath")
-     * </pre>
-     *
-     * Then you will end up with a List like the following:
-     *
-     * <pre>
-     * ["file", "classpath"]
-     * </pre>
-     *
-     * @param key The key to add the property to.
-     * @param value The value to add.
-     */
-    void addProperty(String key, Object value);
-
-    /**
-     * Sets a property, this will replace any previously set values. Set values is implicitly a call to clearProperty(key),
-     * addProperty(key, value).
-     *
-     * @param key The key of the property to change
-     * @param value The new value
-     */
-    void setProperty(String key, Object value);
-
-    /**
-     * Remove a property from the configuration.
-     *
-     * @param key the key to remove along with corresponding value.
-     */
-    void clearProperty(String key);
-
-    /**
-     * Remove all properties from the configuration.
-     */
-    void clear();
-
-    /**
-     * Gets the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
-     * for variable substitution.
-     *
-     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
-     */
-    ConfigurationInterpolator getInterpolator();
-
-    /**
-     * Sets the {@code ConfigurationInterpolator} object to be used by this {@code Configuration}. This object is invoked
-     * for each access of a string property in order to substitute variables which may be contained. The argument can be
-     * <b>null</b> to disable interpolation at all.
-     *
-     * @param ci the new {@code ConfigurationInterpolator}
-     */
-    void setInterpolator(ConfigurationInterpolator ci);
-
-    /**
-     * Creates and installs a new {@code ConfigurationInterpolator} for this {@code Configuration} based on the passed in
-     * arguments. This method creates a default {@code ConfigurationInterpolator} instance and initializes it with the
-     * passed in {@code Lookup} objects. It also adds a special default {@code Lookup} object that tries to resolve
-     * variables by matching them with properties contained in this {@code Configuration}. This is also the main difference
-     * to the {@link #setInterpolator(ConfigurationInterpolator)} method which sets the passed in object as is without
-     * adding this special lookup.
-     *
-     * @param prefixLookups the map with {@code Lookup} objects associated with specific prefixes (can be <b>null</b>)
-     * @param defLookups a collection with default {@code Lookup} objects (can be <b>null</b>)
-     * @see ConfigurationInterpolator
-     */
-    void installInterpolator(Map<String, ? extends Lookup> prefixLookups, Collection<? extends Lookup> defLookups);
 }
