@@ -29,15 +29,14 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>
-        Tools to assist in the reading of configuration/preferences files in
-        various formats.
+    Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
   </description>
 
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.10.0</commons.release.version>
-    <commons.release.next>2.10.1</commons.release.next>
+    <commons.release.version>2.10.1</commons.release.version>
+    <commons.release.next>2.10.2</commons.release.next>
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
     <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
     <commons.release.2.version>1.10</commons.release.2.version>
@@ -46,9 +45,7 @@
     <commons.jira.pid>12310467</commons.jira.pid>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
-
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
       org.apache.commons.beanutils.*;resolution:=optional,
@@ -67,11 +64,9 @@
     <slf4j.version>2.0.12</slf4j.version>
     <!-- Spring 6 requires Java 17 -->
     <spring.version>5.3.33</spring.version>
-
     <japicmp.skip>false</japicmp.skip>
-
     <!-- Commons Release Plugin -->
-    <commons.bc.version>2.9.0</commons.bc.version>
+    <commons.bc.version>2.10.0</commons.bc.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
