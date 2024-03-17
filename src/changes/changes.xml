@@ -23,7 +23,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.10.1" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+    <release version="2.10.1" date="2024-03-17" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->
       <action type="fix" issue="CONFIGURATION-840" dev="ggregory" due-to="Gary Gregory">StackOverflowError adding property in AbstractListDelimiterHandler.flattenIterator().</action>
       <action type="fix" issue="CONFIGURATION-840" dev="ggregory" due-to="Bob Marinier, Gary Gregory">java.lang.module.FindException: Module servlet.api not found.</action>
