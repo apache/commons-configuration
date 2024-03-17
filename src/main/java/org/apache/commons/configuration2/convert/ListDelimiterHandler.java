@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -94,9 +93,7 @@ public interface ListDelimiterHandler {
      * @since 2.9.0
      */
     default Collection<?> flatten(final Object value, final int limit) {
-        final Set<Object> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
-        dejaVu.add(value);
-        return AbstractListDelimiterHandler.flatten(this, value, limit, dejaVu);
+        return AbstractListDelimiterHandler.flatten(this, value, limit, Collections.newSetFromMap(new IdentityHashMap<>()));
     }
 
     /**

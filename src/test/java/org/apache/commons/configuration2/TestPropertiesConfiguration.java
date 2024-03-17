@@ -466,6 +466,22 @@ public class TestPropertiesConfiguration {
         assertEquals(object, result);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4, 8, 16 })
+    public void testCompress840ArrayListCycle(final int size) {
+        final ArrayList<Object> object = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            object.add(i);
+            object.add(object);
+            object.add(new ArrayList<>(object));
+        }
+        final Collection<?> result = testCompress840(object);
+        assertNotNull(result);
+        assertEquals(size, result.size());
+        object.add(object);
+        testCompress840(object);
+    }
+
     @Test
     public void testCompress840BeanContextServicesSupport() {
         testCompress840(new BeanContextServicesSupport());
@@ -490,6 +506,28 @@ public class TestPropertiesConfiguration {
         testCompress840(bcs);
         bcs.add(bcs);
         testCompress840(bcs);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4, 8, 16 })
+    public void testCompress840Exception(final int size) {
+        final ArrayList<Object> object = new ArrayList<>();
+        final Exception bottom = new Exception();
+        object.add(bottom);
+        Exception top = bottom;
+        for (int i = 0; i < size; i++) {
+            object.add(i);
+            top = new Exception(top);
+            object.add(top);
+        }
+        if (bottom != top) {
+            // direct self-causation is not allowed.
+            bottom.initCause(top);
+        }
+        final Collection<?> result = testCompress840(object);
+        assertNotNull(result);
+        assertEquals(size * 2 + 1, result.size());
+        assertEquals(object, result);
     }
 
     @ParameterizedTest
