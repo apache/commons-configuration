@@ -147,7 +147,7 @@ public final class PropertyConverter {
             return toPattern(value);
         } else if (Locale.class.equals(cls)) {
             return toLocale(value);
-        } else if (isEnum(cls)) {
+        } else if (cls.isEnum()) {
             return convertToEnum(cls, value);
         } else if (Color.class.equals(cls)) {
             return toColor(value);
@@ -628,14 +628,7 @@ public final class PropertyConverter {
     }
 
     /**
-     * Calls Class.isEnum() on Java 5, returns false on older JRE.
-     */
-    static boolean isEnum(final Class<?> cls) {
-        return cls.isEnum();
-    }
-
-    /**
-     * Converts the specified value into a Java 5 enum.
+     * Converts the specified value into an {@link Enum}.
      *
      * @param value the value to convert
      * @param cls the type of the enumeration

@@ -163,7 +163,7 @@ public class CatalogResolver implements EntityResolver {
             final String badFilePrefix = "file://";
             final String correctFilePrefix = "file:///";
 
-            // Java 5 has a bug when constructing file URLS
+            // Java 5 has a bug when constructing file URLs
             if (resolved.startsWith(badFilePrefix) && !resolved.startsWith(correctFilePrefix)) {
                 resolved = correctFilePrefix + resolved.substring(badFilePrefix.length());
             }
