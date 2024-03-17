@@ -33,6 +33,51 @@
         various formats.
   </description>
 
+  <properties>
+    <commons.componentid>configuration</commons.componentid>
+    <commons.module.name>org.apache.commons.configuration2</commons.module.name>
+    <commons.release.version>2.10.0</commons.release.version>
+    <commons.release.next>2.10.1</commons.release.next>
+    <commons.release.desc>(Java 8 or above)</commons.release.desc>
+    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
+    <commons.release.2.version>1.10</commons.release.2.version>
+    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
+    <commons.jira.id>CONFIGURATION</commons.jira.id>
+    <commons.jira.pid>12310467</commons.jira.pid>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
+
+    <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
+    <commons.osgi.import>
+      org.apache.commons.beanutils.*;resolution:=optional,
+      org.apache.commons.codec.*;resolution:=optional,
+      org.apache.commons.jxpath.*;resolution:=optional,
+      org.apache.xml.resolver.*;resolution:=optional,
+      javax.servlet.*;resolution:=optional,
+      org.apache.commons.jexl2.*;resolution:=optional,
+      org.apache.commons.vfs2.*;resolution:=optional,
+      org.springframework.*;resolution:=optional,
+      com.fasterxml.jackson.*;resolution:=optional,
+      org.yaml.snakeyaml.*;resolution:=optional,
+      *
+    </commons.osgi.import>
+    <log4j.version>2.23.1</log4j.version>
+    <slf4j.version>2.0.12</slf4j.version>
+    <!-- Spring 6 requires Java 17 -->
+    <spring.version>5.3.33</spring.version>
+
+    <japicmp.skip>false</japicmp.skip>
+
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.9.0</commons.bc.version>
+    <commons.rc.version>RC1</commons.rc.version>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <project.build.outputTimestamp>2024-03-12T23:55:07Z</project.build.outputTimestamp>
+  </properties>
+
   <url>https://commons.apache.org/proper/commons-configuration/</url>
 
   <issueManagement>
@@ -305,51 +350,6 @@
     </dependency>
 
   </dependencies>
-
-  <properties>
-    <commons.componentid>configuration</commons.componentid>
-    <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.10.0</commons.release.version>
-    <commons.release.next>2.10.1</commons.release.next>
-    <commons.release.desc>(Java 8 or above)</commons.release.desc>
-    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
-    <commons.release.2.version>1.10</commons.release.2.version>
-    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
-    <commons.jira.id>CONFIGURATION</commons.jira.id>
-    <commons.jira.pid>12310467</commons.jira.pid>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-
-    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
-
-    <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
-    <commons.osgi.import>
-      org.apache.commons.beanutils.*;resolution:=optional,
-      org.apache.commons.codec.*;resolution:=optional,
-      org.apache.commons.jxpath.*;resolution:=optional,
-      org.apache.xml.resolver.*;resolution:=optional,
-      javax.servlet.*;resolution:=optional,
-      org.apache.commons.jexl2.*;resolution:=optional,
-      org.apache.commons.vfs2.*;resolution:=optional,
-      org.springframework.*;resolution:=optional,
-      com.fasterxml.jackson.*;resolution:=optional,
-      org.yaml.snakeyaml.*;resolution:=optional,
-      *
-    </commons.osgi.import>
-    <log4j.version>2.23.1</log4j.version>
-    <slf4j.version>2.0.12</slf4j.version>
-    <!-- Spring 6 requires Java 17 -->
-    <spring.version>5.3.33</spring.version>
-
-    <japicmp.skip>false</japicmp.skip>
-
-    <!-- Commons Release Plugin -->
-    <commons.bc.version>2.9.0</commons.bc.version>
-    <commons.rc.version>RC1</commons.rc.version>
-    <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
-    <project.build.outputTimestamp>2024-03-12T23:55:07Z</project.build.outputTimestamp>
-  </properties>
 
   <build>
    <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check pmd:check pmd:cpd-check javadoc:javadoc</defaultGoal>
