@@ -24,7 +24,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="configuration">
 		<xs:annotation>
-			<xs:documentation>Commons Configuration v0.1</xs:documentation>
+			<xs:documentation>Apache Commons Configuration</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
