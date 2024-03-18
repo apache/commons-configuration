@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.net.URL;
@@ -66,6 +67,9 @@ public class TestXMLPropertiesConfiguration {
 
     @Test
     public void testDOMLoad() throws Exception {
+        // Edge case
+        assertThrows(NullPointerException.class, () -> new XMLPropertiesConfiguration(null));
+        // Normal case
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
         final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

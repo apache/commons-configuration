@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -91,14 +92,14 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Creates and loads the xml properties from the specified DOM node.
+     * Creates and loads the XML properties from the specified DOM node.
      *
-     * @param element The DOM element
-     * @throws ConfigurationException Error while loading the properties file
+     * @param element The non-null DOM element.
+     * @throws ConfigurationException Error while loading the Element.
      * @since 2.0
      */
     public XMLPropertiesConfiguration(final Element element) throws ConfigurationException {
-        this.load(element);
+        load(Objects.requireNonNull(element, "element"));
     }
 
     /**
