@@ -19,12 +19,16 @@ package org.apache.commons.configuration2.web;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
@@ -47,9 +51,12 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
             return parameters.getProperty(key);
         }
 
+
+
         @Override
-        public Enumeration<?> getInitParameterNames() {
-            return parameters.keys();
+        public Enumeration<String> getInitParameterNames() {
+            final List<String> keys = parameters.keySet().stream().filter(o -> o instanceof String).map(o -> (String) o).collect(Collectors.toList());
+            return Collections.enumeration(keys);
         }
 
         @Override

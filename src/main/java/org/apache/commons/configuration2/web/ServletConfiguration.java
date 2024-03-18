@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
 
 /**
  * A configuration wrapper around a {@link ServletConfig}. This configuration is read only, adding or removing a
