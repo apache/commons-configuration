@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 
 /**
  * A configuration wrapper around a {@link FilterConfig}. This configuration is read only, adding or removing a property

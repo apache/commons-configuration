@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
 
 /**
  * A configuration wrapper to read the initialization parameters of a servlet context. This configuration is read only,

@@ -67,8 +67,8 @@ public final class PropertyConverter {
     /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class<?>[] CONSTR_ARGS = {String.class};
 
-    /** The fully qualified name of {@code javax.mail.internet.InternetAddress}, as used in the javamail-1.* API.  */
-    private static final String INTERNET_ADDRESS_CLASSNAME_JAVAX = "javax.mail.internet.InternetAddress";
+    /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress}, as used in the javamail-1.* API.  */
+    private static final String INTERNET_ADDRESS_CLASSNAME_JAVAX = "jakarta.mail.internet.InternetAddress";
 
     /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress}, as used in the javamail-2.0+ API. */
     private static final String INTERNET_ADDRESS_CLASSNAME_JAKARTA = "jakarta.mail.internet.InternetAddress";
@@ -152,7 +152,7 @@ public final class PropertyConverter {
         } else if (Color.class.equals(cls)) {
             return toColor(value);
         } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
-            // javamail-1.* With javax.mail.* namespace.
+            // javamail-1.* With jakarta.mail.* namespace.
             return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAVAX);
         } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
             // javamail-2.0+, with jakarta.mail.* namespace.

@@ -29,49 +29,9 @@
 
   <inceptionYear>2001</inceptionYear>
   <description>
-    Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+        Tools to assist in the reading of configuration/preferences files in
+        various formats
   </description>
-
-  <properties>
-    <commons.componentid>configuration</commons.componentid>
-    <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.10.1</commons.release.version>
-    <commons.release.next>2.10.2</commons.release.next>
-    <commons.release.desc>(Java 8 or above)</commons.release.desc>
-    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
-    <commons.release.2.version>1.10</commons.release.2.version>
-    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
-    <commons.jira.id>CONFIGURATION</commons.jira.id>
-    <commons.jira.pid>12310467</commons.jira.pid>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
-    <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
-    <commons.osgi.import>
-      org.apache.commons.beanutils.*;resolution:=optional,
-      org.apache.commons.codec.*;resolution:=optional,
-      org.apache.commons.jxpath.*;resolution:=optional,
-      org.apache.xml.resolver.*;resolution:=optional,
-      javax.servlet.*;resolution:=optional,
-      org.apache.commons.jexl2.*;resolution:=optional,
-      org.apache.commons.vfs2.*;resolution:=optional,
-      org.springframework.*;resolution:=optional,
-      com.fasterxml.jackson.*;resolution:=optional,
-      org.yaml.snakeyaml.*;resolution:=optional,
-      *
-    </commons.osgi.import>
-    <log4j.version>2.23.1</log4j.version>
-    <slf4j.version>2.0.12</slf4j.version>
-    <!-- Spring 6 requires Java 17 -->
-    <spring.version>5.3.33</spring.version>
-    <japicmp.skip>false</japicmp.skip>
-    <!-- Commons Release Plugin -->
-    <commons.bc.version>2.10.0</commons.bc.version>
-    <commons.rc.version>RC1</commons.rc.version>
-    <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
-    <project.build.outputTimestamp>2024-03-12T23:55:07Z</project.build.outputTimestamp>
-  </properties>
 
   <url>https://commons.apache.org/proper/commons-configuration/</url>
 
@@ -97,6 +57,233 @@
       <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration/</url>
     </site>
   </distributionManagement>
+
+  <developers>
+    <developer>
+      <name>Daniel Rall</name>
+      <id>dlr</id>
+      <email>dlr@finemaltcoding.com</email>
+      <organization>CollabNet, Inc.</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Martin Poeschl</name>
+      <id>mpoeschl</id>
+      <email>mpoeschl@marmot.at</email>
+      <organization>tucana.at</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>dIon Gillard</name>
+      <id>dion</id>
+      <email>dion@multitask.com.au</email>
+      <organization>Multitask Consulting</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Henning P. Schmiedehausen</name>
+      <id>henning</id>
+      <email>hps@intermeta.de</email>
+      <organization>INTERMETA - Gesellschaft fuer Mehrwertdienste mbH</organization>
+      <timezone>2</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Eric Pugh</name>
+      <id>epugh</id>
+      <email>epugh@upstate.com</email>
+      <organization>upstate.com</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Brian E. Dunbar</name>
+      <id>bdunbar</id>
+      <email>bdunbar@dunbarconsulting.org</email>
+      <organization>dunbarconsulting.org</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Emmanuel Bourg</name>
+      <id>ebourg</id>
+      <email>ebourg@apache.org</email>
+      <organization>Ariane Software</organization>
+      <timezone>+1</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Oliver Heger</name>
+      <id>oheger</id>
+      <email>oheger@apache.org</email>
+      <organization>Bosch Software Innovations</organization>
+      <timezone>+1</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>J&#xF6;rg Schaible</name>
+      <id>joehni</id>
+      <email>joerg.schaible@gmx.de</email>
+      <timezone>+1</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Ralph Goers</name>
+      <id>rgoers</id>
+      <email>rgoers@apache.org</email>
+      <organization>Intuit</organization>
+      <timezone>-8</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <id>ggregory</id>
+      <name>Gary Gregory</name>
+      <email>ggregory at apache.org</email>
+      <url>https://www.garygregory.com</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+      <properties>
+        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
+      </properties>
+    </developer>
+
+    <developer>
+      <name>Claude Warren</name>
+      <id>claudenw</id>
+      <email>claude@apache.org</email>
+      <timezone>0</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Rob Tompkins</name>
+      <id>chtompki</id>
+      <email>chtompki@apache.org</email>
+      <timezone>-4</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Konstantin Shaposhnikov</name>
+      <email>ksh@scand.com</email>
+      <organization>scand.com</organization>
+    </contributor>
+
+    <contributor>
+      <name>Jamie M. Guillemette</name>
+      <email>JMGuillemette@gmail.com</email>
+      <organization>TD Bank</organization>
+    </contributor>
+
+    <contributor>
+      <name>Jorge Ferrer</name>
+      <email>jorge.ferrer@gmail.com</email>
+      <organization></organization>
+    </contributor>
+
+    <contributor>
+      <name>Gabriele Garuglieri</name>
+      <email>gabriele.garuglieri@infoblu.it</email>
+      <organization>Infoblu S.p.A</organization>
+    </contributor>
+
+    <contributor>
+      <name>Nicolas De Loof</name>
+      <email>nicolas.deloof@gmail.com</email>
+      <organization>Cap Gemini</organization>
+    </contributor>
+
+    <contributor>
+      <name>Oliver Kopp</name>
+      <email>koppdev@gmail.com</email>
+    </contributor>
+
+    <contributor>
+      <name>Dennis Kieselhorst</name>
+      <email>deki@apache.org</email>
+      <organization>IRIAN Deutschland</organization>
+    </contributor>
+
+    <contributor>
+      <name>Raviteja Lokineni</name>
+      <email>raviteja.lokineni@gmail.com</email>
+    </contributor>
+
+    <contributor>
+      <name>Vincent Maurin</name>
+      <email>vincent.maurin.fr@gmail.com</email>
+      <organization>glispa GmbH</organization>
+    </contributor>
+
+    <contributor>
+      <name>The Alchemist</name>
+      <email>kap4020@gmail.com</email>
+    </contributor>
+
+    <contributor>
+      <name>Pascal Essiembre</name>
+      <email>pascal.essiembre@norconex.com</email>
+      <organization>Norconex Inc.</organization>
+      <organizationUrl>https://www.norconex.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-4</timezone>
+    </contributor>
+
+    <contributor>
+      <name>Patrick Schmidt</name>
+      <email>patrick.schmidt@codecamp.de</email>
+    </contributor>
+  </contributors>
 
   <dependencies>
     <dependency>
@@ -216,9 +403,9 @@
 
     <dependency>
 	  <!-- For org.apache.commons.configuration2.web -->
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -345,6 +532,51 @@
     </dependency>
 
   </dependencies>
+
+  <properties>
+    <commons.componentid>configuration</commons.componentid>
+    <commons.module.name>org.apache.commons.configuration2</commons.module.name>
+    <commons.release.version>2.10.0</commons.release.version>
+    <commons.release.next>2.10.1</commons.release.next>
+    <commons.release.desc>(Java 8 or above)</commons.release.desc>
+    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
+    <commons.release.2.version>1.10</commons.release.2.version>
+    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
+    <commons.jira.id>CONFIGURATION</commons.jira.id>
+    <commons.jira.pid>12310467</commons.jira.pid>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
+
+    <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
+    <commons.osgi.import>
+      org.apache.commons.beanutils.*;resolution:=optional,
+      org.apache.commons.codec.*;resolution:=optional,
+      org.apache.commons.jxpath.*;resolution:=optional,
+      org.apache.xml.resolver.*;resolution:=optional,
+      javax.servlet.*;resolution:=optional,
+      org.apache.commons.jexl2.*;resolution:=optional,
+      org.apache.commons.vfs2.*;resolution:=optional,
+      org.springframework.*;resolution:=optional,
+      com.fasterxml.jackson.*;resolution:=optional,
+      org.yaml.snakeyaml.*;resolution:=optional,
+      *
+    </commons.osgi.import>
+    <log4j.version>2.23.1</log4j.version>
+    <slf4j.version>2.0.12</slf4j.version>
+    <!-- Spring 6 requires Java 17 -->
+    <spring.version>5.3.32</spring.version>
+
+    <japicmp.skip>false</japicmp.skip>
+
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.9.0</commons.bc.version>
+    <commons.rc.version>RC1</commons.rc.version>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <project.build.outputTimestamp>2024-03-12T23:55:07Z</project.build.outputTimestamp>
+  </properties>
 
   <build>
    <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check pmd:check pmd:cpd-check javadoc:javadoc</defaultGoal>
@@ -626,232 +858,5 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <developers>
-    <developer>
-      <name>Daniel Rall</name>
-      <id>dlr</id>
-      <email>dlr@finemaltcoding.com</email>
-      <organization>CollabNet, Inc.</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Jason van Zyl</name>
-      <id>jvanzyl</id>
-      <email>jason@zenplex.com</email>
-      <organization>Zenplex</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Martin Poeschl</name>
-      <id>mpoeschl</id>
-      <email>mpoeschl@marmot.at</email>
-      <organization>tucana.at</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>dIon Gillard</name>
-      <id>dion</id>
-      <email>dion@multitask.com.au</email>
-      <organization>Multitask Consulting</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Henning P. Schmiedehausen</name>
-      <id>henning</id>
-      <email>hps@intermeta.de</email>
-      <organization>INTERMETA - Gesellschaft fuer Mehrwertdienste mbH</organization>
-      <timezone>2</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Eric Pugh</name>
-      <id>epugh</id>
-      <email>epugh@upstate.com</email>
-      <organization>upstate.com</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Brian E. Dunbar</name>
-      <id>bdunbar</id>
-      <email>bdunbar@dunbarconsulting.org</email>
-      <organization>dunbarconsulting.org</organization>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Emmanuel Bourg</name>
-      <id>ebourg</id>
-      <email>ebourg@apache.org</email>
-      <organization>Ariane Software</organization>
-      <timezone>+1</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Oliver Heger</name>
-      <id>oheger</id>
-      <email>oheger@apache.org</email>
-      <organization>Bosch Software Innovations</organization>
-      <timezone>+1</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>J&#xF6;rg Schaible</name>
-      <id>joehni</id>
-      <email>joerg.schaible@gmx.de</email>
-      <timezone>+1</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Ralph Goers</name>
-      <id>rgoers</id>
-      <email>rgoers@apache.org</email>
-      <organization>Intuit</organization>
-      <timezone>-8</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory at apache.org</email>
-      <url>https://www.garygregory.com</url>
-      <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/New_York</timezone>
-      <properties>
-        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
-      </properties>
-    </developer>
-
-    <developer>
-      <name>Claude Warren</name>
-      <id>claudenw</id>
-      <email>claude@apache.org</email>
-      <timezone>0</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-
-    <developer>
-      <name>Rob Tompkins</name>
-      <id>chtompki</id>
-      <email>chtompki@apache.org</email>
-      <timezone>-4</timezone>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-  </developers>
-
-  <contributors>
-    <contributor>
-      <name>Konstantin Shaposhnikov</name>
-      <email>ksh@scand.com</email>
-      <organization>scand.com</organization>
-    </contributor>
-
-    <contributor>
-      <name>Jamie M. Guillemette</name>
-      <email>JMGuillemette@gmail.com</email>
-      <organization>TD Bank</organization>
-    </contributor>
-
-    <contributor>
-      <name>Jorge Ferrer</name>
-      <email>jorge.ferrer@gmail.com</email>
-      <organization></organization>
-    </contributor>
-
-    <contributor>
-      <name>Gabriele Garuglieri</name>
-      <email>gabriele.garuglieri@infoblu.it</email>
-      <organization>Infoblu S.p.A</organization>
-    </contributor>
-
-    <contributor>
-      <name>Nicolas De Loof</name>
-      <email>nicolas.deloof@gmail.com</email>
-      <organization>Cap Gemini</organization>
-    </contributor>
-
-    <contributor>
-      <name>Oliver Kopp</name>
-      <email>koppdev@gmail.com</email>
-    </contributor>
-
-    <contributor>
-      <name>Dennis Kieselhorst</name>
-      <email>deki@apache.org</email>
-      <organization>IRIAN Deutschland</organization>
-    </contributor>
-
-    <contributor>
-      <name>Raviteja Lokineni</name>
-      <email>raviteja.lokineni@gmail.com</email>
-    </contributor>
-
-    <contributor>
-      <name>Vincent Maurin</name>
-      <email>vincent.maurin.fr@gmail.com</email>
-      <organization>glispa GmbH</organization>
-    </contributor>
-
-    <contributor>
-      <name>The Alchemist</name>
-      <email>kap4020@gmail.com</email>
-    </contributor>
-
-    <contributor>
-      <name>Pascal Essiembre</name>
-      <email>pascal.essiembre@norconex.com</email>
-      <organization>Norconex Inc.</organization>
-      <organizationUrl>https://www.norconex.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-4</timezone>
-    </contributor>
-
-    <contributor>
-      <name>Patrick Schmidt</name>
-      <email>patrick.schmidt@codecamp.de</email>
-    </contributor>
-  </contributors>
 
 </project>

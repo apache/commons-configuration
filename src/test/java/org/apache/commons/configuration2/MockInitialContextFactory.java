@@ -16,20 +16,15 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import javax.naming.*;
+import javax.naming.spi.InitialContextFactory;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.NameClassPair;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.spi.InitialContextFactory;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * A mock implementation of the {@code InitialContextFactory} interface. This implementation will return a mock context
@@ -79,26 +74,36 @@ public class MockInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_CYCLES = "useCycles";
 
-    /** Constant for the name of the missing property. */
+    /**
+     * Constant for the name of the missing property.
+     */
     private static final String MISSING_PROP = "/missing";
 
-    /** Constant for the name of the prefix. */
+    /**
+     * Constant for the name of the prefix.
+     */
     private static final String PREFIX = "test/";
 
-    /** An array with the names of the supported properties. */
+    /**
+     * An array with the names of the supported properties.
+     */
     private static final String[] PROP_NAMES = {"key", "key2", "short", "boolean", "byte", "double", "float", "integer", "long", "onlyinjndi"};
 
-    /** An array with the values of the supported properties. */
+    /**
+     * An array with the values of the supported properties.
+     */
     private static final String[] PROP_VALUES = {"jndivalue", "jndivalue2", "1", "true", "10", "10.25", "20.25", "10", "1000000", "true"};
 
-    /** An array with properties that are requested, but are not in the context. */
+    /**
+     * An array with properties that are requested, but are not in the context.
+     */
     private static final String[] MISSING_NAMES = {"missing/list", "test/imaginarykey", "foo/bar"};
 
     /**
      * Adds a new name-and-value pair to list of {@link NameClassPair}s.
      *
      * @param pairs the list to add to
-     * @param name the name
+     * @param name  the name
      * @param value the value
      */
     private void addEnumPair(final List<NameClassPair> pairs, final String name, final Object value) {
@@ -110,8 +115,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Binds a property value to the mock context.
      *
      * @param mockCtx the context
-     * @param name the name of the property
-     * @param value the value of the property
+     * @param name    the name of the property
+     * @param value   the value of the property
      */
     private void bind(final Context mockCtx, final String name, final String value) throws NamingException {
         when(mockCtx.lookup(name)).thenReturn(value);
@@ -122,7 +127,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Configures the mock to expect a call for a non existing property.
      *
      * @param mockCtx the mock
-     * @param name the name of the property
+     * @param name    the name of the property
      */
     private void bindError(final Context mockCtx, final String name) throws NamingException {
         when(mockCtx.lookup(name)).thenThrow(new NameNotFoundException("unknown property"));
@@ -152,7 +157,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Creates and initializes a naming enumeration. This is a shortcut of wrapping the result of
      * {@link #createNameClassPairs(String[], Object[])} in an instance of {@link ListBasedNamingEnumeration}.
      *
-     * @param names the names contained in the iteration
+     * @param names  the names contained in the iteration
      * @param values the corresponding values
      * @return the mock for the enumeration
      */
@@ -163,7 +168,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Creates and initializes a list of {@link NameClassPair}s that can be used to create a naming enumeration.
      *
-     * @param names the names contained in the iteration
+     * @param names  the names contained in the iteration
      * @param values the corresponding values
      * @return the mock for the enumeration
      */
@@ -199,7 +204,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
         if (useCycles) {
             when(mockTopCtx.lookup("cycle")).thenReturn(mockCycleCtx);
             when(mockTopCtx.list("")).thenAnswer(invocation ->
-                    createNamingEnumeration(new String[] {"test", "cycle"}, new Object[] {mockPrfxCtx, mockCycleCtx}));
+                    createNamingEnumeration(new String[]{"test", "cycle"}, new Object[]{mockPrfxCtx, mockCycleCtx}));
             when(mockCycleCtx.list("")).thenAnswer(invocation -> {
                 final List<NameClassPair> pairs = createNameClassPairs(PROP_NAMES, PROP_VALUES);
                 addEnumPair(pairs, "cycleCtx", mockCycleCtx);
@@ -207,7 +212,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
             });
             when(mockCycleCtx.lookup("cycleCtx")).thenReturn(mockCycleCtx);
         } else {
-            when(mockTopCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(new String[] {"test"}, new Object[] {mockPrfxCtx}));
+            when(mockTopCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(new String[]{"test"}, new Object[]{mockPrfxCtx}));
         }
         return mockBaseCtx;
     }
