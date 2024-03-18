@@ -60,6 +60,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * </p>
  */
 public class CompositeConfiguration extends AbstractConfiguration implements Cloneable {
+
     /** List holding all the configuration */
     private List<Configuration> configList = new LinkedList<>();
 
@@ -89,9 +90,9 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param inMemoryConfiguration the in memory configuration to use
      */
     public CompositeConfiguration(final Configuration inMemoryConfiguration) {
-        configList.clear();
+        this.configList.clear();
         this.inMemoryConfiguration = inMemoryConfiguration;
-        configList.add(inMemoryConfiguration);
+        this.configList.add(inMemoryConfiguration);
     }
 
     /**
