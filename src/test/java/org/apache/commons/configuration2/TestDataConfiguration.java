@@ -1977,9 +1977,12 @@ public class TestDataConfiguration {
         final DataConfiguration conf = new DataConfiguration(baseconf);
 
         assertTrue(conf.isEmpty());
-
         baseconf.setProperty("foo", "bar");
-
         assertFalse(conf.isEmpty());
+    }
+
+    @Test
+    public void testNullConfiguration() {
+        assertThrows(NullPointerException.class, () -> new DataConfiguration(null));
     }
 }

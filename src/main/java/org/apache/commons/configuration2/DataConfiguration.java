@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
@@ -145,7 +146,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param configuration the wrapped configuration
      */
     public DataConfiguration(final Configuration configuration) {
-        this.configuration = configuration;
+        this.configuration = Objects.requireNonNull(configuration);
         this.dataConversionHandler = new DataConversionHandler();
     }
 
