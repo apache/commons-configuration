@@ -100,7 +100,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @since 1.8
      */
     public MapConfiguration(final Properties props) {
-        map = convertPropertiesToMap(props);
+        map = toMap(props);
     }
 
     /**
@@ -220,7 +220,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @return a newly created map with all string keys of the properties
      */
     @SuppressWarnings("unchecked")
-    private static Map<String, Object> convertPropertiesToMap(final Properties props) {
+    private static Map<String, Object> toMap(final Properties props) {
         @SuppressWarnings("rawtypes")
         final Map map = props;
         return map;
