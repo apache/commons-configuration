@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -59,14 +60,10 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * @param parent The parent configuration (must not be <b>null</b>)
      * @param prefix The prefix used to select the properties
      * @param delimiter The prefix delimiter
-     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
+     * @throws NullPointerException if the parent configuration is <b>null</b>
      */
     public SubsetConfiguration(final Configuration parent, final String prefix, final String delimiter) {
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent configuration must not be null!");
-        }
-
-        this.parent = parent;
+        this.parent = Objects.requireNonNull(parent, "parent");
         this.prefix = prefix;
         this.delimiter = delimiter;
         initInterpolator();

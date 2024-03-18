@@ -27,6 +27,7 @@
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if DataConfiguration.DataConfiguration(Configuration) is called with null.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if XMLPropertiesConfiguration.XMLPropertiesConfiguration(Element) is called with null.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if a SubsetConfiguration constructor is called with a null Configuration.</action>
     </release>
     <release version="2.10.1" date="2024-03-17" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->

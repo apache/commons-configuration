@@ -60,6 +60,14 @@ public class TestSubsetConfiguration {
         assertFalse(config.isEmpty());
     }
 
+    /**
+     * Tries to create an instance without a parent configuration.
+     */
+    @Test
+    public void testConstructNullParent() {
+        assertThrows(NullPointerException.class, () -> new SubsetConfiguration(null, ""));
+    }
+
     @Test
     public void testGetChildKey() {
         final Configuration conf = new BaseConfiguration();
@@ -170,14 +178,6 @@ public class TestSubsetConfiguration {
         assertFalse(subset.containsKey("ng.key2"));
     }
 
-    /**
-     * Tries to create an instance without a parent configuration.
-     */
-    @Test
-    public void testInitNoParent() {
-        assertThrows(IllegalArgumentException.class, () -> new SubsetConfiguration(null, ""));
-    }
-
     @Test
     public void testInterpolationForKeysOfTheParent() {
         final BaseConfiguration config = new BaseConfiguration();
@@ -241,6 +241,63 @@ public class TestSubsetConfiguration {
             keys.remove(k);
         }
         assertTrue(keys.isEmpty());
+    }
+
+    @Test
+    public void testPrefixDelimiter(){
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setProperty("part1.part2@test.key1", "value1");
+        config.setProperty("part1.part2", "value2");
+        config.setProperty("part3.part4@testing.key2", "value3");
+
+        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@");
+        // Check subset properties
+        assertEquals("value1", subset.getString("test.key1"));
+        assertEquals("value2", subset.getString(""));
+        assertNull(subset.getString("testing.key2"));
+
+        // Check for empty subset configuration and iterator
+        assertEquals(2, subset.size());
+        assertFalse(subset.isEmpty());
+        assertTrue(subset.getKeys().hasNext());
+    }
+
+    @Test
+    public void testPrefixDelimiterNegativeTest(){
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setProperty("part1.part2@test.key1", "value1");
+        config.setProperty("part3.part4@testing.key2", "value2");
+
+        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@") {
+            // Anonymous inner class declaration to override SubsetConfiguration.getKeysInternal() - Call
+            // ImutableConfiguration.getKeys(String) on the parent configuration of the SubsetConfiguration in order to
+            // not consequently pass the prefix delimiter
+            @Override
+            protected Iterator<String> getKeysInternal() {
+                Class<?> subsetIteratorClass;
+                try {
+                    subsetIteratorClass = Class
+                            .forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
+                    final Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
+                            Iterator.class);
+                    ctor.setAccessible(true);
+
+                    return (Iterator<String>) ctor.newInstance(this, parent.getKeys("part1.part2"));
+                } catch (final Exception ex) {
+                    throw new IllegalArgumentException(ex);
+                }
+            }
+        };
+
+        // Check subset properties - contains one property
+        assertEquals("value1", subset.getString("test.key1"));
+        assertNull(subset.getString("testing.key2"));
+
+        // Check for empty subset configuration and iterator - even if the SubsetConfiguration contains properties, like
+        // checked previously its states that it is empty
+        assertEquals(0, subset.size());
+        assertTrue(subset.isEmpty());
+        assertFalse(subset.getKeys().hasNext());
     }
 
     /**
@@ -307,62 +364,5 @@ public class TestSubsetConfiguration {
 
         subset.setThrowExceptionOnMissing(true);
         assertThrows(NoSuchElementException.class, () -> config.getString("foo"));
-    }
-
-    @Test
-    public void testPrefixDelimiter(){
-        final BaseConfiguration config = new BaseConfiguration();
-        config.setProperty("part1.part2@test.key1", "value1");
-        config.setProperty("part1.part2", "value2");
-        config.setProperty("part3.part4@testing.key2", "value3");
-
-        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@");
-        // Check subset properties
-        assertEquals("value1", subset.getString("test.key1"));
-        assertEquals("value2", subset.getString(""));
-        assertNull(subset.getString("testing.key2"));
-
-        // Check for empty subset configuration and iterator
-        assertEquals(2, subset.size());
-        assertFalse(subset.isEmpty());
-        assertTrue(subset.getKeys().hasNext());
-    }
-
-    @Test
-    public void testPrefixDelimiterNegativeTest(){
-        final BaseConfiguration config = new BaseConfiguration();
-        config.setProperty("part1.part2@test.key1", "value1");
-        config.setProperty("part3.part4@testing.key2", "value2");
-
-        final SubsetConfiguration subset = new SubsetConfiguration(config, "part1.part2", "@") {
-            // Anonymous inner class declaration to override SubsetConfiguration.getKeysInternal() - Call
-            // ImutableConfiguration.getKeys(String) on the parent configuration of the SubsetConfiguration in order to
-            // not consequently pass the prefix delimiter
-            @Override
-            protected Iterator<String> getKeysInternal() {
-                Class<?> subsetIteratorClass;
-                try {
-                    subsetIteratorClass = Class
-                            .forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
-                    final Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
-                            Iterator.class);
-                    ctor.setAccessible(true);
-
-                    return (Iterator<String>) ctor.newInstance(this, parent.getKeys("part1.part2"));
-                } catch (final Exception ex) {
-                    throw new IllegalArgumentException(ex);
-                }
-            }
-        };
-
-        // Check subset properties - contains one property
-        assertEquals("value1", subset.getString("test.key1"));
-        assertNull(subset.getString("testing.key2"));
-
-        // Check for empty subset configuration and iterator - even if the SubsetConfiguration contains properties, like
-        // checked previously its states that it is empty
-        assertEquals(0, subset.size());
-        assertTrue(subset.isEmpty());
-        assertFalse(subset.getKeys().hasNext());
     }
 }
