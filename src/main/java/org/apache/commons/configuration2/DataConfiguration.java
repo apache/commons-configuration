@@ -146,7 +146,7 @@ public class DataConfiguration extends AbstractConfiguration {
      */
     public DataConfiguration(final Configuration configuration) {
         this.configuration = configuration;
-        dataConversionHandler = new DataConversionHandler();
+        this.dataConversionHandler = new DataConversionHandler();
     }
 
     /**
