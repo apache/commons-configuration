@@ -23,15 +23,18 @@ import java.util.Iterator;
  * for testing implementations of clone() methods. It does not make much sense otherwise; all methods are just dummies.
  */
 public class NonCloneableConfiguration extends AbstractConfiguration {
+
     /**
      * Dummy implementation of this method.
      */
     @Override
     protected void addPropertyDirect(final String key, final Object value) {
+        // noop
     }
 
     @Override
     protected void clearPropertyDirect(final String key) {
+        // noop
     }
 
     /**
