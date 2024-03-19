@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
@@ -194,6 +195,15 @@ public class DataConfiguration extends AbstractConfiguration {
     @Override
     protected boolean containsKeyInternal(final String key) {
         return configuration.containsKey(key);
+    }
+
+    private <R> R applyTempDateFormat(final String format, final Supplier<R> supplier) {
+        TEMP_DATE_FORMAT.set(format);
+        try {
+            return supplier.get();
+        } finally {
+            TEMP_DATE_FORMAT.remove();
+        }
     }
 
     @Override
@@ -919,12 +929,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a Date.
      */
     public Date getDate(final String key, final Date defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return get(Date.class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> get(Date.class, key, defaultValue));
     }
 
     public List<Date> getDateList(final String key) {
@@ -973,12 +978,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public List<Date> getDateList(final String key, final List<Date> defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return getList(Date.class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> getList(Date.class, key, defaultValue));
     }
 
     /**
@@ -1037,12 +1037,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public Date[] getDateArray(final String key, final Date[] defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return get(Date[].class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> get(Date[].class, key, defaultValue));
     }
 
     /**
@@ -1107,12 +1102,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a Calendar.
      */
     public Calendar getCalendar(final String key, final Calendar defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return get(Calendar.class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> get(Calendar.class, key, defaultValue));
     }
 
     /**
@@ -1172,12 +1162,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public List<Calendar> getCalendarList(final String key, final List<Calendar> defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return getList(Calendar.class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> getList(Calendar.class, key, defaultValue));
     }
 
     /**
@@ -1239,12 +1224,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public Calendar[] getCalendarArray(final String key, final Calendar[] defaultValue, final String format) {
-        TEMP_DATE_FORMAT.set(format);
-        try {
-            return get(Calendar[].class, key, defaultValue);
-        } finally {
-            TEMP_DATE_FORMAT.remove();
-        }
+        return applyTempDateFormat(format, () -> get(Calendar[].class, key, defaultValue));
     }
 
     /**
