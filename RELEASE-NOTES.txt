@@ -212,8 +212,8 @@ Fixed Bugs
 * CONFIGURATION-822:  Fix ambiguity on the section determining #229. Thanks to Branislav Be?o, Gary Gregory, Bruno P. Kinoshita.
 *                     Use Java style array decelerations #244. Thanks to Arturo Bernal.
 *                     Add ImmutableNode.stream(). Thanks to Gary Gregory.
-*                     Avoid NullPointerException in org.apache.commons.configuration3.web.AppletConfiguration.getKeysInternal(). Thanks to Gary Gregory.
-*                     Fix JDBC prepared statements leak in org.apache.commons.configuration3.DatabaseConfiguration.clearPropertyDirect(String). Thanks to Gary Gregory.
+*                     Avoid NullPointerException in org.apache.commons.configuration2.web.AppletConfiguration.getKeysInternal(). Thanks to Gary Gregory.
+*                     Fix JDBC prepared statements leak in org.apache.commons.configuration2.DatabaseConfiguration.clearPropertyDirect(String). Thanks to Gary Gregory.
 
 Changes
 -------
@@ -465,7 +465,7 @@ Fixed Bugs
 ----------
 
 * CONFIGURATION-750:  XMLPropertyListConfiguration cannot set arrays in the correct plist form. Thanks to Jason Pickens, Gary Gregory, Emmanuel Bourg.
-*                     Fix Javadoc for org.apache.commons.configuration3.PropertiesConfiguration.getIncludeOptional(). Thanks to Gary Gregory.
+*                     Fix Javadoc for org.apache.commons.configuration2.PropertiesConfiguration.getIncludeOptional(). Thanks to Gary Gregory.
 * CONFIGURATION-760:  Properties file using cyclical includes cause a StackOverflowError instead of detecting the misconfiguration. Thanks to Gary Gregory.
 
 Changes
@@ -587,7 +587,7 @@ Fixed Bugs
 
 * CONFIGURATION-710:  Fixed numerous typos in user guides. Thanks to thc202.
 * CONFIGURATION-711:  Update Apache Commons Lang from 3.7 to 3.8.1.
-* CONFIGURATION-727:  org.apache.commons.configuration3.DatabaseConfiguration never closes result sets and statements.
+* CONFIGURATION-727:  org.apache.commons.configuration2.DatabaseConfiguration never closes result sets and statements.
 
 Changes
 -------
@@ -643,7 +643,7 @@ New features
   Path.
 
 * CONFIGURATION-698
-  Add org.apache.commons.configuration3.MapConfiguration.toString().
+  Add org.apache.commons.configuration2.MapConfiguration.toString().
 
 * CONFIGURATION-698
   Add toString() methods here and there to help debugging.
@@ -740,16 +740,16 @@ New features
   Add convenience ctor ConfigurationRuntimeException(String, Object...).
 
 * CONFIGURATION-665
-  Add org.apache.commons.configuration3.AbstractHierarchicalConfiguration.toString().
+  Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
 
 * CONFIGURATION-664
-  Add API org.apache.commons.configuration3.tree.ImmutableNode.getChildren(String).
+  Add API org.apache.commons.configuration2.tree.ImmutableNode.getChildren(String).
 
 * CONFIGURATION-660
   Add toString() methods here and there to help debugging.
 
 * CONFIGURATION-658
-  Add API org.apache.commons.configuration3.DataConfiguration.getURI(String)
+  Add API org.apache.commons.configuration2.DataConfiguration.getURI(String)
   methods.
 
 * CONFIGURATION-656
@@ -986,7 +986,7 @@ https://commons.apache.org/configuration/userguide/upgradeto2_0.html
 
 that describes all breaking changes and helps when upgrading to the new
 version. One obvious breaking change is the renaming of the main package
-(all classes are now located under org.apache.commons.configuration3) and the
+(all classes are now located under org.apache.commons.configuration2) and the
 Maven coordinates (groupId: org.apache.commons, artifactId:
 commons-configuration2). This was necessary to allow both versions to coexist
 on the classpath without conflicts.

@@ -452,11 +452,11 @@ handler.save(out);
      <source><![CDATA[
 <configuration>
   <header>
-    <fileSystem config-class="org.apache.commons.configuration3.io.VFSFileSystem"/>
+    <fileSystem config-class="org.apache.commons.configuration2.io.VFSFileSystem"/>
   </header>
   <override>
     <xml fileName="settings.xml" config-name="xml">
-      <fileSystem config-class="org.apache.commons.configuration3.io.DefaultFileSystem"/>
+      <fileSystem config-class="org.apache.commons.configuration2.io.DefaultFileSystem"/>
     </xml>
 
     <!-- Other sources omitted -->

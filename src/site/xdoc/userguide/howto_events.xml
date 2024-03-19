@@ -255,8 +255,8 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
       configuration events to the console. The class could look as follows:
     </p>
     <source><![CDATA[
-import org.apache.commons.configuration3.event.ConfigurationEvent;
-import org.apache.commons.configuration3.event.EventListener;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventListener;
 
 public class ConfigurationLogListener implements EventListener<ConfigurationEvent>
 {

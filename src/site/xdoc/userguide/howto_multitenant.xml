@@ -105,11 +105,11 @@
 <configuration>
   <header>
     <result loggerName="TestLogger"
-            config-class="org.apache.commons.configuration3.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration3.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
   </header>
   <override>
@@ -118,12 +118,12 @@
                config-forceCreate="true"
                schemaValidation="true">
        <expressionEngine
-          config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" schemaValidation="true">
       <expressionEngine
-          config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>
@@ -241,9 +241,9 @@ XMLConfiguration config = builder.getConfiguration();
         <p>
         <source><![CDATA[
   <bean id="configurationBuilder"
-        class="org.apache.commons.configuration3.builder.FileBasedConfigurationBuilder">
+        class="org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder">
     <constructor-arg index="0"
-      value="org.apache.commons.configuration3.XMLConfiguration"/>
+      value="org.apache.commons.configuration2.XMLConfiguration"/>
     <constructor-arg index="1">
         <map>
             <entry key="config-fileBased">
@@ -258,7 +258,7 @@ XMLConfiguration config = builder.getConfiguration();
         factory-method="getConfiguration">
   </bean>
   <bean id="subcomponentConfig"
-        class="org.apache.commons.configuration3.PatternSubtreeConfigurationWrapper"
+        class="org.apache.commons.configuration2.PatternSubtreeConfigurationWrapper"
         autowire='autodetect'>
     <constructor-arg index="0">
       <ref bean="applicationConfig"/>

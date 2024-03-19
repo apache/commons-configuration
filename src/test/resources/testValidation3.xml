@@ -19,15 +19,15 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
-            config-class="org.apache.commons.configuration3.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration3.tree.MergeCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <providers>
       <provider config-tag="multifile"
-         config-class="org.apache.commons.configuration3.DefaultConfigurationBuilder$FileConfigurationProvider"
-         configurationClass="org.apache.commons.configuration3.MultiFileHierarchicalConfiguration"/>
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
     </providers><entity-resolver catalogFiles="catalog.xml"/>
   </header>
   <system/>

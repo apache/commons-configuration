@@ -23,8 +23,8 @@
     <version>67</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>commons-configuration3</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <artifactId>commons-configuration2</artifactId>
+  <version>2.10.1-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -402,7 +402,7 @@
     </dependency>
 
     <dependency>
-	  <!-- For org.apache.commons.configuration3.web -->
+	  <!-- For org.apache.commons.configuration2.web -->
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <version>6.0.0</version>
@@ -535,7 +535,7 @@
 
   <properties>
     <commons.componentid>configuration</commons.componentid>
-    <commons.module.name>org.apache.commons.configuration3</commons.module.name>
+    <commons.module.name>org.apache.commons.configuration2</commons.module.name>
     <commons.release.version>2.10.0</commons.release.version>
     <commons.release.next>2.10.1</commons.release.next>
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
@@ -571,7 +571,7 @@
     <japicmp.skip>false</japicmp.skip>
 
     <!-- Commons Release Plugin -->
-    <commons.bc.version>3.0.0-SNAPSHOT</commons.bc.version>
+    <commons.bc.version>2.9.0</commons.bc.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
@@ -634,7 +634,7 @@
             The below setting for not failing upon error stems from the fact that javacc's generated
             code.
 
-            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration3.plist,
+            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
             and only generates a portion of the package. Furthermore, the javacc parser generator
             generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
             sake of releasing commons-configuration-2.4.
@@ -663,7 +663,7 @@
           </excludes>
           <systemPropertyVariables>
             <java.awt.headless>true</java.awt.headless>
-            <org.apache.commons.logging.Log>org.apache.commons.configuration3.Logging</org.apache.commons.logging.Log>
+            <org.apache.commons.logging.Log>org.apache.commons.configuration2.Logging</org.apache.commons.logging.Log>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -715,7 +715,7 @@
         <configuration>
           <archive combine.children="append">
             <manifestEntries>
-              <Automatic-Module-Name>org.apache.commons.configuration3</Automatic-Module-Name>
+              <Automatic-Module-Name>org.apache.commons.configuration2</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>

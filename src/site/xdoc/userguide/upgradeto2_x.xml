@@ -47,7 +47,7 @@
       programmatically or through a system property. If the behavior of previous versions must be maintained exactly 
       without changes to the code, then the following system property can be used:
 <source>
-    org.apache.commons.configuration3.interpol.ConfigurationInterpolator.defaultPrefixLookups=BASE64_DECODER,BASE64_ENCODER,CONST,DATE,DNS,ENVIRONMENT,FILE,JAVA,LOCAL_HOST,PROPERTIES,RESOURCE_BUNDLE,SCRIPT,SYSTEM_PROPERTIES,URL,URL_DECODER,URL_ENCODER,XML
+org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups=BASE64_DECODER,BASE64_ENCODER,CONST,DATE,DNS,ENVIRONMENT,FILE,JAVA,LOCAL_HOST,PROPERTIES,RESOURCE_BUNDLE,SCRIPT,SYSTEM_PROPERTIES,URL,URL_DECODER,URL_ENCODER,XML
 </source>
         If the disabled lookups listed above are not used by the target application, then no changes are required. 
     </p>
