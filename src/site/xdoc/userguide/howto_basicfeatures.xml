@@ -280,14 +280,14 @@ java.home = ${env:JAVA_HOME}
         <code>2.8.0</code>, this map was constant. However, starting in version <code>2.8.0</code>, the lookups 
         included in this map can be optionally configured via system property, allowing users greater control over the 
         types of interpolation performed in their applications. The system property in question is named
-        <code>org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups</code>
+        <code>org.apache.commons.configuration3.interpol.ConfigurationInterpolator.defaultPrefixLookups</code>
         and is expected to contain a comma-separated list of names from the
         <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html">DefaultLookups</a></code>
         enum. For example, launching an application with the system property given below will only enable the
         <code>sys</code> and <code>env</code> lookups.
     </p>
 <source><![CDATA[
-org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups=SYSTEM_PROPERTIES,ENVIRONMENT
+org.apache.commons.configuration3.interpol.ConfigurationInterpolator.defaultPrefixLookups=SYSTEM_PROPERTIES,ENVIRONMENT
 ]]></source>
     <p>
         It is also important to note that starting in version <code>2.8.0</code>, several previously enabled
@@ -331,7 +331,7 @@ org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPref
       for the variable passed in:
     </p>
     <source><![CDATA[
-import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.configuration3.interpol.Lookup;
 
 public class EchoLookup implements Lookup
 {
@@ -422,7 +422,7 @@ user.file = ${expr:System.getProperty("user.home")}/settings.xml
     <result/>
     <lookups>
       <lookup config-prefix="expr"
-              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
+              config-class="org.apache.commons.configuration3.interpol.ExprLookup">
         <variables>
           <variable name="System" value="Class:java.lang.System"/>
           <variable name"net" value="Class:java.net.InetAddress"/>
@@ -451,7 +451,7 @@ user.file = ${expr:System.getProperty("user.home")}/settings.xml
     <result/>
     <lookups>
       <lookup config-prefix="expr"
-              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
+              config-class="org.apache.commons.configuration3.interpol.ExprLookup">
         <variables>
           <variable name"net" value="Class:java.net.InetAddress"/>
           <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>

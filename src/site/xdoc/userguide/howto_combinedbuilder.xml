@@ -684,7 +684,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
     config-class="com.foo.MyReloadingDetector" strict=true"/>
   </properties>
   <xml fileName="test.xml" validating="true">
-    <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    <expressionEngine config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
   </xml>
 ]]></source>
     <p>
@@ -831,8 +831,8 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
     <source><![CDATA[
   <header>
     <result throwExceptionOnMissing="true">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration3.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <override>
@@ -878,7 +878,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
 <configuration>
   <header>
     <fileSystem
-      config-class="org.apache.commons.configuration2.io.VFSFileSystem"/>
+      config-class="org.apache.commons.configuration3.io.VFSFileSystem"/>
   </header>
   <xml fileName="test.xml" config-name="xml"/>
 </configuration>
@@ -1010,9 +1010,9 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
 <configuration>
   <header>
     <result>
-      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+      <expressionEngine config-class="org.apache.commons.configuration3.tree.xpath.XPathExpressionEngine"/>
       <listDelimiterHandler
-        config-class="org.apache.commons.configuration2.convert.DefaultListDelimiterHandler">
+        config-class="org.apache.commons.configuration3.convert.DefaultListDelimiterHandler">
         <config-constrarg config-value=","/>
       </listDelimiterHandler>
     </result>
@@ -1196,9 +1196,9 @@ trigger.start();
     <source><![CDATA[
 ConfigurationProvider provider = new BaseConfigurationProvider(
     /* normal builder */
-    "org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder",
+    "org.apache.commons.configuration3.builder.FileBasedConfigurationBuilder",
     /* reloading builder */
-    "org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder",
+    "org.apache.commons.configuration3.builder.ReloadingFileBasedConfigurationBuilder",
     /* configuration class */
     "com.foo.MyConfig",
     /* Parameters; here we assume that we have a custom parameters class
@@ -1249,8 +1249,8 @@ public class MyConfigurationBuilderProvider extends BaseConfigurationBuilderProv
 {
     public MyConfigurationBuilderProvider()
     {
-        super("org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder",
-            "org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder",
+        super("org.apache.commons.configuration3.builder.FileBasedConfigurationBuilder",
+            "org.apache.commons.configuration3.builder.ReloadingFileBasedConfigurationBuilder",
             "com.foo.MyConfig",
             Collections.singleton(MyConfigParams.class.getName()));
     }

@@ -22,8 +22,8 @@
 <configuration>
   <header>
     <result throwExceptionOnMissing="true"
-            config-class="org.apache.commons.configuration2.builder.combined.TestCombinedConfigurationBuilder$CombinedConfigurationTestImpl">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+            config-class="org.apache.commons.configuration3.builder.combined.TestCombinedConfigurationBuilder$CombinedConfigurationTestImpl">
+      <nodeCombiner config-class="org.apache.commons.configuration3.tree.OverrideCombiner"/>
     </result>
   </header>
   <xml fileName="test.xml" config-name="xml"/>

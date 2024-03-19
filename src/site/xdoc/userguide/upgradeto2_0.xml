@@ -80,7 +80,7 @@
     <subsection name="Structural Changes">
     <p>
       The most obvious change you will notice at the very beginning is that
-      the root package was renamed to <code>org.apache.commons.configuration2</code>
+      the root package was renamed to <code>org.apache.commons.configuration3</code>
       - the major version is now part of the package name. This certainly makes
       migration harder, but it is the only possibility to avoid jar hell.
       Imagine for a moment that we had kept the old package name. This

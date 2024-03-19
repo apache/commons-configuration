@@ -28,12 +28,12 @@
 
   <!-- Reason: The reliance on default encoding is only in debug code. -->
   <Match>
-    <Class name="org.apache.commons.configuration2.CombinedConfiguration" />
+    <Class name="org.apache.commons.configuration3.CombinedConfiguration" />
     <Method name="constructCombinedNode" />
     <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration2.ConfigurationUtils" />
+    <Class name="org.apache.commons.configuration3.ConfigurationUtils" />
     <Method name="dump" />
     <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
@@ -42,7 +42,7 @@
        the default encoding is used. This is stated in the documentation.
   -->
   <Match>
-    <Class name="org.apache.commons.configuration2.io.FileHandler" />
+    <Class name="org.apache.commons.configuration3.io.FileHandler" />
     <Or>
       <Method name="loadFromTransformedStream" />
       <Method name="saveToStream" />
@@ -56,17 +56,17 @@
        block.
   -->
   <Match>
-    <Class name="org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder" />
+    <Class name="org.apache.commons.configuration3.builder.FileBasedConfigurationBuilder" />
     <Field name="autoSaveListener" />
     <Bug pattern="IS2_INCONSISTENT_SYNC" />
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration2.builder.combined.ReloadingCombinedConfigurationBuilder" />
+    <Class name="org.apache.commons.configuration3.builder.combined.ReloadingCombinedConfigurationBuilder" />
     <Field name="reloadingController" />
     <Bug pattern="IS2_INCONSISTENT_SYNC" />
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder" />
+    <Class name="org.apache.commons.configuration3.builder.combined.CombinedConfigurationBuilder" />
     <Field name="sourceData" />
     <Bug pattern="IS2_INCONSISTENT_SYNC" />
   </Match>
@@ -75,12 +75,12 @@
   -->
   <Match>
     <Or>
-      <Class name="org.apache.commons.configuration2.plist.ParseException" />
-      <Class name="org.apache.commons.configuration2.plist.PropertyListParser" />
-      <Class name="org.apache.commons.configuration2.plist.PropertyListParserConstants" />
-      <Class name="org.apache.commons.configuration2.plist.PropertyListParserTokenManager" />
-      <Class name="org.apache.commons.configuration2.plist.SimpleCharStream" />
-      <Class name="org.apache.commons.configuration2.plist.TokenMgrError" />
+      <Class name="org.apache.commons.configuration3.plist.ParseException" />
+      <Class name="org.apache.commons.configuration3.plist.PropertyListParser" />
+      <Class name="org.apache.commons.configuration3.plist.PropertyListParserConstants" />
+      <Class name="org.apache.commons.configuration3.plist.PropertyListParserTokenManager" />
+      <Class name="org.apache.commons.configuration3.plist.SimpleCharStream" />
+      <Class name="org.apache.commons.configuration3.plist.TokenMgrError" />
     </Or>
   </Match>
 
@@ -88,12 +88,12 @@
        queries on configuration nodes. They are not intended to be serialized.
   -->
   <Match>
-    <Class name="org.apache.commons.configuration2.tree.xpath.ConfigurationNodePointer" />
+    <Class name="org.apache.commons.configuration3.tree.xpath.ConfigurationNodePointer" />
     <Field name="handler" />
     <Bug pattern="SE_BAD_FIELD" />
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration2.tree.xpath.ConfigurationAttributePointer" />
+    <Class name="org.apache.commons.configuration3.tree.xpath.ConfigurationAttributePointer" />
     <Field name="attributeResult" />
     <Bug pattern="SE_BAD_FIELD" />
   </Match>

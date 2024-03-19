@@ -22,7 +22,7 @@
 <configuration>
   <header>
     <fileSystem
-      config-class="org.apache.commons.configuration2.builder.combined.TestCombinedConfigurationBuilder$FileSystemTestImpl"/>
+      config-class="org.apache.commons.configuration3.builder.combined.TestCombinedConfigurationBuilder$FileSystemTestImpl"/>
   </header>
   <xml fileName="test.xml" config-name="xml"/>
 </configuration>

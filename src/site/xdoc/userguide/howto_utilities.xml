@@ -380,7 +380,7 @@ Configuration config = wrapperFactory.createBuilderConfigurationWrapper(
       <source><![CDATA[
 <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
   <property name="properties">
-      <bean class="org.apache.commons.configuration2.spring.ConfigurationPropertiesFactoryBean">
+      <bean class="org.apache.commons.configuration3.spring.ConfigurationPropertiesFactoryBean">
           <constructor-arg>
               <ref local="xmlConfiguration" />
           </constructor-arg>

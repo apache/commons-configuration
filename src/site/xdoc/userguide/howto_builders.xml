@@ -140,7 +140,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       Basically, initialization parameters are defined by POJOs (plain old
       Java objects) with properties corresponding to the special properties
       supported by the configuration object to be created. In the package
-      <code>org.apache.commons.configuration2.builder.fluent</code> a number
+      <code>org.apache.commons.configuration3.builder.fluent</code> a number
       of interfaces is contained defining the possible initialization
       parameters for the standard <code>Configuration</code> implementations
       shipped with <em>Commons Configuration</em>. These interfaces form a
