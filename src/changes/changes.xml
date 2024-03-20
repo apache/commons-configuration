@@ -25,8 +25,8 @@
   <body>
     <release version="2.10.1" date="2024-03-17" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->
+      <action type="fix" issue="CONFIGURATION-839" dev="ggregory" due-to="Bob Marinier, Gary Gregory">java.lang.module.FindException: Module servlet.api not found.</action>
       <action type="fix" issue="CONFIGURATION-840" dev="ggregory" due-to="Bob Marinier, Gary Gregory">StackOverflowError adding property in AbstractListDelimiterHandler.flattenIterator().</action>
-      <action type="fix" issue="CONFIGURATION-840" dev="ggregory" due-to="Bob Marinier, Gary Gregory">java.lang.module.FindException: Module servlet.api not found.</action>
       <action type="fix" issue="CONFIGURATION-841" dev="ggregory" due-to="Gary Gregory">StackOverflowError calling ListDelimiterHandler.flatten(Object, int) with a cyclical object tree.</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.16.1 to 2.17.0 #297, #303, #326, #331, #340, #378.</action>

@@ -21,8 +21,8 @@ Changes in this version include:
 Fixed Bugs
 ----------
 
+* CONFIGURATION-839:  java.lang.module.FindException: Module servlet.api not found. Thanks to Bob Marinier, Gary Gregory.
 * CONFIGURATION-840:  StackOverflowError adding property in AbstractListDelimiterHandler.flattenIterator(). Thanks to Bob Marinier, Gary Gregory.
-* CONFIGURATION-840:  java.lang.module.FindException: Module servlet.api not found. Thanks to Bob Marinier, Gary Gregory.
 * CONFIGURATION-841:  StackOverflowError calling ListDelimiterHandler.flatten(Object, int) with a cyclical object tree. Thanks to Gary Gregory.
 
 Changes
