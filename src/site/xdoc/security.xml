@@ -110,6 +110,28 @@
                     </ul>
                 </p>
              </subsection>
+             <subsection name="CVE-2024-29131 prior to 2.10.1, Out-of-bounds Write vulnerability">
+               <p>
+                 On 2024-03-20, the Apache Commons Configuration team disclosed <a href="https://www.cve.org/CVERecord?id=CVE-2024-29131">CVE-2024-29131</a>.
+               </p>
+               <p>
+                 This Out-of-bounds Write vulnerability in Apache Commons Configuration affects Apache Commons Configuration: from 2.0 before 2.10.1.
+                 USer can see this as a <code>StackOverflowError</code> when adding a property in <code>AbstractListDelimiterHandler.flattenIterator()</code>.
+                 Users are recommended to upgrade to version 2.10.1, which fixes the issue. 
+                 The details are in <a href="https://issues.apache.org/jira/browse/CONFIGURATION-840">CONFIGURATION-840</a>.
+               </p>
+             </subsection>
+             <subsection name="CVE-2024-29133 prior to 2.10.1, Out-of-bounds Write vulnerability">
+               <p>
+                 On 2024-03-20, the Apache Commons Configuration team disclosed <a href="https://www.cve.org/CVERecord?id=CVE-2024-29133">CVE-2024-29133</a>.
+               </p>
+               <p>
+                 This Out-of-bounds Write vulnerability in Apache Commons Configuration affects Apache Commons Configuration: from 2.0 before 2.10.1.
+                 USer can see this as a <code>StackOverflowError</code> calling <code>ListDelimiterHandler.flatten(Object, int)</code> with a cyclical object tree.
+                 Users are recommended to upgrade to version 2.10.1, which fixes the issue. 
+                 The details are in <a href="https://issues.apache.org/jira/browse/CONFIGURATION-840">CONFIGURATION-841</a>.
+               </p>
+             </subsection>
         </section>
     </body>
 </document>
