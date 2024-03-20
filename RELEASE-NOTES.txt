@@ -28,7 +28,7 @@ Fixed Bugs
 Changes
 -------
 
-*                     Bump jackson-databind from 2.16.1 to 2.17.0 #297, #303, #326, #331, #340, #378. Thanks to Dependabot.
+*                     Bump jackson-databind from 2.16.1 to 2.17.0 #378. Thanks to Dependabot.
 *                     Bump log4j.version from 2.23.0 to 2.23.1 #379. Thanks to Dependabot.
 *                     Bump spring.version from 5.3.32 to 5.3.33 #380. Thanks to Dependabot, Gary Gregory.
 
