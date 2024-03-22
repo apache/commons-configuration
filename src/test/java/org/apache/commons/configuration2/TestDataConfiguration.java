@@ -551,7 +551,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetBigDecimalList() {
         // missing list
-        assertEquals(null, conf.getBigDecimalList("bigdecimal.list", null));
+        assertNull(conf.getBigDecimalList("bigdecimal.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(new BigDecimal("1"));
@@ -623,7 +623,7 @@ public class TestDataConfiguration {
     public void testGetBigIntegerList() {
         // missing list
         final List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
-        assertEquals(null, bigIntegerList);
+        assertNull(bigIntegerList);
 
         List<Object> expected = new ArrayList<>();
         expected.add(new BigInteger("1"));
@@ -697,7 +697,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetBooleanList() {
         // missing list
-        assertEquals(null, conf.getBooleanList("boolean.list", null));
+        assertNull(conf.getBooleanList("boolean.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Boolean.TRUE);
@@ -774,7 +774,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetByteList() {
         // missing list
-        assertEquals(null, conf.getByteList("byte.list", null));
+        assertNull(conf.getByteList("byte.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Byte.valueOf("1"));
@@ -916,7 +916,7 @@ public class TestDataConfiguration {
 
         // missing list
         final List<Calendar> nullList = null;
-        assertEquals(null, conf.getCalendarList("calendar.list", nullList));
+        assertNull(conf.getCalendarList("calendar.list", nullList));
 
         List<Object> expected = new ArrayList<>();
         expected.add(calendar1);
@@ -1020,7 +1020,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetColorList() throws Exception {
         // missing list
-        assertEquals(null, conf.getColorList("color.list", null));
+        assertNull(conf.getColorList("color.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Color.red);
@@ -1150,7 +1150,7 @@ public class TestDataConfiguration {
 
         // missing list
         final List<Date> nullList = null;
-        assertEquals(null, conf.getDateList("date.list", nullList));
+        assertNull(conf.getDateList("date.list", nullList));
 
         List<Object> expected = new ArrayList<>();
         expected.add(date1);
@@ -1253,7 +1253,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetDoubleList() {
         // missing list
-        assertEquals(null, conf.getDoubleList("double.list", null));
+        assertNull(conf.getDoubleList("double.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Double.valueOf("1"));
@@ -1330,7 +1330,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetFloatList() {
         // missing list
-        assertEquals(null, conf.getFloatList("float.list", null));
+        assertNull(conf.getFloatList("float.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Float.valueOf("1"));
@@ -1427,7 +1427,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetIntegerList() {
         // missing list
-        assertEquals(null, conf.getIntegerList("integer.list", null));
+        assertNull(conf.getIntegerList("integer.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Integer.valueOf("1"));
@@ -1578,7 +1578,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetLocaleList() throws Exception {
         // missing list
-        assertEquals(null, conf.getLocaleList("locale.list", null));
+        assertNull(conf.getLocaleList("locale.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Locale.FRENCH);
@@ -1652,7 +1652,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetLongList() {
         // missing list
-        assertEquals(null, conf.getLongList("long.list", null));
+        assertNull(conf.getLongList("long.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Long.valueOf("1"));
@@ -1745,7 +1745,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetShortList() {
         // missing list
-        assertEquals(null, conf.getShortList("short.list", null));
+        assertNull(conf.getShortList("short.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(Short.valueOf("1"));
@@ -1848,7 +1848,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetURIList() throws Exception {
         // missing list
-        assertEquals(null, conf.getURIList("uri.list", null));
+        assertNull(conf.getURIList("uri.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(new URI("http://jakarta.apache.org"));
@@ -1937,7 +1937,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetURLList() throws Exception {
         // missing list
-        assertEquals(null, conf.getURLList("url.list", null));
+        assertNull(conf.getURLList("url.list", null));
 
         List<Object> expected = new ArrayList<>();
         expected.add(new URL("http://jakarta.apache.org"));
