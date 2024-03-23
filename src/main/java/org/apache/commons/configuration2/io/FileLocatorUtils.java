@@ -356,7 +356,7 @@ public final class FileLocatorUtils {
      * &lt;properties fileName="/subdir/my.properties"/&gt;
      * </pre>
      *
-     * Under Windows this path would be resolved relative to the configuration definition file. Under Unix this would be
+     * Under Windows this path would be resolved relative to the configuration definition file. Under UNIX this would be
      * treated as an absolute path name.
      *
      * @param basePath the base path
