@@ -19,11 +19,13 @@ package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
@@ -153,5 +155,11 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         config.getMap().put(KEY, SPACE_VALUE);
         config.setListDelimiterHandler(new DisabledListDelimiterHandler());
         assertEquals(SPACE_VALUE, config.getProperty(KEY));
+    }
+
+    @Test
+    public void testNullMap() {
+        assertThrows(NullPointerException.class, () -> new MapConfiguration((Map) null));
+        assertThrows(NullPointerException.class, () -> new MapConfiguration((Properties) null));
     }
 }
