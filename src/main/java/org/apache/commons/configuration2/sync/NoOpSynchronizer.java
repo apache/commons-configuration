@@ -39,17 +39,21 @@ public enum NoOpSynchronizer implements Synchronizer {
 
     @Override
     public void beginRead() {
+        // Empty dummy implementation of this interface method
     }
 
     @Override
     public void beginWrite() {
+        // Empty dummy implementation of this interface method
     }
 
     @Override
     public void endRead() {
+        // Empty dummy implementation of this interface method
     }
 
     @Override
     public void endWrite() {
+        // Empty dummy implementation of this interface method
     }
 }
