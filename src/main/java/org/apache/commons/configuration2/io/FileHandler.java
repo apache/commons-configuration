@@ -150,14 +150,17 @@ public class FileHandler {
 
         @Override
         public void lock(final LockMode mode) {
+            // empty
         }
 
         @Override
         public void setSynchronizer(final Synchronizer sync) {
+            // empty
         }
 
         @Override
         public void unlock(final LockMode mode) {
+            // empty
         }
     };
 

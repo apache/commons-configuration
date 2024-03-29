@@ -33,6 +33,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisi
      */
     @Override
     public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+        // empty
     }
 
     /**
@@ -40,6 +41,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisi
      */
     @Override
     public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
+        // empty
     }
 
     /**

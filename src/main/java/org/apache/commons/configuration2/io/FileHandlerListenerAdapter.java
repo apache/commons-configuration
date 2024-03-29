@@ -30,21 +30,26 @@ package org.apache.commons.configuration2.io;
 public class FileHandlerListenerAdapter implements FileHandlerListener {
     @Override
     public void loading(final FileHandler handler) {
+        // empty
     }
 
     @Override
     public void loaded(final FileHandler handler) {
+        // empty
     }
 
     @Override
     public void saving(final FileHandler handler) {
+        // empty
     }
 
     @Override
     public void saved(final FileHandler handler) {
+        // empty
     }
 
     @Override
     public void locationChanged(final FileHandler handler) {
+        // empty
     }
 }

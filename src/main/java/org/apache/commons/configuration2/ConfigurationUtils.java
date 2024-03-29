@@ -63,6 +63,7 @@ public final class ConfigurationUtils {
 
         @Override
         public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
+            // empty
         }
 
         @Override
