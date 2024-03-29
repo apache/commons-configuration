@@ -63,7 +63,7 @@ public final class ConfigurationUtils {
 
         @Override
         public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-            // Empty dummy implementation of this interface method
+            // empty
         }
 
         @Override

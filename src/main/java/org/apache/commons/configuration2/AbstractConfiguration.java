@@ -119,7 +119,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Creates a new instance of {@code AbstractConfiguration}.
      */
-    protected AbstractConfiguration() {
+    public AbstractConfiguration() {
         interpolator = new AtomicReference<>();
         initLogger(null);
         installDefaultInterpolator();

@@ -150,17 +150,17 @@ public class FileHandler {
 
         @Override
         public void lock(final LockMode mode) {
-            // Empty dummy implementation of this interface method
+            // empty
         }
 
         @Override
         public void setSynchronizer(final Synchronizer sync) {
-            // Empty dummy implementation of this interface method
+            // empty
         }
 
         @Override
         public void unlock(final LockMode mode) {
-            // Empty dummy implementation of this interface method
+            // empty
         }
     };
 

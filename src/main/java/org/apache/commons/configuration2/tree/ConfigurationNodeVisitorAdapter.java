@@ -33,7 +33,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisi
      */
     @Override
     public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-        // Empty dummy implementation of this interface method
+        // empty
     }
 
     /**
@@ -41,7 +41,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisi
      */
     @Override
     public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
-        // Empty dummy implementation of this interface method
+        // empty
     }
 
     /**
