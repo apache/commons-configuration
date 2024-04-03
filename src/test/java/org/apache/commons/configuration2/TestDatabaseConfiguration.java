@@ -45,6 +45,8 @@ import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ErrorListenerTestImpl;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,10 +79,10 @@ public class TestDatabaseConfiguration {
     private static final String CONFIG_NAME2 = "anotherTestConfig";
 
     /** An error listener for testing whether internal errors occurred. */
-    private ErrorListenerTestImpl listener;
+    private static ErrorListenerTestImpl listener;
 
     /** The test helper. */
-    private DatabaseConfigurationTestHelper helper;
+    private static DatabaseConfigurationTestHelper helper;
 
     /**
      * Checks the error listener for an expected error. The properties of the error event will be compared with the expected
@@ -97,8 +99,8 @@ public class TestDatabaseConfiguration {
         listener = null; // mark as checked
     }
 
-    @BeforeEach
-    public void setUp() throws Exception {
+    @BeforeAll
+    public static void setUp() throws Exception {
         /*
          * Thread.sleep may or may not help with the database is already in use exception.
          */
@@ -145,8 +147,8 @@ public class TestDatabaseConfiguration {
         config.failOnConnect = true;
     }
 
-    @AfterEach
-    public void tearDown() throws Exception {
+    @AfterAll
+    public static void tearDown() throws Exception {
         // if an error listener is defined, we check whether an error occurred
         if (listener != null) {
             listener.done();
@@ -297,7 +299,9 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
-    public void testClearSubset() throws ConfigurationException {
+    public void testClearSubset() throws ConfigurationException, Exception {
+        tearDown();
+        setUp();
         final Configuration config = setUpConfig();
 
         final Configuration subset = config.subset("key1");
@@ -324,7 +328,9 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
-    public void testContainsKeySingle() throws ConfigurationException {
+    public void testContainsKeySingle() throws ConfigurationException, Exception {
+        tearDown();
+        setUp();
         final Configuration config = setUpConfig();
         assertTrue(config.containsKey("key1"));
         assertTrue(config.containsKey("key2"));
@@ -407,7 +413,9 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
-    public void testGetKeysSingle() throws ConfigurationException {
+    public void testGetKeysSingle() throws ConfigurationException, Exception {
+        tearDown();
+        setUp();
         final Configuration config = setUpConfig();
         final Iterator<String> it = config.getKeys();
 
@@ -453,7 +461,9 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
-    public void testGetPropertyDirectSingle() throws ConfigurationException {
+    public void testGetPropertyDirectSingle() throws ConfigurationException, Exception {
+        tearDown();
+        setUp();
         final Configuration config = setUpConfig();
 
         assertEquals("value1", config.getProperty("key1"));
@@ -489,7 +499,9 @@ public class TestDatabaseConfiguration {
     }
 
     @Test
-    public void testIsEmptySingle() throws ConfigurationException {
+    public void testIsEmptySingle() throws ConfigurationException, Exception {
+        tearDown();
+        setUp();
         final Configuration config1 = setUpConfig();
         assertFalse(config1.isEmpty());
     }
