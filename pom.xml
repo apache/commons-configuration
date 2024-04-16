@@ -71,6 +71,14 @@
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <project.build.outputTimestamp>2024-03-20T20:54:04Z</project.build.outputTimestamp>
+    <!-- JaCoCo: Don't make code coverage worse than: -->
+    <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
+    <commons.jacoco.classRatio>0.96</commons.jacoco.classRatio>
+    <commons.jacoco.instructionRatio>0.86</commons.jacoco.instructionRatio>
+    <commons.jacoco.methodRatio>0.90</commons.jacoco.methodRatio>
+    <commons.jacoco.branchRatio>0.82</commons.jacoco.branchRatio>
+    <commons.jacoco.lineRatio>0.88</commons.jacoco.lineRatio>
+    <commons.jacoco.complexityRatio>0.83</commons.jacoco.complexityRatio>
   </properties>
 
   <url>https://commons.apache.org/proper/commons-configuration/</url>
