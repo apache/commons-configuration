@@ -480,7 +480,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             if (!isCommentLine(line)) {
                 if (isSectionLine(line)) {
                     final int length = sectionInLineCommentsAllowed ? line.indexOf("]") : line.length() - 1;
-                    final String section = line.substring(1, length);
+                    String section = line.substring(1, length);
+                    if (section.isEmpty()) {
+                        // use space for sections with no key
+                        section = " ";
+                    }
                     sectionBuilder = sectionBuilders.computeIfAbsent(section, k -> new ImmutableNode.Builder());
                 } else {
                     String key;
