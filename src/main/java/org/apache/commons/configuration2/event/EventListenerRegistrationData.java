@@ -63,6 +63,26 @@ public final class EventListenerRegistrationData<T extends Event> {
     }
 
     /**
+     * Compares this object with another one. Two instances of {@code EventListenerRegistrationData} are considered equal if
+     * they reference the same listener and event type.
+     *
+     * @param obj the object to be compared to
+     * @return a flag whether these objects are equal
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof EventListenerRegistrationData)) {
+            return false;
+        }
+
+        final EventListenerRegistrationData<?> c = (EventListenerRegistrationData<?>) obj;
+        return getListener() == c.getListener() && getEventType().equals(c.getEventType());
+    }
+
+    /**
      * Gets the event type for this listener registration.
      *
      * @return the event type
@@ -84,25 +104,5 @@ public final class EventListenerRegistrationData<T extends Event> {
     public int hashCode() {
         final int result = eventType.hashCode();
         return HASH_FACTOR * result + listener.hashCode();
-    }
-
-    /**
-     * Compares this object with another one. Two instances of {@code EventListenerRegistrationData} are considered equal if
-     * they reference the same listener and event type.
-     *
-     * @param obj the object to be compared to
-     * @return a flag whether these objects are equal
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof EventListenerRegistrationData)) {
-            return false;
-        }
-
-        final EventListenerRegistrationData<?> c = (EventListenerRegistrationData<?>) obj;
-        return getListener() == c.getListener() && getEventType().equals(c.getEventType());
     }
 }

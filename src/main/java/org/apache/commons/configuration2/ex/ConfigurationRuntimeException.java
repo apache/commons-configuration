@@ -56,15 +56,6 @@ public class ConfigurationRuntimeException extends RuntimeException {
     }
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} with specified nested {@code Throwable}.
-     *
-     * @param cause the exception or error that caused this exception to be thrown
-     */
-    public ConfigurationRuntimeException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * Constructs a new {@code ConfigurationRuntimeException} with specified detail message and nested {@code Throwable}.
      *
      * @param message the error message
@@ -72,5 +63,14 @@ public class ConfigurationRuntimeException extends RuntimeException {
      */
     public ConfigurationRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * Constructs a new {@code ConfigurationRuntimeException} with specified nested {@code Throwable}.
+     *
+     * @param cause the exception or error that caused this exception to be thrown
+     */
+    public ConfigurationRuntimeException(final Throwable cause) {
+        super(cause);
     }
 }

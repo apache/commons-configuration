@@ -41,317 +41,6 @@ import org.xml.sax.SAXException;
  */
 public class CatalogResolver implements EntityResolver {
     /**
-     * Debug everything.
-     */
-    private static final int DEBUG_ALL = 9;
-
-    /**
-     * Normal debug setting.
-     */
-    private static final int DEBUG_NORMAL = 4;
-
-    /**
-     * Debug nothing.
-     */
-    private static final int DEBUG_NONE = 0;
-
-    /**
-     * The CatalogManager
-     */
-    private final CatalogManager manager = new CatalogManager();
-
-    /**
-     * The FileSystem in use.
-     */
-    private FileSystem fs = FileLocatorUtils.DEFAULT_FILE_SYSTEM;
-
-    /**
-     * The CatalogResolver
-     */
-    private org.apache.xml.resolver.tools.CatalogResolver resolver;
-
-    /**
-     * Stores the logger.
-     */
-    private ConfigurationLogger log;
-
-    /**
-     * Constructs the CatalogResolver
-     */
-    public CatalogResolver() {
-        manager.setIgnoreMissingProperties(true);
-        manager.setUseStaticCatalog(false);
-        manager.setFileSystem(fs);
-        initLogger(null);
-    }
-
-    /**
-     * Sets the list of catalog file names
-     *
-     * @param catalogs The delimited list of catalog files.
-     */
-    public void setCatalogFiles(final String catalogs) {
-        manager.setCatalogFiles(catalogs);
-    }
-
-    /**
-     * Sets the FileSystem.
-     *
-     * @param fileSystem The FileSystem.
-     */
-    public void setFileSystem(final FileSystem fileSystem) {
-        this.fs = fileSystem;
-        manager.setFileSystem(fileSystem);
-    }
-
-    /**
-     * Sets the base path.
-     *
-     * @param baseDir The base path String.
-     */
-    public void setBaseDir(final String baseDir) {
-        manager.setBaseDir(baseDir);
-    }
-
-    /**
-     * Sets the {@code ConfigurationInterpolator}.
-     *
-     * @param ci the {@code ConfigurationInterpolator}
-     */
-    public void setInterpolator(final ConfigurationInterpolator ci) {
-        manager.setInterpolator(ci);
-    }
-
-    /**
-     * Enables debug logging of xml-commons Catalog processing.
-     *
-     * @param debug True if debugging should be enabled, false otherwise.
-     */
-    public void setDebug(final boolean debug) {
-        manager.setVerbosity(debug ? DEBUG_ALL : DEBUG_NONE);
-    }
-
-    /**
-     * <p>
-     * Implements the {@code resolveEntity} method for the SAX interface.
-     * </p>
-     * <p>
-     * Presented with an optional public identifier and a system identifier, this function attempts to locate a mapping in
-     * the catalogs.
-     * </p>
-     * <p>
-     * If such a mapping is found, the resolver attempts to open the mapped value as an InputSource and return it.
-     * Exceptions are ignored and null is returned if the mapped value cannot be opened as an input source.
-     * </p>
-     * <p>
-     * If no mapping is found (or an error occurs attempting to open the mapped value as an input source), null is returned
-     * and the system will use the specified system identifier as if no entityResolver was specified.
-     * </p>
-     *
-     * @param publicId The public identifier for the entity in question. This may be null.
-     * @param systemId The system identifier for the entity in question. XML requires a system identifier on all external
-     *        entities, so this value is always specified.
-     * @return An InputSource for the mapped identifier, or null.
-     * @throws SAXException if an error occurs.
-     */
-    @SuppressWarnings("resource") // InputSource wraps an InputStream.
-    @Override
-    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException {
-        String resolved = getResolver().getResolvedEntity(publicId, systemId);
-
-        if (resolved != null) {
-            final String badFilePrefix = "file://";
-            final String correctFilePrefix = "file:///";
-
-            // Java 5 has a bug when constructing file URLs
-            if (resolved.startsWith(badFilePrefix) && !resolved.startsWith(correctFilePrefix)) {
-                resolved = correctFilePrefix + resolved.substring(badFilePrefix.length());
-            }
-
-            try {
-                final URL url = locate(fs, null, resolved);
-                if (url == null) {
-                    throw new ConfigurationException("Could not locate " + resolved);
-                }
-                final InputStream inputStream = fs.getInputStream(url);
-                final InputSource inputSource = new InputSource(resolved);
-                inputSource.setPublicId(publicId);
-                inputSource.setByteStream(inputStream);
-                return inputSource;
-            } catch (final Exception e) {
-                log.warn("Failed to create InputSource for " + resolved, e);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the logger used by this configuration object.
-     *
-     * @return the logger
-     */
-    public ConfigurationLogger getLogger() {
-        return log;
-    }
-
-    /**
-     * Allows setting the logger to be used by this object. This method makes it possible for clients to exactly control
-     * logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that want to enable
-     * logging should call this method during their initialization with the logger to be used. Passing in <b>null</b> as
-     * argument disables logging.
-     *
-     * @param log the new logger
-     */
-    public void setLogger(final ConfigurationLogger log) {
-        initLogger(log);
-    }
-
-    /**
-     * Initializes the logger. Checks for null parameters.
-     *
-     * @param log the new logger
-     */
-    private void initLogger(final ConfigurationLogger log) {
-        this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
-    }
-
-    private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver() {
-        if (resolver == null) {
-            resolver = new org.apache.xml.resolver.tools.CatalogResolver(manager);
-        }
-        return resolver;
-    }
-
-    /**
-     * Locates a given file. This implementation delegates to the corresponding method in {@link FileLocatorUtils}.
-     *
-     * @param fs the {@code FileSystem}
-     * @param basePath the base path
-     * @param name the file name
-     * @return the URL pointing to the file
-     */
-    private static URL locate(final FileSystem fs, final String basePath, final String name) {
-        return FileLocatorUtils.locate(FileLocatorUtils.fileLocator().fileSystem(fs).basePath(basePath).fileName(name).create());
-    }
-
-    /**
-     * Extends the CatalogManager to make the FileSystem and base directory accessible.
-     */
-    public static class CatalogManager extends org.apache.xml.resolver.CatalogManager {
-        /** The static catalog used by this manager. */
-        private static org.apache.xml.resolver.Catalog staticCatalog;
-
-        /** The FileSystem */
-        private FileSystem fs;
-
-        /** The base directory */
-        private String baseDir = System.getProperty("user.dir");
-
-        /** The object for handling interpolation. */
-        private ConfigurationInterpolator interpolator;
-
-        /**
-         * Sets the FileSystem
-         *
-         * @param fileSystem The FileSystem in use.
-         */
-        public void setFileSystem(final FileSystem fileSystem) {
-            this.fs = fileSystem;
-        }
-
-        /**
-         * Gets the FileSystem.
-         *
-         * @return The FileSystem.
-         */
-        public FileSystem getFileSystem() {
-            return this.fs;
-        }
-
-        /**
-         * Sets the base directory.
-         *
-         * @param baseDir The base directory.
-         */
-        public void setBaseDir(final String baseDir) {
-            if (baseDir != null) {
-                this.baseDir = baseDir;
-            }
-        }
-
-        /**
-         * Gets the base directory.
-         *
-         * @return The base directory.
-         */
-        public String getBaseDir() {
-            return this.baseDir;
-        }
-
-        /**
-         * Sets the ConfigurationInterpolator.
-         *
-         * @param configurationInterpolator the ConfigurationInterpolator.
-         */
-        public void setInterpolator(final ConfigurationInterpolator configurationInterpolator) {
-            interpolator = configurationInterpolator;
-        }
-
-        /**
-         * Gets the ConfigurationInterpolator.
-         *
-         * @return the ConfigurationInterpolator.
-         */
-        public ConfigurationInterpolator getInterpolator() {
-            return interpolator;
-        }
-
-        /**
-         * Gets a new catalog instance. This method is only overridden because xml-resolver might be in a parent ClassLoader and
-         * will be incapable of loading our Catalog implementation.
-         *
-         * This method always returns a new instance of the underlying catalog class.
-         *
-         * @return the Catalog.
-         */
-        @Override
-        public org.apache.xml.resolver.Catalog getPrivateCatalog() {
-            org.apache.xml.resolver.Catalog catalog = staticCatalog;
-
-            if (catalog == null || !getUseStaticCatalog()) {
-                try {
-                    catalog = new Catalog();
-                    catalog.setCatalogManager(this);
-                    catalog.setupReaders();
-                    catalog.loadSystemCatalogs();
-                } catch (final Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                if (getUseStaticCatalog()) {
-                    staticCatalog = catalog;
-                }
-            }
-
-            return catalog;
-        }
-
-        /**
-         * Gets a catalog instance.
-         *
-         * If this manager uses static catalogs, the same static catalog will always be returned. Otherwise a new catalog will
-         * be returned.
-         *
-         * @return The Catalog.
-         */
-        @Override
-        public org.apache.xml.resolver.Catalog getCatalog() {
-            return getPrivateCatalog();
-        }
-    }
-
-    /**
      * Overrides the Catalog implementation to use the underlying FileSystem.
      */
     public static class Catalog extends org.apache.xml.resolver.Catalog {
@@ -411,6 +100,19 @@ public class CatalogResolver implements EntityResolver {
         }
 
         /**
+         * Performs character normalization on a URI reference.
+         *
+         * @param uriref The URI reference
+         * @return The normalized URI reference.
+         */
+        @Override
+        protected String normalizeURI(final String uriref) {
+            final ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
+            final String resolved = ci != null ? String.valueOf(ci.interpolate(uriref)) : uriref;
+            return super.normalizeURI(resolved);
+        }
+
+        /**
          * Parses the specified catalog file.
          *
          * @param baseDir The base directory, if not included in the file name.
@@ -460,18 +162,316 @@ public class CatalogResolver implements EntityResolver {
                 parsePendingCatalogs();
             }
         }
+    }
+
+    /**
+     * Extends the CatalogManager to make the FileSystem and base directory accessible.
+     */
+    public static class CatalogManager extends org.apache.xml.resolver.CatalogManager {
+        /** The static catalog used by this manager. */
+        private static org.apache.xml.resolver.Catalog staticCatalog;
+
+        /** The FileSystem */
+        private FileSystem fs;
+
+        /** The base directory */
+        private String baseDir = System.getProperty("user.dir");
+
+        /** The object for handling interpolation. */
+        private ConfigurationInterpolator interpolator;
 
         /**
-         * Performs character normalization on a URI reference.
+         * Gets the base directory.
          *
-         * @param uriref The URI reference
-         * @return The normalized URI reference.
+         * @return The base directory.
+         */
+        public String getBaseDir() {
+            return this.baseDir;
+        }
+
+        /**
+         * Gets a catalog instance.
+         *
+         * If this manager uses static catalogs, the same static catalog will always be returned. Otherwise a new catalog will
+         * be returned.
+         *
+         * @return The Catalog.
          */
         @Override
-        protected String normalizeURI(final String uriref) {
-            final ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
-            final String resolved = ci != null ? String.valueOf(ci.interpolate(uriref)) : uriref;
-            return super.normalizeURI(resolved);
+        public org.apache.xml.resolver.Catalog getCatalog() {
+            return getPrivateCatalog();
         }
+
+        /**
+         * Gets the FileSystem.
+         *
+         * @return The FileSystem.
+         */
+        public FileSystem getFileSystem() {
+            return this.fs;
+        }
+
+        /**
+         * Gets the ConfigurationInterpolator.
+         *
+         * @return the ConfigurationInterpolator.
+         */
+        public ConfigurationInterpolator getInterpolator() {
+            return interpolator;
+        }
+
+        /**
+         * Gets a new catalog instance. This method is only overridden because xml-resolver might be in a parent ClassLoader and
+         * will be incapable of loading our Catalog implementation.
+         *
+         * This method always returns a new instance of the underlying catalog class.
+         *
+         * @return the Catalog.
+         */
+        @Override
+        public org.apache.xml.resolver.Catalog getPrivateCatalog() {
+            org.apache.xml.resolver.Catalog catalog = staticCatalog;
+
+            if (catalog == null || !getUseStaticCatalog()) {
+                try {
+                    catalog = new Catalog();
+                    catalog.setCatalogManager(this);
+                    catalog.setupReaders();
+                    catalog.loadSystemCatalogs();
+                } catch (final Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                if (getUseStaticCatalog()) {
+                    staticCatalog = catalog;
+                }
+            }
+
+            return catalog;
+        }
+
+        /**
+         * Sets the base directory.
+         *
+         * @param baseDir The base directory.
+         */
+        public void setBaseDir(final String baseDir) {
+            if (baseDir != null) {
+                this.baseDir = baseDir;
+            }
+        }
+
+        /**
+         * Sets the FileSystem
+         *
+         * @param fileSystem The FileSystem in use.
+         */
+        public void setFileSystem(final FileSystem fileSystem) {
+            this.fs = fileSystem;
+        }
+
+        /**
+         * Sets the ConfigurationInterpolator.
+         *
+         * @param configurationInterpolator the ConfigurationInterpolator.
+         */
+        public void setInterpolator(final ConfigurationInterpolator configurationInterpolator) {
+            interpolator = configurationInterpolator;
+        }
+    }
+
+    /**
+     * Debug everything.
+     */
+    private static final int DEBUG_ALL = 9;
+
+    /**
+     * Normal debug setting.
+     */
+    private static final int DEBUG_NORMAL = 4;
+
+    /**
+     * Debug nothing.
+     */
+    private static final int DEBUG_NONE = 0;
+
+    /**
+     * Locates a given file. This implementation delegates to the corresponding method in {@link FileLocatorUtils}.
+     *
+     * @param fs the {@code FileSystem}
+     * @param basePath the base path
+     * @param name the file name
+     * @return the URL pointing to the file
+     */
+    private static URL locate(final FileSystem fs, final String basePath, final String name) {
+        return FileLocatorUtils.locate(FileLocatorUtils.fileLocator().fileSystem(fs).basePath(basePath).fileName(name).create());
+    }
+
+    /**
+     * The CatalogManager
+     */
+    private final CatalogManager manager = new CatalogManager();
+
+    /**
+     * The FileSystem in use.
+     */
+    private FileSystem fs = FileLocatorUtils.DEFAULT_FILE_SYSTEM;
+
+    /**
+     * The CatalogResolver
+     */
+    private org.apache.xml.resolver.tools.CatalogResolver resolver;
+
+    /**
+     * Stores the logger.
+     */
+    private ConfigurationLogger log;
+
+    /**
+     * Constructs the CatalogResolver
+     */
+    public CatalogResolver() {
+        manager.setIgnoreMissingProperties(true);
+        manager.setUseStaticCatalog(false);
+        manager.setFileSystem(fs);
+        initLogger(null);
+    }
+
+    /**
+     * Gets the logger used by this configuration object.
+     *
+     * @return the logger
+     */
+    public ConfigurationLogger getLogger() {
+        return log;
+    }
+
+    private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver() {
+        if (resolver == null) {
+            resolver = new org.apache.xml.resolver.tools.CatalogResolver(manager);
+        }
+        return resolver;
+    }
+
+    /**
+     * Initializes the logger. Checks for null parameters.
+     *
+     * @param log the new logger
+     */
+    private void initLogger(final ConfigurationLogger log) {
+        this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
+    }
+
+    /**
+     * <p>
+     * Implements the {@code resolveEntity} method for the SAX interface.
+     * </p>
+     * <p>
+     * Presented with an optional public identifier and a system identifier, this function attempts to locate a mapping in
+     * the catalogs.
+     * </p>
+     * <p>
+     * If such a mapping is found, the resolver attempts to open the mapped value as an InputSource and return it.
+     * Exceptions are ignored and null is returned if the mapped value cannot be opened as an input source.
+     * </p>
+     * <p>
+     * If no mapping is found (or an error occurs attempting to open the mapped value as an input source), null is returned
+     * and the system will use the specified system identifier as if no entityResolver was specified.
+     * </p>
+     *
+     * @param publicId The public identifier for the entity in question. This may be null.
+     * @param systemId The system identifier for the entity in question. XML requires a system identifier on all external
+     *        entities, so this value is always specified.
+     * @return An InputSource for the mapped identifier, or null.
+     * @throws SAXException if an error occurs.
+     */
+    @SuppressWarnings("resource") // InputSource wraps an InputStream.
+    @Override
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException {
+        String resolved = getResolver().getResolvedEntity(publicId, systemId);
+
+        if (resolved != null) {
+            final String badFilePrefix = "file://";
+            final String correctFilePrefix = "file:///";
+
+            // Java 5 has a bug when constructing file URLs
+            if (resolved.startsWith(badFilePrefix) && !resolved.startsWith(correctFilePrefix)) {
+                resolved = correctFilePrefix + resolved.substring(badFilePrefix.length());
+            }
+
+            try {
+                final URL url = locate(fs, null, resolved);
+                if (url == null) {
+                    throw new ConfigurationException("Could not locate " + resolved);
+                }
+                final InputStream inputStream = fs.getInputStream(url);
+                final InputSource inputSource = new InputSource(resolved);
+                inputSource.setPublicId(publicId);
+                inputSource.setByteStream(inputStream);
+                return inputSource;
+            } catch (final Exception e) {
+                log.warn("Failed to create InputSource for " + resolved, e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the base path.
+     *
+     * @param baseDir The base path String.
+     */
+    public void setBaseDir(final String baseDir) {
+        manager.setBaseDir(baseDir);
+    }
+
+    /**
+     * Sets the list of catalog file names
+     *
+     * @param catalogs The delimited list of catalog files.
+     */
+    public void setCatalogFiles(final String catalogs) {
+        manager.setCatalogFiles(catalogs);
+    }
+
+    /**
+     * Enables debug logging of xml-commons Catalog processing.
+     *
+     * @param debug True if debugging should be enabled, false otherwise.
+     */
+    public void setDebug(final boolean debug) {
+        manager.setVerbosity(debug ? DEBUG_ALL : DEBUG_NONE);
+    }
+
+    /**
+     * Sets the FileSystem.
+     *
+     * @param fileSystem The FileSystem.
+     */
+    public void setFileSystem(final FileSystem fileSystem) {
+        this.fs = fileSystem;
+        manager.setFileSystem(fileSystem);
+    }
+
+    /**
+     * Sets the {@code ConfigurationInterpolator}.
+     *
+     * @param ci the {@code ConfigurationInterpolator}
+     */
+    public void setInterpolator(final ConfigurationInterpolator ci) {
+        manager.setInterpolator(ci);
+    }
+
+    /**
+     * Allows setting the logger to be used by this object. This method makes it possible for clients to exactly control
+     * logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that want to enable
+     * logging should call this method during their initialization with the logger to be used. Passing in <b>null</b> as
+     * argument disables logging.
+     *
+     * @param log the new logger
+     */
+    public void setLogger(final ConfigurationLogger log) {
+        initLogger(log);
     }
 }

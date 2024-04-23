@@ -87,13 +87,13 @@ public class TestConfigurationPropertySource {
     private String systemPropertyValue;
 
     @Test
-    public void testValueInjection() {
-        assertEquals(TEST_VALUE, value);
+    public void testSystemPropertyValueInjection() {
+        assertEquals(TEST_VALUE, systemPropertyValue);
     }
 
     @Test
-    public void testSystemPropertyValueInjection() {
-        assertEquals(TEST_VALUE, systemPropertyValue);
+    public void testValueInjection() {
+        assertEquals(TEST_VALUE, value);
     }
 
 }

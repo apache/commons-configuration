@@ -50,12 +50,6 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX + MultiFileBuilderParametersImpl.class.getName();
 
-    /** The parameters object for managed builders. */
-    private BuilderParameters managedBuilderParameters;
-
-    /** The file pattern. */
-    private String filePattern;
-
     /**
      * Obtains an instance of this class from the given map with parameters. If this map does not contain an instance,
      * result is <b>null</b>. This is equivalent to {@code fromParameters(params, false)}.
@@ -87,6 +81,22 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
         return instance;
     }
 
+    /** The parameters object for managed builders. */
+    private BuilderParameters managedBuilderParameters;
+
+    /** The file pattern. */
+    private String filePattern;
+
+    /**
+     * {@inheritDoc} This implementation also tries to clone the parameters object for managed builders if possible.
+     */
+    @Override
+    public MultiFileBuilderParametersImpl clone() {
+        final MultiFileBuilderParametersImpl copy = (MultiFileBuilderParametersImpl) super.clone();
+        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils.cloneIfPossible(getManagedBuilderParameters()));
+        return copy;
+    }
+
     /**
      * Gets the pattern for determining file names for managed configurations.
      *
@@ -96,12 +106,6 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
         return filePattern;
     }
 
-    @Override
-    public MultiFileBuilderParametersImpl setFilePattern(final String p) {
-        filePattern = p;
-        return this;
-    }
-
     /**
      * Gets the parameters object for managed configuration builders.
      *
@@ -109,12 +113,6 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      */
     public BuilderParameters getManagedBuilderParameters() {
         return managedBuilderParameters;
-    }
-
-    @Override
-    public MultiFileBuilderParametersImpl setManagedBuilderParameters(final BuilderParameters p) {
-        managedBuilderParameters = p;
-        return this;
     }
 
     /**
@@ -128,13 +126,15 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
         return params;
     }
 
-    /**
-     * {@inheritDoc} This implementation also tries to clone the parameters object for managed builders if possible.
-     */
     @Override
-    public MultiFileBuilderParametersImpl clone() {
-        final MultiFileBuilderParametersImpl copy = (MultiFileBuilderParametersImpl) super.clone();
-        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils.cloneIfPossible(getManagedBuilderParameters()));
-        return copy;
+    public MultiFileBuilderParametersImpl setFilePattern(final String p) {
+        filePattern = p;
+        return this;
+    }
+
+    @Override
+    public MultiFileBuilderParametersImpl setManagedBuilderParameters(final BuilderParameters p) {
+        managedBuilderParameters = p;
+        return this;
     }
 }

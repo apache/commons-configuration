@@ -36,26 +36,6 @@ final class FileUtils {
     private static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
-     * Convert from a {@code URL} to a {@code File}.
-     * <p>
-     * From version 1.1 this method will decode the URL. Syntax such as {@code file:///my%20docs/file.txt} will be correctly
-     * decoded to {@code /my docs/file.txt}. Starting with version 1.5, this method uses UTF-8 to decode percent-encoded
-     * octets to characters. Additionally, malformed percent-encoded octets are handled leniently by passing them through
-     * literally.
-     *
-     * @param url the file URL to convert, {@code null} returns {@code null}
-     * @return the equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
-     */
-    public static File toFile(final URL url) {
-        if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
-            return null;
-        }
-        String fileName = url.getFile().replace('/', File.separatorChar);
-        fileName = decodeUrl(fileName);
-        return new File(fileName);
-    }
-
-    /**
      * Decodes the specified URL as per RFC 3986, i.e. transforms percent-encoded octets to characters by decoding with the
      * UTF-8 character set. This function is primarily intended for usage with {@link java.net.URL} which unfortunately does
      * not enforce proper URLs. As such, this method will leniently accept invalid characters or malformed percent-encoded
@@ -96,6 +76,26 @@ final class FileUtils {
             decoded = buffer.toString();
         }
         return decoded;
+    }
+
+    /**
+     * Convert from a {@code URL} to a {@code File}.
+     * <p>
+     * From version 1.1 this method will decode the URL. Syntax such as {@code file:///my%20docs/file.txt} will be correctly
+     * decoded to {@code /my docs/file.txt}. Starting with version 1.5, this method uses UTF-8 to decode percent-encoded
+     * octets to characters. Additionally, malformed percent-encoded octets are handled leniently by passing them through
+     * literally.
+     *
+     * @param url the file URL to convert, {@code null} returns {@code null}
+     * @return the equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
+     */
+    public static File toFile(final URL url) {
+        if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
+            return null;
+        }
+        String fileName = url.getFile().replace('/', File.separatorChar);
+        fileName = decodeUrl(fileName);
+        return new File(fileName);
     }
 
 }

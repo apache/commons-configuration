@@ -56,6 +56,21 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     /** Constant for a duplicated sequence of escaping characters. */
     private static final String QUAD_ESC = DOUBLE_ESC + DOUBLE_ESC;
 
+    /**
+     * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
+     *
+     * @param line the string to investigate
+     * @return the number of trailing backslashes
+     */
+    private static int countTrailingBS(final String line) {
+        int bsCount = 0;
+        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--) {
+            bsCount++;
+        }
+
+        return bsCount;
+    }
+
     /** The list delimiter character. */
     private final char delimiter;
 
@@ -69,20 +84,31 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     }
 
     /**
-     * Gets the list delimiter character.
-     *
-     * @return the list delimiter character
-     */
-    public char getDelimiter() {
-        return delimiter;
-    }
-
-    /**
      * {@inheritDoc} This implementation performs delimiter escaping for a single value (which is not part of a list).
      */
     @Override
     public Object escape(final Object value, final ValueTransformer transformer) {
         return escapeValue(value, false, transformer);
+    }
+
+    /**
+     * Performs the escaping of backslashes in the specified properties value. Because a double backslash is used to escape
+     * the escape character of a list delimiter, double backslashes also have to be escaped if the property is part of a
+     * (single line) list. In addition, because the output is written into a properties file, each occurrence of a backslash
+     * again has to be doubled. This method is called by {@code escapeValue()}.
+     *
+     * @param value the value to be escaped
+     * @param inList a flag whether the value is part of a list
+     * @return the value with escaped backslashes as string
+     */
+    protected String escapeBackslashs(final Object value, final boolean inList) {
+        String strValue = String.valueOf(value);
+
+        if (inList && strValue.contains(DOUBLE_ESC)) {
+            strValue = StringUtils.replace(strValue, DOUBLE_ESC, QUAD_ESC);
+        }
+
+        return strValue;
     }
 
     /**
@@ -109,6 +135,41 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
             return buf.toString();
         }
         return null;
+    }
+
+    /**
+     * {@inheritDoc} This is just a dummy implementation. It is never called.
+     */
+    @Override
+    protected String escapeString(final String s) {
+        return null;
+    }
+
+    /**
+     * Escapes the given property value. This method is called on saving the configuration for each property value. It
+     * ensures a correct handling of backslash characters and also takes care that list delimiter characters in the value
+     * are escaped.
+     *
+     * @param value the property value
+     * @param inList a flag whether the value is part of a list
+     * @param transformer the {@code ValueTransformer}
+     * @return the escaped property value
+     */
+    protected String escapeValue(final Object value, final boolean inList, final ValueTransformer transformer) {
+        String escapedValue = String.valueOf(transformer.transformValue(escapeBackslashs(value, inList)));
+        if (getDelimiter() != 0) {
+            escapedValue = StringUtils.replace(escapedValue, String.valueOf(getDelimiter()), ESCAPE + getDelimiter());
+        }
+        return escapedValue;
+    }
+
+    /**
+     * Gets the list delimiter character.
+     *
+     * @return the list delimiter character
+     */
+    public char getDelimiter() {
+        return delimiter;
     }
 
     /**
@@ -170,66 +231,5 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
         list.add(t);
 
         return list;
-    }
-
-    /**
-     * {@inheritDoc} This is just a dummy implementation. It is never called.
-     */
-    @Override
-    protected String escapeString(final String s) {
-        return null;
-    }
-
-    /**
-     * Performs the escaping of backslashes in the specified properties value. Because a double backslash is used to escape
-     * the escape character of a list delimiter, double backslashes also have to be escaped if the property is part of a
-     * (single line) list. In addition, because the output is written into a properties file, each occurrence of a backslash
-     * again has to be doubled. This method is called by {@code escapeValue()}.
-     *
-     * @param value the value to be escaped
-     * @param inList a flag whether the value is part of a list
-     * @return the value with escaped backslashes as string
-     */
-    protected String escapeBackslashs(final Object value, final boolean inList) {
-        String strValue = String.valueOf(value);
-
-        if (inList && strValue.contains(DOUBLE_ESC)) {
-            strValue = StringUtils.replace(strValue, DOUBLE_ESC, QUAD_ESC);
-        }
-
-        return strValue;
-    }
-
-    /**
-     * Escapes the given property value. This method is called on saving the configuration for each property value. It
-     * ensures a correct handling of backslash characters and also takes care that list delimiter characters in the value
-     * are escaped.
-     *
-     * @param value the property value
-     * @param inList a flag whether the value is part of a list
-     * @param transformer the {@code ValueTransformer}
-     * @return the escaped property value
-     */
-    protected String escapeValue(final Object value, final boolean inList, final ValueTransformer transformer) {
-        String escapedValue = String.valueOf(transformer.transformValue(escapeBackslashs(value, inList)));
-        if (getDelimiter() != 0) {
-            escapedValue = StringUtils.replace(escapedValue, String.valueOf(getDelimiter()), ESCAPE + getDelimiter());
-        }
-        return escapedValue;
-    }
-
-    /**
-     * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
-     *
-     * @param line the string to investigate
-     * @return the number of trailing backslashes
-     */
-    private static int countTrailingBS(final String line) {
-        int bsCount = 0;
-        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--) {
-            bsCount++;
-        }
-
-        return bsCount;
     }
 }

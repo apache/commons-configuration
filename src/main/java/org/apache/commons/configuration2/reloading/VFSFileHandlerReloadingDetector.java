@@ -55,17 +55,6 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
 
     /**
      * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
-     * {@code FileHandler} object and the given refresh delay.
-     *
-     * @param handler the {@code FileHandler}
-     * @param refreshDelay the refresh delay
-     */
-    public VFSFileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay) {
-        super(handler, refreshDelay);
-    }
-
-    /**
-     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
      * {@code FileHandler} object.
      *
      * @param handler the {@code FileHandler}
@@ -75,22 +64,14 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     }
 
     /**
-     * {@inheritDoc} This implementation uses Commons VFS to obtain a {@code FileObject} and read the date of the last
-     * modification.
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
+     * {@code FileHandler} object and the given refresh delay.
+     *
+     * @param handler the {@code FileHandler}
+     * @param refreshDelay the refresh delay
      */
-    @Override
-    protected long getLastModificationDate() {
-        final FileObject file = getFileObject();
-        try {
-            if (file == null || !file.exists()) {
-                return 0;
-            }
-
-            return file.getContent().getLastModifiedTime();
-        } catch (final FileSystemException ex) {
-            log.error("Unable to get last modified time for" + file.getName().getURI(), ex);
-            return 0;
-        }
+    public VFSFileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay) {
+        super(handler, refreshDelay);
     }
 
     /**
@@ -115,6 +96,25 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
             final String msg = "Unable to monitor " + getFileHandler().getURL().toString();
             log.error(msg);
             throw new ConfigurationRuntimeException(msg, fse);
+        }
+    }
+
+    /**
+     * {@inheritDoc} This implementation uses Commons VFS to obtain a {@code FileObject} and read the date of the last
+     * modification.
+     */
+    @Override
+    protected long getLastModificationDate() {
+        final FileObject file = getFileObject();
+        try {
+            if (file == null || !file.exists()) {
+                return 0;
+            }
+
+            return file.getContent().getLastModifiedTime();
+        } catch (final FileSystemException ex) {
+            log.error("Unable to get last modified time for" + file.getName().getURI(), ex);
+            return 0;
         }
     }
 

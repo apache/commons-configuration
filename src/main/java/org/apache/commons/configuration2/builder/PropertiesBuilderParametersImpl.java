@@ -52,6 +52,15 @@ public class PropertiesBuilderParametersImpl extends FileBasedBuilderParametersI
     /** The key for the IO factory property. */
     private static final String PROP_IO_FACTORY = "IOFactory";
 
+    /**
+     * {@inheritDoc} This implementation takes some more properties into account that are defined in this class.
+     */
+    @Override
+    public void inheritFrom(final Map<String, ?> source) {
+        super.inheritFrom(source);
+        copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_INCLUDE_LISTENER, PROP_IO_FACTORY);
+    }
+
     @Override
     public PropertiesBuilderParametersImpl setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener) {
         storeProperty(PROP_INCLUDE_LISTENER, includeListener);
@@ -64,24 +73,15 @@ public class PropertiesBuilderParametersImpl extends FileBasedBuilderParametersI
         return this;
     }
 
-    /**
-     * {@inheritDoc} This implementation takes some more properties into account that are defined in this class.
-     */
     @Override
-    public void inheritFrom(final Map<String, ?> source) {
-        super.inheritFrom(source);
-        copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_INCLUDE_LISTENER, PROP_IO_FACTORY);
+    public PropertiesBuilderParametersImpl setIOFactory(final IOFactory factory) {
+        storeProperty(PROP_IO_FACTORY, factory);
+        return this;
     }
 
     @Override
     public PropertiesBuilderParametersImpl setLayout(final PropertiesConfigurationLayout layout) {
         storeProperty(PROP_LAYOUT, layout);
-        return this;
-    }
-
-    @Override
-    public PropertiesBuilderParametersImpl setIOFactory(final IOFactory factory) {
-        storeProperty(PROP_IO_FACTORY, factory);
         return this;
     }
 }

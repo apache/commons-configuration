@@ -72,16 +72,6 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     }
 
     /**
-     * Returns the number of elements in this iteration. This is the number of elements in the children list.
-     *
-     * @return the number of elements
-     */
-    @Override
-    protected int size() {
-        return subNodes.size();
-    }
-
-    /**
      * Creates the list with sub nodes. This method gets called during initialization phase. It finds out, based on the
      * given test, which nodes must be iterated over.
      *
@@ -166,6 +156,16 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
         }
 
         return -1;
+    }
+
+    /**
+     * Returns the number of elements in this iteration. This is the number of elements in the children list.
+     *
+     * @return the number of elements
+     */
+    @Override
+    protected int size() {
+        return subNodes.size();
     }
 
 }

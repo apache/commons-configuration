@@ -33,13 +33,6 @@ public final class ConfigurationConverter {
     private static final char DEFAULT_SEPARATOR = ',';
 
     /**
-     * Private constructor prevents instances from being created.
-     */
-    private ConfigurationConverter() {
-        // to prevent instantiation
-    }
-
-    /**
      * Convert a standard Properties class into a configuration class.
      *
      * @param props properties object to convert
@@ -47,6 +40,28 @@ public final class ConfigurationConverter {
      */
     public static Configuration getConfiguration(final Properties props) {
         return new MapConfiguration(props);
+    }
+
+    /**
+     * Convert a Configuration class into a Map class.
+     *
+     * @param config Configuration object to convert
+     * @return Map created from the Configuration
+     */
+    public static Map<Object, Object> getMap(final Configuration config) {
+        return new ConfigurationMap(config);
+    }
+
+    /**
+     * Convert a Configuration class into a Properties class. List properties are joined into a string using either the list
+     * delimiter handler of the configuration (if it extends AbstractConfiguration) or with a comma as delimiter otherwise.
+     * This version of the method exists only for backwards compatibility reason.
+     *
+     * @param config Configuration object to convert
+     * @return Properties created from the Configuration
+     */
+    public static Properties getProperties(final Configuration config) {
+        return getProperties((ImmutableConfiguration) config);
     }
 
     /**
@@ -94,28 +109,6 @@ public final class ConfigurationConverter {
     }
 
     /**
-     * Convert a Configuration class into a Properties class. List properties are joined into a string using either the list
-     * delimiter handler of the configuration (if it extends AbstractConfiguration) or with a comma as delimiter otherwise.
-     * This version of the method exists only for backwards compatibility reason.
-     *
-     * @param config Configuration object to convert
-     * @return Properties created from the Configuration
-     */
-    public static Properties getProperties(final Configuration config) {
-        return getProperties((ImmutableConfiguration) config);
-    }
-
-    /**
-     * Convert a Configuration class into a Map class.
-     *
-     * @param config Configuration object to convert
-     * @return Map created from the Configuration
-     */
-    public static Map<Object, Object> getMap(final Configuration config) {
-        return new ConfigurationMap(config);
-    }
-
-    /**
      * Helper method for joining all elements of a list to a string using the default value separator.
      *
      * @param list the list
@@ -123,5 +116,12 @@ public final class ConfigurationConverter {
      */
     private static String listToString(final List<?> list) {
         return StringUtils.join(list, DEFAULT_SEPARATOR);
+    }
+
+    /**
+     * Private constructor prevents instances from being created.
+     */
+    private ConfigurationConverter() {
+        // to prevent instantiation
     }
 }

@@ -469,28 +469,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /** Constant for the index of the group for the separator. */
         private static final int IDX_SEPARATOR = 3;
 
-        /** Stores the comment lines for the currently processed property. */
-        private final List<String> commentLines;
-
-        /** Stores the name of the last read property. */
-        private String propertyName;
-
-        /** Stores the value of the last read property. */
-        private String propertyValue;
-
-        /** Stores the property separator of the last read property. */
-        private String propertySeparator = DEFAULT_SEPARATOR;
-
-        /**
-         * Constructs a new instance.
-         *
-         * @param reader A Reader.
-         */
-        public PropertiesReader(final Reader reader) {
-            super(reader);
-            commentLines = new ArrayList<>();
-        }
-
         /**
          * Checks if the passed in line should be combined with the following. This is true, if the line ends with an odd number
          * of backslashes.
@@ -527,6 +505,28 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
             }
 
             return result;
+        }
+
+        /** Stores the comment lines for the currently processed property. */
+        private final List<String> commentLines;
+
+        /** Stores the name of the last read property. */
+        private String propertyName;
+
+        /** Stores the value of the last read property. */
+        private String propertyValue;
+
+        /** Stores the property separator of the last read property. */
+        private String propertySeparator = DEFAULT_SEPARATOR;
+
+        /**
+         * Constructs a new instance.
+         *
+         * @param reader A Reader.
+         */
+        public PropertiesReader(final Reader reader) {
+            super(reader);
+            commentLines = new ArrayList<>();
         }
 
         /**
@@ -1038,29 +1038,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /** Constant for the length of a unicode literal. */
     private static final int UNICODE_LEN = 4;
 
-    /** Stores the layout object. */
-    private PropertiesConfigurationLayout layout;
-
-    /** The include listener for the special {@code "include"} key. */
-    private ConfigurationConsumer<ConfigurationException> includeListener;
-
-    /** The IOFactory for creating readers and writers. */
-    private IOFactory ioFactory;
-
-    /** The current {@code FileLocator}. */
-    private FileLocator locator;
-
-    /** Allow file inclusion or not */
-    private boolean includesAllowed = true;
-
-    /**
-     * Creates an empty PropertyConfiguration object which can be used to synthesize a new Properties file by adding values
-     * and then saving().
-     */
-    public PropertiesConfiguration() {
-        installLayout(createLayout());
-    }
-
     /**
      * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
      *
@@ -1254,6 +1231,29 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         return out.toString();
+    }
+
+    /** Stores the layout object. */
+    private PropertiesConfigurationLayout layout;
+
+    /** The include listener for the special {@code "include"} key. */
+    private ConfigurationConsumer<ConfigurationException> includeListener;
+
+    /** The IOFactory for creating readers and writers. */
+    private IOFactory ioFactory;
+
+    /** The current {@code FileLocator}. */
+    private FileLocator locator;
+
+    /** Allow file inclusion or not */
+    private boolean includesAllowed = true;
+
+    /**
+     * Creates an empty PropertyConfiguration object which can be used to synthesize a new Properties file by adding values
+     * and then saving().
+     */
+    public PropertiesConfiguration() {
+        installLayout(createLayout());
     }
 
     /**

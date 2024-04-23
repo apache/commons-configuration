@@ -31,14 +31,6 @@ public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloa
     private volatile boolean reloadingRequired;
 
     /**
-     * {@inheritDoc} This implementation resets the internal flag indicating that a reload should be performed.
-     */
-    @Override
-    public void reloadingPerformed() {
-        reloadingRequired = false;
-    }
-
-    /**
      * Checks whether reloading is required. This implementation checks whether the {@code refresh()} method has been
      * invoked.
      *
@@ -59,5 +51,13 @@ public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloa
     public void refresh() {
         log.info("Reloading configuration.");
         reloadingRequired = true;
+    }
+
+    /**
+     * {@inheritDoc} This implementation resets the internal flag indicating that a reload should be performed.
+     */
+    @Override
+    public void reloadingPerformed() {
+        reloadingRequired = false;
     }
 }

@@ -81,36 +81,11 @@ public class ReloadingController implements EventSource {
     }
 
     /**
-     * Gets the {@code ReloadingDetector} used by this controller.
-     *
-     * @return the {@code ReloadingDetector}
-     */
-    public ReloadingDetector getDetector() {
-        return detector;
-    }
-
-    /**
      * {@inheritDoc} This class generates events of type {@code ReloadingEvent}.
      */
     @Override
     public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
         listeners.addEventListener(eventType, listener);
-    }
-
-    @Override
-    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        return listeners.removeEventListener(eventType, listener);
-    }
-
-    /**
-     * Tests whether this controller is in <em>reloading state</em>. A return value of <b>true</b> means that a previous
-     * invocation of {@code checkForReloading()} has detected the necessity for a reload operation, but
-     * {@code resetReloadingState()} has not been called yet. In this state no further reloading checks are possible.
-     *
-     * @return a flag whether this controller is in reloading state
-     */
-    public synchronized boolean isInReloadingState() {
-        return reloadingState;
     }
 
     /**
@@ -142,6 +117,31 @@ public class ReloadingController implements EventSource {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Gets the {@code ReloadingDetector} used by this controller.
+     *
+     * @return the {@code ReloadingDetector}
+     */
+    public ReloadingDetector getDetector() {
+        return detector;
+    }
+
+    /**
+     * Tests whether this controller is in <em>reloading state</em>. A return value of <b>true</b> means that a previous
+     * invocation of {@code checkForReloading()} has detected the necessity for a reload operation, but
+     * {@code resetReloadingState()} has not been called yet. In this state no further reloading checks are possible.
+     *
+     * @return a flag whether this controller is in reloading state
+     */
+    public synchronized boolean isInReloadingState() {
+        return reloadingState;
+    }
+
+    @Override
+    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
+        return listeners.removeEventListener(eventType, listener);
     }
 
     /**

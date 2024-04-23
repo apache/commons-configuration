@@ -71,24 +71,32 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
         }
     }
 
-    @Override
-    public void set(final String name, final Object value) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("set(" + name + "," + value + ")");
-        }
-        Objects.requireNonNull(value, "Error trying to set property to null.");
+    /**
+     * Checks whether the given name references an indexed property. This implementation tests for properties of type list or
+     * array. If the property does not exist, an exception is thrown.
+     *
+     * @param name the name of the property to check
+     * @return a flag whether this is an indexed property
+     * @throws IllegalArgumentException if the property does not exist
+     */
+    private boolean checkIndexedProperty(final String name) {
+        final Object property = getConfiguration().getProperty(name);
 
-        if (value instanceof Collection) {
-            final Collection<?> collection = (Collection<?>) value;
-            collection.forEach(v -> getConfiguration().addProperty(name, v));
-        } else if (value.getClass().isArray()) {
-            final int length = Array.getLength(value);
-            for (int i = 0; i < length; i++) {
-                getConfiguration().addProperty(name, Array.get(value, i));
-            }
-        } else {
-            getConfiguration().setProperty(name, value);
+        if (property == null) {
+            throw new IllegalArgumentException("Property '" + name + "' does not exist.");
         }
+
+        return property instanceof List || property.getClass().isArray();
+    }
+
+    @Override
+    public boolean contains(final String name, final String key) {
+        final Configuration subset = getConfiguration().subset(name);
+        if (subset == null) {
+            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
+        }
+
+        return subset.containsKey(key);
     }
 
     @Override
@@ -115,16 +123,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
             throw new IllegalArgumentException("Property '" + name + "' does not exist.");
         }
         return result;
-    }
-
-    @Override
-    public boolean contains(final String name, final String key) {
-        final Configuration subset = getConfiguration().subset(name);
-        if (subset == null) {
-            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
-        }
-
-        return subset.containsKey(key);
     }
 
     @Override
@@ -181,25 +179,27 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     }
 
     @Override
-    public void set(final String name, final String key, final Object value) {
-        getConfiguration().setProperty(name + "." + key, value);
+    public void set(final String name, final Object value) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("set(" + name + "," + value + ")");
+        }
+        Objects.requireNonNull(value, "Error trying to set property to null.");
+
+        if (value instanceof Collection) {
+            final Collection<?> collection = (Collection<?>) value;
+            collection.forEach(v -> getConfiguration().addProperty(name, v));
+        } else if (value.getClass().isArray()) {
+            final int length = Array.getLength(value);
+            for (int i = 0; i < length; i++) {
+                getConfiguration().addProperty(name, Array.get(value, i));
+            }
+        } else {
+            getConfiguration().setProperty(name, value);
+        }
     }
 
-    /**
-     * Checks whether the given name references an indexed property. This implementation tests for properties of type list or
-     * array. If the property does not exist, an exception is thrown.
-     *
-     * @param name the name of the property to check
-     * @return a flag whether this is an indexed property
-     * @throws IllegalArgumentException if the property does not exist
-     */
-    private boolean checkIndexedProperty(final String name) {
-        final Object property = getConfiguration().getProperty(name);
-
-        if (property == null) {
-            throw new IllegalArgumentException("Property '" + name + "' does not exist.");
-        }
-
-        return property instanceof List || property.getClass().isArray();
+    @Override
+    public void set(final String name, final String key, final Object value) {
+        getConfiguration().setProperty(name + "." + key, value);
     }
 }

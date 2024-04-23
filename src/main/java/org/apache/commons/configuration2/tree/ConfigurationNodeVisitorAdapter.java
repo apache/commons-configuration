@@ -29,11 +29,12 @@ package org.apache.commons.configuration2.tree;
  */
 public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisitor<T> {
     /**
-     * {@inheritDoc} Empty dummy implementation of this interface method.
+     * {@inheritDoc} This implementation returns always <b>false</b>; this means that all nodes in the current hierarchy are
+     * traversed.
      */
     @Override
-    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-        // empty
+    public boolean terminate() {
+        return false;
     }
 
     /**
@@ -45,11 +46,10 @@ public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisi
     }
 
     /**
-     * {@inheritDoc} This implementation returns always <b>false</b>; this means that all nodes in the current hierarchy are
-     * traversed.
+     * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public boolean terminate() {
-        return false;
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+        // empty
     }
 }

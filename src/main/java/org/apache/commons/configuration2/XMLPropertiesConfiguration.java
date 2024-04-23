@@ -68,6 +68,64 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLPropertiesConfiguration extends BaseConfiguration implements FileBasedConfiguration, FileLocatorAware {
 
     /**
+     * SAX Handler to parse a XML properties file.
+     *
+     * @since 1.2
+     */
+    private final class XMLPropertiesHandler extends DefaultHandler {
+        /** The key of the current entry being parsed. */
+        private String key;
+
+        /** The value of the current entry being parsed. */
+        private StringBuilder value = new StringBuilder();
+
+        /** Indicates that a comment is being parsed. */
+        private boolean inCommentElement;
+
+        /** Indicates that an entry is being parsed. */
+        private boolean inEntryElement;
+
+        @Override
+        public void characters(final char[] chars, final int start, final int length) {
+            /**
+             * We're currently processing an element. All character data from now until the next endElement() call will be the data
+             * for this element.
+             */
+            value.append(chars, start, length);
+        }
+
+        @Override
+        public void endElement(final String uri, final String localName, final String qName) {
+            if (inCommentElement) {
+                // We've just finished a <comment> element so set the header
+                setHeader(value.toString());
+                inCommentElement = false;
+            }
+
+            if (inEntryElement) {
+                // We've just finished an <entry> element, so add the key/value pair
+                addProperty(key, value.toString());
+                inEntryElement = false;
+            }
+
+            // Clear the element value buffer
+            value = new StringBuilder();
+        }
+
+        @Override
+        public void startElement(final String uri, final String localName, final String qName, final Attributes attrs) {
+            if ("comment".equals(qName)) {
+                inCommentElement = true;
+            }
+
+            if ("entry".equals(qName)) {
+                key = attrs.getValue("key");
+                inEntryElement = true;
+            }
+        }
+    }
+
+    /**
      * The default encoding (UTF-8 as specified by https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
      */
     public static final String DEFAULT_ENCODING = StandardCharsets.UTF_8.name();
@@ -103,6 +161,17 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
+     * Escapes a property value before it is written to disk.
+     *
+     * @param value the value to be escaped
+     * @return the escaped value
+     */
+    private String escapeValue(final Object value) {
+        final String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
+        return String.valueOf(getListDelimiterHandler().escape(v, ListDelimiterHandler.NOOP_TRANSFORMER));
+    }
+
+    /**
      * Gets the header comment of this configuration.
      *
      * @return the header comment
@@ -112,32 +181,13 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Sets the header comment of this configuration.
+     * Initializes this object with a {@code FileLocator}. The locator is accessed during load and save operations.
      *
-     * @param header the header comment
+     * @param locator the associated {@code FileLocator}
      */
-    public void setHeader(final String header) {
-        this.header = header;
-    }
-
     @Override
-    public void read(final Reader in) throws ConfigurationException {
-        final SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(false);
-        factory.setValidating(true);
-
-        try {
-            final SAXParser parser = factory.newSAXParser();
-
-            final XMLReader xmlReader = parser.getXMLReader();
-            xmlReader.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
-            xmlReader.setContentHandler(new XMLPropertiesHandler());
-            xmlReader.parse(new InputSource(in));
-        } catch (final Exception e) {
-            throw new ConfigurationException("Unable to parse the configuration file", e);
-        }
-
-        // todo: support included properties ?
+    public void initFileLocator(final FileLocator locator) {
+        this.locator = locator;
     }
 
     /**
@@ -166,6 +216,64 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
                 }
             }
         }
+    }
+
+    @Override
+    public void read(final Reader in) throws ConfigurationException {
+        final SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(false);
+        factory.setValidating(true);
+
+        try {
+            final SAXParser parser = factory.newSAXParser();
+
+            final XMLReader xmlReader = parser.getXMLReader();
+            xmlReader.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
+            xmlReader.setContentHandler(new XMLPropertiesHandler());
+            xmlReader.parse(new InputSource(in));
+        } catch (final Exception e) {
+            throw new ConfigurationException("Unable to parse the configuration file", e);
+        }
+
+        // todo: support included properties ?
+    }
+
+    /**
+     * Writes the configuration as child to the given DOM node
+     *
+     * @param document The DOM document to add the configuration to
+     * @param parent The DOM parent node
+     * @since 2.0
+     */
+    public void save(final Document document, final Node parent) {
+        final Element properties = document.createElement("properties");
+        parent.appendChild(properties);
+        if (getHeader() != null) {
+            final Element comment = document.createElement("comment");
+            properties.appendChild(comment);
+            comment.setTextContent(StringEscapeUtils.escapeXml10(getHeader()));
+        }
+
+        final Iterator<String> keys = getKeys();
+        while (keys.hasNext()) {
+            final String key = keys.next();
+            final Object value = getProperty(key);
+
+            if (value instanceof List) {
+                writeProperty(document, properties, key, (List<?>) value);
+            } else {
+                writeProperty(document, properties, key, value);
+            }
+        }
+    }
+
+    /**
+     * Sets the header comment of this configuration.
+     *
+     * @param header the header comment
+     */
+    public void setHeader(final String header) {
+        this.header = header;
     }
 
     @Override
@@ -200,73 +308,8 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
         writer.flush();
     }
 
-    /**
-     * Write a property.
-     *
-     * @param out the output stream
-     * @param key the key of the property
-     * @param value the value of the property
-     */
-    private void writeProperty(final PrintWriter out, final String key, final Object value) {
-        // escape the key
-        final String k = StringEscapeUtils.escapeXml10(key);
-
-        if (value != null) {
-            final String v = escapeValue(value);
-            out.println("  <entry key=\"" + k + "\">" + v + "</entry>");
-        } else {
-            out.println("  <entry key=\"" + k + "\"/>");
-        }
-    }
-
-    /**
-     * Write a list property.
-     *
-     * @param out the output stream
-     * @param key the key of the property
-     * @param values a list with all property values
-     */
-    private void writeProperty(final PrintWriter out, final String key, final List<?> values) {
-        values.forEach(value -> writeProperty(out, key, value));
-    }
-
-    /**
-     * Writes the configuration as child to the given DOM node
-     *
-     * @param document The DOM document to add the configuration to
-     * @param parent The DOM parent node
-     * @since 2.0
-     */
-    public void save(final Document document, final Node parent) {
-        final Element properties = document.createElement("properties");
-        parent.appendChild(properties);
-        if (getHeader() != null) {
-            final Element comment = document.createElement("comment");
-            properties.appendChild(comment);
-            comment.setTextContent(StringEscapeUtils.escapeXml10(getHeader()));
-        }
-
-        final Iterator<String> keys = getKeys();
-        while (keys.hasNext()) {
-            final String key = keys.next();
-            final Object value = getProperty(key);
-
-            if (value instanceof List) {
-                writeProperty(document, properties, key, (List<?>) value);
-            } else {
-                writeProperty(document, properties, key, value);
-            }
-        }
-    }
-
-    /**
-     * Initializes this object with a {@code FileLocator}. The locator is accessed during load and save operations.
-     *
-     * @param locator the associated {@code FileLocator}
-     */
-    @Override
-    public void initFileLocator(final FileLocator locator) {
-        this.locator = locator;
+    private void writeProperty(final Document document, final Node properties, final String key, final List<?> values) {
+        values.forEach(value -> writeProperty(document, properties, key, value));
     }
 
     private void writeProperty(final Document document, final Node properties, final String key, final Object value) {
@@ -283,76 +326,33 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
         }
     }
 
-    private void writeProperty(final Document document, final Node properties, final String key, final List<?> values) {
-        values.forEach(value -> writeProperty(document, properties, key, value));
+    /**
+     * Write a list property.
+     *
+     * @param out the output stream
+     * @param key the key of the property
+     * @param values a list with all property values
+     */
+    private void writeProperty(final PrintWriter out, final String key, final List<?> values) {
+        values.forEach(value -> writeProperty(out, key, value));
     }
 
     /**
-     * Escapes a property value before it is written to disk.
+     * Write a property.
      *
-     * @param value the value to be escaped
-     * @return the escaped value
+     * @param out the output stream
+     * @param key the key of the property
+     * @param value the value of the property
      */
-    private String escapeValue(final Object value) {
-        final String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
-        return String.valueOf(getListDelimiterHandler().escape(v, ListDelimiterHandler.NOOP_TRANSFORMER));
-    }
+    private void writeProperty(final PrintWriter out, final String key, final Object value) {
+        // escape the key
+        final String k = StringEscapeUtils.escapeXml10(key);
 
-    /**
-     * SAX Handler to parse a XML properties file.
-     *
-     * @since 1.2
-     */
-    private final class XMLPropertiesHandler extends DefaultHandler {
-        /** The key of the current entry being parsed. */
-        private String key;
-
-        /** The value of the current entry being parsed. */
-        private StringBuilder value = new StringBuilder();
-
-        /** Indicates that a comment is being parsed. */
-        private boolean inCommentElement;
-
-        /** Indicates that an entry is being parsed. */
-        private boolean inEntryElement;
-
-        @Override
-        public void startElement(final String uri, final String localName, final String qName, final Attributes attrs) {
-            if ("comment".equals(qName)) {
-                inCommentElement = true;
-            }
-
-            if ("entry".equals(qName)) {
-                key = attrs.getValue("key");
-                inEntryElement = true;
-            }
-        }
-
-        @Override
-        public void endElement(final String uri, final String localName, final String qName) {
-            if (inCommentElement) {
-                // We've just finished a <comment> element so set the header
-                setHeader(value.toString());
-                inCommentElement = false;
-            }
-
-            if (inEntryElement) {
-                // We've just finished an <entry> element, so add the key/value pair
-                addProperty(key, value.toString());
-                inEntryElement = false;
-            }
-
-            // Clear the element value buffer
-            value = new StringBuilder();
-        }
-
-        @Override
-        public void characters(final char[] chars, final int start, final int length) {
-            /**
-             * We're currently processing an element. All character data from now until the next endElement() call will be the data
-             * for this element.
-             */
-            value.append(chars, start, length);
+        if (value != null) {
+            final String v = escapeValue(value);
+            out.println("  <entry key=\"" + k + "\">" + v + "</entry>");
+        } else {
+            out.println("  <entry key=\"" + k + "\"/>");
         }
     }
 }

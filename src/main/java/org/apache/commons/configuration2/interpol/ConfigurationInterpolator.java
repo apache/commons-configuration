@@ -91,6 +91,147 @@ import org.apache.commons.text.StringSubstitutor;
 public class ConfigurationInterpolator {
 
     /**
+     * Internal class used to construct the default {@link Lookup} map used by
+     * {@link ConfigurationInterpolator#getDefaultPrefixLookups()}.
+     */
+    static final class DefaultPrefixLookupsHolder {
+
+        /** Singleton instance, initialized with the system properties. */
+        static final DefaultPrefixLookupsHolder INSTANCE = new DefaultPrefixLookupsHolder(System.getProperties());
+
+        /**
+         * Add the prefix and lookup from {@code lookup} to {@code map}.
+         * @param lookup lookup to add
+         * @param map map to add to
+         */
+        private static void addLookup(final DefaultLookups lookup, final Map<String, Lookup> map) {
+            map.put(lookup.getPrefix(), lookup.getLookup());
+        }
+
+        /**
+         * Create the lookup map used when the user has requested no customization.
+         * @return default lookup map
+         */
+        private static Map<String, Lookup> createDefaultLookups() {
+            final Map<String, Lookup> lookupMap = new HashMap<>();
+
+            addLookup(DefaultLookups.BASE64_DECODER, lookupMap);
+            addLookup(DefaultLookups.BASE64_ENCODER, lookupMap);
+            addLookup(DefaultLookups.CONST, lookupMap);
+            addLookup(DefaultLookups.DATE, lookupMap);
+            addLookup(DefaultLookups.ENVIRONMENT, lookupMap);
+            addLookup(DefaultLookups.FILE, lookupMap);
+            addLookup(DefaultLookups.JAVA, lookupMap);
+            addLookup(DefaultLookups.LOCAL_HOST, lookupMap);
+            addLookup(DefaultLookups.PROPERTIES, lookupMap);
+            addLookup(DefaultLookups.RESOURCE_BUNDLE, lookupMap);
+            addLookup(DefaultLookups.SYSTEM_PROPERTIES, lookupMap);
+            addLookup(DefaultLookups.URL_DECODER, lookupMap);
+            addLookup(DefaultLookups.URL_ENCODER, lookupMap);
+            addLookup(DefaultLookups.XML, lookupMap);
+
+            return lookupMap;
+        }
+
+        /**
+         * Constructs a lookup map by parsing the given string. The string is expected to contain
+         * comma or space-separated names of values from the {@link DefaultLookups} enum.
+         * @param str string to parse; not null
+         * @return lookup map parsed from the given string
+         * @throws IllegalArgumentException if the string does not contain a valid default lookup
+         *      definition
+         */
+        private static Map<String, Lookup> parseLookups(final String str) {
+            final Map<String, Lookup> lookupMap = new HashMap<>();
+
+            try {
+                for (final String lookupName : str.split("[\\s,]+")) {
+                    if (!lookupName.isEmpty()) {
+                        addLookup(DefaultLookups.valueOf(lookupName.toUpperCase()), lookupMap);
+                    }
+                }
+            } catch (final IllegalArgumentException exc) {
+                throw new IllegalArgumentException("Invalid default lookups definition: " + str, exc);
+            }
+
+            return lookupMap;
+        }
+
+        /** Default lookup map. */
+        private final Map<String, Lookup> defaultLookups;
+
+        /**
+         * Constructs a new instance initialized with the given properties.
+         * @param props initialization properties
+         */
+        DefaultPrefixLookupsHolder(final Properties props) {
+            final Map<String, Lookup> lookups =
+                    props.containsKey(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY)
+                        ? parseLookups(props.getProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY))
+                        : createDefaultLookups();
+
+            defaultLookups = Collections.unmodifiableMap(lookups);
+        }
+
+        /**
+         * Gets the default prefix lookups map.
+         * @return default prefix lookups map
+         */
+        Map<String, Lookup> getDefaultPrefixLookups() {
+            return defaultLookups;
+        }
+    }
+
+    /** Class encapsulating the default logic to convert resolved variable values into strings.
+     * This class is thread-safe.
+     */
+    private static final class DefaultStringConverter implements Function<Object, String> {
+
+        /** Shared instance. */
+        static final DefaultStringConverter INSTANCE = new DefaultStringConverter();
+
+        /** {@inheritDoc} */
+        @Override
+        public String apply(final Object obj) {
+            return Objects.toString(extractSimpleValue(obj), null);
+        }
+
+        /** Attempt to extract a simple value from {@code obj} for use in string conversion.
+         * If the input represents a collection of some sort (e.g., an iterable or array),
+         * the first item from the collection is returned.
+         * @param obj input object
+         * @return extracted simple object
+         */
+        private Object extractSimpleValue(final Object obj) {
+            if (!(obj instanceof String)) {
+                if (obj instanceof Iterable) {
+                   return nextOrNull(((Iterable<?>) obj).iterator());
+                }
+                if (obj instanceof Iterator) {
+                    return nextOrNull((Iterator<?>) obj);
+                }
+                if (obj.getClass().isArray()) {
+                    return Array.getLength(obj) > 0
+                            ? Array.get(obj, 0)
+                            : null;
+                }
+            }
+            return obj;
+        }
+
+        /** Return the next value from {@code it} or {@code null} if no values remain.
+         * @param <T> iterated type
+         * @param it iterator
+         * @return next value from {@code it} or {@code null} if no values remain
+         */
+        private <T> T nextOrNull(final Iterator<T> it) {
+            return it.hasNext()
+                    ? it.next()
+                    : null;
+        }
+    }
+
+    /**
      * Name of the system property used to determine the lookups added by the
      * {@link #getDefaultPrefixLookups()} method. Use of this property is only required
      * in cases where the set of default lookups must be modified.
@@ -114,30 +255,6 @@ public class ConfigurationInterpolator {
 
     /** The length of {@link #VAR_END}. */
     private static final int VAR_END_LENGTH = VAR_END.length();
-
-    /** A map with the currently registered lookup objects. */
-    private final Map<String, Lookup> prefixLookups;
-
-    /** Stores the default lookup objects. */
-    private final List<Lookup> defaultLookups;
-
-    /** The helper object performing variable substitution. */
-    private final StringSubstitutor substitutor;
-
-    /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
-    private volatile ConfigurationInterpolator parentInterpolator;
-
-    /** Function used to convert interpolated values to strings. */
-    private volatile Function<Object, String> stringConverter = DefaultStringConverter.INSTANCE;
-
-    /**
-     * Creates a new instance of {@code ConfigurationInterpolator}.
-     */
-    public ConfigurationInterpolator() {
-        prefixLookups = new ConcurrentHashMap<>();
-        defaultLookups = new CopyOnWriteArrayList<>();
-        substitutor = initSubstitutor();
-    }
 
     /**
      * Creates a new instance based on the properties in the given specification object.
@@ -306,6 +423,30 @@ public class ConfigurationInterpolator {
         return lookup;
     }
 
+    /** A map with the currently registered lookup objects. */
+    private final Map<String, Lookup> prefixLookups;
+
+    /** Stores the default lookup objects. */
+    private final List<Lookup> defaultLookups;
+
+    /** The helper object performing variable substitution. */
+    private final StringSubstitutor substitutor;
+
+    /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
+    private volatile ConfigurationInterpolator parentInterpolator;
+
+    /** Function used to convert interpolated values to strings. */
+    private volatile Function<Object, String> stringConverter = DefaultStringConverter.INSTANCE;
+
+    /**
+     * Creates a new instance of {@code ConfigurationInterpolator}.
+     */
+    public ConfigurationInterpolator() {
+        prefixLookups = new ConcurrentHashMap<>();
+        defaultLookups = new CopyOnWriteArrayList<>();
+        substitutor = initSubstitutor();
+    }
+
     /**
      * Adds a default {@code Lookup} object. Default {@code Lookup} objects are queried (in the order they were added) for
      * all variables without a special prefix. If no default {@code Lookup} objects are present, such variables won't be
@@ -384,6 +525,13 @@ public class ConfigurationInterpolator {
         return this.parentInterpolator;
     }
 
+    /** Gets the function used to convert interpolated values to strings.
+     * @return function used to convert interpolated values to strings
+     */
+    public Function<Object, String> getStringConverter() {
+        return stringConverter;
+    }
+
     /**
      * Creates and initializes a {@code StringSubstitutor} object which is used for variable substitution. This
      * {@code StringSubstitutor} is assigned a specialized lookup object implementing the correct variable resolving
@@ -450,24 +598,6 @@ public class ConfigurationInterpolator {
      */
     public boolean isEnableSubstitutionInVariables() {
         return substitutor.isEnableSubstitutionInVariables();
-    }
-
-    /** Gets the function used to convert interpolated values to strings.
-     * @return function used to convert interpolated values to strings
-     */
-    public Function<Object, String> getStringConverter() {
-        return stringConverter;
-    }
-
-    /** Sets the function used to convert interpolated values to strings. Pass
-     * {@code null} to use the default conversion function.
-     * @param stringConverter function used to convert interpolated values to strings
-     *      or {@code null} to use the default conversion function
-     */
-    public void setStringConverter(final Function<Object, String> stringConverter) {
-        this.stringConverter = stringConverter != null
-                ? stringConverter
-                : DefaultStringConverter.INSTANCE;
     }
 
     /**
@@ -604,144 +734,14 @@ public class ConfigurationInterpolator {
         this.parentInterpolator = parentInterpolator;
     }
 
-    /**
-     * Internal class used to construct the default {@link Lookup} map used by
-     * {@link ConfigurationInterpolator#getDefaultPrefixLookups()}.
+    /** Sets the function used to convert interpolated values to strings. Pass
+     * {@code null} to use the default conversion function.
+     * @param stringConverter function used to convert interpolated values to strings
+     *      or {@code null} to use the default conversion function
      */
-    static final class DefaultPrefixLookupsHolder {
-
-        /** Singleton instance, initialized with the system properties. */
-        static final DefaultPrefixLookupsHolder INSTANCE = new DefaultPrefixLookupsHolder(System.getProperties());
-
-        /** Default lookup map. */
-        private final Map<String, Lookup> defaultLookups;
-
-        /**
-         * Constructs a new instance initialized with the given properties.
-         * @param props initialization properties
-         */
-        DefaultPrefixLookupsHolder(final Properties props) {
-            final Map<String, Lookup> lookups =
-                    props.containsKey(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY)
-                        ? parseLookups(props.getProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY))
-                        : createDefaultLookups();
-
-            defaultLookups = Collections.unmodifiableMap(lookups);
-        }
-
-        /**
-         * Gets the default prefix lookups map.
-         * @return default prefix lookups map
-         */
-        Map<String, Lookup> getDefaultPrefixLookups() {
-            return defaultLookups;
-        }
-
-        /**
-         * Create the lookup map used when the user has requested no customization.
-         * @return default lookup map
-         */
-        private static Map<String, Lookup> createDefaultLookups() {
-            final Map<String, Lookup> lookupMap = new HashMap<>();
-
-            addLookup(DefaultLookups.BASE64_DECODER, lookupMap);
-            addLookup(DefaultLookups.BASE64_ENCODER, lookupMap);
-            addLookup(DefaultLookups.CONST, lookupMap);
-            addLookup(DefaultLookups.DATE, lookupMap);
-            addLookup(DefaultLookups.ENVIRONMENT, lookupMap);
-            addLookup(DefaultLookups.FILE, lookupMap);
-            addLookup(DefaultLookups.JAVA, lookupMap);
-            addLookup(DefaultLookups.LOCAL_HOST, lookupMap);
-            addLookup(DefaultLookups.PROPERTIES, lookupMap);
-            addLookup(DefaultLookups.RESOURCE_BUNDLE, lookupMap);
-            addLookup(DefaultLookups.SYSTEM_PROPERTIES, lookupMap);
-            addLookup(DefaultLookups.URL_DECODER, lookupMap);
-            addLookup(DefaultLookups.URL_ENCODER, lookupMap);
-            addLookup(DefaultLookups.XML, lookupMap);
-
-            return lookupMap;
-        }
-
-        /**
-         * Constructs a lookup map by parsing the given string. The string is expected to contain
-         * comma or space-separated names of values from the {@link DefaultLookups} enum.
-         * @param str string to parse; not null
-         * @return lookup map parsed from the given string
-         * @throws IllegalArgumentException if the string does not contain a valid default lookup
-         *      definition
-         */
-        private static Map<String, Lookup> parseLookups(final String str) {
-            final Map<String, Lookup> lookupMap = new HashMap<>();
-
-            try {
-                for (final String lookupName : str.split("[\\s,]+")) {
-                    if (!lookupName.isEmpty()) {
-                        addLookup(DefaultLookups.valueOf(lookupName.toUpperCase()), lookupMap);
-                    }
-                }
-            } catch (final IllegalArgumentException exc) {
-                throw new IllegalArgumentException("Invalid default lookups definition: " + str, exc);
-            }
-
-            return lookupMap;
-        }
-
-        /**
-         * Add the prefix and lookup from {@code lookup} to {@code map}.
-         * @param lookup lookup to add
-         * @param map map to add to
-         */
-        private static void addLookup(final DefaultLookups lookup, final Map<String, Lookup> map) {
-            map.put(lookup.getPrefix(), lookup.getLookup());
-        }
-    }
-
-    /** Class encapsulating the default logic to convert resolved variable values into strings.
-     * This class is thread-safe.
-     */
-    private static final class DefaultStringConverter implements Function<Object, String> {
-
-        /** Shared instance. */
-        static final DefaultStringConverter INSTANCE = new DefaultStringConverter();
-
-        /** {@inheritDoc} */
-        @Override
-        public String apply(final Object obj) {
-            return Objects.toString(extractSimpleValue(obj), null);
-        }
-
-        /** Attempt to extract a simple value from {@code obj} for use in string conversion.
-         * If the input represents a collection of some sort (e.g., an iterable or array),
-         * the first item from the collection is returned.
-         * @param obj input object
-         * @return extracted simple object
-         */
-        private Object extractSimpleValue(final Object obj) {
-            if (!(obj instanceof String)) {
-                if (obj instanceof Iterable) {
-                   return nextOrNull(((Iterable<?>) obj).iterator());
-                }
-                if (obj instanceof Iterator) {
-                    return nextOrNull((Iterator<?>) obj);
-                }
-                if (obj.getClass().isArray()) {
-                    return Array.getLength(obj) > 0
-                            ? Array.get(obj, 0)
-                            : null;
-                }
-            }
-            return obj;
-        }
-
-        /** Return the next value from {@code it} or {@code null} if no values remain.
-         * @param <T> iterated type
-         * @param it iterator
-         * @return next value from {@code it} or {@code null} if no values remain
-         */
-        private <T> T nextOrNull(final Iterator<T> it) {
-            return it.hasNext()
-                    ? it.next()
-                    : null;
-        }
+    public void setStringConverter(final Function<Object, String> stringConverter) {
+        this.stringConverter = stringConverter != null
+                ? stringConverter
+                : DefaultStringConverter.INSTANCE;
     }
 }

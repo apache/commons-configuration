@@ -55,32 +55,8 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implem
     private static final String PROP_AUTO_COMMIT = "autoCommit";
 
     @Override
-    public DatabaseBuilderParametersImpl setDataSource(final DataSource src) {
-        storeProperty(PROP_DATA_SOURCE, src);
-        return this;
-    }
-
-    @Override
-    public DatabaseBuilderParametersImpl setTable(final String tableName) {
-        storeProperty(PROP_TABLE, tableName);
-        return this;
-    }
-
-    @Override
-    public DatabaseBuilderParametersImpl setKeyColumn(final String name) {
-        storeProperty(PROP_KEY_COLUMN, name);
-        return this;
-    }
-
-    @Override
-    public DatabaseBuilderParametersImpl setValueColumn(final String name) {
-        storeProperty(PROP_VALUE_COLUMN, name);
-        return this;
-    }
-
-    @Override
-    public DatabaseBuilderParametersImpl setConfigurationNameColumn(final String name) {
-        storeProperty(PROP_CONFIG_NAME_COLUMN, name);
+    public DatabaseBuilderParametersImpl setAutoCommit(final boolean f) {
+        storeProperty(PROP_AUTO_COMMIT, Boolean.valueOf(f));
         return this;
     }
 
@@ -91,8 +67,32 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setAutoCommit(final boolean f) {
-        storeProperty(PROP_AUTO_COMMIT, Boolean.valueOf(f));
+    public DatabaseBuilderParametersImpl setConfigurationNameColumn(final String name) {
+        storeProperty(PROP_CONFIG_NAME_COLUMN, name);
+        return this;
+    }
+
+    @Override
+    public DatabaseBuilderParametersImpl setDataSource(final DataSource src) {
+        storeProperty(PROP_DATA_SOURCE, src);
+        return this;
+    }
+
+    @Override
+    public DatabaseBuilderParametersImpl setKeyColumn(final String name) {
+        storeProperty(PROP_KEY_COLUMN, name);
+        return this;
+    }
+
+    @Override
+    public DatabaseBuilderParametersImpl setTable(final String tableName) {
+        storeProperty(PROP_TABLE, tableName);
+        return this;
+    }
+
+    @Override
+    public DatabaseBuilderParametersImpl setValueColumn(final String name) {
+        storeProperty(PROP_VALUE_COLUMN, name);
         return this;
     }
 }

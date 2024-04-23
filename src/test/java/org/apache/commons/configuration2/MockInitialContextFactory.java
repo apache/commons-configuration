@@ -49,6 +49,10 @@ public class MockInitialContextFactory implements InitialContextFactory {
         }
 
         @Override
+        public void close() throws NamingException {
+        }
+
+        @Override
         public boolean hasMore() throws NamingException {
             return hasMoreElements();
         }
@@ -66,10 +70,6 @@ public class MockInitialContextFactory implements InitialContextFactory {
         @Override
         public NameClassPair nextElement() {
             return iterator.next();
-        }
-
-        @Override
-        public void close() throws NamingException {
         }
     }
 
@@ -149,18 +149,6 @@ public class MockInitialContextFactory implements InitialContextFactory {
     }
 
     /**
-     * Creates and initializes a naming enumeration. This is a shortcut of wrapping the result of
-     * {@link #createNameClassPairs(String[], Object[])} in an instance of {@link ListBasedNamingEnumeration}.
-     *
-     * @param names the names contained in the iteration
-     * @param values the corresponding values
-     * @return the mock for the enumeration
-     */
-    private NamingEnumeration<NameClassPair> createNamingEnumeration(final String[] names, final Object[] values) {
-        return new ListBasedNamingEnumeration(createNameClassPairs(names, values));
-    }
-
-    /**
      * Creates and initializes a list of {@link NameClassPair}s that can be used to create a naming enumeration.
      *
      * @param names the names contained in the iteration
@@ -173,6 +161,18 @@ public class MockInitialContextFactory implements InitialContextFactory {
             addEnumPair(pairs, names[i], values[i]);
         }
         return pairs;
+    }
+
+    /**
+     * Creates and initializes a naming enumeration. This is a shortcut of wrapping the result of
+     * {@link #createNameClassPairs(String[], Object[])} in an instance of {@link ListBasedNamingEnumeration}.
+     *
+     * @param names the names contained in the iteration
+     * @param values the corresponding values
+     * @return the mock for the enumeration
+     */
+    private NamingEnumeration<NameClassPair> createNamingEnumeration(final String[] names, final Object[] values) {
+        return new ListBasedNamingEnumeration(createNameClassPairs(names, values));
     }
 
     /**

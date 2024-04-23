@@ -93,79 +93,14 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
         closed = new AtomicBoolean();
     }
 
-    /**
-     * Gets the {@code InMemoryNodeModelSupport} object which is used to gain access to the underlying node model.
-     *
-     * @return the associated {@code InMemoryNodeModelSupport} object
-     */
-    public InMemoryNodeModelSupport getParentModelSupport() {
-        return parentModelSupport;
-    }
-
-    /**
-     * Gets the parent model. Operations on this model are delegated to this parent model specifying the selector to the
-     * tracked node.
-     *
-     * @return the parent model
-     */
-    public InMemoryNodeModel getParentModel() {
-        return getParentModelSupport().getNodeModel();
-    }
-
-    /**
-     * Gets the {@code NodeSelector} pointing to the tracked node managed by this model.
-     *
-     * @return the tracked node selector
-     */
-    public NodeSelector getSelector() {
-        return selector;
-    }
-
-    /**
-     * Returns the flag whether the managed tracked node is to be released when this object gets finalized. This method
-     * returns the value of the corresponding flag passed to the constructor. If result is true, the underlying model is
-     * asked to untrack the managed node when this object is claimed by the GC.
-     *
-     * @return a flag whether the managed tracked node should be released when this object dies
-     * @see InMemoryNodeModel#untrackNode(NodeSelector)
-     */
-    public boolean isReleaseTrackedNodeOnFinalize() {
-        return releaseTrackedNodeOnFinalize;
-    }
-
-    @Override
-    public void setRootNode(final ImmutableNode newRoot) {
-        getParentModel().replaceTrackedNode(getSelector(), newRoot);
-    }
-
-    @Override
-    public NodeHandler<ImmutableNode> getNodeHandler() {
-        return getParentModel().getTrackedNodeHandler(getSelector());
-    }
-
-    @Override
-    public void addProperty(final String key, final Iterable<?> values, final NodeKeyResolver<ImmutableNode> resolver) {
-        getParentModel().addProperty(key, getSelector(), values, resolver);
-    }
-
     @Override
     public void addNodes(final String key, final Collection<? extends ImmutableNode> nodes, final NodeKeyResolver<ImmutableNode> resolver) {
         getParentModel().addNodes(key, getSelector(), nodes, resolver);
     }
 
     @Override
-    public void setProperty(final String key, final Object value, final NodeKeyResolver<ImmutableNode> resolver) {
-        getParentModel().setProperty(key, getSelector(), value, resolver);
-    }
-
-    @Override
-    public List<QueryResult<ImmutableNode>> clearTree(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
-        return getParentModel().clearTree(key, getSelector(), resolver);
-    }
-
-    @Override
-    public void clearProperty(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
-        getParentModel().clearProperty(key, getSelector(), resolver);
+    public void addProperty(final String key, final Iterable<?> values, final NodeKeyResolver<ImmutableNode> resolver) {
+        getParentModel().addProperty(key, getSelector(), values, resolver);
     }
 
     /**
@@ -179,12 +114,14 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
         getParentModel().clearTree(null, getSelector(), resolver);
     }
 
-    /**
-     * {@inheritDoc} This implementation returns the tracked node instance acting as root node of this model.
-     */
     @Override
-    public ImmutableNode getInMemoryRepresentation() {
-        return getNodeHandler().getRootNode();
+    public void clearProperty(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
+        getParentModel().clearProperty(key, getSelector(), resolver);
+    }
+
+    @Override
+    public List<QueryResult<ImmutableNode>> clearTree(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
+        return getParentModel().clearTree(key, getSelector(), resolver);
     }
 
     /**
@@ -214,5 +151,68 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
             close();
         }
         super.finalize();
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns the tracked node instance acting as root node of this model.
+     */
+    @Override
+    public ImmutableNode getInMemoryRepresentation() {
+        return getNodeHandler().getRootNode();
+    }
+
+    @Override
+    public NodeHandler<ImmutableNode> getNodeHandler() {
+        return getParentModel().getTrackedNodeHandler(getSelector());
+    }
+
+    /**
+     * Gets the parent model. Operations on this model are delegated to this parent model specifying the selector to the
+     * tracked node.
+     *
+     * @return the parent model
+     */
+    public InMemoryNodeModel getParentModel() {
+        return getParentModelSupport().getNodeModel();
+    }
+
+    /**
+     * Gets the {@code InMemoryNodeModelSupport} object which is used to gain access to the underlying node model.
+     *
+     * @return the associated {@code InMemoryNodeModelSupport} object
+     */
+    public InMemoryNodeModelSupport getParentModelSupport() {
+        return parentModelSupport;
+    }
+
+    /**
+     * Gets the {@code NodeSelector} pointing to the tracked node managed by this model.
+     *
+     * @return the tracked node selector
+     */
+    public NodeSelector getSelector() {
+        return selector;
+    }
+
+    /**
+     * Returns the flag whether the managed tracked node is to be released when this object gets finalized. This method
+     * returns the value of the corresponding flag passed to the constructor. If result is true, the underlying model is
+     * asked to untrack the managed node when this object is claimed by the GC.
+     *
+     * @return a flag whether the managed tracked node should be released when this object dies
+     * @see InMemoryNodeModel#untrackNode(NodeSelector)
+     */
+    public boolean isReleaseTrackedNodeOnFinalize() {
+        return releaseTrackedNodeOnFinalize;
+    }
+
+    @Override
+    public void setProperty(final String key, final Object value, final NodeKeyResolver<ImmutableNode> resolver) {
+        getParentModel().setProperty(key, getSelector(), value, resolver);
+    }
+
+    @Override
+    public void setRootNode(final ImmutableNode newRoot) {
+        getParentModel().replaceTrackedNode(getSelector(), newRoot);
     }
 }

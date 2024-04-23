@@ -77,15 +77,6 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
         delimiter = listDelimiter;
     }
 
-    /**
-     * Gets the list delimiter character used by this instance.
-     *
-     * @return the list delimiter character
-     */
-    public char getDelimiter() {
-        return delimiter;
-    }
-
     @Override
     public Object escapeList(final List<?> values, final ValueTransformer transformer) {
         final Object[] escapedValues = new Object[values.size()];
@@ -107,6 +98,15 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
             buf.append(c);
         }
         return buf.toString();
+    }
+
+    /**
+     * Gets the list delimiter character used by this instance.
+     *
+     * @return the list delimiter character
+     */
+    public char getDelimiter() {
+        return delimiter;
     }
 
     /**

@@ -91,51 +91,98 @@ public class Configurations {
     }
 
     /**
-     * Gets the {@code Parameters} instance associated with this object.
+     * Creates a {@code CombinedConfiguration} instance from the content of the given file. This is a convenience method
+     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
+     * builder is created).
      *
-     * @return the associated {@code Parameters} object
-     */
-    public Parameters getParameters() {
-        return parameters;
-    }
-
-    /**
-     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
-     * file to be loaded.
-     *
-     * @param configClass the configuration class
      * @param file the file to be loaded
-     * @param <T> the type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
+     * @return a {@code CombinedConfiguration} object initialized from this file
+     * @throws ConfigurationException if an error occurred when loading the configuration
      */
-    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final File file) {
-        return createFileBasedBuilder(configClass, fileParams(file));
+    public CombinedConfiguration combined(final File file) throws ConfigurationException {
+        return combinedBuilder(file).getConfiguration();
     }
 
     /**
-     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the URL
-     * to the file to be loaded.
+     * Creates a {@code CombinedConfiguration} instance from the content of the file identified by the given path. This is a
+     * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
+     * the scenes a builder is created).
      *
-     * @param configClass the configuration class
-     * @param url the URL to be loaded
-     * @param <T> the type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
-     */
-    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final URL url) {
-        return createFileBasedBuilder(configClass, fileParams(url));
-    }
-
-    /**
-     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
-     * path to the file to be loaded.
-     *
-     * @param configClass the configuration class
      * @param path the path to the file to be loaded
-     * @param <T> the type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
+     * @return a {@code CombinedConfiguration} object initialized from this URL
+     * @throws ConfigurationException if an error occurred when loading the configuration
      */
-    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final String path) {
-        return createFileBasedBuilder(configClass, fileParams(path));
+    public CombinedConfiguration combined(final String path) throws ConfigurationException {
+        return combinedBuilder(path).getConfiguration();
+    }
+
+    /**
+     * Creates a {@code CombinedConfiguration} instance from the content of the given URL. This is a convenience method
+     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
+     * builder is created).
+     *
+     * @param url the URL to be loaded
+     * @return a {@code CombinedConfiguration} object initialized from this URL
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public CombinedConfiguration combined(final URL url) throws ConfigurationException {
+        return combinedBuilder(url).getConfiguration();
+    }
+
+    /**
+     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given file to be loaded.
+     *
+     * @param file the file to be loaded
+     * @return the newly created {@code CombinedConfigurationBuilder}
+     */
+    public CombinedConfigurationBuilder combinedBuilder(final File file) {
+        return new CombinedConfigurationBuilder().configure(fileParams(file));
+    }
+
+    /**
+     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given path to the file to be
+     * loaded.
+     *
+     * @param path the path to the file to be loaded
+     * @return the newly created {@code CombinedConfigurationBuilder}
+     */
+    public CombinedConfigurationBuilder combinedBuilder(final String path) {
+        return new CombinedConfigurationBuilder().configure(fileParams(path));
+    }
+
+    /**
+     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given URL to be loaded.
+     *
+     * @param url the URL to be loaded
+     * @return the newly created {@code CombinedConfigurationBuilder}
+     */
+    public CombinedConfigurationBuilder combinedBuilder(final URL url) {
+        return new CombinedConfigurationBuilder().configure(fileParams(url));
+    }
+
+    /**
+     * Creates a configured builder for a file-based configuration of the specified type.
+     *
+     * @param configClass the configuration class
+     * @param <T> the type of the configuration to be constructed
+     * @return the newly created builder
+     * @since 2.6
+     */
+    private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass) {
+        return new FileBasedConfigurationBuilder<>(configClass);
+    }
+
+    /**
+     * Creates a configured builder for a file-based configuration of the specified type.
+     *
+     * @param configClass the configuration class
+     * @param params the parameters object for configuring the builder
+     * @param <T> the type of the configuration to be constructed
+     * @return the newly created builder
+     */
+    private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass,
+        final FileBasedBuilderParameters params) {
+        return createFileBasedBuilder(configClass).configure(params);
     }
 
     /**
@@ -154,6 +201,21 @@ public class Configurations {
     }
 
     /**
+     * Creates an instance of the specified file-based configuration class from the content of the file identified by the
+     * given path. This is a convenience method which can be used if no builder is needed for managing the configuration
+     * object. (Although, behind the scenes a builder is created).
+     *
+     * @param configClass the configuration class
+     * @param path the path to the file to be loaded
+     * @param <T> the type of the configuration to be constructed
+     * @return a {@code FileBasedConfiguration} object initialized from this file
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public <T extends FileBasedConfiguration> T fileBased(final Class<T> configClass, final String path) throws ConfigurationException {
+        return fileBasedBuilder(configClass, path).getConfiguration();
+    }
+
+    /**
      * Creates an instance of the specified file-based configuration class from the content of the given URL. This is a
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
@@ -169,18 +231,198 @@ public class Configurations {
     }
 
     /**
-     * Creates an instance of the specified file-based configuration class from the content of the file identified by the
-     * given path. This is a convenience method which can be used if no builder is needed for managing the configuration
-     * object. (Although, behind the scenes a builder is created).
+     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
+     * file to be loaded.
+     *
+     * @param configClass the configuration class
+     * @param file the file to be loaded
+     * @param <T> the type of the configuration to be constructed
+     * @return the new {@code FileBasedConfigurationBuilder}
+     */
+    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final File file) {
+        return createFileBasedBuilder(configClass, fileParams(file));
+    }
+
+    /**
+     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
+     * path to the file to be loaded.
      *
      * @param configClass the configuration class
      * @param path the path to the file to be loaded
      * @param <T> the type of the configuration to be constructed
-     * @return a {@code FileBasedConfiguration} object initialized from this file
+     * @return the new {@code FileBasedConfigurationBuilder}
+     */
+    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final String path) {
+        return createFileBasedBuilder(configClass, fileParams(path));
+    }
+
+    /**
+     * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the URL
+     * to the file to be loaded.
+     *
+     * @param configClass the configuration class
+     * @param url the URL to be loaded
+     * @param <T> the type of the configuration to be constructed
+     * @return the new {@code FileBasedConfigurationBuilder}
+     */
+    public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final URL url) {
+        return createFileBasedBuilder(configClass, fileParams(url));
+    }
+
+    /**
+     * Convenience method for creating a parameters object for a file-based configuration.
+     *
+     * @return the newly created parameters object
+     */
+    private FileBasedBuilderParameters fileParams() {
+        return getParameters().fileBased();
+    }
+
+    /**
+     * Convenience method for creating a file-based parameters object initialized with the given file.
+     *
+     * @param file the file to be loaded
+     * @return the initialized parameters object
+     */
+    private FileBasedBuilderParameters fileParams(final File file) {
+        return fileParams().setFile(file);
+    }
+
+    /**
+     * Convenience method for creating a file-based parameters object initialized with the given file path.
+     *
+     * @param path the path to the file to be loaded
+     * @return the initialized parameters object
+     */
+    private FileBasedBuilderParameters fileParams(final String path) {
+        return fileParams().setFileName(path);
+    }
+
+    /**
+     * Convenience method for creating a file-based parameters object initialized with the given file.
+     *
+     * @param url the URL to be loaded
+     * @return the initialized parameters object
+     */
+    private FileBasedBuilderParameters fileParams(final URL url) {
+        return fileParams().setURL(url);
+    }
+
+    /**
+     * Gets the {@code Parameters} instance associated with this object.
+     *
+     * @return the associated {@code Parameters} object
+     */
+    public Parameters getParameters() {
+        return parameters;
+    }
+
+    /**
+     * Creates a {@code INIConfiguration} instance from the content of the given file. This is a convenience method which
+     * can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
+     * created).
+     *
+     * @param file the file to be loaded
+     * @return a {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
-    public <T extends FileBasedConfiguration> T fileBased(final Class<T> configClass, final String path) throws ConfigurationException {
-        return fileBasedBuilder(configClass, path).getConfiguration();
+    public INIConfiguration ini(final File file) throws ConfigurationException {
+        return iniBuilder(file).getConfiguration();
+    }
+
+    /**
+     * Creates a {@code INIConfiguration} instance from the content of the file identified by the given path. This is a
+     * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
+     * the scenes a builder is created).
+     *
+     * @param path the path to the file to be loaded
+     * @return a {@code INIConfiguration} object initialized from this file
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public INIConfiguration ini(final String path) throws ConfigurationException {
+        return iniBuilder(path).getConfiguration();
+    }
+
+    /**
+     * Creates a {@code INIConfiguration} instance from the content of the given URL. This is a convenience method which can
+     * be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
+     * created).
+     *
+     * @param url the URL to be loaded
+     * @return a {@code INIConfiguration} object initialized from this file
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public INIConfiguration ini(final URL url) throws ConfigurationException {
+        return iniBuilder(url).getConfiguration();
+    }
+
+    /**
+     * Creates a builder for a {@code INIConfiguration} and initializes it with the given file to be loaded.
+     *
+     * @param file the file to be loaded
+     * @return the newly created {@code FileBasedConfigurationBuilder}
+     */
+    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final File file) {
+        return fileBasedBuilder(INIConfiguration.class, file);
+    }
+
+    /**
+     * Creates a builder for a {@code INIConfiguration} and initializes it with the file file identified by the given path.
+     *
+     * @param path the path to the file to be loaded
+     * @return the newly created {@code FileBasedConfigurationBuilder}
+     */
+    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final String path) {
+        return fileBasedBuilder(INIConfiguration.class, path);
+    }
+
+    /**
+     * Creates a builder for a {@code INIConfiguration} and initializes it with the given URL to be loaded.
+     *
+     * @param url the URL to be loaded
+     * @return the newly created {@code FileBasedConfigurationBuilder}
+     */
+    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final URL url) {
+        return fileBasedBuilder(INIConfiguration.class, url);
+    }
+
+    /**
+     * Creates a {@code PropertiesConfiguration} instance from the content of the given file. This is a convenience method
+     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
+     * builder is created).
+     *
+     * @param file the file to be loaded
+     * @return a {@code PropertiesConfiguration} object initialized from this file
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public PropertiesConfiguration properties(final File file) throws ConfigurationException {
+        return propertiesBuilder(file).getConfiguration();
+    }
+
+    /**
+     * Creates a {@code PropertiesConfiguration} instance from the content of the file identified by the given path. This is
+     * a convenience method which can be used if no builder is needed for managing the configuration object. (Although,
+     * behind the scenes a builder is created).
+     *
+     * @param path the path to the file to be loaded
+     * @return a {@code PropertiesConfiguration} object initialized from this path
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public PropertiesConfiguration properties(final String path) throws ConfigurationException {
+        return propertiesBuilder(path).getConfiguration();
+    }
+
+    /**
+     * Creates a {@code PropertiesConfiguration} instance from the content of the given URL. This is a convenience method
+     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
+     * builder is created).
+     *
+     * @param url the URL to be loaded
+     * @return a {@code PropertiesConfiguration} object initialized from this URL
+     * @throws ConfigurationException if an error occurred when loading the configuration
+     */
+    public PropertiesConfiguration properties(final URL url) throws ConfigurationException {
+        return propertiesBuilder(url).getConfiguration();
     }
 
     /**
@@ -215,16 +457,6 @@ public class Configurations {
     }
 
     /**
-     * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given URL to be loaded.
-     *
-     * @param url the URL to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final URL url) {
-        return fileBasedBuilder(PropertiesConfiguration.class, url);
-    }
-
-    /**
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given path to the file to be
      * loaded.
      *
@@ -236,72 +468,13 @@ public class Configurations {
     }
 
     /**
-     * Creates a {@code PropertiesConfiguration} instance from the content of the given file. This is a convenience method
-     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
-     * builder is created).
-     *
-     * @param file the file to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this file
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public PropertiesConfiguration properties(final File file) throws ConfigurationException {
-        return propertiesBuilder(file).getConfiguration();
-    }
-
-    /**
-     * Creates a {@code PropertiesConfiguration} instance from the content of the given URL. This is a convenience method
-     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
-     * builder is created).
-     *
-     * @param url the URL to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this URL
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public PropertiesConfiguration properties(final URL url) throws ConfigurationException {
-        return propertiesBuilder(url).getConfiguration();
-    }
-
-    /**
-     * Creates a {@code PropertiesConfiguration} instance from the content of the file identified by the given path. This is
-     * a convenience method which can be used if no builder is needed for managing the configuration object. (Although,
-     * behind the scenes a builder is created).
-     *
-     * @param path the path to the file to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this path
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public PropertiesConfiguration properties(final String path) throws ConfigurationException {
-        return propertiesBuilder(path).getConfiguration();
-    }
-
-    /**
-     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given file to be loaded.
-     *
-     * @param file the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final File file) {
-        return fileBasedBuilder(XMLConfiguration.class, file);
-    }
-
-    /**
-     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given URL to be loaded.
+     * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
      * @return the newly created {@code FileBasedConfigurationBuilder}
      */
-    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final URL url) {
-        return fileBasedBuilder(XMLConfiguration.class, url);
-    }
-
-    /**
-     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given path to the file to be loaded.
-     *
-     * @param path the path to the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final String path) {
-        return fileBasedBuilder(XMLConfiguration.class, path);
+    public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final URL url) {
+        return fileBasedBuilder(PropertiesConfiguration.class, url);
     }
 
     /**
@@ -318,19 +491,6 @@ public class Configurations {
     }
 
     /**
-     * Creates a {@code XMLConfiguration} instance from the content of the given URL. This is a convenience method which can
-     * be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
-     * created).
-     *
-     * @param url the URL to be loaded
-     * @return a {@code XMLConfiguration} object initialized from this file
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public XMLConfiguration xml(final URL url) throws ConfigurationException {
-        return xmlBuilder(url).getConfiguration();
-    }
-
-    /**
      * Creates a {@code XMLConfiguration} instance from the content of the file identified by the given path. This is a
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
@@ -344,206 +504,46 @@ public class Configurations {
     }
 
     /**
-     * Creates a builder for a {@code INIConfiguration} and initializes it with the given file to be loaded.
-     *
-     * @param file the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final File file) {
-        return fileBasedBuilder(INIConfiguration.class, file);
-    }
-
-    /**
-     * Creates a builder for a {@code INIConfiguration} and initializes it with the given URL to be loaded.
-     *
-     * @param url the URL to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final URL url) {
-        return fileBasedBuilder(INIConfiguration.class, url);
-    }
-
-    /**
-     * Creates a builder for a {@code INIConfiguration} and initializes it with the file file identified by the given path.
-     *
-     * @param path the path to the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
-     */
-    public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final String path) {
-        return fileBasedBuilder(INIConfiguration.class, path);
-    }
-
-    /**
-     * Creates a {@code INIConfiguration} instance from the content of the given file. This is a convenience method which
-     * can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
-     * created).
-     *
-     * @param file the file to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public INIConfiguration ini(final File file) throws ConfigurationException {
-        return iniBuilder(file).getConfiguration();
-    }
-
-    /**
-     * Creates a {@code INIConfiguration} instance from the content of the given URL. This is a convenience method which can
+     * Creates a {@code XMLConfiguration} instance from the content of the given URL. This is a convenience method which can
      * be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
      * created).
      *
      * @param url the URL to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
+     * @return a {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
-    public INIConfiguration ini(final URL url) throws ConfigurationException {
-        return iniBuilder(url).getConfiguration();
+    public XMLConfiguration xml(final URL url) throws ConfigurationException {
+        return xmlBuilder(url).getConfiguration();
     }
 
     /**
-     * Creates a {@code INIConfiguration} instance from the content of the file identified by the given path. This is a
-     * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
-     * the scenes a builder is created).
-     *
-     * @param path the path to the file to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public INIConfiguration ini(final String path) throws ConfigurationException {
-        return iniBuilder(path).getConfiguration();
-    }
-
-    /**
-     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given file to be loaded.
+     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given file to be loaded.
      *
      * @param file the file to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
+     * @return the newly created {@code FileBasedConfigurationBuilder}
      */
-    public CombinedConfigurationBuilder combinedBuilder(final File file) {
-        return new CombinedConfigurationBuilder().configure(fileParams(file));
+    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final File file) {
+        return fileBasedBuilder(XMLConfiguration.class, file);
     }
 
     /**
-     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given URL to be loaded.
-     *
-     * @param url the URL to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
-     */
-    public CombinedConfigurationBuilder combinedBuilder(final URL url) {
-        return new CombinedConfigurationBuilder().configure(fileParams(url));
-    }
-
-    /**
-     * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given path to the file to be
-     * loaded.
+     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given path to the file to be loaded.
      *
      * @param path the path to the file to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
+     * @return the newly created {@code FileBasedConfigurationBuilder}
      */
-    public CombinedConfigurationBuilder combinedBuilder(final String path) {
-        return new CombinedConfigurationBuilder().configure(fileParams(path));
+    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final String path) {
+        return fileBasedBuilder(XMLConfiguration.class, path);
     }
 
     /**
-     * Creates a {@code CombinedConfiguration} instance from the content of the given file. This is a convenience method
-     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
-     * builder is created).
-     *
-     * @param file the file to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this file
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public CombinedConfiguration combined(final File file) throws ConfigurationException {
-        return combinedBuilder(file).getConfiguration();
-    }
-
-    /**
-     * Creates a {@code CombinedConfiguration} instance from the content of the given URL. This is a convenience method
-     * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
-     * builder is created).
+     * Creates a builder for a {@code XMLConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this URL
-     * @throws ConfigurationException if an error occurred when loading the configuration
+     * @return the newly created {@code FileBasedConfigurationBuilder}
      */
-    public CombinedConfiguration combined(final URL url) throws ConfigurationException {
-        return combinedBuilder(url).getConfiguration();
-    }
-
-    /**
-     * Creates a {@code CombinedConfiguration} instance from the content of the file identified by the given path. This is a
-     * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
-     * the scenes a builder is created).
-     *
-     * @param path the path to the file to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this URL
-     * @throws ConfigurationException if an error occurred when loading the configuration
-     */
-    public CombinedConfiguration combined(final String path) throws ConfigurationException {
-        return combinedBuilder(path).getConfiguration();
-    }
-
-    /**
-     * Creates a configured builder for a file-based configuration of the specified type.
-     *
-     * @param configClass the configuration class
-     * @param <T> the type of the configuration to be constructed
-     * @return the newly created builder
-     * @since 2.6
-     */
-    private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass) {
-        return new FileBasedConfigurationBuilder<>(configClass);
-    }
-
-    /**
-     * Creates a configured builder for a file-based configuration of the specified type.
-     *
-     * @param configClass the configuration class
-     * @param params the parameters object for configuring the builder
-     * @param <T> the type of the configuration to be constructed
-     * @return the newly created builder
-     */
-    private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass,
-        final FileBasedBuilderParameters params) {
-        return createFileBasedBuilder(configClass).configure(params);
-    }
-
-    /**
-     * Convenience method for creating a parameters object for a file-based configuration.
-     *
-     * @return the newly created parameters object
-     */
-    private FileBasedBuilderParameters fileParams() {
-        return getParameters().fileBased();
-    }
-
-    /**
-     * Convenience method for creating a file-based parameters object initialized with the given file.
-     *
-     * @param file the file to be loaded
-     * @return the initialized parameters object
-     */
-    private FileBasedBuilderParameters fileParams(final File file) {
-        return fileParams().setFile(file);
-    }
-
-    /**
-     * Convenience method for creating a file-based parameters object initialized with the given file.
-     *
-     * @param url the URL to be loaded
-     * @return the initialized parameters object
-     */
-    private FileBasedBuilderParameters fileParams(final URL url) {
-        return fileParams().setURL(url);
-    }
-
-    /**
-     * Convenience method for creating a file-based parameters object initialized with the given file path.
-     *
-     * @param path the path to the file to be loaded
-     * @return the initialized parameters object
-     */
-    private FileBasedBuilderParameters fileParams(final String path) {
-        return fileParams().setFileName(path);
+    public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final URL url) {
+        return fileBasedBuilder(XMLConfiguration.class, url);
     }
 
 }

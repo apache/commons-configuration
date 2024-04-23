@@ -52,82 +52,6 @@ import java.util.function.Function;
  * @since 2.0
  */
 public final class InterpolatorSpecification {
-    /** The {@code ConfigurationInterpolator} instance to be used directly. */
-    private final ConfigurationInterpolator interpolator;
-
-    /** The parent {@code ConfigurationInterpolator}. */
-    private final ConfigurationInterpolator parentInterpolator;
-
-    /** The map with prefix lookups. */
-    private final Map<String, Lookup> prefixLookups;
-
-    /** The collection with default lookups. */
-    private final Collection<Lookup> defaultLookups;
-
-    /** Function used to convert interpolated values to strings. */
-    private final Function<Object, String> stringConverter;
-
-    /**
-     * Creates a new instance of {@code InterpolatorSpecification} with the properties defined by the given builder object.
-     *
-     * @param builder the builder
-     */
-    private InterpolatorSpecification(final Builder builder) {
-        interpolator = builder.interpolator;
-        parentInterpolator = builder.parentInterpolator;
-        prefixLookups = Collections.unmodifiableMap(new HashMap<>(builder.prefixLookups));
-        defaultLookups = Collections.unmodifiableCollection(new ArrayList<>(builder.defLookups));
-        stringConverter = builder.stringConverter;
-    }
-
-    /**
-     * Gets the {@code ConfigurationInterpolator} instance to be used directly.
-     *
-     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
-     */
-    public ConfigurationInterpolator getInterpolator() {
-        return interpolator;
-    }
-
-    /**
-     * Gets the parent {@code ConfigurationInterpolator} object.
-     *
-     * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
-     */
-    public ConfigurationInterpolator getParentInterpolator() {
-        return parentInterpolator;
-    }
-
-    /**
-     * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
-     * {@code Lookup} objects.
-     *
-     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
-     */
-    public Map<String, Lookup> getPrefixLookups() {
-        return prefixLookups;
-    }
-
-    /**
-     * Gets a collection with the default lookups.
-     *
-     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
-     */
-    public Collection<Lookup> getDefaultLookups() {
-        return defaultLookups;
-    }
-
-    /**
-     * Gets the function used to convert interpolated values to strings or {@code null}
-     * if the default conversion function is to be used.
-     *
-     * @return function used to convert interpolated values to strings or {@code null} if
-     *      the default conversion function is to be used
-     */
-    public Function<Object, String> getStringConverter() {
-        return stringConverter;
-    }
-
     /**
      * <p>
      * A <em>builder</em> class for creating instances of {@code InterpolatorSpecification}.
@@ -138,6 +62,18 @@ public final class InterpolatorSpecification {
      * </p>
      */
     public static class Builder {
+        /**
+         * Helper method for checking a lookup. Throws an exception if the lookup is <b>null</b>.
+         *
+         * @param lookup the lookup to be checked
+         * @throws IllegalArgumentException if the lookup is <b>null</b>
+         */
+        private static void checkLookup(final Lookup lookup) {
+            if (lookup == null) {
+                throw new IllegalArgumentException("Lookup must not be null!");
+            }
+        }
+
         /** A map with prefix lookups. */
         private final Map<String, Lookup> prefixLookups;
 
@@ -159,35 +95,27 @@ public final class InterpolatorSpecification {
         }
 
         /**
-         * Adds a {@code Lookup} object for a given prefix.
+         * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
+         * instance is reset so that it can be reused for creating further specification objects.
          *
-         * @param prefix the prefix (must not be <b>null</b>)
-         * @param lookup the {@code Lookup} (must not be <b>null</b>)
-         * @return a reference to this builder for method chaining
-         * @throws IllegalArgumentException if a required parameter is missing
+         * @return the newly created {@code InterpolatorSpecification}
          */
-        public Builder withPrefixLookup(final String prefix, final Lookup lookup) {
-            if (prefix == null) {
-                throw new IllegalArgumentException("Prefix must not be null!");
-            }
-            checkLookup(lookup);
-            prefixLookups.put(prefix, lookup);
-            return this;
+        public InterpolatorSpecification create() {
+            final InterpolatorSpecification spec = new InterpolatorSpecification(this);
+            reset();
+            return spec;
         }
 
         /**
-         * Adds the content of the given map to the prefix lookups managed by this builder. The map can be <b>null</b>, then
-         * this method has no effect.
-         *
-         * @param lookups the map with prefix lookups to be added
-         * @return a reference to this builder for method chaining
-         * @throws IllegalArgumentException if the map contains <b>null</b> values
+         * Removes all data from this builder. Afterwards it can be used to define a brand new {@code InterpolatorSpecification}
+         * object.
          */
-        public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
-            if (lookups != null) {
-                lookups.forEach(this::withPrefixLookup);
-            }
-            return this;
+        public void reset() {
+            interpolator = null;
+            parentInterpolator = null;
+            prefixLookups.clear();
+            defLookups.clear();
+            stringConverter = null;
         }
 
         /**
@@ -243,6 +171,38 @@ public final class InterpolatorSpecification {
         }
 
         /**
+         * Adds a {@code Lookup} object for a given prefix.
+         *
+         * @param prefix the prefix (must not be <b>null</b>)
+         * @param lookup the {@code Lookup} (must not be <b>null</b>)
+         * @return a reference to this builder for method chaining
+         * @throws IllegalArgumentException if a required parameter is missing
+         */
+        public Builder withPrefixLookup(final String prefix, final Lookup lookup) {
+            if (prefix == null) {
+                throw new IllegalArgumentException("Prefix must not be null!");
+            }
+            checkLookup(lookup);
+            prefixLookups.put(prefix, lookup);
+            return this;
+        }
+
+        /**
+         * Adds the content of the given map to the prefix lookups managed by this builder. The map can be <b>null</b>, then
+         * this method has no effect.
+         *
+         * @param lookups the map with prefix lookups to be added
+         * @return a reference to this builder for method chaining
+         * @throws IllegalArgumentException if the map contains <b>null</b> values
+         */
+        public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
+            if (lookups != null) {
+                lookups.forEach(this::withPrefixLookup);
+            }
+            return this;
+        }
+
+        /**
          * Sets the function used to convert interpolated values to strings. Pass {@code null}
          * if the default conversion function is to be used.
          *
@@ -254,41 +214,81 @@ public final class InterpolatorSpecification {
             this.stringConverter = fn;
             return this;
         }
+    }
 
-        /**
-         * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
-         * instance is reset so that it can be reused for creating further specification objects.
-         *
-         * @return the newly created {@code InterpolatorSpecification}
-         */
-        public InterpolatorSpecification create() {
-            final InterpolatorSpecification spec = new InterpolatorSpecification(this);
-            reset();
-            return spec;
-        }
+    /** The {@code ConfigurationInterpolator} instance to be used directly. */
+    private final ConfigurationInterpolator interpolator;
 
-        /**
-         * Removes all data from this builder. Afterwards it can be used to define a brand new {@code InterpolatorSpecification}
-         * object.
-         */
-        public void reset() {
-            interpolator = null;
-            parentInterpolator = null;
-            prefixLookups.clear();
-            defLookups.clear();
-            stringConverter = null;
-        }
+    /** The parent {@code ConfigurationInterpolator}. */
+    private final ConfigurationInterpolator parentInterpolator;
 
-        /**
-         * Helper method for checking a lookup. Throws an exception if the lookup is <b>null</b>.
-         *
-         * @param lookup the lookup to be checked
-         * @throws IllegalArgumentException if the lookup is <b>null</b>
-         */
-        private static void checkLookup(final Lookup lookup) {
-            if (lookup == null) {
-                throw new IllegalArgumentException("Lookup must not be null!");
-            }
-        }
+    /** The map with prefix lookups. */
+    private final Map<String, Lookup> prefixLookups;
+
+    /** The collection with default lookups. */
+    private final Collection<Lookup> defaultLookups;
+
+    /** Function used to convert interpolated values to strings. */
+    private final Function<Object, String> stringConverter;
+
+    /**
+     * Creates a new instance of {@code InterpolatorSpecification} with the properties defined by the given builder object.
+     *
+     * @param builder the builder
+     */
+    private InterpolatorSpecification(final Builder builder) {
+        interpolator = builder.interpolator;
+        parentInterpolator = builder.parentInterpolator;
+        prefixLookups = Collections.unmodifiableMap(new HashMap<>(builder.prefixLookups));
+        defaultLookups = Collections.unmodifiableCollection(new ArrayList<>(builder.defLookups));
+        stringConverter = builder.stringConverter;
+    }
+
+    /**
+     * Gets a collection with the default lookups.
+     *
+     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
+     */
+    public Collection<Lookup> getDefaultLookups() {
+        return defaultLookups;
+    }
+
+    /**
+     * Gets the {@code ConfigurationInterpolator} instance to be used directly.
+     *
+     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
+     */
+    public ConfigurationInterpolator getInterpolator() {
+        return interpolator;
+    }
+
+    /**
+     * Gets the parent {@code ConfigurationInterpolator} object.
+     *
+     * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
+     */
+    public ConfigurationInterpolator getParentInterpolator() {
+        return parentInterpolator;
+    }
+
+    /**
+     * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
+     * {@code Lookup} objects.
+     *
+     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
+     */
+    public Map<String, Lookup> getPrefixLookups() {
+        return prefixLookups;
+    }
+
+    /**
+     * Gets the function used to convert interpolated values to strings or {@code null}
+     * if the default conversion function is to be used.
+     *
+     * @return function used to convert interpolated values to strings or {@code null} if
+     *      the default conversion function is to be used
+     */
+    public Function<Object, String> getStringConverter() {
+        return stringConverter;
     }
 }

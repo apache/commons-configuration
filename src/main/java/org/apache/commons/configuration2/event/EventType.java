@@ -46,54 +46,6 @@ public class EventType<T extends Event> implements Serializable {
     /** Constant for the format used by toString(). */
     private static final String FMT_TO_STRING = "%s [ %s ]";
 
-    /** Stores the super type of this type. */
-    private final EventType<? super T> superType;
-
-    /** A name for this event type. */
-    private final String name;
-
-    /**
-     * Creates a new instance of {@code EventType} and initializes it with the super type and a type name. If no super type
-     * is specified, this is the root event type.
-     *
-     * @param superEventType the super event type
-     * @param typeName the name of this event type
-     */
-    public EventType(final EventType<? super T> superEventType, final String typeName) {
-        superType = superEventType;
-        name = typeName;
-    }
-
-    /**
-     * Gets the super event type. Result is <b>null</b> for the root event type.
-     *
-     * @return the super event type
-     */
-    public EventType<? super T> getSuperType() {
-        return superType;
-    }
-
-    /**
-     * Gets the name of this event type. The name has no specific semantic meaning. It is just used for debugging
-     * purposes and also part of the string representation of this event type.
-     *
-     * @return the event type name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Returns a string representation for this object. This method is mainly overridden for debugging purposes. The
-     * returned string contains the name of this event type.
-     *
-     * @return a string for this object
-     */
-    @Override
-    public String toString() {
-        return String.format(FMT_TO_STRING, getClass().getSimpleName(), getName());
-    }
-
     /**
      * Returns a set with all event types that are super types of the specified type. This set contains the direct and
      * indirect super types and also includes the given type itself. The passed in type may be <b>null</b>, then an empty
@@ -129,5 +81,53 @@ public class EventType<T extends Event> implements Serializable {
             currentType = currentType.getSuperType();
         }
         return false;
+    }
+
+    /** Stores the super type of this type. */
+    private final EventType<? super T> superType;
+
+    /** A name for this event type. */
+    private final String name;
+
+    /**
+     * Creates a new instance of {@code EventType} and initializes it with the super type and a type name. If no super type
+     * is specified, this is the root event type.
+     *
+     * @param superEventType the super event type
+     * @param typeName the name of this event type
+     */
+    public EventType(final EventType<? super T> superEventType, final String typeName) {
+        superType = superEventType;
+        name = typeName;
+    }
+
+    /**
+     * Gets the name of this event type. The name has no specific semantic meaning. It is just used for debugging
+     * purposes and also part of the string representation of this event type.
+     *
+     * @return the event type name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the super event type. Result is <b>null</b> for the root event type.
+     *
+     * @return the super event type
+     */
+    public EventType<? super T> getSuperType() {
+        return superType;
+    }
+
+    /**
+     * Returns a string representation for this object. This method is mainly overridden for debugging purposes. The
+     * returned string contains the name of this event type.
+     *
+     * @return a string for this object
+     */
+    @Override
+    public String toString() {
+        return String.format(FMT_TO_STRING, getClass().getSimpleName(), getName());
     }
 }

@@ -50,19 +50,6 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     private final T node;
 
     /**
-     * Creates a new instance of {@code ConfigurationNodePointer} pointing to the specified node.
-     *
-     * @param node the wrapped node
-     * @param locale the locale
-     * @param handler the {@code NodeHandler}
-     */
-    public ConfigurationNodePointer(final T node, final Locale locale, final NodeHandler<T> handler) {
-        super(null, locale);
-        this.node = node;
-        this.handler = handler;
-    }
-
-    /**
      * Creates a new instance of {@code ConfigurationNodePointer} and initializes it with its parent pointer.
      *
      * @param parent the parent pointer
@@ -76,93 +63,53 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns a flag whether this node is a leaf. This is the case if there are no child nodes.
+     * Creates a new instance of {@code ConfigurationNodePointer} pointing to the specified node.
      *
-     * @return a flag if this node is a leaf
+     * @param node the wrapped node
+     * @param locale the locale
+     * @param handler the {@code NodeHandler}
      */
-    @Override
-    public boolean isLeaf() {
-        return getNodeHandler().getChildrenCount(node, null) < 1;
+    public ConfigurationNodePointer(final T node, final Locale locale, final NodeHandler<T> handler) {
+        super(null, locale);
+        this.node = node;
+        this.handler = handler;
     }
 
     /**
-     * Returns a flag if this node is a collection. This is not the case.
+     * Returns an iterator for the attributes that match the given name.
      *
-     * @return the collection flag
+     * @param name the attribute name
+     * @return the iterator for the attributes
      */
     @Override
-    public boolean isCollection() {
-        return false;
+    public NodeIterator attributeIterator(final QName name) {
+        return new ConfigurationNodeIteratorAttribute<>(this, name);
     }
 
     /**
-     * Gets this node's length. This is always 1.
+     * Casts the given child pointer to a node pointer of this type. This is a bit dangerous. However, in a typical setup,
+     * child node pointers can only be created by this instance which ensures that they are of the correct type. Therefore,
+     * this cast is safe.
      *
-     * @return the node's length
+     * @param p the {@code NodePointer} to cast
+     * @return the resulting {@code ConfigurationNodePointer}
      */
-    @Override
-    public int getLength() {
-        return 1;
+    private ConfigurationNodePointer<T> castPointer(final NodePointer p) {
+        @SuppressWarnings("unchecked") // see method comment
+        final ConfigurationNodePointer<T> result = (ConfigurationNodePointer<T>) p;
+        return result;
     }
 
     /**
-     * Checks whether this node pointer refers to an attribute node. This is not the case.
+     * Returns an iterator for the children of this pointer that match the given test object.
      *
-     * @return the attribute flag
+     * @param test the test object
+     * @param reverse the reverse flag
+     * @param startWith the start value of the iteration
      */
     @Override
-    public boolean isAttribute() {
-        return false;
-    }
-
-    /**
-     * Gets this node's name.
-     *
-     * @return the name
-     */
-    @Override
-    public QName getName() {
-        return new QName(null, getNodeHandler().nodeName(node));
-    }
-
-    /**
-     * Gets this node's base value. This is the associated configuration node.
-     *
-     * @return the base value
-     */
-    @Override
-    public Object getBaseValue() {
-        return node;
-    }
-
-    /**
-     * Gets the immediate node. This is the associated configuration node.
-     *
-     * @return the immediate node
-     */
-    @Override
-    public Object getImmediateNode() {
-        return node;
-    }
-
-    /**
-     * Gets the value of this node.
-     *
-     * @return the represented node's value
-     */
-    @Override
-    public Object getValue() {
-        return getNodeHandler().getValue(node);
-    }
-
-    /**
-     * Sets the value of this node. This is not supported, so always an exception is thrown.
-     *
-     * @param value the new value
-     */
-    @Override
-    public void setValue(final Object value) {
-        throw new UnsupportedOperationException("Node value cannot be set!");
+    public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith) {
+        return new ConfigurationNodeIteratorChildren<>(this, test, reverse, castPointer(startWith));
     }
 
     /**
@@ -190,26 +137,111 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     }
 
     /**
-     * Returns an iterator for the attributes that match the given name.
+     * Gets this node's base value. This is the associated configuration node.
      *
-     * @param name the attribute name
-     * @return the iterator for the attributes
+     * @return the base value
      */
     @Override
-    public NodeIterator attributeIterator(final QName name) {
-        return new ConfigurationNodeIteratorAttribute<>(this, name);
+    public Object getBaseValue() {
+        return node;
     }
 
     /**
-     * Returns an iterator for the children of this pointer that match the given test object.
+     * Gets the wrapped configuration node.
      *
-     * @param test the test object
-     * @param reverse the reverse flag
-     * @param startWith the start value of the iteration
+     * @return the wrapped node
+     */
+    public T getConfigurationNode() {
+        return node;
+    }
+
+    /**
+     * Gets the immediate node. This is the associated configuration node.
+     *
+     * @return the immediate node
      */
     @Override
-    public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith) {
-        return new ConfigurationNodeIteratorChildren<>(this, test, reverse, castPointer(startWith));
+    public Object getImmediateNode() {
+        return node;
+    }
+
+    /**
+     * Gets this node's length. This is always 1.
+     *
+     * @return the node's length
+     */
+    @Override
+    public int getLength() {
+        return 1;
+    }
+
+    /**
+     * Gets this node's name.
+     *
+     * @return the name
+     */
+    @Override
+    public QName getName() {
+        return new QName(null, getNodeHandler().nodeName(node));
+    }
+
+    /**
+     * Gets the {@code NodeHandler} used by this instance.
+     *
+     * @return the {@code NodeHandler}
+     */
+    public NodeHandler<T> getNodeHandler() {
+        return handler;
+    }
+
+    /**
+     * Gets the value of this node.
+     *
+     * @return the represented node's value
+     */
+    @Override
+    public Object getValue() {
+        return getNodeHandler().getValue(node);
+    }
+
+    /**
+     * Checks whether this node pointer refers to an attribute node. This is not the case.
+     *
+     * @return the attribute flag
+     */
+    @Override
+    public boolean isAttribute() {
+        return false;
+    }
+
+    /**
+     * Returns a flag if this node is a collection. This is not the case.
+     *
+     * @return the collection flag
+     */
+    @Override
+    public boolean isCollection() {
+        return false;
+    }
+
+    /**
+     * Returns a flag whether this node is a leaf. This is the case if there are no child nodes.
+     *
+     * @return a flag if this node is a leaf
+     */
+    @Override
+    public boolean isLeaf() {
+        return getNodeHandler().getChildrenCount(node, null) < 1;
+    }
+
+    /**
+     * Sets the value of this node. This is not supported, so always an exception is thrown.
+     *
+     * @param value the new value
+     */
+    @Override
+    public void setValue(final Object value) {
+        throw new UnsupportedOperationException("Node value cannot be set!");
     }
 
     /**
@@ -224,37 +256,5 @@ final class ConfigurationNodePointer<T> extends NodePointer {
             return true;
         }
         return super.testNode(test);
-    }
-
-    /**
-     * Gets the {@code NodeHandler} used by this instance.
-     *
-     * @return the {@code NodeHandler}
-     */
-    public NodeHandler<T> getNodeHandler() {
-        return handler;
-    }
-
-    /**
-     * Gets the wrapped configuration node.
-     *
-     * @return the wrapped node
-     */
-    public T getConfigurationNode() {
-        return node;
-    }
-
-    /**
-     * Casts the given child pointer to a node pointer of this type. This is a bit dangerous. However, in a typical setup,
-     * child node pointers can only be created by this instance which ensures that they are of the correct type. Therefore,
-     * this cast is safe.
-     *
-     * @param p the {@code NodePointer} to cast
-     * @return the resulting {@code ConfigurationNodePointer}
-     */
-    private ConfigurationNodePointer<T> castPointer(final NodePointer p) {
-        @SuppressWarnings("unchecked") // see method comment
-        final ConfigurationNodePointer<T> result = (ConfigurationNodePointer<T>) p;
-        return result;
     }
 }

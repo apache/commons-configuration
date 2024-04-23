@@ -53,6 +53,14 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler {
     }
 
     /**
+     * {@inheritDoc} This implementation returns the passed in string without any changes.
+     */
+    @Override
+    protected String escapeString(final String s) {
+        return s;
+    }
+
+    /**
      * {@inheritDoc} This implementation always returns a collection containing the passed in string as its single element.
      * The string is not changed, the {@code trim} flag is ignored. (The {@code trim} flag refers to the components
      * extracted from the string. Because no components are extracted nothing is trimmed.)
@@ -62,13 +70,5 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler {
         final Collection<String> result = new ArrayList<>(1);
         result.add(s);
         return result;
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns the passed in string without any changes.
-     */
-    @Override
-    protected String escapeString(final String s) {
-        return s;
     }
 }

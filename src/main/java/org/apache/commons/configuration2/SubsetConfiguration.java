@@ -34,200 +34,6 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  */
 public class SubsetConfiguration extends AbstractConfiguration {
-    /** The parent configuration. */
-    protected Configuration parent;
-
-    /** The prefix used to select the properties. */
-    protected String prefix;
-
-    /** The prefix delimiter */
-    protected String delimiter;
-
-    /**
-     * Create a subset of the specified configuration
-     *
-     * @param parent The parent configuration (must not be <b>null</b>)
-     * @param prefix The prefix used to select the properties
-     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
-     */
-    public SubsetConfiguration(final Configuration parent, final String prefix) {
-        this(parent, prefix, null);
-    }
-
-    /**
-     * Create a subset of the specified configuration
-     *
-     * @param parent The parent configuration (must not be <b>null</b>)
-     * @param prefix The prefix used to select the properties
-     * @param delimiter The prefix delimiter
-     * @throws NullPointerException if the parent configuration is <b>null</b>
-     */
-    public SubsetConfiguration(final Configuration parent, final String prefix, final String delimiter) {
-        this.parent = Objects.requireNonNull(parent, "parent");
-        this.prefix = prefix;
-        this.delimiter = delimiter;
-        initInterpolator();
-    }
-
-    /**
-     * Gets the key in the parent configuration associated to the specified key in this subset.
-     *
-     * @param key The key in the subset.
-     * @return the key as to be used by the parent
-     */
-    protected String getParentKey(final String key) {
-        if (StringUtils.isEmpty(key)) {
-            return prefix;
-        }
-        return delimiter == null ? prefix + key : prefix + delimiter + key;
-    }
-
-    /**
-     * Gets the key in the subset configuration associated to the specified key in the parent configuration.
-     *
-     * @param key The key in the parent configuration.
-     * @return the key in the context of this subset configuration
-     */
-    protected String getChildKey(final String key) {
-        if (!key.startsWith(prefix)) {
-            throw new IllegalArgumentException("The parent key '" + key + "' is not in the subset.");
-        }
-        String modifiedKey = null;
-        if (key.length() == prefix.length()) {
-            modifiedKey = "";
-        } else {
-            final int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
-            modifiedKey = key.substring(i);
-        }
-
-        return modifiedKey;
-    }
-
-    /**
-     * Gets the parent configuration for this subset.
-     *
-     * @return the parent configuration
-     */
-    public Configuration getParent() {
-        return parent;
-    }
-
-    /**
-     * Gets the prefix used to select the properties in the parent configuration.
-     *
-     * @return the prefix used by this subset
-     */
-    public String getPrefix() {
-        return prefix;
-    }
-
-    /**
-     * Sets the prefix used to select the properties in the parent configuration.
-     *
-     * @param prefix the prefix
-     */
-    public void setPrefix(final String prefix) {
-        this.prefix = prefix;
-    }
-
-    @Override
-    public Configuration subset(final String prefix) {
-        return parent.subset(getParentKey(prefix));
-    }
-
-    @Override
-    protected boolean isEmptyInternal() {
-        return !getKeysInternal().hasNext();
-    }
-
-    @Override
-    protected boolean containsKeyInternal(final String key) {
-        return parent.containsKey(getParentKey(key));
-    }
-
-    @Override
-    public void addPropertyDirect(final String key, final Object value) {
-        parent.addProperty(getParentKey(key), value);
-    }
-
-    @Override
-    protected void clearPropertyDirect(final String key) {
-        parent.clearProperty(getParentKey(key));
-    }
-
-    @Override
-    protected Object getPropertyInternal(final String key) {
-        return parent.getProperty(getParentKey(key));
-    }
-
-    @Override
-    protected Iterator<String> getKeysInternal(final String prefix) {
-        return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
-    }
-
-    @Override
-    protected Iterator<String> getKeysInternal() {
-        return new SubsetIterator(parent.getKeys(prefix, delimiter));
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Change the behavior of the parent configuration if it supports this feature.
-     */
-    @Override
-    public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing) {
-        if (parent instanceof AbstractConfiguration) {
-            ((AbstractConfiguration) parent).setThrowExceptionOnMissing(throwExceptionOnMissing);
-        } else {
-            super.setThrowExceptionOnMissing(throwExceptionOnMissing);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * The subset inherits this feature from its parent if it supports this feature.
-     */
-    @Override
-    public boolean isThrowExceptionOnMissing() {
-        if (parent instanceof AbstractConfiguration) {
-            return ((AbstractConfiguration) parent).isThrowExceptionOnMissing();
-        }
-        return super.isThrowExceptionOnMissing();
-    }
-
-    /**
-     * {@inheritDoc} If the parent configuration extends {@link AbstractConfiguration}, the list delimiter handler is
-     * obtained from there.
-     */
-    @Override
-    public ListDelimiterHandler getListDelimiterHandler() {
-        return parent instanceof AbstractConfiguration ? ((AbstractConfiguration) parent).getListDelimiterHandler() : super.getListDelimiterHandler();
-    }
-
-    /**
-     * {@inheritDoc} If the parent configuration extends {@link AbstractConfiguration}, the list delimiter handler is passed
-     * to the parent.
-     */
-    @Override
-    public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
-        if (parent instanceof AbstractConfiguration) {
-            ((AbstractConfiguration) parent).setListDelimiterHandler(listDelimiterHandler);
-        } else {
-            super.setListDelimiterHandler(listDelimiterHandler);
-        }
-    }
-
-    /**
-     * Initializes the {@code ConfigurationInterpolator} for this sub configuration. This is a standard
-     * {@code ConfigurationInterpolator} which also references the {@code ConfigurationInterpolator} of the parent
-     * configuration.
-     */
-    private void initInterpolator() {
-        getInterpolator().setParentInterpolator(getParent().getInterpolator());
-    }
-
     /**
      * A specialized iterator to be returned by the {@code getKeys()} methods. This implementation wraps an iterator from
      * the parent configuration. The keys returned by this iterator are correspondingly transformed.
@@ -273,5 +79,199 @@ public class SubsetConfiguration extends AbstractConfiguration {
         public void remove() {
             parentIterator.remove();
         }
+    }
+
+    /** The parent configuration. */
+    protected Configuration parent;
+
+    /** The prefix used to select the properties. */
+    protected String prefix;
+
+    /** The prefix delimiter */
+    protected String delimiter;
+
+    /**
+     * Create a subset of the specified configuration
+     *
+     * @param parent The parent configuration (must not be <b>null</b>)
+     * @param prefix The prefix used to select the properties
+     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
+     */
+    public SubsetConfiguration(final Configuration parent, final String prefix) {
+        this(parent, prefix, null);
+    }
+
+    /**
+     * Create a subset of the specified configuration
+     *
+     * @param parent The parent configuration (must not be <b>null</b>)
+     * @param prefix The prefix used to select the properties
+     * @param delimiter The prefix delimiter
+     * @throws NullPointerException if the parent configuration is <b>null</b>
+     */
+    public SubsetConfiguration(final Configuration parent, final String prefix, final String delimiter) {
+        this.parent = Objects.requireNonNull(parent, "parent");
+        this.prefix = prefix;
+        this.delimiter = delimiter;
+        initInterpolator();
+    }
+
+    @Override
+    public void addPropertyDirect(final String key, final Object value) {
+        parent.addProperty(getParentKey(key), value);
+    }
+
+    @Override
+    protected void clearPropertyDirect(final String key) {
+        parent.clearProperty(getParentKey(key));
+    }
+
+    @Override
+    protected boolean containsKeyInternal(final String key) {
+        return parent.containsKey(getParentKey(key));
+    }
+
+    /**
+     * Gets the key in the subset configuration associated to the specified key in the parent configuration.
+     *
+     * @param key The key in the parent configuration.
+     * @return the key in the context of this subset configuration
+     */
+    protected String getChildKey(final String key) {
+        if (!key.startsWith(prefix)) {
+            throw new IllegalArgumentException("The parent key '" + key + "' is not in the subset.");
+        }
+        String modifiedKey = null;
+        if (key.length() == prefix.length()) {
+            modifiedKey = "";
+        } else {
+            final int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
+            modifiedKey = key.substring(i);
+        }
+
+        return modifiedKey;
+    }
+
+    @Override
+    protected Iterator<String> getKeysInternal() {
+        return new SubsetIterator(parent.getKeys(prefix, delimiter));
+    }
+
+    @Override
+    protected Iterator<String> getKeysInternal(final String prefix) {
+        return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
+    }
+
+    /**
+     * {@inheritDoc} If the parent configuration extends {@link AbstractConfiguration}, the list delimiter handler is
+     * obtained from there.
+     */
+    @Override
+    public ListDelimiterHandler getListDelimiterHandler() {
+        return parent instanceof AbstractConfiguration ? ((AbstractConfiguration) parent).getListDelimiterHandler() : super.getListDelimiterHandler();
+    }
+
+    /**
+     * Gets the parent configuration for this subset.
+     *
+     * @return the parent configuration
+     */
+    public Configuration getParent() {
+        return parent;
+    }
+
+    /**
+     * Gets the key in the parent configuration associated to the specified key in this subset.
+     *
+     * @param key The key in the subset.
+     * @return the key as to be used by the parent
+     */
+    protected String getParentKey(final String key) {
+        if (StringUtils.isEmpty(key)) {
+            return prefix;
+        }
+        return delimiter == null ? prefix + key : prefix + delimiter + key;
+    }
+
+    /**
+     * Gets the prefix used to select the properties in the parent configuration.
+     *
+     * @return the prefix used by this subset
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    protected Object getPropertyInternal(final String key) {
+        return parent.getProperty(getParentKey(key));
+    }
+
+    /**
+     * Initializes the {@code ConfigurationInterpolator} for this sub configuration. This is a standard
+     * {@code ConfigurationInterpolator} which also references the {@code ConfigurationInterpolator} of the parent
+     * configuration.
+     */
+    private void initInterpolator() {
+        getInterpolator().setParentInterpolator(getParent().getInterpolator());
+    }
+
+    @Override
+    protected boolean isEmptyInternal() {
+        return !getKeysInternal().hasNext();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * The subset inherits this feature from its parent if it supports this feature.
+     */
+    @Override
+    public boolean isThrowExceptionOnMissing() {
+        if (parent instanceof AbstractConfiguration) {
+            return ((AbstractConfiguration) parent).isThrowExceptionOnMissing();
+        }
+        return super.isThrowExceptionOnMissing();
+    }
+
+    /**
+     * {@inheritDoc} If the parent configuration extends {@link AbstractConfiguration}, the list delimiter handler is passed
+     * to the parent.
+     */
+    @Override
+    public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
+        if (parent instanceof AbstractConfiguration) {
+            ((AbstractConfiguration) parent).setListDelimiterHandler(listDelimiterHandler);
+        } else {
+            super.setListDelimiterHandler(listDelimiterHandler);
+        }
+    }
+
+    /**
+     * Sets the prefix used to select the properties in the parent configuration.
+     *
+     * @param prefix the prefix
+     */
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Change the behavior of the parent configuration if it supports this feature.
+     */
+    @Override
+    public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing) {
+        if (parent instanceof AbstractConfiguration) {
+            ((AbstractConfiguration) parent).setThrowExceptionOnMissing(throwExceptionOnMissing);
+        } else {
+            super.setThrowExceptionOnMissing(throwExceptionOnMissing);
+        }
+    }
+
+    @Override
+    public Configuration subset(final String prefix) {
+        return parent.subset(getParentKey(prefix));
     }
 }

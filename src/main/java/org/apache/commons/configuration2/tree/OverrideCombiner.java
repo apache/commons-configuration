@@ -41,35 +41,6 @@ package org.apache.commons.configuration2.tree;
  */
 public class OverrideCombiner extends NodeCombiner {
     /**
-     * Constructs an override combination for the passed in node structures.
-     *
-     * @param node1 the first node
-     * @param node2 the second node
-     * @return the resulting combined node structure
-     */
-    @Override
-    public ImmutableNode combine(final ImmutableNode node1, final ImmutableNode node2) {
-        final ImmutableNode.Builder result = new ImmutableNode.Builder();
-        result.name(node1.getNodeName());
-
-        // Process nodes from the first structure, which override the second
-        node1.forEach(child -> {
-            final ImmutableNode child2 = canCombine(node1, node2, child);
-            result.addChild(child2 != null ? combine(child, child2) : child);
-        });
-
-        // Process nodes from the second structure, which are not contained
-        // in the first structure
-        node2.stream().filter(child -> HANDLER.getChildrenCount(node1, child.getNodeName()) < 1).forEach(result::addChild);
-
-        // Handle attributes and value
-        addAttributes(result, node1, node2);
-        result.value(node1.getValue() != null ? node1.getValue() : node2.getValue());
-
-        return result.create();
-    }
-
-    /**
      * Handles the attributes during a combination process. First all attributes of the first node are added to the result.
      * Then all attributes of the second node, which are not contained in the first node, are also added.
      *
@@ -101,5 +72,34 @@ public class OverrideCombiner extends NodeCombiner {
             return HANDLER.getChildren(node2, child.getNodeName()).get(0);
         }
         return null;
+    }
+
+    /**
+     * Constructs an override combination for the passed in node structures.
+     *
+     * @param node1 the first node
+     * @param node2 the second node
+     * @return the resulting combined node structure
+     */
+    @Override
+    public ImmutableNode combine(final ImmutableNode node1, final ImmutableNode node2) {
+        final ImmutableNode.Builder result = new ImmutableNode.Builder();
+        result.name(node1.getNodeName());
+
+        // Process nodes from the first structure, which override the second
+        node1.forEach(child -> {
+            final ImmutableNode child2 = canCombine(node1, node2, child);
+            result.addChild(child2 != null ? combine(child, child2) : child);
+        });
+
+        // Process nodes from the second structure, which are not contained
+        // in the first structure
+        node2.stream().filter(child -> HANDLER.getChildrenCount(node1, child.getNodeName()) < 1).forEach(result::addChild);
+
+        // Handle attributes and value
+        addAttributes(result, node1, node2);
+        result.value(node1.getValue() != null ? node1.getValue() : node2.getValue());
+
+        return result.create();
     }
 }

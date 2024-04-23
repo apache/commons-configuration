@@ -59,6 +59,130 @@ import org.apache.commons.configuration2.tree.NodeCombiner;
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
+     * Internal class that identifies each Configuration.
+     */
+    static class ConfigData {
+        /** Stores a reference to the configuration. */
+        private final Configuration configuration;
+
+        /** Stores the name under which the configuration is stored. */
+        private final String name;
+
+        /** Stores the at string. */
+        private final String at;
+
+        /**
+         * Creates a new instance of {@code ConfigData} and initializes it.
+         *
+         * @param config the configuration
+         * @param n the name
+         * @param at the at position
+         */
+        public ConfigData(final Configuration config, final String n, final String at) {
+            configuration = config;
+            name = n;
+            this.at = at;
+        }
+
+        /**
+         * Gets the at position of this configuration.
+         *
+         * @return the at position
+         */
+        public String getAt() {
+            return at;
+        }
+
+        /**
+         * Gets the stored configuration.
+         *
+         * @return the configuration
+         */
+        public Configuration getConfiguration() {
+            return configuration;
+        }
+
+        /**
+         * Gets the configuration's name.
+         *
+         * @return the name
+         */
+        public String getName() {
+            return name;
+        }
+
+    }
+
+    /**
+     * A simple data class holding information about the current configuration while an operation for a thread is processed.
+     */
+    private static final class CurrentConfigHolder {
+        /** Stores the current configuration of the current thread. */
+        private CombinedConfiguration currentConfiguration;
+
+        /**
+         * Stores the key of the configuration evaluated for the current thread at the beginning of an operation.
+         */
+        private final String key;
+
+        /** A counter for reentrant locks. */
+        private int lockCount;
+
+        /**
+         * Creates a new instance of {@code CurrentConfigHolder} and initializes it with the key for the current configuration.
+         *
+         * @param curKey the current key
+         */
+        public CurrentConfigHolder(final String curKey) {
+            key = curKey;
+        }
+
+        /**
+         * Decrements the lock counter and checks whether it has reached 0. In this cause, the operation is complete, and the
+         * lock can be released.
+         *
+         * @return <b>true</b> if the lock count reaches 0, <b>false</b> otherwise
+         */
+        public boolean decrementLockCountAndCheckRelease() {
+            return --lockCount == 0;
+        }
+
+        /**
+         * Gets the current configuration.
+         *
+         * @return the current configuration
+         */
+        public CombinedConfiguration getCurrentConfiguration() {
+            return currentConfiguration;
+        }
+
+        /**
+         * Gets the current key.
+         *
+         * @return the current key
+         */
+        public String getKey() {
+            return key;
+        }
+
+        /**
+         * Increments the lock counter.
+         */
+        public void incrementLockCount() {
+            lockCount++;
+        }
+
+        /**
+         * Sets the current configuration.
+         *
+         * @param currentConfiguration the current configuration
+         */
+        public void setCurrentConfiguration(final CombinedConfiguration currentConfiguration) {
+            this.currentConfiguration = currentConfiguration;
+        }
+    }
+
+    /**
      * Stores the current configuration for each involved thread. This value is set at the beginning of an operation and
      * removed at the end.
      */
@@ -86,17 +210,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     private final ConfigurationInterpolator localSubst;
 
     /**
-     * Creates a new instance of {@code DynamicCombinedConfiguration} and initializes the combiner to be used.
-     *
-     * @param comb the node combiner (can be <b>null</b>, then a union combiner is used as default)
-     */
-    public DynamicCombinedConfiguration(final NodeCombiner comb) {
-        setNodeCombiner(comb);
-        initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
-        localSubst = initLocalInterpolator();
-    }
-
-    /**
      * Creates a new instance of {@code DynamicCombinedConfiguration} that uses a union combiner.
      *
      * @see org.apache.commons.configuration2.tree.UnionCombiner
@@ -106,47 +219,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         localSubst = initLocalInterpolator();
     }
 
-    public void setKeyPattern(final String pattern) {
-        this.keyPattern = pattern;
-    }
-
-    public String getKeyPattern() {
-        return this.keyPattern;
-    }
-
     /**
-     * Sets the name of the Logger to use on each CombinedConfiguration.
+     * Creates a new instance of {@code DynamicCombinedConfiguration} and initializes the combiner to be used.
      *
-     * @param name The Logger name.
+     * @param comb the node combiner (can be <b>null</b>, then a union combiner is used as default)
      */
-    public void setLoggerName(final String name) {
-        this.loggerName = name;
-    }
-
-    /**
-     * Gets the node combiner that is used for creating the combined node structure.
-     *
-     * @return the node combiner
-     */
-    @Override
-    public NodeCombiner getNodeCombiner() {
-        return nodeCombiner;
-    }
-
-    /**
-     * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
-     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
-     * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
-     *
-     * @param nodeCombiner the node combiner
-     */
-    @Override
-    public void setNodeCombiner(final NodeCombiner nodeCombiner) {
-        if (nodeCombiner == null) {
-            throw new IllegalArgumentException("Node combiner must not be null!");
-        }
-        this.nodeCombiner = nodeCombiner;
-        invalidateAll();
+    public DynamicCombinedConfiguration(final NodeCombiner comb) {
+        setNodeCombiner(comb);
+        initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
+        localSubst = initLocalInterpolator();
     }
 
     /**
@@ -178,19 +259,198 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         }
     }
 
+    @Override
+    public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
+        configs.values().forEach(cc -> cc.addEventListener(eventType, listener));
+        super.addEventListener(eventType, listener);
+    }
+
+    @Override
+    protected void addNodesInternal(final String key, final Collection<? extends ImmutableNode> nodes) {
+        this.getCurrentConfig().addNodes(key, nodes);
+    }
+
+    @Override
+    protected void addPropertyInternal(final String key, final Object value) {
+        this.getCurrentConfig().addProperty(key, value);
+    }
+
     /**
-     * Gets the number of configurations that are contained in this combined configuration.
-     *
-     * @return the number of contained configurations
+     * {@inheritDoc} This implementation ensures that the current configuration is initialized. The lock counter is
+     * increased.
      */
     @Override
-    public int getNumberOfConfigurations() {
-        beginRead(false);
-        try {
-            return configurations.size();
-        } finally {
-            endRead();
+    protected void beginRead(final boolean optimize) {
+        final CurrentConfigHolder cch = ensureCurrentConfiguration();
+        cch.incrementLockCount();
+        if (!optimize && cch.getCurrentConfiguration() == null) {
+            // delegate to beginWrite() which creates the child configuration
+            beginWrite(false);
+            endWrite();
         }
+
+        // This actually uses our own synchronizer
+        cch.getCurrentConfiguration().beginRead(optimize);
+    }
+
+    /**
+     * {@inheritDoc} This implementation ensures that the current configuration is initialized. If necessary, a new child
+     * configuration instance is created.
+     */
+    @Override
+    protected void beginWrite(final boolean optimize) {
+        final CurrentConfigHolder cch = ensureCurrentConfiguration();
+        cch.incrementLockCount();
+
+        super.beginWrite(optimize);
+        if (!optimize && cch.getCurrentConfiguration() == null) {
+            cch.setCurrentConfiguration(createChildConfiguration());
+            configs.put(cch.getKey(), cch.getCurrentConfiguration());
+            initChildConfiguration(cch.getCurrentConfiguration());
+        }
+    }
+
+    @Override
+    public void clearErrorListeners() {
+        configs.values().forEach(BaseEventSource::clearErrorListeners);
+        super.clearErrorListeners();
+    }
+
+    @Override
+    public void clearEventListeners() {
+        configs.values().forEach(CombinedConfiguration::clearEventListeners);
+        super.clearEventListeners();
+    }
+
+    @Override
+    protected void clearInternal() {
+        this.getCurrentConfig().clear();
+    }
+
+    @Override
+    protected void clearPropertyDirect(final String key) {
+        this.getCurrentConfig().clearProperty(key);
+    }
+
+    @Override
+    protected Object clearTreeInternal(final String key) {
+        this.getCurrentConfig().clearTree(key);
+        return Collections.emptyList();
+    }
+
+    @Override
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key) {
+        return this.getCurrentConfig().configurationAt(key);
+    }
+
+    @Override
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key, final boolean supportUpdates) {
+        return this.getCurrentConfig().configurationAt(key, supportUpdates);
+    }
+
+    @Override
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
+        return this.getCurrentConfig().configurationsAt(key);
+    }
+
+    @Override
+    protected boolean containsKeyInternal(final String key) {
+        return this.getCurrentConfig().containsKey(key);
+    }
+
+    /**
+     * Creates a new, uninitialized child configuration.
+     *
+     * @return the new child configuration
+     */
+    private CombinedConfiguration createChildConfiguration() {
+        return new CombinedConfiguration(getNodeCombiner());
+    }
+
+    /**
+     * {@inheritDoc} This implementation clears the current configuration if necessary.
+     */
+    @Override
+    protected void endRead() {
+        CURRENT_CONFIG.get().getCurrentConfiguration().endRead();
+        releaseLock();
+    }
+
+    /**
+     * {@inheritDoc} This implementation clears the current configuration if necessary.
+     */
+    @Override
+    protected void endWrite() {
+        super.endWrite();
+        releaseLock();
+    }
+
+    /**
+     * Checks whether the current configuration is set. If not, a {@code CurrentConfigHolder} is now created and
+     * initialized, and associated with the current thread. The member for the current configuration is undefined if for the
+     * current key no configuration exists yet.
+     *
+     * @return the {@code CurrentConfigHolder} instance for the current thread
+     */
+    private CurrentConfigHolder ensureCurrentConfiguration() {
+        CurrentConfigHolder cch = CURRENT_CONFIG.get();
+        if (cch == null) {
+            final String key = String.valueOf(localSubst.interpolate(keyPattern));
+            cch = new CurrentConfigHolder(key);
+            cch.setCurrentConfiguration(configs.get(key));
+            CURRENT_CONFIG.set(cch);
+        }
+        return cch;
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(final String key) {
+        return this.getCurrentConfig().getBigDecimal(key);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
+        return this.getCurrentConfig().getBigDecimal(key, defaultValue);
+    }
+
+    @Override
+    public BigInteger getBigInteger(final String key) {
+        return this.getCurrentConfig().getBigInteger(key);
+    }
+
+    @Override
+    public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
+        return this.getCurrentConfig().getBigInteger(key, defaultValue);
+    }
+
+    @Override
+    public boolean getBoolean(final String key) {
+        return this.getCurrentConfig().getBoolean(key);
+    }
+
+    @Override
+    public boolean getBoolean(final String key, final boolean defaultValue) {
+        return this.getCurrentConfig().getBoolean(key, defaultValue);
+    }
+
+    @Override
+    public Boolean getBoolean(final String key, final Boolean defaultValue) {
+        return this.getCurrentConfig().getBoolean(key, defaultValue);
+    }
+
+    @Override
+    public byte getByte(final String key) {
+        return this.getCurrentConfig().getByte(key);
+    }
+
+    @Override
+    public byte getByte(final String key, final byte defaultValue) {
+        return this.getCurrentConfig().getByte(key, defaultValue);
+    }
+
+    @Override
+    public Byte getByte(final String key, final Byte defaultValue) {
+        return this.getCurrentConfig().getByte(key, defaultValue);
     }
 
     /**
@@ -244,131 +504,32 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Removes the configuration with the specified name.
+     * Gets the current configuration. This configuration was initialized at the beginning of an operation and stored in
+     * a thread-local variable. Some methods of this class call this method directly without requesting a lock before. To
+     * deal with this, we always request an additional read lock.
      *
-     * @param name the name of the configuration to be removed
-     * @return the removed configuration (<b>null</b> if this configuration was not found)
+     * @return the current configuration
      */
-    @Override
-    public Configuration removeConfiguration(final String name) {
-        final Configuration conf = getConfiguration(name);
-        if (conf != null) {
-            removeConfiguration(conf);
-        }
-        return conf;
-    }
-
-    /**
-     * Removes the specified configuration from this combined configuration.
-     *
-     * @param config the configuration to be removed
-     * @return a flag whether this configuration was found and could be removed
-     */
-    @Override
-    public boolean removeConfiguration(final Configuration config) {
-        beginWrite(false);
+    private CombinedConfiguration getCurrentConfig() {
+        CombinedConfiguration config;
+        String key;
+        beginRead(false);
         try {
-            for (int index = 0; index < getNumberOfConfigurations(); index++) {
-                if (configurations.get(index).getConfiguration() == config) {
-                    removeConfigurationAt(index);
-                    return true;
-                }
-            }
-
-            return false;
+            config = CURRENT_CONFIG.get().getCurrentConfiguration();
+            key = CURRENT_CONFIG.get().getKey();
         } finally {
-            endWrite();
+            endRead();
         }
-    }
 
-    /**
-     * Removes the configuration at the specified index.
-     *
-     * @param index the index
-     * @return the removed configuration
-     */
-    @Override
-    public Configuration removeConfigurationAt(final int index) {
-        beginWrite(false);
-        try {
-            final ConfigData cd = configurations.remove(index);
-            if (cd.getName() != null) {
-                namedConfigurations.remove(cd.getName());
-            }
-            return cd.getConfiguration();
-        } finally {
-            endWrite();
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Returning config for " + key + ": " + config);
         }
+        return config;
     }
 
     @Override
-    protected void addPropertyInternal(final String key, final Object value) {
-        this.getCurrentConfig().addProperty(key, value);
-    }
-
-    @Override
-    protected void clearInternal() {
-        this.getCurrentConfig().clear();
-    }
-
-    @Override
-    protected void clearPropertyDirect(final String key) {
-        this.getCurrentConfig().clearProperty(key);
-    }
-
-    @Override
-    protected boolean containsKeyInternal(final String key) {
-        return this.getCurrentConfig().containsKey(key);
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
-        return this.getCurrentConfig().getBigDecimal(key, defaultValue);
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(final String key) {
-        return this.getCurrentConfig().getBigDecimal(key);
-    }
-
-    @Override
-    public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
-        return this.getCurrentConfig().getBigInteger(key, defaultValue);
-    }
-
-    @Override
-    public BigInteger getBigInteger(final String key) {
-        return this.getCurrentConfig().getBigInteger(key);
-    }
-
-    @Override
-    public boolean getBoolean(final String key, final boolean defaultValue) {
-        return this.getCurrentConfig().getBoolean(key, defaultValue);
-    }
-
-    @Override
-    public Boolean getBoolean(final String key, final Boolean defaultValue) {
-        return this.getCurrentConfig().getBoolean(key, defaultValue);
-    }
-
-    @Override
-    public boolean getBoolean(final String key) {
-        return this.getCurrentConfig().getBoolean(key);
-    }
-
-    @Override
-    public byte getByte(final String key, final byte defaultValue) {
-        return this.getCurrentConfig().getByte(key, defaultValue);
-    }
-
-    @Override
-    public Byte getByte(final String key, final Byte defaultValue) {
-        return this.getCurrentConfig().getByte(key, defaultValue);
-    }
-
-    @Override
-    public byte getByte(final String key) {
-        return this.getCurrentConfig().getByte(key);
+    public double getDouble(final String key) {
+        return this.getCurrentConfig().getDouble(key);
     }
 
     @Override
@@ -382,8 +543,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
-    public double getDouble(final String key) {
-        return this.getCurrentConfig().getDouble(key);
+    public float getFloat(final String key) {
+        return this.getCurrentConfig().getFloat(key);
     }
 
     @Override
@@ -397,8 +558,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
-    public float getFloat(final String key) {
-        return this.getCurrentConfig().getFloat(key);
+    public int getInt(final String key) {
+        return this.getCurrentConfig().getInt(key);
     }
 
     @Override
@@ -407,13 +568,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
-    public int getInt(final String key) {
-        return this.getCurrentConfig().getInt(key);
-    }
-
-    @Override
     public Integer getInteger(final String key, final Integer defaultValue) {
         return this.getCurrentConfig().getInteger(key, defaultValue);
+    }
+
+    public String getKeyPattern() {
+        return this.keyPattern;
     }
 
     @Override
@@ -427,13 +587,18 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
+    public List<Object> getList(final String key) {
+        return this.getCurrentConfig().getList(key);
+    }
+
+    @Override
     public List<Object> getList(final String key, final List<?> defaultValue) {
         return this.getCurrentConfig().getList(key, defaultValue);
     }
 
     @Override
-    public List<Object> getList(final String key) {
-        return this.getCurrentConfig().getList(key);
+    public long getLong(final String key) {
+        return this.getCurrentConfig().getLong(key);
     }
 
     @Override
@@ -447,8 +612,33 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
-    public long getLong(final String key) {
-        return this.getCurrentConfig().getLong(key);
+    protected int getMaxIndexInternal(final String key) {
+        return this.getCurrentConfig().getMaxIndex(key);
+    }
+
+    /**
+     * Gets the node combiner that is used for creating the combined node structure.
+     *
+     * @return the node combiner
+     */
+    @Override
+    public NodeCombiner getNodeCombiner() {
+        return nodeCombiner;
+    }
+
+    /**
+     * Gets the number of configurations that are contained in this combined configuration.
+     *
+     * @return the number of contained configurations
+     */
+    @Override
+    public int getNumberOfConfigurations() {
+        beginRead(false);
+        try {
+            return configurations.size();
+        } finally {
+            endRead();
+        }
     }
 
     @Override
@@ -462,6 +652,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
+    public short getShort(final String key) {
+        return this.getCurrentConfig().getShort(key);
+    }
+
+    @Override
     public short getShort(final String key, final short defaultValue) {
         return this.getCurrentConfig().getShort(key, defaultValue);
     }
@@ -469,82 +664,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     @Override
     public Short getShort(final String key, final Short defaultValue) {
         return this.getCurrentConfig().getShort(key, defaultValue);
-    }
-
-    @Override
-    public short getShort(final String key) {
-        return this.getCurrentConfig().getShort(key);
-    }
-
-    @Override
-    public String getString(final String key, final String defaultValue) {
-        return this.getCurrentConfig().getString(key, defaultValue);
-    }
-
-    @Override
-    public String getString(final String key) {
-        return this.getCurrentConfig().getString(key);
-    }
-
-    @Override
-    public String[] getStringArray(final String key) {
-        return this.getCurrentConfig().getStringArray(key);
-    }
-
-    @Override
-    protected boolean isEmptyInternal() {
-        return this.getCurrentConfig().isEmpty();
-    }
-
-    @Override
-    protected int sizeInternal() {
-        return this.getCurrentConfig().size();
-    }
-
-    @Override
-    protected void setPropertyInternal(final String key, final Object value) {
-        this.getCurrentConfig().setProperty(key, value);
-    }
-
-    @Override
-    public Configuration subset(final String prefix) {
-        return this.getCurrentConfig().subset(prefix);
-    }
-
-    @Override
-    protected void addNodesInternal(final String key, final Collection<? extends ImmutableNode> nodes) {
-        this.getCurrentConfig().addNodes(key, nodes);
-    }
-
-    @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key, final boolean supportUpdates) {
-        return this.getCurrentConfig().configurationAt(key, supportUpdates);
-    }
-
-    @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key) {
-        return this.getCurrentConfig().configurationAt(key);
-    }
-
-    @Override
-    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-        return this.getCurrentConfig().configurationsAt(key);
-    }
-
-    @Override
-    protected Object clearTreeInternal(final String key) {
-        this.getCurrentConfig().clearTree(key);
-        return Collections.emptyList();
-    }
-
-    @Override
-    protected int getMaxIndexInternal(final String key) {
-        return this.getCurrentConfig().getMaxIndex(key);
-    }
-
-    @Override
-    public Configuration interpolatedConfiguration() {
-        return this.getCurrentConfig().interpolatedConfiguration();
     }
 
     /**
@@ -574,140 +693,18 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     @Override
-    public void clearEventListeners() {
-        configs.values().forEach(CombinedConfiguration::clearEventListeners);
-        super.clearEventListeners();
+    public String getString(final String key) {
+        return this.getCurrentConfig().getString(key);
     }
 
     @Override
-    public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        configs.values().forEach(cc -> cc.addEventListener(eventType, listener));
-        super.addEventListener(eventType, listener);
+    public String getString(final String key, final String defaultValue) {
+        return this.getCurrentConfig().getString(key, defaultValue);
     }
 
     @Override
-    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        configs.values().forEach(cc -> cc.removeEventListener(eventType, listener));
-        return super.removeEventListener(eventType, listener);
-    }
-
-    @Override
-    public void clearErrorListeners() {
-        configs.values().forEach(BaseEventSource::clearErrorListeners);
-        super.clearErrorListeners();
-    }
-
-    /**
-     * Invalidates the current combined configuration. This means that the next time a property is accessed the combined
-     * node structure must be re-constructed. Invalidation of a combined configuration also means that an event of type
-     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other events most times appear twice (once before and
-     * once after an update), this event is only fired once (after update).
-     */
-    @Override
-    public void invalidate() {
-        getCurrentConfig().invalidate();
-    }
-
-    public void invalidateAll() {
-        configs.values().forEach(CombinedConfiguration::invalidate);
-    }
-
-    /**
-     * {@inheritDoc} This implementation ensures that the current configuration is initialized. The lock counter is
-     * increased.
-     */
-    @Override
-    protected void beginRead(final boolean optimize) {
-        final CurrentConfigHolder cch = ensureCurrentConfiguration();
-        cch.incrementLockCount();
-        if (!optimize && cch.getCurrentConfiguration() == null) {
-            // delegate to beginWrite() which creates the child configuration
-            beginWrite(false);
-            endWrite();
-        }
-
-        // This actually uses our own synchronizer
-        cch.getCurrentConfiguration().beginRead(optimize);
-    }
-
-    /**
-     * {@inheritDoc} This implementation ensures that the current configuration is initialized. If necessary, a new child
-     * configuration instance is created.
-     */
-    @Override
-    protected void beginWrite(final boolean optimize) {
-        final CurrentConfigHolder cch = ensureCurrentConfiguration();
-        cch.incrementLockCount();
-
-        super.beginWrite(optimize);
-        if (!optimize && cch.getCurrentConfiguration() == null) {
-            cch.setCurrentConfiguration(createChildConfiguration());
-            configs.put(cch.getKey(), cch.getCurrentConfiguration());
-            initChildConfiguration(cch.getCurrentConfiguration());
-        }
-    }
-
-    /**
-     * {@inheritDoc} This implementation clears the current configuration if necessary.
-     */
-    @Override
-    protected void endRead() {
-        CURRENT_CONFIG.get().getCurrentConfiguration().endRead();
-        releaseLock();
-    }
-
-    /**
-     * {@inheritDoc} This implementation clears the current configuration if necessary.
-     */
-    @Override
-    protected void endWrite() {
-        super.endWrite();
-        releaseLock();
-    }
-
-    /**
-     * Decrements the lock count of the current configuration holder. If it reaches 0, the current configuration is removed.
-     * (It is then reevaluated when the next operation starts.)
-     */
-    private void releaseLock() {
-        final CurrentConfigHolder cch = CURRENT_CONFIG.get();
-        assert cch != null : "No current configuration!";
-        if (cch.decrementLockCountAndCheckRelease()) {
-            CURRENT_CONFIG.remove();
-        }
-    }
-
-    /**
-     * Gets the current configuration. This configuration was initialized at the beginning of an operation and stored in
-     * a thread-local variable. Some methods of this class call this method directly without requesting a lock before. To
-     * deal with this, we always request an additional read lock.
-     *
-     * @return the current configuration
-     */
-    private CombinedConfiguration getCurrentConfig() {
-        CombinedConfiguration config;
-        String key;
-        beginRead(false);
-        try {
-            config = CURRENT_CONFIG.get().getCurrentConfiguration();
-            key = CURRENT_CONFIG.get().getKey();
-        } finally {
-            endRead();
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Returning config for " + key + ": " + config);
-        }
-        return config;
-    }
-
-    /**
-     * Creates a new, uninitialized child configuration.
-     *
-     * @return the new child configuration
-     */
-    private CombinedConfiguration createChildConfiguration() {
-        return new CombinedConfiguration(getNodeCombiner());
+    public String[] getStringArray(final String key) {
+        return this.getCurrentConfig().getStringArray(key);
     }
 
     /**
@@ -744,145 +741,148 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         };
     }
 
+    @Override
+    public Configuration interpolatedConfiguration() {
+        return this.getCurrentConfig().interpolatedConfiguration();
+    }
+
     /**
-     * Checks whether the current configuration is set. If not, a {@code CurrentConfigHolder} is now created and
-     * initialized, and associated with the current thread. The member for the current configuration is undefined if for the
-     * current key no configuration exists yet.
+     * Invalidates the current combined configuration. This means that the next time a property is accessed the combined
+     * node structure must be re-constructed. Invalidation of a combined configuration also means that an event of type
+     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other events most times appear twice (once before and
+     * once after an update), this event is only fired once (after update).
+     */
+    @Override
+    public void invalidate() {
+        getCurrentConfig().invalidate();
+    }
+
+    public void invalidateAll() {
+        configs.values().forEach(CombinedConfiguration::invalidate);
+    }
+
+    @Override
+    protected boolean isEmptyInternal() {
+        return this.getCurrentConfig().isEmpty();
+    }
+
+    /**
+     * Decrements the lock count of the current configuration holder. If it reaches 0, the current configuration is removed.
+     * (It is then reevaluated when the next operation starts.)
+     */
+    private void releaseLock() {
+        final CurrentConfigHolder cch = CURRENT_CONFIG.get();
+        assert cch != null : "No current configuration!";
+        if (cch.decrementLockCountAndCheckRelease()) {
+            CURRENT_CONFIG.remove();
+        }
+    }
+
+    /**
+     * Removes the specified configuration from this combined configuration.
      *
-     * @return the {@code CurrentConfigHolder} instance for the current thread
+     * @param config the configuration to be removed
+     * @return a flag whether this configuration was found and could be removed
      */
-    private CurrentConfigHolder ensureCurrentConfiguration() {
-        CurrentConfigHolder cch = CURRENT_CONFIG.get();
-        if (cch == null) {
-            final String key = String.valueOf(localSubst.interpolate(keyPattern));
-            cch = new CurrentConfigHolder(key);
-            cch.setCurrentConfiguration(configs.get(key));
-            CURRENT_CONFIG.set(cch);
+    @Override
+    public boolean removeConfiguration(final Configuration config) {
+        beginWrite(false);
+        try {
+            for (int index = 0; index < getNumberOfConfigurations(); index++) {
+                if (configurations.get(index).getConfiguration() == config) {
+                    removeConfigurationAt(index);
+                    return true;
+                }
+            }
+
+            return false;
+        } finally {
+            endWrite();
         }
-        return cch;
     }
 
     /**
-     * Internal class that identifies each Configuration.
+     * Removes the configuration with the specified name.
+     *
+     * @param name the name of the configuration to be removed
+     * @return the removed configuration (<b>null</b> if this configuration was not found)
      */
-    static class ConfigData {
-        /** Stores a reference to the configuration. */
-        private final Configuration configuration;
-
-        /** Stores the name under which the configuration is stored. */
-        private final String name;
-
-        /** Stores the at string. */
-        private final String at;
-
-        /**
-         * Creates a new instance of {@code ConfigData} and initializes it.
-         *
-         * @param config the configuration
-         * @param n the name
-         * @param at the at position
-         */
-        public ConfigData(final Configuration config, final String n, final String at) {
-            configuration = config;
-            name = n;
-            this.at = at;
+    @Override
+    public Configuration removeConfiguration(final String name) {
+        final Configuration conf = getConfiguration(name);
+        if (conf != null) {
+            removeConfiguration(conf);
         }
-
-        /**
-         * Gets the stored configuration.
-         *
-         * @return the configuration
-         */
-        public Configuration getConfiguration() {
-            return configuration;
-        }
-
-        /**
-         * Gets the configuration's name.
-         *
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Gets the at position of this configuration.
-         *
-         * @return the at position
-         */
-        public String getAt() {
-            return at;
-        }
-
+        return conf;
     }
 
     /**
-     * A simple data class holding information about the current configuration while an operation for a thread is processed.
+     * Removes the configuration at the specified index.
+     *
+     * @param index the index
+     * @return the removed configuration
      */
-    private static final class CurrentConfigHolder {
-        /** Stores the current configuration of the current thread. */
-        private CombinedConfiguration currentConfiguration;
-
-        /**
-         * Stores the key of the configuration evaluated for the current thread at the beginning of an operation.
-         */
-        private final String key;
-
-        /** A counter for reentrant locks. */
-        private int lockCount;
-
-        /**
-         * Creates a new instance of {@code CurrentConfigHolder} and initializes it with the key for the current configuration.
-         *
-         * @param curKey the current key
-         */
-        public CurrentConfigHolder(final String curKey) {
-            key = curKey;
+    @Override
+    public Configuration removeConfigurationAt(final int index) {
+        beginWrite(false);
+        try {
+            final ConfigData cd = configurations.remove(index);
+            if (cd.getName() != null) {
+                namedConfigurations.remove(cd.getName());
+            }
+            return cd.getConfiguration();
+        } finally {
+            endWrite();
         }
+    }
 
-        /**
-         * Gets the current configuration.
-         *
-         * @return the current configuration
-         */
-        public CombinedConfiguration getCurrentConfiguration() {
-            return currentConfiguration;
-        }
+    @Override
+    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
+        configs.values().forEach(cc -> cc.removeEventListener(eventType, listener));
+        return super.removeEventListener(eventType, listener);
+    }
 
-        /**
-         * Sets the current configuration.
-         *
-         * @param currentConfiguration the current configuration
-         */
-        public void setCurrentConfiguration(final CombinedConfiguration currentConfiguration) {
-            this.currentConfiguration = currentConfiguration;
-        }
+    public void setKeyPattern(final String pattern) {
+        this.keyPattern = pattern;
+    }
 
-        /**
-         * Gets the current key.
-         *
-         * @return the current key
-         */
-        public String getKey() {
-            return key;
-        }
+    /**
+     * Sets the name of the Logger to use on each CombinedConfiguration.
+     *
+     * @param name The Logger name.
+     */
+    public void setLoggerName(final String name) {
+        this.loggerName = name;
+    }
 
-        /**
-         * Increments the lock counter.
-         */
-        public void incrementLockCount() {
-            lockCount++;
+    /**
+     * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
+     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
+     * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
+     *
+     * @param nodeCombiner the node combiner
+     */
+    @Override
+    public void setNodeCombiner(final NodeCombiner nodeCombiner) {
+        if (nodeCombiner == null) {
+            throw new IllegalArgumentException("Node combiner must not be null!");
         }
+        this.nodeCombiner = nodeCombiner;
+        invalidateAll();
+    }
 
-        /**
-         * Decrements the lock counter and checks whether it has reached 0. In this cause, the operation is complete, and the
-         * lock can be released.
-         *
-         * @return <b>true</b> if the lock count reaches 0, <b>false</b> otherwise
-         */
-        public boolean decrementLockCountAndCheckRelease() {
-            return --lockCount == 0;
-        }
+    @Override
+    protected void setPropertyInternal(final String key, final Object value) {
+        this.getCurrentConfig().setProperty(key, value);
+    }
+
+    @Override
+    protected int sizeInternal() {
+        return this.getCurrentConfig().size();
+    }
+
+    @Override
+    public Configuration subset(final String prefix) {
+        return this.getCurrentConfig().subset(prefix);
     }
 }

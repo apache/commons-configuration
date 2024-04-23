@@ -82,6 +82,16 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
+     * Create a CompositeConfiguration with an empty in memory configuration and adds the collection of configurations
+     * specified.
+     *
+     * @param configurations the collection of configurations to add
+     */
+    public CompositeConfiguration(final Collection<? extends Configuration> configurations) {
+        this(new BaseConfiguration(), configurations);
+    }
+
+    /**
      * Creates a CompositeConfiguration object with a specified <em>in-memory configuration</em>. This configuration will
      * store any changes made to the {@code CompositeConfiguration}. Note: Use this constructor if you want to set a special
      * type of in-memory configuration. If you have a configuration which should act as both a child configuration and as
@@ -93,16 +103,6 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         this.configList.clear();
         this.inMemoryConfiguration = inMemoryConfiguration;
         this.configList.add(inMemoryConfiguration);
-    }
-
-    /**
-     * Create a CompositeConfiguration with an empty in memory configuration and adds the collection of configurations
-     * specified.
-     *
-     * @param configurations the collection of configurations to add
-     */
-    public CompositeConfiguration(final Collection<? extends Configuration> configurations) {
-        this(new BaseConfiguration(), configurations);
     }
 
     /**
@@ -213,34 +213,33 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Remove a configuration. The in memory configuration cannot be removed.
+     * Add this property to the in-memory Configuration.
      *
-     * @param config The configuration to remove
+     * @param key The Key to add the property to.
+     * @param token The Value to add.
      */
-    public void removeConfiguration(final Configuration config) {
-        beginWrite(false);
-        try {
-            // Make sure that you can't remove the inMemoryConfiguration from
-            // the CompositeConfiguration object
-            if (!config.equals(inMemoryConfiguration)) {
-                configList.remove(config);
-            }
-        } finally {
-            endWrite();
-        }
+    @Override
+    protected void addPropertyDirect(final String key, final Object token) {
+        inMemoryConfiguration.addProperty(key, token);
     }
 
     /**
-     * Gets the number of configurations.
+     * Adds the value of a property to the given list. This method is used by {@code getList()} for gathering property
+     * values from the child configurations.
      *
-     * @return the number of configuration
+     * @param dest the list for collecting the data
+     * @param config the configuration to query
+     * @param key the key of the property
      */
-    public int getNumberOfConfigurations() {
-        beginRead(false);
-        try {
-            return configList.size();
-        } finally {
-            endRead();
+    private void appendListProperty(final List<Object> dest, final Configuration config, final String key) {
+        final Object value = interpolate(config.getProperty(key));
+        if (value != null) {
+            if (value instanceof Collection) {
+                final Collection<?> col = (Collection<?>) value;
+                dest.addAll(col);
+            } else {
+                dest.add(value);
+            }
         }
     }
 
@@ -259,27 +258,73 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         inMemoryConfigIsChild = false;
     }
 
-    /**
-     * Add this property to the in-memory Configuration.
-     *
-     * @param key The Key to add the property to.
-     * @param token The Value to add.
-     */
     @Override
-    protected void addPropertyDirect(final String key, final Object token) {
-        inMemoryConfiguration.addProperty(key, token);
+    protected void clearPropertyDirect(final String key) {
+        configList.forEach(config -> config.clearProperty(key));
     }
 
     /**
-     * Read property from underlying composite
+     * Returns a copy of this object. This implementation will create a deep clone, i.e. all configurations contained in
+     * this composite will also be cloned. This only works if all contained configurations support cloning; otherwise a
+     * runtime exception will be thrown. Registered event handlers won't get cloned.
      *
-     * @param key key to use for mapping
-     *
-     * @return object associated with the given configuration key.
+     * @return the copy
+     * @since 1.3
      */
     @Override
-    protected Object getPropertyInternal(final String key) {
-        return configList.stream().filter(config -> config.containsKey(key)).findFirst().map(config -> config.getProperty(key)).orElse(null);
+    public Object clone() {
+        try {
+            final CompositeConfiguration copy = (CompositeConfiguration) super.clone();
+            copy.configList = new LinkedList<>();
+            copy.inMemoryConfiguration = ConfigurationUtils.cloneConfiguration(getInMemoryConfiguration());
+            copy.configList.add(copy.inMemoryConfiguration);
+
+            configList.forEach(config -> {
+                if (config != getInMemoryConfiguration()) {
+                    copy.addConfiguration(ConfigurationUtils.cloneConfiguration(config));
+                }
+            });
+
+            copy.cloneInterpolator(this);
+            return copy;
+        } catch (final CloneNotSupportedException cnex) {
+            // cannot happen
+            throw new ConfigurationRuntimeException(cnex);
+        }
+    }
+
+    @Override
+    protected boolean containsKeyInternal(final String key) {
+        return configList.stream().anyMatch(config -> config.containsKey(key));
+    }
+
+    /**
+     * Gets the configuration at the specified index.
+     *
+     * @param index The index of the configuration to retrieve
+     * @return the configuration at this index
+     */
+    public Configuration getConfiguration(final int index) {
+        beginRead(false);
+        try {
+            return configList.get(index);
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
+     * Gets the &quot;in memory configuration&quot;. In this configuration changes are stored.
+     *
+     * @return the in memory configuration
+     */
+    public Configuration getInMemoryConfiguration() {
+        beginRead(false);
+        try {
+            return inMemoryConfiguration;
+        } finally {
+            endRead();
+        }
     }
 
     @Override
@@ -294,21 +339,6 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         final Set<String> keys = new LinkedHashSet<>();
         configList.forEach(config -> config.getKeys(key).forEachRemaining(keys::add));
         return keys.iterator();
-    }
-
-    @Override
-    protected boolean isEmptyInternal() {
-        return configList.stream().allMatch(Configuration::isEmpty);
-    }
-
-    @Override
-    protected void clearPropertyDirect(final String key) {
-        configList.forEach(config -> config.clearProperty(key));
-    }
-
-    @Override
-    protected boolean containsKeyInternal(final String key) {
-        return configList.stream().anyMatch(config -> config.containsKey(key));
     }
 
     @Override
@@ -342,88 +372,30 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return list;
     }
 
-    @Override
-    public String[] getStringArray(final String key) {
-        final List<Object> list = getList(key);
-
-        // transform property values into strings
-        final String[] tokens = new String[list.size()];
-
-        for (int i = 0; i < tokens.length; i++) {
-            tokens[i] = String.valueOf(list.get(i));
-        }
-
-        return tokens;
-    }
-
     /**
-     * Gets the configuration at the specified index.
+     * Gets the number of configurations.
      *
-     * @param index The index of the configuration to retrieve
-     * @return the configuration at this index
+     * @return the number of configuration
      */
-    public Configuration getConfiguration(final int index) {
+    public int getNumberOfConfigurations() {
         beginRead(false);
         try {
-            return configList.get(index);
+            return configList.size();
         } finally {
             endRead();
         }
     }
 
     /**
-     * Gets the &quot;in memory configuration&quot;. In this configuration changes are stored.
+     * Read property from underlying composite
      *
-     * @return the in memory configuration
-     */
-    public Configuration getInMemoryConfiguration() {
-        beginRead(false);
-        try {
-            return inMemoryConfiguration;
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * Returns a copy of this object. This implementation will create a deep clone, i.e. all configurations contained in
-     * this composite will also be cloned. This only works if all contained configurations support cloning; otherwise a
-     * runtime exception will be thrown. Registered event handlers won't get cloned.
+     * @param key key to use for mapping
      *
-     * @return the copy
-     * @since 1.3
+     * @return object associated with the given configuration key.
      */
     @Override
-    public Object clone() {
-        try {
-            final CompositeConfiguration copy = (CompositeConfiguration) super.clone();
-            copy.configList = new LinkedList<>();
-            copy.inMemoryConfiguration = ConfigurationUtils.cloneConfiguration(getInMemoryConfiguration());
-            copy.configList.add(copy.inMemoryConfiguration);
-
-            configList.forEach(config -> {
-                if (config != getInMemoryConfiguration()) {
-                    copy.addConfiguration(ConfigurationUtils.cloneConfiguration(config));
-                }
-            });
-
-            copy.cloneInterpolator(this);
-            return copy;
-        } catch (final CloneNotSupportedException cnex) {
-            // cannot happen
-            throw new ConfigurationRuntimeException(cnex);
-        }
-    }
-
-    /**
-     * {@inheritDoc} This implementation ensures that the in memory configuration is correctly initialized.
-     */
-    @Override
-    public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
-        if (inMemoryConfiguration instanceof AbstractConfiguration) {
-            ((AbstractConfiguration) inMemoryConfiguration).setListDelimiterHandler(listDelimiterHandler);
-        }
-        super.setListDelimiterHandler(listDelimiterHandler);
+    protected Object getPropertyInternal(final String key) {
+        return configList.stream().filter(config -> config.containsKey(key)).findFirst().map(config -> config.getProperty(key)).orElse(null);
     }
 
     /**
@@ -460,6 +432,43 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return source;
     }
 
+    @Override
+    public String[] getStringArray(final String key) {
+        final List<Object> list = getList(key);
+
+        // transform property values into strings
+        final String[] tokens = new String[list.size()];
+
+        for (int i = 0; i < tokens.length; i++) {
+            tokens[i] = String.valueOf(list.get(i));
+        }
+
+        return tokens;
+    }
+
+    @Override
+    protected boolean isEmptyInternal() {
+        return configList.stream().allMatch(Configuration::isEmpty);
+    }
+
+    /**
+     * Remove a configuration. The in memory configuration cannot be removed.
+     *
+     * @param config The configuration to remove
+     */
+    public void removeConfiguration(final Configuration config) {
+        beginWrite(false);
+        try {
+            // Make sure that you can't remove the inMemoryConfiguration from
+            // the CompositeConfiguration object
+            if (!config.equals(inMemoryConfiguration)) {
+                configList.remove(config);
+            }
+        } finally {
+            endWrite();
+        }
+    }
+
     /**
      * Replaces the current in-memory configuration by the given one.
      *
@@ -474,22 +483,13 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     /**
-     * Adds the value of a property to the given list. This method is used by {@code getList()} for gathering property
-     * values from the child configurations.
-     *
-     * @param dest the list for collecting the data
-     * @param config the configuration to query
-     * @param key the key of the property
+     * {@inheritDoc} This implementation ensures that the in memory configuration is correctly initialized.
      */
-    private void appendListProperty(final List<Object> dest, final Configuration config, final String key) {
-        final Object value = interpolate(config.getProperty(key));
-        if (value != null) {
-            if (value instanceof Collection) {
-                final Collection<?> col = (Collection<?>) value;
-                dest.addAll(col);
-            } else {
-                dest.add(value);
-            }
+    @Override
+    public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
+        if (inMemoryConfiguration instanceof AbstractConfiguration) {
+            ((AbstractConfiguration) inMemoryConfiguration).setListDelimiterHandler(listDelimiterHandler);
         }
+        super.setListDelimiterHandler(listDelimiterHandler);
     }
 }

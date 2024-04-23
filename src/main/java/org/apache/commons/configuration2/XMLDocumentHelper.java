@@ -59,33 +59,119 @@ import org.w3c.dom.NodeList;
  * @since 2.0
  */
 final class XMLDocumentHelper {
-    /** Stores the document managed by this instance. */
-    private final Document document;
-
-    /** The element mapping to the source document. */
-    private final Map<Node, Node> elementMapping;
-
-    /** Stores the public ID of the source document. */
-    private final String sourcePublicID;
-
-    /** Stores the system ID of the source document. */
-    private final String sourceSystemID;
-
     /**
-     * Creates a new instance of {@code XMLDocumentHelper} and initializes it with the given XML document. Note: This
-     * constructor is package private only for testing purposes. Instances should be created using the static factory
-     * methods.
+     * Creates a copy of the specified document.
      *
      * @param doc the {@code Document}
-     * @param elemMap the element mapping
-     * @param pubID the public ID of the source document
-     * @param sysID the system ID of the source document
+     * @return the copy of this document
+     * @throws ConfigurationException if an error occurs
      */
-    XMLDocumentHelper(final Document doc, final Map<Node, Node> elemMap, final String pubID, final String sysID) {
-        document = doc;
-        elementMapping = elemMap;
-        sourcePublicID = pubID;
-        sourceSystemID = sysID;
+    private static Document copyDocument(final Document doc) throws ConfigurationException {
+        final Transformer transformer = createTransformer();
+        final DOMSource source = new DOMSource(doc);
+        final DOMResult result = new DOMResult();
+        transform(transformer, source, result);
+
+        return (Document) result.getNode();
+    }
+
+    /**
+     * Creates a new {@code DocumentBuilder} using the specified factory. Exceptions are rethrown as
+     * {@code ConfigurationException} exceptions.
+     *
+     * @param factory the {@code DocumentBuilderFactory}
+     * @return the newly created {@code DocumentBuilder}
+     * @throws ConfigurationException if an error occurs
+     */
+    static DocumentBuilder createDocumentBuilder(final DocumentBuilderFactory factory) throws ConfigurationException {
+        try {
+            return factory.newDocumentBuilder();
+        } catch (final ParserConfigurationException pcex) {
+            throw new ConfigurationException(pcex);
+        }
+    }
+
+    /**
+     * Creates a new {@code DocumentBuilderFactory} instance.
+     *
+     * @return the new factory object
+     */
+    private static DocumentBuilderFactory createDocumentBuilderFactory() {
+        return DocumentBuilderFactory.newInstance();
+    }
+
+    /**
+     * Creates the element mapping for the specified documents. For each node in the source document an entry is created
+     * pointing to the corresponding node in the destination object.
+     *
+     * @param doc1 the source document
+     * @param doc2 the destination document
+     * @return the element mapping
+     */
+    private static Map<Node, Node> createElementMapping(final Document doc1, final Document doc2) {
+        final Map<Node, Node> mapping = new HashMap<>();
+        createElementMappingForNodes(doc1.getDocumentElement(), doc2.getDocumentElement(), mapping);
+        return mapping;
+    }
+
+    /**
+     * Creates the element mapping for the specified nodes and all their child nodes.
+     *
+     * @param n1 node 1
+     * @param n2 node 2
+     * @param mapping the mapping to be filled
+     */
+    private static void createElementMappingForNodes(final Node n1, final Node n2, final Map<Node, Node> mapping) {
+        mapping.put(n1, n2);
+        final NodeList childNodes1 = n1.getChildNodes();
+        final NodeList childNodes2 = n2.getChildNodes();
+        final int count = Math.min(childNodes1.getLength(), childNodes2.getLength());
+        for (int i = 0; i < count; i++) {
+            createElementMappingForNodes(childNodes1.item(i), childNodes2.item(i), mapping);
+        }
+    }
+
+    /**
+     * Creates a new {@code Transformer} object. No initializations are performed on the new instance.
+     *
+     * @return the new {@code Transformer}
+     * @throws ConfigurationException if the {@code Transformer} could not be created
+     */
+    public static Transformer createTransformer() throws ConfigurationException {
+        return createTransformer(createTransformerFactory());
+    }
+
+    /**
+     * Creates a {@code Transformer} using the specified factory.
+     *
+     * @param factory the {@code TransformerFactory}
+     * @return the newly created {@code Transformer}
+     * @throws ConfigurationException if an error occurs
+     */
+    static Transformer createTransformer(final TransformerFactory factory) throws ConfigurationException {
+        try {
+            return factory.newTransformer();
+        } catch (final TransformerConfigurationException tex) {
+            throw new ConfigurationException(tex);
+        }
+    }
+
+    /**
+     * Creates a new {@code TransformerFactory}.
+     *
+     * @return the {@code TransformerFactory}
+     */
+    static TransformerFactory createTransformerFactory() {
+        return TransformerFactory.newInstance();
+    }
+
+    /**
+     * Creates an empty element mapping.
+     *
+     * @return the empty mapping
+     */
+    private static Map<Node, Node> emptyElementMapping() {
+        return Collections.emptyMap();
     }
 
     /**
@@ -133,6 +219,64 @@ final class XMLDocumentHelper {
     }
 
     /**
+     * Performs an XSL transformation on the passed in operands. All possible exceptions are caught and redirected as
+     * {@code ConfigurationException} exceptions.
+     *
+     * @param transformer the transformer
+     * @param source the source
+     * @param result the result
+     * @throws ConfigurationException if an error occurs
+     */
+    public static void transform(final Transformer transformer, final Source source, final Result result) throws ConfigurationException {
+        try {
+            transformer.transform(source, result);
+        } catch (final TransformerException tex) {
+            throw new ConfigurationException(tex);
+        }
+    }
+
+    /** Stores the document managed by this instance. */
+    private final Document document;
+
+    /** The element mapping to the source document. */
+    private final Map<Node, Node> elementMapping;
+
+    /** Stores the public ID of the source document. */
+    private final String sourcePublicID;
+
+    /** Stores the system ID of the source document. */
+    private final String sourceSystemID;
+
+    /**
+     * Creates a new instance of {@code XMLDocumentHelper} and initializes it with the given XML document. Note: This
+     * constructor is package private only for testing purposes. Instances should be created using the static factory
+     * methods.
+     *
+     * @param doc the {@code Document}
+     * @param elemMap the element mapping
+     * @param pubID the public ID of the source document
+     * @param sysID the system ID of the source document
+     */
+    XMLDocumentHelper(final Document doc, final Map<Node, Node> elemMap, final String pubID, final String sysID) {
+        document = doc;
+        elementMapping = elemMap;
+        sourcePublicID = pubID;
+        sourceSystemID = sysID;
+    }
+
+    /**
+     * Creates a copy of this object. This copy contains a copy of the document and an element mapping which allows mapping
+     * elements from the source document to elements of the copied document.
+     *
+     * @return the copy
+     * @throws ConfigurationException if an error occurs
+     */
+    public XMLDocumentHelper createCopy() throws ConfigurationException {
+        final Document docCopy = copyDocument(getDocument());
+        return new XMLDocumentHelper(docCopy, createElementMapping(getDocument(), docCopy), getSourcePublicID(), getSourceSystemID());
+    }
+
+    /**
      * Gets the {@code Document} managed by this helper.
      *
      * @return the wrapped {@code Document}
@@ -168,149 +312,5 @@ final class XMLDocumentHelper {
      */
     public String getSourceSystemID() {
         return sourceSystemID;
-    }
-
-    /**
-     * Creates a new {@code Transformer} object. No initializations are performed on the new instance.
-     *
-     * @return the new {@code Transformer}
-     * @throws ConfigurationException if the {@code Transformer} could not be created
-     */
-    public static Transformer createTransformer() throws ConfigurationException {
-        return createTransformer(createTransformerFactory());
-    }
-
-    /**
-     * Performs an XSL transformation on the passed in operands. All possible exceptions are caught and redirected as
-     * {@code ConfigurationException} exceptions.
-     *
-     * @param transformer the transformer
-     * @param source the source
-     * @param result the result
-     * @throws ConfigurationException if an error occurs
-     */
-    public static void transform(final Transformer transformer, final Source source, final Result result) throws ConfigurationException {
-        try {
-            transformer.transform(source, result);
-        } catch (final TransformerException tex) {
-            throw new ConfigurationException(tex);
-        }
-    }
-
-    /**
-     * Creates a copy of this object. This copy contains a copy of the document and an element mapping which allows mapping
-     * elements from the source document to elements of the copied document.
-     *
-     * @return the copy
-     * @throws ConfigurationException if an error occurs
-     */
-    public XMLDocumentHelper createCopy() throws ConfigurationException {
-        final Document docCopy = copyDocument(getDocument());
-        return new XMLDocumentHelper(docCopy, createElementMapping(getDocument(), docCopy), getSourcePublicID(), getSourceSystemID());
-    }
-
-    /**
-     * Creates a new {@code TransformerFactory}.
-     *
-     * @return the {@code TransformerFactory}
-     */
-    static TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
-    }
-
-    /**
-     * Creates a {@code Transformer} using the specified factory.
-     *
-     * @param factory the {@code TransformerFactory}
-     * @return the newly created {@code Transformer}
-     * @throws ConfigurationException if an error occurs
-     */
-    static Transformer createTransformer(final TransformerFactory factory) throws ConfigurationException {
-        try {
-            return factory.newTransformer();
-        } catch (final TransformerConfigurationException tex) {
-            throw new ConfigurationException(tex);
-        }
-    }
-
-    /**
-     * Creates a new {@code DocumentBuilder} using the specified factory. Exceptions are rethrown as
-     * {@code ConfigurationException} exceptions.
-     *
-     * @param factory the {@code DocumentBuilderFactory}
-     * @return the newly created {@code DocumentBuilder}
-     * @throws ConfigurationException if an error occurs
-     */
-    static DocumentBuilder createDocumentBuilder(final DocumentBuilderFactory factory) throws ConfigurationException {
-        try {
-            return factory.newDocumentBuilder();
-        } catch (final ParserConfigurationException pcex) {
-            throw new ConfigurationException(pcex);
-        }
-    }
-
-    /**
-     * Creates a copy of the specified document.
-     *
-     * @param doc the {@code Document}
-     * @return the copy of this document
-     * @throws ConfigurationException if an error occurs
-     */
-    private static Document copyDocument(final Document doc) throws ConfigurationException {
-        final Transformer transformer = createTransformer();
-        final DOMSource source = new DOMSource(doc);
-        final DOMResult result = new DOMResult();
-        transform(transformer, source, result);
-
-        return (Document) result.getNode();
-    }
-
-    /**
-     * Creates a new {@code DocumentBuilderFactory} instance.
-     *
-     * @return the new factory object
-     */
-    private static DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
-    }
-
-    /**
-     * Creates an empty element mapping.
-     *
-     * @return the empty mapping
-     */
-    private static Map<Node, Node> emptyElementMapping() {
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Creates the element mapping for the specified documents. For each node in the source document an entry is created
-     * pointing to the corresponding node in the destination object.
-     *
-     * @param doc1 the source document
-     * @param doc2 the destination document
-     * @return the element mapping
-     */
-    private static Map<Node, Node> createElementMapping(final Document doc1, final Document doc2) {
-        final Map<Node, Node> mapping = new HashMap<>();
-        createElementMappingForNodes(doc1.getDocumentElement(), doc2.getDocumentElement(), mapping);
-        return mapping;
-    }
-
-    /**
-     * Creates the element mapping for the specified nodes and all their child nodes.
-     *
-     * @param n1 node 1
-     * @param n2 node 2
-     * @param mapping the mapping to be filled
-     */
-    private static void createElementMappingForNodes(final Node n1, final Node n2, final Map<Node, Node> mapping) {
-        mapping.put(n1, n2);
-        final NodeList childNodes1 = n1.getChildNodes();
-        final NodeList childNodes2 = n2.getChildNodes();
-        final int count = Math.min(childNodes1.getLength(), childNodes2.getLength());
-        for (int i = 0; i < count; i++) {
-            createElementMappingForNodes(childNodes1.item(i), childNodes2.item(i), mapping);
-        }
     }
 }

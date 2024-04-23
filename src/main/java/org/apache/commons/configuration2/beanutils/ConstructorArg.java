@@ -36,28 +36,6 @@ import java.util.Objects;
  */
 public final class ConstructorArg {
 
-    /** The bean declaration referenced by this constructor argument. */
-    private final BeanDeclaration beanDeclaration;
-
-    /** The value of this constructor argument. */
-    private final Object value;
-
-    /** The name of the argument type. */
-    private final String typeName;
-
-    /**
-     * Constructs a new instance of {@code ConstructorArg}.
-     *
-     * @param decl the associated bean declaration
-     * @param val the value of the argument
-     * @param type the type name
-     */
-    private ConstructorArg(final BeanDeclaration decl, final Object val, final String type) {
-        beanDeclaration = decl;
-        value = val;
-        typeName = type;
-    }
-
     /**
      * Creates a new instance of {@code ConstructorArg} for the specified {@code BeanDeclaration}. The actual value of this
      * argument is the resolved {@code BeanDeclaration}.
@@ -108,6 +86,28 @@ public final class ConstructorArg {
         return new ConstructorArg(null, value, typeName);
     }
 
+    /** The bean declaration referenced by this constructor argument. */
+    private final BeanDeclaration beanDeclaration;
+
+    /** The value of this constructor argument. */
+    private final Object value;
+
+    /** The name of the argument type. */
+    private final String typeName;
+
+    /**
+     * Constructs a new instance of {@code ConstructorArg}.
+     *
+     * @param decl the associated bean declaration
+     * @param val the value of the argument
+     * @param type the type name
+     */
+    private ConstructorArg(final BeanDeclaration decl, final Object val, final String type) {
+        beanDeclaration = decl;
+        value = val;
+        typeName = type;
+    }
+
     /**
      * Gets the {@code BeanDeclaration} referenced by this constructor argument. A return value of <b>null</b> means that
      * this constructor argument does not have a bean declaration as value; in this case, the value can be queried using the
@@ -120,15 +120,14 @@ public final class ConstructorArg {
     }
 
     /**
-     * Tests whether this constructor argument represents a {@code BeanDeclaration}. If this method returns
-     * <b>true</b>, the actual value of this argument can be obtained by resolving the bean declaration returned by
-     * {@link #getBeanDeclaration()}. Otherwise, this argument has a simple value which can be queried using
-     * {@link #getValue()}.
+     * Gets the optional data type name of this constructor argument. The type name can be specified as a hint to select
+     * a specific constructor if there are ambiguities. Note that it does not necessarily has to match the data type of this
+     * argument's value because a type conversion may be performed before invoking the constructor.
      *
-     * @return whether this constructor argument references a bean declaration
+     * @return the data type name of this argument if defined or <b>null</b> otherwise
      */
-    public boolean isNestedBeanDeclaration() {
-        return getBeanDeclaration() != null;
+    public String getTypeName() {
+        return typeName;
     }
 
     /**
@@ -143,14 +142,15 @@ public final class ConstructorArg {
     }
 
     /**
-     * Gets the optional data type name of this constructor argument. The type name can be specified as a hint to select
-     * a specific constructor if there are ambiguities. Note that it does not necessarily has to match the data type of this
-     * argument's value because a type conversion may be performed before invoking the constructor.
+     * Tests whether this constructor argument represents a {@code BeanDeclaration}. If this method returns
+     * <b>true</b>, the actual value of this argument can be obtained by resolving the bean declaration returned by
+     * {@link #getBeanDeclaration()}. Otherwise, this argument has a simple value which can be queried using
+     * {@link #getValue()}.
      *
-     * @return the data type name of this argument if defined or <b>null</b> otherwise
+     * @return whether this constructor argument references a bean declaration
      */
-    public String getTypeName() {
-        return typeName;
+    public boolean isNestedBeanDeclaration() {
+        return getBeanDeclaration() != null;
     }
 
     /**

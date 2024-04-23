@@ -48,75 +48,6 @@ import java.util.Objects;
  * @since 2.0
  */
 public class CombinedReloadingController extends ReloadingController {
-    /** Constant for a dummy reloading detector. */
-    private static final ReloadingDetector DUMMY = new MultiReloadingControllerDetector(null);
-
-    /** The collection with managed reloading controllers. */
-    private final Collection<ReloadingController> controllers;
-
-    /** The reloading detector used by this instance. */
-    private final ReloadingDetector detector;
-
-    /**
-     * Creates a new instance of {@code CombinedReloadingController} and initializes it with the {@code ReloadingController}
-     * objects to be managed.
-     *
-     * @param subCtrls the collection with sub {@code ReloadingController}s (must not be <b>null</b> or contain <b>null</b>
-     *        entries)
-     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
-     */
-    public CombinedReloadingController(final Collection<? extends ReloadingController> subCtrls) {
-        super(DUMMY);
-        controllers = checkManagedControllers(subCtrls);
-        detector = new MultiReloadingControllerDetector(this);
-    }
-
-    /**
-     * Gets a (unmodifiable) collection with the sub controllers managed by this combined controller.
-     *
-     * @return a collection with sub controllers
-     */
-    public Collection<ReloadingController> getSubControllers() {
-        return controllers;
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns a special reloading detector which operates on all managed controllers.
-     */
-    @Override
-    public ReloadingDetector getDetector() {
-        return detector;
-    }
-
-    /**
-     * Resets the reloading state of all managed sub controllers unconditionally. This method is intended to be called after
-     * the creation of an instance. It may be the case that some of the sub controllers are already in reloading state, so
-     * their state is out of sync with this controller's global reloading state. This method ensures that the reloading
-     * state of all sub controllers is reset.
-     */
-    public void resetInitialReloadingState() {
-        getDetector().reloadingPerformed();
-    }
-
-    /**
-     * Checks the collection with the passed in sub controllers and creates a defensive copy.
-     *
-     * @param subCtrls the collection with sub controllers
-     * @return a copy of the collection to be stored in the newly created instance
-     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
-     */
-    private static Collection<ReloadingController> checkManagedControllers(final Collection<? extends ReloadingController> subCtrls) {
-        if (subCtrls == null) {
-            throw new IllegalArgumentException("Collection with sub controllers must not be null!");
-        }
-        final Collection<ReloadingController> ctrls = new ArrayList<>(subCtrls);
-        if (ctrls.stream().anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("Collection with sub controllers contains a null entry!");
-        }
-
-        return Collections.unmodifiableCollection(ctrls);
-    }
-
     /**
      * A specialized implementation of the {@code ReloadingDetector} interface which operates on a collection of
      * {@code ReloadingController} objects. The methods defined by the {@code ReloadingDetector} interface are delegated to
@@ -152,5 +83,74 @@ public class CombinedReloadingController extends ReloadingController {
         public void reloadingPerformed() {
             owner.getSubControllers().forEach(ReloadingController::resetReloadingState);
         }
+    }
+
+    /** Constant for a dummy reloading detector. */
+    private static final ReloadingDetector DUMMY = new MultiReloadingControllerDetector(null);
+
+    /**
+     * Checks the collection with the passed in sub controllers and creates a defensive copy.
+     *
+     * @param subCtrls the collection with sub controllers
+     * @return a copy of the collection to be stored in the newly created instance
+     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
+     */
+    private static Collection<ReloadingController> checkManagedControllers(final Collection<? extends ReloadingController> subCtrls) {
+        if (subCtrls == null) {
+            throw new IllegalArgumentException("Collection with sub controllers must not be null!");
+        }
+        final Collection<ReloadingController> ctrls = new ArrayList<>(subCtrls);
+        if (ctrls.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Collection with sub controllers contains a null entry!");
+        }
+
+        return Collections.unmodifiableCollection(ctrls);
+    }
+
+    /** The collection with managed reloading controllers. */
+    private final Collection<ReloadingController> controllers;
+
+    /** The reloading detector used by this instance. */
+    private final ReloadingDetector detector;
+
+    /**
+     * Creates a new instance of {@code CombinedReloadingController} and initializes it with the {@code ReloadingController}
+     * objects to be managed.
+     *
+     * @param subCtrls the collection with sub {@code ReloadingController}s (must not be <b>null</b> or contain <b>null</b>
+     *        entries)
+     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
+     */
+    public CombinedReloadingController(final Collection<? extends ReloadingController> subCtrls) {
+        super(DUMMY);
+        controllers = checkManagedControllers(subCtrls);
+        detector = new MultiReloadingControllerDetector(this);
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns a special reloading detector which operates on all managed controllers.
+     */
+    @Override
+    public ReloadingDetector getDetector() {
+        return detector;
+    }
+
+    /**
+     * Gets a (unmodifiable) collection with the sub controllers managed by this combined controller.
+     *
+     * @return a collection with sub controllers
+     */
+    public Collection<ReloadingController> getSubControllers() {
+        return controllers;
+    }
+
+    /**
+     * Resets the reloading state of all managed sub controllers unconditionally. This method is intended to be called after
+     * the creation of an instance. It may be the case that some of the sub controllers are already in reloading state, so
+     * their state is out of sync with this controller's global reloading state. This method ensures that the reloading
+     * state of all sub controllers is reset.
+     */
+    public void resetInitialReloadingState() {
+        getDetector().reloadingPerformed();
     }
 }

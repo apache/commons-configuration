@@ -43,8 +43,349 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class DefaultConfigurationKey {
+    /**
+     * A specialized iterator class for tokenizing a configuration key. This class implements the normal iterator interface.
+     * In addition it provides some specific methods for configuration keys.
+     */
+    public class KeyIterator implements Iterator<Object>, Cloneable {
+        /** Stores the current key name. */
+        private String current;
+
+        /** Stores the start index of the actual token. */
+        private int startIndex;
+
+        /** Stores the end index of the actual token. */
+        private int endIndex;
+
+        /** Stores the index of the actual property if there is one. */
+        private int indexValue;
+
+        /** Stores a flag if the actual property has an index. */
+        private boolean hasIndex;
+
+        /** Stores a flag if the actual property is an attribute. */
+        private boolean attribute;
+
+        /**
+         * Helper method for checking if the passed key is an attribute. If this is the case, the internal fields will be set.
+         *
+         * @param key the key to be checked
+         * @return a flag if the key is an attribute
+         */
+        private boolean checkAttribute(final String key) {
+            if (isAttributeKey(key)) {
+                current = removeAttributeMarkers(key);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Helper method for checking if the passed key contains an index. If this is the case, internal fields will be set.
+         *
+         * @param key the key to be checked
+         * @return a flag if an index is defined
+         */
+        private boolean checkIndex(final String key) {
+            boolean result = false;
+
+            try {
+                final int idx = key.lastIndexOf(getSymbols().getIndexStart());
+                if (idx > 0) {
+                    final int endidx = key.indexOf(getSymbols().getIndexEnd(), idx);
+
+                    if (endidx > idx + 1) {
+                        indexValue = Integer.parseInt(key.substring(idx + 1, endidx));
+                        current = key.substring(0, idx);
+                        result = true;
+                    }
+                }
+            } catch (final NumberFormatException nfe) {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /**
+         * Creates a clone of this object.
+         *
+         * @return a clone of this object
+         */
+        @Override
+        public Object clone() {
+            try {
+                return super.clone();
+            } catch (final CloneNotSupportedException cex) {
+                // should not happen
+                return null;
+            }
+        }
+
+        /**
+         * Returns the current key of the iteration (without skipping to the next element). This is the same key the previous
+         * {@code next()} call had returned. (Short form of {@code currentKey(false)}.
+         *
+         * @return the current key
+         */
+        public String currentKey() {
+            return currentKey(false);
+        }
+
+        /**
+         * Returns the current key of the iteration (without skipping to the next element). The boolean parameter indicates
+         * wheter a decorated key should be returned. This affects only attribute keys: if the parameter is <b>false</b>, the
+         * attribute markers are stripped from the key; if it is <b>true</b>, they remain.
+         *
+         * @param decorated a flag if the decorated key is to be returned
+         * @return the current key
+         */
+        public String currentKey(final boolean decorated) {
+            return decorated && !isPropertyKey() ? constructAttributeKey(current) : current;
+        }
+
+        /**
+         * Checks if a delimiter at the specified position is escaped. If this is the case, the next valid search position will
+         * be returned. Otherwise the return value is -1.
+         *
+         * @param key the key to check
+         * @param pos the position where a delimiter was found
+         * @return information about escaped delimiters
+         */
+        private int escapedPosition(final String key, final int pos) {
+            if (getSymbols().getEscapedDelimiter() == null) {
+                // nothing to escape
+                return -1;
+            }
+            final int escapeOffset = escapeOffset();
+            if (escapeOffset < 0 || escapeOffset > pos) {
+                // No escaping possible at this position
+                return -1;
+            }
+
+            final int escapePos = key.indexOf(getSymbols().getEscapedDelimiter(), pos - escapeOffset);
+            if (escapePos <= pos && escapePos >= 0) {
+                // The found delimiter is escaped. Next valid search position
+                // is behind the escaped delimiter.
+                return escapePos + getSymbols().getEscapedDelimiter().length();
+            }
+            return -1;
+        }
+
+        /**
+         * Determines the relative offset of an escaped delimiter in relation to a delimiter. Depending on the used delimiter
+         * and escaped delimiter tokens the position where to search for an escaped delimiter is different. If, for instance,
+         * the dot character (&quot;.&quot;) is used as delimiter, and a doubled dot (&quot;..&quot;) as escaped delimiter, the
+         * escaped delimiter starts at the same position as the delimiter. If the token &quot;\.&quot; was used, it would start
+         * one character before the delimiter because the delimiter character &quot;.&quot; is the second character in the
+         * escaped delimiter string. This relation will be determined by this method. For this to work the delimiter string must
+         * be contained in the escaped delimiter string.
+         *
+         * @return the relative offset of the escaped delimiter in relation to a delimiter
+         */
+        private int escapeOffset() {
+            return getSymbols().getEscapedDelimiter().indexOf(getSymbols().getPropertyDelimiter());
+        }
+
+        /**
+         * Helper method for determining the next indices.
+         *
+         * @return the next key part
+         */
+        private String findNextIndices() {
+            startIndex = endIndex;
+            // skip empty names
+            while (startIndex < length() && hasLeadingDelimiter(keyBuffer.substring(startIndex))) {
+                startIndex += getSymbols().getPropertyDelimiter().length();
+            }
+
+            // Key ends with a delimiter?
+            if (startIndex >= length()) {
+                endIndex = length();
+                startIndex = endIndex - 1;
+                return keyBuffer.substring(startIndex, endIndex);
+            }
+            return nextKeyPart();
+        }
+
+        /**
+         * Gets the index value of the current key. If the current key does not have an index, return value is -1. This
+         * method can be called after {@code next()}.
+         *
+         * @return the index value of the current key
+         */
+        public int getIndex() {
+            return indexValue;
+        }
+
+        /**
+         * Returns a flag if the current key has an associated index. This method can be called after {@code next()}.
+         *
+         * @return a flag if the current key has an index
+         */
+        public boolean hasIndex() {
+            return hasIndex;
+        }
+
+        /**
+         * Checks if there is a next element.
+         *
+         * @return a flag if there is a next element
+         */
+        @Override
+        public boolean hasNext() {
+            return endIndex < keyBuffer.length();
+        }
+
+        /**
+         * Returns a flag if the current key is an attribute. This method can be called after {@code next()}.
+         *
+         * @return a flag if the current key is an attribute
+         */
+        public boolean isAttribute() {
+            // if attribute emulation mode is active, the last part of a key is
+            // always an attribute key, too
+            return attribute || isAttributeEmulatingMode() && !hasNext();
+        }
+
+        /**
+         * Returns a flag whether attributes are marked the same way as normal property keys. We call this the &quot;attribute
+         * emulating mode&quot;. When navigating through node hierarchies it might be convenient to treat attributes the same
+         * way than other child nodes, so an expression engine supports to set the attribute markers to the same value than the
+         * property delimiter. If this is the case, some special checks have to be performed.
+         *
+         * @return a flag if attributes and normal property keys are treated the same way
+         */
+        private boolean isAttributeEmulatingMode() {
+            return getSymbols().getAttributeEnd() == null && StringUtils.equals(getSymbols().getPropertyDelimiter(), getSymbols().getAttributeStart());
+        }
+
+        /**
+         * Returns a flag whether the current key refers to a property (i.e. is no special attribute key). Usually this method
+         * will return the opposite of {@code isAttribute()}, but if the delimiters for normal properties and attributes are set
+         * to the same string, it is possible that both methods return <b>true</b>.
+         *
+         * @return a flag if the current key is a property key
+         * @see #isAttribute()
+         */
+        public boolean isPropertyKey() {
+            return !attribute;
+        }
+
+        /**
+         * Returns the next object in the iteration.
+         *
+         * @return the next object
+         */
+        @Override
+        public Object next() {
+            return nextKey();
+        }
+
+        /**
+         * Searches the next unescaped delimiter from the given position.
+         *
+         * @param key the key
+         * @param pos the start position
+         * @param endPos the end position
+         * @return the position of the next delimiter or -1 if there is none
+         */
+        private int nextDelimiterPos(final String key, final int pos, final int endPos) {
+            int delimiterPos = pos;
+            boolean found = false;
+
+            do {
+                delimiterPos = key.indexOf(getSymbols().getPropertyDelimiter(), delimiterPos);
+                if (delimiterPos < 0 || delimiterPos >= endPos) {
+                    return -1;
+                }
+                final int escapePos = escapedPosition(key, delimiterPos);
+                if (escapePos < 0) {
+                    found = true;
+                } else {
+                    delimiterPos = escapePos;
+                }
+            } while (!found);
+
+            return delimiterPos;
+        }
+
+        /**
+         * Returns the next key part of this configuration key. This is a short form of {@code nextKey(false)}.
+         *
+         * @return the next key part
+         */
+        public String nextKey() {
+            return nextKey(false);
+        }
+
+        /**
+         * Returns the next key part of this configuration key. The boolean parameter indicates wheter a decorated key should be
+         * returned. This affects only attribute keys: if the parameter is <b>false</b>, the attribute markers are stripped from
+         * the key; if it is <b>true</b>, they remain.
+         *
+         * @param decorated a flag if the decorated key is to be returned
+         * @return the next key part
+         */
+        public String nextKey(final boolean decorated) {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No more key parts!");
+            }
+
+            hasIndex = false;
+            indexValue = -1;
+            final String key = findNextIndices();
+
+            current = key;
+            hasIndex = checkIndex(key);
+            attribute = checkAttribute(current);
+
+            return currentKey(decorated);
+        }
+
+        /**
+         * Helper method for extracting the next key part. Takes escaping of delimiter characters into account.
+         *
+         * @return the next key part
+         */
+        private String nextKeyPart() {
+            int attrIdx = keyBuffer.toString().indexOf(getSymbols().getAttributeStart(), startIndex);
+            if (attrIdx < 0 || attrIdx == startIndex) {
+                attrIdx = length();
+            }
+
+            int delIdx = nextDelimiterPos(keyBuffer.toString(), startIndex, attrIdx);
+            if (delIdx < 0) {
+                delIdx = attrIdx;
+            }
+
+            endIndex = Math.min(attrIdx, delIdx);
+            return unescapeDelimiters(keyBuffer.substring(startIndex, endIndex));
+        }
+
+        /**
+         * Removes the current object in the iteration. This method is not supported by this iterator type, so an exception is
+         * thrown.
+         */
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Remove not supported!");
+        }
+    }
+
     /** Constant for the initial StringBuffer size. */
     private static final int INITIAL_SIZE = 32;
+
+    /**
+     * Helper method for comparing two key parts.
+     *
+     * @param it1 the iterator with the first part
+     * @param it2 the iterator with the second part
+     * @return a flag if both parts are equal
+     */
+    private static boolean partsEqual(final KeyIterator it1, final KeyIterator it2) {
+        return it1.nextKey().equals(it2.nextKey()) && it1.getIndex() == it2.getIndex() && it1.isAttribute() == it2.isAttribute();
+    }
 
     /** Stores a reference to the associated expression engine. */
     private final DefaultExpressionEngine expressionEngine;
@@ -83,12 +424,14 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Gets the associated default expression engine.
+     * Appends the name of a property to this key. If necessary, a property delimiter will be added. Property delimiters in
+     * the given string will not be escaped.
      *
-     * @return the associated expression engine
+     * @param property the name of the property to be added
+     * @return a reference to this object
      */
-    public DefaultExpressionEngine getExpressionEngine() {
-        return expressionEngine;
+    public DefaultConfigurationKey append(final String property) {
+        return append(property, false);
     }
 
     /**
@@ -117,14 +460,14 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Appends the name of a property to this key. If necessary, a property delimiter will be added. Property delimiters in
-     * the given string will not be escaped.
+     * Appends an attribute to this configuration key.
      *
-     * @param property the name of the property to be added
+     * @param attr the name of the attribute to be appended
      * @return a reference to this object
      */
-    public DefaultConfigurationKey append(final String property) {
-        return append(property, false);
+    public DefaultConfigurationKey appendAttribute(final String attr) {
+        keyBuffer.append(constructAttributeKey(attr));
+        return this;
     }
 
     /**
@@ -141,34 +484,14 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Appends an attribute to this configuration key.
+     * Extracts the name of the attribute from the given attribute key. This method removes the attribute markers - if any -
+     * from the specified key.
      *
-     * @param attr the name of the attribute to be appended
-     * @return a reference to this object
+     * @param key the attribute key
+     * @return the name of the corresponding attribute
      */
-    public DefaultConfigurationKey appendAttribute(final String attr) {
-        keyBuffer.append(constructAttributeKey(attr));
-        return this;
-    }
-
-    /**
-     * Returns the actual length of this configuration key.
-     *
-     * @return the length of this key
-     */
-    public int length() {
-        return keyBuffer.length();
-    }
-
-    /**
-     * Sets the new length of this configuration key. With this method it is possible to truncate the key, e.g. to return to
-     * a state prior calling some {@code append()} methods. The semantic is the same as the {@code setLength()} method of
-     * {@code StringBuilder}.
-     *
-     * @param len the new length of the key
-     */
-    public void setLength(final int len) {
-        keyBuffer.setLength(len);
+    public String attributeName(final String key) {
+        return isAttributeKey(key) ? removeAttributeMarkers(key) : key;
     }
 
     /**
@@ -199,6 +522,28 @@ public class DefaultConfigurationKey {
         }
 
         return result;
+    }
+
+    /**
+     * Decorates the given key so that it represents an attribute. Adds special start and end markers. The passed in string
+     * will be modified only if does not already represent an attribute.
+     *
+     * @param key the key to be decorated
+     * @return the decorated attribute key
+     */
+    public String constructAttributeKey(final String key) {
+        if (key == null) {
+            return StringUtils.EMPTY;
+        }
+        if (isAttributeKey(key)) {
+            return key;
+        }
+        final StringBuilder buf = new StringBuilder();
+        buf.append(getSymbols().getAttributeStart()).append(key);
+        if (getSymbols().getAttributeEnd() != null) {
+            buf.append(getSymbols().getAttributeEnd());
+        }
+        return buf.toString();
     }
 
     /**
@@ -251,6 +596,35 @@ public class DefaultConfigurationKey {
     }
 
     /**
+     * Escapes the delimiters in the specified string.
+     *
+     * @param key the key to be escaped
+     * @return the escaped key
+     */
+    private String escapeDelimiters(final String key) {
+        return getSymbols().getEscapedDelimiter() == null || !key.contains(getSymbols().getPropertyDelimiter()) ? key
+            : StringUtils.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
+    }
+
+    /**
+     * Gets the associated default expression engine.
+     *
+     * @return the associated expression engine
+     */
+    public DefaultExpressionEngine getExpressionEngine() {
+        return expressionEngine;
+    }
+
+    /**
+     * Gets the symbols object from the associated expression engine.
+     *
+     * @return the {@code DefaultExpressionEngineSymbols}
+     */
+    private DefaultExpressionEngineSymbols getSymbols() {
+        return getExpressionEngine().getSymbols();
+    }
+
+    /**
      * Returns the hash code for this object.
      *
      * @return the hash code
@@ -261,13 +635,25 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Returns a string representation of this object. This is the configuration key as a plain string.
+     * Helper method that checks if the specified key starts with a property delimiter.
      *
-     * @return a string for this object
+     * @param key the key to check
+     * @return a flag if there is a leading delimiter
      */
-    @Override
-    public String toString() {
-        return keyBuffer.toString();
+    private boolean hasLeadingDelimiter(final String key) {
+        return key.startsWith(getSymbols().getPropertyDelimiter())
+            && (getSymbols().getEscapedDelimiter() == null || !key.startsWith(getSymbols().getEscapedDelimiter()));
+    }
+
+    /**
+     * Helper method that checks if the specified key ends with a property delimiter.
+     *
+     * @param key the key to check
+     * @return a flag if there is a trailing delimiter
+     */
+    private boolean hasTrailingDelimiter(final String key) {
+        return key.endsWith(getSymbols().getPropertyDelimiter())
+            && (getSymbols().getEscapedDelimiter() == null || !key.endsWith(getSymbols().getEscapedDelimiter()));
     }
 
     /**
@@ -285,36 +671,63 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Decorates the given key so that it represents an attribute. Adds special start and end markers. The passed in string
-     * will be modified only if does not already represent an attribute.
+     * Returns an iterator for iterating over the single components of this configuration key.
      *
-     * @param key the key to be decorated
-     * @return the decorated attribute key
+     * @return an iterator for this key
      */
-    public String constructAttributeKey(final String key) {
-        if (key == null) {
-            return StringUtils.EMPTY;
-        }
-        if (isAttributeKey(key)) {
-            return key;
-        }
-        final StringBuilder buf = new StringBuilder();
-        buf.append(getSymbols().getAttributeStart()).append(key);
-        if (getSymbols().getAttributeEnd() != null) {
-            buf.append(getSymbols().getAttributeEnd());
-        }
-        return buf.toString();
+    public KeyIterator iterator() {
+        return new KeyIterator();
     }
 
     /**
-     * Extracts the name of the attribute from the given attribute key. This method removes the attribute markers - if any -
-     * from the specified key.
+     * Returns the actual length of this configuration key.
      *
-     * @param key the attribute key
-     * @return the name of the corresponding attribute
+     * @return the length of this key
      */
-    public String attributeName(final String key) {
-        return isAttributeKey(key) ? removeAttributeMarkers(key) : key;
+    public int length() {
+        return keyBuffer.length();
+    }
+
+    /**
+     * Helper method for removing attribute markers from a key.
+     *
+     * @param key the key
+     * @return the key with removed attribute markers
+     */
+    private String removeAttributeMarkers(final String key) {
+        return key.substring(getSymbols().getAttributeStart().length(),
+            key.length() - (getSymbols().getAttributeEnd() != null ? getSymbols().getAttributeEnd().length() : 0));
+    }
+
+    /**
+     * Sets the new length of this configuration key. With this method it is possible to truncate the key, e.g. to return to
+     * a state prior calling some {@code append()} methods. The semantic is the same as the {@code setLength()} method of
+     * {@code StringBuilder}.
+     *
+     * @param len the new length of the key
+     */
+    public void setLength(final int len) {
+        keyBuffer.setLength(len);
+    }
+
+    /**
+     * Returns a string representation of this object. This is the configuration key as a plain string.
+     *
+     * @return a string for this object
+     */
+    @Override
+    public String toString() {
+        return keyBuffer.toString();
+    }
+
+    /**
+     * Removes delimiters at the beginning and the end of the specified key.
+     *
+     * @param key the key
+     * @return the key with removed property delimiters
+     */
+    public String trim(final String key) {
+        return trimRight(trimLeft(key));
     }
 
     /**
@@ -352,58 +765,6 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Removes delimiters at the beginning and the end of the specified key.
-     *
-     * @param key the key
-     * @return the key with removed property delimiters
-     */
-    public String trim(final String key) {
-        return trimRight(trimLeft(key));
-    }
-
-    /**
-     * Returns an iterator for iterating over the single components of this configuration key.
-     *
-     * @return an iterator for this key
-     */
-    public KeyIterator iterator() {
-        return new KeyIterator();
-    }
-
-    /**
-     * Helper method that checks if the specified key ends with a property delimiter.
-     *
-     * @param key the key to check
-     * @return a flag if there is a trailing delimiter
-     */
-    private boolean hasTrailingDelimiter(final String key) {
-        return key.endsWith(getSymbols().getPropertyDelimiter())
-            && (getSymbols().getEscapedDelimiter() == null || !key.endsWith(getSymbols().getEscapedDelimiter()));
-    }
-
-    /**
-     * Helper method that checks if the specified key starts with a property delimiter.
-     *
-     * @param key the key to check
-     * @return a flag if there is a leading delimiter
-     */
-    private boolean hasLeadingDelimiter(final String key) {
-        return key.startsWith(getSymbols().getPropertyDelimiter())
-            && (getSymbols().getEscapedDelimiter() == null || !key.startsWith(getSymbols().getEscapedDelimiter()));
-    }
-
-    /**
-     * Helper method for removing attribute markers from a key.
-     *
-     * @param key the key
-     * @return the key with removed attribute markers
-     */
-    private String removeAttributeMarkers(final String key) {
-        return key.substring(getSymbols().getAttributeStart().length(),
-            key.length() - (getSymbols().getAttributeEnd() != null ? getSymbols().getAttributeEnd().length() : 0));
-    }
-
-    /**
      * Unescapes the delimiters in the specified string.
      *
      * @param key the key to be unescaped
@@ -412,366 +773,5 @@ public class DefaultConfigurationKey {
     private String unescapeDelimiters(final String key) {
         return getSymbols().getEscapedDelimiter() == null ? key
             : StringUtils.replace(key, getSymbols().getEscapedDelimiter(), getSymbols().getPropertyDelimiter());
-    }
-
-    /**
-     * Gets the symbols object from the associated expression engine.
-     *
-     * @return the {@code DefaultExpressionEngineSymbols}
-     */
-    private DefaultExpressionEngineSymbols getSymbols() {
-        return getExpressionEngine().getSymbols();
-    }
-
-    /**
-     * Escapes the delimiters in the specified string.
-     *
-     * @param key the key to be escaped
-     * @return the escaped key
-     */
-    private String escapeDelimiters(final String key) {
-        return getSymbols().getEscapedDelimiter() == null || !key.contains(getSymbols().getPropertyDelimiter()) ? key
-            : StringUtils.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
-    }
-
-    /**
-     * Helper method for comparing two key parts.
-     *
-     * @param it1 the iterator with the first part
-     * @param it2 the iterator with the second part
-     * @return a flag if both parts are equal
-     */
-    private static boolean partsEqual(final KeyIterator it1, final KeyIterator it2) {
-        return it1.nextKey().equals(it2.nextKey()) && it1.getIndex() == it2.getIndex() && it1.isAttribute() == it2.isAttribute();
-    }
-
-    /**
-     * A specialized iterator class for tokenizing a configuration key. This class implements the normal iterator interface.
-     * In addition it provides some specific methods for configuration keys.
-     */
-    public class KeyIterator implements Iterator<Object>, Cloneable {
-        /** Stores the current key name. */
-        private String current;
-
-        /** Stores the start index of the actual token. */
-        private int startIndex;
-
-        /** Stores the end index of the actual token. */
-        private int endIndex;
-
-        /** Stores the index of the actual property if there is one. */
-        private int indexValue;
-
-        /** Stores a flag if the actual property has an index. */
-        private boolean hasIndex;
-
-        /** Stores a flag if the actual property is an attribute. */
-        private boolean attribute;
-
-        /**
-         * Returns the next key part of this configuration key. This is a short form of {@code nextKey(false)}.
-         *
-         * @return the next key part
-         */
-        public String nextKey() {
-            return nextKey(false);
-        }
-
-        /**
-         * Returns the next key part of this configuration key. The boolean parameter indicates wheter a decorated key should be
-         * returned. This affects only attribute keys: if the parameter is <b>false</b>, the attribute markers are stripped from
-         * the key; if it is <b>true</b>, they remain.
-         *
-         * @param decorated a flag if the decorated key is to be returned
-         * @return the next key part
-         */
-        public String nextKey(final boolean decorated) {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No more key parts!");
-            }
-
-            hasIndex = false;
-            indexValue = -1;
-            final String key = findNextIndices();
-
-            current = key;
-            hasIndex = checkIndex(key);
-            attribute = checkAttribute(current);
-
-            return currentKey(decorated);
-        }
-
-        /**
-         * Checks if there is a next element.
-         *
-         * @return a flag if there is a next element
-         */
-        @Override
-        public boolean hasNext() {
-            return endIndex < keyBuffer.length();
-        }
-
-        /**
-         * Returns the next object in the iteration.
-         *
-         * @return the next object
-         */
-        @Override
-        public Object next() {
-            return nextKey();
-        }
-
-        /**
-         * Removes the current object in the iteration. This method is not supported by this iterator type, so an exception is
-         * thrown.
-         */
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Remove not supported!");
-        }
-
-        /**
-         * Returns the current key of the iteration (without skipping to the next element). This is the same key the previous
-         * {@code next()} call had returned. (Short form of {@code currentKey(false)}.
-         *
-         * @return the current key
-         */
-        public String currentKey() {
-            return currentKey(false);
-        }
-
-        /**
-         * Returns the current key of the iteration (without skipping to the next element). The boolean parameter indicates
-         * wheter a decorated key should be returned. This affects only attribute keys: if the parameter is <b>false</b>, the
-         * attribute markers are stripped from the key; if it is <b>true</b>, they remain.
-         *
-         * @param decorated a flag if the decorated key is to be returned
-         * @return the current key
-         */
-        public String currentKey(final boolean decorated) {
-            return decorated && !isPropertyKey() ? constructAttributeKey(current) : current;
-        }
-
-        /**
-         * Returns a flag if the current key is an attribute. This method can be called after {@code next()}.
-         *
-         * @return a flag if the current key is an attribute
-         */
-        public boolean isAttribute() {
-            // if attribute emulation mode is active, the last part of a key is
-            // always an attribute key, too
-            return attribute || isAttributeEmulatingMode() && !hasNext();
-        }
-
-        /**
-         * Returns a flag whether the current key refers to a property (i.e. is no special attribute key). Usually this method
-         * will return the opposite of {@code isAttribute()}, but if the delimiters for normal properties and attributes are set
-         * to the same string, it is possible that both methods return <b>true</b>.
-         *
-         * @return a flag if the current key is a property key
-         * @see #isAttribute()
-         */
-        public boolean isPropertyKey() {
-            return !attribute;
-        }
-
-        /**
-         * Gets the index value of the current key. If the current key does not have an index, return value is -1. This
-         * method can be called after {@code next()}.
-         *
-         * @return the index value of the current key
-         */
-        public int getIndex() {
-            return indexValue;
-        }
-
-        /**
-         * Returns a flag if the current key has an associated index. This method can be called after {@code next()}.
-         *
-         * @return a flag if the current key has an index
-         */
-        public boolean hasIndex() {
-            return hasIndex;
-        }
-
-        /**
-         * Creates a clone of this object.
-         *
-         * @return a clone of this object
-         */
-        @Override
-        public Object clone() {
-            try {
-                return super.clone();
-            } catch (final CloneNotSupportedException cex) {
-                // should not happen
-                return null;
-            }
-        }
-
-        /**
-         * Helper method for determining the next indices.
-         *
-         * @return the next key part
-         */
-        private String findNextIndices() {
-            startIndex = endIndex;
-            // skip empty names
-            while (startIndex < length() && hasLeadingDelimiter(keyBuffer.substring(startIndex))) {
-                startIndex += getSymbols().getPropertyDelimiter().length();
-            }
-
-            // Key ends with a delimiter?
-            if (startIndex >= length()) {
-                endIndex = length();
-                startIndex = endIndex - 1;
-                return keyBuffer.substring(startIndex, endIndex);
-            }
-            return nextKeyPart();
-        }
-
-        /**
-         * Helper method for extracting the next key part. Takes escaping of delimiter characters into account.
-         *
-         * @return the next key part
-         */
-        private String nextKeyPart() {
-            int attrIdx = keyBuffer.toString().indexOf(getSymbols().getAttributeStart(), startIndex);
-            if (attrIdx < 0 || attrIdx == startIndex) {
-                attrIdx = length();
-            }
-
-            int delIdx = nextDelimiterPos(keyBuffer.toString(), startIndex, attrIdx);
-            if (delIdx < 0) {
-                delIdx = attrIdx;
-            }
-
-            endIndex = Math.min(attrIdx, delIdx);
-            return unescapeDelimiters(keyBuffer.substring(startIndex, endIndex));
-        }
-
-        /**
-         * Searches the next unescaped delimiter from the given position.
-         *
-         * @param key the key
-         * @param pos the start position
-         * @param endPos the end position
-         * @return the position of the next delimiter or -1 if there is none
-         */
-        private int nextDelimiterPos(final String key, final int pos, final int endPos) {
-            int delimiterPos = pos;
-            boolean found = false;
-
-            do {
-                delimiterPos = key.indexOf(getSymbols().getPropertyDelimiter(), delimiterPos);
-                if (delimiterPos < 0 || delimiterPos >= endPos) {
-                    return -1;
-                }
-                final int escapePos = escapedPosition(key, delimiterPos);
-                if (escapePos < 0) {
-                    found = true;
-                } else {
-                    delimiterPos = escapePos;
-                }
-            } while (!found);
-
-            return delimiterPos;
-        }
-
-        /**
-         * Checks if a delimiter at the specified position is escaped. If this is the case, the next valid search position will
-         * be returned. Otherwise the return value is -1.
-         *
-         * @param key the key to check
-         * @param pos the position where a delimiter was found
-         * @return information about escaped delimiters
-         */
-        private int escapedPosition(final String key, final int pos) {
-            if (getSymbols().getEscapedDelimiter() == null) {
-                // nothing to escape
-                return -1;
-            }
-            final int escapeOffset = escapeOffset();
-            if (escapeOffset < 0 || escapeOffset > pos) {
-                // No escaping possible at this position
-                return -1;
-            }
-
-            final int escapePos = key.indexOf(getSymbols().getEscapedDelimiter(), pos - escapeOffset);
-            if (escapePos <= pos && escapePos >= 0) {
-                // The found delimiter is escaped. Next valid search position
-                // is behind the escaped delimiter.
-                return escapePos + getSymbols().getEscapedDelimiter().length();
-            }
-            return -1;
-        }
-
-        /**
-         * Determines the relative offset of an escaped delimiter in relation to a delimiter. Depending on the used delimiter
-         * and escaped delimiter tokens the position where to search for an escaped delimiter is different. If, for instance,
-         * the dot character (&quot;.&quot;) is used as delimiter, and a doubled dot (&quot;..&quot;) as escaped delimiter, the
-         * escaped delimiter starts at the same position as the delimiter. If the token &quot;\.&quot; was used, it would start
-         * one character before the delimiter because the delimiter character &quot;.&quot; is the second character in the
-         * escaped delimiter string. This relation will be determined by this method. For this to work the delimiter string must
-         * be contained in the escaped delimiter string.
-         *
-         * @return the relative offset of the escaped delimiter in relation to a delimiter
-         */
-        private int escapeOffset() {
-            return getSymbols().getEscapedDelimiter().indexOf(getSymbols().getPropertyDelimiter());
-        }
-
-        /**
-         * Helper method for checking if the passed key is an attribute. If this is the case, the internal fields will be set.
-         *
-         * @param key the key to be checked
-         * @return a flag if the key is an attribute
-         */
-        private boolean checkAttribute(final String key) {
-            if (isAttributeKey(key)) {
-                current = removeAttributeMarkers(key);
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Helper method for checking if the passed key contains an index. If this is the case, internal fields will be set.
-         *
-         * @param key the key to be checked
-         * @return a flag if an index is defined
-         */
-        private boolean checkIndex(final String key) {
-            boolean result = false;
-
-            try {
-                final int idx = key.lastIndexOf(getSymbols().getIndexStart());
-                if (idx > 0) {
-                    final int endidx = key.indexOf(getSymbols().getIndexEnd(), idx);
-
-                    if (endidx > idx + 1) {
-                        indexValue = Integer.parseInt(key.substring(idx + 1, endidx));
-                        current = key.substring(0, idx);
-                        result = true;
-                    }
-                }
-            } catch (final NumberFormatException nfe) {
-                result = false;
-            }
-
-            return result;
-        }
-
-        /**
-         * Returns a flag whether attributes are marked the same way as normal property keys. We call this the &quot;attribute
-         * emulating mode&quot;. When navigating through node hierarchies it might be convenient to treat attributes the same
-         * way than other child nodes, so an expression engine supports to set the attribute markers to the same value than the
-         * property delimiter. If this is the case, some special checks have to be performed.
-         *
-         * @return a flag if attributes and normal property keys are treated the same way
-         */
-        private boolean isAttributeEmulatingMode() {
-            return getSymbols().getAttributeEnd() == null && StringUtils.equals(getSymbols().getPropertyDelimiter(), getSymbols().getAttributeStart());
-        }
     }
 }

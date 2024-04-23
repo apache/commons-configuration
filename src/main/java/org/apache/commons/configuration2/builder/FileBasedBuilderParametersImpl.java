@@ -54,34 +54,6 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     private static final String PROP_DETECTOR_FACTORY = "reloadingDetectorFactory";
 
     /**
-     * Stores the associated file handler for the location of the configuration.
-     */
-    private FileHandler fileHandler;
-
-    /** The factory for reloading detectors. */
-    private ReloadingDetectorFactory reloadingDetectorFactory;
-
-    /** The refresh delay for reloading support. */
-    private Long reloadingRefreshDelay;
-
-    /**
-     * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an uninitialized {@code FileHandler} object.
-     */
-    public FileBasedBuilderParametersImpl() {
-        this(null);
-    }
-
-    /**
-     * Creates a new instance of {@code FileBasedBuilderParametersImpl} and associates it with the given {@code FileHandler}
-     * object. If the handler is <b>null</b>, a new handler instance is created.
-     *
-     * @param handler the associated {@code FileHandler} (can be <b>null</b>)
-     */
-    public FileBasedBuilderParametersImpl(final FileHandler handler) {
-        fileHandler = handler != null ? handler : new FileHandler();
-    }
-
-    /**
      * Creates a new {@code FileBasedBuilderParametersImpl} object from the content of the given map. While
      * {@code fromParameters()} expects that an object already exists and is stored in the given map, this method creates a
      * new instance based on the content of the map. The map can contain properties of a {@code FileHandler} and some
@@ -134,6 +106,34 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
             instance = new FileBasedBuilderParametersImpl();
         }
         return instance;
+    }
+
+    /**
+     * Stores the associated file handler for the location of the configuration.
+     */
+    private FileHandler fileHandler;
+
+    /** The factory for reloading detectors. */
+    private ReloadingDetectorFactory reloadingDetectorFactory;
+
+    /** The refresh delay for reloading support. */
+    private Long reloadingRefreshDelay;
+
+    /**
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an uninitialized {@code FileHandler} object.
+     */
+    public FileBasedBuilderParametersImpl() {
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} and associates it with the given {@code FileHandler}
+     * object. If the handler is <b>null</b>, a new handler instance is created.
+     *
+     * @param handler the associated {@code FileHandler} (can be <b>null</b>)
+     */
+    public FileBasedBuilderParametersImpl(final FileHandler handler) {
+        fileHandler = handler != null ? handler : new FileHandler();
     }
 
     /**

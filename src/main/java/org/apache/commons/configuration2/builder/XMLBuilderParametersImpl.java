@@ -56,6 +56,16 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     /** The key for the schema validation flag. */
     private static final String PROP_SCHEMA_VALIDATION = "schemaValidation";
 
+    /**
+     * Gets the {@code EntityResolver} stored in this parameters object. Result is <b>null</b> if no such object has been
+     * set.
+     *
+     * @return the {@code EntityResolver} or <b>null</b>
+     */
+    public EntityResolver getEntityResolver() {
+        return (EntityResolver) fetchProperty(PROP_ENTITY_RESOLVER);
+    }
+
     @Override
     public void inheritFrom(final Map<String, ?> source) {
         super.inheritFrom(source);
@@ -74,19 +84,15 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
         return this;
     }
 
-    /**
-     * Gets the {@code EntityResolver} stored in this parameters object. Result is <b>null</b> if no such object has been
-     * set.
-     *
-     * @return the {@code EntityResolver} or <b>null</b>
-     */
-    public EntityResolver getEntityResolver() {
-        return (EntityResolver) fetchProperty(PROP_ENTITY_RESOLVER);
-    }
-
     @Override
     public XMLBuilderParametersImpl setPublicID(final String pubID) {
         storeProperty(PROP_PUBLIC_ID, pubID);
+        return this;
+    }
+
+    @Override
+    public XMLBuilderParametersImpl setSchemaValidation(final boolean f) {
+        storeProperty(PROP_SCHEMA_VALIDATION, Boolean.valueOf(f));
         return this;
     }
 
@@ -99,12 +105,6 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     @Override
     public XMLBuilderParametersImpl setValidating(final boolean f) {
         storeProperty(PROP_VALIDATING, Boolean.valueOf(f));
-        return this;
-    }
-
-    @Override
-    public XMLBuilderParametersImpl setSchemaValidation(final boolean f) {
-        storeProperty(PROP_SCHEMA_VALIDATION, Boolean.valueOf(f));
         return this;
     }
 }

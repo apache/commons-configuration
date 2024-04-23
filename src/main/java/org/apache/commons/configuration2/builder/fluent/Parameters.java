@@ -74,6 +74,48 @@ import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParame
  */
 //@formatter:off
 public final class Parameters {
+    /**
+     * A specialized {@code InvocationHandler} implementation which maps the methods of a parameters interface to an
+     * implementation of the corresponding property interfaces. The parameters interface is a union of multiple property
+     * interfaces. The wrapped object implements all of these, but not the union interface. Therefore, a reflection-based
+     * approach is required. A special handling is required for the method of the {@code BuilderParameters} interface
+     * because here no fluent return value is used.
+     */
+    private static final class ParametersIfcInvocationHandler implements InvocationHandler {
+        /**
+         * Checks whether the specified method belongs to an interface which requires fluent result values.
+         *
+         * @param method the method to be checked
+         * @return a flag whether the method's result should be handled as a fluent result value
+         */
+        private static boolean isFluentResult(final Method method) {
+            final Class<?> declaringClass = method.getDeclaringClass();
+            return declaringClass.isInterface() && !declaringClass.equals(BuilderParameters.class);
+        }
+
+        /** The target object of reflection calls. */
+        private final Object target;
+
+        /**
+         * Creates a new instance of {@code ParametersIfcInvocationHandler} and sets the wrapped parameters object.
+         *
+         * @param targetObj the target object for reflection calls
+         */
+        public ParametersIfcInvocationHandler(final Object targetObj) {
+            target = targetObj;
+        }
+
+        /**
+         * {@inheritDoc} This implementation delegates method invocations to the target object and handles the return value
+         * correctly.
+         */
+        @Override
+        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+            final Object result = method.invoke(target, args);
+            return isFluentResult(method) ? proxy : result;
+        }
+    }
+
     /** The manager for default handlers. */
     private final DefaultParametersManager defaultParametersManager;
 
@@ -96,12 +138,113 @@ public final class Parameters {
     }
 
     /**
+     * Creates a new instance of a parameters object for basic configuration properties.
+     *
+     * @return the new parameters object
+     */
+    public BasicBuilderParameters basic() {
+        return new BasicBuilderParameters();
+    }
+
+    /**
+     * Creates a new instance of a parameters object for combined configuration builder properties.
+     *
+     * @return the new parameters object
+     */
+    public CombinedBuilderParameters combined() {
+        return createParametersProxy(new CombinedBuilderParametersImpl(), CombinedBuilderParameters.class);
+    }
+
+    /**
+     * Creates a proxy object for a given parameters interface based on the given implementation object. The newly created
+     * object is initialized with default values if there are matching {@link DefaultParametersHandler} objects.
+     *
+     * @param <T> the type of the parameters interface
+     * @param target the implementing target object
+     * @param ifcClass the interface class
+     * @param superIfcs an array with additional interface classes to be implemented
+     * @return the proxy object
+     */
+    private <T> T createParametersProxy(final Object target, final Class<T> ifcClass, final Class<?>... superIfcs) {
+        final Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
+        ifcClasses[0] = ifcClass;
+        System.arraycopy(superIfcs, 0, ifcClasses, 1, superIfcs.length);
+        final Object obj = Proxy.newProxyInstance(Parameters.class.getClassLoader(), ifcClasses, new ParametersIfcInvocationHandler(target));
+        getDefaultParametersManager().initializeParameters((BuilderParameters) obj);
+        return ifcClass.cast(obj);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for database configurations.
+     *
+     * @return the new parameters object
+     */
+    public DatabaseBuilderParameters database() {
+        return createParametersProxy(new DatabaseBuilderParametersImpl(), DatabaseBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for file-based configuration properties.
+     *
+     * @return the new parameters object
+     */
+    public FileBasedBuilderParameters fileBased() {
+        return createParametersProxy(new FileBasedBuilderParametersImpl(), FileBasedBuilderParameters.class);
+    }
+
+    /**
      * Gets the {@code DefaultParametersManager} associated with this object.
      *
      * @return the {@code DefaultParametersManager}
      */
     public DefaultParametersManager getDefaultParametersManager() {
         return defaultParametersManager;
+    }
+
+    /**
+     * Creates a new instance of a parameters object for hierarchical configurations.
+     *
+     * @return the new parameters object
+     */
+    public HierarchicalBuilderParameters hierarchical() {
+        return createParametersProxy(new HierarchicalBuilderParametersImpl(), HierarchicalBuilderParameters.class, FileBasedBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for INI configurations.
+     *
+     * @return the new parameters object
+     */
+    public INIBuilderParameters ini() {
+        return createParametersProxy(new INIBuilderParametersImpl(), INIBuilderParameters.class, FileBasedBuilderParameters.class,
+            HierarchicalBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for JNDI configurations.
+     *
+     * @return the new parameters object
+     */
+    public JndiBuilderParameters jndi() {
+        return createParametersProxy(new JndiBuilderParametersImpl(), JndiBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for a builder for multiple file-based configurations.
+     *
+     * @return the new parameters object
+     */
+    public MultiFileBuilderParameters multiFile() {
+        return createParametersProxy(new MultiFileBuilderParametersImpl(), MultiFileBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for properties configurations.
+     *
+     * @return the new parameters object
+     */
+    public PropertiesBuilderParameters properties() {
+        return createParametersProxy(new PropertiesBuilderParametersImpl(), PropertiesBuilderParameters.class, FileBasedBuilderParameters.class);
     }
 
     /**
@@ -135,51 +278,6 @@ public final class Parameters {
     }
 
     /**
-     * Creates a new instance of a parameters object for basic configuration properties.
-     *
-     * @return the new parameters object
-     */
-    public BasicBuilderParameters basic() {
-        return new BasicBuilderParameters();
-    }
-
-    /**
-     * Creates a new instance of a parameters object for file-based configuration properties.
-     *
-     * @return the new parameters object
-     */
-    public FileBasedBuilderParameters fileBased() {
-        return createParametersProxy(new FileBasedBuilderParametersImpl(), FileBasedBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for combined configuration builder properties.
-     *
-     * @return the new parameters object
-     */
-    public CombinedBuilderParameters combined() {
-        return createParametersProxy(new CombinedBuilderParametersImpl(), CombinedBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for JNDI configurations.
-     *
-     * @return the new parameters object
-     */
-    public JndiBuilderParameters jndi() {
-        return createParametersProxy(new JndiBuilderParametersImpl(), JndiBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for hierarchical configurations.
-     *
-     * @return the new parameters object
-     */
-    public HierarchicalBuilderParameters hierarchical() {
-        return createParametersProxy(new HierarchicalBuilderParametersImpl(), HierarchicalBuilderParameters.class, FileBasedBuilderParameters.class);
-    }
-
-    /**
      * Creates a new instance of a parameters object for XML configurations.
      *
      * @return the new parameters object
@@ -187,103 +285,5 @@ public final class Parameters {
     public XMLBuilderParameters xml() {
         return createParametersProxy(new XMLBuilderParametersImpl(), XMLBuilderParameters.class, FileBasedBuilderParameters.class,
             HierarchicalBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for properties configurations.
-     *
-     * @return the new parameters object
-     */
-    public PropertiesBuilderParameters properties() {
-        return createParametersProxy(new PropertiesBuilderParametersImpl(), PropertiesBuilderParameters.class, FileBasedBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for a builder for multiple file-based configurations.
-     *
-     * @return the new parameters object
-     */
-    public MultiFileBuilderParameters multiFile() {
-        return createParametersProxy(new MultiFileBuilderParametersImpl(), MultiFileBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for database configurations.
-     *
-     * @return the new parameters object
-     */
-    public DatabaseBuilderParameters database() {
-        return createParametersProxy(new DatabaseBuilderParametersImpl(), DatabaseBuilderParameters.class);
-    }
-
-    /**
-     * Creates a new instance of a parameters object for INI configurations.
-     *
-     * @return the new parameters object
-     */
-    public INIBuilderParameters ini() {
-        return createParametersProxy(new INIBuilderParametersImpl(), INIBuilderParameters.class, FileBasedBuilderParameters.class,
-            HierarchicalBuilderParameters.class);
-    }
-
-    /**
-     * Creates a proxy object for a given parameters interface based on the given implementation object. The newly created
-     * object is initialized with default values if there are matching {@link DefaultParametersHandler} objects.
-     *
-     * @param <T> the type of the parameters interface
-     * @param target the implementing target object
-     * @param ifcClass the interface class
-     * @param superIfcs an array with additional interface classes to be implemented
-     * @return the proxy object
-     */
-    private <T> T createParametersProxy(final Object target, final Class<T> ifcClass, final Class<?>... superIfcs) {
-        final Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
-        ifcClasses[0] = ifcClass;
-        System.arraycopy(superIfcs, 0, ifcClasses, 1, superIfcs.length);
-        final Object obj = Proxy.newProxyInstance(Parameters.class.getClassLoader(), ifcClasses, new ParametersIfcInvocationHandler(target));
-        getDefaultParametersManager().initializeParameters((BuilderParameters) obj);
-        return ifcClass.cast(obj);
-    }
-
-    /**
-     * A specialized {@code InvocationHandler} implementation which maps the methods of a parameters interface to an
-     * implementation of the corresponding property interfaces. The parameters interface is a union of multiple property
-     * interfaces. The wrapped object implements all of these, but not the union interface. Therefore, a reflection-based
-     * approach is required. A special handling is required for the method of the {@code BuilderParameters} interface
-     * because here no fluent return value is used.
-     */
-    private static final class ParametersIfcInvocationHandler implements InvocationHandler {
-        /** The target object of reflection calls. */
-        private final Object target;
-
-        /**
-         * Creates a new instance of {@code ParametersIfcInvocationHandler} and sets the wrapped parameters object.
-         *
-         * @param targetObj the target object for reflection calls
-         */
-        public ParametersIfcInvocationHandler(final Object targetObj) {
-            target = targetObj;
-        }
-
-        /**
-         * {@inheritDoc} This implementation delegates method invocations to the target object and handles the return value
-         * correctly.
-         */
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            final Object result = method.invoke(target, args);
-            return isFluentResult(method) ? proxy : result;
-        }
-
-        /**
-         * Checks whether the specified method belongs to an interface which requires fluent result values.
-         *
-         * @param method the method to be checked
-         * @return a flag whether the method's result should be handled as a fluent result value
-         */
-        private static boolean isFluentResult(final Method method) {
-            final Class<?> declaringClass = method.getDeclaringClass();
-            return declaringClass.isInterface() && !declaringClass.equals(BuilderParameters.class);
-        }
     }
 }

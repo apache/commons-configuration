@@ -202,18 +202,6 @@ public class TestInMemoryNodeModelTrackedNodes {
     }
 
     /**
-     * Prepares the resolver mock to expect a nodeKey() request.
-     *
-     * @param resolver the {@code NodeKeyResolver}
-     * @param node the node whose name is to be resolved
-     * @param key the key to be returned for this node
-     */
-    private void prepareNodeKey(final NodeKeyResolver<ImmutableNode> resolver, final ImmutableNode node, final String key) {
-        final Map<ImmutableNode, String> cache = new HashMap<>();
-        when(resolver.nodeKey(node, cache, model.getNodeHandler())).thenReturn(key);
-    }
-
-    /**
      * Returns the fields node from the model.
      *
      * @return the fields node
@@ -239,6 +227,18 @@ public class TestInMemoryNodeModelTrackedNodes {
     private void initDetachedNode(final NodeKeyResolver<ImmutableNode> resolver) {
         model.trackNode(selector, resolver);
         model.clearTree("tables.table(0)", resolver);
+    }
+
+    /**
+     * Prepares the resolver mock to expect a nodeKey() request.
+     *
+     * @param resolver the {@code NodeKeyResolver}
+     * @param node the node whose name is to be resolved
+     * @param key the key to be returned for this node
+     */
+    private void prepareNodeKey(final NodeKeyResolver<ImmutableNode> resolver, final ImmutableNode node, final String key) {
+        final Map<ImmutableNode, String> cache = new HashMap<>();
+        when(resolver.nodeKey(node, cache, model.getNodeHandler())).thenReturn(key);
     }
 
     @BeforeEach

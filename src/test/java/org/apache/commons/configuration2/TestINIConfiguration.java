@@ -161,6 +161,26 @@ public class TestINIConfiguration {
         }
     }
 
+    private static Stream<Arguments> provideSectionsWithComments() {
+        return Stream.of(
+                Arguments.of(INI_DATA6, false, new String[]{null, "section11] ; sub-section related to [section1"}),
+                Arguments.of(INI_DATA7, false, new String[]{null, "section11] # sub-section related to [section1"}),
+                Arguments.of(INI_DATA6, true, new String[]{"section1", "section11"}),
+                Arguments.of(INI_DATA7, true, new String[]{"section1", "section11"})
+        );
+    }
+
+    private static Stream<Arguments> provideValuesWithComments() {
+        return Stream.of(
+                Arguments.of(INI_DATA2, "section4.var3", "123"),
+                Arguments.of(INI_DATA2, "section4.var4", "1;2;3"),
+                Arguments.of(INI_DATA2, "section4.var5", "'quoted' \"value\""),
+                Arguments.of(INI_DATA5, "section4.var3", "123"),
+                Arguments.of(INI_DATA5, "section4.var4", "1#2;3"),
+                Arguments.of(INI_DATA5, "section4.var5", "'quoted' \"value\"")
+        );
+    }
+
     /**
      * Saves the specified configuration to a string. The string can be compared with an expected value or again loaded into
      * a configuration.
@@ -292,6 +312,16 @@ public class TestINIConfiguration {
         assertEquals("a#b#c", instance.getString("section.key2"));
         assertNull(instance.getString("section.;key3"));
         assertEquals("value4", instance.getString("section.#key4"));
+    }
+
+    /**
+     * Tests correct handling of empty sections "[ ]".
+     */
+    @Test
+    public void testEmptySection() throws ConfigurationException {
+        final INIConfiguration config = setUpConfig("[]" + LINE_SEPARATOR + "key=value" + LINE_SEPARATOR);
+        final String value = config.getString(" .key");
+        assertEquals("value", value);
     }
 
     /**
@@ -514,6 +544,16 @@ public class TestINIConfiguration {
     @Test
     public void testGetSectionsWithGlobal() throws ConfigurationException {
         checkSectionNames(INI_DATA_GLOBAL, new String[] {null, "section1", "section2", "section3"});
+    }
+
+    /**
+     * Tests whether a section with inline comment is correctly parsed.
+     */
+    @ParameterizedTest
+    @MethodSource("provideSectionsWithComments")
+    public void testGetSectionsWithInLineComment(final String source, final boolean allowComments, final String[] results) throws ConfigurationException {
+        final INIConfiguration config = setUpConfig(source, allowComments);
+        checkSectionNames(config, results);
     }
 
     /**
@@ -1010,17 +1050,6 @@ public class TestINIConfiguration {
         assertEquals(value, config.getString(key));
     }
 
-    private static Stream<Arguments> provideValuesWithComments() {
-        return Stream.of(
-                Arguments.of(INI_DATA2, "section4.var3", "123"),
-                Arguments.of(INI_DATA2, "section4.var4", "1;2;3"),
-                Arguments.of(INI_DATA2, "section4.var5", "'quoted' \"value\""),
-                Arguments.of(INI_DATA5, "section4.var3", "123"),
-                Arguments.of(INI_DATA5, "section4.var4", "1#2;3"),
-                Arguments.of(INI_DATA5, "section4.var5", "'quoted' \"value\"")
-        );
-    }
-
     /**
      * Tests whether the list delimiter character is recognized.
      */
@@ -1029,16 +1058,6 @@ public class TestINIConfiguration {
         final INIConfiguration config = setUpConfig("[test]" + LINE_SEPARATOR + "list=1,2,3" + LINE_SEPARATOR);
         final List<Object> list = config.getList("test.list");
         assertEquals(Arrays.asList("1", "2", "3"), list);
-    }
-
-    /**
-     * Tests correct handling of empty sections "[ ]".
-     */
-    @Test
-    public void testEmptySection() throws ConfigurationException {
-        final INIConfiguration config = setUpConfig("[]" + LINE_SEPARATOR + "key=value" + LINE_SEPARATOR);
-        final String value = config.getString(" .key");
-        assertEquals("value", value);
     }
 
     /**
@@ -1081,25 +1100,6 @@ public class TestINIConfiguration {
         config2.read(new StringReader(writer.toString()));
 
         assertEquals("1;2;3", config2.getString("section.key1"));
-    }
-
-    /**
-     * Tests whether a section with inline comment is correctly parsed.
-     */
-    @ParameterizedTest
-    @MethodSource("provideSectionsWithComments")
-    public void testGetSectionsWithInLineComment(final String source, final boolean allowComments, final String[] results) throws ConfigurationException {
-        final INIConfiguration config = setUpConfig(source, allowComments);
-        checkSectionNames(config, results);
-    }
-
-    private static Stream<Arguments> provideSectionsWithComments() {
-        return Stream.of(
-                Arguments.of(INI_DATA6, false, new String[]{null, "section11] ; sub-section related to [section1"}),
-                Arguments.of(INI_DATA7, false, new String[]{null, "section11] # sub-section related to [section1"}),
-                Arguments.of(INI_DATA6, true, new String[]{"section1", "section11"}),
-                Arguments.of(INI_DATA7, true, new String[]{"section1", "section11"})
-        );
     }
 
     /**

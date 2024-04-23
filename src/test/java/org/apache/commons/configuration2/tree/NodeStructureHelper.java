@@ -233,36 +233,6 @@ public class NodeStructureHelper {
     }
 
     /**
-     * Prepares the passed in resolver mock to resolve add keys. They are interpreted on a default expression engine.
-     *
-     * @param resolver the {@code NodeKeyResolver} mock
-     */
-    public static void prepareResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
-        when(resolver.resolveAddKey(any(), any(), any())).then(invocation -> {
-            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
-            final String key = invocation.getArgument(1, String.class);
-            final TreeData handler = invocation.getArgument(2, TreeData.class);
-            return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
-        });
-    }
-
-    /**
-     * Prepares a mock for a resolver to expect arbitrary resolve operations. These operations are implemented on top of a
-     * default expression engine.
-     *
-     * @param resolver the mock resolver
-     */
-    @SuppressWarnings("unchecked")
-    public static void prepareResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
-        when(resolver.resolveKey(any(), any(), any())).thenAnswer(invocation -> {
-            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
-            final String key = invocation.getArgument(1, String.class);
-            final NodeHandler<ImmutableNode> handler = invocation.getArgument(2, NodeHandler.class);
-            return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
-        });
-    }
-
-    /**
      * Returns the name of the specified field in the tables tree.
      *
      * @param tabIdx the index of the table
@@ -425,6 +395,36 @@ public class NodeStructureHelper {
      */
     public static int personaeLength(final int authorIdx, final int workIdx) {
         return PERSONAE[authorIdx][workIdx].length;
+    }
+
+    /**
+     * Prepares the passed in resolver mock to resolve add keys. They are interpreted on a default expression engine.
+     *
+     * @param resolver the {@code NodeKeyResolver} mock
+     */
+    public static void prepareResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
+        when(resolver.resolveAddKey(any(), any(), any())).then(invocation -> {
+            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
+            final String key = invocation.getArgument(1, String.class);
+            final TreeData handler = invocation.getArgument(2, TreeData.class);
+            return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
+        });
+    }
+
+    /**
+     * Prepares a mock for a resolver to expect arbitrary resolve operations. These operations are implemented on top of a
+     * default expression engine.
+     *
+     * @param resolver the mock resolver
+     */
+    @SuppressWarnings("unchecked")
+    public static void prepareResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
+        when(resolver.resolveKey(any(), any(), any())).thenAnswer(invocation -> {
+            final ImmutableNode root = invocation.getArgument(0, ImmutableNode.class);
+            final String key = invocation.getArgument(1, String.class);
+            final NodeHandler<ImmutableNode> handler = invocation.getArgument(2, NodeHandler.class);
+            return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
+        });
     }
 
     /**

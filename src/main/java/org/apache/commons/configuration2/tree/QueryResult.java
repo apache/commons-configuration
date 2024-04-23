@@ -38,6 +38,30 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @param <T> the type of the result nodes
  */
 public final class QueryResult<T> {
+    /**
+     * Creates a {@code QueryResult} instance representing an attribute result. An attribute result consists of the node the
+     * attribute belongs to and the attribute name. (The value can be obtained based on this information.)
+     *
+     * @param parentNode the node which owns the attribute
+     * @param attrName the attribute name
+     * @param <T> the type of the parent node
+     * @return the newly created instance
+     */
+    public static <T> QueryResult<T> createAttributeResult(final T parentNode, final String attrName) {
+        return new QueryResult<>(parentNode, attrName);
+    }
+
+    /**
+     * Creates a {@code QueryResult} instance representing the specified result node.
+     *
+     * @param <T> the type of the result node
+     * @param resultNode the result node
+     * @return the newly created instance
+     */
+    public static <T> QueryResult<T> createNodeResult(final T resultNode) {
+        return new QueryResult<>(resultNode, null);
+    }
+
     /** The node result. */
     private final T node;
 
@@ -53,79 +77,6 @@ public final class QueryResult<T> {
     private QueryResult(final T nd, final String attr) {
         node = nd;
         attributeName = attr;
-    }
-
-    /**
-     * Creates a {@code QueryResult} instance representing the specified result node.
-     *
-     * @param <T> the type of the result node
-     * @param resultNode the result node
-     * @return the newly created instance
-     */
-    public static <T> QueryResult<T> createNodeResult(final T resultNode) {
-        return new QueryResult<>(resultNode, null);
-    }
-
-    /**
-     * Creates a {@code QueryResult} instance representing an attribute result. An attribute result consists of the node the
-     * attribute belongs to and the attribute name. (The value can be obtained based on this information.)
-     *
-     * @param parentNode the node which owns the attribute
-     * @param attrName the attribute name
-     * @param <T> the type of the parent node
-     * @return the newly created instance
-     */
-    public static <T> QueryResult<T> createAttributeResult(final T parentNode, final String attrName) {
-        return new QueryResult<>(parentNode, attrName);
-    }
-
-    /**
-     * Gets the node referenced by this object. Depending on the result type, this is either the result node or the
-     * parent node of the represented attribute.
-     *
-     * @return the referenced node
-     */
-    public T getNode() {
-        return node;
-    }
-
-    /**
-     * Gets the name of the attribute. This method is defined only for results of type attribute.
-     *
-     * @return the attribute name
-     */
-    public String getAttributeName() {
-        return attributeName;
-    }
-
-    /**
-     * Returns a flag whether this is a result of type attribute. If result is <b>true</b>, the attribute name and value can
-     * be queried. Otherwise, only the result node is available.
-     *
-     * @return <b>true</b> for an attribute result, <b>false</b> otherwise
-     */
-    public boolean isAttributeResult() {
-        return StringUtils.isNotEmpty(getAttributeName());
-    }
-
-    /**
-     * Gets the attribute value if this is an attribute result. If this is not an attribute result, an exception is
-     * thrown.
-     *
-     * @param handler the {@code NodeHandler}
-     * @return the attribute value
-     * @throws IllegalStateException if this is not an attribute result
-     */
-    public Object getAttributeValue(final NodeHandler<T> handler) {
-        if (!isAttributeResult()) {
-            throw new IllegalStateException("This is not an attribute result! " + "Attribute value cannot be fetched.");
-        }
-        return handler.getAttributeValue(getNode(), getAttributeName());
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(getNode()).append(getAttributeName()).toHashCode();
     }
 
     /**
@@ -146,6 +97,55 @@ public final class QueryResult<T> {
 
         final QueryResult<?> c = (QueryResult<?>) obj;
         return new EqualsBuilder().append(getNode(), c.getNode()).append(getAttributeName(), c.getAttributeName()).isEquals();
+    }
+
+    /**
+     * Gets the name of the attribute. This method is defined only for results of type attribute.
+     *
+     * @return the attribute name
+     */
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    /**
+     * Gets the attribute value if this is an attribute result. If this is not an attribute result, an exception is
+     * thrown.
+     *
+     * @param handler the {@code NodeHandler}
+     * @return the attribute value
+     * @throws IllegalStateException if this is not an attribute result
+     */
+    public Object getAttributeValue(final NodeHandler<T> handler) {
+        if (!isAttributeResult()) {
+            throw new IllegalStateException("This is not an attribute result! " + "Attribute value cannot be fetched.");
+        }
+        return handler.getAttributeValue(getNode(), getAttributeName());
+    }
+
+    /**
+     * Gets the node referenced by this object. Depending on the result type, this is either the result node or the
+     * parent node of the represented attribute.
+     *
+     * @return the referenced node
+     */
+    public T getNode() {
+        return node;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(getNode()).append(getAttributeName()).toHashCode();
+    }
+
+    /**
+     * Returns a flag whether this is a result of type attribute. If result is <b>true</b>, the attribute name and value can
+     * be queried. Otherwise, only the result node is available.
+     *
+     * @return <b>true</b> for an attribute result, <b>false</b> otherwise
+     */
+    public boolean isAttributeResult() {
+        return StringUtils.isNotEmpty(getAttributeName());
     }
 
     /**

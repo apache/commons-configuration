@@ -154,6 +154,119 @@ import org.apache.commons.configuration2.tree.QueryResult;
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {
 
+    /**
+     * A specialized visitor that fills a list with keys that are defined in a node hierarchy.
+     */
+    private final class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter<T> {
+
+        /** Stores the list to be filled. */
+        private final Set<String> keyList;
+
+        /** A stack with the keys of the already processed nodes. */
+        private final Stack<String> parentKeys;
+
+        /**
+         * Default constructor.
+         */
+        public DefinedKeysVisitor() {
+            keyList = new LinkedHashSet<>();
+            parentKeys = new Stack<>();
+        }
+
+        /**
+         * Creates a new {@code DefinedKeysVisitor} instance and sets the prefix for the keys to fetch.
+         *
+         * @param prefix the prefix
+         */
+        public DefinedKeysVisitor(final String prefix) {
+            this();
+            parentKeys.push(prefix);
+        }
+
+        /**
+         * Gets the list with all defined keys.
+         *
+         * @return the list with the defined keys
+         */
+        public Set<String> getKeyList() {
+            return keyList;
+        }
+
+        /**
+         * Appends all attribute keys of the current node.
+         *
+         * @param parentKey the parent key
+         * @param node the current node
+         * @param handler the {@code NodeHandler}
+         */
+        public void handleAttributeKeys(final String parentKey, final T node, final NodeHandler<T> handler) {
+            handler.getAttributes(node).forEach(attr -> keyList.add(getExpressionEngine().attributeKey(parentKey, attr)));
+        }
+
+        /**
+         * {@inheritDoc} This implementation removes this node's key from the stack.
+         */
+        @Override
+        public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
+            parentKeys.pop();
+        }
+
+        /**
+         * {@inheritDoc} If this node has a value, its key is added to the internal list.
+         */
+        @Override
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+            final String parentKey = parentKeys.isEmpty() ? null : parentKeys.peek();
+            final String key = getExpressionEngine().nodeKey(node, parentKey, handler);
+            parentKeys.push(key);
+            if (handler.getValue(node) != null) {
+                keyList.add(key);
+            }
+            handleAttributeKeys(key, node, handler);
+        }
+    }
+
+    /**
+     * A specialized visitor that checks if a node is defined. &quot;Defined&quot; in this terms means that the node or at
+     * least one of its sub nodes is associated with a value.
+     *
+     * @param <T> the type of the nodes managed by this hierarchical configuration
+     */
+    private static final class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
+
+        /** Stores the defined flag. */
+        private boolean defined;
+
+        /**
+         * Returns the defined flag.
+         *
+         * @return the defined flag
+         */
+        public boolean isDefined() {
+            return defined;
+        }
+
+        /**
+         * Checks if iteration should be stopped. This can be done if the first defined node is found.
+         *
+         * @return a flag if iteration should be stopped
+         */
+        @Override
+        public boolean terminate() {
+            return isDefined();
+        }
+
+        /**
+         * Visits the node. Checks if a value is defined.
+         *
+         * @param node the actual node
+         */
+        @Override
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+            defined = handler.getValue(node) != null || !handler.getAttributes(node).isEmpty();
+        }
+    }
+
     /** The model for managing the data stored in this configuration. */
     private NodeModel<T> nodeModel;
 
@@ -167,124 +280,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected AbstractHierarchicalConfiguration(final NodeModel<T> nodeModel) {
         this.nodeModel = nodeModel;
-    }
-
-    /**
-     * {@inheritDoc} This implementation handles synchronization and delegates to {@code getRootElementNameInternal()}.
-     */
-    @Override
-    public final String getRootElementName() {
-        beginRead(false);
-        try {
-            return getRootElementNameInternal();
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * Actually obtains the name of the root element. This method is called by {@code getRootElementName()}. It just returns
-     * the name of the root node. Subclasses that treat the root element name differently can override this method.
-     *
-     * @return the name of this configuration's root element
-     */
-    protected String getRootElementNameInternal() {
-        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
-        return nodeHandler.nodeName(nodeHandler.getRootNode());
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns the configuration's {@code NodeModel}. It is guarded by the current
-     * {@code Synchronizer}.
-     */
-    @Override
-    public NodeModel<T> getNodeModel() {
-        beginRead(false);
-        try {
-            return getModel();
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
-     * expression engine was set, the default expression engine will be returned.
-     *
-     * @return the current expression engine
-     * @since 1.3
-     */
-    @Override
-    public ExpressionEngine getExpressionEngine() {
-        return expressionEngine != null ? expressionEngine : DefaultExpressionEngine.INSTANCE;
-    }
-
-    /**
-     * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
-     * will be interpreted by this engine.
-     *
-     * @param expressionEngine the new expression engine; can be <b>null</b>, then the default expression engine will be
-     *        used
-     * @since 1.3
-     */
-    @Override
-    public void setExpressionEngine(final ExpressionEngine expressionEngine) {
-        this.expressionEngine = expressionEngine;
-    }
-
-    /**
-     * Fetches the specified property. This task is delegated to the associated expression engine.
-     *
-     * @param key the key to be looked up
-     * @return the found value
-     */
-    @Override
-    protected Object getPropertyInternal(final String key) {
-        final List<QueryResult<T>> results = fetchNodeList(key);
-
-        if (results.isEmpty()) {
-            return null;
-        }
-        final NodeHandler<T> handler = getModel().getNodeHandler();
-        final List<Object> list = results.stream().map(r -> valueFromResult(r, handler)).filter(Objects::nonNull).collect(Collectors.toList());
-
-        if (list.size() < 1) {
-            return null;
-        }
-        return list.size() == 1 ? list.get(0) : list;
-    }
-
-    /**
-     * Adds the property with the specified key. This task will be delegated to the associated {@code ExpressionEngine}, so
-     * the passed in key must match the requirements of this implementation.
-     *
-     * @param key the key of the new property
-     * @param obj the value of the new property
-     */
-    @Override
-    protected void addPropertyInternal(final String key, final Object obj) {
-        addPropertyToModel(key, getListDelimiterHandler().parse(obj));
-    }
-
-    /**
-     * {@inheritDoc} This method is not called in the normal way (via {@code addProperty()} for hierarchical configurations
-     * because all values to be added for the property have to be passed to the model in a single step. However, to allow
-     * derived classes to add an arbitrary value as an object, a special implementation is provided here. The passed in
-     * object is not parsed as a list, but passed directly as only value to the model.
-     */
-    @Override
-    protected void addPropertyDirect(final String key, final Object value) {
-        addPropertyToModel(key, Collections.singleton(value));
-    }
-
-    /**
-     * Helper method for executing an add property operation on the model.
-     *
-     * @param key the key of the new property
-     * @param values the values to be added for this property
-     */
-    private void addPropertyToModel(final String key, final Iterable<?> values) {
-        getModel().addProperty(key, values, this);
     }
 
     /**
@@ -328,120 +323,36 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Checks if this configuration is empty. Empty means that there are no keys with any values, though there can be some
-     * (empty) nodes.
+     * {@inheritDoc} This method is not called in the normal way (via {@code addProperty()} for hierarchical configurations
+     * because all values to be added for the property have to be passed to the model in a single step. However, to allow
+     * derived classes to add an arbitrary value as an object, a special implementation is provided here. The passed in
+     * object is not parsed as a list, but passed directly as only value to the model.
+     */
+    @Override
+    protected void addPropertyDirect(final String key, final Object value) {
+        addPropertyToModel(key, Collections.singleton(value));
+    }
+
+    /**
+     * Adds the property with the specified key. This task will be delegated to the associated {@code ExpressionEngine}, so
+     * the passed in key must match the requirements of this implementation.
      *
-     * @return a flag if this configuration is empty
+     * @param key the key of the new property
+     * @param obj the value of the new property
      */
     @Override
-    protected boolean isEmptyInternal() {
-        return !nodeDefined(getModel().getNodeHandler().getRootNode());
+    protected void addPropertyInternal(final String key, final Object obj) {
+        addPropertyToModel(key, getListDelimiterHandler().parse(obj));
     }
 
     /**
-     * Checks if the specified key is contained in this configuration. Note that for this configuration the term
-     * &quot;contained&quot; means that the key has an associated value. If there is a node for this key that has no value
-     * but children (either defined or undefined), this method will still return <b>false </b>.
+     * Helper method for executing an add property operation on the model.
      *
-     * @param key the key to be checked
-     * @return a flag if this key is contained in this configuration
+     * @param key the key of the new property
+     * @param values the values to be added for this property
      */
-    @Override
-    protected boolean containsKeyInternal(final String key) {
-        return getPropertyInternal(key) != null;
-    }
-
-    /**
-     * Sets the value of the specified property.
-     *
-     * @param key the key of the property to set
-     * @param value the new value of this property
-     */
-    @Override
-    protected void setPropertyInternal(final String key, final Object value) {
-        getModel().setProperty(key, value, this);
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the expression engine.
-     */
-    @Override
-    public List<QueryResult<T>> resolveKey(final T root, final String key, final NodeHandler<T> handler) {
-        return getExpressionEngine().query(root, key, handler);
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to {@code resolveKey()} and then filters out attribute results.
-     */
-    @Override
-    public List<T> resolveNodeKey(final T root, final String key, final NodeHandler<T> handler) {
-        return resolveKey(root, key, handler).stream().filter(r -> !r.isAttributeResult()).map(QueryResult::getNode)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the expression engine.
-     */
-    @Override
-    public NodeAddData<T> resolveAddKey(final T root, final String key, final NodeHandler<T> handler) {
-        return getExpressionEngine().prepareAdd(root, key, handler);
-    }
-
-    /**
-     * {@inheritDoc} This implementation executes a query for the given key and constructs a {@code NodeUpdateData} object
-     * based on the results. It determines which nodes need to be changed and whether new ones need to be added or existing
-     * ones need to be removed.
-     */
-    @Override
-    public NodeUpdateData<T> resolveUpdateKey(final T root, final String key, final Object newValue, final NodeHandler<T> handler) {
-        final Iterator<QueryResult<T>> itNodes = fetchNodeList(key).iterator();
-        final Iterator<?> itValues = getListDelimiterHandler().parse(newValue).iterator();
-        final Map<QueryResult<T>, Object> changedValues = new HashMap<>();
-        Collection<Object> additionalValues = null;
-        Collection<QueryResult<T>> removedItems = null;
-
-        while (itNodes.hasNext() && itValues.hasNext()) {
-            changedValues.put(itNodes.next(), itValues.next());
-        }
-
-        // Add additional nodes if necessary
-        if (itValues.hasNext()) {
-            additionalValues = new LinkedList<>();
-            itValues.forEachRemaining(additionalValues::add);
-        }
-
-        // Remove remaining nodes
-        if (itNodes.hasNext()) {
-            removedItems = new LinkedList<>();
-            itNodes.forEachRemaining(removedItems::add);
-        }
-
-        return new NodeUpdateData<>(changedValues, additionalValues, removedItems, key);
-    }
-
-    /**
-     * {@inheritDoc} This implementation uses the expression engine to generate a canonical key for the passed in node. For
-     * this purpose, the path to the root node has to be traversed. The cache is used to store and access keys for nodes
-     * encountered on the path.
-     */
-    @Override
-    public String nodeKey(final T node, final Map<T, String> cache, final NodeHandler<T> handler) {
-        final List<T> paths = new LinkedList<>();
-        T currentNode = node;
-        String key = cache.get(node);
-        while (key == null && currentNode != null) {
-            paths.add(0, currentNode);
-            currentNode = handler.getParent(currentNode);
-            key = cache.get(currentNode);
-        }
-
-        for (final T n : paths) {
-            final String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
-            cache.put(n, currentKey);
-            key = currentKey;
-        }
-
-        return key;
+    private void addPropertyToModel(final String key, final Iterable<?> values) {
+        getModel().addProperty(key, values, this);
     }
 
     /**
@@ -451,6 +362,17 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected void clearInternal() {
         getModel().clear(this);
+    }
+
+    /**
+     * Removes the property with the given key. Properties with names that start with the given key (i.e. properties below
+     * the specified key in the hierarchy) won't be affected. This implementation delegates to the node+ model.
+     *
+     * @param key the key of the property to be removed
+     */
+    @Override
+    protected void clearPropertyDirect(final String key) {
+        getModel().clearProperty(key, this);
     }
 
     /**
@@ -486,24 +408,74 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Removes the property with the given key. Properties with names that start with the given key (i.e. properties below
-     * the specified key in the hierarchy) won't be affected. This implementation delegates to the node+ model.
+     * Creates a copy of this object. This new configuration object will contain copies of all nodes in the same structure.
+     * Registered event listeners won't be cloned; so they are not registered at the returned copy.
      *
-     * @param key the key of the property to be removed
+     * @return the copy
+     * @since 1.2
      */
     @Override
-    protected void clearPropertyDirect(final String key) {
-        getModel().clearProperty(key, this);
+    public Object clone() {
+        beginRead(false);
+        try {
+            @SuppressWarnings("unchecked") // clone returns the same type
+            final AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) super.clone();
+            copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
+            copy.cloneInterpolator(this);
+            copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
+            copy.nodeModel = cloneNodeModel();
+
+            return copy;
+        } catch (final CloneNotSupportedException cex) {
+            // should not happen
+            throw new ConfigurationRuntimeException(cex);
+        } finally {
+            endRead();
+        }
     }
 
     /**
-     * {@inheritDoc} This implementation is slightly more efficient than the default implementation. It does not iterate
-     * over the key set, but directly queries its size after it has been constructed. Note that constructing the key set is
-     * still an O(n) operation.
+     * Creates a clone of the node model. This method is called by {@code clone()}.
+     *
+     * @return the clone of the {@code NodeModel}
+     * @since 2.0
+     */
+    protected abstract NodeModel<T> cloneNodeModel();
+
+    /**
+     * Checks if the specified key is contained in this configuration. Note that for this configuration the term
+     * &quot;contained&quot; means that the key has an associated value. If there is a node for this key that has no value
+     * but children (either defined or undefined), this method will still return <b>false </b>.
+     *
+     * @param key the key to be checked
+     * @return a flag if this key is contained in this configuration
      */
     @Override
-    protected int sizeInternal() {
-        return visitDefinedKeys().getKeyList().size();
+    protected boolean containsKeyInternal(final String key) {
+        return getPropertyInternal(key) != null;
+    }
+
+    /**
+     * Helper method for resolving the specified key.
+     *
+     * @param key the key
+     * @return a list with all results selected by this key
+     */
+    protected List<QueryResult<T>> fetchNodeList(final String key) {
+        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        return resolveKey(nodeHandler.getRootNode(), key, nodeHandler);
+    }
+
+    /**
+     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
+     * expression engine was set, the default expression engine will be returned.
+     *
+     * @return the current expression engine
+     * @since 1.3
+     */
+    @Override
+    public ExpressionEngine getExpressionEngine() {
+        return expressionEngine != null ? expressionEngine : DefaultExpressionEngine.INSTANCE;
     }
 
     /**
@@ -515,18 +487,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected Iterator<String> getKeysInternal() {
         return visitDefinedKeys().getKeyList().iterator();
-    }
-
-    /**
-     * Creates a {@code DefinedKeysVisitor} and visits all defined keys with it.
-     *
-     * @return the visitor after all keys have been visited
-     */
-    private DefinedKeysVisitor visitDefinedKeys() {
-        final DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
-        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), visitor, nodeHandler);
-        return visitor;
     }
 
     /**
@@ -590,49 +550,85 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Creates a copy of this object. This new configuration object will contain copies of all nodes in the same structure.
-     * Registered event listeners won't be cloned; so they are not registered at the returned copy.
+     * Gets the {@code NodeModel} used by this configuration. This method is intended for internal use only. Access to
+     * the model is granted without any synchronization. This is in contrast to the &quot;official&quot;
+     * {@code getNodeModel()} method which is guarded by the configuration's {@code Synchronizer}.
      *
-     * @return the copy
-     * @since 1.2
+     * @return the node model
+     */
+    protected NodeModel<T> getModel() {
+        return nodeModel;
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns the configuration's {@code NodeModel}. It is guarded by the current
+     * {@code Synchronizer}.
      */
     @Override
-    public Object clone() {
+    public NodeModel<T> getNodeModel() {
         beginRead(false);
         try {
-            @SuppressWarnings("unchecked") // clone returns the same type
-            final AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) super.clone();
-            copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
-            copy.cloneInterpolator(this);
-            copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
-            copy.nodeModel = cloneNodeModel();
-
-            return copy;
-        } catch (final CloneNotSupportedException cex) {
-            // should not happen
-            throw new ConfigurationRuntimeException(cex);
+            return getModel();
         } finally {
             endRead();
         }
     }
 
     /**
-     * Creates a clone of the node model. This method is called by {@code clone()}.
+     * Fetches the specified property. This task is delegated to the associated expression engine.
      *
-     * @return the clone of the {@code NodeModel}
-     * @since 2.0
+     * @param key the key to be looked up
+     * @return the found value
      */
-    protected abstract NodeModel<T> cloneNodeModel();
+    @Override
+    protected Object getPropertyInternal(final String key) {
+        final List<QueryResult<T>> results = fetchNodeList(key);
+
+        if (results.isEmpty()) {
+            return null;
+        }
+        final NodeHandler<T> handler = getModel().getNodeHandler();
+        final List<Object> list = results.stream().map(r -> valueFromResult(r, handler)).filter(Objects::nonNull).collect(Collectors.toList());
+
+        if (list.size() < 1) {
+            return null;
+        }
+        return list.size() == 1 ? list.get(0) : list;
+    }
 
     /**
-     * Helper method for resolving the specified key.
-     *
-     * @param key the key
-     * @return a list with all results selected by this key
+     * {@inheritDoc} This implementation handles synchronization and delegates to {@code getRootElementNameInternal()}.
      */
-    protected List<QueryResult<T>> fetchNodeList(final String key) {
+    @Override
+    public final String getRootElementName() {
+        beginRead(false);
+        try {
+            return getRootElementNameInternal();
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
+     * Actually obtains the name of the root element. This method is called by {@code getRootElementName()}. It just returns
+     * the name of the root node. Subclasses that treat the root element name differently can override this method.
+     *
+     * @return the name of this configuration's root element
+     */
+    protected String getRootElementNameInternal() {
         final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
-        return resolveKey(nodeHandler.getRootNode(), key, nodeHandler);
+        return nodeHandler.nodeName(nodeHandler.getRootNode());
+    }
+
+    /**
+     * Checks if this configuration is empty. Empty means that there are no keys with any values, though there can be some
+     * (empty) nodes.
+     *
+     * @return a flag if this configuration is empty
+     */
+    @Override
+    protected boolean isEmptyInternal() {
+        return !nodeDefined(getModel().getNodeHandler().getRootNode());
     }
 
     /**
@@ -648,14 +644,124 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Gets the {@code NodeModel} used by this configuration. This method is intended for internal use only. Access to
-     * the model is granted without any synchronization. This is in contrast to the &quot;official&quot;
-     * {@code getNodeModel()} method which is guarded by the configuration's {@code Synchronizer}.
-     *
-     * @return the node model
+     * {@inheritDoc} This implementation uses the expression engine to generate a canonical key for the passed in node. For
+     * this purpose, the path to the root node has to be traversed. The cache is used to store and access keys for nodes
+     * encountered on the path.
      */
-    protected NodeModel<T> getModel() {
-        return nodeModel;
+    @Override
+    public String nodeKey(final T node, final Map<T, String> cache, final NodeHandler<T> handler) {
+        final List<T> paths = new LinkedList<>();
+        T currentNode = node;
+        String key = cache.get(node);
+        while (key == null && currentNode != null) {
+            paths.add(0, currentNode);
+            currentNode = handler.getParent(currentNode);
+            key = cache.get(currentNode);
+        }
+
+        for (final T n : paths) {
+            final String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
+            cache.put(n, currentKey);
+            key = currentKey;
+        }
+
+        return key;
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the expression engine.
+     */
+    @Override
+    public NodeAddData<T> resolveAddKey(final T root, final String key, final NodeHandler<T> handler) {
+        return getExpressionEngine().prepareAdd(root, key, handler);
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the expression engine.
+     */
+    @Override
+    public List<QueryResult<T>> resolveKey(final T root, final String key, final NodeHandler<T> handler) {
+        return getExpressionEngine().query(root, key, handler);
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to {@code resolveKey()} and then filters out attribute results.
+     */
+    @Override
+    public List<T> resolveNodeKey(final T root, final String key, final NodeHandler<T> handler) {
+        return resolveKey(root, key, handler).stream().filter(r -> !r.isAttributeResult()).map(QueryResult::getNode)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    /**
+     * {@inheritDoc} This implementation executes a query for the given key and constructs a {@code NodeUpdateData} object
+     * based on the results. It determines which nodes need to be changed and whether new ones need to be added or existing
+     * ones need to be removed.
+     */
+    @Override
+    public NodeUpdateData<T> resolveUpdateKey(final T root, final String key, final Object newValue, final NodeHandler<T> handler) {
+        final Iterator<QueryResult<T>> itNodes = fetchNodeList(key).iterator();
+        final Iterator<?> itValues = getListDelimiterHandler().parse(newValue).iterator();
+        final Map<QueryResult<T>, Object> changedValues = new HashMap<>();
+        Collection<Object> additionalValues = null;
+        Collection<QueryResult<T>> removedItems = null;
+
+        while (itNodes.hasNext() && itValues.hasNext()) {
+            changedValues.put(itNodes.next(), itValues.next());
+        }
+
+        // Add additional nodes if necessary
+        if (itValues.hasNext()) {
+            additionalValues = new LinkedList<>();
+            itValues.forEachRemaining(additionalValues::add);
+        }
+
+        // Remove remaining nodes
+        if (itNodes.hasNext()) {
+            removedItems = new LinkedList<>();
+            itNodes.forEachRemaining(removedItems::add);
+        }
+
+        return new NodeUpdateData<>(changedValues, additionalValues, removedItems, key);
+    }
+
+    /**
+     * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
+     * will be interpreted by this engine.
+     *
+     * @param expressionEngine the new expression engine; can be <b>null</b>, then the default expression engine will be
+     *        used
+     * @since 1.3
+     */
+    @Override
+    public void setExpressionEngine(final ExpressionEngine expressionEngine) {
+        this.expressionEngine = expressionEngine;
+    }
+
+    /**
+     * Sets the value of the specified property.
+     *
+     * @param key the key of the property to set
+     * @param value the new value of this property
+     */
+    @Override
+    protected void setPropertyInternal(final String key, final Object value) {
+        getModel().setProperty(key, value, this);
+    }
+
+    /**
+     * {@inheritDoc} This implementation is slightly more efficient than the default implementation. It does not iterate
+     * over the key set, but directly queries its size after it has been constructed. Note that constructing the key set is
+     * still an O(n) operation.
+     */
+    @Override
+    protected int sizeInternal() {
+        return visitDefinedKeys().getKeyList().size();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "(" + getRootElementNameInternal() + ")";
     }
 
     /**
@@ -670,120 +776,14 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * A specialized visitor that checks if a node is defined. &quot;Defined&quot; in this terms means that the node or at
-     * least one of its sub nodes is associated with a value.
+     * Creates a {@code DefinedKeysVisitor} and visits all defined keys with it.
      *
-     * @param <T> the type of the nodes managed by this hierarchical configuration
+     * @return the visitor after all keys have been visited
      */
-    private static final class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
-
-        /** Stores the defined flag. */
-        private boolean defined;
-
-        /**
-         * Checks if iteration should be stopped. This can be done if the first defined node is found.
-         *
-         * @return a flag if iteration should be stopped
-         */
-        @Override
-        public boolean terminate() {
-            return isDefined();
-        }
-
-        /**
-         * Visits the node. Checks if a value is defined.
-         *
-         * @param node the actual node
-         */
-        @Override
-        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-            defined = handler.getValue(node) != null || !handler.getAttributes(node).isEmpty();
-        }
-
-        /**
-         * Returns the defined flag.
-         *
-         * @return the defined flag
-         */
-        public boolean isDefined() {
-            return defined;
-        }
-    }
-
-    /**
-     * A specialized visitor that fills a list with keys that are defined in a node hierarchy.
-     */
-    private final class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter<T> {
-
-        /** Stores the list to be filled. */
-        private final Set<String> keyList;
-
-        /** A stack with the keys of the already processed nodes. */
-        private final Stack<String> parentKeys;
-
-        /**
-         * Default constructor.
-         */
-        public DefinedKeysVisitor() {
-            keyList = new LinkedHashSet<>();
-            parentKeys = new Stack<>();
-        }
-
-        /**
-         * Creates a new {@code DefinedKeysVisitor} instance and sets the prefix for the keys to fetch.
-         *
-         * @param prefix the prefix
-         */
-        public DefinedKeysVisitor(final String prefix) {
-            this();
-            parentKeys.push(prefix);
-        }
-
-        /**
-         * Gets the list with all defined keys.
-         *
-         * @return the list with the defined keys
-         */
-        public Set<String> getKeyList() {
-            return keyList;
-        }
-
-        /**
-         * {@inheritDoc} This implementation removes this node's key from the stack.
-         */
-        @Override
-        public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
-            parentKeys.pop();
-        }
-
-        /**
-         * {@inheritDoc} If this node has a value, its key is added to the internal list.
-         */
-        @Override
-        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-            final String parentKey = parentKeys.isEmpty() ? null : parentKeys.peek();
-            final String key = getExpressionEngine().nodeKey(node, parentKey, handler);
-            parentKeys.push(key);
-            if (handler.getValue(node) != null) {
-                keyList.add(key);
-            }
-            handleAttributeKeys(key, node, handler);
-        }
-
-        /**
-         * Appends all attribute keys of the current node.
-         *
-         * @param parentKey the parent key
-         * @param node the current node
-         * @param handler the {@code NodeHandler}
-         */
-        public void handleAttributeKeys(final String parentKey, final T node, final NodeHandler<T> handler) {
-            handler.getAttributes(node).forEach(attr -> keyList.add(getExpressionEngine().attributeKey(parentKey, attr)));
-        }
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "(" + getRootElementNameInternal() + ")";
+    private DefinedKeysVisitor visitDefinedKeys() {
+        final DefinedKeysVisitor visitor = new DefinedKeysVisitor();
+        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), visitor, nodeHandler);
+        return visitor;
     }
 }

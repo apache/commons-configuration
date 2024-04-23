@@ -66,6 +66,15 @@ public class EnvironmentConfiguration extends MapConfiguration {
     }
 
     /**
+     * Removes all properties from this configuration. Because this configuration is read-only, this operation is not
+     * allowed and will cause an exception.
+     */
+    @Override
+    protected void clearInternal() {
+        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
+    }
+
+    /**
      * Removes a property from this configuration. Because this configuration is read-only, this operation is not allowed
      * and will cause an exception.
      *
@@ -73,15 +82,6 @@ public class EnvironmentConfiguration extends MapConfiguration {
      */
     @Override
     protected void clearPropertyDirect(final String key) {
-        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
-    }
-
-    /**
-     * Removes all properties from this configuration. Because this configuration is read-only, this operation is not
-     * allowed and will cause an exception.
-     */
-    @Override
-    protected void clearInternal() {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }
 }

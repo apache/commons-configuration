@@ -41,105 +41,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * @param <T> the type of the nodes supported by this reader
  */
 public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReader {
-    /** Stores the configuration object to be parsed. */
-    private HierarchicalConfiguration<T> configuration;
-
-    /**
-     * Creates a new instance of {@code HierarchicalConfigurationXMLReader}.
-     */
-    public HierarchicalConfigurationXMLReader() {
-    }
-
-    /**
-     * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and sets the configuration to be parsed.
-     *
-     * @param config the configuration object
-     */
-    public HierarchicalConfigurationXMLReader(final HierarchicalConfiguration<T> config) {
-        this();
-        setConfiguration(config);
-    }
-
-    /**
-     * Gets the configuration object to be parsed.
-     *
-     * @return the configuration object to be parsed
-     */
-    public HierarchicalConfiguration<T> getConfiguration() {
-        return configuration;
-    }
-
-    /**
-     * Sets the configuration object to be parsed.
-     *
-     * @param config the configuration object to be parsed
-     */
-    public void setConfiguration(final HierarchicalConfiguration<T> config) {
-        configuration = config;
-    }
-
-    /**
-     * Gets the configuration object to be processed.
-     *
-     * @return the actual configuration object
-     */
-    @Override
-    public Configuration getParsedConfiguration() {
-        return getConfiguration();
-    }
-
-    /**
-     * Processes the actual configuration object to generate SAX parsing events.
-     */
-    @Override
-    protected void processKeys() {
-        final NodeHandler<T> nodeHandler = getConfiguration().getNodeModel().getNodeHandler();
-        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), new SAXVisitor(), nodeHandler);
-    }
-
     /**
      * A specialized visitor class for generating SAX events for a hierarchical node structure.
      */
     private final class SAXVisitor extends ConfigurationNodeVisitorAdapter<T> {
         /** Constant for the attribute type. */
         private static final String ATTR_TYPE = "CDATA";
-
-        /**
-         * Visits the specified node after its children have been processed.
-         *
-         * @param node the actual node
-         * @param handler the node handler
-         */
-        @Override
-        public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
-            fireElementEnd(nodeName(node, handler));
-        }
-
-        /**
-         * Visits the specified node.
-         *
-         * @param node the actual node
-         * @param handler the node handler
-         */
-        @Override
-        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-            fireElementStart(nodeName(node, handler), fetchAttributes(node, handler));
-
-            final Object value = handler.getValue(node);
-            if (value != null) {
-                fireCharacters(value.toString());
-            }
-        }
-
-        /**
-         * Checks if iteration should be terminated. This implementation stops iteration after an exception has occurred.
-         *
-         * @return a flag if iteration should be stopped
-         */
-        @Override
-        public boolean terminate() {
-            return getException() != null;
-        }
 
         /**
          * Returns an object with all attributes for the specified node.
@@ -173,5 +80,98 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
             final String nodeName = handler.nodeName(node);
             return nodeName == null ? getRootName() : nodeName;
         }
+
+        /**
+         * Checks if iteration should be terminated. This implementation stops iteration after an exception has occurred.
+         *
+         * @return a flag if iteration should be stopped
+         */
+        @Override
+        public boolean terminate() {
+            return getException() != null;
+        }
+
+        /**
+         * Visits the specified node after its children have been processed.
+         *
+         * @param node the actual node
+         * @param handler the node handler
+         */
+        @Override
+        public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
+            fireElementEnd(nodeName(node, handler));
+        }
+
+        /**
+         * Visits the specified node.
+         *
+         * @param node the actual node
+         * @param handler the node handler
+         */
+        @Override
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+            fireElementStart(nodeName(node, handler), fetchAttributes(node, handler));
+
+            final Object value = handler.getValue(node);
+            if (value != null) {
+                fireCharacters(value.toString());
+            }
+        }
+    }
+
+    /** Stores the configuration object to be parsed. */
+    private HierarchicalConfiguration<T> configuration;
+
+    /**
+     * Creates a new instance of {@code HierarchicalConfigurationXMLReader}.
+     */
+    public HierarchicalConfigurationXMLReader() {
+    }
+
+    /**
+     * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and sets the configuration to be parsed.
+     *
+     * @param config the configuration object
+     */
+    public HierarchicalConfigurationXMLReader(final HierarchicalConfiguration<T> config) {
+        this();
+        setConfiguration(config);
+    }
+
+    /**
+     * Gets the configuration object to be parsed.
+     *
+     * @return the configuration object to be parsed
+     */
+    public HierarchicalConfiguration<T> getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Gets the configuration object to be processed.
+     *
+     * @return the actual configuration object
+     */
+    @Override
+    public Configuration getParsedConfiguration() {
+        return getConfiguration();
+    }
+
+    /**
+     * Processes the actual configuration object to generate SAX parsing events.
+     */
+    @Override
+    protected void processKeys() {
+        final NodeHandler<T> nodeHandler = getConfiguration().getNodeModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), new SAXVisitor(), nodeHandler);
+    }
+
+    /**
+     * Sets the configuration object to be parsed.
+     *
+     * @param config the configuration object to be parsed
+     */
+    public void setConfiguration(final HierarchicalConfiguration<T> config) {
+        configuration = config;
     }
 }

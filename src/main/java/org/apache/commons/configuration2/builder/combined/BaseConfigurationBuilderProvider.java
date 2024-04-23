@@ -61,6 +61,30 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /** The types of the constructor parameters for a basic builder. */
     private static final Class<?>[] CTOR_PARAM_TYPES = {Class.class, Map.class, Boolean.TYPE};
 
+    /**
+     * Creates an instance of a parameter class using reflection.
+     *
+     * @param paramcls the parameter class
+     * @return the newly created instance
+     * @throws Exception if an error occurs
+     */
+    private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
+        return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).getConstructor().newInstance();
+    }
+
+    /**
+     * Creates a new, unmodifiable collection for the parameter classes.
+     *
+     * @param paramCls the collection with parameter classes passed to the constructor
+     * @return the collection to be stored
+     */
+    private static Collection<String> initParameterClasses(final Collection<String> paramCls) {
+        if (paramCls == null) {
+            return Collections.emptySet();
+        }
+        return Collections.unmodifiableCollection(new ArrayList<>(paramCls));
+    }
+
     /** The name of the builder class. */
     private final String builderClass;
 
@@ -98,115 +122,18 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Gets the name of the class of the builder created by this provider.
+     * Configures a newly created builder instance with its initialization parameters. This method is called after a new
+     * instance was created using reflection. This implementation passes the parameter objects to the builder's
+     * {@code configure()} method.
      *
-     * @return the builder class
-     */
-    public String getBuilderClass() {
-        return builderClass;
-    }
-
-    /**
-     * Gets the name of the class of the builder created by this provider if the reload flag is set. If this method
-     * returns <b>null</b>, reloading builders are not supported by this provider.
-     *
-     * @return the reloading builder class
-     */
-    public String getReloadingBuilderClass() {
-        return reloadingBuilderClass;
-    }
-
-    /**
-     * Gets the name of the configuration class created by the builder produced by this provider.
-     *
-     * @return the configuration class
-     */
-    public String getConfigurationClass() {
-        return configurationClass;
-    }
-
-    /**
-     * Gets an unmodifiable collection with the names of parameter classes supported by this provider.
-     *
-     * @return the parameter classes
-     */
-    public Collection<String> getParameterClasses() {
-        return parameterClasses;
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to some protected methods to create a new builder instance using
-     * reflection and to configure it with parameter values defined by the passed in {@code BeanDeclaration}.
-     */
-    @Override
-    public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(final ConfigurationDeclaration decl) throws ConfigurationException {
-        try {
-            final Collection<BuilderParameters> params = createParameterObjects();
-            initializeParameterObjects(decl, params);
-            final BasicConfigurationBuilder<? extends Configuration> builder = createBuilder(decl, params);
-            configureBuilder(builder, decl, params);
-            return builder;
-        } catch (final ConfigurationException cex) {
-            throw cex;
-        } catch (final Exception ex) {
-            throw new ConfigurationException(ex);
-        }
-    }
-
-    /**
-     * Determines the <em>allowFailOnInit</em> flag for the newly created builder based on the given
-     * {@code ConfigurationDeclaration}. Some combinations of flags in the declaration say that a configuration source is
-     * optional, but an empty instance should be created if its creation fail.
-     *
+     * @param builder the builder to be initialized
      * @param decl the current {@code ConfigurationDeclaration}
-     * @return the value of the <em>allowFailOnInit</em> flag
-     */
-    protected boolean isAllowFailOnInit(final ConfigurationDeclaration decl) {
-        return decl.isOptional() && decl.isForceCreate();
-    }
-
-    /**
-     * Creates a collection of parameter objects to be used for configuring the builder. This method creates instances of
-     * the parameter classes passed to the constructor.
-     *
-     * @return a collection with parameter objects for the builder
-     * @throws Exception if an error occurs while creating parameter objects via reflection
-     */
-    protected Collection<BuilderParameters> createParameterObjects() throws Exception {
-        final Collection<BuilderParameters> params = new ArrayList<>(getParameterClasses().size());
-        for (final String paramcls : getParameterClasses()) {
-            params.add(createParameterObject(paramcls));
-        }
-        return params;
-    }
-
-    /**
-     * Initializes the parameter objects with data stored in the current bean declaration. This method is called before the
-     * newly created builder instance is configured with the parameter objects. It maps attributes of the bean declaration
-     * to properties of parameter objects. In addition, it invokes the parent {@code CombinedConfigurationBuilder} so that
-     * the parameters object can inherit properties already defined for this builder.
-     *
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with (uninitialized) parameter objects
+     * @param params the collection with initialization parameter objects
      * @throws Exception if an error occurs
      */
-    protected void initializeParameterObjects(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) throws Exception {
-        inheritParentBuilderProperties(decl, params);
-        final MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
-        decl.getConfigurationBuilder().initBean(wrapBean, decl);
-    }
-
-    /**
-     * Passes all parameter objects to the parent {@code CombinedConfigurationBuilder} so that properties already defined
-     * for the parent builder can be added. This method is called before the parameter objects are initialized from the
-     * definition configuration. This way properties from the parent builder are inherited, but can be overridden for child
-     * configurations.
-     *
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with (uninitialized) parameter objects
-     */
-    protected void inheritParentBuilderProperties(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) {
-        params.forEach(p -> decl.getConfigurationBuilder().initChildBuilderParameters(p));
+    protected void configureBuilder(final BasicConfigurationBuilder<? extends Configuration> builder, final ConfigurationDeclaration decl,
+        final Collection<BuilderParameters> params) throws Exception {
+        builder.configure(params.toArray(new BuilderParameters[params.size()]));
     }
 
     /**
@@ -232,18 +159,18 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Configures a newly created builder instance with its initialization parameters. This method is called after a new
-     * instance was created using reflection. This implementation passes the parameter objects to the builder's
-     * {@code configure()} method.
+     * Creates a collection of parameter objects to be used for configuring the builder. This method creates instances of
+     * the parameter classes passed to the constructor.
      *
-     * @param builder the builder to be initialized
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with initialization parameter objects
-     * @throws Exception if an error occurs
+     * @return a collection with parameter objects for the builder
+     * @throws Exception if an error occurs while creating parameter objects via reflection
      */
-    protected void configureBuilder(final BasicConfigurationBuilder<? extends Configuration> builder, final ConfigurationDeclaration decl,
-        final Collection<BuilderParameters> params) throws Exception {
-        builder.configure(params.toArray(new BuilderParameters[params.size()]));
+    protected Collection<BuilderParameters> createParameterObjects() throws Exception {
+        final Collection<BuilderParameters> params = new ArrayList<>(getParameterClasses().size());
+        for (final String paramcls : getParameterClasses()) {
+            params.add(createParameterObject(paramcls));
+        }
+        return params;
     }
 
     /**
@@ -282,26 +209,99 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     }
 
     /**
-     * Creates an instance of a parameter class using reflection.
+     * Gets the name of the class of the builder created by this provider.
      *
-     * @param paramcls the parameter class
-     * @return the newly created instance
-     * @throws Exception if an error occurs
+     * @return the builder class
      */
-    private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
-        return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).getConstructor().newInstance();
+    public String getBuilderClass() {
+        return builderClass;
     }
 
     /**
-     * Creates a new, unmodifiable collection for the parameter classes.
-     *
-     * @param paramCls the collection with parameter classes passed to the constructor
-     * @return the collection to be stored
+     * {@inheritDoc} This implementation delegates to some protected methods to create a new builder instance using
+     * reflection and to configure it with parameter values defined by the passed in {@code BeanDeclaration}.
      */
-    private static Collection<String> initParameterClasses(final Collection<String> paramCls) {
-        if (paramCls == null) {
-            return Collections.emptySet();
+    @Override
+    public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(final ConfigurationDeclaration decl) throws ConfigurationException {
+        try {
+            final Collection<BuilderParameters> params = createParameterObjects();
+            initializeParameterObjects(decl, params);
+            final BasicConfigurationBuilder<? extends Configuration> builder = createBuilder(decl, params);
+            configureBuilder(builder, decl, params);
+            return builder;
+        } catch (final ConfigurationException cex) {
+            throw cex;
+        } catch (final Exception ex) {
+            throw new ConfigurationException(ex);
         }
-        return Collections.unmodifiableCollection(new ArrayList<>(paramCls));
+    }
+
+    /**
+     * Gets the name of the configuration class created by the builder produced by this provider.
+     *
+     * @return the configuration class
+     */
+    public String getConfigurationClass() {
+        return configurationClass;
+    }
+
+    /**
+     * Gets an unmodifiable collection with the names of parameter classes supported by this provider.
+     *
+     * @return the parameter classes
+     */
+    public Collection<String> getParameterClasses() {
+        return parameterClasses;
+    }
+
+    /**
+     * Gets the name of the class of the builder created by this provider if the reload flag is set. If this method
+     * returns <b>null</b>, reloading builders are not supported by this provider.
+     *
+     * @return the reloading builder class
+     */
+    public String getReloadingBuilderClass() {
+        return reloadingBuilderClass;
+    }
+
+    /**
+     * Passes all parameter objects to the parent {@code CombinedConfigurationBuilder} so that properties already defined
+     * for the parent builder can be added. This method is called before the parameter objects are initialized from the
+     * definition configuration. This way properties from the parent builder are inherited, but can be overridden for child
+     * configurations.
+     *
+     * @param decl the current {@code ConfigurationDeclaration}
+     * @param params the collection with (uninitialized) parameter objects
+     */
+    protected void inheritParentBuilderProperties(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) {
+        params.forEach(p -> decl.getConfigurationBuilder().initChildBuilderParameters(p));
+    }
+
+    /**
+     * Initializes the parameter objects with data stored in the current bean declaration. This method is called before the
+     * newly created builder instance is configured with the parameter objects. It maps attributes of the bean declaration
+     * to properties of parameter objects. In addition, it invokes the parent {@code CombinedConfigurationBuilder} so that
+     * the parameters object can inherit properties already defined for this builder.
+     *
+     * @param decl the current {@code ConfigurationDeclaration}
+     * @param params the collection with (uninitialized) parameter objects
+     * @throws Exception if an error occurs
+     */
+    protected void initializeParameterObjects(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) throws Exception {
+        inheritParentBuilderProperties(decl, params);
+        final MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
+        decl.getConfigurationBuilder().initBean(wrapBean, decl);
+    }
+
+    /**
+     * Determines the <em>allowFailOnInit</em> flag for the newly created builder based on the given
+     * {@code ConfigurationDeclaration}. Some combinations of flags in the declaration say that a configuration source is
+     * optional, but an empty instance should be created if its creation fail.
+     *
+     * @param decl the current {@code ConfigurationDeclaration}
+     * @return the value of the <em>allowFailOnInit</em> flag
+     */
+    protected boolean isAllowFailOnInit(final ConfigurationDeclaration decl) {
+        return decl.isOptional() && decl.isForceCreate();
     }
 }

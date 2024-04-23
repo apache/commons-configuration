@@ -45,15 +45,15 @@ public class ServletFilterConfiguration extends BaseWebConfiguration {
     }
 
     @Override
-    protected Object getPropertyInternal(final String key) {
-        return handleDelimiters(config.getInitParameter(key));
-    }
-
-    @Override
     protected Iterator<String> getKeysInternal() {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
         final Enumeration<String> en = config.getInitParameterNames();
         return Collections.list(en).iterator();
+    }
+
+    @Override
+    protected Object getPropertyInternal(final String key) {
+        return handleDelimiters(config.getInitParameter(key));
     }
 }

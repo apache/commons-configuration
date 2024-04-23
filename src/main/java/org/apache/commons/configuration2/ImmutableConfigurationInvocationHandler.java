@@ -42,48 +42,6 @@ import java.util.Objects;
  * @since 2.0
  */
 final class ImmutableConfigurationInvocationHandler implements InvocationHandler {
-    /** The underlying configuration object. */
-    private final Configuration wrappedConfiguration;
-
-    /**
-     * Creates a new instance of {@code ImmutableConfigurationInvocationHandler} and initializes it with the wrapped
-     * configuration object.
-     *
-     * @param configuration the wrapped {@code Configuration} (must not be <b>null</b>)
-     * @throws NullPointerException if the {@code Configuration} is <b>null</b>
-     */
-    public ImmutableConfigurationInvocationHandler(final Configuration configuration) {
-        wrappedConfiguration = Objects.requireNonNull(configuration, "configuration");
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the wrapped configuration object. Result objects are wrapped if
-     * necessary.
-     */
-    @Override
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        try {
-            return handleResult(method.invoke(wrappedConfiguration, args));
-        } catch (final InvocationTargetException e) {
-            // unwrap
-            throw e.getCause();
-        }
-    }
-
-    /**
-     * Handles the result from the method invocation on the wrapped configuration. This implementation wraps result objects
-     * if necessary so that the underlying configuration cannot be manipulated.
-     *
-     * @param result the result object
-     * @return the processed result object
-     */
-    private static Object handleResult(final Object result) {
-        if (result instanceof Iterator) {
-            return new ImmutableIterator((Iterator<?>) result);
-        }
-        return result;
-    }
-
     /**
      * A specialized {@code Iterator} implementation which delegates to an underlying iterator, but does not support the
      * {@code remove()} method.
@@ -123,6 +81,48 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
         @Override
         public void remove() {
             throw new UnsupportedOperationException("remove() operation not supported!");
+        }
+    }
+
+    /**
+     * Handles the result from the method invocation on the wrapped configuration. This implementation wraps result objects
+     * if necessary so that the underlying configuration cannot be manipulated.
+     *
+     * @param result the result object
+     * @return the processed result object
+     */
+    private static Object handleResult(final Object result) {
+        if (result instanceof Iterator) {
+            return new ImmutableIterator((Iterator<?>) result);
+        }
+        return result;
+    }
+
+    /** The underlying configuration object. */
+    private final Configuration wrappedConfiguration;
+
+    /**
+     * Creates a new instance of {@code ImmutableConfigurationInvocationHandler} and initializes it with the wrapped
+     * configuration object.
+     *
+     * @param configuration the wrapped {@code Configuration} (must not be <b>null</b>)
+     * @throws NullPointerException if the {@code Configuration} is <b>null</b>
+     */
+    public ImmutableConfigurationInvocationHandler(final Configuration configuration) {
+        wrappedConfiguration = Objects.requireNonNull(configuration, "configuration");
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the wrapped configuration object. Result objects are wrapped if
+     * necessary.
+     */
+    @Override
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+        try {
+            return handleResult(method.invoke(wrappedConfiguration, args));
+        } catch (final InvocationTargetException e) {
+            // unwrap
+            throw e.getCause();
         }
     }
 }

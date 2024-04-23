@@ -37,6 +37,16 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
     private final Map<String, URL> registeredEntities = new HashMap<>();
 
     /**
+     * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
+     *
+     * @return a map with the registered entity IDs
+     */
+    @Override
+    public Map<String, URL> getRegisteredEntities() {
+        return registeredEntities;
+    }
+
+    /**
      * <p>
      * Registers the specified URL for the specified public identifier.
      * </p>
@@ -96,15 +106,5 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
         }
         // default processing behavior
         return null;
-    }
-
-    /**
-     * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
-     *
-     * @return a map with the registered entity IDs
-     */
-    @Override
-    public Map<String, URL> getRegisteredEntities() {
-        return registeredEntities;
     }
 }

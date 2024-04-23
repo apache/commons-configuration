@@ -50,6 +50,37 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
+     * Gets the value of the {@code at} attribute.
+     *
+     * @return the value of the {@code at} attribute (can be <b>null</b>)
+     */
+    public String getAt() {
+        final String result = this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
+        return result == null ? this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT) : result;
+    }
+
+    /**
+     * Gets the bean's class name. This implementation will always return <b>null</b>.
+     *
+     * @return the name of the bean's class
+     */
+    @Override
+    public String getBeanClassName() {
+        return null;
+    }
+
+    /**
+     * Gets the name of the bean factory. For configuration source declarations always a reserved factory is used. This
+     * factory's name is returned by this implementation.
+     *
+     * @return the name of the bean factory
+     */
+    @Override
+    public String getBeanFactoryName() {
+        return CombinedConfigurationBuilder.CONFIG_BEAN_FACTORY_NAME;
+    }
+
+    /**
      * Gets the associated configuration builder.
      *
      * @return the configuration builder
@@ -59,13 +90,25 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Gets the value of the {@code at} attribute.
+     * Gets the name for the represented configuration source. The name is optional, so this method can return
+     * <b>null</b>.
      *
-     * @return the value of the {@code at} attribute (can be <b>null</b>)
+     * @return the name of the associated configuration source or <b>null</b>
      */
-    public String getAt() {
-        final String result = this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
-        return result == null ? this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT) : result;
+    public String getName() {
+        return getConfiguration().getString(CombinedConfigurationBuilder.ATTR_NAME);
+    }
+
+    /**
+     * Gets a flag whether this configuration should always be created and added to the resulting combined configuration.
+     * This flag is evaluated only for optional configurations whose normal creation has caused an error. If for such a
+     * configuration the {@code forceCreate} attribute is set and the corresponding configuration provider supports this
+     * mode, an empty configuration will be created and added to the resulting combined configuration.
+     *
+     * @return the value of the {@code forceCreate} attribute
+     */
+    public boolean isForceCreate() {
+        return this.getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_FORCECREATE, false);
     }
 
     /**
@@ -82,18 +125,6 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Gets a flag whether this configuration should always be created and added to the resulting combined configuration.
-     * This flag is evaluated only for optional configurations whose normal creation has caused an error. If for such a
-     * configuration the {@code forceCreate} attribute is set and the corresponding configuration provider supports this
-     * mode, an empty configuration will be created and added to the resulting combined configuration.
-     *
-     * @return the value of the {@code forceCreate} attribute
-     */
-    public boolean isForceCreate() {
-        return this.getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_FORCECREATE, false);
-    }
-
-    /**
      * Returns a flag whether a builder with reloading support should be created. This may not be supported by all
      * configuration builder providers.
      *
@@ -101,37 +132,6 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      */
     public boolean isReload() {
         return getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_RELOAD, false);
-    }
-
-    /**
-     * Gets the name for the represented configuration source. The name is optional, so this method can return
-     * <b>null</b>.
-     *
-     * @return the name of the associated configuration source or <b>null</b>
-     */
-    public String getName() {
-        return getConfiguration().getString(CombinedConfigurationBuilder.ATTR_NAME);
-    }
-
-    /**
-     * Gets the name of the bean factory. For configuration source declarations always a reserved factory is used. This
-     * factory's name is returned by this implementation.
-     *
-     * @return the name of the bean factory
-     */
-    @Override
-    public String getBeanFactoryName() {
-        return CombinedConfigurationBuilder.CONFIG_BEAN_FACTORY_NAME;
-    }
-
-    /**
-     * Gets the bean's class name. This implementation will always return <b>null</b>.
-     *
-     * @return the name of the bean's class
-     */
-    @Override
-    public String getBeanClassName() {
-        return null;
     }
 
     /**

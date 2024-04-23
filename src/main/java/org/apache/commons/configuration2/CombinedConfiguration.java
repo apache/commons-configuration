@@ -156,6 +156,161 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CombinedConfiguration extends BaseHierarchicalConfiguration implements EventListener<ConfigurationEvent> {
     /**
+     * An internal helper class for storing information about contained configurations.
+     */
+    private final class ConfigData {
+        /** Stores a reference to the configuration. */
+        private final Configuration configuration;
+
+        /** Stores the name under which the configuration is stored. */
+        private final String name;
+
+        /** Stores the at information as path of nodes. */
+        private final Collection<String> atPath;
+
+        /** Stores the at string. */
+        private final String at;
+
+        /** Stores the root node for this child configuration. */
+        private ImmutableNode rootNode;
+
+        /**
+         * Creates a new instance of {@code ConfigData} and initializes it.
+         *
+         * @param config the configuration
+         * @param n the name
+         * @param at the at position
+         */
+        public ConfigData(final Configuration config, final String n, final String at) {
+            configuration = config;
+            name = n;
+            atPath = parseAt(at);
+            this.at = at;
+        }
+
+        /**
+         * Gets the at position of this configuration.
+         *
+         * @return the at position
+         */
+        public String getAt() {
+            return at;
+        }
+
+        /**
+         * Gets the stored configuration.
+         *
+         * @return the configuration
+         */
+        public Configuration getConfiguration() {
+            return configuration;
+        }
+
+        /**
+         * Gets the configuration's name.
+         *
+         * @return the name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Gets the root node for this child configuration.
+         *
+         * @return the root node of this child configuration
+         * @since 1.5
+         */
+        public ImmutableNode getRootNode() {
+            return rootNode;
+        }
+
+        /**
+         * Obtains the root node of the wrapped configuration. If necessary, a hierarchical representation of the configuration
+         * has to be created first.
+         *
+         * @return the root node of the associated configuration
+         */
+        private ImmutableNode getRootNodeOfConfiguration() {
+            getConfiguration().lock(LockMode.READ);
+            try {
+                final ImmutableNode root = ConfigurationUtils.convertToHierarchical(getConfiguration(), conversionExpressionEngine).getNodeModel()
+                    .getInMemoryRepresentation();
+                rootNode = root;
+                return root;
+            } finally {
+                getConfiguration().unlock(LockMode.READ);
+            }
+        }
+
+        /**
+         * Gets the transformed root node of the stored configuration. The term &quot;transformed&quot; means that an
+         * eventually defined at path has been applied.
+         *
+         * @return the transformed root node
+         */
+        public ImmutableNode getTransformedRoot() {
+            final ImmutableNode configRoot = getRootNodeOfConfiguration();
+            return atPath == null ? configRoot : prependAtPath(configRoot);
+        }
+
+        /**
+         * Splits the at path into its components.
+         *
+         * @param at the at string
+         * @return a collection with the names of the single components
+         */
+        private Collection<String> parseAt(final String at) {
+            if (StringUtils.isEmpty(at)) {
+                return null;
+            }
+
+            final Collection<String> result = new ArrayList<>();
+            final DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(AT_ENGINE, at).iterator();
+            while (it.hasNext()) {
+                result.add(it.nextKey());
+            }
+            return result;
+        }
+
+        /**
+         * Prepends the at path to the given node.
+         *
+         * @param node the root node of the represented configuration
+         * @return the new root node including the at path
+         */
+        private ImmutableNode prependAtPath(final ImmutableNode node) {
+            final ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
+            final Iterator<String> pathIterator = atPath.iterator();
+            prependAtPathComponent(pathBuilder, pathIterator.next(), pathIterator, node);
+            return new ImmutableNode.Builder(1).addChild(pathBuilder.create()).create();
+        }
+
+        /**
+         * Handles a single component of the at path. A corresponding node is created and added to the hierarchical path to the
+         * original root node of the configuration.
+         *
+         * @param builder the current node builder object
+         * @param currentComponent the name of the current path component
+         * @param components an iterator with all components of the at path
+         * @param orgRoot the original root node of the wrapped configuration
+         */
+        private void prependAtPathComponent(final ImmutableNode.Builder builder, final String currentComponent, final Iterator<String> components,
+            final ImmutableNode orgRoot) {
+            builder.name(currentComponent);
+            if (components.hasNext()) {
+                final ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
+                prependAtPathComponent(childBuilder, components.next(), components, orgRoot);
+                builder.addChild(childBuilder.create());
+            } else {
+                builder.addChildren(orgRoot.getChildren());
+                builder.addAttributes(orgRoot.getAttributes());
+                builder.value(orgRoot.getValue());
+            }
+        }
+    }
+
+    /**
      * Constant for the event type fired when the internal node structure of a combined configuration becomes invalid.
      *
      * @since 2.0
@@ -189,6 +344,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private boolean upToDate;
 
     /**
+     * Creates a new instance of {@code CombinedConfiguration} that uses a union combiner.
+     *
+     * @see org.apache.commons.configuration2.tree.UnionCombiner
+     */
+    public CombinedConfiguration() {
+        this(null);
+    }
+
+    /**
      * Creates a new instance of {@code CombinedConfiguration} and initializes the combiner to be used.
      *
      * @param comb the node combiner (can be <b>null</b>, then a union combiner is used as default)
@@ -199,83 +363,24 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Creates a new instance of {@code CombinedConfiguration} that uses a union combiner.
+     * Adds a new configuration to this combined configuration. The new configuration is not given a name. Its properties
+     * will be added under the root of the combined node structure.
      *
-     * @see org.apache.commons.configuration2.tree.UnionCombiner
+     * @param config the configuration to add (must not be <b>null</b>)
      */
-    public CombinedConfiguration() {
-        this(null);
+    public void addConfiguration(final Configuration config) {
+        addConfiguration(config, null, null);
     }
 
     /**
-     * Gets the node combiner that is used for creating the combined node structure.
+     * Adds a new configuration to this combined configuration with an optional name. The new configuration's properties
+     * will be added under the root of the combined node structure.
      *
-     * @return the node combiner
+     * @param config the configuration to add (must not be <b>null</b>)
+     * @param name the name of this configuration (can be <b>null</b>)
      */
-    public NodeCombiner getNodeCombiner() {
-        beginRead(true);
-        try {
-            return nodeCombiner;
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
-     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
-     * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
-     *
-     * @param nodeCombiner the node combiner
-     */
-    public void setNodeCombiner(final NodeCombiner nodeCombiner) {
-        if (nodeCombiner == null) {
-            throw new IllegalArgumentException("Node combiner must not be null!");
-        }
-
-        beginWrite(true);
-        try {
-            this.nodeCombiner = nodeCombiner;
-            invalidateInternal();
-        } finally {
-            endWrite();
-        }
-    }
-
-    /**
-     * Gets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones.
-     *
-     * @return the conversion expression engine
-     * @since 1.6
-     */
-    public ExpressionEngine getConversionExpressionEngine() {
-        beginRead(true);
-        try {
-            return conversionExpressionEngine;
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * Sets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones. When constructing
-     * the root node for this combined configuration the properties of all child configurations must be combined to a single
-     * hierarchical node structure. In this process, non hierarchical configurations are converted to hierarchical ones
-     * first. This can be problematic if a child configuration contains keys that are no compatible with the default
-     * expression engine used by hierarchical configurations. Therefore it is possible to specify a specific expression
-     * engine to be used for this purpose.
-     *
-     * @param conversionExpressionEngine the conversion expression engine
-     * @see ConfigurationUtils#convertToHierarchical(Configuration, ExpressionEngine)
-     * @since 1.6
-     */
-    public void setConversionExpressionEngine(final ExpressionEngine conversionExpressionEngine) {
-        beginWrite(true);
-        try {
-            this.conversionExpressionEngine = conversionExpressionEngine;
-        } finally {
-            endWrite();
-        }
+    public void addConfiguration(final Configuration config, final String name) {
+        addConfiguration(config, name, null);
     }
 
     /**
@@ -318,38 +423,133 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Adds a new configuration to this combined configuration with an optional name. The new configuration's properties
-     * will be added under the root of the combined node structure.
-     *
-     * @param config the configuration to add (must not be <b>null</b>)
-     * @param name the name of this configuration (can be <b>null</b>)
+     * {@inheritDoc} This implementation checks whether a combined root node is available. If not, it is constructed by
+     * requesting a write lock.
      */
-    public void addConfiguration(final Configuration config, final String name) {
-        addConfiguration(config, name, null);
+    @Override
+    protected void beginRead(final boolean optimize) {
+        if (optimize) {
+            // just need a lock, don't construct configuration
+            super.beginRead(true);
+            return;
+        }
+
+        boolean lockObtained = false;
+        do {
+            super.beginRead(false);
+            if (isUpToDate()) {
+                lockObtained = true;
+            } else {
+                // release read lock and try to obtain a write lock
+                endRead();
+                beginWrite(false); // this constructs the root node
+                endWrite();
+            }
+        } while (!lockObtained);
     }
 
     /**
-     * Adds a new configuration to this combined configuration. The new configuration is not given a name. Its properties
-     * will be added under the root of the combined node structure.
-     *
-     * @param config the configuration to add (must not be <b>null</b>)
+     * {@inheritDoc} This implementation checks whether a combined root node is available. If not, it is constructed now.
      */
-    public void addConfiguration(final Configuration config) {
-        addConfiguration(config, null, null);
-    }
+    @Override
+    protected void beginWrite(final boolean optimize) {
+        super.beginWrite(true);
+        if (optimize) {
+            // just need a lock, don't construct configuration
+            return;
+        }
 
-    /**
-     * Gets the number of configurations that are contained in this combined configuration.
-     *
-     * @return the number of contained configurations
-     */
-    public int getNumberOfConfigurations() {
-        beginRead(true);
+        boolean success = false;
         try {
-            return getNumberOfConfigurationsInternal();
+            if (!isUpToDate()) {
+                getSubConfigurationParentModel().replaceRoot(constructCombinedNode(), this);
+                upToDate = true;
+            }
+            success = true;
+        } finally {
+            if (!success) {
+                endWrite();
+            }
+        }
+    }
+
+    /**
+     * Clears this configuration. All contained configurations will be removed.
+     */
+    @Override
+    protected void clearInternal() {
+        unregisterListenerAtChildren();
+        initChildCollections();
+        invalidateInternal();
+    }
+
+    /**
+     * Returns a copy of this object. This implementation performs a deep clone, i.e. all contained configurations will be
+     * cloned, too. For this to work, all contained configurations must be cloneable. Registered event listeners won't be
+     * cloned. The clone will use the same node combiner than the original.
+     *
+     * @return the copied object
+     */
+    @Override
+    public Object clone() {
+        beginRead(false);
+        try {
+            final CombinedConfiguration copy = (CombinedConfiguration) super.clone();
+            copy.initChildCollections();
+            configurations.forEach(cd -> copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd.getConfiguration()), cd.getName(), cd.getAt()));
+
+            return copy;
         } finally {
             endRead();
         }
+    }
+
+    /**
+     * Creates the root node of this combined configuration.
+     *
+     * @return the combined root node
+     */
+    private ImmutableNode constructCombinedNode() {
+        if (getNumberOfConfigurationsInternal() < 1) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("No configurations defined for " + this);
+            }
+            return EMPTY_ROOT;
+        }
+        final Iterator<ConfigData> it = configurations.iterator();
+        ImmutableNode node = it.next().getTransformedRoot();
+        while (it.hasNext()) {
+            node = nodeCombiner.combine(node, it.next().getTransformedRoot());
+        }
+        if (getLogger().isDebugEnabled()) {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            final PrintStream stream = new PrintStream(os);
+            TreeUtils.printTree(stream, node);
+            getLogger().debug(os.toString());
+        }
+        return node;
+    }
+
+    /**
+     * Determines the configurations to which the specified node belongs. This is done by inspecting the nodes structures of
+     * all child configurations.
+     *
+     * @param node the node
+     * @return a set with the owning configurations
+     */
+    private Set<Configuration> findSourceConfigurations(final ImmutableNode node) {
+        final Set<Configuration> result = new HashSet<>();
+        final FindNodeVisitor<ImmutableNode> visitor = new FindNodeVisitor<>(node);
+
+        configurations.forEach(cd -> {
+            NodeTreeWalker.INSTANCE.walkBFS(cd.getRootNode(), visitor, getModel().getNodeHandler());
+            if (visitor.isFound()) {
+                result.add(cd.getConfiguration());
+                visitor.reset();
+            }
+        });
+
+        return result;
     }
 
     /**
@@ -385,21 +585,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Gets a List of all the configurations that have been added.
-     *
-     * @return A List of all the configurations.
-     * @since 1.7
-     */
-    public List<Configuration> getConfigurations() {
-        beginRead(true);
-        try {
-            return configurations.stream().map(ConfigData::getConfiguration).collect(Collectors.toList());
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
      * Gets a List of the names of all the configurations that have been added in the order they were added. A NULL value
      * will be present in the list for each configuration that was added without a name.
      *
@@ -413,53 +598,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         } finally {
             endRead();
         }
-    }
-
-    /**
-     * Removes the specified configuration from this combined configuration.
-     *
-     * @param config the configuration to be removed
-     * @return a flag whether this configuration was found and could be removed
-     */
-    public boolean removeConfiguration(final Configuration config) {
-        for (int index = 0; index < getNumberOfConfigurations(); index++) {
-            if (configurations.get(index).getConfiguration() == config) {
-                removeConfigurationAt(index);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Removes the configuration at the specified index.
-     *
-     * @param index the index
-     * @return the removed configuration
-     */
-    public Configuration removeConfigurationAt(final int index) {
-        final ConfigData cd = configurations.remove(index);
-        if (cd.getName() != null) {
-            namedConfigurations.remove(cd.getName());
-        }
-        unregisterListenerAt(cd.getConfiguration());
-        invalidateInternal();
-        return cd.getConfiguration();
-    }
-
-    /**
-     * Removes the configuration with the specified name.
-     *
-     * @param name the name of the configuration to be removed
-     * @return the removed configuration (<b>null</b> if this configuration was not found)
-     */
-    public Configuration removeConfiguration(final String name) {
-        final Configuration conf = getConfiguration(name);
-        if (conf != null) {
-            removeConfiguration(conf);
-        }
-        return conf;
     }
 
     /**
@@ -478,62 +616,71 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Invalidates this combined configuration. This means that the next time a property is accessed the combined node
-     * structure must be re-constructed. Invalidation of a combined configuration also means that an event of type
-     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other events most times appear twice (once before and
-     * once after an update), this event is only fired once (after update).
-     */
-    public void invalidate() {
-        beginWrite(true);
-        try {
-            invalidateInternal();
-        } finally {
-            endWrite();
-        }
-    }
-
-    /**
-     * Event listener call back for configuration update events. This method is called whenever one of the contained
-     * configurations was modified. It invalidates this combined configuration.
+     * Gets a List of all the configurations that have been added.
      *
-     * @param event the update event
+     * @return A List of all the configurations.
+     * @since 1.7
      */
-    @Override
-    public void onEvent(final ConfigurationEvent event) {
-        if (event.isBeforeUpdate()) {
-            invalidate();
-        }
-    }
-
-    /**
-     * Clears this configuration. All contained configurations will be removed.
-     */
-    @Override
-    protected void clearInternal() {
-        unregisterListenerAtChildren();
-        initChildCollections();
-        invalidateInternal();
-    }
-
-    /**
-     * Returns a copy of this object. This implementation performs a deep clone, i.e. all contained configurations will be
-     * cloned, too. For this to work, all contained configurations must be cloneable. Registered event listeners won't be
-     * cloned. The clone will use the same node combiner than the original.
-     *
-     * @return the copied object
-     */
-    @Override
-    public Object clone() {
-        beginRead(false);
+    public List<Configuration> getConfigurations() {
+        beginRead(true);
         try {
-            final CombinedConfiguration copy = (CombinedConfiguration) super.clone();
-            copy.initChildCollections();
-            configurations.forEach(cd -> copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd.getConfiguration()), cd.getName(), cd.getAt()));
-
-            return copy;
+            return configurations.stream().map(ConfigData::getConfiguration).collect(Collectors.toList());
         } finally {
             endRead();
         }
+    }
+
+    /**
+     * Gets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones.
+     *
+     * @return the conversion expression engine
+     * @since 1.6
+     */
+    public ExpressionEngine getConversionExpressionEngine() {
+        beginRead(true);
+        try {
+            return conversionExpressionEngine;
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
+     * Gets the node combiner that is used for creating the combined node structure.
+     *
+     * @return the node combiner
+     */
+    public NodeCombiner getNodeCombiner() {
+        beginRead(true);
+        try {
+            return nodeCombiner;
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
+     * Gets the number of configurations that are contained in this combined configuration.
+     *
+     * @return the number of contained configurations
+     */
+    public int getNumberOfConfigurations() {
+        beginRead(true);
+        try {
+            return getNumberOfConfigurationsInternal();
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
+     * Gets the number of child configurations in this combined configuration. The internal list of child configurations
+     * is accessed without synchronization.
+     *
+     * @return the number of child configurations
+     */
+    private int getNumberOfConfigurationsInternal() {
+        return configurations.size();
     }
 
     /**
@@ -609,54 +756,35 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * {@inheritDoc} This implementation checks whether a combined root node is available. If not, it is constructed by
-     * requesting a write lock.
+     * Initializes internal data structures for storing information about child configurations.
      */
-    @Override
-    protected void beginRead(final boolean optimize) {
-        if (optimize) {
-            // just need a lock, don't construct configuration
-            super.beginRead(true);
-            return;
-        }
-
-        boolean lockObtained = false;
-        do {
-            super.beginRead(false);
-            if (isUpToDate()) {
-                lockObtained = true;
-            } else {
-                // release read lock and try to obtain a write lock
-                endRead();
-                beginWrite(false); // this constructs the root node
-                endWrite();
-            }
-        } while (!lockObtained);
+    private void initChildCollections() {
+        configurations = new ArrayList<>();
+        namedConfigurations = new HashMap<>();
     }
 
     /**
-     * {@inheritDoc} This implementation checks whether a combined root node is available. If not, it is constructed now.
+     * Invalidates this combined configuration. This means that the next time a property is accessed the combined node
+     * structure must be re-constructed. Invalidation of a combined configuration also means that an event of type
+     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other events most times appear twice (once before and
+     * once after an update), this event is only fired once (after update).
      */
-    @Override
-    protected void beginWrite(final boolean optimize) {
-        super.beginWrite(true);
-        if (optimize) {
-            // just need a lock, don't construct configuration
-            return;
-        }
-
-        boolean success = false;
+    public void invalidate() {
+        beginWrite(true);
         try {
-            if (!isUpToDate()) {
-                getSubConfigurationParentModel().replaceRoot(constructCombinedNode(), this);
-                upToDate = true;
-            }
-            success = true;
+            invalidateInternal();
         } finally {
-            if (!success) {
-                endWrite();
-            }
+            endWrite();
         }
+    }
+
+    /**
+     * Marks this configuration as invalid. This means that the next access re-creates the root node. An invalidate event is
+     * also fired. Note: This implementation expects that an exclusive (write) lock is held on this instance.
+     */
+    private void invalidateInternal() {
+        upToDate = false;
+        fireEvent(COMBINED_INVALIDATE, null, null, false);
     }
 
     /**
@@ -670,68 +798,16 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Marks this configuration as invalid. This means that the next access re-creates the root node. An invalidate event is
-     * also fired. Note: This implementation expects that an exclusive (write) lock is held on this instance.
-     */
-    private void invalidateInternal() {
-        upToDate = false;
-        fireEvent(COMBINED_INVALIDATE, null, null, false);
-    }
-
-    /**
-     * Initializes internal data structures for storing information about child configurations.
-     */
-    private void initChildCollections() {
-        configurations = new ArrayList<>();
-        namedConfigurations = new HashMap<>();
-    }
-
-    /**
-     * Creates the root node of this combined configuration.
+     * Event listener call back for configuration update events. This method is called whenever one of the contained
+     * configurations was modified. It invalidates this combined configuration.
      *
-     * @return the combined root node
+     * @param event the update event
      */
-    private ImmutableNode constructCombinedNode() {
-        if (getNumberOfConfigurationsInternal() < 1) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("No configurations defined for " + this);
-            }
-            return EMPTY_ROOT;
+    @Override
+    public void onEvent(final ConfigurationEvent event) {
+        if (event.isBeforeUpdate()) {
+            invalidate();
         }
-        final Iterator<ConfigData> it = configurations.iterator();
-        ImmutableNode node = it.next().getTransformedRoot();
-        while (it.hasNext()) {
-            node = nodeCombiner.combine(node, it.next().getTransformedRoot());
-        }
-        if (getLogger().isDebugEnabled()) {
-            final ByteArrayOutputStream os = new ByteArrayOutputStream();
-            final PrintStream stream = new PrintStream(os);
-            TreeUtils.printTree(stream, node);
-            getLogger().debug(os.toString());
-        }
-        return node;
-    }
-
-    /**
-     * Determines the configurations to which the specified node belongs. This is done by inspecting the nodes structures of
-     * all child configurations.
-     *
-     * @param node the node
-     * @return a set with the owning configurations
-     */
-    private Set<Configuration> findSourceConfigurations(final ImmutableNode node) {
-        final Set<Configuration> result = new HashSet<>();
-        final FindNodeVisitor<ImmutableNode> visitor = new FindNodeVisitor<>(node);
-
-        configurations.forEach(cd -> {
-            NodeTreeWalker.INSTANCE.walkBFS(cd.getRootNode(), visitor, getModel().getNodeHandler());
-            if (visitor.isFound()) {
-                result.add(cd.getConfiguration());
-                visitor.reset();
-            }
-        });
-
-        return result;
     }
 
     /**
@@ -742,6 +818,95 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private void registerListenerAt(final Configuration configuration) {
         if (configuration instanceof EventSource) {
             ((EventSource) configuration).addEventListener(ConfigurationEvent.ANY, this);
+        }
+    }
+
+    /**
+     * Removes the specified configuration from this combined configuration.
+     *
+     * @param config the configuration to be removed
+     * @return a flag whether this configuration was found and could be removed
+     */
+    public boolean removeConfiguration(final Configuration config) {
+        for (int index = 0; index < getNumberOfConfigurations(); index++) {
+            if (configurations.get(index).getConfiguration() == config) {
+                removeConfigurationAt(index);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes the configuration with the specified name.
+     *
+     * @param name the name of the configuration to be removed
+     * @return the removed configuration (<b>null</b> if this configuration was not found)
+     */
+    public Configuration removeConfiguration(final String name) {
+        final Configuration conf = getConfiguration(name);
+        if (conf != null) {
+            removeConfiguration(conf);
+        }
+        return conf;
+    }
+
+    /**
+     * Removes the configuration at the specified index.
+     *
+     * @param index the index
+     * @return the removed configuration
+     */
+    public Configuration removeConfigurationAt(final int index) {
+        final ConfigData cd = configurations.remove(index);
+        if (cd.getName() != null) {
+            namedConfigurations.remove(cd.getName());
+        }
+        unregisterListenerAt(cd.getConfiguration());
+        invalidateInternal();
+        return cd.getConfiguration();
+    }
+
+    /**
+     * Sets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones. When constructing
+     * the root node for this combined configuration the properties of all child configurations must be combined to a single
+     * hierarchical node structure. In this process, non hierarchical configurations are converted to hierarchical ones
+     * first. This can be problematic if a child configuration contains keys that are no compatible with the default
+     * expression engine used by hierarchical configurations. Therefore it is possible to specify a specific expression
+     * engine to be used for this purpose.
+     *
+     * @param conversionExpressionEngine the conversion expression engine
+     * @see ConfigurationUtils#convertToHierarchical(Configuration, ExpressionEngine)
+     * @since 1.6
+     */
+    public void setConversionExpressionEngine(final ExpressionEngine conversionExpressionEngine) {
+        beginWrite(true);
+        try {
+            this.conversionExpressionEngine = conversionExpressionEngine;
+        } finally {
+            endWrite();
+        }
+    }
+
+    /**
+     * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
+     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
+     * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
+     *
+     * @param nodeCombiner the node combiner
+     */
+    public void setNodeCombiner(final NodeCombiner nodeCombiner) {
+        if (nodeCombiner == null) {
+            throw new IllegalArgumentException("Node combiner must not be null!");
+        }
+
+        beginWrite(true);
+        try {
+            this.nodeCombiner = nodeCombiner;
+            invalidateInternal();
+        } finally {
+            endWrite();
         }
     }
 
@@ -763,171 +928,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private void unregisterListenerAtChildren() {
         if (configurations != null) {
             configurations.forEach(child -> unregisterListenerAt(child.getConfiguration()));
-        }
-    }
-
-    /**
-     * Gets the number of child configurations in this combined configuration. The internal list of child configurations
-     * is accessed without synchronization.
-     *
-     * @return the number of child configurations
-     */
-    private int getNumberOfConfigurationsInternal() {
-        return configurations.size();
-    }
-
-    /**
-     * An internal helper class for storing information about contained configurations.
-     */
-    private final class ConfigData {
-        /** Stores a reference to the configuration. */
-        private final Configuration configuration;
-
-        /** Stores the name under which the configuration is stored. */
-        private final String name;
-
-        /** Stores the at information as path of nodes. */
-        private final Collection<String> atPath;
-
-        /** Stores the at string. */
-        private final String at;
-
-        /** Stores the root node for this child configuration. */
-        private ImmutableNode rootNode;
-
-        /**
-         * Creates a new instance of {@code ConfigData} and initializes it.
-         *
-         * @param config the configuration
-         * @param n the name
-         * @param at the at position
-         */
-        public ConfigData(final Configuration config, final String n, final String at) {
-            configuration = config;
-            name = n;
-            atPath = parseAt(at);
-            this.at = at;
-        }
-
-        /**
-         * Gets the stored configuration.
-         *
-         * @return the configuration
-         */
-        public Configuration getConfiguration() {
-            return configuration;
-        }
-
-        /**
-         * Gets the configuration's name.
-         *
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Gets the at position of this configuration.
-         *
-         * @return the at position
-         */
-        public String getAt() {
-            return at;
-        }
-
-        /**
-         * Gets the root node for this child configuration.
-         *
-         * @return the root node of this child configuration
-         * @since 1.5
-         */
-        public ImmutableNode getRootNode() {
-            return rootNode;
-        }
-
-        /**
-         * Gets the transformed root node of the stored configuration. The term &quot;transformed&quot; means that an
-         * eventually defined at path has been applied.
-         *
-         * @return the transformed root node
-         */
-        public ImmutableNode getTransformedRoot() {
-            final ImmutableNode configRoot = getRootNodeOfConfiguration();
-            return atPath == null ? configRoot : prependAtPath(configRoot);
-        }
-
-        /**
-         * Prepends the at path to the given node.
-         *
-         * @param node the root node of the represented configuration
-         * @return the new root node including the at path
-         */
-        private ImmutableNode prependAtPath(final ImmutableNode node) {
-            final ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
-            final Iterator<String> pathIterator = atPath.iterator();
-            prependAtPathComponent(pathBuilder, pathIterator.next(), pathIterator, node);
-            return new ImmutableNode.Builder(1).addChild(pathBuilder.create()).create();
-        }
-
-        /**
-         * Handles a single component of the at path. A corresponding node is created and added to the hierarchical path to the
-         * original root node of the configuration.
-         *
-         * @param builder the current node builder object
-         * @param currentComponent the name of the current path component
-         * @param components an iterator with all components of the at path
-         * @param orgRoot the original root node of the wrapped configuration
-         */
-        private void prependAtPathComponent(final ImmutableNode.Builder builder, final String currentComponent, final Iterator<String> components,
-            final ImmutableNode orgRoot) {
-            builder.name(currentComponent);
-            if (components.hasNext()) {
-                final ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
-                prependAtPathComponent(childBuilder, components.next(), components, orgRoot);
-                builder.addChild(childBuilder.create());
-            } else {
-                builder.addChildren(orgRoot.getChildren());
-                builder.addAttributes(orgRoot.getAttributes());
-                builder.value(orgRoot.getValue());
-            }
-        }
-
-        /**
-         * Obtains the root node of the wrapped configuration. If necessary, a hierarchical representation of the configuration
-         * has to be created first.
-         *
-         * @return the root node of the associated configuration
-         */
-        private ImmutableNode getRootNodeOfConfiguration() {
-            getConfiguration().lock(LockMode.READ);
-            try {
-                final ImmutableNode root = ConfigurationUtils.convertToHierarchical(getConfiguration(), conversionExpressionEngine).getNodeModel()
-                    .getInMemoryRepresentation();
-                rootNode = root;
-                return root;
-            } finally {
-                getConfiguration().unlock(LockMode.READ);
-            }
-        }
-
-        /**
-         * Splits the at path into its components.
-         *
-         * @param at the at string
-         * @return a collection with the names of the single components
-         */
-        private Collection<String> parseAt(final String at) {
-            if (StringUtils.isEmpty(at)) {
-                return null;
-            }
-
-            final Collection<String> result = new ArrayList<>();
-            final DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(AT_ENGINE, at).iterator();
-            while (it.hasNext()) {
-                result.add(it.nextKey());
-            }
-            return result;
         }
     }
 }

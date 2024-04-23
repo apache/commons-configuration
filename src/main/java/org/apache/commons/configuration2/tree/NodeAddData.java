@@ -46,6 +46,19 @@ import java.util.List;
  * @param <T> the type of nodes this class can handle
  */
 public class NodeAddData<T> {
+    /**
+     * Creates the list with path nodes. Handles null input.
+     *
+     * @param intermediateNodes the nodes passed to the constructor
+     * @return an unmodifiable list of path nodes
+     */
+    private static List<String> createPathNodes(final Collection<String> intermediateNodes) {
+        if (intermediateNodes == null) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(new ArrayList<>(intermediateNodes));
+    }
+
     /** Stores the parent node of the add operation. */
     private final T parent;
 
@@ -73,15 +86,6 @@ public class NodeAddData<T> {
         newNodeName = newName;
         attribute = isAttr;
         pathNodes = createPathNodes(intermediateNodes);
-    }
-
-    /**
-     * Returns a flag if the new node to be added is an attribute.
-     *
-     * @return <b>true</b> for an attribute node, <b>false</b> for a child node
-     */
-    public boolean isAttribute() {
-        return attribute;
     }
 
     /**
@@ -116,15 +120,11 @@ public class NodeAddData<T> {
     }
 
     /**
-     * Creates the list with path nodes. Handles null input.
+     * Returns a flag if the new node to be added is an attribute.
      *
-     * @param intermediateNodes the nodes passed to the constructor
-     * @return an unmodifiable list of path nodes
+     * @return <b>true</b> for an attribute node, <b>false</b> for a child node
      */
-    private static List<String> createPathNodes(final Collection<String> intermediateNodes) {
-        if (intermediateNodes == null) {
-            return Collections.emptyList();
-        }
-        return Collections.unmodifiableList(new ArrayList<>(intermediateNodes));
+    public boolean isAttribute() {
+        return attribute;
     }
 }

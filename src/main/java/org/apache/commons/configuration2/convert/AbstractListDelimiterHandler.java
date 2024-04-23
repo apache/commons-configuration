@@ -39,27 +39,6 @@ import java.util.Set;
  */
 public abstract class AbstractListDelimiterHandler implements ListDelimiterHandler {
 
-    /**
-     * Flattens the given iterator. For each element in the iteration {@code flatten()} is called recursively.
-     *
-     * @param handler the working handler
-     * @param target the target collection
-     * @param iterator the iterator to process
-     * @param limit a limit for the number of elements to extract
-     * @param dejaVue Previously visited objects.
-     */
-    static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
-            Set<Object> dejaVue) {
-        int size = target.size();
-        while (size < limit && iterator.hasNext()) {
-            final Object next = iterator.next();
-            if (!dejaVue.contains(next)) {
-                target.addAll(flatten(handler, next, limit - size, dejaVue));
-                size = target.size();
-            }
-        }
-    }
-
     static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
         dejaVu.add(value);
         if (value instanceof String) {
@@ -83,6 +62,27 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
             }
         }
         return result;
+    }
+
+    /**
+     * Flattens the given iterator. For each element in the iteration {@code flatten()} is called recursively.
+     *
+     * @param handler the working handler
+     * @param target the target collection
+     * @param iterator the iterator to process
+     * @param limit a limit for the number of elements to extract
+     * @param dejaVue Previously visited objects.
+     */
+    static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
+            Set<Object> dejaVue) {
+        int size = target.size();
+        while (size < limit && iterator.hasNext()) {
+            final Object next = iterator.next();
+            if (!dejaVue.contains(next)) {
+                target.addAll(flatten(handler, next, limit - size, dejaVue));
+                size = target.size();
+            }
+        }
     }
 
     /**

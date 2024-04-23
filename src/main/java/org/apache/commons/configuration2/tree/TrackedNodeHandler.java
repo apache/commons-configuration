@@ -54,20 +54,20 @@ final class TrackedNodeHandler extends AbstractImmutableNodeHandler {
     }
 
     /**
+     * {@inheritDoc} This implementation delegates to the handler with the parent mapping.
+     */
+    @Override
+    public ImmutableNode getParent(final ImmutableNode node) {
+        return getParentHandler().getParent(node);
+    }
+
+    /**
      * Gets the parent handler. This is the {@code NodeHandler} which is consulted for determining a node's parent node.
      *
      * @return the parent {@code NodeHandler}
      */
     public NodeHandler<ImmutableNode> getParentHandler() {
         return parentHandler;
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the handler with the parent mapping.
-     */
-    @Override
-    public ImmutableNode getParent(final ImmutableNode node) {
-        return getParentHandler().getParent(node);
     }
 
     /**

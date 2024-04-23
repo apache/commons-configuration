@@ -46,6 +46,16 @@ public class NodeSelector {
     private final List<String> nodeKeys;
 
     /**
+     * Creates a new instance of {@code NodeSelector} and initializes it with the list of keys to be used as selection
+     * criteria.
+     *
+     * @param keys the keys for selecting nodes
+     */
+    private NodeSelector(final List<String> keys) {
+        nodeKeys = keys;
+    }
+
+    /**
      * Creates a new instance of {@code NodeSelector} and initializes it with the key to the target node.
      *
      * @param key the key
@@ -55,13 +65,52 @@ public class NodeSelector {
     }
 
     /**
-     * Creates a new instance of {@code NodeSelector} and initializes it with the list of keys to be used as selection
-     * criteria.
+     * Compares this object with another one. Two instances of {@code NodeSelector} are considered equal if they have the
+     * same keys as selection criteria.
      *
-     * @param keys the keys for selecting nodes
+     * @param obj the object to be compared
+     * @return a flag whether these objects are equal
      */
-    private NodeSelector(final List<String> keys) {
-        nodeKeys = keys;
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof NodeSelector)) {
+            return false;
+        }
+
+        final NodeSelector c = (NodeSelector) obj;
+        return nodeKeys.equals(c.nodeKeys);
+    }
+
+    /**
+     * Executes a query for a given key and filters the results for nodes only.
+     *
+     * @param root the root node for the query
+     * @param resolver the {@code NodeKeyResolver}
+     * @param handler the {@code NodeHandler}
+     * @param key the key
+     * @param nodes here the results are stored
+     */
+    private void getFilteredResults(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler,
+        final String key, final List<ImmutableNode> nodes) {
+        final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(root, key, handler);
+        results.forEach(result -> {
+            if (!result.isAttributeResult()) {
+                nodes.add(result.getNode());
+            }
+        });
+    }
+
+    /**
+     * Returns a hash code for this object.
+     *
+     * @return a hash code
+     */
+    @Override
+    public int hashCode() {
+        return nodeKeys.hashCode();
     }
 
     /**
@@ -104,36 +153,6 @@ public class NodeSelector {
     }
 
     /**
-     * Compares this object with another one. Two instances of {@code NodeSelector} are considered equal if they have the
-     * same keys as selection criteria.
-     *
-     * @param obj the object to be compared
-     * @return a flag whether these objects are equal
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof NodeSelector)) {
-            return false;
-        }
-
-        final NodeSelector c = (NodeSelector) obj;
-        return nodeKeys.equals(c.nodeKeys);
-    }
-
-    /**
-     * Returns a hash code for this object.
-     *
-     * @return a hash code
-     */
-    @Override
-    public int hashCode() {
-        return nodeKeys.hashCode();
-    }
-
-    /**
      * Returns a string representation for this object. This string contains the keys to be used as selection criteria.
      *
      * @return a string for this object
@@ -141,24 +160,5 @@ public class NodeSelector {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("keys", nodeKeys).toString();
-    }
-
-    /**
-     * Executes a query for a given key and filters the results for nodes only.
-     *
-     * @param root the root node for the query
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
-     * @param key the key
-     * @param nodes here the results are stored
-     */
-    private void getFilteredResults(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler,
-        final String key, final List<ImmutableNode> nodes) {
-        final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(root, key, handler);
-        results.forEach(result -> {
-            if (!result.isAttributeResult()) {
-                nodes.add(result.getNode());
-            }
-        });
     }
 }

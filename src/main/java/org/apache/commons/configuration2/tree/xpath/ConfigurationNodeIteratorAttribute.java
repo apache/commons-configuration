@@ -53,24 +53,16 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     }
 
     /**
-     * Creates a pointer for the node at the specified position.
+     * Helper method for checking whether an attribute is defined and adding it to the list of attributes to iterate over.
      *
-     * @param position the desired position
-     * @return a pointer for the attribute at this position
+     * @param parent the parent node pointer
+     * @param result the result list
+     * @param name the name of the current attribute
      */
-    @Override
-    protected NodePointer createNodePointer(final int position) {
-        return new ConfigurationAttributePointer<>(parentPointer, attributeNames.get(position));
-    }
-
-    /**
-     * Returns the size of the managed iteration.
-     *
-     * @return the iteration size
-     */
-    @Override
-    protected int size() {
-        return attributeNames.size();
+    private void addAttributeData(final ConfigurationNodePointer<T> parent, final List<String> result, final String name) {
+        if (parent.getNodeHandler().getAttributeValue(parent.getConfigurationNode(), name) != null) {
+            result.add(name);
+        }
     }
 
     /**
@@ -98,15 +90,23 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     }
 
     /**
-     * Helper method for checking whether an attribute is defined and adding it to the list of attributes to iterate over.
+     * Creates a pointer for the node at the specified position.
      *
-     * @param parent the parent node pointer
-     * @param result the result list
-     * @param name the name of the current attribute
+     * @param position the desired position
+     * @return a pointer for the attribute at this position
      */
-    private void addAttributeData(final ConfigurationNodePointer<T> parent, final List<String> result, final String name) {
-        if (parent.getNodeHandler().getAttributeValue(parent.getConfigurationNode(), name) != null) {
-            result.add(name);
-        }
+    @Override
+    protected NodePointer createNodePointer(final int position) {
+        return new ConfigurationAttributePointer<>(parentPointer, attributeNames.get(position));
+    }
+
+    /**
+     * Returns the size of the managed iteration.
+     *
+     * @return the iteration size
+     */
+    @Override
+    protected int size() {
+        return attributeNames.size();
     }
 }

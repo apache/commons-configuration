@@ -64,20 +64,6 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
         super(c);
     }
 
-    @Override
-    public void read(final Reader in) throws ConfigurationException {
-        try {
-            load(mapper.readValue(in, this.type));
-        } catch (final Exception e) {
-            rethrowException(e);
-        }
-    }
-
-    @Override
-    public void write(final Writer out) throws ConfigurationException, IOException {
-        this.mapper.writer().writeValue(out, constructMap(this.getNodeModel().getNodeHandler().getRootNode()));
-    }
-
     /**
      * Loads the configuration from the given input stream.
      *
@@ -91,6 +77,20 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
         } catch (final Exception e) {
             rethrowException(e);
         }
+    }
+
+    @Override
+    public void read(final Reader in) throws ConfigurationException {
+        try {
+            load(mapper.readValue(in, this.type));
+        } catch (final Exception e) {
+            rethrowException(e);
+        }
+    }
+
+    @Override
+    public void write(final Writer out) throws ConfigurationException, IOException {
+        this.mapper.writer().writeValue(out, constructMap(this.getNodeModel().getNodeHandler().getRootNode()));
     }
 
 }

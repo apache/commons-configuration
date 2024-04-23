@@ -51,8 +51,8 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     }
 
     @Override
-    public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator) {
-        storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
+    public INIBuilderParametersImpl setCommentLeadingCharsUsedInInput(final String separator) {
+        storeProperty(PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT, separator);
         return this;
     }
 
@@ -63,8 +63,8 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     }
 
     @Override
-    public INIBuilderParametersImpl setCommentLeadingCharsUsedInInput(final String separator) {
-        storeProperty(PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT, separator);
+    public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator) {
+        storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
         return this;
     }
 }

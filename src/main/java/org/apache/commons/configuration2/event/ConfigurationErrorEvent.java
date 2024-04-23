@@ -102,6 +102,15 @@ public class ConfigurationErrorEvent extends Event {
     }
 
     /**
+     * Gets the cause of this error event. This is the {@code Throwable} object that caused this event to be fired.
+     *
+     * @return the cause of this error event
+     */
+    public Throwable getCause() {
+        return cause;
+    }
+
+    /**
      * Gets the {@code EventType} of the operation which caused this error.
      *
      * @return the event type of the operation causing this error
@@ -126,14 +135,5 @@ public class ConfigurationErrorEvent extends Event {
      */
     public Object getPropertyValue() {
         return propertyValue;
-    }
-
-    /**
-     * Gets the cause of this error event. This is the {@code Throwable} object that caused this event to be fired.
-     *
-     * @return the cause of this error event
-     */
-    public Throwable getCause() {
-        return cause;
     }
 }

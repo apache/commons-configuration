@@ -34,12 +34,21 @@ public class SystemConfiguration extends MapConfiguration {
     private static final Log LOG = LogFactory.getLog(SystemConfiguration.class);
 
     /**
-     * Create a Configuration based on the system properties.
+     * Sets System properties from a configuration object.
      *
-     * @see System#getProperties
+     * @param systemConfig The configuration containing the properties to be set.
+     * @since 1.6
      */
-    public SystemConfiguration() {
-        super(System.getProperties());
+    public static void setSystemProperties(final Configuration systemConfig) {
+        final Iterator<String> iter = systemConfig.getKeys();
+        while (iter.hasNext()) {
+            final String key = iter.next();
+            final String value = (String) systemConfig.getProperty(key);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Setting system property " + key + " to " + value);
+            }
+            System.setProperty(key, value);
+        }
     }
 
     /**
@@ -74,21 +83,12 @@ public class SystemConfiguration extends MapConfiguration {
     }
 
     /**
-     * Sets System properties from a configuration object.
+     * Create a Configuration based on the system properties.
      *
-     * @param systemConfig The configuration containing the properties to be set.
-     * @since 1.6
+     * @see System#getProperties
      */
-    public static void setSystemProperties(final Configuration systemConfig) {
-        final Iterator<String> iter = systemConfig.getKeys();
-        while (iter.hasNext()) {
-            final String key = iter.next();
-            final String value = (String) systemConfig.getProperty(key);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting system property " + key + " to " + value);
-            }
-            System.setProperty(key, value);
-        }
+    public SystemConfiguration() {
+        super(System.getProperties());
     }
 
     /**

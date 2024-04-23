@@ -54,204 +54,6 @@ public class DefaultBeanFactory implements BeanFactory {
     /** A format string for generating error messages for constructor matching. */
     private static final String FMT_CTOR_ERROR = "%s! Bean class = %s, constructor arguments = %s";
 
-    /** The conversion handler used by this instance. */
-    private final ConversionHandler conversionHandler;
-
-    /**
-     * Constructs a new instance of {@code DefaultBeanFactory} using a default {@code ConversionHandler}.
-     */
-    public DefaultBeanFactory() {
-        this(null);
-    }
-
-    /**
-     * Constructs a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
-     * conversions.
-     *
-     * @param convHandler the {@code ConversionHandler}; can be <b>null</b>, then a default handler is used
-     * @since 2.0
-     */
-    public DefaultBeanFactory(final ConversionHandler convHandler) {
-        conversionHandler = convHandler != null ? convHandler : DefaultConversionHandler.INSTANCE;
-    }
-
-    /**
-     * Gets the {@code ConversionHandler} used by this object.
-     *
-     * @return the {@code ConversionHandler}
-     * @since 2.0
-     */
-    public ConversionHandler getConversionHandler() {
-        return conversionHandler;
-    }
-
-    /**
-     * Creates a new bean instance. This implementation delegates to the protected methods {@code createBeanInstance()} and
-     * {@code initBeanInstance()} for creating and initializing the bean. This makes it easier for derived classes that need
-     * to change specific functionality of the base class.
-     *
-     * @param bcc the context object defining the bean to be created
-     * @return the new bean instance
-     * @throws Exception if an error occurs
-     */
-    @Override
-    public Object createBean(final BeanCreationContext bcc) throws Exception {
-        final Object result = createBeanInstance(bcc);
-        initBeanInstance(result, bcc);
-        return result;
-    }
-
-    /**
-     * Gets the default bean class used by this factory. This is always <b>null</b> for this implementation.
-     *
-     * @return the default bean class
-     */
-    @Override
-    public Class<?> getDefaultBeanClass() {
-        return null;
-    }
-
-    /**
-     * Creates the bean instance. This method is called by {@code createBean()}. It uses reflection to create a new instance
-     * of the specified class.
-     *
-     * @param bcc the context object defining the bean to be created
-     * @return the new bean instance
-     * @throws Exception if an error occurs
-     */
-    protected Object createBeanInstance(final BeanCreationContext bcc) throws Exception {
-        final Constructor<?> ctor = findMatchingConstructor(bcc.getBeanClass(), bcc.getBeanDeclaration());
-        final Object[] args = fetchConstructorArgs(ctor, bcc);
-        return ctor.newInstance(args);
-    }
-
-    /**
-     * Initializes the newly created bean instance. This method is called by {@code createBean()}. It calls the
-     * {@code initBean()} method of the context object for performing the initialization.
-     *
-     * @param bean the newly created bean instance
-     * @param bcc the context object defining the bean to be created
-     * @throws Exception if an error occurs
-     */
-    protected void initBeanInstance(final Object bean, final BeanCreationContext bcc) throws Exception {
-        bcc.initBean(bean, bcc.getBeanDeclaration());
-    }
-
-    /**
-     * Evaluates constructor arguments in the specified {@code BeanDeclaration} and tries to find a unique matching
-     * constructor. If this is not possible, an exception is thrown. Note: This method is intended to be used by concrete
-     * {@link BeanFactory} implementations and not by client code.
-     *
-     * @param beanClass the class of the bean to be created
-     * @param data the current {@code BeanDeclaration}
-     * @param <T> the type of the bean to be created
-     * @return the single matching constructor
-     * @throws ConfigurationRuntimeException if no single matching constructor can be found
-     * @throws NullPointerException if the bean class or bean declaration are <b>null</b>
-     */
-    protected static <T> Constructor<T> findMatchingConstructor(final Class<T> beanClass, final BeanDeclaration data) {
-        final List<Constructor<T>> matchingConstructors = findMatchingConstructors(beanClass, data);
-        checkSingleMatchingConstructor(beanClass, data, matchingConstructors);
-        return matchingConstructors.get(0);
-    }
-
-    /**
-     * Obtains the arguments for a constructor call to create a bean. This method resolves nested bean declarations and
-     * performs necessary type conversions.
-     *
-     * @param ctor the constructor to be invoked
-     * @param bcc the context object defining the bean to be created
-     * @return an array with constructor arguments
-     */
-    private Object[] fetchConstructorArgs(final Constructor<?> ctor, final BeanCreationContext bcc) {
-        final Class<?>[] types = ctor.getParameterTypes();
-        assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size() : "Wrong number of constructor arguments!";
-        final Object[] args = new Object[types.length];
-        int idx = 0;
-
-        for (final ConstructorArg arg : nullSafeConstructorArgs(bcc.getBeanDeclaration())) {
-            final Object val = arg.isNestedBeanDeclaration() ? bcc.createBean(arg.getBeanDeclaration()) : arg.getValue();
-            args[idx] = getConversionHandler().to(val, types[idx], null);
-            idx++;
-        }
-
-        return args;
-    }
-
-    /**
-     * Fetches constructor arguments from the given bean declaration. Handles <b>null</b> values safely.
-     *
-     * @param data the bean declaration
-     * @return the collection with constructor arguments (never <b>null</b>)
-     */
-    private static Collection<ConstructorArg> nullSafeConstructorArgs(final BeanDeclaration data) {
-        Collection<ConstructorArg> args = data.getConstructorArgs();
-        if (args == null) {
-            args = Collections.emptySet();
-        }
-        return args;
-    }
-
-    /**
-     * Returns a list with all constructors which are compatible with the constructor arguments specified by the given
-     * {@code BeanDeclaration}.
-     *
-     * @param beanClass the bean class to be instantiated
-     * @param data the current {@code BeanDeclaration}
-     * @return a list with all matching constructors
-     */
-    private static <T> List<Constructor<T>> findMatchingConstructors(final Class<T> beanClass, final BeanDeclaration data) {
-        final List<Constructor<T>> result = new LinkedList<>();
-        final Collection<ConstructorArg> args = getConstructorArgs(data);
-        for (final Constructor<?> ctor : beanClass.getConstructors()) {
-            if (matchesConstructor(ctor, args)) {
-                // cast should be okay according to the Javadocs of
-                // getConstructors()
-                @SuppressWarnings("unchecked")
-                final Constructor<T> match = (Constructor<T>) ctor;
-                result.add(match);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Checks whether the given constructor is compatible with the given list of arguments.
-     *
-     * @param ctor the constructor to be checked
-     * @param args the collection of constructor arguments
-     * @return a flag whether this constructor is compatible with the given arguments
-     */
-    private static boolean matchesConstructor(final Constructor<?> ctor, final Collection<ConstructorArg> args) {
-        final Class<?>[] types = ctor.getParameterTypes();
-        if (types.length != args.size()) {
-            return false;
-        }
-
-        int idx = 0;
-        for (final ConstructorArg arg : args) {
-            if (!arg.matches(types[idx++])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Gets constructor arguments from a bean declaration. Deals with <b>null</b> values.
-     *
-     * @param data the bean declaration
-     * @return the collection with constructor arguments (never <b>null</b>)
-     */
-    private static Collection<ConstructorArg> getConstructorArgs(final BeanDeclaration data) {
-        Collection<ConstructorArg> args = data.getConstructorArgs();
-        if (args == null) {
-            args = Collections.emptySet();
-        }
-        return args;
-    }
-
     /**
      * Checks whether exactly one matching constructor was found. Throws a meaningful exception if there
      * is not a single matching constructor.
@@ -281,5 +83,203 @@ public class DefaultBeanFactory implements BeanFactory {
      */
     private static ConfigurationRuntimeException constructorMatchingException(final Class<?> beanClass, final BeanDeclaration data, final String msg) {
         return new ConfigurationRuntimeException(FMT_CTOR_ERROR, msg, beanClass.getName(), getConstructorArgs(data).toString());
+    }
+
+    /**
+     * Evaluates constructor arguments in the specified {@code BeanDeclaration} and tries to find a unique matching
+     * constructor. If this is not possible, an exception is thrown. Note: This method is intended to be used by concrete
+     * {@link BeanFactory} implementations and not by client code.
+     *
+     * @param beanClass the class of the bean to be created
+     * @param data the current {@code BeanDeclaration}
+     * @param <T> the type of the bean to be created
+     * @return the single matching constructor
+     * @throws ConfigurationRuntimeException if no single matching constructor can be found
+     * @throws NullPointerException if the bean class or bean declaration are <b>null</b>
+     */
+    protected static <T> Constructor<T> findMatchingConstructor(final Class<T> beanClass, final BeanDeclaration data) {
+        final List<Constructor<T>> matchingConstructors = findMatchingConstructors(beanClass, data);
+        checkSingleMatchingConstructor(beanClass, data, matchingConstructors);
+        return matchingConstructors.get(0);
+    }
+
+    /**
+     * Returns a list with all constructors which are compatible with the constructor arguments specified by the given
+     * {@code BeanDeclaration}.
+     *
+     * @param beanClass the bean class to be instantiated
+     * @param data the current {@code BeanDeclaration}
+     * @return a list with all matching constructors
+     */
+    private static <T> List<Constructor<T>> findMatchingConstructors(final Class<T> beanClass, final BeanDeclaration data) {
+        final List<Constructor<T>> result = new LinkedList<>();
+        final Collection<ConstructorArg> args = getConstructorArgs(data);
+        for (final Constructor<?> ctor : beanClass.getConstructors()) {
+            if (matchesConstructor(ctor, args)) {
+                // cast should be okay according to the Javadocs of
+                // getConstructors()
+                @SuppressWarnings("unchecked")
+                final Constructor<T> match = (Constructor<T>) ctor;
+                result.add(match);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Gets constructor arguments from a bean declaration. Deals with <b>null</b> values.
+     *
+     * @param data the bean declaration
+     * @return the collection with constructor arguments (never <b>null</b>)
+     */
+    private static Collection<ConstructorArg> getConstructorArgs(final BeanDeclaration data) {
+        Collection<ConstructorArg> args = data.getConstructorArgs();
+        if (args == null) {
+            args = Collections.emptySet();
+        }
+        return args;
+    }
+
+    /**
+     * Checks whether the given constructor is compatible with the given list of arguments.
+     *
+     * @param ctor the constructor to be checked
+     * @param args the collection of constructor arguments
+     * @return a flag whether this constructor is compatible with the given arguments
+     */
+    private static boolean matchesConstructor(final Constructor<?> ctor, final Collection<ConstructorArg> args) {
+        final Class<?>[] types = ctor.getParameterTypes();
+        if (types.length != args.size()) {
+            return false;
+        }
+
+        int idx = 0;
+        for (final ConstructorArg arg : args) {
+            if (!arg.matches(types[idx++])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Fetches constructor arguments from the given bean declaration. Handles <b>null</b> values safely.
+     *
+     * @param data the bean declaration
+     * @return the collection with constructor arguments (never <b>null</b>)
+     */
+    private static Collection<ConstructorArg> nullSafeConstructorArgs(final BeanDeclaration data) {
+        Collection<ConstructorArg> args = data.getConstructorArgs();
+        if (args == null) {
+            args = Collections.emptySet();
+        }
+        return args;
+    }
+
+    /** The conversion handler used by this instance. */
+    private final ConversionHandler conversionHandler;
+
+    /**
+     * Constructs a new instance of {@code DefaultBeanFactory} using a default {@code ConversionHandler}.
+     */
+    public DefaultBeanFactory() {
+        this(null);
+    }
+
+    /**
+     * Constructs a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
+     * conversions.
+     *
+     * @param convHandler the {@code ConversionHandler}; can be <b>null</b>, then a default handler is used
+     * @since 2.0
+     */
+    public DefaultBeanFactory(final ConversionHandler convHandler) {
+        conversionHandler = convHandler != null ? convHandler : DefaultConversionHandler.INSTANCE;
+    }
+
+    /**
+     * Creates a new bean instance. This implementation delegates to the protected methods {@code createBeanInstance()} and
+     * {@code initBeanInstance()} for creating and initializing the bean. This makes it easier for derived classes that need
+     * to change specific functionality of the base class.
+     *
+     * @param bcc the context object defining the bean to be created
+     * @return the new bean instance
+     * @throws Exception if an error occurs
+     */
+    @Override
+    public Object createBean(final BeanCreationContext bcc) throws Exception {
+        final Object result = createBeanInstance(bcc);
+        initBeanInstance(result, bcc);
+        return result;
+    }
+
+    /**
+     * Creates the bean instance. This method is called by {@code createBean()}. It uses reflection to create a new instance
+     * of the specified class.
+     *
+     * @param bcc the context object defining the bean to be created
+     * @return the new bean instance
+     * @throws Exception if an error occurs
+     */
+    protected Object createBeanInstance(final BeanCreationContext bcc) throws Exception {
+        final Constructor<?> ctor = findMatchingConstructor(bcc.getBeanClass(), bcc.getBeanDeclaration());
+        final Object[] args = fetchConstructorArgs(ctor, bcc);
+        return ctor.newInstance(args);
+    }
+
+    /**
+     * Obtains the arguments for a constructor call to create a bean. This method resolves nested bean declarations and
+     * performs necessary type conversions.
+     *
+     * @param ctor the constructor to be invoked
+     * @param bcc the context object defining the bean to be created
+     * @return an array with constructor arguments
+     */
+    private Object[] fetchConstructorArgs(final Constructor<?> ctor, final BeanCreationContext bcc) {
+        final Class<?>[] types = ctor.getParameterTypes();
+        assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size() : "Wrong number of constructor arguments!";
+        final Object[] args = new Object[types.length];
+        int idx = 0;
+
+        for (final ConstructorArg arg : nullSafeConstructorArgs(bcc.getBeanDeclaration())) {
+            final Object val = arg.isNestedBeanDeclaration() ? bcc.createBean(arg.getBeanDeclaration()) : arg.getValue();
+            args[idx] = getConversionHandler().to(val, types[idx], null);
+            idx++;
+        }
+
+        return args;
+    }
+
+    /**
+     * Gets the {@code ConversionHandler} used by this object.
+     *
+     * @return the {@code ConversionHandler}
+     * @since 2.0
+     */
+    public ConversionHandler getConversionHandler() {
+        return conversionHandler;
+    }
+
+    /**
+     * Gets the default bean class used by this factory. This is always <b>null</b> for this implementation.
+     *
+     * @return the default bean class
+     */
+    @Override
+    public Class<?> getDefaultBeanClass() {
+        return null;
+    }
+
+    /**
+     * Initializes the newly created bean instance. This method is called by {@code createBean()}. It calls the
+     * {@code initBean()} method of the context object for performing the initialization.
+     *
+     * @param bean the newly created bean instance
+     * @param bcc the context object defining the bean to be created
+     * @throws Exception if an error occurs
+     */
+    protected void initBeanInstance(final Object bean, final BeanCreationContext bcc) throws Exception {
+        bcc.initBean(bean, bcc.getBeanDeclaration());
     }
 }

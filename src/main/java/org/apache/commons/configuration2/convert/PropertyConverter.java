@@ -74,10 +74,16 @@ public final class PropertyConverter {
     private static final String INTERNET_ADDRESS_CLASSNAME_JAKARTA = "jakarta.mail.internet.InternetAddress";
 
     /**
-     * Private constructor prevents instances from being created.
+     * Converts a value to a constant of an enumeration class.
+     *
+     * @param enumClass the enumeration class
+     * @param value the value to be converted
+     * @return the converted value
      */
-    private PropertyConverter() {
-        // presvents instantiation.
+    @SuppressWarnings("unchecked")
+    // conversion is safe because we know that the class is an Enum class
+    private static Object convertToEnum(final Class<?> enumClass, final Object value) {
+        return toEnum(value, enumClass.asSubclass(Enum.class));
     }
 
     /**
@@ -167,6 +173,36 @@ public final class PropertyConverter {
     }
 
     /**
+     * Converts the specified object into a BigDecimal.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a BigDecimal
+     */
+    public static BigDecimal toBigDecimal(final Object value) throws ConversionException {
+        final Number n = toNumber(value, BigDecimal.class);
+        if (n instanceof BigDecimal) {
+            return (BigDecimal) n;
+        }
+        return BigDecimal.valueOf(n.doubleValue());
+    }
+
+    /**
+     * Converts the specified object into a BigInteger.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a BigInteger
+     */
+    public static BigInteger toBigInteger(final Object value) throws ConversionException {
+        final Number n = toNumber(value, BigInteger.class);
+        if (n instanceof BigInteger) {
+            return (BigInteger) n;
+        }
+        return BigInteger.valueOf(n.longValue());
+    }
+
+    /**
      * Converts the specified object into a Boolean. Internally the {@code org.apache.commons.lang.BooleanUtils} class from
      * the <a href="https://commons.apache.org/lang/">Commons Lang</a> project is used to perform this conversion. This
      * class accepts some more tokens for the boolean value of <b>true</b>, e.g. {@code yes} and {@code on}. Please refer to
@@ -191,22 +227,6 @@ public final class PropertyConverter {
     }
 
     /**
-     * Converts the specified value object to a {@code Character}. This method converts the passed in object to a string. If
-     * the string has exactly one character, this character is returned as result. Otherwise, conversion fails.
-     *
-     * @param value the value to be converted
-     * @return the resulting {@code Character} object
-     * @throws ConversionException if the conversion is not possible
-     */
-    public static Character toCharacter(final Object value) throws ConversionException {
-        final String strValue = String.valueOf(value);
-        if (strValue.length() == 1) {
-            return Character.valueOf(strValue.charAt(0));
-        }
-        throw new ConversionException(String.format("The value '%s' cannot be converted to a Character object!", strValue));
-    }
-
-    /**
      * Converts the specified object into a Byte.
      *
      * @param value the value to convert
@@ -222,304 +242,48 @@ public final class PropertyConverter {
     }
 
     /**
-     * Converts the specified object into a Short.
+     * Converts the specified object into a Calendar.
      *
      * @param value the value to convert
+     * @param format the DateFormat pattern to parse String values
      * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a short
+     * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
-    public static Short toShort(final Object value) throws ConversionException {
-        final Number n = toNumber(value, Short.class);
-        if (n instanceof Short) {
-            return (Short) n;
+    public static Calendar toCalendar(final Object value, final String format) throws ConversionException {
+        if (value instanceof Calendar) {
+            return (Calendar) value;
         }
-        return n.shortValue();
-    }
-
-    /**
-     * Converts the specified object into an Integer.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to an integer
-     */
-    public static Integer toInteger(final Object value) throws ConversionException {
-        final Number n = toNumber(value, Integer.class);
-        if (n instanceof Integer) {
-            return (Integer) n;
-        }
-        return n.intValue();
-    }
-
-    /**
-     * Converts the specified object into a Long.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Long
-     */
-    public static Long toLong(final Object value) throws ConversionException {
-        final Number n = toNumber(value, Long.class);
-        if (n instanceof Long) {
-            return (Long) n;
-        }
-        return n.longValue();
-    }
-
-    /**
-     * Converts the specified object into a Float.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Float
-     */
-    public static Float toFloat(final Object value) throws ConversionException {
-        final Number n = toNumber(value, Float.class);
-        if (n instanceof Float) {
-            return (Float) n;
-        }
-        return Float.valueOf(n.floatValue());
-    }
-
-    /**
-     * Converts the specified object into a Double.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Double
-     */
-    public static Double toDouble(final Object value) throws ConversionException {
-        final Number n = toNumber(value, Double.class);
-        if (n instanceof Double) {
-            return (Double) n;
-        }
-        return Double.valueOf(n.doubleValue());
-    }
-
-    /**
-     * Converts the specified object into a Duration.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Duration
-     * @since 2.8.0
-     */
-    public static Duration toDuration(final Object value) throws ConversionException {
-        if (value instanceof Duration) {
-            return (Duration) value;
-        }
-        if (value instanceof CharSequence) {
-            try {
-                return Duration.parse((CharSequence) value);
-            } catch (final DateTimeParseException e) {
-                throw new ConversionException("Could not convert " + value + " to Duration", e);
-            }
-        }
-        throw new ConversionException("The value " + value + " can't be converted to a Duration");
-    }
-
-    /**
-     * Converts the specified object into a BigInteger.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a BigInteger
-     */
-    public static BigInteger toBigInteger(final Object value) throws ConversionException {
-        final Number n = toNumber(value, BigInteger.class);
-        if (n instanceof BigInteger) {
-            return (BigInteger) n;
-        }
-        return BigInteger.valueOf(n.longValue());
-    }
-
-    /**
-     * Converts the specified object into a BigDecimal.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a BigDecimal
-     */
-    public static BigDecimal toBigDecimal(final Object value) throws ConversionException {
-        final Number n = toNumber(value, BigDecimal.class);
-        if (n instanceof BigDecimal) {
-            return (BigDecimal) n;
-        }
-        return BigDecimal.valueOf(n.doubleValue());
-    }
-
-    /**
-     * Tries to convert the specified object into a number object. This method is used by the conversion methods for number
-     * types. Note that the return value is not in always of the specified target class, but only if a new object has to be
-     * created.
-     *
-     * @param value the value to be converted (must not be <b>null</b>)
-     * @param targetClass the target class of the conversion (must be derived from {@link Number})
-     * @return the converted number
-     * @throws ConversionException if the object cannot be converted
-     */
-    static Number toNumber(final Object value, final Class<?> targetClass) throws ConversionException {
-        if (value instanceof Number) {
-            return (Number) value;
-        }
-        final String str = value.toString();
-        if (str.startsWith(HEX_PREFIX)) {
-            try {
-                return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
-            } catch (final NumberFormatException nex) {
-                throw new ConversionException("Could not convert " + str + " to " + targetClass.getName() + "! Invalid hex number.", nex);
-            }
-        }
-
-        if (str.startsWith(BIN_PREFIX)) {
-            try {
-                return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
-            } catch (final NumberFormatException nex) {
-                throw new ConversionException("Could not convert " + str + " to " + targetClass.getName() + "! Invalid binary number.", nex);
-            }
-        }
-
-        try {
-            final Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
-            return (Number) constr.newInstance(str);
-        } catch (final InvocationTargetException itex) {
-            throw new ConversionException("Could not convert " + str + " to " + targetClass.getName(), itex.getTargetException());
-        } catch (final Exception ex) {
-            // Treat all possible exceptions the same way
-            throw new ConversionException("Conversion error when trying to convert " + str + " to " + targetClass.getName(), ex);
-        }
-    }
-
-    /**
-     * Converts the specified object into a File.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a File
-     * @since 2.3
-     */
-    public static File toFile(final Object value) throws ConversionException {
-        if (value instanceof File) {
-            return (File) value;
-        }
-        if (value instanceof Path) {
-            return ((Path) value).toFile();
-        }
-        if (value instanceof String) {
-            return new File((String) value);
-        }
-        throw new ConversionException("The value " + value + " can't be converted to a File");
-    }
-
-    /**
-     * Converts the specified object into a Path.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Path
-     * @since 2.3
-     */
-    public static Path toPath(final Object value) throws ConversionException {
-        if (value instanceof File) {
-            return ((File) value).toPath();
-        }
-        if (value instanceof Path) {
-            return (Path) value;
-        }
-        if (value instanceof String) {
-            return Paths.get((String) value);
-        }
-        throw new ConversionException("The value " + value + " can't be converted to a Path");
-    }
-
-    /**
-     * Converts the specified object into an URI.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to an URI
-     */
-    public static URI toURI(final Object value) throws ConversionException {
-        if (value instanceof URI) {
-            return (URI) value;
+        if (value instanceof Date) {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime((Date) value);
+            return calendar;
         }
         if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to an URI");
+            throw new ConversionException("The value " + value + " can't be converted to a Calendar");
         }
         try {
-            return new URI((String) value);
-        } catch (final URISyntaxException e) {
-            throw new ConversionException("The value " + value + " can't be converted to an URI", e);
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new SimpleDateFormat(format).parse((String) value));
+            return calendar;
+        } catch (final ParseException e) {
+            throw new ConversionException("The value " + value + " can't be converted to a Calendar", e);
         }
     }
 
     /**
-     * Converts the specified object into an URL.
+     * Converts the specified value object to a {@code Character}. This method converts the passed in object to a string. If
+     * the string has exactly one character, this character is returned as result. Otherwise, conversion fails.
      *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to an URL
+     * @param value the value to be converted
+     * @return the resulting {@code Character} object
+     * @throws ConversionException if the conversion is not possible
      */
-    public static URL toURL(final Object value) throws ConversionException {
-        if (value instanceof URL) {
-            return (URL) value;
+    public static Character toCharacter(final Object value) throws ConversionException {
+        final String strValue = String.valueOf(value);
+        if (strValue.length() == 1) {
+            return Character.valueOf(strValue.charAt(0));
         }
-        if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to an URL");
-        }
-        try {
-            return new URL((String) value);
-        } catch (final MalformedURLException e) {
-            throw new ConversionException("The value " + value + " can't be converted to an URL", e);
-        }
-    }
-
-    /**
-     * Converts the specified object into a Pattern.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Pattern
-     */
-    public static Pattern toPattern(final Object value) throws ConversionException {
-        if (value instanceof Pattern) {
-            return (Pattern) value;
-        }
-        if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a Pattern");
-        }
-        try {
-            return Pattern.compile((String) value);
-        } catch (final PatternSyntaxException e) {
-            throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
-        }
-    }
-
-    /**
-     * Converts the specified object into a Locale.
-     *
-     * @param value the value to convert
-     * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Locale
-     */
-    public static Locale toLocale(final Object value) throws ConversionException {
-        if (value instanceof Locale) {
-            return (Locale) value;
-        }
-        if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a Locale");
-        }
-        final String[] elements = ((String) value).split("_");
-        final int size = elements.length;
-
-        if (size >= 1 && (elements[0].length() == 2 || elements[0].isEmpty())) {
-            final String language = elements[0];
-            final String country = size >= 2 ? elements[1] : "";
-            final String variant = size >= 3 ? elements[2] : "";
-
-            return new Locale(language, country, variant);
-        }
-        throw new ConversionException("The value " + value + " can't be converted to a Locale");
+        throw new ConversionException(String.format("The value '%s' cannot be converted to a Character object!", strValue));
     }
 
     /**
@@ -579,52 +343,65 @@ public final class PropertyConverter {
     }
 
     /**
-     * Converts the specified value into an internet address.
+     * Converts the specified object into a Date.
      *
      * @param value the value to convert
+     * @param format the DateFormat pattern to parse String values
      * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a InetAddress
-     *
-     * @since 1.5
+     * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
-    static InetAddress toInetAddress(final Object value) throws ConversionException {
-        if (value instanceof InetAddress) {
-            return (InetAddress) value;
+    public static Date toDate(final Object value, final String format) throws ConversionException {
+        if (value instanceof Date) {
+            return (Date) value;
+        }
+        if (value instanceof Calendar) {
+            return ((Calendar) value).getTime();
         }
         if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a InetAddress");
+            throw new ConversionException("The value " + value + " can't be converted to a Date");
         }
         try {
-            return InetAddress.getByName((String) value);
-        } catch (final UnknownHostException e) {
-            throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
+            return new SimpleDateFormat(format).parse((String) value);
+        } catch (final ParseException e) {
+            throw new ConversionException("The value " + value + " can't be converted to a Date", e);
         }
     }
 
     /**
-     * Converts the specified value into an email address with the given class name.
+     * Converts the specified object into a Double.
      *
      * @param value the value to convert
-     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, e.g.,
-     *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to an email address
-     *
-     * @since 1.5
+     * @throws ConversionException thrown if the value cannot be converted to a Double
      */
-    static Object toInternetAddress(final Object value, final String targetClassName) throws ConversionException {
-        if (value.getClass().getName().equals(targetClassName)) {
-            return value;
+    public static Double toDouble(final Object value) throws ConversionException {
+        final Number n = toNumber(value, Double.class);
+        if (n instanceof Double) {
+            return (Double) n;
         }
-        if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress");
+        return Double.valueOf(n.doubleValue());
+    }
+
+    /**
+     * Converts the specified object into a Duration.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Duration
+     * @since 2.8.0
+     */
+    public static Duration toDuration(final Object value) throws ConversionException {
+        if (value instanceof Duration) {
+            return (Duration) value;
         }
-        try {
-            final Constructor<?> ctor = Class.forName(targetClassName).getConstructor(String.class);
-            return ctor.newInstance(value);
-        } catch (final Exception e) {
-            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress", e);
+        if (value instanceof CharSequence) {
+            try {
+                return Duration.parse((CharSequence) value);
+            } catch (final DateTimeParseException e) {
+                throw new ConversionException("Could not convert " + value + " to Duration", e);
+            }
         }
+        throw new ConversionException("The value " + value + " can't be converted to a Duration");
     }
 
     /**
@@ -660,69 +437,292 @@ public final class PropertyConverter {
     }
 
     /**
-     * Converts the specified object into a Date.
+     * Converts the specified object into a File.
      *
      * @param value the value to convert
-     * @param format the DateFormat pattern to parse String values
      * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Calendar
+     * @throws ConversionException thrown if the value cannot be converted to a File
+     * @since 2.3
      */
-    public static Date toDate(final Object value, final String format) throws ConversionException {
-        if (value instanceof Date) {
-            return (Date) value;
+    public static File toFile(final Object value) throws ConversionException {
+        if (value instanceof File) {
+            return (File) value;
         }
-        if (value instanceof Calendar) {
-            return ((Calendar) value).getTime();
+        if (value instanceof Path) {
+            return ((Path) value).toFile();
+        }
+        if (value instanceof String) {
+            return new File((String) value);
+        }
+        throw new ConversionException("The value " + value + " can't be converted to a File");
+    }
+
+    /**
+     * Converts the specified object into a Float.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Float
+     */
+    public static Float toFloat(final Object value) throws ConversionException {
+        final Number n = toNumber(value, Float.class);
+        if (n instanceof Float) {
+            return (Float) n;
+        }
+        return Float.valueOf(n.floatValue());
+    }
+
+    /**
+     * Converts the specified value into an internet address.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a InetAddress
+     *
+     * @since 1.5
+     */
+    static InetAddress toInetAddress(final Object value) throws ConversionException {
+        if (value instanceof InetAddress) {
+            return (InetAddress) value;
         }
         if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a Date");
+            throw new ConversionException("The value " + value + " can't be converted to a InetAddress");
         }
         try {
-            return new SimpleDateFormat(format).parse((String) value);
-        } catch (final ParseException e) {
-            throw new ConversionException("The value " + value + " can't be converted to a Date", e);
+            return InetAddress.getByName((String) value);
+        } catch (final UnknownHostException e) {
+            throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
         }
     }
 
     /**
-     * Converts the specified object into a Calendar.
+     * Converts the specified object into an Integer.
      *
      * @param value the value to convert
-     * @param format the DateFormat pattern to parse String values
      * @return the converted value
-     * @throws ConversionException thrown if the value cannot be converted to a Calendar
+     * @throws ConversionException thrown if the value cannot be converted to an integer
      */
-    public static Calendar toCalendar(final Object value, final String format) throws ConversionException {
-        if (value instanceof Calendar) {
-            return (Calendar) value;
+    public static Integer toInteger(final Object value) throws ConversionException {
+        final Number n = toNumber(value, Integer.class);
+        if (n instanceof Integer) {
+            return (Integer) n;
         }
-        if (value instanceof Date) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime((Date) value);
-            return calendar;
+        return n.intValue();
+    }
+
+    /**
+     * Converts the specified value into an email address with the given class name.
+     *
+     * @param value the value to convert
+     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, e.g.,
+     *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an email address
+     *
+     * @since 1.5
+     */
+    static Object toInternetAddress(final Object value, final String targetClassName) throws ConversionException {
+        if (value.getClass().getName().equals(targetClassName)) {
+            return value;
         }
         if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a Calendar");
+            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress");
         }
         try {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new SimpleDateFormat(format).parse((String) value));
-            return calendar;
-        } catch (final ParseException e) {
-            throw new ConversionException("The value " + value + " can't be converted to a Calendar", e);
+            final Constructor<?> ctor = Class.forName(targetClassName).getConstructor(String.class);
+            return ctor.newInstance(value);
+        } catch (final Exception e) {
+            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress", e);
         }
     }
 
     /**
-     * Converts a value to a constant of an enumeration class.
+     * Converts the specified object into a Locale.
      *
-     * @param enumClass the enumeration class
-     * @param value the value to be converted
+     * @param value the value to convert
      * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Locale
      */
-    @SuppressWarnings("unchecked")
-    // conversion is safe because we know that the class is an Enum class
-    private static Object convertToEnum(final Class<?> enumClass, final Object value) {
-        return toEnum(value, enumClass.asSubclass(Enum.class));
+    public static Locale toLocale(final Object value) throws ConversionException {
+        if (value instanceof Locale) {
+            return (Locale) value;
+        }
+        if (!(value instanceof String)) {
+            throw new ConversionException("The value " + value + " can't be converted to a Locale");
+        }
+        final String[] elements = ((String) value).split("_");
+        final int size = elements.length;
+
+        if (size >= 1 && (elements[0].length() == 2 || elements[0].isEmpty())) {
+            final String language = elements[0];
+            final String country = size >= 2 ? elements[1] : "";
+            final String variant = size >= 3 ? elements[2] : "";
+
+            return new Locale(language, country, variant);
+        }
+        throw new ConversionException("The value " + value + " can't be converted to a Locale");
+    }
+
+    /**
+     * Converts the specified object into a Long.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Long
+     */
+    public static Long toLong(final Object value) throws ConversionException {
+        final Number n = toNumber(value, Long.class);
+        if (n instanceof Long) {
+            return (Long) n;
+        }
+        return n.longValue();
+    }
+
+    /**
+     * Tries to convert the specified object into a number object. This method is used by the conversion methods for number
+     * types. Note that the return value is not in always of the specified target class, but only if a new object has to be
+     * created.
+     *
+     * @param value the value to be converted (must not be <b>null</b>)
+     * @param targetClass the target class of the conversion (must be derived from {@link Number})
+     * @return the converted number
+     * @throws ConversionException if the object cannot be converted
+     */
+    static Number toNumber(final Object value, final Class<?> targetClass) throws ConversionException {
+        if (value instanceof Number) {
+            return (Number) value;
+        }
+        final String str = value.toString();
+        if (str.startsWith(HEX_PREFIX)) {
+            try {
+                return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
+            } catch (final NumberFormatException nex) {
+                throw new ConversionException("Could not convert " + str + " to " + targetClass.getName() + "! Invalid hex number.", nex);
+            }
+        }
+
+        if (str.startsWith(BIN_PREFIX)) {
+            try {
+                return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
+            } catch (final NumberFormatException nex) {
+                throw new ConversionException("Could not convert " + str + " to " + targetClass.getName() + "! Invalid binary number.", nex);
+            }
+        }
+
+        try {
+            final Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
+            return (Number) constr.newInstance(str);
+        } catch (final InvocationTargetException itex) {
+            throw new ConversionException("Could not convert " + str + " to " + targetClass.getName(), itex.getTargetException());
+        } catch (final Exception ex) {
+            // Treat all possible exceptions the same way
+            throw new ConversionException("Conversion error when trying to convert " + str + " to " + targetClass.getName(), ex);
+        }
+    }
+
+    /**
+     * Converts the specified object into a Path.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Path
+     * @since 2.3
+     */
+    public static Path toPath(final Object value) throws ConversionException {
+        if (value instanceof File) {
+            return ((File) value).toPath();
+        }
+        if (value instanceof Path) {
+            return (Path) value;
+        }
+        if (value instanceof String) {
+            return Paths.get((String) value);
+        }
+        throw new ConversionException("The value " + value + " can't be converted to a Path");
+    }
+
+    /**
+     * Converts the specified object into a Pattern.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Pattern
+     */
+    public static Pattern toPattern(final Object value) throws ConversionException {
+        if (value instanceof Pattern) {
+            return (Pattern) value;
+        }
+        if (!(value instanceof String)) {
+            throw new ConversionException("The value " + value + " can't be converted to a Pattern");
+        }
+        try {
+            return Pattern.compile((String) value);
+        } catch (final PatternSyntaxException e) {
+            throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
+        }
+    }
+
+    /**
+     * Converts the specified object into a Short.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a short
+     */
+    public static Short toShort(final Object value) throws ConversionException {
+        final Number n = toNumber(value, Short.class);
+        if (n instanceof Short) {
+            return (Short) n;
+        }
+        return n.shortValue();
+    }
+
+    /**
+     * Converts the specified object into an URI.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an URI
+     */
+    public static URI toURI(final Object value) throws ConversionException {
+        if (value instanceof URI) {
+            return (URI) value;
+        }
+        if (!(value instanceof String)) {
+            throw new ConversionException("The value " + value + " can't be converted to an URI");
+        }
+        try {
+            return new URI((String) value);
+        } catch (final URISyntaxException e) {
+            throw new ConversionException("The value " + value + " can't be converted to an URI", e);
+        }
+    }
+
+    /**
+     * Converts the specified object into an URL.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an URL
+     */
+    public static URL toURL(final Object value) throws ConversionException {
+        if (value instanceof URL) {
+            return (URL) value;
+        }
+        if (!(value instanceof String)) {
+            throw new ConversionException("The value " + value + " can't be converted to an URL");
+        }
+        try {
+            return new URL((String) value);
+        } catch (final MalformedURLException e) {
+            throw new ConversionException("The value " + value + " can't be converted to an URL", e);
+        }
+    }
+
+    /**
+     * Private constructor prevents instances from being created.
+     */
+    private PropertyConverter() {
+        // presvents instantiation.
     }
 }

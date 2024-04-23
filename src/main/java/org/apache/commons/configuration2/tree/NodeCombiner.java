@@ -49,6 +49,26 @@ public abstract class NodeCombiner {
      */
     protected static final NodeHandler<ImmutableNode> HANDLER = createNodeHandler();
 
+    /**
+     * Creates a node handler object for immutable nodes which can be used by sub classes to perform advanced operations on
+     * nodes.
+     *
+     * @return the node handler implementation
+     */
+    private static NodeHandler<ImmutableNode> createNodeHandler() {
+        return new AbstractImmutableNodeHandler() {
+            @Override
+            public ImmutableNode getParent(final ImmutableNode node) {
+                return null;
+            }
+
+            @Override
+            public ImmutableNode getRootNode() {
+                return null;
+            }
+        };
+    }
+
     /** Stores a list with node names that are known to be list nodes. */
     private final Set<String> listNodes;
 
@@ -69,6 +89,16 @@ public abstract class NodeCombiner {
     }
 
     /**
+     * Combines the hierarchies represented by the given root nodes. This method must be defined in concrete sub classes
+     * with the implementation of a specific combination algorithm.
+     *
+     * @param node1 the first root node
+     * @param node2 the second root node
+     * @return the root node of the resulting combined node structure
+     */
+    public abstract ImmutableNode combine(ImmutableNode node1, ImmutableNode node2);
+
+    /**
      * Gets a set with the names of nodes that are known to be list nodes.
      *
      * @return a set with the names of list nodes
@@ -86,35 +116,5 @@ public abstract class NodeCombiner {
      */
     public boolean isListNode(final ImmutableNode node) {
         return listNodes.contains(node.getNodeName());
-    }
-
-    /**
-     * Combines the hierarchies represented by the given root nodes. This method must be defined in concrete sub classes
-     * with the implementation of a specific combination algorithm.
-     *
-     * @param node1 the first root node
-     * @param node2 the second root node
-     * @return the root node of the resulting combined node structure
-     */
-    public abstract ImmutableNode combine(ImmutableNode node1, ImmutableNode node2);
-
-    /**
-     * Creates a node handler object for immutable nodes which can be used by sub classes to perform advanced operations on
-     * nodes.
-     *
-     * @return the node handler implementation
-     */
-    private static NodeHandler<ImmutableNode> createNodeHandler() {
-        return new AbstractImmutableNodeHandler() {
-            @Override
-            public ImmutableNode getParent(final ImmutableNode node) {
-                return null;
-            }
-
-            @Override
-            public ImmutableNode getRootNode() {
-                return null;
-            }
-        };
     }
 }

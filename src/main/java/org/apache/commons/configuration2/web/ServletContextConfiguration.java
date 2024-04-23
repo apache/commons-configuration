@@ -55,15 +55,15 @@ public class ServletContextConfiguration extends BaseWebConfiguration {
     }
 
     @Override
-    protected Object getPropertyInternal(final String key) {
-        return handleDelimiters(context.getInitParameter(key));
-    }
-
-    @Override
     protected Iterator<String> getKeysInternal() {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
         final Enumeration<String> en = context.getInitParameterNames();
         return Collections.list(en).iterator();
+    }
+
+    @Override
+    protected Object getPropertyInternal(final String key) {
+        return handleDelimiters(context.getInitParameter(key));
     }
 }

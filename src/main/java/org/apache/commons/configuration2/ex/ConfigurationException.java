@@ -42,15 +42,6 @@ public class ConfigurationException extends Exception {
     }
 
     /**
-     * Constructs a new {@code ConfigurationException} with specified nested {@code Throwable}.
-     *
-     * @param cause the exception or error that caused this exception to be thrown
-     */
-    public ConfigurationException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * Constructs a new {@code ConfigurationException} with specified detail message and nested {@code Throwable}.
      *
      * @param message the error message
@@ -58,5 +49,14 @@ public class ConfigurationException extends Exception {
      */
     public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * Constructs a new {@code ConfigurationException} with specified nested {@code Throwable}.
+     *
+     * @param cause the exception or error that caused this exception to be thrown
+     */
+    public ConfigurationException(final Throwable cause) {
+        super(cause);
     }
 }

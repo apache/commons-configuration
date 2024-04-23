@@ -29,12 +29,17 @@ import org.springframework.core.env.EnumerablePropertySource;
  */
 public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration> {
 
+    protected ConfigurationPropertySource(final String name) {
+        super(name);
+    }
+
     public ConfigurationPropertySource(final String name, final Configuration source) {
         super(name, source);
     }
 
-    protected ConfigurationPropertySource(final String name) {
-        super(name);
+    @Override
+    public Object getProperty(final String name) {
+        return source.getString(name);
     }
 
     @Override
@@ -42,10 +47,5 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
         final List<String> keys = new ArrayList<>();
         source.getKeys().forEachRemaining(keys::add);
         return keys.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
-    }
-
-    @Override
-    public Object getProperty(final String name) {
-        return source.getString(name);
     }
 }

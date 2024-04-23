@@ -24,10 +24,6 @@ import java.io.PrintStream;
  * @since 1.7
  */
 public final class TreeUtils {
-    /** Prevent creating this class. */
-    private TreeUtils() {
-    }
-
     /**
      * Print out the data in the configuration.
      *
@@ -58,5 +54,9 @@ public final class TreeUtils {
             stream.print(indent);
         }
         stream.println("</" + result.getNodeName() + ">");
+    }
+
+    /** Prevent creating this class. */
+    private TreeUtils() {
     }
 }

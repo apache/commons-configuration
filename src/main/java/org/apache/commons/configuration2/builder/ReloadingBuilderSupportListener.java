@@ -40,6 +40,22 @@ import org.apache.commons.configuration2.reloading.ReloadingEvent;
  * @since 2.0
  */
 final class ReloadingBuilderSupportListener implements EventListener<Event> {
+    /**
+     * Creates a new instance of {@code ReloadingBuilderSupportListener} which connects the specified
+     * {@code ConfigurationBuilder} with the given {@code ReloadingController}. Listeners are registered to react on
+     * notifications and implement a reloading protocol as described in the class comment.
+     *
+     * @param configBuilder the {@code ConfigurationBuilder}
+     * @param controller the {@code ReloadingController}
+     * @return the newly created listener object
+     */
+    public static ReloadingBuilderSupportListener connect(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
+        final ReloadingBuilderSupportListener listener = new ReloadingBuilderSupportListener(configBuilder, controller);
+        controller.addEventListener(ReloadingEvent.ANY, listener);
+        configBuilder.installEventListener(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED, listener);
+        return listener;
+    }
+
     /** Stores the associated configuration builder. */
     private final BasicConfigurationBuilder<?> builder;
 
@@ -55,22 +71,6 @@ final class ReloadingBuilderSupportListener implements EventListener<Event> {
     private ReloadingBuilderSupportListener(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
         builder = configBuilder;
         reloadingController = controller;
-    }
-
-    /**
-     * Creates a new instance of {@code ReloadingBuilderSupportListener} which connects the specified
-     * {@code ConfigurationBuilder} with the given {@code ReloadingController}. Listeners are registered to react on
-     * notifications and implement a reloading protocol as described in the class comment.
-     *
-     * @param configBuilder the {@code ConfigurationBuilder}
-     * @param controller the {@code ReloadingController}
-     * @return the newly created listener object
-     */
-    public static ReloadingBuilderSupportListener connect(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
-        final ReloadingBuilderSupportListener listener = new ReloadingBuilderSupportListener(configBuilder, controller);
-        controller.addEventListener(ReloadingEvent.ANY, listener);
-        configBuilder.installEventListener(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED, listener);
-        return listener;
     }
 
     /**

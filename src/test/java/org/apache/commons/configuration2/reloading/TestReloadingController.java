@@ -60,6 +60,11 @@ public class TestReloadingController {
         return new ReloadingController(detector);
     }
 
+    @BeforeEach
+    public void setUp() throws Exception {
+        detector = mock(ReloadingDetector.class);
+    }
+
     /**
      * Prepares the given event listener mock to expect an event notification. The event received is stored in the given
      * mutable object.
@@ -72,20 +77,6 @@ public class TestReloadingController {
             evRef.setValue(invocation.getArgument(0, ReloadingEvent.class));
             return null;
         }).when(l).onEvent(any());
-    }
-
-    /**
-     * Verifies that an invocation has occurred on the given event listener for an event notification.
-     *
-     * @param l the listener mock
-     */
-    private void verifyEvent(final EventListener<ReloadingEvent> l) {
-        verify(l).onEvent(any());
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        detector = mock(ReloadingDetector.class);
     }
 
     /**
@@ -201,5 +192,14 @@ public class TestReloadingController {
         verify(detector).isReloadingRequired();
         verify(detector).reloadingPerformed();
         verifyNoMoreInteractions(detector);
+    }
+
+    /**
+     * Verifies that an invocation has occurred on the given event listener for an event notification.
+     *
+     * @param l the listener mock
+     */
+    private void verifyEvent(final EventListener<ReloadingEvent> l) {
+        verify(l).onEvent(any());
     }
 }

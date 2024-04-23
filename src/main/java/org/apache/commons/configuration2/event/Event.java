@@ -70,6 +70,19 @@ public class Event extends EventObject {
     }
 
     /**
+     * Helper method for appending a representation for a property to the overall string representation for this object.
+     * This method is called by {@code toString()} for generating string fragments for the properties of this class. It can
+     * also be used by derived classes which extend the string representation of this base class.
+     *
+     * @param buf the target buffer
+     * @param property the name of the property
+     * @param value the property value
+     */
+    protected void appendPropertyRepresentation(final StringBuilder buf, final String property, final Object value) {
+        buf.append(String.format(FMT_PROPERTY, property, String.valueOf(value)));
+    }
+
+    /**
      * Gets the type of this event.
      *
      * @return the event type
@@ -92,18 +105,5 @@ public class Event extends EventObject {
         appendPropertyRepresentation(buf, "eventType", getEventType());
         buf.append(" ]");
         return buf.toString();
-    }
-
-    /**
-     * Helper method for appending a representation for a property to the overall string representation for this object.
-     * This method is called by {@code toString()} for generating string fragments for the properties of this class. It can
-     * also be used by derived classes which extend the string representation of this base class.
-     *
-     * @param buf the target buffer
-     * @param property the name of the property
-     * @param value the property value
-     */
-    protected void appendPropertyRepresentation(final StringBuilder buf, final String property, final Object value) {
-        buf.append(String.format(FMT_PROPERTY, property, String.valueOf(value)));
     }
 }

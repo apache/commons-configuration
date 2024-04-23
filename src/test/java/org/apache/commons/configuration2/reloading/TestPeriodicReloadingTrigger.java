@@ -74,23 +74,6 @@ public class TestPeriodicReloadingTrigger {
         return new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT, executor);
     }
 
-    /**
-     * Prepares the executor mock to for any invocation which schedules the trigger task.
-     * This method should be used to call one of the {@code thenReturn}, {@code thenAnswer} or {@code thenThrow} methods.
-     *
-     * @return An ongoing stubbing for the future
-     */
-    private OngoingStubbing<ScheduledFuture<?>> whenScheduled() {
-        return when(executor.scheduleAtFixedRate(any(), eq(PERIOD), eq(PERIOD), eq(UNIT)));
-    }
-
-    /**
-     * Verifies that an invocation has occurred on the executor mock which schedules the trigger task.
-     */
-    private void verifyScheduled() {
-        verify(executor).scheduleAtFixedRate(any(), eq(PERIOD), eq(PERIOD), eq(UNIT));
-    }
-
     @BeforeEach
     public void setUp() throws Exception {
         executor = mock(ScheduledExecutorService.class);
@@ -217,5 +200,22 @@ public class TestPeriodicReloadingTrigger {
     @Test
     public void testStopNotRunning() {
         createTrigger().stop();
+    }
+
+    /**
+     * Verifies that an invocation has occurred on the executor mock which schedules the trigger task.
+     */
+    private void verifyScheduled() {
+        verify(executor).scheduleAtFixedRate(any(), eq(PERIOD), eq(PERIOD), eq(UNIT));
+    }
+
+    /**
+     * Prepares the executor mock to for any invocation which schedules the trigger task.
+     * This method should be used to call one of the {@code thenReturn}, {@code thenAnswer} or {@code thenThrow} methods.
+     *
+     * @return An ongoing stubbing for the future
+     */
+    private OngoingStubbing<ScheduledFuture<?>> whenScheduled() {
+        return when(executor.scheduleAtFixedRate(any(), eq(PERIOD), eq(PERIOD), eq(UNIT)));
     }
 }

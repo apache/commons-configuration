@@ -38,75 +38,35 @@ import java.util.Set;
  */
 public class ConfigurationMap extends AbstractMap<Object, Object> {
     /**
-     * The {@code Configuration} wrapped by this class.
-     */
-    private final Configuration configuration;
-
-    /**
-     * Creates a new instance of a {@code ConfigurationMap} that wraps the specified {@code Configuration} instance.
-     *
-     * @param configuration {@code Configuration} instance.
-     */
-    public ConfigurationMap(final Configuration configuration) {
-        this.configuration = Objects.requireNonNull(configuration, "configuration");
-    }
-
-    /**
-     * Gets the wrapped {@code Configuration} object.
-     *
-     * @return the wrapped configuration
-     * @since 1.2
-     */
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    /**
-     * Returns a set with the entries contained in this configuration-based map.
-     *
-     * @return a set with the contained entries
-     * @see java.util.Map#entrySet()
-     */
-    @Override
-    public Set<Map.Entry<Object, Object>> entrySet() {
-        return new ConfigurationSet(configuration);
-    }
-
-    /**
-     * Stores the value for the specified key. The value is stored in the underlying configuration.
-     *
-     * @param key the key (will be converted to a string)
-     * @param value the value
-     * @return the old value of this key or <b>null</b> if it is new
-     * @see java.util.Map#put(Object, Object)
-     */
-    @Override
-    public Object put(final Object key, final Object value) {
-        final String strKey = String.valueOf(key);
-        final Object old = configuration.getProperty(strKey);
-        configuration.setProperty(strKey, value);
-        return old;
-    }
-
-    /**
-     * Gets the value of the specified key. The key is converted to a string and then passed to the underlying
-     * configuration.
-     *
-     * @param key the key
-     * @return the value of this key
-     * @see java.util.Map#get(Object)
-     */
-    @Override
-    public Object get(final Object key) {
-        return configuration.getProperty(String.valueOf(key));
-    }
-
-    /**
      * Sets of entries in the map.
      */
     static class ConfigurationSet extends AbstractSet<Map.Entry<Object, Object>> {
-        /** The configuration mapped to this entry set. */
-        private final Configuration configuration;
+        /**
+         * Iterator over the entries in the ConfigurationMap.
+         */
+        private final class ConfigurationSetIterator implements Iterator<Map.Entry<Object, Object>> {
+            /** An iterator over the keys in the configuration. */
+            private final Iterator<String> keys;
+
+            private ConfigurationSetIterator() {
+                keys = configuration.getKeys();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return keys.hasNext();
+            }
+
+            @Override
+            public Map.Entry<Object, Object> next() {
+                return new Entry(keys.next());
+            }
+
+            @Override
+            public void remove() {
+                keys.remove();
+            }
+        }
 
         /**
          * A Map entry in the ConfigurationMap.
@@ -137,35 +97,19 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
             }
         }
 
-        /**
-         * Iterator over the entries in the ConfigurationMap.
-         */
-        private final class ConfigurationSetIterator implements Iterator<Map.Entry<Object, Object>> {
-            /** An iterator over the keys in the configuration. */
-            private final Iterator<String> keys;
-
-            private ConfigurationSetIterator() {
-                keys = configuration.getKeys();
-            }
-
-            @Override
-            public boolean hasNext() {
-                return keys.hasNext();
-            }
-
-            @Override
-            public Map.Entry<Object, Object> next() {
-                return new Entry(keys.next());
-            }
-
-            @Override
-            public void remove() {
-                keys.remove();
-            }
-        }
+        /** The configuration mapped to this entry set. */
+        private final Configuration configuration;
 
         ConfigurationSet(final Configuration configuration) {
             this.configuration = configuration;
+        }
+
+        /**
+         * @see java.util.Collection#iterator()
+         */
+        @Override
+        public Iterator<Map.Entry<Object, Object>> iterator() {
+            return new ConfigurationSetIterator();
         }
 
         /**
@@ -181,13 +125,69 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
             }
             return count;
         }
+    }
 
-        /**
-         * @see java.util.Collection#iterator()
-         */
-        @Override
-        public Iterator<Map.Entry<Object, Object>> iterator() {
-            return new ConfigurationSetIterator();
-        }
+    /**
+     * The {@code Configuration} wrapped by this class.
+     */
+    private final Configuration configuration;
+
+    /**
+     * Creates a new instance of a {@code ConfigurationMap} that wraps the specified {@code Configuration} instance.
+     *
+     * @param configuration {@code Configuration} instance.
+     */
+    public ConfigurationMap(final Configuration configuration) {
+        this.configuration = Objects.requireNonNull(configuration, "configuration");
+    }
+
+    /**
+     * Returns a set with the entries contained in this configuration-based map.
+     *
+     * @return a set with the contained entries
+     * @see java.util.Map#entrySet()
+     */
+    @Override
+    public Set<Map.Entry<Object, Object>> entrySet() {
+        return new ConfigurationSet(configuration);
+    }
+
+    /**
+     * Gets the value of the specified key. The key is converted to a string and then passed to the underlying
+     * configuration.
+     *
+     * @param key the key
+     * @return the value of this key
+     * @see java.util.Map#get(Object)
+     */
+    @Override
+    public Object get(final Object key) {
+        return configuration.getProperty(String.valueOf(key));
+    }
+
+    /**
+     * Gets the wrapped {@code Configuration} object.
+     *
+     * @return the wrapped configuration
+     * @since 1.2
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Stores the value for the specified key. The value is stored in the underlying configuration.
+     *
+     * @param key the key (will be converted to a string)
+     * @param value the value
+     * @return the old value of this key or <b>null</b> if it is new
+     * @see java.util.Map#put(Object, Object)
+     */
+    @Override
+    public Object put(final Object key, final Object value) {
+        final String strKey = String.valueOf(key);
+        final Object old = configuration.getProperty(strKey);
+        configuration.setProperty(strKey, value);
+        return old;
     }
 }

@@ -63,6 +63,87 @@ import org.apache.commons.text.lookup.StringLookup;
  * @since 1.7
  */
 public class ExprLookup implements Lookup {
+    /**
+     * The key and corresponding object that will be made available to the JexlContext for use in expressions.
+     */
+    public static class Variable {
+        /** The name to be used in expressions */
+        private String key;
+
+        /** The object to be accessed in expressions */
+        private Object value;
+
+        public Variable() {
+        }
+
+        public Variable(final String name, final Object value) {
+            setName(name);
+            setValue(value);
+        }
+
+        public String getName() {
+            return key;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public void setName(final String name) {
+            this.key = name;
+        }
+
+        public void setValue(final Object value) throws ConfigurationRuntimeException {
+            try {
+                if (!(value instanceof String)) {
+                    this.value = value;
+                    return;
+                }
+                final String val = (String) value;
+                final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
+                final Class<?> clazz = ClassUtils.getClass(name);
+                if (name.length() == val.length()) {
+                    this.value = clazz.getConstructor().newInstance();
+                } else {
+                    this.value = clazz;
+                }
+            } catch (final Exception e) {
+                throw new ConfigurationRuntimeException("Unable to create " + value, e);
+            }
+
+        }
+    }
+
+    /**
+     * List wrapper used to allow the Variables list to be created as beans in DefaultConfigurationBuilder.
+     */
+    public static class Variables extends ArrayList<Variable> {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = 20111205L;
+
+        /**
+         * Creates a new empty instance of {@code Variables}.
+         */
+        public Variables() {
+        }
+
+        /**
+         * Creates a new instance of {@code Variables} and copies the content of the given object.
+         *
+         * @param vars the {@code Variables} object to be copied
+         */
+        public Variables(final Variables vars) {
+            super(vars);
+        }
+
+        public Variable getVariable() {
+            return !isEmpty() ? get(size() - 1) : null;
+        }
+
+    }
+
     /** Prefix to identify a Java Class object */
     private static final String CLASS = "Class:";
 
@@ -122,62 +203,14 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Sets the prefix to use to identify subordinate expressions. This cannot be the same as the prefix used for the primary
-     * expression.
+     * Creates a new {@code JexlContext} and initializes it with the variables managed by this Lookup object.
      *
-     * @param prefix The String identifying the beginning of the expression.
+     * @return the newly created context
      */
-    public void setVariablePrefixMatcher(final String prefix) {
-        prefixMatcher = prefix;
-    }
-
-    /**
-     * Sets the suffix to use to identify subordinate expressions. This cannot be the same as the suffix used for the primary
-     * expression.
-     *
-     * @param suffix The String identifying the end of the expression.
-     */
-    public void setVariableSuffixMatcher(final String suffix) {
-        suffixMatcher = suffix;
-    }
-
-    /**
-     * Add the Variables that will be accessible within expressions.
-     *
-     * @param list The list of Variables.
-     */
-    public void setVariables(final Variables list) {
-        variables = new Variables(list);
-    }
-
-    /**
-     * Gets the list of Variables that are accessible within expressions. This method returns a copy of the variables
-     * managed by this lookup; so modifying this object has no impact on this lookup.
-     *
-     * @return the List of Variables that are accessible within expressions.
-     */
-    public Variables getVariables() {
-        return new Variables(variables);
-    }
-
-    /**
-     * Gets the logger used by this object.
-     *
-     * @return the {@code Log}
-     * @since 2.0
-     */
-    public ConfigurationLogger getLogger() {
-        return logger;
-    }
-
-    /**
-     * Sets the logger to be used by this object. If no logger is passed in, no log output is generated.
-     *
-     * @param logger the {@code Log}
-     * @since 2.0
-     */
-    public void setLogger(final ConfigurationLogger logger) {
-        this.logger = logger;
+    private JexlContext createContext() {
+        final JexlContext ctx = new MapContext();
+        initializeContext(ctx);
+        return ctx;
     }
 
     /**
@@ -191,14 +224,47 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Sets the {@code ConfigurationInterpolator} to be used by this object.
+     * Gets the logger used by this object.
      *
-     * @param interpolator the {@code ConfigurationInterpolator} (may be <b>null</b>)
+     * @return the {@code Log}
      * @since 2.0
      */
-    public void setInterpolator(final ConfigurationInterpolator interpolator) {
-        this.interpolator = interpolator;
-        installSubstitutor(interpolator);
+    public ConfigurationLogger getLogger() {
+        return logger;
+    }
+
+    /**
+     * Gets the list of Variables that are accessible within expressions. This method returns a copy of the variables
+     * managed by this lookup; so modifying this object has no impact on this lookup.
+     *
+     * @return the List of Variables that are accessible within expressions.
+     */
+    public Variables getVariables() {
+        return new Variables(variables);
+    }
+
+    /**
+     * Initializes the specified context with the variables managed by this Lookup object.
+     *
+     * @param ctx the context to be initialized
+     */
+    private void initializeContext(final JexlContext ctx) {
+        variables.forEach(var -> ctx.set(var.getName(), var.getValue()));
+    }
+
+    /**
+     * Creates a {@code StringSubstitutor} object which uses the passed in {@code ConfigurationInterpolator} as lookup
+     * object.
+     *
+     * @param ip the {@code ConfigurationInterpolator} to be used
+     */
+    private void installSubstitutor(final ConfigurationInterpolator ip) {
+        if (ip == null) {
+            substitutor = null;
+        } else {
+            final StringLookup variableResolver = key -> Objects.toString(ip.resolve(key), null);
+            substitutor = new StringSubstitutor(variableResolver, prefixMatcher, suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);
+        }
     }
 
     /**
@@ -229,118 +295,52 @@ public class ExprLookup implements Lookup {
     }
 
     /**
-     * Creates a {@code StringSubstitutor} object which uses the passed in {@code ConfigurationInterpolator} as lookup
-     * object.
+     * Sets the {@code ConfigurationInterpolator} to be used by this object.
      *
-     * @param ip the {@code ConfigurationInterpolator} to be used
+     * @param interpolator the {@code ConfigurationInterpolator} (may be <b>null</b>)
+     * @since 2.0
      */
-    private void installSubstitutor(final ConfigurationInterpolator ip) {
-        if (ip == null) {
-            substitutor = null;
-        } else {
-            final StringLookup variableResolver = key -> Objects.toString(ip.resolve(key), null);
-            substitutor = new StringSubstitutor(variableResolver, prefixMatcher, suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);
-        }
+    public void setInterpolator(final ConfigurationInterpolator interpolator) {
+        this.interpolator = interpolator;
+        installSubstitutor(interpolator);
     }
 
     /**
-     * Creates a new {@code JexlContext} and initializes it with the variables managed by this Lookup object.
+     * Sets the logger to be used by this object. If no logger is passed in, no log output is generated.
      *
-     * @return the newly created context
+     * @param logger the {@code Log}
+     * @since 2.0
      */
-    private JexlContext createContext() {
-        final JexlContext ctx = new MapContext();
-        initializeContext(ctx);
-        return ctx;
+    public void setLogger(final ConfigurationLogger logger) {
+        this.logger = logger;
     }
 
     /**
-     * Initializes the specified context with the variables managed by this Lookup object.
+     * Sets the prefix to use to identify subordinate expressions. This cannot be the same as the prefix used for the primary
+     * expression.
      *
-     * @param ctx the context to be initialized
+     * @param prefix The String identifying the beginning of the expression.
      */
-    private void initializeContext(final JexlContext ctx) {
-        variables.forEach(var -> ctx.set(var.getName(), var.getValue()));
+    public void setVariablePrefixMatcher(final String prefix) {
+        prefixMatcher = prefix;
     }
 
     /**
-     * List wrapper used to allow the Variables list to be created as beans in DefaultConfigurationBuilder.
+     * Add the Variables that will be accessible within expressions.
+     *
+     * @param list The list of Variables.
      */
-    public static class Variables extends ArrayList<Variable> {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = 20111205L;
-
-        /**
-         * Creates a new empty instance of {@code Variables}.
-         */
-        public Variables() {
-        }
-
-        /**
-         * Creates a new instance of {@code Variables} and copies the content of the given object.
-         *
-         * @param vars the {@code Variables} object to be copied
-         */
-        public Variables(final Variables vars) {
-            super(vars);
-        }
-
-        public Variable getVariable() {
-            return !isEmpty() ? get(size() - 1) : null;
-        }
-
+    public void setVariables(final Variables list) {
+        variables = new Variables(list);
     }
 
     /**
-     * The key and corresponding object that will be made available to the JexlContext for use in expressions.
+     * Sets the suffix to use to identify subordinate expressions. This cannot be the same as the suffix used for the primary
+     * expression.
+     *
+     * @param suffix The String identifying the end of the expression.
      */
-    public static class Variable {
-        /** The name to be used in expressions */
-        private String key;
-
-        /** The object to be accessed in expressions */
-        private Object value;
-
-        public Variable() {
-        }
-
-        public Variable(final String name, final Object value) {
-            setName(name);
-            setValue(value);
-        }
-
-        public String getName() {
-            return key;
-        }
-
-        public void setName(final String name) {
-            this.key = name;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public void setValue(final Object value) throws ConfigurationRuntimeException {
-            try {
-                if (!(value instanceof String)) {
-                    this.value = value;
-                    return;
-                }
-                final String val = (String) value;
-                final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
-                final Class<?> clazz = ClassUtils.getClass(name);
-                if (name.length() == val.length()) {
-                    this.value = clazz.getConstructor().newInstance();
-                } else {
-                    this.value = clazz;
-                }
-            } catch (final Exception e) {
-                throw new ConfigurationRuntimeException("Unable to create " + value, e);
-            }
-
-        }
+    public void setVariableSuffixMatcher(final String suffix) {
+        suffixMatcher = suffix;
     }
 }

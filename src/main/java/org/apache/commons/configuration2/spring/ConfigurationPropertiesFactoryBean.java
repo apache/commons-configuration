@@ -46,6 +46,17 @@ import org.springframework.util.Assert;
  */
 public class ConfigurationPropertiesFactoryBean implements InitializingBean, FactoryBean<Properties> {
 
+    /**
+     * Creates a defensive copy of the specified array. Handles null values correctly.
+     *
+     * @param src the source array
+     * @param <T> the type of the array
+     * @return the defensive copy of the array
+     */
+    private static <T> T[] defensiveCopy(final T[] src) {
+        return src != null ? src.clone() : null;
+    }
+
     /** Internal CompositeConfiguration containing the merged configuration objects **/
     private CompositeConfiguration compositeConfiguration;
 
@@ -64,30 +75,6 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     public ConfigurationPropertiesFactoryBean(final Configuration configuration) {
         Assert.notNull(configuration, "configuration");
         this.compositeConfiguration = new CompositeConfiguration(configuration);
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
-    @Override
-    public Properties getObject() throws Exception {
-        return compositeConfiguration != null ? ConfigurationConverter.getProperties(compositeConfiguration) : null;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
-    @Override
-    public Class<?> getObjectType() {
-        return Properties.class;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
-    @Override
-    public boolean isSingleton() {
-        return true;
     }
 
     /**
@@ -116,8 +103,44 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         }
     }
 
+    public CompositeConfiguration getConfiguration() {
+        return compositeConfiguration;
+    }
+
     public Configuration[] getConfigurations() {
         return defensiveCopy(configurations);
+    }
+
+    public Resource[] getLocations() {
+        return defensiveCopy(locations);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObject()
+     */
+    @Override
+    public Properties getObject() throws Exception {
+        return compositeConfiguration != null ? ConfigurationConverter.getProperties(compositeConfiguration) : null;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+     */
+    @Override
+    public Class<?> getObjectType() {
+        return Properties.class;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+     */
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+
+    public boolean isThrowExceptionOnMissing() {
+        return throwExceptionOnMissing;
     }
 
     /**
@@ -127,10 +150,6 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     public void setConfigurations(final Configuration... configurations) {
         this.configurations = defensiveCopy(configurations);
-    }
-
-    public Resource[] getLocations() {
-        return defensiveCopy(locations);
     }
 
     /**
@@ -143,10 +162,6 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         this.locations = defensiveCopy(locations);
     }
 
-    public boolean isThrowExceptionOnMissing() {
-        return throwExceptionOnMissing;
-    }
-
     /**
      * Sets the underlying Commons CompositeConfiguration throwExceptionOnMissing flag.
      *
@@ -155,20 +170,5 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing) {
         this.throwExceptionOnMissing = throwExceptionOnMissing;
-    }
-
-    public CompositeConfiguration getConfiguration() {
-        return compositeConfiguration;
-    }
-
-    /**
-     * Creates a defensive copy of the specified array. Handles null values correctly.
-     *
-     * @param src the source array
-     * @param <T> the type of the array
-     * @return the defensive copy of the array
-     */
-    private static <T> T[] defensiveCopy(final T[] src) {
-        return src != null ? src.clone() : null;
     }
 }

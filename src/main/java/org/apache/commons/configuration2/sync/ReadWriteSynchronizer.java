@@ -36,8 +36,25 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @since 2.0
  */
 public class ReadWriteSynchronizer implements Synchronizer {
+    /**
+     * Returns a new default lock object which is used if no lock is passed to the constructor.
+     *
+     * @return the new default lock object
+     */
+    private static ReadWriteLock createDefaultLock() {
+        return new ReentrantReadWriteLock();
+    }
+
     /** The lock object used by this Synchronizer. */
     private final ReadWriteLock lock;
+
+    /**
+     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes it with a lock object of type
+     * {@code ReentrantReadWriteLock}.
+     */
+    public ReadWriteSynchronizer() {
+        this(null);
+    }
 
     /**
      * Creates a new instance of {@code ReadWriteSynchronizer} and initializes it with the given lock object. This
@@ -50,22 +67,9 @@ public class ReadWriteSynchronizer implements Synchronizer {
         lock = l != null ? l : createDefaultLock();
     }
 
-    /**
-     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes it with a lock object of type
-     * {@code ReentrantReadWriteLock}.
-     */
-    public ReadWriteSynchronizer() {
-        this(null);
-    }
-
     @Override
     public void beginRead() {
         lock.readLock().lock();
-    }
-
-    @Override
-    public void endRead() {
-        lock.readLock().unlock();
     }
 
     @Override
@@ -74,16 +78,12 @@ public class ReadWriteSynchronizer implements Synchronizer {
     }
 
     @Override
-    public void endWrite() {
-        lock.writeLock().unlock();
+    public void endRead() {
+        lock.readLock().unlock();
     }
 
-    /**
-     * Returns a new default lock object which is used if no lock is passed to the constructor.
-     *
-     * @return the new default lock object
-     */
-    private static ReadWriteLock createDefaultLock() {
-        return new ReentrantReadWriteLock();
+    @Override
+    public void endWrite() {
+        lock.writeLock().unlock();
     }
 }

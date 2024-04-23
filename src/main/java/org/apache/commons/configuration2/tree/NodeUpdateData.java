@@ -40,6 +40,35 @@ import java.util.Map;
  * @param <T> the type of nodes involved in this update operation
  */
 public class NodeUpdateData<T> {
+    /**
+     * Creates an unmodifiable defensive copy of the passed in collection with may be null.
+     *
+     * @param col the collection to be copied
+     * @param <T> the element type of the collection
+     * @return the unmodifiable copy
+     */
+    private static <T> Collection<T> copyCollection(final Collection<? extends T> col) {
+        if (col == null) {
+            return Collections.emptySet();
+        }
+        return Collections.unmodifiableCollection(new ArrayList<>(col));
+    }
+
+    /**
+     * Creates an unmodifiable defensive copy of the passed in map which may be null.
+     *
+     * @param map the map to be copied
+     * @param <K> the type of the keys involved
+     * @param <V> the type of the values involved
+     * @return the unmodifiable copy
+     */
+    private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map) {
+        if (map == null) {
+            return Collections.emptyMap();
+        }
+        return Collections.unmodifiableMap(new HashMap<>(map));
+    }
+
     /** The map with the query results whose value has to be changed. */
     private final Map<QueryResult<T>, Object> changedValues;
 
@@ -80,6 +109,15 @@ public class NodeUpdateData<T> {
     }
 
     /**
+     * Gets the key for this update operation.
+     *
+     * @return the key for this operation
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
      * Gets a collection with the values to be newly added. For these values new nodes have to be created and added under
      * the key stored in this object.
      *
@@ -97,43 +135,5 @@ public class NodeUpdateData<T> {
      */
     public Collection<QueryResult<T>> getRemovedNodes() {
         return removedNodes;
-    }
-
-    /**
-     * Gets the key for this update operation.
-     *
-     * @return the key for this operation
-     */
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * Creates an unmodifiable defensive copy of the passed in map which may be null.
-     *
-     * @param map the map to be copied
-     * @param <K> the type of the keys involved
-     * @param <V> the type of the values involved
-     * @return the unmodifiable copy
-     */
-    private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map) {
-        if (map == null) {
-            return Collections.emptyMap();
-        }
-        return Collections.unmodifiableMap(new HashMap<>(map));
-    }
-
-    /**
-     * Creates an unmodifiable defensive copy of the passed in collection with may be null.
-     *
-     * @param col the collection to be copied
-     * @param <T> the element type of the collection
-     * @return the unmodifiable copy
-     */
-    private static <T> Collection<T> copyCollection(final Collection<? extends T> col) {
-        if (col == null) {
-            return Collections.emptySet();
-        }
-        return Collections.unmodifiableCollection(new ArrayList<>(col));
     }
 }

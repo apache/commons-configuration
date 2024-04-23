@@ -99,12 +99,6 @@ public final class FileLocatorUtils {
     private static final String PROP_SOURCE_URL = "sourceURL";
 
     /**
-     * Private constructor so that no instances can be created.
-     */
-    private FileLocatorUtils() {
-    }
-
-    /**
      * Extends a path by another component. The given extension is added to the already existing path adding a separator if
      * necessary.
      *
@@ -546,6 +540,12 @@ public final class FileLocatorUtils {
      */
     static URL toURL(final File file) throws MalformedURLException {
         return file.toURI().toURL();
+    }
+
+    /**
+     * Private constructor so that no instances can be created.
+     */
+    private FileLocatorUtils() {
     }
 
 }

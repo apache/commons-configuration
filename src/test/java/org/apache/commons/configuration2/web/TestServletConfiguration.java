@@ -38,22 +38,6 @@ import org.mockito.ArgumentMatchers;
  */
 public class TestServletConfiguration extends TestAbstractConfiguration {
 
-    /**
-     * Creates a mocked {@link ServletConfig}.
-     *
-     * @param parameters the init parameters to use
-     * @return The created mock
-     */
-    private ServletConfig mockServletConfig(final Properties parameters) {
-        final ServletConfig config = mock(ServletConfig.class);
-        when(config.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
-        when(config.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
-            final String name = invocation.getArgument(0, String.class);
-            return parameters.getProperty(name);
-        });
-        return config;
-    }
-
     @Override
     protected AbstractConfiguration getConfiguration() {
         final Properties parameters = new Properties();
@@ -84,6 +68,22 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
         return new ServletConfiguration(mockServletConfig(new Properties()));
+    }
+
+    /**
+     * Creates a mocked {@link ServletConfig}.
+     *
+     * @param parameters the init parameters to use
+     * @return The created mock
+     */
+    private ServletConfig mockServletConfig(final Properties parameters) {
+        final ServletConfig config = mock(ServletConfig.class);
+        when(config.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
+        when(config.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
+            final String name = invocation.getArgument(0, String.class);
+            return parameters.getProperty(name);
+        });
+        return config;
     }
 
     @Override

@@ -41,6 +41,63 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2.0
  */
 public class DefaultParametersManager {
+    /**
+     * A data class storing information about {@code DefaultParametersHandler} objects added to a {@code Parameters} object.
+     * Using this class it is possible to find out which default handlers apply for a given parameters object and to invoke
+     * them.
+     */
+    private static final class DefaultHandlerData {
+        /** The handler object. */
+        private final DefaultParametersHandler<?> handler;
+
+        /** The class supported by this handler. */
+        private final Class<?> parameterClass;
+
+        /** The start class for applying this handler. */
+        private final Class<?> startClass;
+
+        /**
+         * Creates a new instance of {@code DefaultHandlerData}.
+         *
+         * @param h the {@code DefaultParametersHandler}
+         * @param cls the handler's data class
+         * @param startCls the start class
+         */
+        public DefaultHandlerData(final DefaultParametersHandler<?> h, final Class<?> cls, final Class<?> startCls) {
+            handler = h;
+            parameterClass = cls;
+            startClass = startCls;
+        }
+
+        /**
+         * Checks whether the managed {@code DefaultParametersHandler} can be applied to the given parameters object. If this is
+         * the case, it is executed on this object and can initialize it with default values.
+         *
+         * @param obj the parameters object to be initialized
+         */
+        @SuppressWarnings("unchecked")
+        // There are explicit isInstance() checks, so there won't be
+        // ClassCastExceptions
+        public void applyHandlerIfMatching(final BuilderParameters obj) {
+            if (parameterClass.isInstance(obj) && (startClass == null || startClass.isInstance(obj))) {
+                @SuppressWarnings("rawtypes")
+                final DefaultParametersHandler handlerUntyped = handler;
+                handlerUntyped.initializeDefaults(obj);
+            }
+        }
+
+        /**
+         * Tests whether this instance refers to the specified occurrence of a {@code DefaultParametersHandler}.
+         *
+         * @param h the handler to be checked
+         * @param startCls the start class
+         * @return <b>true</b> if this instance refers to this occurrence, <b>false</b> otherwise
+         */
+        public boolean isOccurrence(final DefaultParametersHandler<?> h, final Class<?> startCls) {
+            return h == handler && (startCls == null || startCls.equals(startClass));
+        }
+    }
+
     /** A collection with the registered default handlers. */
     private final Collection<DefaultHandlerData> defaultHandlers;
 
@@ -49,6 +106,19 @@ public class DefaultParametersManager {
      */
     public DefaultParametersManager() {
         defaultHandlers = new CopyOnWriteArrayList<>();
+    }
+
+    /**
+     * Initializes the passed in {@code BuilderParameters} object by applying all matching {@link DefaultParametersHandler}
+     * objects registered at this instance. Using this method the passed in parameters object can be populated with default
+     * values.
+     *
+     * @param params the parameters object to be initialized (may be <b>null</b>, then this method has no effect)
+     */
+    public void initializeParameters(final BuilderParameters params) {
+        if (params != null) {
+            defaultHandlers.forEach(dhd -> dhd.applyHandlerIfMatching(params));
+        }
     }
 
     /**
@@ -127,75 +197,5 @@ public class DefaultParametersManager {
      */
     public void unregisterDefaultsHandler(final DefaultParametersHandler<?> handler, final Class<?> startClass) {
         defaultHandlers.removeIf(dhd -> dhd.isOccurrence(handler, startClass));
-    }
-
-    /**
-     * Initializes the passed in {@code BuilderParameters} object by applying all matching {@link DefaultParametersHandler}
-     * objects registered at this instance. Using this method the passed in parameters object can be populated with default
-     * values.
-     *
-     * @param params the parameters object to be initialized (may be <b>null</b>, then this method has no effect)
-     */
-    public void initializeParameters(final BuilderParameters params) {
-        if (params != null) {
-            defaultHandlers.forEach(dhd -> dhd.applyHandlerIfMatching(params));
-        }
-    }
-
-    /**
-     * A data class storing information about {@code DefaultParametersHandler} objects added to a {@code Parameters} object.
-     * Using this class it is possible to find out which default handlers apply for a given parameters object and to invoke
-     * them.
-     */
-    private static final class DefaultHandlerData {
-        /** The handler object. */
-        private final DefaultParametersHandler<?> handler;
-
-        /** The class supported by this handler. */
-        private final Class<?> parameterClass;
-
-        /** The start class for applying this handler. */
-        private final Class<?> startClass;
-
-        /**
-         * Creates a new instance of {@code DefaultHandlerData}.
-         *
-         * @param h the {@code DefaultParametersHandler}
-         * @param cls the handler's data class
-         * @param startCls the start class
-         */
-        public DefaultHandlerData(final DefaultParametersHandler<?> h, final Class<?> cls, final Class<?> startCls) {
-            handler = h;
-            parameterClass = cls;
-            startClass = startCls;
-        }
-
-        /**
-         * Checks whether the managed {@code DefaultParametersHandler} can be applied to the given parameters object. If this is
-         * the case, it is executed on this object and can initialize it with default values.
-         *
-         * @param obj the parameters object to be initialized
-         */
-        @SuppressWarnings("unchecked")
-        // There are explicit isInstance() checks, so there won't be
-        // ClassCastExceptions
-        public void applyHandlerIfMatching(final BuilderParameters obj) {
-            if (parameterClass.isInstance(obj) && (startClass == null || startClass.isInstance(obj))) {
-                @SuppressWarnings("rawtypes")
-                final DefaultParametersHandler handlerUntyped = handler;
-                handlerUntyped.initializeDefaults(obj);
-            }
-        }
-
-        /**
-         * Tests whether this instance refers to the specified occurrence of a {@code DefaultParametersHandler}.
-         *
-         * @param h the handler to be checked
-         * @param startCls the start class
-         * @return <b>true</b> if this instance refers to this occurrence, <b>false</b> otherwise
-         */
-        public boolean isOccurrence(final DefaultParametersHandler<?> h, final Class<?> startCls) {
-            return h == handler && (startCls == null || startCls.equals(startClass));
-        }
     }
 }

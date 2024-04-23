@@ -116,21 +116,16 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
-     * Gets the parent configuration of this subnode configuration.
+     * {@inheritDoc} This implementation returns a copy of the current node model with the same settings. However, it has to
+     * be ensured that the track count for the node selector is increased.
      *
-     * @return the parent configuration
+     * @return the node model for the clone
      */
-    public BaseHierarchicalConfiguration getParent() {
-        return parent;
-    }
-
-    /**
-     * Gets the selector to the root node of this configuration.
-     *
-     * @return the {@code NodeSelector} to the root node
-     */
-    public NodeSelector getRootSelector() {
-        return rootSelector;
+    @Override
+    protected NodeModel<ImmutableNode> cloneNodeModel() {
+        final InMemoryNodeModel parentModel = (InMemoryNodeModel) getParent().getModel();
+        parentModel.trackNode(getRootSelector(), getParent());
+        return new TrackedNodeModel(getParent(), getRootSelector(), true);
     }
 
     /**
@@ -144,6 +139,15 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
+     * {@inheritDoc} This implementation makes sure that the correct node model (the one of the parent) is used for the new
+     * sub configuration.
+     */
+    @Override
+    protected SubnodeConfiguration createSubConfigurationForTrackedNode(final NodeSelector selector, final InMemoryNodeModelSupport parentModelSupport) {
+        return super.createSubConfigurationForTrackedNode(selector, getParent());
+    }
+
+    /**
      * {@inheritDoc} This implementation returns a newly created node model with the correct root node set. Note that this
      * model is not used for property access, but only made available to clients that need to operate on the node structure
      * of this {@code SubnodeConfiguration}. Be aware that the implementation of this method is not very efficient.
@@ -152,6 +156,15 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     public InMemoryNodeModel getNodeModel() {
         final ImmutableNode root = getParent().getNodeModel().getTrackedNode(getRootSelector());
         return new InMemoryNodeModel(root);
+    }
+
+    /**
+     * Gets the parent configuration of this subnode configuration.
+     *
+     * @return the parent configuration
+     */
+    public BaseHierarchicalConfiguration getParent() {
+        return parent;
     }
 
     /**
@@ -171,16 +184,12 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     }
 
     /**
-     * {@inheritDoc} This implementation returns a copy of the current node model with the same settings. However, it has to
-     * be ensured that the track count for the node selector is increased.
+     * Gets the selector to the root node of this configuration.
      *
-     * @return the node model for the clone
+     * @return the {@code NodeSelector} to the root node
      */
-    @Override
-    protected NodeModel<ImmutableNode> cloneNodeModel() {
-        final InMemoryNodeModel parentModel = (InMemoryNodeModel) getParent().getModel();
-        parentModel.trackNode(getRootSelector(), getParent());
-        return new TrackedNodeModel(getParent(), getRootSelector(), true);
+    public NodeSelector getRootSelector() {
+        return rootSelector;
     }
 
     /**
@@ -198,15 +207,6 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     @Override
     protected InMemoryNodeModel getSubConfigurationParentModel() {
         return getTrackedModel().getParentModel();
-    }
-
-    /**
-     * {@inheritDoc} This implementation makes sure that the correct node model (the one of the parent) is used for the new
-     * sub configuration.
-     */
-    @Override
-    protected SubnodeConfiguration createSubConfigurationForTrackedNode(final NodeSelector selector, final InMemoryNodeModelSupport parentModelSupport) {
-        return super.createSubConfigurationForTrackedNode(selector, getParent());
     }
 
     /**

@@ -71,65 +71,31 @@ public class BaseEventSource implements EventSource {
         initListeners();
     }
 
-    /**
-     * Gets a collection with all event listeners of the specified event type that are currently registered at this
-     * object.
-     *
-     * @param eventType the event type object
-     * @param <T> the event type
-     * @return a collection with the event listeners of the specified event type (this collection is a snapshot of the
-     *         currently registered listeners; it cannot be manipulated)
-     */
-    public <T extends Event> Collection<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
-        final List<EventListener<? super T>> result = new LinkedList<>();
-        eventListeners.getEventListeners(eventType).forEach(result::add);
-        return Collections.unmodifiableCollection(result);
-    }
-
-    /**
-     * Gets a list with all {@code EventListenerRegistrationData} objects currently contained for this event source. This
-     * method allows access to all registered event listeners, independent on their type.
-     *
-     * @return a list with information about all registered event listeners
-     */
-    public List<EventListenerRegistrationData<?>> getEventListenerRegistrations() {
-        return eventListeners.getRegistrations();
-    }
-
-    /**
-     * Returns a flag whether detail events are enabled.
-     *
-     * @return a flag if detail events are generated
-     */
-    public boolean isDetailEvents() {
-        return checkDetailEvents(0);
-    }
-
-    /**
-     * Determines whether detail events should be generated. If enabled, some methods can generate multiple update events.
-     * Note that this method records the number of calls, i.e. if for instance {@code setDetailEvents(false)} was called
-     * three times, you will have to invoke the method as often to enable the details.
-     *
-     * @param enable a flag if detail events should be enabled or disabled
-     */
-    public void setDetailEvents(final boolean enable) {
-        synchronized (lockDetailEventsCount) {
-            if (enable) {
-                detailEvents++;
-            } else {
-                detailEvents--;
-            }
-        }
-    }
-
     @Override
     public <T extends Event> void addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
         eventListeners.addEventListener(eventType, listener);
     }
 
-    @Override
-    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
-        return eventListeners.removeEventListener(eventType, listener);
+    /**
+     * Helper method for checking the current counter for detail events. This method checks whether the counter is greater
+     * than the passed in limit.
+     *
+     * @param limit the limit to be compared to
+     * @return <b>true</b> if the counter is greater than the limit, <b>false</b> otherwise
+     */
+    private boolean checkDetailEvents(final int limit) {
+        synchronized (lockDetailEventsCount) {
+            return detailEvents > limit;
+        }
+    }
+
+    /**
+     * Removes all registered error listeners.
+     *
+     * @since 1.4
+     */
+    public void clearErrorListeners() {
+        eventListeners.getRegistrationsForSuperType(ConfigurationErrorEvent.ANY).forEach(eventListeners::removeEventListener);
     }
 
     /**
@@ -140,12 +106,19 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Removes all registered error listeners.
+     * Overrides the {@code clone()} method to correctly handle so far registered event listeners. This implementation
+     * ensures that the clone will have empty event listener lists, i.e. the listeners registered at an
+     * {@code BaseEventSource} object will not be copied.
      *
+     * @return the cloned object
+     * @throws CloneNotSupportedException if cloning is not allowed
      * @since 1.4
      */
-    public void clearErrorListeners() {
-        eventListeners.getRegistrationsForSuperType(ConfigurationErrorEvent.ANY).forEach(eventListeners::removeEventListener);
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        final BaseEventSource copy = (BaseEventSource) super.clone();
+        copy.initListeners();
+        return copy;
     }
 
     /**
@@ -163,25 +136,19 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Creates an event object and delivers it to all registered event listeners. The method checks first if sending an
-     * event is allowed (making use of the {@code detailEvents} property), and if listeners are registered.
+     * Creates a {@code ConfigurationErrorEvent} object based on the passed in parameters. This is called by
+     * {@code fireError()} if it decides that an event needs to be generated.
      *
      * @param type the event's type
+     * @param opType the operation type related to this error
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param before the before update flag
-     * @param <T> the type of the event to be fired
+     * @param ex the {@code Throwable} object that caused this error event
+     * @return the event object
      */
-    protected <T extends ConfigurationEvent> void fireEvent(final EventType<T> type, final String propName, final Object propValue, final boolean before) {
-        if (checkDetailEvents(-1)) {
-            final EventListenerList.EventListenerIterator<T> it = eventListeners.getEventListenerIterator(type);
-            if (it.hasNext()) {
-                final ConfigurationEvent event = createEvent(type, propName, propValue, before);
-                while (it.hasNext()) {
-                    it.invokeNext(event);
-                }
-            }
-        }
+    protected ConfigurationErrorEvent createErrorEvent(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType,
+        final String propName, final Object propValue, final Throwable ex) {
+        return new ConfigurationErrorEvent(this, type, opType, propName, propValue, ex);
     }
 
     /**
@@ -222,35 +189,50 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Creates a {@code ConfigurationErrorEvent} object based on the passed in parameters. This is called by
-     * {@code fireError()} if it decides that an event needs to be generated.
+     * Creates an event object and delivers it to all registered event listeners. The method checks first if sending an
+     * event is allowed (making use of the {@code detailEvents} property), and if listeners are registered.
      *
      * @param type the event's type
-     * @param opType the operation type related to this error
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the {@code Throwable} object that caused this error event
-     * @return the event object
+     * @param before the before update flag
+     * @param <T> the type of the event to be fired
      */
-    protected ConfigurationErrorEvent createErrorEvent(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType,
-        final String propName, final Object propValue, final Throwable ex) {
-        return new ConfigurationErrorEvent(this, type, opType, propName, propValue, ex);
+    protected <T extends ConfigurationEvent> void fireEvent(final EventType<T> type, final String propName, final Object propValue, final boolean before) {
+        if (checkDetailEvents(-1)) {
+            final EventListenerList.EventListenerIterator<T> it = eventListeners.getEventListenerIterator(type);
+            if (it.hasNext()) {
+                final ConfigurationEvent event = createEvent(type, propName, propValue, before);
+                while (it.hasNext()) {
+                    it.invokeNext(event);
+                }
+            }
+        }
     }
 
     /**
-     * Overrides the {@code clone()} method to correctly handle so far registered event listeners. This implementation
-     * ensures that the clone will have empty event listener lists, i.e. the listeners registered at an
-     * {@code BaseEventSource} object will not be copied.
+     * Gets a list with all {@code EventListenerRegistrationData} objects currently contained for this event source. This
+     * method allows access to all registered event listeners, independent on their type.
      *
-     * @return the cloned object
-     * @throws CloneNotSupportedException if cloning is not allowed
-     * @since 1.4
+     * @return a list with information about all registered event listeners
      */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        final BaseEventSource copy = (BaseEventSource) super.clone();
-        copy.initListeners();
-        return copy;
+    public List<EventListenerRegistrationData<?>> getEventListenerRegistrations() {
+        return eventListeners.getRegistrations();
+    }
+
+    /**
+     * Gets a collection with all event listeners of the specified event type that are currently registered at this
+     * object.
+     *
+     * @param eventType the event type object
+     * @param <T> the event type
+     * @return a collection with the event listeners of the specified event type (this collection is a snapshot of the
+     *         currently registered listeners; it cannot be manipulated)
+     */
+    public <T extends Event> Collection<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
+        final List<EventListener<? super T>> result = new LinkedList<>();
+        eventListeners.getEventListeners(eventType).forEach(result::add);
+        return Collections.unmodifiableCollection(result);
     }
 
     /**
@@ -261,15 +243,33 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Helper method for checking the current counter for detail events. This method checks whether the counter is greater
-     * than the passed in limit.
+     * Returns a flag whether detail events are enabled.
      *
-     * @param limit the limit to be compared to
-     * @return <b>true</b> if the counter is greater than the limit, <b>false</b> otherwise
+     * @return a flag if detail events are generated
      */
-    private boolean checkDetailEvents(final int limit) {
+    public boolean isDetailEvents() {
+        return checkDetailEvents(0);
+    }
+
+    @Override
+    public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
+        return eventListeners.removeEventListener(eventType, listener);
+    }
+
+    /**
+     * Determines whether detail events should be generated. If enabled, some methods can generate multiple update events.
+     * Note that this method records the number of calls, i.e. if for instance {@code setDetailEvents(false)} was called
+     * three times, you will have to invoke the method as often to enable the details.
+     *
+     * @param enable a flag if detail events should be enabled or disabled
+     */
+    public void setDetailEvents(final boolean enable) {
         synchronized (lockDetailEventsCount) {
-            return detailEvents > limit;
+            if (enable) {
+                detailEvents++;
+            } else {
+                detailEvents--;
+            }
         }
     }
 }

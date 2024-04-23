@@ -33,25 +33,16 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  */
 abstract class BaseWebConfiguration extends AbstractConfiguration {
     /**
-     * Checks if this configuration is empty. This implementation makes use of the {@code getKeys()} method (which must be
-     * defined by concrete sub classes) to find out whether properties exist.
+     * Adds a property to this configuration. <strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong>
      *
-     * @return a flag whether this configuration is empty
+     * @param key the key of the property
+     * @param obj the value to be added
+     * @throws UnsupportedOperationException because this operation is not allowed
      */
     @Override
-    protected boolean isEmptyInternal() {
-        return !getKeysInternal().hasNext();
-    }
-
-    /**
-     * Checks whether the specified key is stored in this configuration.
-     *
-     * @param key the key
-     * @return a flag whether this key exists in this configuration
-     */
-    @Override
-    protected boolean containsKeyInternal(final String key) {
-        return getPropertyInternal(key) != null;
+    protected void addPropertyDirect(final String key, final Object obj) {
+        throw new UnsupportedOperationException("Read only configuration");
     }
 
     /**
@@ -67,16 +58,14 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Adds a property to this configuration. <strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong>
+     * Checks whether the specified key is stored in this configuration.
      *
-     * @param key the key of the property
-     * @param obj the value to be added
-     * @throws UnsupportedOperationException because this operation is not allowed
+     * @param key the key
+     * @return a flag whether this key exists in this configuration
      */
     @Override
-    protected void addPropertyDirect(final String key, final Object obj) {
-        throw new UnsupportedOperationException("Read only configuration");
+    protected boolean containsKeyInternal(final String key) {
+        return getPropertyInternal(key) != null;
     }
 
     /**
@@ -93,5 +82,16 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
         }
 
         return value;
+    }
+
+    /**
+     * Checks if this configuration is empty. This implementation makes use of the {@code getKeys()} method (which must be
+     * defined by concrete sub classes) to find out whether properties exist.
+     *
+     * @return a flag whether this configuration is empty
+     */
+    @Override
+    protected boolean isEmptyInternal() {
+        return !getKeysInternal().hasNext();
     }
 }

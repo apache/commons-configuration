@@ -64,18 +64,6 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Creates a JNDIConfiguration using the default initial context, shifted with the specified prefix, as the root of the
-     * properties.
-     *
-     * @param prefix the prefix
-     *
-     * @throws NamingException thrown if an error occurs when initializing the default context
-     */
-    public JNDIConfiguration(final String prefix) throws NamingException {
-        this(new InitialContext(), prefix);
-    }
-
-    /**
      * Creates a JNDIConfiguration using the specified initial context as the root of the properties.
      *
      * @param context the initial context
@@ -96,6 +84,237 @@ public class JNDIConfiguration extends AbstractConfiguration {
         this.prefix = prefix;
         initLogger(new ConfigurationLogger(JNDIConfiguration.class));
         addErrorLogListener();
+    }
+
+    /**
+     * Creates a JNDIConfiguration using the default initial context, shifted with the specified prefix, as the root of the
+     * properties.
+     *
+     * @param prefix the prefix
+     *
+     * @throws NamingException thrown if an error occurs when initializing the default context
+     */
+    public JNDIConfiguration(final String prefix) throws NamingException {
+        this(new InitialContext(), prefix);
+    }
+
+    /**
+     * <p>
+     * <strong>This operation is not supported and will throw an UnsupportedOperationException.</strong>
+     * </p>
+     *
+     * @param key the key
+     * @param obj the value
+     * @throws UnsupportedOperationException always thrown as this method is not supported
+     */
+    @Override
+    protected void addPropertyDirect(final String key, final Object obj) {
+        throw new UnsupportedOperationException("This operation is not supported");
+    }
+
+    /**
+     * Removes the specified property.
+     *
+     * @param key the key of the property to remove
+     */
+    @Override
+    protected void clearPropertyDirect(final String key) {
+        clearedProperties.add(key);
+    }
+
+    /**
+     * Checks whether the specified key is contained in this configuration.
+     *
+     * @param key the key to check
+     * @return a flag whether this key is stored in this configuration
+     */
+    @Override
+    protected boolean containsKeyInternal(String key) {
+        if (clearedProperties.contains(key)) {
+            return false;
+        }
+        key = key.replace('.', '/');
+        try {
+            // throws a NamingException if JNDI doesn't contain the key.
+            getBaseContext().lookup(key);
+            return true;
+        } catch (final NameNotFoundException e) {
+            // expected exception, no need to log it
+            return false;
+        } catch (final NamingException e) {
+            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null, e);
+            return false;
+        }
+    }
+
+    /**
+     * Gets the base context with the prefix applied.
+     *
+     * @return the base context
+     * @throws NamingException if an error occurs
+     */
+    public Context getBaseContext() throws NamingException {
+        if (baseContext == null) {
+            baseContext = (Context) getContext().lookup(prefix == null ? "" : prefix);
+        }
+
+        return baseContext;
+    }
+
+    /**
+     * Gets the initial context used by this configuration. This context is independent of the prefix specified.
+     *
+     * @return the initial context
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
+     * Because JNDI is based on a tree configuration, we need to filter down the tree, till we find the Context specified by
+     * the key to start from. Otherwise return null.
+     *
+     * @param path the path of keys to traverse in order to find the context
+     * @param context the context to start from
+     * @return The context at that key's location in the JNDI tree, or null if not found
+     * @throws NamingException if JNDI has an issue
+     */
+    private Context getContext(final List<String> path, final Context context) throws NamingException {
+        // return the current context if the path is empty
+        if (path == null || path.isEmpty()) {
+            return context;
+        }
+
+        final String key = path.get(0);
+
+        // search a context matching the key in the context's elements
+        NamingEnumeration<NameClassPair> elements = null;
+
+        try {
+            elements = context.list("");
+            while (elements.hasMore()) {
+                final NameClassPair nameClassPair = elements.next();
+                final String name = nameClassPair.getName();
+                final Object object = context.lookup(name);
+
+                if (object instanceof Context && name.equals(key)) {
+                    final Context subcontext = (Context) object;
+
+                    // recursive search in the sub context
+                    return getContext(path.subList(1, path.size()), subcontext);
+                }
+            }
+        } finally {
+            if (elements != null) {
+                elements.close();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets an iterator with all property keys stored in this configuration.
+     *
+     * @return an iterator with all keys
+     */
+    @Override
+    protected Iterator<String> getKeysInternal() {
+        return getKeysInternal("");
+    }
+
+    /**
+     * Gets an iterator with all property keys starting with the given prefix.
+     *
+     * @param prefix the prefix
+     * @return an iterator with the selected keys
+     */
+    @Override
+    protected Iterator<String> getKeysInternal(final String prefix) {
+        // build the path
+        final String[] splitPath = StringUtils.split(prefix, ".");
+
+        final List<String> path = Arrays.asList(splitPath);
+
+        try {
+            // find the context matching the specified path
+            final Context context = getContext(path, getBaseContext());
+
+            // return all the keys under the context found
+            final Set<String> keys = new HashSet<>();
+            if (context != null) {
+                recursiveGetKeys(keys, context, prefix, new HashSet<>());
+            } else if (containsKey(prefix)) {
+                // add the prefix if it matches exactly a property key
+                keys.add(prefix);
+            }
+
+            return keys.iterator();
+        } catch (final NameNotFoundException e) {
+            // expected exception, no need to log it
+            return new ArrayList<String>().iterator();
+        } catch (final NamingException e) {
+            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null, e);
+            return new ArrayList<String>().iterator();
+        }
+    }
+
+    /**
+     * Gets the prefix.
+     *
+     * @return the prefix
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * Gets the value of the specified property.
+     *
+     * @param key the key of the property
+     * @return the value of this property
+     */
+    @Override
+    protected Object getPropertyInternal(String key) {
+        if (clearedProperties.contains(key)) {
+            return null;
+        }
+
+        try {
+            key = key.replace('.', '/');
+            return getBaseContext().lookup(key);
+        } catch (final NameNotFoundException | NotContextException nctxex) {
+            // expected exception, no need to log it
+            return null;
+        } catch (final NamingException e) {
+            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null, e);
+            return null;
+        }
+    }
+
+    /**
+     * Returns a flag whether this configuration is empty.
+     *
+     * @return the empty flag
+     */
+    @Override
+    protected boolean isEmptyInternal() {
+        try {
+            NamingEnumeration<NameClassPair> enumeration = null;
+
+            try {
+                enumeration = getBaseContext().list("");
+                return !enumeration.hasMore();
+            } finally {
+                // close the enumeration
+                if (enumeration != null) {
+                    enumeration.close();
+                }
+            }
+        } catch (final NamingException e) {
+            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null, e);
+            return true;
+        }
     }
 
     /**
@@ -149,175 +368,16 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Gets an iterator with all property keys stored in this configuration.
+     * Sets the initial context of the configuration.
      *
-     * @return an iterator with all keys
+     * @param context the context
      */
-    @Override
-    protected Iterator<String> getKeysInternal() {
-        return getKeysInternal("");
-    }
+    public void setContext(final Context context) {
+        // forget the removed properties
+        clearedProperties.clear();
 
-    /**
-     * Gets an iterator with all property keys starting with the given prefix.
-     *
-     * @param prefix the prefix
-     * @return an iterator with the selected keys
-     */
-    @Override
-    protected Iterator<String> getKeysInternal(final String prefix) {
-        // build the path
-        final String[] splitPath = StringUtils.split(prefix, ".");
-
-        final List<String> path = Arrays.asList(splitPath);
-
-        try {
-            // find the context matching the specified path
-            final Context context = getContext(path, getBaseContext());
-
-            // return all the keys under the context found
-            final Set<String> keys = new HashSet<>();
-            if (context != null) {
-                recursiveGetKeys(keys, context, prefix, new HashSet<>());
-            } else if (containsKey(prefix)) {
-                // add the prefix if it matches exactly a property key
-                keys.add(prefix);
-            }
-
-            return keys.iterator();
-        } catch (final NameNotFoundException e) {
-            // expected exception, no need to log it
-            return new ArrayList<String>().iterator();
-        } catch (final NamingException e) {
-            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null, e);
-            return new ArrayList<String>().iterator();
-        }
-    }
-
-    /**
-     * Because JNDI is based on a tree configuration, we need to filter down the tree, till we find the Context specified by
-     * the key to start from. Otherwise return null.
-     *
-     * @param path the path of keys to traverse in order to find the context
-     * @param context the context to start from
-     * @return The context at that key's location in the JNDI tree, or null if not found
-     * @throws NamingException if JNDI has an issue
-     */
-    private Context getContext(final List<String> path, final Context context) throws NamingException {
-        // return the current context if the path is empty
-        if (path == null || path.isEmpty()) {
-            return context;
-        }
-
-        final String key = path.get(0);
-
-        // search a context matching the key in the context's elements
-        NamingEnumeration<NameClassPair> elements = null;
-
-        try {
-            elements = context.list("");
-            while (elements.hasMore()) {
-                final NameClassPair nameClassPair = elements.next();
-                final String name = nameClassPair.getName();
-                final Object object = context.lookup(name);
-
-                if (object instanceof Context && name.equals(key)) {
-                    final Context subcontext = (Context) object;
-
-                    // recursive search in the sub context
-                    return getContext(path.subList(1, path.size()), subcontext);
-                }
-            }
-        } finally {
-            if (elements != null) {
-                elements.close();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns a flag whether this configuration is empty.
-     *
-     * @return the empty flag
-     */
-    @Override
-    protected boolean isEmptyInternal() {
-        try {
-            NamingEnumeration<NameClassPair> enumeration = null;
-
-            try {
-                enumeration = getBaseContext().list("");
-                return !enumeration.hasMore();
-            } finally {
-                // close the enumeration
-                if (enumeration != null) {
-                    enumeration.close();
-                }
-            }
-        } catch (final NamingException e) {
-            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null, e);
-            return true;
-        }
-    }
-
-    /**
-     * <p>
-     * <strong>This operation is not supported and will throw an UnsupportedOperationException.</strong>
-     * </p>
-     *
-     * @param key the key
-     * @param value the value
-     * @throws UnsupportedOperationException always thrown as this method is not supported
-     */
-    @Override
-    protected void setPropertyInternal(final String key, final Object value) {
-        throw new UnsupportedOperationException("This operation is not supported");
-    }
-
-    /**
-     * Removes the specified property.
-     *
-     * @param key the key of the property to remove
-     */
-    @Override
-    protected void clearPropertyDirect(final String key) {
-        clearedProperties.add(key);
-    }
-
-    /**
-     * Checks whether the specified key is contained in this configuration.
-     *
-     * @param key the key to check
-     * @return a flag whether this key is stored in this configuration
-     */
-    @Override
-    protected boolean containsKeyInternal(String key) {
-        if (clearedProperties.contains(key)) {
-            return false;
-        }
-        key = key.replace('.', '/');
-        try {
-            // throws a NamingException if JNDI doesn't contain the key.
-            getBaseContext().lookup(key);
-            return true;
-        } catch (final NameNotFoundException e) {
-            // expected exception, no need to log it
-            return false;
-        } catch (final NamingException e) {
-            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null, e);
-            return false;
-        }
-    }
-
-    /**
-     * Gets the prefix.
-     *
-     * @return the prefix
-     */
-    public String getPrefix() {
-        return prefix;
+        // change the context
+        this.context = context;
     }
 
     /**
@@ -333,76 +393,16 @@ public class JNDIConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Gets the value of the specified property.
-     *
-     * @param key the key of the property
-     * @return the value of this property
-     */
-    @Override
-    protected Object getPropertyInternal(String key) {
-        if (clearedProperties.contains(key)) {
-            return null;
-        }
-
-        try {
-            key = key.replace('.', '/');
-            return getBaseContext().lookup(key);
-        } catch (final NameNotFoundException | NotContextException nctxex) {
-            // expected exception, no need to log it
-            return null;
-        } catch (final NamingException e) {
-            fireError(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null, e);
-            return null;
-        }
-    }
-
-    /**
      * <p>
      * <strong>This operation is not supported and will throw an UnsupportedOperationException.</strong>
      * </p>
      *
      * @param key the key
-     * @param obj the value
+     * @param value the value
      * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
-    protected void addPropertyDirect(final String key, final Object obj) {
+    protected void setPropertyInternal(final String key, final Object value) {
         throw new UnsupportedOperationException("This operation is not supported");
-    }
-
-    /**
-     * Gets the base context with the prefix applied.
-     *
-     * @return the base context
-     * @throws NamingException if an error occurs
-     */
-    public Context getBaseContext() throws NamingException {
-        if (baseContext == null) {
-            baseContext = (Context) getContext().lookup(prefix == null ? "" : prefix);
-        }
-
-        return baseContext;
-    }
-
-    /**
-     * Gets the initial context used by this configuration. This context is independent of the prefix specified.
-     *
-     * @return the initial context
-     */
-    public Context getContext() {
-        return context;
-    }
-
-    /**
-     * Sets the initial context of the configuration.
-     *
-     * @param context the context
-     */
-    public void setContext(final Context context) {
-        // forget the removed properties
-        clearedProperties.clear();
-
-        // change the context
-        this.context = context;
     }
 }

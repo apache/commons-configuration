@@ -164,57 +164,6 @@ public class FileHandler {
         }
     };
 
-    /** The file-based object managed by this handler. */
-    private final FileBased content;
-
-    /** A reference to the current {@code FileLocator} object. */
-    private final AtomicReference<FileLocator> fileLocator;
-
-    /** A collection with the registered listeners. */
-    private final List<FileHandlerListener> listeners = new CopyOnWriteArrayList<>();
-
-    /**
-     * Creates a new instance of {@code FileHandler} which is not associated with a {@code FileBased} object and thus does
-     * not have a content. Objects of this kind can be used to define a file location, but it is not possible to actually
-     * load or save data.
-     */
-    public FileHandler() {
-        this(null);
-    }
-
-    /**
-     * Creates a new instance of {@code FileHandler} and sets the managed {@code FileBased} object.
-     *
-     * @param obj the file-based object to manage
-     */
-    public FileHandler(final FileBased obj) {
-        this(obj, emptyFileLocator());
-    }
-
-    /**
-     * Creates a new instance of {@code FileHandler} which is associated with the given {@code FileBased} object and the
-     * location defined for the given {@code FileHandler} object. A copy of the location of the given {@code FileHandler} is
-     * created. This constructor is a possibility to associate a file location with a {@code FileBased} object.
-     *
-     * @param obj the {@code FileBased} object to manage
-     * @param c the {@code FileHandler} from which to copy the location (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code FileHandler} is <b>null</b>
-     */
-    public FileHandler(final FileBased obj, final FileHandler c) {
-        this(obj, checkSourceHandler(c).getFileLocator());
-    }
-
-    /**
-     * Creates a new instance of {@code FileHandler} based on the given {@code FileBased} and {@code FileLocator} objects.
-     *
-     * @param obj the {@code FileBased} object to manage
-     * @param locator the {@code FileLocator}
-     */
-    private FileHandler(final FileBased obj, final FileLocator locator) {
-        content = obj;
-        fileLocator = new AtomicReference<>(locator);
-    }
-
     /**
      * Helper method for checking a file handler which is to be copied. Throws an exception if the handler is <b>null</b>.
      *
@@ -292,6 +241,57 @@ public class FileHandler {
             fileName = FILE_SCHEME_SLASH + fileName.substring(FILE_SCHEME.length());
         }
         return fileName;
+    }
+
+    /** The file-based object managed by this handler. */
+    private final FileBased content;
+
+    /** A reference to the current {@code FileLocator} object. */
+    private final AtomicReference<FileLocator> fileLocator;
+
+    /** A collection with the registered listeners. */
+    private final List<FileHandlerListener> listeners = new CopyOnWriteArrayList<>();
+
+    /**
+     * Creates a new instance of {@code FileHandler} which is not associated with a {@code FileBased} object and thus does
+     * not have a content. Objects of this kind can be used to define a file location, but it is not possible to actually
+     * load or save data.
+     */
+    public FileHandler() {
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code FileHandler} and sets the managed {@code FileBased} object.
+     *
+     * @param obj the file-based object to manage
+     */
+    public FileHandler(final FileBased obj) {
+        this(obj, emptyFileLocator());
+    }
+
+    /**
+     * Creates a new instance of {@code FileHandler} which is associated with the given {@code FileBased} object and the
+     * location defined for the given {@code FileHandler} object. A copy of the location of the given {@code FileHandler} is
+     * created. This constructor is a possibility to associate a file location with a {@code FileBased} object.
+     *
+     * @param obj the {@code FileBased} object to manage
+     * @param c the {@code FileHandler} from which to copy the location (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code FileHandler} is <b>null</b>
+     */
+    public FileHandler(final FileBased obj, final FileHandler c) {
+        this(obj, checkSourceHandler(c).getFileLocator());
+    }
+
+    /**
+     * Creates a new instance of {@code FileHandler} based on the given {@code FileBased} and {@code FileLocator} objects.
+     *
+     * @param obj the {@code FileBased} object to manage
+     * @param locator the {@code FileLocator}
+     */
+    private FileHandler(final FileBased obj, final FileLocator locator) {
+        content = obj;
+        fileLocator = new AtomicReference<>(locator);
     }
 
     /**

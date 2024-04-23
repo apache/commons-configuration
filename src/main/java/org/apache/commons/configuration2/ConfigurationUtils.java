@@ -76,115 +76,9 @@ public final class ConfigurationUtils {
     private static final Log LOG = LogFactory.getLog(ConfigurationUtils.class);
 
     /**
-     * Private constructor. Prevents instances from being created.
-     */
-    private ConfigurationUtils() {
-        // to prevent instantiation...
-    }
-
-    /**
-     * Dump the configuration key/value mappings to some ouput stream.
-     *
-     * @param configuration the configuration
-     * @param out the output stream to dump the configuration to
-     * @since 2.2
-     */
-    public static void dump(final ImmutableConfiguration configuration, final PrintStream out) {
-        dump(configuration, new PrintWriter(out));
-    }
-
-    /**
-     * Dump the configuration key/value mappings to some ouput stream. This version of the method exists only for backwards
-     * compatibility reason.
-     *
-     * @param configuration the configuration
-     * @param out the output stream to dump the configuration to
-     */
-    public static void dump(final Configuration configuration, final PrintStream out) {
-        dump((ImmutableConfiguration) configuration, out);
-    }
-
-    /**
-     * Dump the configuration key/value mappings to some writer.
-     *
-     * @param configuration the configuration
-     * @param out the writer to dump the configuration to
-     * @since 2.2
-     */
-    public static void dump(final ImmutableConfiguration configuration, final PrintWriter out) {
-        for (final Iterator<String> keys = configuration.getKeys(); keys.hasNext();) {
-            final String key = keys.next();
-            final Object value = configuration.getProperty(key);
-            out.print(key);
-            out.print("=");
-            out.print(value);
-
-            if (keys.hasNext()) {
-                out.println();
-            }
-        }
-
-        out.flush();
-    }
-
-    /**
-     * Dump the configuration key/value mappings to some writer. This version of the method exists only for backwards
-     * compatibility reason.
-     *
-     * @param configuration the configuration
-     * @param out the writer to dump the configuration to
-     */
-    public static void dump(final Configuration configuration, final PrintWriter out) {
-        dump((ImmutableConfiguration) configuration, out);
-    }
-
-    /**
-     * Gets a string representation of the key/value mappings of a configuration.
-     *
-     * @param configuration the configuration
-     * @return a string representation of the configuration
-     * @since 2.2
-     */
-    public static String toString(final ImmutableConfiguration configuration) {
-        final StringWriter writer = new StringWriter();
-        dump(configuration, new PrintWriter(writer));
-        return writer.toString();
-    }
-
-    /**
-     * Gets a string representation of the key/value mappings of a configuration. This version of the method exists only for
-     * backwards compatibility reason.
-     *
-     * @param configuration the configuration
-     * @return a string representation of the configuration
-     */
-    public static String toString(final Configuration configuration) {
-        return toString((ImmutableConfiguration) configuration);
-    }
-
-    /**
      * <p>
-     * Copy all properties from the source configuration to the target configuration. Properties in the target configuration
-     * are replaced with the properties with the same key in the source configuration.
-     * </p>
-     * <p>
-     * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
-     * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
-     * </p>
-     *
-     * @param source the source configuration
-     * @param target the target configuration
-     * @since 2.2
-     */
-    public static void copy(final ImmutableConfiguration source, final Configuration target) {
-        source.getKeys().forEachRemaining(key -> target.setProperty(key, source.getProperty(key)));
-    }
-
-    /**
-     * <p>
-     * Copy all properties from the source configuration to the target configuration. Properties in the target configuration
-     * are replaced with the properties with the same key in the source configuration.
+     * Append all properties from the source configuration to the target configuration. Properties in the source
+     * configuration are appended to the properties with the same key in the target configuration.
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
@@ -196,8 +90,8 @@ public final class ConfigurationUtils {
      * @param target the target configuration
      * @since 1.1
      */
-    public static void copy(final Configuration source, final Configuration target) {
-        copy((ImmutableConfiguration) source, target);
+    public static void append(final Configuration source, final Configuration target) {
+        append((ImmutableConfiguration) source, target);
     }
 
     /**
@@ -220,22 +114,126 @@ public final class ConfigurationUtils {
     }
 
     /**
-     * <p>
-     * Append all properties from the source configuration to the target configuration. Properties in the source
-     * configuration are appended to the properties with the same key in the target configuration.
-     * </p>
-     * <p>
-     * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
-     * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
-     * </p>
+     * Casts the specified object to an {@code EventSource} if possible. The boolean argument determines the method's
+     * behavior if the object does not implement the {@code EventSource} event: if set to <b>false</b>, a
+     * {@code ConfigurationRuntimeException} is thrown; if set to <b>true</b>, a dummy {@code EventSource} is returned; on
+     * this object all methods can be called, but they do not have any effect.
      *
-     * @param source the source configuration
-     * @param target the target configuration
-     * @since 1.1
+     * @param obj the object to be cast as {@code EventSource}
+     * @param mockIfUnsupported a flag whether a mock object should be returned if necessary
+     * @return an {@code EventSource}
+     * @throws ConfigurationRuntimeException if the object cannot be cast to {@code EventSource} and the mock flag is
+     *         <b>false</b>
+     * @since 2.0
      */
-    public static void append(final Configuration source, final Configuration target) {
-        append((ImmutableConfiguration) source, target);
+    public static EventSource asEventSource(final Object obj, final boolean mockIfUnsupported) {
+        if (obj instanceof EventSource) {
+            return (EventSource) obj;
+        }
+
+        if (!mockIfUnsupported) {
+            throw new ConfigurationRuntimeException("Cannot cast to EventSource: " + obj);
+        }
+        return DUMMY_EVENT_SOURCE;
+    }
+
+    /**
+     * An internally used helper method for cloning objects. This implementation is not very sophisticated nor efficient.
+     * Maybe it can be replaced by an implementation from Commons Lang later. The method checks whether the passed in object
+     * implements the {@code Cloneable} interface. If this is the case, the {@code clone()} method is invoked by reflection.
+     * Errors that occur during the cloning process are re-thrown as runtime exceptions.
+     *
+     * @param obj the object to be cloned
+     * @return the cloned object
+     * @throws CloneNotSupportedException if the object cannot be cloned
+     */
+    static Object clone(final Object obj) throws CloneNotSupportedException {
+        if (obj instanceof Cloneable) {
+            try {
+                final Method m = obj.getClass().getMethod(METHOD_CLONE);
+                return m.invoke(obj);
+            } catch (final NoSuchMethodException nmex) {
+                throw new CloneNotSupportedException("No clone() method found for class" + obj.getClass().getName());
+            } catch (final IllegalAccessException | InvocationTargetException itex) {
+                throw new ConfigurationRuntimeException(itex);
+            }
+        }
+        throw new CloneNotSupportedException(obj.getClass().getName() + " does not implement Cloneable");
+    }
+
+    /**
+     * Clones the given configuration object if this is possible. If the passed in configuration object implements the
+     * {@code Cloneable} interface, its {@code clone()} method will be invoked. Otherwise an exception will be thrown.
+     *
+     * @param config the configuration object to be cloned (can be <b>null</b>)
+     * @return the cloned configuration (<b>null</b> if the argument was <b>null</b>, too)
+     * @throws ConfigurationRuntimeException if cloning is not supported for this object
+     * @since 1.3
+     */
+    public static Configuration cloneConfiguration(final Configuration config) throws ConfigurationRuntimeException {
+        if (config == null) {
+            return null;
+        }
+        try {
+            return (Configuration) clone(config);
+        } catch (final CloneNotSupportedException cnex) {
+            throw new ConfigurationRuntimeException(cnex);
+        }
+    }
+
+    /**
+     * Returns a clone of the passed in object if cloning is supported or the object itself if not. This method checks
+     * whether the passed in object implements the {@code Cloneable} interface. If this is the case, the {@code clone()}
+     * method is invoked. Otherwise, the object is directly returned. Errors that might occur during reflection calls are
+     * caught and also cause this method to return the original object.
+     *
+     * @param obj the object to be cloned
+     * @return the result of the cloning attempt
+     * @since 2.0
+     */
+    public static Object cloneIfPossible(final Object obj) {
+        try {
+            return clone(obj);
+        } catch (final Exception ex) {
+            return obj;
+        }
+    }
+
+    /**
+     * Creates a clone of the specified {@code Synchronizer}. This method can be called by {@code clone()} implementations
+     * in configuration classes that also need to copy the {@code Synchronizer} object. This method can handle some
+     * well-known {@code Synchronizer} implementations directly. For other classes, it uses the following algorithm:
+     * <ul>
+     * <li>If the class of the {@code Synchronizer} has a standard constructor, a new instance is created using
+     * reflection.</li>
+     * <li>If this is not possible, it is tried whether the object can be cloned.</li>
+     * </ul>
+     * If all attempts fail, a {@code ConfigurationRuntimeException} is thrown.
+     *
+     * @param sync the {@code Synchronizer} object to be cloned
+     * @return the clone of this {@code Synchronizer}
+     * @throws ConfigurationRuntimeException if no clone can be created
+     * @throws IllegalArgumentException if <b>null</b> is passed in
+     */
+    public static Synchronizer cloneSynchronizer(final Synchronizer sync) {
+        if (sync == null) {
+            throw new IllegalArgumentException("Synchronizer must not be null!");
+        }
+        if (NoOpSynchronizer.INSTANCE == sync) {
+            return sync;
+        }
+
+        try {
+            return sync.getClass().getConstructor().newInstance();
+        } catch (final Exception ex) {
+            LOG.info("Cannot create new instance of " + sync.getClass());
+        }
+
+        try {
+            return (Synchronizer) clone(sync);
+        } catch (final CloneNotSupportedException cnex) {
+            throw new ConfigurationRuntimeException("Cannot clone Synchronizer " + sync);
+        }
     }
 
     /**
@@ -292,102 +290,110 @@ public final class ConfigurationUtils {
     }
 
     /**
-     * Clones the given configuration object if this is possible. If the passed in configuration object implements the
-     * {@code Cloneable} interface, its {@code clone()} method will be invoked. Otherwise an exception will be thrown.
+     * <p>
+     * Copy all properties from the source configuration to the target configuration. Properties in the target configuration
+     * are replaced with the properties with the same key in the source configuration.
+     * </p>
+     * <p>
+     * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
+     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
+     * </p>
      *
-     * @param config the configuration object to be cloned (can be <b>null</b>)
-     * @return the cloned configuration (<b>null</b> if the argument was <b>null</b>, too)
-     * @throws ConfigurationRuntimeException if cloning is not supported for this object
-     * @since 1.3
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 1.1
      */
-    public static Configuration cloneConfiguration(final Configuration config) throws ConfigurationRuntimeException {
-        if (config == null) {
-            return null;
-        }
-        try {
-            return (Configuration) clone(config);
-        } catch (final CloneNotSupportedException cnex) {
-            throw new ConfigurationRuntimeException(cnex);
-        }
+    public static void copy(final Configuration source, final Configuration target) {
+        copy((ImmutableConfiguration) source, target);
     }
 
     /**
-     * Returns a clone of the passed in object if cloning is supported or the object itself if not. This method checks
-     * whether the passed in object implements the {@code Cloneable} interface. If this is the case, the {@code clone()}
-     * method is invoked. Otherwise, the object is directly returned. Errors that might occur during reflection calls are
-     * caught and also cause this method to return the original object.
+     * <p>
+     * Copy all properties from the source configuration to the target configuration. Properties in the target configuration
+     * are replaced with the properties with the same key in the source configuration.
+     * </p>
+     * <p>
+     * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
+     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
+     * </p>
      *
-     * @param obj the object to be cloned
-     * @return the result of the cloning attempt
-     * @since 2.0
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 2.2
      */
-    public static Object cloneIfPossible(final Object obj) {
-        try {
-            return clone(obj);
-        } catch (final Exception ex) {
-            return obj;
-        }
+    public static void copy(final ImmutableConfiguration source, final Configuration target) {
+        source.getKeys().forEachRemaining(key -> target.setProperty(key, source.getProperty(key)));
     }
 
     /**
-     * An internally used helper method for cloning objects. This implementation is not very sophisticated nor efficient.
-     * Maybe it can be replaced by an implementation from Commons Lang later. The method checks whether the passed in object
-     * implements the {@code Cloneable} interface. If this is the case, the {@code clone()} method is invoked by reflection.
-     * Errors that occur during the cloning process are re-thrown as runtime exceptions.
+     * Helper method for creating a proxy for an unmodifiable configuration. The interfaces the proxy should implement are
+     * passed as argument.
      *
-     * @param obj the object to be cloned
-     * @return the cloned object
-     * @throws CloneNotSupportedException if the object cannot be cloned
+     * @param ifcs an array with the interface classes the proxy must implement
+     * @param c the configuration object to be wrapped
+     * @return a proxy object for an immutable configuration
+     * @throws NullPointerException if the configuration is <b>null</b>
      */
-    static Object clone(final Object obj) throws CloneNotSupportedException {
-        if (obj instanceof Cloneable) {
-            try {
-                final Method m = obj.getClass().getMethod(METHOD_CLONE);
-                return m.invoke(obj);
-            } catch (final NoSuchMethodException nmex) {
-                throw new CloneNotSupportedException("No clone() method found for class" + obj.getClass().getName());
-            } catch (final IllegalAccessException | InvocationTargetException itex) {
-                throw new ConfigurationRuntimeException(itex);
+    private static ImmutableConfiguration createUnmodifiableConfiguration(final Class<?>[] ifcs, final Configuration c) {
+        return (ImmutableConfiguration) Proxy.newProxyInstance(ConfigurationUtils.class.getClassLoader(), ifcs, new ImmutableConfigurationInvocationHandler(c));
+    }
+
+    /**
+     * Dump the configuration key/value mappings to some ouput stream. This version of the method exists only for backwards
+     * compatibility reason.
+     *
+     * @param configuration the configuration
+     * @param out the output stream to dump the configuration to
+     */
+    public static void dump(final Configuration configuration, final PrintStream out) {
+        dump((ImmutableConfiguration) configuration, out);
+    }
+
+    /**
+     * Dump the configuration key/value mappings to some writer. This version of the method exists only for backwards
+     * compatibility reason.
+     *
+     * @param configuration the configuration
+     * @param out the writer to dump the configuration to
+     */
+    public static void dump(final Configuration configuration, final PrintWriter out) {
+        dump((ImmutableConfiguration) configuration, out);
+    }
+
+    /**
+     * Dump the configuration key/value mappings to some ouput stream.
+     *
+     * @param configuration the configuration
+     * @param out the output stream to dump the configuration to
+     * @since 2.2
+     */
+    public static void dump(final ImmutableConfiguration configuration, final PrintStream out) {
+        dump(configuration, new PrintWriter(out));
+    }
+
+    /**
+     * Dump the configuration key/value mappings to some writer.
+     *
+     * @param configuration the configuration
+     * @param out the writer to dump the configuration to
+     * @since 2.2
+     */
+    public static void dump(final ImmutableConfiguration configuration, final PrintWriter out) {
+        for (final Iterator<String> keys = configuration.getKeys(); keys.hasNext();) {
+            final String key = keys.next();
+            final Object value = configuration.getProperty(key);
+            out.print(key);
+            out.print("=");
+            out.print(value);
+
+            if (keys.hasNext()) {
+                out.println();
             }
         }
-        throw new CloneNotSupportedException(obj.getClass().getName() + " does not implement Cloneable");
-    }
 
-    /**
-     * Creates a clone of the specified {@code Synchronizer}. This method can be called by {@code clone()} implementations
-     * in configuration classes that also need to copy the {@code Synchronizer} object. This method can handle some
-     * well-known {@code Synchronizer} implementations directly. For other classes, it uses the following algorithm:
-     * <ul>
-     * <li>If the class of the {@code Synchronizer} has a standard constructor, a new instance is created using
-     * reflection.</li>
-     * <li>If this is not possible, it is tried whether the object can be cloned.</li>
-     * </ul>
-     * If all attempts fail, a {@code ConfigurationRuntimeException} is thrown.
-     *
-     * @param sync the {@code Synchronizer} object to be cloned
-     * @return the clone of this {@code Synchronizer}
-     * @throws ConfigurationRuntimeException if no clone can be created
-     * @throws IllegalArgumentException if <b>null</b> is passed in
-     */
-    public static Synchronizer cloneSynchronizer(final Synchronizer sync) {
-        if (sync == null) {
-            throw new IllegalArgumentException("Synchronizer must not be null!");
-        }
-        if (NoOpSynchronizer.INSTANCE == sync) {
-            return sync;
-        }
-
-        try {
-            return sync.getClass().getConstructor().newInstance();
-        } catch (final Exception ex) {
-            LOG.info("Cannot create new instance of " + sync.getClass());
-        }
-
-        try {
-            return (Synchronizer) clone(sync);
-        } catch (final CloneNotSupportedException cnex) {
-            throw new ConfigurationRuntimeException("Cannot clone Synchronizer " + sync);
-        }
+        out.flush();
     }
 
     /**
@@ -455,6 +461,30 @@ public final class ConfigurationUtils {
     }
 
     /**
+     * Gets a string representation of the key/value mappings of a configuration. This version of the method exists only for
+     * backwards compatibility reason.
+     *
+     * @param configuration the configuration
+     * @return a string representation of the configuration
+     */
+    public static String toString(final Configuration configuration) {
+        return toString((ImmutableConfiguration) configuration);
+    }
+
+    /**
+     * Gets a string representation of the key/value mappings of a configuration.
+     *
+     * @param configuration the configuration
+     * @return a string representation of the configuration
+     * @since 2.2
+     */
+    public static String toString(final ImmutableConfiguration configuration) {
+        final StringWriter writer = new StringWriter();
+        dump(configuration, new PrintWriter(writer));
+        return writer.toString();
+    }
+
+    /**
      * Creates an {@code ImmutableConfiguration} from the given {@code Configuration} object. This method creates a proxy
      * object wrapping the original configuration and making it available under the {@code ImmutableConfiguration}
      * interface. Through this interface the configuration cannot be manipulated. It is also not possible to cast the
@@ -483,39 +513,9 @@ public final class ConfigurationUtils {
     }
 
     /**
-     * Helper method for creating a proxy for an unmodifiable configuration. The interfaces the proxy should implement are
-     * passed as argument.
-     *
-     * @param ifcs an array with the interface classes the proxy must implement
-     * @param c the configuration object to be wrapped
-     * @return a proxy object for an immutable configuration
-     * @throws NullPointerException if the configuration is <b>null</b>
+     * Private constructor. Prevents instances from being created.
      */
-    private static ImmutableConfiguration createUnmodifiableConfiguration(final Class<?>[] ifcs, final Configuration c) {
-        return (ImmutableConfiguration) Proxy.newProxyInstance(ConfigurationUtils.class.getClassLoader(), ifcs, new ImmutableConfigurationInvocationHandler(c));
-    }
-
-    /**
-     * Casts the specified object to an {@code EventSource} if possible. The boolean argument determines the method's
-     * behavior if the object does not implement the {@code EventSource} event: if set to <b>false</b>, a
-     * {@code ConfigurationRuntimeException} is thrown; if set to <b>true</b>, a dummy {@code EventSource} is returned; on
-     * this object all methods can be called, but they do not have any effect.
-     *
-     * @param obj the object to be cast as {@code EventSource}
-     * @param mockIfUnsupported a flag whether a mock object should be returned if necessary
-     * @return an {@code EventSource}
-     * @throws ConfigurationRuntimeException if the object cannot be cast to {@code EventSource} and the mock flag is
-     *         <b>false</b>
-     * @since 2.0
-     */
-    public static EventSource asEventSource(final Object obj, final boolean mockIfUnsupported) {
-        if (obj instanceof EventSource) {
-            return (EventSource) obj;
-        }
-
-        if (!mockIfUnsupported) {
-            throw new ConfigurationRuntimeException("Cannot cast to EventSource: " + obj);
-        }
-        return DUMMY_EVENT_SOURCE;
+    private ConfigurationUtils() {
+        // to prevent instantiation...
     }
 }

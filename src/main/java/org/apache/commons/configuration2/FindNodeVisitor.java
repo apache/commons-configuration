@@ -42,21 +42,6 @@ final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
         searchNode = node;
     }
 
-    @Override
-    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
-        if (node.equals(searchNode)) {
-            found = true;
-        }
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns <b>true</b> as soon as the node was found.
-     */
-    @Override
-    public boolean terminate() {
-        return found;
-    }
-
     /**
      * Returns a flag whether the search node was found in the last search operation.
      *
@@ -72,5 +57,20 @@ final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
      */
     public void reset() {
         found = false;
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns <b>true</b> as soon as the node was found.
+     */
+    @Override
+    public boolean terminate() {
+        return found;
+    }
+
+    @Override
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+        if (node.equals(searchNode)) {
+            found = true;
+        }
     }
 }

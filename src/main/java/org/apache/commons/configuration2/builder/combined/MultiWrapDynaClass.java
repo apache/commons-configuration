@@ -54,12 +54,9 @@ final class MultiWrapDynaClass implements DynaClass {
         initProperties(wrappedCls);
     }
 
-    /**
-     * {@inheritDoc} The name of this class is not relevant.
-     */
     @Override
-    public String getName() {
-        return null;
+    public DynaProperty[] getDynaProperties() {
+        return properties.toArray(EMPTY_PROPS);
     }
 
     @Override
@@ -67,18 +64,12 @@ final class MultiWrapDynaClass implements DynaClass {
         return namedProperties.get(name);
     }
 
-    @Override
-    public DynaProperty[] getDynaProperties() {
-        return properties.toArray(EMPTY_PROPS);
-    }
-
     /**
-     * {@inheritDoc} This implementation always throws an exception because it is not possible to instantiate a bean of
-     * multiple classes.
+     * {@inheritDoc} The name of this class is not relevant.
      */
     @Override
-    public DynaBean newInstance() throws IllegalAccessException, InstantiationException {
-        throw new UnsupportedOperationException("Cannot create an instance of MultiWrapDynaBean!");
+    public String getName() {
+        return null;
     }
 
     /**
@@ -91,5 +82,14 @@ final class MultiWrapDynaClass implements DynaClass {
             properties.add(p);
             namedProperties.put(p.getName(), p);
         }));
+    }
+
+    /**
+     * {@inheritDoc} This implementation always throws an exception because it is not possible to instantiate a bean of
+     * multiple classes.
+     */
+    @Override
+    public DynaBean newInstance() throws IllegalAccessException, InstantiationException {
+        throw new UnsupportedOperationException("Cannot create an instance of MultiWrapDynaBean!");
     }
 }

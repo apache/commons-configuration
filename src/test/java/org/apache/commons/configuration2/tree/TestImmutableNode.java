@@ -70,16 +70,6 @@ public class TestImmutableNode {
     }
 
     /**
-     * Checks whether a node has the expected children.
-     *
-     * @param node the node to be checked
-     * @param expChildren the collection with the expected children
-     */
-    private static void checkChildNodes(final ImmutableNode node, final List<ImmutableNode> expChildren) {
-        assertEquals(expChildren, node.getChildren());
-    }
-
-    /**
      * Checks whether a node has exactly the specified children.
      *
      * @param parent the parent node to be checked
@@ -87,6 +77,16 @@ public class TestImmutableNode {
      */
     private static void checkChildNodes(final ImmutableNode parent, final ImmutableNode... children) {
         checkChildNodes(parent, Arrays.asList(children));
+    }
+
+    /**
+     * Checks whether a node has the expected children.
+     *
+     * @param node the node to be checked
+     * @param expChildren the collection with the expected children
+     */
+    private static void checkChildNodes(final ImmutableNode node, final List<ImmutableNode> expChildren) {
+        assertEquals(expChildren, node.getChildren());
     }
 
     /**

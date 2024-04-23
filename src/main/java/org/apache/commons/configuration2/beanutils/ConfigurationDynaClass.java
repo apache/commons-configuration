@@ -55,6 +55,29 @@ public class ConfigurationDynaClass implements DynaClass {
     }
 
     @Override
+    public DynaProperty[] getDynaProperties() {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("getDynaProperties()");
+        }
+
+        final Iterator<String> keys = configuration.getKeys();
+        final List<DynaProperty> properties = new ArrayList<>();
+        while (keys.hasNext()) {
+            final String key = keys.next();
+            final DynaProperty property = getDynaProperty(key);
+            properties.add(property);
+        }
+
+        final DynaProperty[] propertyArray = new DynaProperty[properties.size()];
+        properties.toArray(propertyArray);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Found " + properties.size() + " properties.");
+        }
+
+        return propertyArray;
+    }
+
+    @Override
     public DynaProperty getDynaProperty(final String name) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("getDynaProperty(" + name + ")");
@@ -90,29 +113,6 @@ public class ConfigurationDynaClass implements DynaClass {
         }
 
         return new DynaProperty(name, type);
-    }
-
-    @Override
-    public DynaProperty[] getDynaProperties() {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("getDynaProperties()");
-        }
-
-        final Iterator<String> keys = configuration.getKeys();
-        final List<DynaProperty> properties = new ArrayList<>();
-        while (keys.hasNext()) {
-            final String key = keys.next();
-            final DynaProperty property = getDynaProperty(key);
-            properties.add(property);
-        }
-
-        final DynaProperty[] propertyArray = new DynaProperty[properties.size()];
-        properties.toArray(propertyArray);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Found " + properties.size() + " properties.");
-        }
-
-        return propertyArray;
     }
 
     @Override

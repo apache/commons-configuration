@@ -59,28 +59,15 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
         childDeclarations = new ArrayList<>(Arrays.asList(decl));
     }
 
-    /**
-     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory name.
-     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory name,
-     * result is <b>null</b>.
-     */
-    @Override
-    public String getBeanFactoryName() {
-        return findFirst(BeanDeclaration::getBeanFactoryName);
-    }
-
     private <T> T findFirst(final Function<? super BeanDeclaration, ? extends T> mapper) {
         return childDeclarations.stream().map(mapper).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
-    /**
-     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory
-     * parameter. The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory
-     * parameter, result is <b>null</b>.
-     */
-    @Override
-    public Object getBeanFactoryParameter() {
-        return findFirst(BeanDeclaration::getBeanFactoryParameter);
+    private Map<String, Object> get(final Function<? super BeanDeclaration, ? extends Map<String, Object>> mapper) {
+        @SuppressWarnings("unchecked")
+        final ArrayList<BeanDeclaration> temp = (ArrayList<BeanDeclaration>) childDeclarations.clone();
+        Collections.reverse(temp);
+        return temp.stream().map(mapper).filter(Objects::nonNull).collect(HashMap::new, HashMap::putAll, HashMap::putAll);
     }
 
     /**
@@ -94,6 +81,26 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
     }
 
     /**
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory name.
+     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory name,
+     * result is <b>null</b>.
+     */
+    @Override
+    public String getBeanFactoryName() {
+        return findFirst(BeanDeclaration::getBeanFactoryName);
+    }
+
+    /**
+     * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory
+     * parameter. The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory
+     * parameter, result is <b>null</b>.
+     */
+    @Override
+    public Object getBeanFactoryParameter() {
+        return findFirst(BeanDeclaration::getBeanFactoryParameter);
+    }
+
+    /**
      * {@inheritDoc} This implementation creates a union of the properties returned by all child declarations. If a property
      * is defined in multiple child declarations, the declaration that comes before in the list of children takes
      * precedence.
@@ -101,23 +108,6 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
     @Override
     public Map<String, Object> getBeanProperties() {
         return get(BeanDeclaration::getBeanProperties);
-    }
-
-    private Map<String, Object> get(final Function<? super BeanDeclaration, ? extends Map<String, Object>> mapper) {
-        @SuppressWarnings("unchecked")
-        final ArrayList<BeanDeclaration> temp = (ArrayList<BeanDeclaration>) childDeclarations.clone();
-        Collections.reverse(temp);
-        return temp.stream().map(mapper).filter(Objects::nonNull).collect(HashMap::new, HashMap::putAll, HashMap::putAll);
-    }
-
-    /**
-     * {@inheritDoc} This implementation creates a union of the nested bean declarations returned by all child declarations.
-     * If a complex property is defined in multiple child declarations, the declaration that comes before in the list of
-     * children takes precedence.
-     */
-    @Override
-    public Map<String, Object> getNestedBeanDeclarations() {
-        return get(BeanDeclaration::getNestedBeanDeclarations);
     }
 
     /**
@@ -134,5 +124,15 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
             }
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * {@inheritDoc} This implementation creates a union of the nested bean declarations returned by all child declarations.
+     * If a complex property is defined in multiple child declarations, the declaration that comes before in the list of
+     * children takes precedence.
+     */
+    @Override
+    public Map<String, Object> getNestedBeanDeclarations() {
+        return get(BeanDeclaration::getNestedBeanDeclarations);
     }
 }

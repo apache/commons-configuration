@@ -64,6 +64,38 @@ public class TestConfigurationInterpolator {
     /** Constant for the value of the test variable. */
     private static final String TEST_VALUE = "TestVariableValue";
 
+    private static void assertMappedLookups(final Map<String, Lookup> lookupMap, final String... keys) {
+        final Set<String> remainingKeys = new HashSet<>(lookupMap.keySet());
+
+        for (final String key : keys) {
+            assertNotNull(key, "Expected map to contain string lookup for key " + key);
+
+            remainingKeys.remove(key);
+        }
+
+        assertEquals(Collections.emptySet(), remainingKeys);
+    }
+
+    private static void checkDefaultPrefixLookupsHolder(final Properties props, final String... keys) {
+        final ConfigurationInterpolator.DefaultPrefixLookupsHolder holder =
+                new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props);
+
+        final Map<String, Lookup> lookupMap = holder.getDefaultPrefixLookups();
+
+        assertMappedLookups(lookupMap, keys);
+    }
+
+    /**
+     * Main method used to verify the default lookups resolved during JVM execution.
+     * @param args
+     */
+    public static void main(final String[] args) {
+        System.out.println("Default lookups");
+        for (final String key : ConfigurationInterpolator.getDefaultPrefixLookups().keySet()) {
+            System.out.println("- " + key);
+        }
+    }
+
     /**
      * Creates a lookup object that can resolve the test variable (and nothing else).
      *
@@ -119,6 +151,107 @@ public class TestConfigurationInterpolator {
     public void testAddDefaultLookupsNull() {
         interpolator.addDefaultLookups(null);
         assertTrue(interpolator.getDefaultLookups().isEmpty());
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_allLookups() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY,
+                "BASE64_DECODER BASE64_ENCODER const, date, dns, environment "
+                + "file ,java, local_host properties, resource_bundle,script,system_properties "
+                + "url url_decoder  , url_encoder, xml");
+
+        checkDefaultPrefixLookupsHolder(props,
+                "base64",
+                StringLookupFactory.KEY_BASE64_DECODER,
+                StringLookupFactory.KEY_BASE64_ENCODER,
+                StringLookupFactory.KEY_CONST,
+                StringLookupFactory.KEY_DATE,
+                StringLookupFactory.KEY_ENV,
+                StringLookupFactory.KEY_FILE,
+                StringLookupFactory.KEY_JAVA,
+                StringLookupFactory.KEY_LOCALHOST,
+                StringLookupFactory.KEY_PROPERTIES,
+                StringLookupFactory.KEY_RESOURCE_BUNDLE,
+                StringLookupFactory.KEY_SYS,
+                StringLookupFactory.KEY_URL_DECODER,
+                StringLookupFactory.KEY_URL_ENCODER,
+                StringLookupFactory.KEY_XML,
+
+                StringLookupFactory.KEY_DNS,
+                StringLookupFactory.KEY_URL,
+                StringLookupFactory.KEY_SCRIPT);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_givenSingleLookup() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder");
+
+        checkDefaultPrefixLookupsHolder(props,
+                "base64",
+                StringLookupFactory.KEY_BASE64_ENCODER);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_givenSingleLookup_weirdString() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " \n \t  ,, DnS , , ");
+
+        checkDefaultPrefixLookupsHolder(props, StringLookupFactory.KEY_DNS);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_invalidLookupsDefinition() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
+
+        final Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
+        assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_lookupsPropertyEmptyAndBlank() {
+        final Properties propsWithNull = new Properties();
+        propsWithNull.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "");
+
+        checkDefaultPrefixLookupsHolder(propsWithNull);
+
+        final Properties propsWithBlank = new Properties();
+        propsWithBlank.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " ");
+
+        checkDefaultPrefixLookupsHolder(propsWithBlank);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_lookupsPropertyNotPresent() {
+        checkDefaultPrefixLookupsHolder(new Properties(),
+                "base64",
+                StringLookupFactory.KEY_BASE64_DECODER,
+                StringLookupFactory.KEY_BASE64_ENCODER,
+                StringLookupFactory.KEY_CONST,
+                StringLookupFactory.KEY_DATE,
+                StringLookupFactory.KEY_ENV,
+                StringLookupFactory.KEY_FILE,
+                StringLookupFactory.KEY_JAVA,
+                StringLookupFactory.KEY_LOCALHOST,
+                StringLookupFactory.KEY_PROPERTIES,
+                StringLookupFactory.KEY_RESOURCE_BUNDLE,
+                StringLookupFactory.KEY_SYS,
+                StringLookupFactory.KEY_URL_DECODER,
+                StringLookupFactory.KEY_URL_ENCODER,
+                StringLookupFactory.KEY_XML);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_multipleLookups() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "dns, url script ");
+
+        checkDefaultPrefixLookupsHolder(props,
+                StringLookupFactory.KEY_DNS,
+                StringLookupFactory.KEY_URL,
+                StringLookupFactory.KEY_SCRIPT);
     }
 
     /**
@@ -254,33 +387,6 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests that a custom string converter can be used.
-     */
-    @Test
-    public void testSetStringConverter() {
-        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
-        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
-        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
-        interpolator.setStringConverter(stringConverter);
-        assertSame(stringConverter, interpolator.getStringConverter());
-        assertEquals("'abc': '[1, 2]'", interpolator.interpolate("${y}: ${x}"));
-    }
-
-    /**
-     * Tests that the default string converter can be reapplied by passing {@code null}.
-     */
-    @Test
-    public void testSetStringConverterNullArgumentUsesDefault() {
-        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
-        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
-        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
-        interpolator.setStringConverter(stringConverter);
-        interpolator.setStringConverter(null);
-        assertNotSame(stringConverter, interpolator.getStringConverter());
-        assertEquals("abc: 1", interpolator.interpolate("${y}: ${x}"));
-    }
-
-    /**
      * Tests creating an instance. Does it contain some predefined lookups and a default string converter?
      */
     @Test
@@ -293,12 +399,12 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests that an empty variable definition does not cause problems.
+     * Tests interpolation of an array argument.
      */
     @Test
-    public void testInterpolateEmptyVariable() {
-        final String value = "${}";
-        assertEquals(value, interpolator.interpolate(value));
+    public void testInterpolateArray() {
+        final int[] value = {1, 2};
+        assertSame(value, interpolator.interpolate(value));
     }
 
     /**
@@ -311,15 +417,6 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests interpolation of a non string argument.
-     */
-    @Test
-    public void testInterpolateObject() {
-        final Object value = 42;
-        assertSame(value, interpolator.interpolate(value));
-    }
-
-    /**
      * Tests interpolation of a collection argument.
      */
     @Test
@@ -329,11 +426,20 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests interpolation of an array argument.
+     * Tests that an empty variable definition does not cause problems.
      */
     @Test
-    public void testInterpolateArray() {
-        final int[] value = {1, 2};
+    public void testInterpolateEmptyVariable() {
+        final String value = "${}";
+        assertEquals(value, interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests interpolation of a non string argument.
+     */
+    @Test
+    public void testInterpolateObject() {
+        final Object value = 42;
         assertSame(value, interpolator.interpolate(value));
     }
 
@@ -357,26 +463,31 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests a property value consisting of multiple variables.
+     * Tests an interpolated string that begins and ends with variable lookups that have
+     * the potential to fail. Part of CONFIGURATION-764.
      */
     @Test
-    public void testInterpolationMultipleVariables() {
-        final String value = "The ${subject} jumps over ${object}.";
-        interpolator.addDefaultLookup(setUpTestLookup("subject", "quick brown fox"));
-        interpolator.addDefaultLookup(setUpTestLookup("object", "the lazy dog"));
-        assertEquals("The quick brown fox jumps over the lazy dog.", interpolator.interpolate(value));
+    public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
+        interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
+        final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
+        assertThat(result, matchesPattern("\\d{4}-\\d{2}-\\d{2}"));
     }
 
     /**
-     * Tests interpolation with variables containing multiple simple non-string variables.
+     * Tests interpolation with multiple variables containing arrays.
      */
     @Test
-    public void testInterpolationMultipleSimpleNonStringVariables() {
-        final String value = "${x} = ${y} is ${result}";
-        interpolator.addDefaultLookup(setUpTestLookup("x", 1));
-        interpolator.addDefaultLookup(setUpTestLookup("y", 2));
-        interpolator.addDefaultLookup(setUpTestLookup("result", false));
-        assertEquals("1 = 2 is false", interpolator.interpolate(value));
+    public void testInterpolationMultipleArrayVariables() {
+        final String value = "${single}bc${multi}23${empty}${null}";
+        final int[] multi = {1, 0, 0};
+        final String[] single = {"a"};
+        final int[] empty = {};
+        final Object[] containsNull = {null};
+        interpolator.addDefaultLookup(setUpTestLookup("multi", multi));
+        interpolator.addDefaultLookup(setUpTestLookup("single", single));
+        interpolator.addDefaultLookup(setUpTestLookup("empty", empty));
+        interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
+        assertEquals("abc123${empty}${null}", interpolator.interpolate(value));
     }
 
     /**
@@ -400,28 +511,35 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests interpolation with multiple variables containing arrays.
+     * Tests interpolation with variables containing multiple simple non-string variables.
      */
     @Test
-    public void testInterpolationMultipleArrayVariables() {
-        final String value = "${single}bc${multi}23${empty}${null}";
-        final int[] multi = {1, 0, 0};
-        final String[] single = {"a"};
-        final int[] empty = {};
-        final Object[] containsNull = {null};
-        interpolator.addDefaultLookup(setUpTestLookup("multi", multi));
-        interpolator.addDefaultLookup(setUpTestLookup("single", single));
-        interpolator.addDefaultLookup(setUpTestLookup("empty", empty));
-        interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
-        assertEquals("abc123${empty}${null}", interpolator.interpolate(value));
+    public void testInterpolationMultipleSimpleNonStringVariables() {
+        final String value = "${x} = ${y} is ${result}";
+        interpolator.addDefaultLookup(setUpTestLookup("x", 1));
+        interpolator.addDefaultLookup(setUpTestLookup("y", 2));
+        interpolator.addDefaultLookup(setUpTestLookup("result", false));
+        assertEquals("1 = 2 is false", interpolator.interpolate(value));
     }
 
     /**
-     * Tests an interpolation that consists of a single variable only. The variable's value should be returned verbatim.
+     * Tests a property value consisting of multiple variables.
      */
     @Test
-    public void testInterpolationSingleVariable() {
-        final Object value = 42;
+    public void testInterpolationMultipleVariables() {
+        final String value = "The ${subject} jumps over ${object}.";
+        interpolator.addDefaultLookup(setUpTestLookup("subject", "quick brown fox"));
+        interpolator.addDefaultLookup(setUpTestLookup("object", "the lazy dog"));
+        assertEquals("The quick brown fox jumps over the lazy dog.", interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests an interpolation that consists of a single array variable only. The variable's value
+     * should be returned verbatim.
+     */
+    @Test
+    public void testInterpolationSingleArrayVariable() {
+        final int[] value = {42, -1};
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
     }
@@ -438,12 +556,11 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests an interpolation that consists of a single array variable only. The variable's value
-     * should be returned verbatim.
+     * Tests an interpolation that consists of a single variable only. The variable's value should be returned verbatim.
      */
     @Test
-    public void testInterpolationSingleArrayVariable() {
-        final int[] value = {42, -1};
+    public void testInterpolationSingleVariable() {
+        final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
     }
@@ -468,17 +585,6 @@ public class TestConfigurationInterpolator {
         final String value = "${" + TEST_NAME;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, "someValue"));
         assertEquals(value, interpolator.interpolate(value));
-    }
-
-    /**
-     * Tests an interpolated string that begins and ends with variable lookups that have
-     * the potential to fail. Part of CONFIGURATION-764.
-     */
-    @Test
-    public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
-        interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
-        final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
-        assertThat(result, matchesPattern("\\d{4}-\\d{2}-\\d{2}"));
     }
 
     /**
@@ -715,136 +821,30 @@ public class TestConfigurationInterpolator {
         assertNull(interpolator.resolve(":" + TEST_NAME));
     }
 
+    /**
+     * Tests that a custom string converter can be used.
+     */
     @Test
-    public void testDefaultStringLookupsHolder_lookupsPropertyNotPresent() {
-        checkDefaultPrefixLookupsHolder(new Properties(),
-                "base64",
-                StringLookupFactory.KEY_BASE64_DECODER,
-                StringLookupFactory.KEY_BASE64_ENCODER,
-                StringLookupFactory.KEY_CONST,
-                StringLookupFactory.KEY_DATE,
-                StringLookupFactory.KEY_ENV,
-                StringLookupFactory.KEY_FILE,
-                StringLookupFactory.KEY_JAVA,
-                StringLookupFactory.KEY_LOCALHOST,
-                StringLookupFactory.KEY_PROPERTIES,
-                StringLookupFactory.KEY_RESOURCE_BUNDLE,
-                StringLookupFactory.KEY_SYS,
-                StringLookupFactory.KEY_URL_DECODER,
-                StringLookupFactory.KEY_URL_ENCODER,
-                StringLookupFactory.KEY_XML);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_lookupsPropertyEmptyAndBlank() {
-        final Properties propsWithNull = new Properties();
-        propsWithNull.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "");
-
-        checkDefaultPrefixLookupsHolder(propsWithNull);
-
-        final Properties propsWithBlank = new Properties();
-        propsWithBlank.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " ");
-
-        checkDefaultPrefixLookupsHolder(propsWithBlank);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_givenSingleLookup() {
-        final Properties props = new Properties();
-        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder");
-
-        checkDefaultPrefixLookupsHolder(props,
-                "base64",
-                StringLookupFactory.KEY_BASE64_ENCODER);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_givenSingleLookup_weirdString() {
-        final Properties props = new Properties();
-        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " \n \t  ,, DnS , , ");
-
-        checkDefaultPrefixLookupsHolder(props, StringLookupFactory.KEY_DNS);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_multipleLookups() {
-        final Properties props = new Properties();
-        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "dns, url script ");
-
-        checkDefaultPrefixLookupsHolder(props,
-                StringLookupFactory.KEY_DNS,
-                StringLookupFactory.KEY_URL,
-                StringLookupFactory.KEY_SCRIPT);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_allLookups() {
-        final Properties props = new Properties();
-        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY,
-                "BASE64_DECODER BASE64_ENCODER const, date, dns, environment "
-                + "file ,java, local_host properties, resource_bundle,script,system_properties "
-                + "url url_decoder  , url_encoder, xml");
-
-        checkDefaultPrefixLookupsHolder(props,
-                "base64",
-                StringLookupFactory.KEY_BASE64_DECODER,
-                StringLookupFactory.KEY_BASE64_ENCODER,
-                StringLookupFactory.KEY_CONST,
-                StringLookupFactory.KEY_DATE,
-                StringLookupFactory.KEY_ENV,
-                StringLookupFactory.KEY_FILE,
-                StringLookupFactory.KEY_JAVA,
-                StringLookupFactory.KEY_LOCALHOST,
-                StringLookupFactory.KEY_PROPERTIES,
-                StringLookupFactory.KEY_RESOURCE_BUNDLE,
-                StringLookupFactory.KEY_SYS,
-                StringLookupFactory.KEY_URL_DECODER,
-                StringLookupFactory.KEY_URL_ENCODER,
-                StringLookupFactory.KEY_XML,
-
-                StringLookupFactory.KEY_DNS,
-                StringLookupFactory.KEY_URL,
-                StringLookupFactory.KEY_SCRIPT);
-    }
-
-    @Test
-    public void testDefaultStringLookupsHolder_invalidLookupsDefinition() {
-        final Properties props = new Properties();
-        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
-
-        final Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
-        assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
-    }
-
-    private static void checkDefaultPrefixLookupsHolder(final Properties props, final String... keys) {
-        final ConfigurationInterpolator.DefaultPrefixLookupsHolder holder =
-                new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props);
-
-        final Map<String, Lookup> lookupMap = holder.getDefaultPrefixLookups();
-
-        assertMappedLookups(lookupMap, keys);
-    }
-
-    private static void assertMappedLookups(final Map<String, Lookup> lookupMap, final String... keys) {
-        final Set<String> remainingKeys = new HashSet<>(lookupMap.keySet());
-
-        for (final String key : keys) {
-            assertNotNull(key, "Expected map to contain string lookup for key " + key);
-
-            remainingKeys.remove(key);
-        }
-
-        assertEquals(Collections.emptySet(), remainingKeys);
+    public void testSetStringConverter() {
+        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
+        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
+        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
+        interpolator.setStringConverter(stringConverter);
+        assertSame(stringConverter, interpolator.getStringConverter());
+        assertEquals("'abc': '[1, 2]'", interpolator.interpolate("${y}: ${x}"));
     }
 
     /**
-     * Main method used to verify the default lookups resolved during JVM execution.
-     * @param args
+     * Tests that the default string converter can be reapplied by passing {@code null}.
      */
-    public static void main(final String[] args) {
-        System.out.println("Default lookups");
-        for (final String key : ConfigurationInterpolator.getDefaultPrefixLookups().keySet()) {
-            System.out.println("- " + key);
-        }
+    @Test
+    public void testSetStringConverterNullArgumentUsesDefault() {
+        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
+        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
+        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
+        interpolator.setStringConverter(stringConverter);
+        interpolator.setStringConverter(null);
+        assertNotSame(stringConverter, interpolator.getStringConverter());
+        assertEquals("abc: 1", interpolator.interpolate("${y}: ${x}"));
     }
 }

@@ -43,11 +43,6 @@ public class AppletConfiguration extends BaseWebConfiguration {
     }
 
     @Override
-    protected Object getPropertyInternal(final String key) {
-        return handleDelimiters(applet.getParameter(key));
-    }
-
-    @Override
     protected Iterator<String> getKeysInternal() {
         final String[][] paramsInfo = applet.getParameterInfo();
         final String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
@@ -57,5 +52,10 @@ public class AppletConfiguration extends BaseWebConfiguration {
             }
         }
         return Arrays.asList(keys).iterator();
+    }
+
+    @Override
+    protected Object getPropertyInternal(final String key) {
+        return handleDelimiters(applet.getParameter(key));
     }
 }

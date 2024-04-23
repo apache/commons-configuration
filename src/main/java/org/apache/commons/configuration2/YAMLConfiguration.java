@@ -41,6 +41,16 @@ import org.yaml.snakeyaml.representer.Representer;
  */
 public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements FileBasedConfiguration, InputStreamSupport {
     /**
+     * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
+     *
+     * @param options options for loading the file
+     * @return the {@code Yaml} instance for loading a file
+     */
+    private static Yaml createYamlForReading(final LoaderOptions options) {
+        return new Yaml(new SafeConstructor(options), new Representer(new DumperOptions()), new DumperOptions(), options);
+    }
+
+    /**
      * Creates a new instance of {@code YAMLConfiguration}.
      */
     public YAMLConfiguration() {
@@ -53,34 +63,6 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
      */
     public YAMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
-    }
-
-    @Override
-    public void read(final Reader in) throws ConfigurationException {
-        try {
-            final Yaml yaml = createYamlForReading(new LoaderOptions());
-            final Map<String, Object> map = yaml.load(in);
-            load(map);
-        } catch (final Exception e) {
-            rethrowException(e);
-        }
-    }
-
-    public void read(final Reader in, final LoaderOptions options) throws ConfigurationException {
-        try {
-            final Yaml yaml = createYamlForReading(options);
-            final Map<String, Object> map = yaml.load(in);
-            load(map);
-        } catch (final Exception e) {
-            rethrowException(e);
-        }
-    }
-
-    @Override
-    public void write(final Writer out) throws ConfigurationException, IOException {
-        final DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        dump(out, options);
     }
 
     public void dump(final Writer out, final DumperOptions options)
@@ -116,14 +98,32 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
         }
     }
 
-    /**
-     * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
-     *
-     * @param options options for loading the file
-     * @return the {@code Yaml} instance for loading a file
-     */
-    private static Yaml createYamlForReading(final LoaderOptions options) {
-        return new Yaml(new SafeConstructor(options), new Representer(new DumperOptions()), new DumperOptions(), options);
+    @Override
+    public void read(final Reader in) throws ConfigurationException {
+        try {
+            final Yaml yaml = createYamlForReading(new LoaderOptions());
+            final Map<String, Object> map = yaml.load(in);
+            load(map);
+        } catch (final Exception e) {
+            rethrowException(e);
+        }
+    }
+
+    public void read(final Reader in, final LoaderOptions options) throws ConfigurationException {
+        try {
+            final Yaml yaml = createYamlForReading(options);
+            final Map<String, Object> map = yaml.load(in);
+            load(map);
+        } catch (final Exception e) {
+            rethrowException(e);
+        }
+    }
+
+    @Override
+    public void write(final Writer out) throws ConfigurationException, IOException {
+        final DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        dump(out, options);
     }
 
 }

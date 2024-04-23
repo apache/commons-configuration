@@ -101,11 +101,265 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class PropertiesConfigurationLayout implements EventListener<ConfigurationEvent> {
+    /**
+     * A helper class for storing all layout related information for a configuration property.
+     */
+    static class PropertyLayoutData implements Cloneable {
+        /** Stores the comment for the property. */
+        private StringBuffer comment;
+
+        /** The separator to be used for this property. */
+        private String separator;
+
+        /** Stores the number of blank lines before this property. */
+        private int blankLines;
+
+        /** Stores the single line property. */
+        private boolean singleLine;
+
+        /**
+         * Creates a new instance of {@code PropertyLayoutData}.
+         */
+        public PropertyLayoutData() {
+            singleLine = true;
+            separator = PropertiesConfiguration.DEFAULT_SEPARATOR;
+        }
+
+        /**
+         * Adds a comment for this property. If already a comment exists, the new comment is added (separated by a newline).
+         *
+         * @param s the comment to add
+         */
+        public void addComment(final String s) {
+            if (s != null) {
+                if (comment == null) {
+                    comment = new StringBuffer(s);
+                } else {
+                    comment.append(CR).append(s);
+                }
+            }
+        }
+
+        /**
+         * Creates a copy of this object.
+         *
+         * @return the copy
+         */
+        @Override
+        public PropertyLayoutData clone() {
+            try {
+                final PropertyLayoutData copy = (PropertyLayoutData) super.clone();
+                if (comment != null) {
+                    // must copy string buffer, too
+                    copy.comment = new StringBuffer(getComment());
+                }
+                return copy;
+            } catch (final CloneNotSupportedException cnex) {
+                // This cannot happen!
+                throw new ConfigurationRuntimeException(cnex);
+            }
+        }
+
+        /**
+         * Gets the number of blank lines before this property.
+         *
+         * @return the number of blank lines before this property
+         * @deprecated Use {#link {@link #getBlankLines()}}.
+         */
+        @Deprecated
+        public int getBlancLines() {
+            return getBlankLines();
+        }
+
+        /**
+         * Gets the number of blank lines before this property.
+         *
+         * @return the number of blank lines before this property
+         * @since 2.8.0
+         */
+        public int getBlankLines() {
+            return blankLines;
+        }
+
+        /**
+         * Gets the comment for this property. The comment is returned as it is, without processing of comment characters.
+         *
+         * @return the comment (can be <b>null</b>)
+         */
+        public String getComment() {
+            return Objects.toString(comment, null);
+        }
+
+        /**
+         * Gets the separator that was used for this property.
+         *
+         * @return the property separator
+         */
+        public String getSeparator() {
+            return separator;
+        }
+
+        /**
+         * Returns the single line flag.
+         *
+         * @return the single line flag
+         */
+        public boolean isSingleLine() {
+            return singleLine;
+        }
+
+        /**
+         * Sets the number of properties before this property.
+         *
+         * @param blankLines the number of properties before this property
+         * @deprecated Use {@link #setBlankLines(int)}.
+         */
+        @Deprecated
+        public void setBlancLines(final int blankLines) {
+            setBlankLines(blankLines);
+        }
+
+        /**
+         * Sets the number of properties before this property.
+         *
+         * @param blankLines the number of properties before this property
+         * @since 2.8.0
+         */
+        public void setBlankLines(final int blankLines) {
+            this.blankLines = blankLines;
+        }
+
+        /**
+         * Sets the comment for this property.
+         *
+         * @param s the new comment (can be <b>null</b>)
+         */
+        public void setComment(final String s) {
+            if (s == null) {
+                comment = null;
+            } else {
+                comment = new StringBuffer(s);
+            }
+        }
+
+        /**
+         * Sets the separator to be used for the represented property.
+         *
+         * @param separator the property separator
+         */
+        public void setSeparator(final String separator) {
+            this.separator = separator;
+        }
+
+        /**
+         * Sets the single line flag.
+         *
+         * @param singleLine the single line flag
+         */
+        public void setSingleLine(final boolean singleLine) {
+            this.singleLine = singleLine;
+        }
+    }
+
     /** Constant for the line break character. */
     private static final String CR = "\n";
 
     /** Constant for the default comment prefix. */
     private static final String COMMENT_PREFIX = "# ";
+
+    /**
+     * Helper method for generating a comment string. Depending on the boolean argument the resulting string either has no
+     * comment characters or a leading comment character at each line.
+     *
+     * @param comment the comment string to be processed
+     * @param commentChar determines the presence of comment characters
+     * @return the canonical comment string (can be <b>null</b>)
+     */
+    private static String constructCanonicalComment(final String comment, final boolean commentChar) {
+        return comment == null ? null : trimComment(comment, commentChar);
+    }
+
+    /**
+     * Tests whether a line is a comment, i.e. whether it starts with a comment character.
+     *
+     * @param line the line
+     * @return a flag if this is a comment line
+     */
+    static boolean isCommentLine(final String line) {
+        return PropertiesConfiguration.isCommentLine(line);
+    }
+
+    /**
+     * Either removes the comment character from the given comment line or ensures that the line starts with a comment
+     * character.
+     *
+     * @param s the comment line
+     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
+     * @return the line without comment character
+     */
+    static String stripCommentChar(final String s, final boolean comment) {
+        if (StringUtils.isBlank(s) || isCommentLine(s) == comment) {
+            return s;
+        }
+        if (!comment) {
+            int pos = 0;
+            // find first comment character
+            while (PropertiesConfiguration.COMMENT_CHARS.indexOf(s.charAt(pos)) < 0) {
+                pos++;
+            }
+
+            // Remove leading spaces
+            pos++;
+            while (pos < s.length() && Character.isWhitespace(s.charAt(pos))) {
+                pos++;
+            }
+
+            return pos < s.length() ? s.substring(pos) : StringUtils.EMPTY;
+        }
+        return COMMENT_PREFIX + s;
+    }
+
+    /**
+     * Trims a comment. This method either removes all comment characters from the given string, leaving only the plain
+     * comment text or ensures that every line starts with a valid comment character.
+     *
+     * @param s the string to be processed
+     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
+     * @return the trimmed comment
+     */
+    static String trimComment(final String s, final boolean comment) {
+        final StringBuilder buf = new StringBuilder(s.length());
+        int lastPos = 0;
+        int pos;
+
+        do {
+            pos = s.indexOf(CR, lastPos);
+            if (pos >= 0) {
+                final String line = s.substring(lastPos, pos);
+                buf.append(stripCommentChar(line, comment)).append(CR);
+                lastPos = pos + CR.length();
+            }
+        } while (pos >= 0);
+
+        if (lastPos < s.length()) {
+            buf.append(stripCommentChar(s.substring(lastPos), comment));
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Helper method for writing a comment line. This method ensures that the correct line separator is used if the comment
+     * spans multiple lines.
+     *
+     * @param writer the writer
+     * @param comment the comment to write
+     * @throws IOException if an IO error occurs
+     */
+    private static void writeComment(final PropertiesConfiguration.PropertiesWriter writer, final String comment) throws IOException {
+        if (comment != null) {
+            writer.writeln(StringUtils.replace(comment, CR, writer.getLineSeparator()));
+        }
+    }
 
     /** Stores a map with the contained layout information. */
     private final Map<String, PropertyLayoutData> layoutData;
@@ -153,41 +407,90 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Gets the comment for the specified property key in a canonical form. &quot;Canonical&quot; means that either all
-     * lines start with a comment character or none. If the {@code commentChar} parameter is <b>false</b>, all comment
-     * characters are removed, so that the result is only the plain text of the comment. Otherwise it is ensured that each
-     * line of the comment starts with a comment character. Also, line breaks in the comment are normalized to the line
-     * separator &quot;\n&quot;.
+     * Checks if parts of the passed in comment can be used as header comment. This method checks whether a header comment
+     * can be defined (i.e. whether this is the first comment in the loaded file). If this is the case, it is searched for
+     * the latest blank line. This line will mark the end of the header comment. The return value is the index of the first
+     * line in the passed in list, which does not belong to the header comment.
      *
-     * @param key the key of the property
-     * @param commentChar determines whether all lines should start with comment characters or not
-     * @return the canonical comment for this key (can be <b>null</b>)
+     * @param commentLines the comment lines
+     * @return the index of the next line after the header comment
      */
-    public String getCanonicalComment(final String key, final boolean commentChar) {
-        return constructCanonicalComment(getComment(key), commentChar);
+    private int checkHeaderComment(final List<String> commentLines) {
+        if (loadCounter.get() == 1 && layoutData.isEmpty()) {
+            int index = commentLines.size() - 1;
+            // strip comments that belong to first key
+            while (index >= 0 && StringUtils.isNotEmpty(commentLines.get(index))) {
+                index--;
+            }
+            // strip blank lines
+            while (index >= 0 && StringUtils.isEmpty(commentLines.get(index))) {
+                index--;
+            }
+            if (getHeaderComment() == null) {
+                setHeaderComment(extractComment(commentLines, 0, index));
+            }
+            return index + 1;
+        }
+        return 0;
     }
 
     /**
-     * Gets the comment for the specified property key. The comment is returned as it was set (either manually by calling
-     * {@code setComment()} or when it was loaded from a properties file). No modifications are performed.
-     *
-     * @param key the key of the property
-     * @return the comment for this key (can be <b>null</b>)
+     * Removes all content from this layout object.
      */
-    public String getComment(final String key) {
-        return fetchLayoutData(key).getComment();
+    private void clear() {
+        seenStack.clear();
+        layoutData.clear();
+        setHeaderComment(null);
+        setFooterComment(null);
     }
 
     /**
-     * Sets the comment for the specified property key. The comment (or its single lines if it is a multi-line comment) can
-     * start with a comment character. If this is the case, it will be written without changes. Otherwise a default comment
-     * character is added automatically.
+     * Copies the data from the given layout object.
      *
-     * @param key the key of the property
-     * @param comment the comment for this key (can be <b>null</b>, then the comment will be removed)
+     * @param c the layout object to copy
      */
-    public void setComment(final String key, final String comment) {
-        fetchLayoutData(key).setComment(comment);
+    private void copyFrom(final PropertiesConfigurationLayout c) {
+        c.getKeys().forEach(key -> layoutData.put(key, c.layoutData.get(key).clone()));
+
+        setHeaderComment(c.getHeaderComment());
+        setFooterComment(c.getFooterComment());
+    }
+
+    /**
+     * Extracts a comment string from the given range of the specified comment lines. The single lines are added using a
+     * line feed as separator.
+     *
+     * @param commentLines a list with comment lines
+     * @param from the start index
+     * @param to the end index (inclusive)
+     * @return the comment string (<b>null</b> if it is undefined)
+     */
+    private String extractComment(final List<String> commentLines, final int from, final int to) {
+        if (to < from) {
+            return null;
+        }
+        final StringBuilder buf = new StringBuilder(commentLines.get(from));
+        for (int i = from + 1; i <= to; i++) {
+            buf.append(CR);
+            buf.append(commentLines.get(i));
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Returns a layout data object for the specified key. If this is a new key, a new object is created and initialized
+     * with default values.
+     *
+     * @param key the key
+     * @return the corresponding layout data object
+     */
+    private PropertyLayoutData fetchLayoutData(final String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Property key must not be null!");
+        }
+
+        // PropertyLayoutData defaults to singleLine = true
+        return layoutData.computeIfAbsent(key, k -> new PropertyLayoutData());
     }
 
     /**
@@ -213,56 +516,18 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Sets the number of blank lines before the given property key. This can be used for a logical grouping of properties.
+     * Gets the comment for the specified property key in a canonical form. &quot;Canonical&quot; means that either all
+     * lines start with a comment character or none. If the {@code commentChar} parameter is <b>false</b>, all comment
+     * characters are removed, so that the result is only the plain text of the comment. Otherwise it is ensured that each
+     * line of the comment starts with a comment character. Also, line breaks in the comment are normalized to the line
+     * separator &quot;\n&quot;.
      *
-     * @param key the property key
-     * @param number the number of blank lines to add before this property definition
-     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}.
+     * @param key the key of the property
+     * @param commentChar determines whether all lines should start with comment characters or not
+     * @return the canonical comment for this key (can be <b>null</b>)
      */
-    @Deprecated
-    public void setBlancLinesBefore(final String key, final int number) {
-        setBlankLinesBefore(key, number);
-    }
-
-    /**
-     * Sets the number of blank lines before the given property key. This can be used for a logical grouping of properties.
-     *
-     * @param key the property key
-     * @param number the number of blank lines to add before this property definition
-     * @since 2.8.0
-     */
-    public void setBlankLinesBefore(final String key, final int number) {
-        fetchLayoutData(key).setBlankLines(number);
-    }
-
-    /**
-     * Gets the header comment of the represented properties file in a canonical form. With the {@code commentChar}
-     * parameter it can be specified whether comment characters should be stripped or be always present.
-     *
-     * @param commentChar determines the presence of comment characters
-     * @return the header comment (can be <b>null</b>)
-     */
-    public String getCanonicalHeaderComment(final boolean commentChar) {
-        return constructCanonicalComment(getHeaderComment(), commentChar);
-    }
-
-    /**
-     * Gets the header comment of the represented properties file. This method returns the header comment exactly as it
-     * was set using {@code setHeaderComment()} or extracted from the loaded properties file.
-     *
-     * @return the header comment (can be <b>null</b>)
-     */
-    public String getHeaderComment() {
-        return headerComment;
-    }
-
-    /**
-     * Sets the header comment for the represented properties file. This comment will be output on top of the file.
-     *
-     * @param comment the comment
-     */
-    public void setHeaderComment(final String comment) {
-        headerComment = comment;
+    public String getCanonicalComment(final String key, final boolean commentChar) {
+        return constructCanonicalComment(getComment(key), commentChar);
     }
 
     /**
@@ -279,6 +544,28 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
+     * Gets the header comment of the represented properties file in a canonical form. With the {@code commentChar}
+     * parameter it can be specified whether comment characters should be stripped or be always present.
+     *
+     * @param commentChar determines the presence of comment characters
+     * @return the header comment (can be <b>null</b>)
+     */
+    public String getCanonicalHeaderComment(final boolean commentChar) {
+        return constructCanonicalComment(getHeaderComment(), commentChar);
+    }
+
+    /**
+     * Gets the comment for the specified property key. The comment is returned as it was set (either manually by calling
+     * {@code setComment()} or when it was loaded from a properties file). No modifications are performed.
+     *
+     * @param key the key of the property
+     * @return the comment for this key (can be <b>null</b>)
+     */
+    public String getComment(final String key) {
+        return fetchLayoutData(key).getComment();
+    }
+
+    /**
      * Gets the footer comment of the represented properties file. This method returns the footer comment exactly as it
      * was set using {@code setFooterComment()} or extracted from the loaded properties file.
      *
@@ -290,58 +577,42 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Sets the footer comment for the represented properties file. This comment will be output at the bottom of the file.
+     * Gets the global separator.
      *
-     * @param footerComment the footer comment
-     * @since 2.0
+     * @return the global properties separator
+     * @since 1.7
      */
-    public void setFooterComment(final String footerComment) {
-        this.footerComment = footerComment;
+    public String getGlobalSeparator() {
+        return globalSeparator;
     }
 
     /**
-     * Returns a flag whether the specified property is defined on a single line. This is meaningful only if this property
-     * has multiple values.
+     * Gets the header comment of the represented properties file. This method returns the header comment exactly as it
+     * was set using {@code setHeaderComment()} or extracted from the loaded properties file.
      *
-     * @param key the property key
-     * @return a flag if this property is defined on a single line
+     * @return the header comment (can be <b>null</b>)
      */
-    public boolean isSingleLine(final String key) {
-        return fetchLayoutData(key).isSingleLine();
+    public String getHeaderComment() {
+        return headerComment;
     }
 
     /**
-     * Sets the &quot;single line flag&quot; for the specified property key. This flag is evaluated if the property has
-     * multiple values (i.e. if it is a list property). In this case, if the flag is set, all values will be written in a
-     * single property definition using the list delimiter as separator. Otherwise multiple lines will be written for this
-     * property, each line containing one property value.
+     * Gets a set with all property keys managed by this object.
      *
-     * @param key the property key
-     * @param f the single line flag
+     * @return a set with all contained property keys
      */
-    public void setSingleLine(final String key, final boolean f) {
-        fetchLayoutData(key).setSingleLine(f);
+    public Set<String> getKeys() {
+        return layoutData.keySet();
     }
 
     /**
-     * Returns the &quot;force single line&quot; flag.
+     * Gets the line separator.
      *
-     * @return the force single line flag
-     * @see #setForceSingleLine(boolean)
+     * @return the line separator
+     * @since 1.7
      */
-    public boolean isForceSingleLine() {
-        return forceSingleLine;
-    }
-
-    /**
-     * Sets the &quot;force single line&quot; flag. If this flag is set, all properties with multiple values are written on
-     * single lines. This mode provides more compatibility with {@link Properties}, which cannot deal with
-     * multiple definitions of a single property. This mode has no effect if the list delimiter parsing is disabled.
-     *
-     * @param f the force single line flag
-     */
-    public void setForceSingleLine(final boolean f) {
-        forceSingleLine = f;
+    public String getLineSeparator() {
+        return lineSeparator;
     }
 
     /**
@@ -356,74 +627,24 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Sets the separator to be used for the property with the given key. The separator is the string between the property
-     * key and its value. For new properties &quot; = &quot; is used. When a properties file is read, the layout tries to
-     * determine the separator for each property. With this method the separator can be changed. To be compatible with the
-     * properties format only the characters {@code =} and {@code :} (with or without whitespace) should be used, but this
-     * method does not enforce this - it accepts arbitrary strings. If the key refers to a property with multiple values
-     * that are written on multiple lines, this separator will be used on all lines.
+     * Returns the &quot;force single line&quot; flag.
      *
-     * @param key the key for the property
-     * @param sep the separator to be used for this property
-     * @since 1.7
+     * @return the force single line flag
+     * @see #setForceSingleLine(boolean)
      */
-    public void setSeparator(final String key, final String sep) {
-        fetchLayoutData(key).setSeparator(sep);
+    public boolean isForceSingleLine() {
+        return forceSingleLine;
     }
 
     /**
-     * Gets the global separator.
+     * Returns a flag whether the specified property is defined on a single line. This is meaningful only if this property
+     * has multiple values.
      *
-     * @return the global properties separator
-     * @since 1.7
+     * @param key the property key
+     * @return a flag if this property is defined on a single line
      */
-    public String getGlobalSeparator() {
-        return globalSeparator;
-    }
-
-    /**
-     * Sets the global separator for properties. With this method a separator can be set that will be used for all
-     * properties when writing the configuration. This is an easy way of determining the properties separator globally. To
-     * be compatible with the properties format only the characters {@code =} and {@code :} (with or without whitespace)
-     * should be used, but this method does not enforce this - it accepts arbitrary strings. If the global separator is set
-     * to <b>null</b>, property separators are not changed. This is the default behavior as it produces results that are
-     * closer to the original properties file.
-     *
-     * @param globalSeparator the separator to be used for all properties
-     * @since 1.7
-     */
-    public void setGlobalSeparator(final String globalSeparator) {
-        this.globalSeparator = globalSeparator;
-    }
-
-    /**
-     * Gets the line separator.
-     *
-     * @return the line separator
-     * @since 1.7
-     */
-    public String getLineSeparator() {
-        return lineSeparator;
-    }
-
-    /**
-     * Sets the line separator. When writing the properties configuration, all lines are terminated with this separator. If
-     * no separator was set, the platform-specific default line separator is used.
-     *
-     * @param lineSeparator the line separator
-     * @since 1.7
-     */
-    public void setLineSeparator(final String lineSeparator) {
-        this.lineSeparator = lineSeparator;
-    }
-
-    /**
-     * Gets a set with all property keys managed by this object.
-     *
-     * @return a set with all contained property keys
-     */
-    public Set<String> getKeys() {
-        return layoutData.keySet();
+    public boolean isSingleLine(final String key) {
+        return fetchLayoutData(key).isSingleLine();
     }
 
     /**
@@ -467,6 +688,29 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             throw new ConfigurationException(ioex);
         } finally {
             loadCounter.decrementAndGet();
+        }
+    }
+
+    /**
+     * The event listener callback. Here event notifications of the configuration object are processed to update the layout
+     * object properly.
+     *
+     * @param event the event object
+     */
+    @Override
+    public void onEvent(final ConfigurationEvent event) {
+        if (!event.isBeforeUpdate() && loadCounter.get() == 0) {
+            if (ConfigurationEvent.ADD_PROPERTY.equals(event.getEventType())) {
+                final boolean contained = layoutData.containsKey(event.getPropertyName());
+                final PropertyLayoutData data = fetchLayoutData(event.getPropertyName());
+                data.setSingleLine(!contained);
+            } else if (ConfigurationEvent.CLEAR_PROPERTY.equals(event.getEventType())) {
+                layoutData.remove(event.getPropertyName());
+            } else if (ConfigurationEvent.CLEAR.equals(event.getEventType())) {
+                clear();
+            } else if (ConfigurationEvent.SET_PROPERTY.equals(event.getEventType())) {
+                fetchLayoutData(event.getPropertyName());
+            }
         }
     }
 
@@ -522,366 +766,122 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * The event listener callback. Here event notifications of the configuration object are processed to update the layout
-     * object properly.
+     * Sets the number of blank lines before the given property key. This can be used for a logical grouping of properties.
      *
-     * @param event the event object
+     * @param key the property key
+     * @param number the number of blank lines to add before this property definition
+     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}.
      */
-    @Override
-    public void onEvent(final ConfigurationEvent event) {
-        if (!event.isBeforeUpdate() && loadCounter.get() == 0) {
-            if (ConfigurationEvent.ADD_PROPERTY.equals(event.getEventType())) {
-                final boolean contained = layoutData.containsKey(event.getPropertyName());
-                final PropertyLayoutData data = fetchLayoutData(event.getPropertyName());
-                data.setSingleLine(!contained);
-            } else if (ConfigurationEvent.CLEAR_PROPERTY.equals(event.getEventType())) {
-                layoutData.remove(event.getPropertyName());
-            } else if (ConfigurationEvent.CLEAR.equals(event.getEventType())) {
-                clear();
-            } else if (ConfigurationEvent.SET_PROPERTY.equals(event.getEventType())) {
-                fetchLayoutData(event.getPropertyName());
-            }
-        }
+    @Deprecated
+    public void setBlancLinesBefore(final String key, final int number) {
+        setBlankLinesBefore(key, number);
     }
 
     /**
-     * Returns a layout data object for the specified key. If this is a new key, a new object is created and initialized
-     * with default values.
+     * Sets the number of blank lines before the given property key. This can be used for a logical grouping of properties.
      *
-     * @param key the key
-     * @return the corresponding layout data object
+     * @param key the property key
+     * @param number the number of blank lines to add before this property definition
+     * @since 2.8.0
      */
-    private PropertyLayoutData fetchLayoutData(final String key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Property key must not be null!");
-        }
-
-        // PropertyLayoutData defaults to singleLine = true
-        return layoutData.computeIfAbsent(key, k -> new PropertyLayoutData());
+    public void setBlankLinesBefore(final String key, final int number) {
+        fetchLayoutData(key).setBlankLines(number);
     }
 
     /**
-     * Removes all content from this layout object.
-     */
-    private void clear() {
-        seenStack.clear();
-        layoutData.clear();
-        setHeaderComment(null);
-        setFooterComment(null);
-    }
-
-    /**
-     * Tests whether a line is a comment, i.e. whether it starts with a comment character.
+     * Sets the comment for the specified property key. The comment (or its single lines if it is a multi-line comment) can
+     * start with a comment character. If this is the case, it will be written without changes. Otherwise a default comment
+     * character is added automatically.
      *
-     * @param line the line
-     * @return a flag if this is a comment line
+     * @param key the key of the property
+     * @param comment the comment for this key (can be <b>null</b>, then the comment will be removed)
      */
-    static boolean isCommentLine(final String line) {
-        return PropertiesConfiguration.isCommentLine(line);
+    public void setComment(final String key, final String comment) {
+        fetchLayoutData(key).setComment(comment);
     }
 
     /**
-     * Trims a comment. This method either removes all comment characters from the given string, leaving only the plain
-     * comment text or ensures that every line starts with a valid comment character.
+     * Sets the footer comment for the represented properties file. This comment will be output at the bottom of the file.
      *
-     * @param s the string to be processed
-     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
-     * @return the trimmed comment
+     * @param footerComment the footer comment
+     * @since 2.0
      */
-    static String trimComment(final String s, final boolean comment) {
-        final StringBuilder buf = new StringBuilder(s.length());
-        int lastPos = 0;
-        int pos;
-
-        do {
-            pos = s.indexOf(CR, lastPos);
-            if (pos >= 0) {
-                final String line = s.substring(lastPos, pos);
-                buf.append(stripCommentChar(line, comment)).append(CR);
-                lastPos = pos + CR.length();
-            }
-        } while (pos >= 0);
-
-        if (lastPos < s.length()) {
-            buf.append(stripCommentChar(s.substring(lastPos), comment));
-        }
-        return buf.toString();
+    public void setFooterComment(final String footerComment) {
+        this.footerComment = footerComment;
     }
 
     /**
-     * Either removes the comment character from the given comment line or ensures that the line starts with a comment
-     * character.
+     * Sets the &quot;force single line&quot; flag. If this flag is set, all properties with multiple values are written on
+     * single lines. This mode provides more compatibility with {@link Properties}, which cannot deal with
+     * multiple definitions of a single property. This mode has no effect if the list delimiter parsing is disabled.
      *
-     * @param s the comment line
-     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
-     * @return the line without comment character
+     * @param f the force single line flag
      */
-    static String stripCommentChar(final String s, final boolean comment) {
-        if (StringUtils.isBlank(s) || isCommentLine(s) == comment) {
-            return s;
-        }
-        if (!comment) {
-            int pos = 0;
-            // find first comment character
-            while (PropertiesConfiguration.COMMENT_CHARS.indexOf(s.charAt(pos)) < 0) {
-                pos++;
-            }
-
-            // Remove leading spaces
-            pos++;
-            while (pos < s.length() && Character.isWhitespace(s.charAt(pos))) {
-                pos++;
-            }
-
-            return pos < s.length() ? s.substring(pos) : StringUtils.EMPTY;
-        }
-        return COMMENT_PREFIX + s;
+    public void setForceSingleLine(final boolean f) {
+        forceSingleLine = f;
     }
 
     /**
-     * Extracts a comment string from the given range of the specified comment lines. The single lines are added using a
-     * line feed as separator.
+     * Sets the global separator for properties. With this method a separator can be set that will be used for all
+     * properties when writing the configuration. This is an easy way of determining the properties separator globally. To
+     * be compatible with the properties format only the characters {@code =} and {@code :} (with or without whitespace)
+     * should be used, but this method does not enforce this - it accepts arbitrary strings. If the global separator is set
+     * to <b>null</b>, property separators are not changed. This is the default behavior as it produces results that are
+     * closer to the original properties file.
      *
-     * @param commentLines a list with comment lines
-     * @param from the start index
-     * @param to the end index (inclusive)
-     * @return the comment string (<b>null</b> if it is undefined)
+     * @param globalSeparator the separator to be used for all properties
+     * @since 1.7
      */
-    private String extractComment(final List<String> commentLines, final int from, final int to) {
-        if (to < from) {
-            return null;
-        }
-        final StringBuilder buf = new StringBuilder(commentLines.get(from));
-        for (int i = from + 1; i <= to; i++) {
-            buf.append(CR);
-            buf.append(commentLines.get(i));
-        }
-        return buf.toString();
+    public void setGlobalSeparator(final String globalSeparator) {
+        this.globalSeparator = globalSeparator;
     }
 
     /**
-     * Checks if parts of the passed in comment can be used as header comment. This method checks whether a header comment
-     * can be defined (i.e. whether this is the first comment in the loaded file). If this is the case, it is searched for
-     * the latest blank line. This line will mark the end of the header comment. The return value is the index of the first
-     * line in the passed in list, which does not belong to the header comment.
+     * Sets the header comment for the represented properties file. This comment will be output on top of the file.
      *
-     * @param commentLines the comment lines
-     * @return the index of the next line after the header comment
+     * @param comment the comment
      */
-    private int checkHeaderComment(final List<String> commentLines) {
-        if (loadCounter.get() == 1 && layoutData.isEmpty()) {
-            int index = commentLines.size() - 1;
-            // strip comments that belong to first key
-            while (index >= 0 && StringUtils.isNotEmpty(commentLines.get(index))) {
-                index--;
-            }
-            // strip blank lines
-            while (index >= 0 && StringUtils.isEmpty(commentLines.get(index))) {
-                index--;
-            }
-            if (getHeaderComment() == null) {
-                setHeaderComment(extractComment(commentLines, 0, index));
-            }
-            return index + 1;
-        }
-        return 0;
+    public void setHeaderComment(final String comment) {
+        headerComment = comment;
     }
 
     /**
-     * Copies the data from the given layout object.
+     * Sets the line separator. When writing the properties configuration, all lines are terminated with this separator. If
+     * no separator was set, the platform-specific default line separator is used.
      *
-     * @param c the layout object to copy
+     * @param lineSeparator the line separator
+     * @since 1.7
      */
-    private void copyFrom(final PropertiesConfigurationLayout c) {
-        c.getKeys().forEach(key -> layoutData.put(key, c.layoutData.get(key).clone()));
-
-        setHeaderComment(c.getHeaderComment());
-        setFooterComment(c.getFooterComment());
+    public void setLineSeparator(final String lineSeparator) {
+        this.lineSeparator = lineSeparator;
     }
 
     /**
-     * Helper method for writing a comment line. This method ensures that the correct line separator is used if the comment
-     * spans multiple lines.
+     * Sets the separator to be used for the property with the given key. The separator is the string between the property
+     * key and its value. For new properties &quot; = &quot; is used. When a properties file is read, the layout tries to
+     * determine the separator for each property. With this method the separator can be changed. To be compatible with the
+     * properties format only the characters {@code =} and {@code :} (with or without whitespace) should be used, but this
+     * method does not enforce this - it accepts arbitrary strings. If the key refers to a property with multiple values
+     * that are written on multiple lines, this separator will be used on all lines.
      *
-     * @param writer the writer
-     * @param comment the comment to write
-     * @throws IOException if an IO error occurs
+     * @param key the key for the property
+     * @param sep the separator to be used for this property
+     * @since 1.7
      */
-    private static void writeComment(final PropertiesConfiguration.PropertiesWriter writer, final String comment) throws IOException {
-        if (comment != null) {
-            writer.writeln(StringUtils.replace(comment, CR, writer.getLineSeparator()));
-        }
+    public void setSeparator(final String key, final String sep) {
+        fetchLayoutData(key).setSeparator(sep);
     }
 
     /**
-     * Helper method for generating a comment string. Depending on the boolean argument the resulting string either has no
-     * comment characters or a leading comment character at each line.
+     * Sets the &quot;single line flag&quot; for the specified property key. This flag is evaluated if the property has
+     * multiple values (i.e. if it is a list property). In this case, if the flag is set, all values will be written in a
+     * single property definition using the list delimiter as separator. Otherwise multiple lines will be written for this
+     * property, each line containing one property value.
      *
-     * @param comment the comment string to be processed
-     * @param commentChar determines the presence of comment characters
-     * @return the canonical comment string (can be <b>null</b>)
+     * @param key the property key
+     * @param f the single line flag
      */
-    private static String constructCanonicalComment(final String comment, final boolean commentChar) {
-        return comment == null ? null : trimComment(comment, commentChar);
-    }
-
-    /**
-     * A helper class for storing all layout related information for a configuration property.
-     */
-    static class PropertyLayoutData implements Cloneable {
-        /** Stores the comment for the property. */
-        private StringBuffer comment;
-
-        /** The separator to be used for this property. */
-        private String separator;
-
-        /** Stores the number of blank lines before this property. */
-        private int blankLines;
-
-        /** Stores the single line property. */
-        private boolean singleLine;
-
-        /**
-         * Creates a new instance of {@code PropertyLayoutData}.
-         */
-        public PropertyLayoutData() {
-            singleLine = true;
-            separator = PropertiesConfiguration.DEFAULT_SEPARATOR;
-        }
-
-        /**
-         * Gets the number of blank lines before this property.
-         *
-         * @return the number of blank lines before this property
-         * @deprecated Use {#link {@link #getBlankLines()}}.
-         */
-        @Deprecated
-        public int getBlancLines() {
-            return getBlankLines();
-        }
-
-        /**
-         * Gets the number of blank lines before this property.
-         *
-         * @return the number of blank lines before this property
-         * @since 2.8.0
-         */
-        public int getBlankLines() {
-            return blankLines;
-        }
-
-        /**
-         * Sets the number of properties before this property.
-         *
-         * @param blankLines the number of properties before this property
-         * @deprecated Use {@link #setBlankLines(int)}.
-         */
-        @Deprecated
-        public void setBlancLines(final int blankLines) {
-            setBlankLines(blankLines);
-        }
-
-        /**
-         * Sets the number of properties before this property.
-         *
-         * @param blankLines the number of properties before this property
-         * @since 2.8.0
-         */
-        public void setBlankLines(final int blankLines) {
-            this.blankLines = blankLines;
-        }
-
-        /**
-         * Returns the single line flag.
-         *
-         * @return the single line flag
-         */
-        public boolean isSingleLine() {
-            return singleLine;
-        }
-
-        /**
-         * Sets the single line flag.
-         *
-         * @param singleLine the single line flag
-         */
-        public void setSingleLine(final boolean singleLine) {
-            this.singleLine = singleLine;
-        }
-
-        /**
-         * Adds a comment for this property. If already a comment exists, the new comment is added (separated by a newline).
-         *
-         * @param s the comment to add
-         */
-        public void addComment(final String s) {
-            if (s != null) {
-                if (comment == null) {
-                    comment = new StringBuffer(s);
-                } else {
-                    comment.append(CR).append(s);
-                }
-            }
-        }
-
-        /**
-         * Sets the comment for this property.
-         *
-         * @param s the new comment (can be <b>null</b>)
-         */
-        public void setComment(final String s) {
-            if (s == null) {
-                comment = null;
-            } else {
-                comment = new StringBuffer(s);
-            }
-        }
-
-        /**
-         * Gets the comment for this property. The comment is returned as it is, without processing of comment characters.
-         *
-         * @return the comment (can be <b>null</b>)
-         */
-        public String getComment() {
-            return Objects.toString(comment, null);
-        }
-
-        /**
-         * Gets the separator that was used for this property.
-         *
-         * @return the property separator
-         */
-        public String getSeparator() {
-            return separator;
-        }
-
-        /**
-         * Sets the separator to be used for the represented property.
-         *
-         * @param separator the property separator
-         */
-        public void setSeparator(final String separator) {
-            this.separator = separator;
-        }
-
-        /**
-         * Creates a copy of this object.
-         *
-         * @return the copy
-         */
-        @Override
-        public PropertyLayoutData clone() {
-            try {
-                final PropertyLayoutData copy = (PropertyLayoutData) super.clone();
-                if (comment != null) {
-                    // must copy string buffer, too
-                    copy.comment = new StringBuffer(getComment());
-                }
-                return copy;
-            } catch (final CloneNotSupportedException cnex) {
-                // This cannot happen!
-                throw new ConfigurationRuntimeException(cnex);
-            }
-        }
+    public void setSingleLine(final String key, final boolean f) {
+        fetchLayoutData(key).setSingleLine(f);
     }
 }

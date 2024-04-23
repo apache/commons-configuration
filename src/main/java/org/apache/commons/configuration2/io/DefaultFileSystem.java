@@ -36,6 +36,99 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  */
 public class DefaultFileSystem extends FileSystem {
 
+    /**
+     * Wraps the output stream so errors can be detected in the HTTP response.
+     *
+     * @since 1.7
+     */
+    private static final class HttpOutputStream extends VerifiableOutputStream {
+        /** The wrapped OutputStream */
+        private final OutputStream stream;
+
+        /** The HttpURLConnection */
+        private final HttpURLConnection connection;
+
+        public HttpOutputStream(final OutputStream stream, final HttpURLConnection connection) {
+            this.stream = stream;
+            this.connection = connection;
+        }
+
+        @Override
+        public void close() throws IOException {
+            stream.close();
+        }
+
+        @Override
+        public void flush() throws IOException {
+            stream.flush();
+        }
+
+        @Override
+        public String toString() {
+            return stream.toString();
+        }
+
+        @Override
+        public void verify() throws IOException {
+            if (connection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
+                throw new IOException("HTTP Error " + connection.getResponseCode() + " " + connection.getResponseMessage());
+            }
+        }
+
+        @Override
+        public void write(final byte[] bytes) throws IOException {
+            stream.write(bytes);
+        }
+
+        @Override
+        public void write(final byte[] bytes, final int i, final int i1) throws IOException {
+            stream.write(bytes, i, i1);
+        }
+
+        @Override
+        public void write(final int i) throws IOException {
+            stream.write(i);
+        }
+    }
+
+    /**
+     * Create the path to the specified file.
+     *
+     * @param file the target file
+     * @throws ConfigurationException if the path cannot be created
+     */
+    private void createPath(final File file) throws ConfigurationException {
+        // create the path to the file if the file doesn't exist
+        if (file != null && !file.exists()) {
+            final File parent = file.getParentFile();
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
+                throw new ConfigurationException("Cannot create path: " + parent);
+            }
+        }
+    }
+
+    @Override
+    public String getBasePath(final String path) {
+        final URL url;
+        try {
+            url = getURL(null, path);
+            return FileLocatorUtils.getBasePath(url);
+        } catch (final Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String getFileName(final String path) {
+        final URL url;
+        try {
+            url = getURL(null, path);
+            return FileLocatorUtils.getFileName(url);
+        } catch (final Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public InputStream getInputStream(final URL url) throws ConfigurationException {
         return getInputStream(url, null);
@@ -53,6 +146,17 @@ public class DefaultFileSystem extends FileSystem {
             return urlConnectionOptions == null ? url.openStream() : urlConnectionOptions.openConnection(url).getInputStream();
         } catch (final Exception e) {
             throw new ConfigurationException("Unable to load the configuration from the URL " + url, e);
+        }
+    }
+
+    @Override
+    public OutputStream getOutputStream(final File file) throws ConfigurationException {
+        try {
+            // create the file if necessary
+            createPath(file);
+            return new FileOutputStream(file);
+        } catch (final FileNotFoundException e) {
+            throw new ConfigurationException("Unable to save to file " + file, e);
         }
     }
 
@@ -89,17 +193,6 @@ public class DefaultFileSystem extends FileSystem {
     }
 
     @Override
-    public OutputStream getOutputStream(final File file) throws ConfigurationException {
-        try {
-            // create the file if necessary
-            createPath(file);
-            return new FileOutputStream(file);
-        } catch (final FileNotFoundException e) {
-            throw new ConfigurationException("Unable to save to file " + file, e);
-        }
-    }
-
-    @Override
     public String getPath(final File file, final URL url, final String basePath, final String fileName) {
         String path = null;
         // if resource was loaded from jar file may be null
@@ -124,28 +217,6 @@ public class DefaultFileSystem extends FileSystem {
         }
 
         return path;
-    }
-
-    @Override
-    public String getBasePath(final String path) {
-        final URL url;
-        try {
-            url = getURL(null, path);
-            return FileLocatorUtils.getBasePath(url);
-        } catch (final Exception e) {
-            return null;
-        }
-    }
-
-    @Override
-    public String getFileName(final String path) {
-        final URL url;
-        try {
-            url = getURL(null, path);
-            return FileLocatorUtils.getFileName(url);
-        } catch (final Exception e) {
-            return null;
-        }
     }
 
     @Override
@@ -189,77 +260,6 @@ public class DefaultFileSystem extends FileSystem {
                 getLogger().debug("Could not locate file " + fileName + " at " + basePath + ": " + e.getMessage());
             }
             return null;
-        }
-    }
-
-    /**
-     * Create the path to the specified file.
-     *
-     * @param file the target file
-     * @throws ConfigurationException if the path cannot be created
-     */
-    private void createPath(final File file) throws ConfigurationException {
-        // create the path to the file if the file doesn't exist
-        if (file != null && !file.exists()) {
-            final File parent = file.getParentFile();
-            if (parent != null && !parent.exists() && !parent.mkdirs()) {
-                throw new ConfigurationException("Cannot create path: " + parent);
-            }
-        }
-    }
-
-    /**
-     * Wraps the output stream so errors can be detected in the HTTP response.
-     *
-     * @since 1.7
-     */
-    private static final class HttpOutputStream extends VerifiableOutputStream {
-        /** The wrapped OutputStream */
-        private final OutputStream stream;
-
-        /** The HttpURLConnection */
-        private final HttpURLConnection connection;
-
-        public HttpOutputStream(final OutputStream stream, final HttpURLConnection connection) {
-            this.stream = stream;
-            this.connection = connection;
-        }
-
-        @Override
-        public void write(final byte[] bytes) throws IOException {
-            stream.write(bytes);
-        }
-
-        @Override
-        public void write(final byte[] bytes, final int i, final int i1) throws IOException {
-            stream.write(bytes, i, i1);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            stream.flush();
-        }
-
-        @Override
-        public void close() throws IOException {
-            stream.close();
-        }
-
-        @Override
-        public void write(final int i) throws IOException {
-            stream.write(i);
-        }
-
-        @Override
-        public String toString() {
-            return stream.toString();
-        }
-
-        @Override
-        public void verify() throws IOException {
-            if (connection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                throw new IOException("HTTP Error " + connection.getResponseCode() + " " + connection.getResponseMessage());
-            }
         }
     }
 }

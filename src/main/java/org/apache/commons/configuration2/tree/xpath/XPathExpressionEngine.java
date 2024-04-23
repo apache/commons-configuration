@@ -142,6 +142,81 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /** Constant for the end of an index expression. */
     private static final char END_INDEX = ']';
 
+    // static initializer: registers the configuration node pointer factory
+    static {
+        JXPathContextReferenceImpl.addNodePointerFactory(new ConfigurationNodePointerFactory());
+    }
+
+    /**
+     * Converts the objects returned as query result from the JXPathContext to query result objects.
+     *
+     * @param results the list with results from the context
+     * @param <T> the type of results to be produced
+     * @return the result list
+     */
+    private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
+        return results.stream().map(res -> (QueryResult<T>) createResult(res)).collect(Collectors.toList());
+    }
+
+    /**
+     * Creates a {@code QueryResult} object from the given result object of a query. Because of the node pointers involved
+     * result objects can only be of two types:
+     * <ul>
+     * <li>nodes of type T</li>
+     * <li>attribute results already wrapped in {@code QueryResult} objects</li>
+     * </ul>
+     * This method performs a corresponding cast. Warnings can be suppressed because of the implementation of the query
+     * functionality.
+     *
+     * @param resObj the query result object
+     * @param <T> the type of the result to be produced
+     * @return the {@code QueryResult}
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> QueryResult<T> createResult(final Object resObj) {
+        if (resObj instanceof QueryResult) {
+            return (QueryResult<T>) resObj;
+        }
+        return QueryResult.createNodeResult((T) resObj);
+    }
+
+    /**
+     * Determines the index of the given child node in the node list of its parent.
+     *
+     * @param parent the parent node
+     * @param child the child node
+     * @param handler the node handler
+     * @param <T> the type of the nodes involved
+     * @return the index of this child node
+     */
+    private static <T> int determineIndex(final T parent, final T child, final NodeHandler<T> handler) {
+        return handler.getChildren(parent, handler.nodeName(child)).indexOf(child) + 1;
+    }
+
+    /**
+     * Determines the position of the separator in a key for adding new properties. If no delimiter is found, result is -1.
+     *
+     * @param key the key
+     * @return the position of the delimiter
+     */
+    private static int findKeySeparator(final String key) {
+        int index = key.length() - 1;
+        while (index >= 0 && !Character.isWhitespace(key.charAt(index))) {
+            index--;
+        }
+        return index;
+    }
+
+    /**
+     * Helper method for throwing an exception about an invalid path.
+     *
+     * @param path the invalid path
+     * @param msg the exception message
+     */
+    private static void invalidPath(final String path, final String msg) {
+        throw new IllegalArgumentException("Invalid node path: \"" + path + "\" " + msg);
+    }
+
     /** The internally used context factory. */
     private final XPathContextFactory contextFactory;
 
@@ -160,48 +235,6 @@ public class XPathExpressionEngine implements ExpressionEngine {
      */
     XPathExpressionEngine(final XPathContextFactory factory) {
         contextFactory = factory;
-    }
-
-    /**
-     * {@inheritDoc} This implementation interprets the passed in key as an XPATH expression.
-     */
-    @Override
-    public <T> List<QueryResult<T>> query(final T root, final String key, final NodeHandler<T> handler) {
-        if (StringUtils.isEmpty(key)) {
-            final QueryResult<T> result = createResult(root);
-            return Collections.singletonList(result);
-        }
-        final JXPathContext context = createContext(root, handler);
-        List<?> results = context.selectNodes(key);
-        if (results == null) {
-            results = Collections.emptyList();
-        }
-        return convertResults(results);
-    }
-
-    /**
-     * {@inheritDoc} This implementation creates an XPATH expression that selects the given node (under the assumption that
-     * the passed in parent key is valid). As the {@code nodeKey()} implementation of
-     * {@link org.apache.commons.configuration2.tree.DefaultExpressionEngine DefaultExpressionEngine} this method does not
-     * return indices for nodes. So all child nodes of a given parent with the same name have the same key.
-     */
-    @Override
-    public <T> String nodeKey(final T node, final String parentKey, final NodeHandler<T> handler) {
-        if (parentKey == null) {
-            // name of the root node
-            return StringUtils.EMPTY;
-        }
-        if (handler.nodeName(node) == null) {
-            // paranoia check for undefined node names
-            return parentKey;
-        }
-        final StringBuilder buf = new StringBuilder(parentKey.length() + handler.nodeName(node).length() + PATH_DELIMITER.length());
-        if (!parentKey.isEmpty()) {
-            buf.append(parentKey);
-            buf.append(PATH_DELIMITER);
-        }
-        buf.append(handler.nodeName(node));
-        return buf.toString();
     }
 
     @Override
@@ -236,32 +269,6 @@ public class XPathExpressionEngine implements ExpressionEngine {
         buf.append(determineIndex(parent, node, handler));
         buf.append(END_INDEX);
         return buf.toString();
-    }
-
-    /**
-     * {@inheritDoc} The expected format of the passed in key is explained in the class comment.
-     */
-    @Override
-    public <T> NodeAddData<T> prepareAdd(final T root, final String key, final NodeHandler<T> handler) {
-        if (key == null) {
-            throw new IllegalArgumentException("prepareAdd: key must not be null!");
-        }
-
-        String addKey = key;
-        int index = findKeySeparator(addKey);
-        if (index < 0) {
-            addKey = generateKeyForAdd(root, addKey, handler);
-            index = findKeySeparator(addKey);
-        } else if (index >= addKey.length() - 1) {
-            invalidPath(addKey, " new node path must not be empty.");
-        }
-
-        final List<QueryResult<T>> nodes = query(root, addKey.substring(0, index).trim(), handler);
-        if (nodes.size() != 1) {
-            throw new IllegalArgumentException("prepareAdd: key '" + key + "' must select exactly one target node!");
-        }
-
-        return createNodeAddData(addKey.substring(index).trim(), nodes.get(0));
     }
 
     /**
@@ -330,15 +337,6 @@ public class XPathExpressionEngine implements ExpressionEngine {
     }
 
     /**
-     * Gets the {@code XPathContextFactory} used by this instance.
-     *
-     * @return the {@code XPathContextFactory}
-     */
-    XPathContextFactory getContextFactory() {
-        return contextFactory;
-    }
-
-    /**
      * Tries to generate a key for adding a property. This method is called if a key was used for adding properties which
      * does not contain a space character. It splits the key at its single components and searches for the last existing
      * component. Then a key compatible key for adding properties is generated.
@@ -366,77 +364,79 @@ public class XPathExpressionEngine implements ExpressionEngine {
     }
 
     /**
-     * Determines the index of the given child node in the node list of its parent.
+     * Gets the {@code XPathContextFactory} used by this instance.
      *
-     * @param parent the parent node
-     * @param child the child node
-     * @param handler the node handler
-     * @param <T> the type of the nodes involved
-     * @return the index of this child node
+     * @return the {@code XPathContextFactory}
      */
-    private static <T> int determineIndex(final T parent, final T child, final NodeHandler<T> handler) {
-        return handler.getChildren(parent, handler.nodeName(child)).indexOf(child) + 1;
+    XPathContextFactory getContextFactory() {
+        return contextFactory;
     }
 
     /**
-     * Helper method for throwing an exception about an invalid path.
-     *
-     * @param path the invalid path
-     * @param msg the exception message
+     * {@inheritDoc} This implementation creates an XPATH expression that selects the given node (under the assumption that
+     * the passed in parent key is valid). As the {@code nodeKey()} implementation of
+     * {@link org.apache.commons.configuration2.tree.DefaultExpressionEngine DefaultExpressionEngine} this method does not
+     * return indices for nodes. So all child nodes of a given parent with the same name have the same key.
      */
-    private static void invalidPath(final String path, final String msg) {
-        throw new IllegalArgumentException("Invalid node path: \"" + path + "\" " + msg);
-    }
-
-    /**
-     * Determines the position of the separator in a key for adding new properties. If no delimiter is found, result is -1.
-     *
-     * @param key the key
-     * @return the position of the delimiter
-     */
-    private static int findKeySeparator(final String key) {
-        int index = key.length() - 1;
-        while (index >= 0 && !Character.isWhitespace(key.charAt(index))) {
-            index--;
+    @Override
+    public <T> String nodeKey(final T node, final String parentKey, final NodeHandler<T> handler) {
+        if (parentKey == null) {
+            // name of the root node
+            return StringUtils.EMPTY;
         }
-        return index;
-    }
-
-    /**
-     * Converts the objects returned as query result from the JXPathContext to query result objects.
-     *
-     * @param results the list with results from the context
-     * @param <T> the type of results to be produced
-     * @return the result list
-     */
-    private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
-        return results.stream().map(res -> (QueryResult<T>) createResult(res)).collect(Collectors.toList());
-    }
-
-    /**
-     * Creates a {@code QueryResult} object from the given result object of a query. Because of the node pointers involved
-     * result objects can only be of two types:
-     * <ul>
-     * <li>nodes of type T</li>
-     * <li>attribute results already wrapped in {@code QueryResult} objects</li>
-     * </ul>
-     * This method performs a corresponding cast. Warnings can be suppressed because of the implementation of the query
-     * functionality.
-     *
-     * @param resObj the query result object
-     * @param <T> the type of the result to be produced
-     * @return the {@code QueryResult}
-     */
-    @SuppressWarnings("unchecked")
-    private static <T> QueryResult<T> createResult(final Object resObj) {
-        if (resObj instanceof QueryResult) {
-            return (QueryResult<T>) resObj;
+        if (handler.nodeName(node) == null) {
+            // paranoia check for undefined node names
+            return parentKey;
         }
-        return QueryResult.createNodeResult((T) resObj);
+        final StringBuilder buf = new StringBuilder(parentKey.length() + handler.nodeName(node).length() + PATH_DELIMITER.length());
+        if (!parentKey.isEmpty()) {
+            buf.append(parentKey);
+            buf.append(PATH_DELIMITER);
+        }
+        buf.append(handler.nodeName(node));
+        return buf.toString();
     }
 
-    // static initializer: registers the configuration node pointer factory
-    static {
-        JXPathContextReferenceImpl.addNodePointerFactory(new ConfigurationNodePointerFactory());
+    /**
+     * {@inheritDoc} The expected format of the passed in key is explained in the class comment.
+     */
+    @Override
+    public <T> NodeAddData<T> prepareAdd(final T root, final String key, final NodeHandler<T> handler) {
+        if (key == null) {
+            throw new IllegalArgumentException("prepareAdd: key must not be null!");
+        }
+
+        String addKey = key;
+        int index = findKeySeparator(addKey);
+        if (index < 0) {
+            addKey = generateKeyForAdd(root, addKey, handler);
+            index = findKeySeparator(addKey);
+        } else if (index >= addKey.length() - 1) {
+            invalidPath(addKey, " new node path must not be empty.");
+        }
+
+        final List<QueryResult<T>> nodes = query(root, addKey.substring(0, index).trim(), handler);
+        if (nodes.size() != 1) {
+            throw new IllegalArgumentException("prepareAdd: key '" + key + "' must select exactly one target node!");
+        }
+
+        return createNodeAddData(addKey.substring(index).trim(), nodes.get(0));
+    }
+
+    /**
+     * {@inheritDoc} This implementation interprets the passed in key as an XPATH expression.
+     */
+    @Override
+    public <T> List<QueryResult<T>> query(final T root, final String key, final NodeHandler<T> handler) {
+        if (StringUtils.isEmpty(key)) {
+            final QueryResult<T> result = createResult(root);
+            return Collections.singletonList(result);
+        }
+        final JXPathContext context = createContext(root, handler);
+        List<?> results = context.selectNodes(key);
+        if (results == null) {
+            results = Collections.emptyList();
+        }
+        return convertResults(results);
     }
 }

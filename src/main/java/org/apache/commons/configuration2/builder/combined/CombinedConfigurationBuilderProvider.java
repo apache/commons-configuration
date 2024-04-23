@@ -53,6 +53,18 @@ public class CombinedConfigurationBuilderProvider extends BaseConfigurationBuild
     private static final String FILE_PARAMS = "org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl";
 
     /**
+     * Populates the specified parameters object with properties from the given configuration. This method is used to set
+     * default values for basic properties based on the result configuration of the parent builder.
+     *
+     * @param config the configuration whose properties are to be copied
+     * @param params the target parameters object
+     */
+    private static void setUpBasicParameters(final CombinedConfiguration config, final BasicBuilderParameters params) {
+        params.setListDelimiterHandler(config.getListDelimiterHandler()).setLogger(config.getLogger())
+            .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing()).setConfigurationDecoder(config.getConfigurationDecoder());
+    }
+
+    /**
      * Creates a new instance of {@code CombinedConfigurationBuilderProvider}.
      */
     public CombinedConfigurationBuilderProvider() {
@@ -89,17 +101,5 @@ public class CombinedConfigurationBuilderProvider extends BaseConfigurationBuild
         setUpBasicParameters(decl.getConfigurationBuilder().getConfigurationUnderConstruction(), basicParams);
         // now properties set explicitly can be overridden
         super.initializeParameterObjects(decl, params);
-    }
-
-    /**
-     * Populates the specified parameters object with properties from the given configuration. This method is used to set
-     * default values for basic properties based on the result configuration of the parent builder.
-     *
-     * @param config the configuration whose properties are to be copied
-     * @param params the target parameters object
-     */
-    private static void setUpBasicParameters(final CombinedConfiguration config, final BasicBuilderParameters params) {
-        params.setListDelimiterHandler(config.getListDelimiterHandler()).setLogger(config.getLogger())
-            .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing()).setConfigurationDecoder(config.getConfigurationDecoder());
     }
 }

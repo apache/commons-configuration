@@ -46,6 +46,37 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /** Constant for the file extension separator. */
     private static final char EXT_SEPARATOR = '.';
 
+    /**
+     * Extracts the extension from the given file name. The name can be <b>null</b>.
+     *
+     * @param fileName the file name
+     * @return the extension (<b>null</b> if there is none)
+     */
+    private static String extractExtension(final String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+
+        final int pos = fileName.lastIndexOf(EXT_SEPARATOR);
+        return pos < 0 ? null : fileName.substring(pos + 1);
+    }
+
+    /**
+     * Tries to obtain the current file name from the given list of parameter objects.
+     *
+     * @param params the parameter objects
+     * @return the file name or <b>null</b> if unspecified
+     */
+    private static String fetchCurrentFileName(final Collection<BuilderParameters> params) {
+        for (final BuilderParameters p : params) {
+            if (p instanceof FileBasedBuilderParametersImpl) {
+                final FileBasedBuilderParametersImpl fp = (FileBasedBuilderParametersImpl) p;
+                return fp.getFileHandler().getFileName();
+            }
+        }
+        return null;
+    }
+
     /** The matching configuration class. */
     private final String matchingConfigurationClass;
 
@@ -83,25 +114,6 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     }
 
     /**
-     * Gets the name of the matching configuration class. This class is used if the file extension matches the extension
-     * of this provider.
-     *
-     * @return the matching configuration class
-     */
-    public String getMatchingConfigurationClass() {
-        return matchingConfigurationClass;
-    }
-
-    /**
-     * Gets the file extension of this provider.
-     *
-     * @return the file extension to match
-     */
-    public String getExtension() {
-        return extension;
-    }
-
-    /**
      * {@inheritDoc} This implementation tries to find a {@link FileBasedBuilderParametersImpl} object in the parameter
      * objects. If one is found, the extension of the file name is obtained and compared against the stored file extension.
      * In case of a match, the matching configuration class is selected, otherwise the default one.
@@ -114,33 +126,21 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     }
 
     /**
-     * Tries to obtain the current file name from the given list of parameter objects.
+     * Gets the file extension of this provider.
      *
-     * @param params the parameter objects
-     * @return the file name or <b>null</b> if unspecified
+     * @return the file extension to match
      */
-    private static String fetchCurrentFileName(final Collection<BuilderParameters> params) {
-        for (final BuilderParameters p : params) {
-            if (p instanceof FileBasedBuilderParametersImpl) {
-                final FileBasedBuilderParametersImpl fp = (FileBasedBuilderParametersImpl) p;
-                return fp.getFileHandler().getFileName();
-            }
-        }
-        return null;
+    public String getExtension() {
+        return extension;
     }
 
     /**
-     * Extracts the extension from the given file name. The name can be <b>null</b>.
+     * Gets the name of the matching configuration class. This class is used if the file extension matches the extension
+     * of this provider.
      *
-     * @param fileName the file name
-     * @return the extension (<b>null</b> if there is none)
+     * @return the matching configuration class
      */
-    private static String extractExtension(final String fileName) {
-        if (fileName == null) {
-            return null;
-        }
-
-        final int pos = fileName.lastIndexOf(EXT_SEPARATOR);
-        return pos < 0 ? null : fileName.substring(pos + 1);
+    public String getMatchingConfigurationClass() {
+        return matchingConfigurationClass;
     }
 }

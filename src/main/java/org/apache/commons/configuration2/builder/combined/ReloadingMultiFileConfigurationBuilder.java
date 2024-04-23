@@ -61,16 +61,13 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
     private final ReloadingController reloadingController = createReloadingController();
 
     /**
-     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters and a
-     * flag whether initialization failures should be ignored.
+     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} without setting initialization parameters.
      *
      * @param resCls the result configuration class
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit a flag whether initialization errors should be ignored
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
-        super(resCls, params, allowFailOnInit);
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls) {
+        super(resCls);
     }
 
     /**
@@ -85,22 +82,16 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
     }
 
     /**
-     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} without setting initialization parameters.
+     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters and a
+     * flag whether initialization failures should be ignored.
      *
      * @param resCls the result configuration class
+     * @param params a map with initialization parameters
+     * @param allowFailOnInit a flag whether initialization errors should be ignored
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls) {
-        super(resCls);
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns a special {@code ReloadingController} that delegates to the reloading
-     * controllers of the managed builders created so far.
-     */
-    @Override
-    public ReloadingController getReloadingController() {
-        return reloadingController;
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
+        super(resCls, params, allowFailOnInit);
     }
 
     /**
@@ -126,5 +117,14 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
                 return getManagedBuilders().values().stream().map(b -> ((ReloadingControllerSupport) b).getReloadingController()).collect(Collectors.toList());
             }
         };
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns a special {@code ReloadingController} that delegates to the reloading
+     * controllers of the managed builders created so far.
+     */
+    @Override
+    public ReloadingController getReloadingController() {
+        return reloadingController;
     }
 }
