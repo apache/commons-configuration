@@ -518,8 +518,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the {@code NodeModel} for the new configuration
      */
     private static NodeModel<ImmutableNode> createNodeModel(final HierarchicalConfiguration<ImmutableNode> c) {
-        final ImmutableNode root = c != null ? obtainRootNode(c) : null;
-        return new InMemoryNodeModel(root);
+        return new InMemoryNodeModel(obtainRootNode(c));
     }
 
     /**
@@ -530,7 +529,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the root node of this configuration
      */
     private static ImmutableNode obtainRootNode(final HierarchicalConfiguration<ImmutableNode> c) {
-        return c.getNodeModel().getNodeHandler().getRootNode();
+        return c != null ? c.getNodeModel().getNodeHandler().getRootNode() : null;
     }
 
     /**
