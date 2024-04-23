@@ -74,7 +74,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * @param dejaVue Previously visited objects.
      */
     static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
-            Set<Object> dejaVue) {
+            final Set<Object> dejaVue) {
         int size = target.size();
         while (size < limit && iterator.hasNext()) {
             final Object next = iterator.next();
