@@ -24,6 +24,8 @@
   </properties>
   <body>
     <release version="2.10.2" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+      <!-- ADD -->
+      <action type="fix" issue="CONFIGURATION-844" dev="ggregory" due-to="Thomas Steiner, Gary Gregory">Add support for empty sections #408.</action>
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if DataConfiguration.DataConfiguration(Configuration) is called with null.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if XMLPropertiesConfiguration.XMLPropertiesConfiguration(Element) is called with null.</action>
