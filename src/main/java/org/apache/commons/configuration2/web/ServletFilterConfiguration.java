@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.web;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Objects;
 
 import javax.servlet.FilterConfig;
 
@@ -30,6 +31,7 @@ import javax.servlet.FilterConfig;
  * @since 1.1
  */
 public class ServletFilterConfiguration extends BaseWebConfiguration {
+
     /** Stores the wrapped filter config. */
     protected FilterConfig config;
 
@@ -39,7 +41,7 @@ public class ServletFilterConfiguration extends BaseWebConfiguration {
      * @param config the filter configuration
      */
     public ServletFilterConfiguration(final FilterConfig config) {
-        this.config = config;
+        this.config = Objects.requireNonNull(config, "config");
     }
 
     @Override

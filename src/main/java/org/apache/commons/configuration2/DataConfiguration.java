@@ -102,6 +102,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration {
+
     /** The key of the property storing the user-defined date format. */
     public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
 
@@ -147,7 +148,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param configuration the wrapped configuration
      */
     public DataConfiguration(final Configuration configuration) {
-        this.configuration = Objects.requireNonNull(configuration);
+        this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.dataConversionHandler = new DataConversionHandler();
     }
 

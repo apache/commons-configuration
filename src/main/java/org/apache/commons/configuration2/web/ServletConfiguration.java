@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.web;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Objects;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -41,7 +42,7 @@ public class ServletConfiguration extends BaseWebConfiguration {
      * @param servlet the servlet
      */
     public ServletConfiguration(final Servlet servlet) {
-        this(servlet.getServletConfig());
+        this(Objects.requireNonNull(servlet, "servlet").getServletConfig());
     }
 
     /**
@@ -50,7 +51,7 @@ public class ServletConfiguration extends BaseWebConfiguration {
      * @param config the servlet configuration
      */
     public ServletConfiguration(final ServletConfig config) {
-        this.config = config;
+        this.config = Objects.requireNonNull(config, "config");
     }
 
     @Override

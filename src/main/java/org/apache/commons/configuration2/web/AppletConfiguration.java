@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.web;
 import java.applet.Applet;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * A configuration wrapper to read applet parameters. This configuration is read only, adding or removing a property
@@ -28,6 +29,7 @@ import java.util.Iterator;
  * @since 1.1
  */
 public class AppletConfiguration extends BaseWebConfiguration {
+
     /** Stores the wrapped applet. */
     protected Applet applet;
 
@@ -37,7 +39,7 @@ public class AppletConfiguration extends BaseWebConfiguration {
      * @param applet the applet
      */
     public AppletConfiguration(final Applet applet) {
-        this.applet = applet;
+        this.applet = Objects.requireNonNull(applet, "applet");
     }
 
     @Override

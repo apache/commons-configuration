@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.ServletRequest;
 
@@ -32,6 +33,7 @@ import javax.servlet.ServletRequest;
  * @since 1.1
  */
 public class ServletRequestConfiguration extends BaseWebConfiguration {
+
     /** Stores the wrapped request. */
     protected ServletRequest request;
 
@@ -41,7 +43,7 @@ public class ServletRequestConfiguration extends BaseWebConfiguration {
      * @param request the servlet request
      */
     public ServletRequestConfiguration(final ServletRequest request) {
-        this.request = request;
+        this.request = Objects.requireNonNull(request, "config");
     }
 
     @Override
