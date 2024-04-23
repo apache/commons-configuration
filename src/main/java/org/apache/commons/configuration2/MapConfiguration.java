@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
@@ -87,7 +88,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @param map the map
      */
     public MapConfiguration(final Map<String, ?> map) {
-        this.map = (Map<String, Object>) map;
+        this.map = (Map<String, Object>) Objects.requireNonNull(map, "map");
     }
 
     /**
@@ -100,7 +101,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @since 1.8
      */
     public MapConfiguration(final Properties props) {
-        map = toMap(props);
+        map = toMap(Objects.requireNonNull(props));
     }
 
     /**
