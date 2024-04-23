@@ -1032,6 +1032,16 @@ public class TestINIConfiguration {
     }
 
     /**
+     * Tests correct handling of empty sections "[ ]".
+     */
+    @Test
+    public void testEmptySection() throws ConfigurationException {
+        final INIConfiguration config = setUpConfig("[]" + LINE_SEPARATOR + "key=value" + LINE_SEPARATOR);
+        final String value = config.getString(" .key");
+        assertEquals("value", value);
+    }
+
+    /**
      * Tests whether a value which contains a semicolon can be loaded successfully. This test is related to
      * CONFIGURATION-434.
      */
