@@ -203,6 +203,8 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  */
 public class INIConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
 
+    private static final String EMPTY_KEY = " ";
+
     /**
      * Builds instances of INIConfiguration.
      *
@@ -501,7 +503,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     String section = line.substring(1, length);
                     if (section.isEmpty()) {
                         // use space for sections with no key
-                        section = " ";
+                        section = EMPTY_KEY;
                     }
                     sectionBuilder = sectionBuilders.computeIfAbsent(section, k -> new ImmutableNode.Builder());
                 } else {
@@ -517,7 +519,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     key = key.trim();
                     if (key.isEmpty()) {
                         // use space for properties with no key
-                        key = " ";
+                        key = EMPTY_KEY;
                     }
                     createValueNodes(sectionBuilder, key, value);
                 }
