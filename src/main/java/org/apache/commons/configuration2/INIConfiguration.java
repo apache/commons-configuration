@@ -134,6 +134,9 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  *  [sectionSeparators]
  *  passwd : abc=def
  *  a:b = "value"
+ *
+ *  []
+ *  var = emptySection
  * </pre>
  * <p>
  * This ini file will be parsed without error. Note:
@@ -155,6 +158,8 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * {@code abc=def}. This default behavior can be changed by using quotes. If there is a separator character before the
  * first quote character (ignoring whitespace), this character is used as separator. Thus the second property definition
  * in the section has the key {@code a:b} and the value {@code value}.</li>
+ * <li>The empty section is added using a key consisting of a single space character. The parameters can be accessed
+ * using {@code getProperty(" .var")}</li>
  * </ul>
  * <p>
  * Internally, this configuration maps the content of the represented ini file to its node structure in the following
@@ -480,7 +485,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             if (!isCommentLine(line)) {
                 if (isSectionLine(line)) {
                     final int length = sectionInLineCommentsAllowed ? line.indexOf("]") : line.length() - 1;
-                    final String section = line.substring(1, length);
+                    String section = line.substring(1, length);
+                    if (section.isEmpty()) {
+                        // use space for sections with no key
+                        section = " ";
+                    }
                     sectionBuilder = sectionBuilders.computeIfAbsent(section, k -> new ImmutableNode.Builder());
                 } else {
                     String key;
