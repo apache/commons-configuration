@@ -203,6 +203,9 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  */
 public class INIConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
 
+    /**
+     * The empty key.
+     */
     private static final String EMPTY_KEY = " ";
 
     /**

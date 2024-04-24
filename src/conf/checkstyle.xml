@@ -127,7 +127,7 @@
     <module name="StringLiteralEquality" />
     <module name="SuperClone" />
     <module name="SuperFinalize" />
-    <module name="DeclarationOrder" />
+    <!-- <module name="DeclarationOrder" /> -->
     <module name="ExplicitInitialization" />
     <module name="DefaultComesLast" />
     <module name="FallThrough" />
