@@ -67,8 +67,8 @@ public class TestNodeNameMatchers {
     public void testEqualsIgnoreCaseMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ENGLISH)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ROOT)));
     }
 
     /**

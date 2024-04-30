@@ -57,7 +57,7 @@ public class TestConfigurationAttributePointer {
         final ImmutableNode.Builder ndBuilder = new ImmutableNode.Builder();
         ndBuilder.name("parent").addAttribute(ATTR_NAME, ATTR_VALUE);
         final ImmutableNode nd = ndBuilder.create();
-        parent = new ConfigurationNodePointer<>(nd, Locale.ENGLISH, new InMemoryNodeModel(nd).getNodeHandler());
+        parent = new ConfigurationNodePointer<>(nd, Locale.ROOT, new InMemoryNodeModel(nd).getNodeHandler());
         pointer = new ConfigurationAttributePointer<>(parent, ATTR_NAME);
     }
 

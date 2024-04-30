@@ -92,7 +92,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
     @Test
     public void testDetermineConfigurationClassMatchCase() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
-        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT.toUpperCase(Locale.ENGLISH));
+        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT.toUpperCase(Locale.ROOT));
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
