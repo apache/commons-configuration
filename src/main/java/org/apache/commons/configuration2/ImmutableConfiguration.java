@@ -62,6 +62,14 @@ public interface ImmutableConfiguration {
      */
     boolean containsKey(String key);
 
+    /**
+     * Returns true if this configuration contains one or more keys to this value. This operation is more expensive than
+     * the {@link #containsKey containsKey} method.
+     *
+     * @param value value whose presence in this configuration is to be tested
+     * @return {@code true} if this configuration maps one or more keys to the specified value
+     * @throws NullPointerException if the value is {@code null}
+     */
     boolean containsValue(String value);
 
     /**

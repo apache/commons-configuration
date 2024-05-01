@@ -419,6 +419,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
     }
 
+    /**
+     * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
+     */
     @Override
     public final boolean containsValue(final String value) {
         beginRead(false);
@@ -439,6 +442,20 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected abstract boolean containsKeyInternal(String key);
 
+    /**
+     * Tests if an input value maps into the specified value in this configuration data structure. This operation is
+     * more expensive than the {@link #containsKeyInternal containsKey} method.
+     * <p>
+     * The implementation of this method will be different depending on the type of Configuration used.
+     *
+     * <p>Note that this method is identical in functionality to
+     * {@link #containsValue containsValue}, (which is part of the {@link ImmutableConfiguration} interface).
+     *
+     * @param value a value to search for
+     * @return {@code true} if and only if some key maps to the {@code value} argument in this hashtable as determined
+     * by the {@code equals} method; {@code false} otherwise.
+     * @throws NullPointerException if the value is {@code null}
+     */
     protected abstract boolean containsValueInternal(String value);
 
     /**
