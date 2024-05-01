@@ -17,9 +17,7 @@
 
 package org.apache.commons.configuration2.web;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -86,13 +84,6 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
             return parameters.getProperty(name);
         });
         return config;
-    }
-
-    @Test
-    void testContainsValue(){
-        AbstractConfiguration config = getConfiguration(); // is Servlet
-        assertTrue(config.containsValue("value1"), "should return true");
-        assertFalse(config.containsValue("value99999"), "should return false");
     }
 
     @Override

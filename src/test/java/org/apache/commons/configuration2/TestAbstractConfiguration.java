@@ -79,6 +79,13 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
+    void testContainsValue(){
+        AbstractConfiguration config = getConfiguration();
+        assertTrue(config.containsValue("value1"), "should return true");
+        assertFalse(config.containsValue("value99999"), "should return false");
+    }
+
+    @Test
     public void testClearProperty() {
         final Configuration config = getConfiguration();
         config.clearProperty("key2");

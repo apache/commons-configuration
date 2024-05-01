@@ -174,7 +174,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
 
     @Override
     protected boolean containsValueInternal(final String value) {
-        return map.containsKey(value);
+        return map.containsValue(value);
     }
 
     @Override
