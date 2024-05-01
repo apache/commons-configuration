@@ -149,20 +149,19 @@ public class JNDIConfiguration extends AbstractConfiguration {
 
     @Override
     protected boolean containsValueInternal(final String value) {
-        return checkIfContainsValue(getKeys(), value);
+        return contains(getKeys(), value);
     }
 
-
-    private boolean checkIfContainsValue(Iterator<String> keys, String value) {
+    private boolean contains(Iterator<String> keys, final String value) {
         if (keys.hasNext()) {
-            String key = keys.next();
-            Object valueFromProp = getProperty(key);
+            String nextKey = keys.next();
+            Object valueFromKey = getProperty(nextKey);
 
-            if (valueFromProp.equals(value)) {
+            if (valueFromKey.equals(value)) {
                 return true;
             }
 
-            checkIfContainsValue(keys, value);
+            contains(keys, value);
         }
 
         return false;
