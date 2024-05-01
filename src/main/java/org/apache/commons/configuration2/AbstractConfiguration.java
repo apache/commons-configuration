@@ -1529,6 +1529,21 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return size;
     }
 
+    protected boolean contains(Iterator<String> keys, final String value) {
+        if (keys.hasNext()) {
+            String nextKey = keys.next();
+            Object valueFromKey = getProperty(nextKey);
+
+            if (valueFromKey.equals(value)) {
+                return true;
+            }
+
+            contains(keys, value);
+        }
+
+        return false;
+    }
+
     @Override
     public Configuration subset(final String prefix) {
         return new SubsetConfiguration(this, prefix, ".");

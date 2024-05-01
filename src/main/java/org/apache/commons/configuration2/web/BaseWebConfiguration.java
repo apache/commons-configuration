@@ -17,7 +17,6 @@
 package org.apache.commons.configuration2.web;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 
@@ -72,21 +71,6 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     @Override
     protected boolean containsValueInternal(final String value) {
         return contains(getKeys(), value);
-    }
-
-    private boolean contains(Iterator<String> keys, final String value) {
-        if (keys.hasNext()) {
-            String nextKey = keys.next();
-            Object valueFromKey = getProperty(nextKey);
-
-            if (valueFromKey.equals(value)) {
-                return true;
-            }
-
-            contains(keys, value);
-        }
-
-        return false;
     }
 
     /**

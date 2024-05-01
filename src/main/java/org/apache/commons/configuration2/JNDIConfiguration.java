@@ -152,21 +152,6 @@ public class JNDIConfiguration extends AbstractConfiguration {
         return contains(getKeys(), value);
     }
 
-    private boolean contains(Iterator<String> keys, final String value) {
-        if (keys.hasNext()) {
-            String nextKey = keys.next();
-            Object valueFromKey = getProperty(nextKey);
-
-            if (valueFromKey.equals(value)) {
-                return true;
-            }
-
-            contains(keys, value);
-        }
-
-        return false;
-    }
-
     /**
      * Gets the base context with the prefix applied.
      *

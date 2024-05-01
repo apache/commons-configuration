@@ -130,6 +130,11 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
         return config.containsKey(makePath(key));
     }
 
+    @Override
+    protected boolean containsValueInternal(String value) {
+        return config.containsValue(value);
+    }
+
     /**
      * Returns the wrapped configuration as a {@code FileBased} object. If this cast is not possible, an exception is
      * thrown.

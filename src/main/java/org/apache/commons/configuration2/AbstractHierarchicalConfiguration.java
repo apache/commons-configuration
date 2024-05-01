@@ -460,21 +460,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         return contains(getKeys(), value);
     }
 
-    private boolean contains(Iterator<String> keys, final String value) {
-        if (keys.hasNext()) {
-            String nextKey = keys.next();
-            Object valueFromKey = getProperty(nextKey);
-
-            if (valueFromKey.equals(value)) {
-                return true;
-            }
-
-            contains(keys, value);
-        }
-
-        return false;
-    }
-
     /**
      * Helper method for resolving the specified key.
      *

@@ -358,6 +358,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return this.getCurrentConfig().containsKey(key);
     }
 
+    @Override
+    protected boolean containsValueInternal(String value) {
+        return this.getCurrentConfig().contains(getKeys(), value);
+    }
+
     /**
      * Creates a new, uninitialized child configuration.
      *
