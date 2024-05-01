@@ -424,6 +424,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final boolean containsValue(final String value) {
+        Objects.requireNonNull(value);
         beginRead(false);
         try {
             return containsValueInternal(value);

@@ -69,8 +69,11 @@ public interface ImmutableConfiguration {
      * @param value value whose presence in this configuration is to be tested
      * @return {@code true} if this configuration maps one or more keys to the specified value
      * @throws NullPointerException if the value is {@code null}
+     * @throws UnsupportedOperationException if this method is not supported by the implementing class.
      */
-    boolean containsValue(String value);
+    default boolean containsValue(String value) {
+        throw new UnsupportedOperationException(String.format("Class %s does not support this method.", this.getClass()));
+    }
 
     /**
      * Gets an object of the specified type associated with the given configuration key. If the key doesn't map to an
