@@ -483,7 +483,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, value, null) {
             @Override
             protected Boolean performOperation() throws SQLException {
-                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, valueColumn), true, value)) {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, valueColumn), false, value)) {
                     return rs.next();
                 }
             }
