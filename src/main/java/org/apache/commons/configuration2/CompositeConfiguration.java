@@ -298,6 +298,11 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return configList.stream().anyMatch(config -> config.containsKey(key));
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return configList.stream().anyMatch(config -> config.containsValue(value));
+    }
+
     /**
      * Gets the configuration at the specified index.
      *

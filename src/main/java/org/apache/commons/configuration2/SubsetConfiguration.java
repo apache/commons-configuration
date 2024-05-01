@@ -131,6 +131,11 @@ public class SubsetConfiguration extends AbstractConfiguration {
         return parent.containsKey(getParentKey(key));
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return parent.containsValue(value);
+    }
+
     /**
      * Gets the key in the subset configuration associated to the specified key in the parent configuration.
      *

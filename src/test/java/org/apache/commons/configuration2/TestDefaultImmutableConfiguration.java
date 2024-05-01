@@ -54,6 +54,12 @@ public class TestDefaultImmutableConfiguration {
         }
 
         @Override
+        public boolean containsValue(String value) {
+            // Super is not a default method.
+            return false;
+        }
+
+        @Override
         public <T> T get(final Class<T> cls, final String key) {
             // Super is not a default method.
             return null;

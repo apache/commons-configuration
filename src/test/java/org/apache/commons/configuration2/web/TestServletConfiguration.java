@@ -86,6 +86,11 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
         return config;
     }
 
+    @Test
+    void test(){
+        System.out.println(getConfiguration().containsValue("value14561"));
+    }
+
     @Override
     @Test
     public void testAddPropertyDirect() {

@@ -136,6 +136,11 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         return store.containsKey(key);
     }
 
+    @Override
+    protected boolean containsValueInternal(String value) {
+        return store.containsValue(value);
+    }
+
     /**
      * Gets the list of the keys contained in the configuration repository.
      *

@@ -455,6 +455,27 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         return getPropertyInternal(key) != null;
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return checkIfContainsValue(getKeys(), value);
+    }
+
+
+    private boolean checkIfContainsValue(Iterator<String> keys, String value) {
+        if (keys.hasNext()) {
+            String key = keys.next();
+            Object valueFromProp = getProperty(key);
+
+            if (valueFromProp.equals(value)) {
+                return true;
+            }
+
+            checkIfContainsValue(keys, value);
+        }
+
+        return false;
+    }
+
     /**
      * Helper method for resolving the specified key.
      *

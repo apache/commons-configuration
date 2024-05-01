@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.web;
 
 import java.util.Collection;
 
+import java.util.Iterator;
 import org.apache.commons.configuration2.AbstractConfiguration;
 
 /**
@@ -67,6 +68,28 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     protected boolean containsKeyInternal(final String key) {
         return getPropertyInternal(key) != null;
     }
+
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return checkIfContainsValue(getKeys(), value);
+    }
+
+
+    private boolean checkIfContainsValue(Iterator<String> keys, String value) {
+        if (keys.hasNext()) {
+            String key = keys.next();
+            Object valueFromProp = getProperty(key);
+
+            if (valueFromProp.equals(value)) {
+                return true;
+            }
+
+            checkIfContainsValue(keys, value);
+        }
+
+        return false;
+    }
+
 
     /**
      * Takes care of list delimiters in property values. This method checks if delimiter parsing is enabled and the passed

@@ -62,6 +62,8 @@ public interface ImmutableConfiguration {
      */
     boolean containsKey(String key);
 
+    boolean containsValue(String value);
+
     /**
      * Gets an object of the specified type associated with the given configuration key. If the key doesn't map to an
      * existing object, the method returns null unless {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to

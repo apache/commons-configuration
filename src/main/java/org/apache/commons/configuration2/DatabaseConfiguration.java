@@ -478,6 +478,21 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         return result != null && result.booleanValue();
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, value, null) {
+            @Override
+            protected Boolean performOperation() throws SQLException {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, valueColumn), true, value)) {
+                    return rs.next();
+                }
+            }
+        };
+
+        final Boolean result = op.execute();
+        return result != null && result.booleanValue();
+    }
+
     /**
      * Extracts the value of a property from the given result set. The passed in {@code ResultSet} was created by a SELECT
      * statement on the underlying database table. This implementation reads the value of the column determined by the

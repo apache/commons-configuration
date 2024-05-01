@@ -147,6 +147,27 @@ public class JNDIConfiguration extends AbstractConfiguration {
         }
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return checkIfContainsValue(getKeys(), value);
+    }
+
+
+    private boolean checkIfContainsValue(Iterator<String> keys, String value) {
+        if (keys.hasNext()) {
+            String key = keys.next();
+            Object valueFromProp = getProperty(key);
+
+            if (valueFromProp.equals(value)) {
+                return true;
+            }
+
+            checkIfContainsValue(keys, value);
+        }
+
+        return false;
+    }
+
     /**
      * Gets the base context with the prefix applied.
      *

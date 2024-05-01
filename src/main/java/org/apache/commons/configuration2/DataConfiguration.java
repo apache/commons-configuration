@@ -213,6 +213,11 @@ public class DataConfiguration extends AbstractConfiguration {
         return configuration.containsKey(key);
     }
 
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return configuration.containsValue(value);
+    }
+
     /**
      * Gets an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.

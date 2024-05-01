@@ -419,6 +419,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
     }
 
+    @Override
+    public final boolean containsValue(final String value){
+        beginRead(false);
+        try {
+            return containsValueInternal(value);
+        } finally {
+            endRead();
+        }
+    }
+
     /**
      * Actually checks whether the specified key is contained in this configuration. This method is called by
      * {@code containsKey()}. It has to be defined by concrete subclasses.
@@ -428,6 +438,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     protected abstract boolean containsKeyInternal(String key);
+
+    protected abstract boolean containsValueInternal(String value);
 
     /**
      * Helper method for obtaining a property value with a type conversion.
