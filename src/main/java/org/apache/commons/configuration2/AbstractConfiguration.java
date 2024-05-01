@@ -1530,17 +1530,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     protected boolean contains(Iterator<String> keys, final String value) {
-        if (keys.hasNext()) {
-            String nextKey = keys.next();
-            Object valueFromKey = getProperty(nextKey);
-
-            if (valueFromKey.equals(value)) {
+        while (keys.hasNext()) {
+            if (value.equals(getProperty(keys.next()))) {
                 return true;
             }
-
-            contains(keys, value);
         }
-
         return false;
     }
 
