@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemProperties;
 
 /**
  * <p>
@@ -40,8 +41,6 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  */
 public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
-    /** Constant for the system property with the user's home directory. */
-    private static final String PROP_HOME = "user.home";
 
     /**
      * Obtains the home directory to be used by a new instance. If a directory name is provided, it is used. Otherwise, the
@@ -51,7 +50,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @return the directory to be used
      */
     private static String fetchHomeDirectory(final String homeDir) {
-        return homeDir != null ? homeDir : System.getProperty(PROP_HOME);
+        return homeDir != null ? homeDir : SystemProperties.getUserName();
     }
 
     /** The home directory to be searched for the requested file. */

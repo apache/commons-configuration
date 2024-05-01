@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
+import org.apache.commons.lang3.SystemProperties;
 
 /**
  * A helper class that defines a bunch of tests related to variable interpolation. It can be used for running these
@@ -65,7 +66,7 @@ public class InterpolationTestHelper {
         final Configuration c = config.interpolatedConfiguration();
         assertEquals("/home/applicationRoot/db/hypersonic", c.getProperty("db"));
         assertEquals(KeyEvent.VK_CANCEL, c.getInt("intkey.code"));
-        assertEquals(System.getProperty("java.version"), c.getProperty("inttest.sysprop"));
+        assertEquals(SystemProperties.getJavaVersion(), c.getProperty("inttest.sysprop"));
         assertEquals("3,1415", c.getProperty("inttest.value"));
         final List<?> lst = (List<?>) c.getProperty("inttest.list");
         assertEquals(Arrays.asList("/home/applicationRoot/db/hypersonic", "3,1415"), lst);

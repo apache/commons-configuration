@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.lang3.SystemProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -70,7 +71,7 @@ public class TestHomeDirectoryLocationStrategy {
     @Test
     public void testInitDefaults() {
         final HomeDirectoryLocationStrategy strategy = new HomeDirectoryLocationStrategy();
-        assertEquals(System.getProperty("user.home"), strategy.getHomeDirectory());
+        assertEquals(SystemProperties.getUserName(), strategy.getHomeDirectory());
         assertFalse(strategy.isEvaluateBasePath());
     }
 

@@ -28,6 +28,7 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.configuration2.io.FileSystem;
+import org.apache.commons.lang3.SystemProperties;
 import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;
@@ -175,7 +176,7 @@ public class CatalogResolver implements EntityResolver {
         private FileSystem fs;
 
         /** The base directory */
-        private String baseDir = System.getProperty("user.dir");
+        private String baseDir = SystemProperties.getUserDir();
 
         /** The object for handling interpolation. */
         private ConfigurationInterpolator interpolator;
