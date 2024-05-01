@@ -17,8 +17,8 @@
 package org.apache.commons.configuration2.web;
 
 import java.util.Collection;
-
 import java.util.Iterator;
+
 import org.apache.commons.configuration2.AbstractConfiguration;
 
 /**
@@ -89,7 +89,6 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
 
         return false;
     }
-
 
     /**
      * Takes care of list delimiters in property values. This method checks if delimiter parsing is enabled and the passed

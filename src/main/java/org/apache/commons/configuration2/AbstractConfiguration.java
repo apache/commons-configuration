@@ -420,7 +420,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public final boolean containsValue(final String value){
+    public final boolean containsValue(final String value) {
         beginRead(false);
         try {
             return containsValueInternal(value);
