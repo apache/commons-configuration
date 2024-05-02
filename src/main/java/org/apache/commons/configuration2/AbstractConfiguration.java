@@ -424,7 +424,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final boolean containsValue(final String value) {
-        Objects.requireNonNull(value, "Value cannot be null!");
+        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         beginRead(false);
         try {
             return containsValueInternal(value);
@@ -1548,6 +1548,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     protected boolean contains(Iterator<String> keys, final String value) {
+        Objects.requireNonNull(keys, "Parameter \"keys\" cannot be null");
+        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         while (keys.hasNext()) {
             if (value.equals(getProperty(keys.next()))) {
                 return true;
