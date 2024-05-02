@@ -82,7 +82,33 @@ public abstract class TestAbstractConfiguration {
     void testContainsValue(){
         Configuration config = getConfiguration();
         assertTrue(config.containsValue("value1"), "should return true for class " + this.getClass());
-        assertFalse(config.containsValue("value99999"), "should return true for class " + this.getClass());
+        assertFalse(config.containsValue("value99999"), "should return false for class " + this.getClass());
+    }
+
+    @Test
+    void testContains(){
+        AbstractConfiguration config = getConfiguration();
+
+        assertTrue(config.contains(config.getKeys(), "value1"), "should return true for class " + this.getClass());
+        assertFalse(config.contains(config.getKeys(),"value99999"), "should return false for class " + this.getClass());
+    }
+
+    @Test
+    void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
+        Configuration config = getConfiguration();
+        NullPointerException npe = assertThrows(NullPointerException.class, () -> config.containsValue(null),
+            String.format("%s should throw NullPointerException when value is null.", this.getClass()));
+
+        assertEquals("Value cannot be null!", npe.getMessage());
+    }
+
+    @Test
+    void givenNullIterator_testContains_shouldThrowNullPointerException(){
+        AbstractConfiguration config = getConfiguration();
+
+        NullPointerException npe = assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
+
+        assertEquals("Cannot invoke \"java.util.Iterator.hasNext()\" because \"keys\" is null", npe.getMessage());
     }
 
     @Test
