@@ -183,7 +183,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
         if (LOG.isTraceEnabled()) {
             LOG.trace("set(" + name + "," + value + ")");
         }
-        Objects.requireNonNull(value, "Error trying to set property to null.");
+        Objects.requireNonNull(value, "value");
 
         if (value instanceof Collection) {
             final Collection<?> collection = (Collection<?>) value;
