@@ -444,8 +444,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected abstract boolean containsKeyInternal(String key);
 
     /**
-     * Tests if an input value maps into the specified value in this configuration data structure. This operation is
-     * more expensive than the {@link #containsKeyInternal containsKey} method.
+     * Returns true if this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the {@link #containsKeyInternal containsKey} method.
      * <p>
      * The implementation of this method will be different depending on the type of Configuration used.
      *

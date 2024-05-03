@@ -63,16 +63,17 @@ public interface ImmutableConfiguration {
     boolean containsKey(String key);
 
     /**
-     * Returns true if this configuration contains one or more matches to this value. This operation is more expensive than
-     * the {@link #containsKey containsKey} method.
+     * Returns true if this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the {@link #containsKey containsKey} method.
      *
      * @param value value whose presence in this configuration is to be tested
      * @return {@code true} if this configuration maps one or more keys to the specified value
-     * @throws NullPointerException if the value is {@code null}
+     * @throws NullPointerException          if the value is {@code null}
      * @throws UnsupportedOperationException if this method is not supported by the implementing class.
      */
     default boolean containsValue(String value) {
-        throw new UnsupportedOperationException(String.format("Class %s does not support this method.", this.getClass()));
+        throw new UnsupportedOperationException(
+            String.format("Class %s does not support this method.", this.getClass()));
     }
 
     /**
