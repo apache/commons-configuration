@@ -488,7 +488,6 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 }
             }
         };
-
         final Boolean result = op.execute();
         return result != null && result.booleanValue();
     }

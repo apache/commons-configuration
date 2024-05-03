@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
@@ -63,17 +64,23 @@ public interface ImmutableConfiguration {
     boolean containsKey(String key);
 
     /**
-     * Returns true if this configuration contains one or more matches to this value. This operation stops at first
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
      * match but may be more expensive than the {@link #containsKey containsKey} method.
      *
      * @param value value whose presence in this configuration is to be tested
      * @return {@code true} if this configuration maps one or more keys to the specified value
      * @throws NullPointerException          if the value is {@code null}
-     * @throws UnsupportedOperationException if this method is not supported by the implementing class.
+     * @since 2.0
      */
-    default boolean containsValue(String value) {
-        throw new UnsupportedOperationException(
-            String.format("Class %s does not support this method.", this.getClass()));
+    default boolean containsValue(final String value) {
+        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
+        final Iterator<String> keys = getKeys();
+        while (keys.hasNext()) {
+            if (value.equals(getProperty(keys.next()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

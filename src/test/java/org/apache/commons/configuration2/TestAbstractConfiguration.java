@@ -79,40 +79,39 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    void testContainsValue(){
-        Configuration config = getConfiguration();
+    public void testContainsValue(){
+        final Configuration config = getConfiguration();
         assertTrue(config.containsValue("value1"), "should return true for class " + this.getClass());
         assertFalse(config.containsValue("value99999"), "should return false for class " + this.getClass());
     }
 
     @Test
-    void testContains(){
-        AbstractConfiguration config = getConfiguration();
-
+    public void testContains(){
+        final AbstractConfiguration config = getConfiguration();
         assertTrue(config.contains(config.getKeys(), "value1"), "should return true for class " + this.getClass());
         assertFalse(config.contains(config.getKeys(),"value99999"), "should return false for class " + this.getClass());
     }
 
     @Test
-    void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
-        Configuration config = getConfiguration();
-        NullPointerException npe = assertThrows(NullPointerException.class, () -> config.containsValue(null),
+    public void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
+        final Configuration config = getConfiguration();
+        final NullPointerException npe = assertThrows(NullPointerException.class, () -> config.containsValue(null),
             String.format("%s should throw NullPointerException when value is null.", this.getClass()));
 
         assertEquals("Parameter \"value\" cannot be null", npe.getMessage());
     }
 
     @Test
-    void givenNullIterator_testContains_shouldThrowNullPointerException(){
-        AbstractConfiguration config = getConfiguration();
+    public void givenNullIterator_testContains_shouldThrowNullPointerException(){
+        final AbstractConfiguration config = getConfiguration();
 
-        NullPointerException npe = assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
+        final NullPointerException npe = assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
 
         assertEquals("Parameter \"keys\" cannot be null", npe.getMessage());
     }
 
     @Test
-    void givenNullValue_testContains_shouldThrowNullPointerException(){
+    public void givenNullValue_testContains_shouldThrowNullPointerException(){
         AbstractConfiguration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
 

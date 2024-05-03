@@ -1555,7 +1555,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return true if the value is found in the properties, false otherwise
      * @throws NullPointerException if keys or value is null
      */
-    protected boolean contains(Iterator<String> keys, final String value) {
+    protected boolean contains(final Iterator<String> keys, final String value) {
         Objects.requireNonNull(keys, "Parameter \"keys\" cannot be null");
         Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         while (keys.hasNext()) {
