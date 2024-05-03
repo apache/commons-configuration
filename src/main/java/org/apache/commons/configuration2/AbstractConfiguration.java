@@ -1547,6 +1547,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return size;
     }
 
+    /**
+     * Checks if the specified value exists in the properties structure mapped by the provided keys.
+     *
+     * @param keys an Iterator of String keys to search for the value
+     * @param value the String value to search for in the properties
+     * @return true if the value is found in the properties, false otherwise
+     * @throws NullPointerException if keys or value is null
+     */
     protected boolean contains(Iterator<String> keys, final String value) {
         Objects.requireNonNull(keys, "Parameter \"keys\" cannot be null");
         Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
