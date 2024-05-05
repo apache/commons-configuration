@@ -720,7 +720,7 @@ public class TestBaseConfiguration {
     }
 
     @Test
-    public void givenNullValue_testContainsValue_shouldReturnFalse() {
+    public void testContainsValue() {
         assertFalse(config.containsValue(null));
     }
 }

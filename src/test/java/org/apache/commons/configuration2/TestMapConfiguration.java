@@ -164,7 +164,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
     }
 
     @Test
-    public void givenNullValue_testContainsValue_shouldReturnFalse() {
+    public void testContainsValue() {
         assertFalse(getConfiguration().containsValue(null), "should return false");
     }
 }

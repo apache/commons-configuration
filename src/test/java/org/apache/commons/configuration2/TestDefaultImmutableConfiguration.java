@@ -363,7 +363,7 @@ public class TestDefaultImmutableConfiguration {
     }
 
     @Test
-    public void givenExistingValue_testContainsValueWithDefaultImplementation_shouldReturnTrue() {
+    public void testContainsValueDefaultImplementation() {
         config.map.put("test", "213123");
         assertTrue(config.containsValue("213123"));
     }

@@ -79,28 +79,28 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testContainsValue(){
+    public void testContainsValue() {
         final Configuration config = getConfiguration();
         assertTrue(config.containsValue("value1"));
         assertFalse(config.containsValue("value99999"));
     }
 
     @Test
-    public void testContains(){
+    public void testContains() {
         final AbstractConfiguration config = getConfiguration();
         assertTrue(config.contains(config.getKeys(), "value1"));
-        assertFalse(config.contains(config.getKeys(),"value99999"));
+        assertFalse(config.contains(config.getKeys(), "value99999"));
     }
 
     @Test
-    public void givenNullIterator_testContains_shouldThrowNullPointerException() {
+    public void givenNullIteratorTestContains() {
         final AbstractConfiguration config = getConfiguration();
 
         assertThrows(NullPointerException.class, () -> config.contains(null, "value1"));
     }
 
     @Test
-    public void givenNullValue_testContains_shouldThrowNullPointerException() {
+    public void givenNullValueTestContains() {
         AbstractConfiguration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
 

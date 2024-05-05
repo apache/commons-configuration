@@ -116,7 +116,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
     }
 
     @Test
-    public void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
+    public void testContainsValue() {
         final Configuration config = getConfiguration();
         assertThrows(NullPointerException.class, () -> config.containsValue(null));
     }
