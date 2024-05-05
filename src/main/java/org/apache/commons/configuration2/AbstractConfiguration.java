@@ -421,10 +421,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
+     * @since 2.0
      */
     @Override
     public final boolean containsValue(final String value) {
-        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         beginRead(false);
         try {
             return containsValueInternal(value);
@@ -444,7 +444,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected abstract boolean containsKeyInternal(String key);
 
     /**
-     * Returns true if this configuration contains one or more matches to this value. This operation stops at first
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
      * match but may be more expensive than the {@link #containsKeyInternal containsKey} method.
      * <p>
      * The implementation of this method will be different depending on the type of Configuration used.
@@ -456,6 +456,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return {@code true} if and only if some key maps to the {@code value} argument in this hashtable as determined
      * by the {@code equals} method; {@code false} otherwise.
      * @throws NullPointerException if the value is {@code null}
+     * @since 2.0
      */
     protected abstract boolean containsValueInternal(String value);
 
@@ -1553,11 +1554,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param keys an Iterator of String keys to search for the value
      * @param value the String value to search for in the properties
      * @return true if the value is found in the properties, false otherwise
-     * @throws NullPointerException if keys or value is null
+     * @since 2.0
      */
     protected boolean contains(final Iterator<String> keys, final String value) {
-        Objects.requireNonNull(keys, "Parameter \"keys\" cannot be null");
-        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         while (keys.hasNext()) {
             if (value.equals(getProperty(keys.next()))) {
                 return true;

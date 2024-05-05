@@ -213,6 +213,11 @@ public class DataConfiguration extends AbstractConfiguration {
         return configuration.containsKey(key);
     }
 
+    /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the containsKey method.
+     * @since 2.0
+     */
     @Override
     protected boolean containsValueInternal(final String value) {
         return configuration.containsValue(value);

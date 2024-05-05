@@ -298,6 +298,11 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return configList.stream().anyMatch(config -> config.containsKey(key));
     }
 
+    /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the containsKey method.
+     * @since 2.0
+     */
     @Override
     protected boolean containsValueInternal(final String value) {
         return configList.stream().anyMatch(config -> config.containsValue(value));

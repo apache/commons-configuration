@@ -68,12 +68,10 @@ public interface ImmutableConfiguration {
      * match but may be more expensive than the {@link #containsKey containsKey} method.
      *
      * @param value value whose presence in this configuration is to be tested
-     * @return {@code true} if this configuration maps one or more keys to the specified value
-     * @throws NullPointerException          if the value is {@code null}
+     * @return {@code true} if this configuration maps one or more keys to the specified value, false otherwise.
      * @since 2.0
      */
     default boolean containsValue(final String value) {
-        Objects.requireNonNull(value, "Parameter \"value\" cannot be null");
         final Iterator<String> keys = getKeys();
         while (keys.hasNext()) {
             if (value.equals(getProperty(keys.next()))) {
