@@ -68,7 +68,7 @@ public interface ImmutableConfiguration {
      *
      * @param value value whose presence in this configuration is to be tested
      * @return {@code true} if this configuration maps one or more keys to the specified value, false otherwise.
-     * @since 2.0
+     * @since 2.11.0
      */
     default boolean containsValue(final String value) {
         final Iterator<String> keys = getKeys();
