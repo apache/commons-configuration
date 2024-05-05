@@ -718,4 +718,9 @@ public class TestBaseConfiguration {
     public void testThrowExceptionOnMissing() {
         assertTrue(config.isThrowExceptionOnMissing());
     }
+
+    @Test
+    public void givenNullValue_testContainsValue_shouldReturnFalse() {
+        assertFalse(config.containsValue(null), "should return false");
+    }
 }

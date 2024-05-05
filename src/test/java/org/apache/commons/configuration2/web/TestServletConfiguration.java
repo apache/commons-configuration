@@ -28,6 +28,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.junit.jupiter.api.Test;
@@ -96,5 +97,11 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
     @Test
     public void testClearProperty() {
         assertThrows(UnsupportedOperationException.class, super::testClearProperty);
+    }
+
+    @Test
+    public void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
+        final Configuration config = getConfiguration();
+        assertThrows(NullPointerException.class, () -> config.containsValue(null), "should throw NullPointerException");
     }
 }

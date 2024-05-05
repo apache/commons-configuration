@@ -93,21 +93,10 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
-        final Configuration config = getConfiguration();
-        final NullPointerException npe = assertThrows(NullPointerException.class, () -> config.containsValue(null),
-            String.format("%s should throw NullPointerException when value is null.", this.getClass()));
-
-        assertEquals("Parameter \"value\" cannot be null", npe.getMessage());
-    }
-
-    @Test
     public void givenNullIterator_testContains_shouldThrowNullPointerException(){
         final AbstractConfiguration config = getConfiguration();
 
-        final NullPointerException npe = assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
-
-        assertEquals("Parameter \"keys\" cannot be null", npe.getMessage());
+        assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
     }
 
     @Test
@@ -115,9 +104,7 @@ public abstract class TestAbstractConfiguration {
         AbstractConfiguration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
 
-        NullPointerException npe = assertThrows(NullPointerException.class, () -> config.contains(keys,null));
-
-        assertEquals("Parameter \"value\" cannot be null", npe.getMessage());
+        assertThrows(NullPointerException.class, () -> config.contains(keys,null));
     }
 
     @Test

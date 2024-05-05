@@ -115,4 +115,10 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         }
         assertEquals(expected, v);
     }
+
+    @Test
+    public void givenNullValue_testContainsValue_shouldThrowNullPointerException() {
+        final Configuration config = getConfiguration();
+        assertThrows(NullPointerException.class, () -> config.containsValue(null), "should throw NullPointerException");
+    }
 }
