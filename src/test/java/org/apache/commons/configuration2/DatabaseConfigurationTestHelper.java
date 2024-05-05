@@ -41,6 +41,7 @@ import org.dbunit.operation.DatabaseOperation;
  * and column names and database connection settings are provided, too.
  */
 public class DatabaseConfigurationTestHelper {
+
     /** Constant for the configuration table. */
     public static final String TABLE = "configuration";
 
@@ -60,16 +61,16 @@ public class DatabaseConfigurationTestHelper {
     public static final String CONFIG_NAME = "test";
 
     /** Constant for the JDBC driver class. */
-    public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
+    public static final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
 
     /** Constant for the connection URL. */
-    public final String DATABASE_URL = "jdbc:hsqldb:mem:testdb";
+    public static final String DATABASE_URL = "jdbc:hsqldb:mem:testdb";
 
     /** Constant for the DB user name. */
-    public final String DATABASE_USERNAME = "sa";
+    public static final String DATABASE_USERNAME = "sa";
 
     /** Constant for the DB password. */
-    public final String DATABASE_PASSWORD = "";
+    public static final String DATABASE_PASSWORD = "";
 
     /** Stores the in-process database. */
     private HsqlDB hsqlDB;

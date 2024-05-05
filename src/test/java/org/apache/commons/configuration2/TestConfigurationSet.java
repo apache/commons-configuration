@@ -31,11 +31,11 @@ import org.junit.jupiter.api.Test;
  */
 public class TestConfigurationSet {
 
-    ConfigurationMap.ConfigurationSet set;
+    private ConfigurationMap.ConfigurationSet set;
 
-    String[] properties = {"booleanProperty", "doubleProperty", "floatProperty", "intProperty", "longProperty", "shortProperty", "stringProperty"};
+    private String[] properties = {"booleanProperty", "doubleProperty", "floatProperty", "intProperty", "longProperty", "shortProperty", "stringProperty"};
 
-    Object[] values = {Boolean.TRUE, Double.valueOf(Double.MAX_VALUE), Float.valueOf(Float.MAX_VALUE), Integer.valueOf(Integer.MAX_VALUE),
+    private Object[] values = {Boolean.TRUE, Double.valueOf(Double.MAX_VALUE), Float.valueOf(Float.MAX_VALUE), Integer.valueOf(Integer.MAX_VALUE),
         Long.valueOf(Long.MAX_VALUE), Short.valueOf(Short.MAX_VALUE), "This is a string"};
 
     /**

@@ -63,6 +63,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Test class for {@code FileBasedConfigurationBuilder}.
  */
 public class TestFileBasedConfigurationBuilder {
+
     /** Constant for a test property name. */
     private static final String PROP = "testProperty";
 
@@ -73,9 +74,7 @@ public class TestFileBasedConfigurationBuilder {
      * @param expValue the expected value of the test property
      * @throws ConfigurationException if an error occurs
      */
-    private static void checkSavedConfig(final File file, final int expValue)
-            throws ConfigurationException
-    {
+    private static void checkSavedConfig(final File file, final int expValue) throws ConfigurationException {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(config);
         handler.load(file);
@@ -383,8 +382,8 @@ public class TestFileBasedConfigurationBuilder {
      */
     @Test
     public void testGetDefaultEncodingSubClass() {
-        final PropertiesConfiguration conf = new PropertiesConfiguration()
-        {
+        final PropertiesConfiguration conf = new PropertiesConfiguration() {
+            // empty
         };
         assertEquals(PropertiesConfiguration.DEFAULT_ENCODING, FileBasedConfigurationBuilder.getDefaultEncoding(conf.getClass()));
     }

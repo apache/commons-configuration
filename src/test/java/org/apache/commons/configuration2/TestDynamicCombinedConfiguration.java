@@ -145,11 +145,13 @@ public class TestDynamicCombinedConfiguration {
             }
         }
     }
+
     public static class ThreadLookup implements Lookup {
-        private static final ThreadLocal<String> id = new ThreadLocal<>();
+
+        private static final ThreadLocal<String> ID = new ThreadLocal<>();
 
         public static void setId(final String value) {
-            id.set(value);
+            ID.set(value);
         }
 
         public ThreadLookup() {
@@ -164,7 +166,7 @@ public class TestDynamicCombinedConfiguration {
             if (value != null) {
                 return value;
             }
-            return id.get();
+            return ID.get();
 
         }
     }

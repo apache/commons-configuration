@@ -34,14 +34,15 @@ import org.junit.jupiter.api.Test;
  * Test class for DefaultExpressionEngine.
  */
 public class TestDefaultExpressionEngine {
+
     /** Stores the names of the test nodes representing tables. */
-    private static final String[] tables = {"users", "documents"};
+    private static final String[] TABLES = {"users", "documents"};
 
     /** Stores the types of the test table nodes. */
-    private static final String[] tabTypes = {"system", "application"};
+    private static final String[] TAB_TYPES = {"system", "application"};
 
     /** Test data fields for the node hierarchy. */
-    private static final String[][] fields = {{"uid", "uname", "firstName", "lastName", "email"}, {"docid", "name", "creationDate", "authorID", "version"}};
+    private static final String[][] FIELDS = {{"uid", "uname", "firstName", "lastName", "email"}, {"docid", "name", "creationDate", "authorID", "version"}};
 
     /** The root of a hierarchy with test nodes. */
     private static ImmutableNode root;
@@ -95,17 +96,17 @@ public class TestDefaultExpressionEngine {
      * @return the root of the test node hierarchy
      */
     private static ImmutableNode setUpNodes() {
-        final ImmutableNode.Builder nodeTablesBuilder = new ImmutableNode.Builder(tables.length);
+        final ImmutableNode.Builder nodeTablesBuilder = new ImmutableNode.Builder(TABLES.length);
         nodeTablesBuilder.name("tables");
-        for (int i = 0; i < tables.length; i++) {
+        for (int i = 0; i < TABLES.length; i++) {
             final ImmutableNode.Builder nodeTableBuilder = new ImmutableNode.Builder(2);
             nodeTableBuilder.name("table");
-            nodeTableBuilder.addChild(new ImmutableNode.Builder().name("name").value(tables[i]).create());
-            nodeTableBuilder.addAttribute("type", tabTypes[i]);
+            nodeTableBuilder.addChild(new ImmutableNode.Builder().name("name").value(TABLES[i]).create());
+            nodeTableBuilder.addAttribute("type", TAB_TYPES[i]);
 
-            final ImmutableNode.Builder nodeFieldsBuilder = new ImmutableNode.Builder(fields[i].length);
-            for (int j = 0; j < fields[i].length; j++) {
-                nodeFieldsBuilder.addChild(createFieldNode(fields[i][j]));
+            final ImmutableNode.Builder nodeFieldsBuilder = new ImmutableNode.Builder(FIELDS[i].length);
+            for (int j = 0; j < FIELDS[i].length; j++) {
+                nodeFieldsBuilder.addChild(createFieldNode(FIELDS[i][j]));
             }
             nodeTableBuilder.addChild(nodeFieldsBuilder.name("fields").create());
             nodeTablesBuilder.addChild(nodeTableBuilder.create());
@@ -403,7 +404,7 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddAttribute() {
         final NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables.table(0)[@tableSpace]", handler);
-        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue());
+        assertEquals(TABLES[0], data.getParent().getChildren().get(0).getValue());
         assertEquals("tableSpace", data.getNewNodeName());
         assertTrue(data.isAttribute());
         assertTrue(data.getPathNodes().isEmpty());
@@ -484,7 +485,7 @@ public class TestDefaultExpressionEngine {
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables/table[0]/test", handler);
         assertEquals("test", data.getNewNodeName());
         assertFalse(data.isAttribute());
-        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue());
+        assertEquals(TABLES[0], data.getParent().getChildren().get(0).getValue());
 
         data = engine.prepareAdd(root, "a/complete/new/path@attr", handler);
         assertEquals("attr", data.getNewNodeName());
@@ -502,7 +503,7 @@ public class TestDefaultExpressionEngine {
         assertTrue(data.getPathNodes().isEmpty());
         assertEquals("table", data.getParent().getNodeName());
         final ImmutableNode node = data.getParent().getChildren().get(0);
-        assertEquals(tables[0], node.getValue());
+        assertEquals(TABLES[0], node.getValue());
 
         data = engine.prepareAdd(root, "tables.table(1).fields.field(2).alias", handler);
         assertEquals("alias", data.getNewNodeName());
@@ -557,8 +558,8 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testQueryAlternativeSyntax() {
         setUpAlternativeSyntax();
-        checkKeyValue("tables/table[1]/name", "name", tables[1]);
-        checkAttributeValue("tables/table[0]@type", "type", tabTypes[0]);
+        checkKeyValue("tables/table[1]/name", "name", TABLES[1]);
+        checkAttributeValue("tables/table[0]@type", "type", TAB_TYPES[0]);
         checkAttributeValue("@test", "test", "true");
         checkKeyValue("connection.settings/usr.name", "usr.name", "scott");
     }
@@ -571,8 +572,8 @@ public class TestDefaultExpressionEngine {
         final DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
             .setAttributeEnd(null).setAttributeStart(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER).create();
         engine = new DefaultExpressionEngine(symbols);
-        checkKeyValue("tables.table(0).name", "name", tables[0]);
-        checkAttributeValue("tables.table(0).type", "type", tabTypes[0]);
+        checkKeyValue("tables.table(0).name", "name", TABLES[0]);
+        checkAttributeValue("tables.table(0).type", "type", TAB_TYPES[0]);
         checkKey("tables.table.type", "type", 2);
     }
 
@@ -612,12 +613,12 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testQueryNodes() {
-        for (int i = 0; i < tables.length; i++) {
-            checkKeyValue("tables.table(" + i + ").name", "name", tables[i]);
-            checkAttributeValue("tables.table(" + i + ")[@type]", "type", tabTypes[i]);
+        for (int i = 0; i < TABLES.length; i++) {
+            checkKeyValue("tables.table(" + i + ").name", "name", TABLES[i]);
+            checkAttributeValue("tables.table(" + i + ")[@type]", "type", TAB_TYPES[i]);
 
-            for (int j = 0; j < fields[i].length; j++) {
-                checkKeyValue("tables.table(" + i + ").fields.field(" + j + ").name", "name", fields[i][j]);
+            for (int j = 0; j < FIELDS[i].length; j++) {
+                checkKeyValue("tables.table(" + i + ").fields.field(" + j + ").name", "name", FIELDS[i][j]);
             }
         }
     }

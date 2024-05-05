@@ -38,9 +38,10 @@ public class TestEventSource {
      * operation.
      */
     private static final class CountingEventSource extends BaseEventSource implements Cloneable {
-        int eventCount;
 
-        int errorCount;
+        private int eventCount;
+
+        private int errorCount;
 
         @Override
         protected ConfigurationErrorEvent createErrorEvent(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType,
@@ -61,7 +62,7 @@ public class TestEventSource {
     private static final Object TEST_PROPVALUE = "a test property value";
 
     /** Constant for the event property name. */
-    private final String TEST_PROPNAME = "test.property.name";
+    private static final String TEST_PROPNAME = "test.property.name";
 
     /** The object under test. */
     private CountingEventSource source;

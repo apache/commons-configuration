@@ -1297,7 +1297,7 @@ public class TestXMLConfiguration {
     }
 
     @Test
-    public void testSaveWithRootAttributes_ByHand() throws ConfigurationException {
+    public void testSaveWithRootAttributesByHand() throws ConfigurationException {
         conf = new XMLConfiguration();
         conf.addProperty("[@xmlns:foo]", "http://example.com/");
         assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"));

@@ -38,6 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
  * nature of this class and structured data access.
  */
 public class TestHierarchicalXMLConfiguration {
+
     /** Test resources directory. */
     private static final String TEST_DIR = "conf";
 
@@ -252,7 +253,7 @@ public class TestHierarchicalXMLConfiguration {
     @Test
     public void testXmlNodeTypes() throws Exception {
         // Number of keys expected from test configuration file
-        final int KEY_COUNT = 5;
+        final int keyCount = 5;
 
         // Load the configuration file
         final FileHandler handler = new FileHandler(config);
@@ -280,6 +281,6 @@ public class TestHierarchicalXMLConfiguration {
             iter.next();
             count++;
         }
-        assertEquals(KEY_COUNT, count);
+        assertEquals(keyCount, count);
     }
 }

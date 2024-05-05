@@ -43,6 +43,7 @@ import org.yaml.snakeyaml.Yaml;
  * Unit test for {@link YAMLConfiguration}
  */
 public class TestYAMLConfiguration {
+
     /** A folder for temporary files. */
     @TempDir
     public File tempFolder;
@@ -68,42 +69,42 @@ public class TestYAMLConfiguration {
     }
 
     @Test
-    public void testGetProperty_dictionary() {
+    public void testGetPropertyDictionary() {
         assertEquals("Martin D'vloper", yamlConfiguration.getProperty("martin.name"));
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
         assertEquals("Elite", yamlConfiguration.getProperty("martin.skill"));
     }
 
     @Test
-    public void testGetProperty_integer() {
+    public void testGetPropertyInteger() {
         final Object property = yamlConfiguration.getProperty("int1");
         assertInstanceOf(Integer.class, property);
         assertEquals(37, property);
     }
 
     @Test
-    public void testGetProperty_nested() {
+    public void testGetPropertyNested() {
         assertEquals("value23", yamlConfiguration.getProperty("key2.key3"));
     }
 
     @Test
-    public void testGetProperty_nested_with_list() {
+    public void testGetPropertyNestedWithList() {
         assertEquals(Arrays.asList("col1", "col2"), yamlConfiguration.getProperty("key4.key5"));
     }
 
     @Test
-    public void testGetProperty_simple() {
+    public void testGetPropertySimple() {
         assertEquals("value1", yamlConfiguration.getProperty("key1"));
     }
 
     @Test
-    public void testGetProperty_subset() {
+    public void testGetPropertySubset() {
         final Configuration subset = yamlConfiguration.subset("key4");
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
     @Test
-    public void testGetProperty_very_nested_properties() {
+    public void testGetPropertyVeryNestedProperties() {
         final Object property = yamlConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }

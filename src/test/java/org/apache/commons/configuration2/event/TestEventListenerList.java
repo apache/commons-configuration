@@ -229,7 +229,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testEventListenerIteratorWrongEvent() {
-        final EventListener<EventSub2> listener = event -> {};
+        final EventListener<EventSub2> listener = event -> { };
         list.addEventListener(typeSub2, listener);
         final EventListenerList.EventListenerIterator<EventSub2> iterator = list.getEventListenerIterator(typeSub2);
         assertTrue(iterator.hasNext());

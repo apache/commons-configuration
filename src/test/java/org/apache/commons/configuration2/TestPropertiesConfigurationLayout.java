@@ -44,12 +44,14 @@ import org.junit.jupiter.api.Test;
  * Test class for PropertiesConfigurationLayout.
  */
 public class TestPropertiesConfigurationLayout {
+
     /**
      * A mock properties configuration implementation that is used to check whether some expected methods are called.
      */
     static class LayoutTestConfiguration extends PropertiesConfiguration {
+
         /** Stores a builder object. */
-        public PropertiesBuilder builder;
+        private PropertiesBuilder builder;
 
         /**
          * Simulates the propertyLoaded() callback. If a builder was set, a load() call on the layout is invoked.

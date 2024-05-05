@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.beanutils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,14 +42,16 @@ import org.junit.jupiter.api.Test;
  * Test class for BeanHelper.
  */
 public class TestBeanHelper {
+
     /**
      * An implementation of the BeanFactory interface used for testing. This implementation is really simple: If the
      * BeanCreationTestBean class is provided, a new instance will be created. Otherwise an exception is thrown.
      */
     private final class TestBeanFactory implements BeanFactory {
-        Object parameter;
 
-        boolean supportsDefaultClass;
+        private Object parameter;
+
+        private boolean supportsDefaultClass;
 
         /** A counter for the created instances. */
         private int createBeanCount;

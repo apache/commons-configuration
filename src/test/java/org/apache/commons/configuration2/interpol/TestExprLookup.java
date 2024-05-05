@@ -41,8 +41,10 @@ import org.junit.jupiter.api.Test;
  * Test class for ExprLookup.
  */
 public class TestExprLookup {
+
     public static class Utility {
-        String message;
+
+        private String message;
 
         public Utility(final String msg) {
             this.message = msg;

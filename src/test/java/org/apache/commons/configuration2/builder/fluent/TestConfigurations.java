@@ -357,30 +357,24 @@ public class TestConfigurations {
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builderFail = configs.propertiesBuilder(absPath);
         assertThrows(ConfigurationException.class, builderFail::getConfiguration);
         assertThrows(ConfigurationException.class, () -> configs.properties(absPath));
-        {
-            // Expect success:
-            // @formatter:off
+        // Expect success:
+        // @formatter:off
             final Map<String, Object> map =
                     new Parameters().properties()
                             .setPath(absPath)
                             .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER)
                             .getParameters();
-            // @formatter:on
-            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath).addParameters(map);
-            final PropertiesConfiguration configuration = builderOk.getConfiguration();
-            assertEquals("valueA", configuration.getString("keyA"));
-        }
-        {
-            // Expect success:
-            // @formatter:off
-            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(
+        // @formatter:on
+        final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath).addParameters(map);
+        assertEquals("valueA", builderOk.getConfiguration().getString("keyA"));
+        // Expect success:
+        // @formatter:off
+            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk2 = configs.propertiesBuilder(
                     new Parameters().properties()
                         .setPath(absPath)
                         .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER));
-            // @formatter:on
-            final PropertiesConfiguration configuration = builderOk.getConfiguration();
-            assertEquals("valueA", configuration.getString("keyA"));
-        }
+        // @formatter:on
+        assertEquals("valueA", builderOk2.getConfiguration().getString("keyA"));
     }
 
     /**

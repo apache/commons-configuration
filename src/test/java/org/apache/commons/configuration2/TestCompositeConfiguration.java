@@ -209,11 +209,11 @@ public class TestCompositeConfiguration {
 
     @Test
     public void testCheckingInMemoryConfiguration() throws Exception {
-        final String TEST_KEY = "testKey";
+        final String testKey = "testKey";
         final Configuration defaults = new PropertiesConfiguration();
-        defaults.setProperty(TEST_KEY, "testValue");
+        defaults.setProperty(testKey, "testValue");
         final Configuration testConfiguration = new CompositeConfiguration(defaults);
-        assertTrue(testConfiguration.containsKey(TEST_KEY));
+        assertTrue(testConfiguration.containsKey(testKey));
         assertFalse(testConfiguration.isEmpty());
         boolean foundTestKey = false;
         final Iterator<String> i = testConfiguration.getKeys();
@@ -222,13 +222,13 @@ public class TestCompositeConfiguration {
         // assertEquals(2,i.size());
         while (i.hasNext()) {
             final String key = i.next();
-            if (key.equals(TEST_KEY)) {
+            if (key.equals(testKey)) {
                 foundTestKey = true;
             }
         }
         assertTrue(foundTestKey);
-        testConfiguration.clearProperty(TEST_KEY);
-        assertFalse(testConfiguration.containsKey(TEST_KEY));
+        testConfiguration.clearProperty(testKey);
+        assertFalse(testConfiguration.containsKey(testKey));
     }
 
     /**

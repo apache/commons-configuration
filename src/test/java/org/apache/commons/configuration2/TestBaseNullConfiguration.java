@@ -111,7 +111,8 @@ public class TestBaseNullConfiguration {
     @Test
     public void testGetBoolean() {
         config.setProperty("boolA", Boolean.TRUE);
-        final boolean boolT = true, boolF = false;
+        final boolean boolT = true;
+        final boolean boolF = false;
         assertEquals(boolT, config.getBoolean("boolA"));
         assertEquals(boolT, config.getBoolean("boolA", boolF));
         assertEquals(boolF, config.getBoolean("boolNotInConfig", boolF));

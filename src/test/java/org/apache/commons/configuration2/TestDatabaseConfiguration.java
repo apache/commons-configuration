@@ -60,7 +60,7 @@ public class TestDatabaseConfiguration {
      */
     public static class PotentialErrorDatabaseConfiguration extends DatabaseConfiguration {
         /** A flag whether a getConnection() call should fail. */
-        boolean failOnConnect;
+        private boolean failOnConnect;
 
         @Override
         public DataSource getDatasource() {

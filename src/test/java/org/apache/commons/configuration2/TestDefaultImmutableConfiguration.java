@@ -45,7 +45,7 @@ public class TestDefaultImmutableConfiguration {
     /** Tests default methods. This class MUST NOT override the default methods! */
     private static final class MapImmutableConfiguration implements ImmutableConfiguration {
 
-        Map<String, Object> map = new HashMap<>();
+        private Map<String, Object> map = new HashMap<>();
 
         @Override
         public boolean containsKey(final String key) {

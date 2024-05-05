@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
  * </p>
  */
 public class TestConfigurationDynaBean {
+
     /**
      * The basic test bean for each test.
      */
@@ -52,22 +53,22 @@ public class TestConfigurationDynaBean {
      * The set of property names we expect to have returned when calling {@code getDynaProperties()}. You should update this
      * list when new properties are added to TestBean.
      */
-    String[] properties = {"booleanProperty", "booleanSecond", "doubleProperty", "floatProperty", "intProperty", "longProperty", "mappedProperty.key1",
+    private String[] properties = {"booleanProperty", "booleanSecond", "doubleProperty", "floatProperty", "intProperty", "longProperty", "mappedProperty.key1",
         "mappedProperty.key2", "mappedProperty.key3", "mappedIntProperty.key1", "shortProperty", "stringProperty", "byteProperty", "charProperty"};
 
-    Object[] values = {Boolean.TRUE, Boolean.TRUE, Double.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE,
+    private Object[] values = {Boolean.TRUE, Boolean.TRUE, Double.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE,
         Long.MAX_VALUE, "First Value", "Second Value", "Third Value", Integer.MAX_VALUE, Short.MAX_VALUE,
         "This is a string", Byte.MAX_VALUE, Character.MAX_VALUE};
 
-    int[] intArray = {0, 10, 20, 30, 40};
-    boolean[] booleanArray = {true, false, true, false, true};
-    char[] charArray = {'a', 'b', 'c', 'd', 'e'};
-    byte[] byteArray = {0, 10, 20, 30, 40};
-    long[] longArray = {0, 10, 20, 30, 40};
-    short[] shortArray = {0, 10, 20, 30, 40};
-    float[] floatArray = {0, 10, 20, 30, 40};
-    double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
-    String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
+    private int[] intArray = {0, 10, 20, 30, 40};
+    private boolean[] booleanArray = {true, false, true, false, true};
+    private char[] charArray = {'a', 'b', 'c', 'd', 'e'};
+    private byte[] byteArray = {0, 10, 20, 30, 40};
+    private long[] longArray = {0, 10, 20, 30, 40};
+    private short[] shortArray = {0, 10, 20, 30, 40};
+    private float[] floatArray = {0, 10, 20, 30, 40};
+    private double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
+    private String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
     /**
      * Creates the underlying configuration object for the dyna bean.

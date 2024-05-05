@@ -171,9 +171,8 @@ public class TestConfigurationLogger {
         assertNotNull(logger1.getLog());
         if (logger1.getLog() instanceof Log4JLogger) {
             assertEquals(logger1.getLog(), logger2.getLog());
-        } else {
-            // TODO assert what for the Slf4j adapter?
         }
+        // else: TODO assert what for the Slf4j adapter?
     }
 
     /**

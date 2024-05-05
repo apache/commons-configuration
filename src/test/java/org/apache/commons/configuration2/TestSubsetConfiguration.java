@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
  * Test case for the {@link SubsetConfiguration} class.
  */
 public class TestSubsetConfiguration {
+
     static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
@@ -244,7 +245,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testPrefixDelimiter(){
+    public void testPrefixDelimiter() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("part1.part2@test.key1", "value1");
         config.setProperty("part1.part2", "value2");
@@ -263,7 +264,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testPrefixDelimiterNegativeTest(){
+    public void testPrefixDelimiterNegativeTest() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("part1.part2@test.key1", "value1");
         config.setProperty("part3.part4@testing.key2", "value2");
@@ -276,10 +277,8 @@ public class TestSubsetConfiguration {
             protected Iterator<String> getKeysInternal() {
                 Class<?> subsetIteratorClass;
                 try {
-                    subsetIteratorClass = Class
-                            .forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
-                    final Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class,
-                            Iterator.class);
+                    subsetIteratorClass = Class.forName("org.apache.commons.configuration2.SubsetConfiguration$SubsetIterator");
+                    final Constructor<?> ctor = subsetIteratorClass.getDeclaredConstructor(SubsetConfiguration.class, Iterator.class);
                     ctor.setAccessible(true);
 
                     return (Iterator<String>) ctor.newInstance(this, parent.getKeys("part1.part2"));

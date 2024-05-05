@@ -154,7 +154,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_allLookups() {
+    public void testDefaultStringLookupsHolderAllLookups() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY,
                 "BASE64_DECODER BASE64_ENCODER const, date, dns, environment "
@@ -184,34 +184,29 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_givenSingleLookup() {
+    public void testDefaultStringLookupsHolderGivenSingleLookup() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder");
-
-        checkDefaultPrefixLookupsHolder(props,
-                "base64",
-                StringLookupFactory.KEY_BASE64_ENCODER);
+        checkDefaultPrefixLookupsHolder(props, "base64", StringLookupFactory.KEY_BASE64_ENCODER);
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_givenSingleLookup_weirdString() {
+    public void testDefaultStringLookupsHolderGivenSingleLookupWeirdString() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " \n \t  ,, DnS , , ");
-
         checkDefaultPrefixLookupsHolder(props, StringLookupFactory.KEY_DNS);
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_invalidLookupsDefinition() {
+    public void testDefaultStringLookupsHolderInvalidLookupsDefinition() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
-
         final Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
         assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_lookupsPropertyEmptyAndBlank() {
+    public void testDefaultStringLookupsHolderLookupsPropertyEmptyAndBlank() {
         final Properties propsWithNull = new Properties();
         propsWithNull.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "");
 
@@ -224,7 +219,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_lookupsPropertyNotPresent() {
+    public void testDefaultStringLookupsHolderLookupsPropertyNotPresent() {
         checkDefaultPrefixLookupsHolder(new Properties(),
                 "base64",
                 StringLookupFactory.KEY_BASE64_DECODER,
@@ -244,7 +239,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolder_multipleLookups() {
+    public void testDefaultStringLookupsHolderMultipleLookups() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "dns, url script ");
 

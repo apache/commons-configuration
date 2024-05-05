@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
-
 <!DOCTYPE suppressions PUBLIC
-    "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
-    "https://checkstyle.org/dtds/suppressions_1_0.dtd">
-<!--
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+ <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
@@ -22,24 +21,29 @@
 <!-- ===================================================================== -->
 <!-- Exceptions for Checkstyle -->
 <!-- ===================================================================== -->
-
 <suppressions>
-
-    <suppress checks="MissingSwitchDefault" files="PropertiesConfiguration.java"/>
-
-    <!-- There is an empty catch block ignoring unsupported operation exceptions
-         from the list delimiter handler. This is okay, then the property is
-         written out in multiple lines.
-    -->
-    <suppress checks="EmptyBlock" files="PropertiesConfiguration.java"
-      lines="1074-1107"/>
-
-    <suppress files="FileUtils\.java" checks="[a-zA-Z0-9]*"/>
-
-    <!-- There is an import for an exception class which is used in the
-         Javadoc for almost every method.
-    -->
-    <suppress checks="UnusedImports" files="DataConfiguration"/>
-    <suppress checks="UnusedImports" files="ConversionHandler"/>
-    <suppress checks="UnusedImports" files="DefaultConversionHandler"/>
+  <suppress checks="MissingSwitchDefault" files="PropertiesConfiguration.java"/>
+ <!-- There is an empty catch block ignoring unsupported operation exceptions
+       from the list delimiter handler. This is okay, then the property is
+       written out in multiple lines.
+  -->
+  <suppress checks="EmptyBlock" files="PropertiesConfiguration.java" lines="1074-1107"/>
+  <suppress files="FileUtils\.java" checks="[a-zA-Z0-9]*"/>
+  <!-- There is an import for an exception class which is used in the
+       Javadoc for almost every method.
+  -->
+  <suppress checks="UnusedImports" files="DataConfiguration"/>
+  <suppress checks="UnusedImports" files="ConversionHandler"/>
+  <suppress checks="UnusedImports" files="DefaultConversionHandler"/>
+  <!-- Tests -->
+  <suppress checks="MagicNumber" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="JavadocMethod" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="JavadocPackage" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="JavadocVariable" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="ParameterNumber" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="VisibilityModifier" files="src[/\\]test[/\\]java[/\\]" message="Variable 'tempFolder' must be private and have accessor methods"/>
+  <suppress checks="MethodLength" files="src[/\\]test[/\\]java[/\\]" />
+  <suppress checks="SuperClone" files="src[/\\]test[/\\]java[/\\]org[/\\]apache[/\\]commons[/\\]configuration2[/\\]TestConfigurationUtils.java" />
+  <!-- Class can't be final for Mockito -->
+  <suppress checks="FinalClass" files="src[/\\]test[/\\]java[/\\]org[/\\]apache[/\\]commons[/\\]configuration2[/\\]io[/\\]TestFileHandler.java" />
 </suppressions>

@@ -34,8 +34,9 @@ import org.junit.jupiter.api.Test;
  * Test case for the {@link AppletConfiguration} class.
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration {
+
     /** A flag whether tests with an applet can be run. */
-    boolean supportsApplet;
+    private boolean supportsApplet;
 
     @Override
     protected AbstractConfiguration getConfiguration() {

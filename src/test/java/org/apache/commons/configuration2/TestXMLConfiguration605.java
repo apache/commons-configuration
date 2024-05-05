@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * Tests for {@code XMLConfiguration} related to CONFIGURATION-605: XMLConfiguration drops configuration key immediately
  * following one whose value contains a comma
  */
-public class TestXMLConfiguration_605 {
+public class TestXMLConfiguration605 {
     /**
      * Checks whether the specified configuration contains all expected keys.
      *

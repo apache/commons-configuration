@@ -66,9 +66,10 @@ public class TestCombinedConfiguration {
      * Test event listener class for checking if the expected invalidate events are fired.
      */
     private static final class CombinedListener implements EventListener<ConfigurationEvent> {
-        int invalidateEvents;
 
-        int otherEvents;
+        private int invalidateEvents;
+
+        private int otherEvents;
 
         /**
          * Checks if the expected number of events was fired.
@@ -96,6 +97,7 @@ public class TestCombinedConfiguration {
      * configuration. If everything works well, this property should have at least one and at most two values.
      */
     private static final class ReadThread extends Thread {
+
         /** The configuration to be accessed. */
         private final Configuration config;
 

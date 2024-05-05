@@ -32,7 +32,9 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public class HsqlDB {
-    private static final Log log = LogFactory.getLog(HsqlDB.class);
+
+    private static final Log LOG = LogFactory.getLog(HsqlDB.class);
+
     private final Connection connection;
 
     public HsqlDB(final String uri, final String databaseDriver, final String loadFile) throws Exception {
@@ -80,7 +82,7 @@ public class HsqlDB {
                 try {
                     statement.execute(cmd);
                 } catch (final SQLException sqle) {
-                    log.warn("Statement: " + cmd + ": " + sqle.getMessage());
+                    LOG.warn("Statement: " + cmd + ": " + sqle.getMessage());
                 }
 
                 commands = commands.substring(targetPos + 2);

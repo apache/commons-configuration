@@ -397,6 +397,7 @@
             <propertyExpansion>basedir=${basedir}/src</propertyExpansion>
             <includeResources>false</includeResources>
             <includeTestResources>false</includeTestResources>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <sourceDirectories>
               <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
             </sourceDirectories>

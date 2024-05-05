@@ -35,7 +35,8 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 /**
  * Assertions on configurations for the unit tests. This class also provides access to test files.
  */
-public class ConfigurationAssert {
+public final class ConfigurationAssert {
+
     /** Constant for the name of the directory with the test files. */
     public static final String TEST_DIR_NAME = "target/test-classes";
 
@@ -176,5 +177,9 @@ public class ConfigurationAssert {
         } catch (final MalformedURLException mex) {
             throw new ConfigurationRuntimeException(mex);
         }
+    }
+
+    private ConfigurationAssert() {
+        // empty
     }
 }

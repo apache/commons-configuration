@@ -79,10 +79,8 @@ public class TestDataConfiguration {
         final BaseConfiguration baseConfig = new BaseConfiguration();
         baseConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf = new DataConfiguration(baseConfig);
-
         // empty value
         conf.addProperty("empty", "");
-
         // lists of boolean
         conf.addProperty("boolean.list1", "true");
         conf.addProperty("boolean.list1", "false");
@@ -98,7 +96,6 @@ public class TestDataConfiguration {
         conf.addProperty("boolean.string", "true");
         conf.addProperty("boolean.object", Boolean.TRUE);
         conf.addProperty("boolean.list.interpolated", "${boolean.string},false");
-
         // lists of bytes
         conf.addProperty("byte.list1", "1");
         conf.addProperty("byte.list1", "2");
@@ -114,7 +111,6 @@ public class TestDataConfiguration {
         conf.addProperty("byte.string", "1");
         conf.addProperty("byte.object", Byte.valueOf("1"));
         conf.addProperty("byte.list.interpolated", "${byte.string},2");
-
         // lists of shorts
         conf.addProperty("short.list1", "1");
         conf.addProperty("short.list1", "2");
@@ -130,7 +126,6 @@ public class TestDataConfiguration {
         conf.addProperty("short.string", "1");
         conf.addProperty("short.object", Short.valueOf("1"));
         conf.addProperty("short.list.interpolated", "${short.string},2");
-
         // lists of integers
         conf.addProperty("integer.list1", "1");
         conf.addProperty("integer.list1", "2");
@@ -146,7 +141,6 @@ public class TestDataConfiguration {
         conf.addProperty("integer.string", "1");
         conf.addProperty("integer.object", Integer.valueOf("1"));
         conf.addProperty("integer.list.interpolated", "${integer.string},2");
-
         // lists of longs
         conf.addProperty("long.list1", "1");
         conf.addProperty("long.list1", "2");
@@ -162,7 +156,6 @@ public class TestDataConfiguration {
         conf.addProperty("long.string", "1");
         conf.addProperty("long.object", Long.valueOf("1"));
         conf.addProperty("long.list.interpolated", "${long.string},2");
-
         // lists of floats
         conf.addProperty("float.list1", "1");
         conf.addProperty("float.list1", "2");
@@ -178,7 +171,6 @@ public class TestDataConfiguration {
         conf.addProperty("float.string", "1");
         conf.addProperty("float.object", Float.valueOf("1"));
         conf.addProperty("float.list.interpolated", "${float.string},2");
-
         // lists of doubles
         conf.addProperty("double.list1", "1");
         conf.addProperty("double.list1", "2");
@@ -194,7 +186,6 @@ public class TestDataConfiguration {
         conf.addProperty("double.string", "1");
         conf.addProperty("double.object", Double.valueOf("1"));
         conf.addProperty("double.list.interpolated", "${double.string},2");
-
         // lists of big integers
         conf.addProperty("biginteger.list1", "1");
         conf.addProperty("biginteger.list1", "2");
@@ -209,7 +200,6 @@ public class TestDataConfiguration {
         conf.addProperty("biginteger.string", "1");
         conf.addProperty("biginteger.object", new BigInteger("1"));
         conf.addProperty("biginteger.list.interpolated", "${biginteger.string},2");
-
         // lists of big decimals
         conf.addProperty("bigdecimal.list1", "1");
         conf.addProperty("bigdecimal.list1", "2");
@@ -224,7 +214,6 @@ public class TestDataConfiguration {
         conf.addProperty("bigdecimal.string", "1");
         conf.addProperty("bigdecimal.object", new BigDecimal("1"));
         conf.addProperty("bigdecimal.list.interpolated", "${bigdecimal.string},2");
-
         // URIs
         final String uri1 = "http://jakarta.apache.org";
         final String uri2 = "http://www.apache.org";
@@ -242,7 +231,6 @@ public class TestDataConfiguration {
         uris.add(new URI(uri2));
         conf.addProperty("uri.list6", uris);
         conf.addProperty("uri.list.interpolated", "${uri.string}," + uri2);
-
         // URLs
         final String url1 = "http://jakarta.apache.org";
         final String url2 = "http://www.apache.org";
@@ -260,7 +248,6 @@ public class TestDataConfiguration {
         urls.add(new URL(url2));
         conf.addProperty("url.list6", urls);
         conf.addProperty("url.list.interpolated", "${url.string}," + url2);
-
         // Locales
         conf.addProperty("locale.string", "fr");
         conf.addProperty("locale.string.interpolated", "${locale.string}");
@@ -276,7 +263,6 @@ public class TestDataConfiguration {
         locales.add(Locale.GERMAN);
         conf.addProperty("locale.list6", locales);
         conf.addProperty("locale.list.interpolated", "${locale.string},de");
-
         // Colors
         final String color1 = "FF0000";
         final String color2 = "0000FF";
@@ -294,19 +280,16 @@ public class TestDataConfiguration {
         colors.add(Color.blue);
         conf.addProperty("color.list6", colors);
         conf.addProperty("color.list.interpolated", "${color.string}," + color2);
-
         // Dates & Calendars
         final String pattern = DATE_PATTERN;
         final DateFormat format = new SimpleDateFormat(pattern);
         conf.setProperty(DataConfiguration.DATE_FORMAT_KEY, pattern);
-
         final Date date1 = format.parse("2004-01-01");
         final Date date2 = format.parse("2004-12-31");
         final Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);
         final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
-
         conf.addProperty("date.string", "2004-01-01");
         conf.addProperty("date.string.interpolated", "${date.string}");
         conf.addProperty("date.object", date1);
@@ -323,7 +306,6 @@ public class TestDataConfiguration {
         conf.addProperty("date.list6", dates);
         conf.addProperty("date.list.interpolated", "${date.string},2004-12-31");
         conf.addPropertyDirect("date.list7", new String[] {"2004-01-01", "2004-12-31"});
-
         conf.addProperty("calendar.string", "2004-01-01");
         conf.addProperty("calendar.string.interpolated", "${calendar.string}");
         conf.addProperty("calendar.object", calendar1);
@@ -340,12 +322,10 @@ public class TestDataConfiguration {
         conf.addProperty("calendar.list6", calendars);
         conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
         conf.addPropertyDirect("calendar.list7", new String[] {"2004-01-01", "2004-12-31"});
-
         // host address
         conf.addProperty("ip.string", "127.0.0.1");
         conf.addProperty("ip.string.interpolated", "${ip.string}");
         conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
-
         // email address
         conf.addProperty("email.string", "dev@test.org");
         conf.addProperty("email.string.interpolated", "${email.string}");

@@ -33,7 +33,8 @@ import org.apache.commons.lang3.SystemProperties;
  * A helper class that defines a bunch of tests related to variable interpolation. It can be used for running these
  * tests on different configuration implementations.
  */
-public class InterpolationTestHelper {
+public final class InterpolationTestHelper {
+
     /**
      * Tests accessing and manipulating the interpolator object.
      *
@@ -222,5 +223,9 @@ public class InterpolationTestHelper {
         final String expectedValue = "/base-level/first-level/second-level/third-level";
 
         assertEquals(expectedValue, config.getString("test.third-level"));
+    }
+
+    private InterpolationTestHelper() {
+        // empty
     }
 }

@@ -30,7 +30,8 @@ import org.apache.commons.lang3.StringUtils;
  * A helper class for tests related to hierarchies of {@code ImmutableNode} objects. This class provides functionality
  * for creating test trees and accessing single nodes. It can be used by various test classes.
  */
-public class NodeStructureHelper {
+public final class NodeStructureHelper {
+
     /** A pattern for parsing node keys with optional indices. */
     private static final Pattern PAT_KEY_WITH_INDEX = Pattern.compile("(\\w+)\\((\\d+)\\)");
 
@@ -465,5 +466,9 @@ public class NodeStructureHelper {
      */
     public static int worksLength(final int authorIdx) {
         return WORKS[authorIdx].length;
+    }
+
+    private NodeStructureHelper() {
+        // empty
     }
 }
