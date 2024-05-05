@@ -721,6 +721,6 @@ public class TestBaseConfiguration {
 
     @Test
     public void givenNullValue_testContainsValue_shouldReturnFalse() {
-        assertFalse(config.containsValue(null), "should return false");
+        assertFalse(config.containsValue(null));
     }
 }

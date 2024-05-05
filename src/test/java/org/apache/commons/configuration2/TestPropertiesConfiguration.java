@@ -1220,8 +1220,8 @@ public class TestPropertiesConfiguration {
         Configurations configManager = new Configurations();
         Configuration config = configManager.properties("src/test/resources/config/test.properties");
 
-        assertTrue(config.containsValue("jndivalue2"), "should return true");
-        assertFalse(config.containsValue("notFound"), "should return false");
+        assertTrue(config.containsValue("jndivalue2"));
+        assertFalse(config.containsValue("notFound"));
     }
 
     /**

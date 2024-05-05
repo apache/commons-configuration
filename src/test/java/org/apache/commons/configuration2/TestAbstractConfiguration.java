@@ -81,30 +81,30 @@ public abstract class TestAbstractConfiguration {
     @Test
     public void testContainsValue(){
         final Configuration config = getConfiguration();
-        assertTrue(config.containsValue("value1"), "should return true for class " + this.getClass());
-        assertFalse(config.containsValue("value99999"), "should return false for class " + this.getClass());
+        assertTrue(config.containsValue("value1"));
+        assertFalse(config.containsValue("value99999"));
     }
 
     @Test
     public void testContains(){
         final AbstractConfiguration config = getConfiguration();
-        assertTrue(config.contains(config.getKeys(), "value1"), "should return true for class " + this.getClass());
-        assertFalse(config.contains(config.getKeys(),"value99999"), "should return false for class " + this.getClass());
+        assertTrue(config.contains(config.getKeys(), "value1"));
+        assertFalse(config.contains(config.getKeys(),"value99999"));
     }
 
     @Test
-    public void givenNullIterator_testContains_shouldThrowNullPointerException(){
+    public void givenNullIterator_testContains_shouldThrowNullPointerException() {
         final AbstractConfiguration config = getConfiguration();
 
-        assertThrows(NullPointerException.class, () -> config.contains(null,"value1"));
+        assertThrows(NullPointerException.class, () -> config.contains(null, "value1"));
     }
 
     @Test
-    public void givenNullValue_testContains_shouldThrowNullPointerException(){
+    public void givenNullValue_testContains_shouldThrowNullPointerException() {
         AbstractConfiguration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
 
-        assertThrows(NullPointerException.class, () -> config.contains(keys,null));
+        assertThrows(NullPointerException.class, () -> config.contains(keys, null));
     }
 
     @Test

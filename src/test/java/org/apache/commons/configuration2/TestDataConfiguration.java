@@ -1969,6 +1969,6 @@ public class TestDataConfiguration {
     @Test
     public void givenNullValue_testContainsValue_shouldReturnFalse() {
         final Configuration config = conf.getConfiguration();
-        assertFalse(config.containsValue(null), "should return false");
+        assertFalse(config.containsValue(null));
     }
 }
