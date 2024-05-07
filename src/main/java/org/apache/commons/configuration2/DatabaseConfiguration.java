@@ -193,9 +193,9 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         public T execute() {
             T result = null;
 
-            if (getDatasource() != null) {
+            if (getDataSource() != null) {
                 try {
-                    conn = getDatasource().getConnection();
+                    conn = getDataSource().getConnection();
                     result = performOperation();
 
                     if (isAutoCommit()) {
@@ -519,7 +519,9 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      *
      * @return the data source
      * @since 1.4
+     * @deprecated Use {@link #getDataSource()}
      */
+    @Deprecated
     public DataSource getDatasource() {
         return dataSource;
     }

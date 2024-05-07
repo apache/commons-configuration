@@ -54,22 +54,33 @@ import org.junit.jupiter.api.Test;
  * tries. Otherwise you may get database is already in use by another process errors.
  */
 public class TestDatabaseConfiguration {
+
     /**
      * A specialized database configuration implementation that can be configured to throw an exception when obtaining a
      * connection. This way database exceptions can be simulated.
      */
     public static class PotentialErrorDatabaseConfiguration extends DatabaseConfiguration {
+
         /** A flag whether a getConnection() call should fail. */
         private boolean failOnConnect;
 
         @Override
         public DataSource getDatasource() {
+            return getDS();
+        }
+
+        @Override
+        public DataSource getDataSource() {
+            return getDS();
+        }
+
+        private DataSource getDS() {
             if (failOnConnect) {
                 final DataSource ds = mock(DataSource.class);
                 assertDoesNotThrow(() -> when(ds.getConnection()).thenThrow(new SQLException("Simulated DB error")));
                 return ds;
             }
-            return super.getDatasource();
+            return super.getDataSource();
         }
     }
 
