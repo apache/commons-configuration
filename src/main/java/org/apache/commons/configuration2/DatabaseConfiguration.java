@@ -125,10 +125,10 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      */
     private abstract class AbstractJdbcOperation<T> {
         /** Stores the connection. */
-        private Connection conn;
+        private Connection connection;
 
         /** Stores the statement. */
-        private PreparedStatement pstmt;
+        private PreparedStatement preparedStatement;
 
         /** Stores the result set. */
         private ResultSet resultSet;
@@ -179,8 +179,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 statement = sql;
             }
 
-            pstmt = getConnection().prepareStatement(statement);
-            return pstmt;
+            preparedStatement = getConnection().prepareStatement(statement);
+            return preparedStatement;
         }
 
         /**
@@ -195,16 +195,16 @@ public class DatabaseConfiguration extends AbstractConfiguration {
 
             if (getDataSource() != null) {
                 try {
-                    conn = getDataSource().getConnection();
+                    connection = getDataSource().getConnection();
                     result = performOperation();
 
                     if (isAutoCommit()) {
-                        conn.commit();
+                        connection.commit();
                     }
                 } catch (final SQLException e) {
                     fireError(errorEventType, operationEventType, errorPropertyName, errorPropertyValue, e);
                 } finally {
-                    close(conn, pstmt, resultSet);
+                    close(connection, preparedStatement, resultSet);
                 }
             }
 
@@ -218,7 +218,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @return the current connection
          */
         protected Connection getConnection() {
-            return conn;
+            return connection;
         }
 
         /**
