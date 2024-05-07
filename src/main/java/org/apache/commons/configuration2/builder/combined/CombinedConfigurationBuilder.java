@@ -286,10 +286,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * Processes the declaration of configuration builder providers, creates the corresponding builder if necessary, obtains
          * configurations, and adds them to the specified result configuration.
          *
-         * @param ccResult the result configuration
-         * @param srcDecl the collection with the declarations of configuration sources to process
-         * @return a list with configuration builders
-         * @throws ConfigurationException if an error occurs
+         * @param ccResult the result configuration.
+         * @param srcDecl the collection with the declarations of configuration sources to process.
+         * @param builders List of configuration builders.
+         * @return a list with configuration builders.
+         * @throws ConfigurationException if an error occurs.
          */
         public List<ConfigurationBuilder<? extends Configuration>> createAndAddConfigurations(final CombinedConfiguration ccResult,
             final List<ConfigurationDeclaration> srcDecl, final List<ConfigurationBuilder<? extends Configuration>> builders) throws ConfigurationException {
