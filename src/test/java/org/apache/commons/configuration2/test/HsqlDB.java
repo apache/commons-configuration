@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Stolen from Turbine
  */
-
 public class HsqlDB {
 
     private static final Log LOG = LogFactory.getLog(HsqlDB.class);

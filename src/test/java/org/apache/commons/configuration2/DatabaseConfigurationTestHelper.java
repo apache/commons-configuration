@@ -76,7 +76,7 @@ public class DatabaseConfigurationTestHelper {
     private HsqlDB hsqlDB;
 
     /** The data source. */
-    private DataSource datasource;
+    private DataSource dataSource;
 
     /**
      * The auto-commit mode for the configuration instances created by this helper.
@@ -92,7 +92,8 @@ public class DatabaseConfigurationTestHelper {
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
-    public <T extends DatabaseConfiguration> T createConfig(final Class<T> configCls, final DatabaseBuilderParameters params) throws ConfigurationException {
+    public <T extends DatabaseConfiguration> T createConfiguration(final Class<T> configCls, final DatabaseBuilderParameters params)
+            throws ConfigurationException {
         return new BasicConfigurationBuilder<>(configCls).configure(params).getConfiguration();
     }
 
@@ -101,15 +102,15 @@ public class DatabaseConfigurationTestHelper {
      *
      * @return the {@code DataSource}
      */
-    public DataSource getDatasource() {
-        if (datasource == null) {
+    public DataSource getDataSource() {
+        if (dataSource == null) {
             try {
-                datasource = setUpDataSource();
+                dataSource = setUpDataSource();
             } catch (final Exception ex) {
                 throw new ConfigurationRuntimeException("Could not create data source", ex);
             }
         }
-        return datasource;
+        return dataSource;
     }
 
     /**
@@ -160,7 +161,7 @@ public class DatabaseConfigurationTestHelper {
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T setUpConfig(final Class<T> configCls) throws ConfigurationException {
-        return createConfig(configCls, setUpDefaultParameters());
+        return createConfiguration(configCls, setUpDefaultParameters());
     }
 
     /**
@@ -200,7 +201,7 @@ public class DatabaseConfigurationTestHelper {
      * @return the parameters object
      */
     public DatabaseBuilderParameters setUpDefaultParameters() {
-        return new Parameters().database().setDataSource(getDatasource()).setTable(TABLE).setKeyColumn(COL_KEY).setValueColumn(COL_VALUE)
+        return new Parameters().database().setDataSource(getDataSource()).setTable(TABLE).setKeyColumn(COL_KEY).setValueColumn(COL_VALUE)
             .setAutoCommit(isAutoCommit());
     }
 
@@ -224,7 +225,7 @@ public class DatabaseConfigurationTestHelper {
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T setUpMultiConfig(final Class<T> configCls, final String configName) throws ConfigurationException {
-        return createConfig(configCls, setUpMultiParameters(configName));
+        return createConfiguration(configCls, setUpMultiParameters(configName));
     }
 
     /**
@@ -245,8 +246,8 @@ public class DatabaseConfigurationTestHelper {
      * @throws Exception if an error occurs
      */
     public void tearDown() throws Exception {
-        if (datasource != null) {
-            datasource.getConnection().close();
+        if (dataSource != null) {
+            dataSource.getConnection().close();
         }
         hsqlDB.close();
     }

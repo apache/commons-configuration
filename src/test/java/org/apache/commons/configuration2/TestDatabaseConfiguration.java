@@ -385,7 +385,7 @@ public class TestDatabaseConfiguration {
     @Test
     public void testGetKeys() throws ConfigurationException {
         final DatabaseBuilderParameters params = helper.setUpDefaultParameters().setTable("configurationList");
-        final Configuration config1 = helper.createConfig(DatabaseConfiguration.class, params);
+        final Configuration config1 = helper.createConfiguration(DatabaseConfiguration.class, params);
         final Iterator<String> i = config1.getKeys();
         assertTrue(i.hasNext());
         final Object key = i.next();
@@ -429,7 +429,7 @@ public class TestDatabaseConfiguration {
     @Test
     public void testGetList() throws ConfigurationException {
         final DatabaseBuilderParameters params = helper.setUpDefaultParameters().setTable("configurationList");
-        final Configuration config1 = helper.createConfig(DatabaseConfiguration.class, params);
+        final Configuration config1 = helper.createConfiguration(DatabaseConfiguration.class, params);
         final List<Object> list = config1.getList("key3");
         assertEquals(3, list.size());
     }
