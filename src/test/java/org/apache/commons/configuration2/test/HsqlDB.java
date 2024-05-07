@@ -17,12 +17,14 @@
 
 package org.apache.commons.configuration2.test;
 
-import java.io.FileReader;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,17 +61,7 @@ public class HsqlDB {
     }
 
     private String getFileContents(final String fileName) throws Exception {
-        try (FileReader fr = new FileReader(fileName)) {
-
-            final char[] fileBuf = new char[1024];
-            final StringBuilder sb = new StringBuilder(1000);
-            int res = -1;
-
-            while ((res = fr.read(fileBuf, 0, 1024)) > -1) {
-                sb.append(fileBuf, 0, res);
-            }
-            return sb.toString();
-        }
+        return PathUtils.readString(Paths.get(fileName), Charset.defaultCharset());
     }
 
     private void loadSqlFile(final String fileName) throws Exception {
