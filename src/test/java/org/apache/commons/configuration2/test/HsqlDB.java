@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Stolen from Turbine
+ * Sourced from Apache Turbine.
  */
 public class HsqlDB {
 
@@ -40,9 +40,7 @@ public class HsqlDB {
 
     public HsqlDB(final String uri, final String databaseDriver, final String loadFile) throws Exception {
         Class.forName(databaseDriver);
-
         this.connection = DriverManager.getConnection(uri, "sa", "");
-
         if (StringUtils.isNotEmpty(loadFile)) {
             loadSqlFile(loadFile);
         }
@@ -67,7 +65,6 @@ public class HsqlDB {
     private void loadSqlFile(final String fileName) throws Exception {
         try (Statement statement = connection.createStatement()) {
             String commands = getFileContents(fileName);
-
             for (int targetPos = commands.indexOf(';'); targetPos > -1; targetPos = commands.indexOf(';')) {
                 final String cmd = commands.substring(0, targetPos + 1);
                 try {
@@ -75,7 +72,6 @@ public class HsqlDB {
                 } catch (final SQLException sqle) {
                     LOG.warn("Statement: " + cmd + ": " + sqle.getMessage());
                 }
-
                 commands = commands.substring(targetPos + 2);
             }
         }
