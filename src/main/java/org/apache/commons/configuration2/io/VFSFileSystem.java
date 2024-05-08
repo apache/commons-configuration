@@ -47,15 +47,14 @@ import org.apache.commons.vfs2.provider.UriParser;
  * @since 1.7
  */
 public class VFSFileSystem extends DefaultFileSystem {
+
     /**
      * Stream handler required to create URL.
      */
     private static final class VFSURLStreamHandler extends URLStreamHandler {
-        /** The Protocol used */
-        private final String protocol;
 
         public VFSURLStreamHandler(final FileName file) {
-            this.protocol = file.getScheme();
+            // empty
         }
 
         @Override
@@ -197,7 +196,6 @@ public class VFSFileSystem extends DefaultFileSystem {
                     return name.toString();
                 }
             }
-
             if (UriParser.extractScheme(fileName) != null) {
                 return fileName;
             }
@@ -238,7 +236,6 @@ public class VFSFileSystem extends DefaultFileSystem {
     @Override
     public URL locateFromURL(final String basePath, final String fileName) {
         final String fileScheme = UriParser.extractScheme(fileName);
-
         // Use DefaultFileSystem if basePath and fileName don't have a scheme.
         if ((basePath == null || UriParser.extractScheme(basePath) == null) && fileScheme == null) {
             return super.locateFromURL(basePath, fileName);
@@ -280,7 +277,6 @@ public class VFSFileSystem extends DefaultFileSystem {
         final Class<?>[] paramTypes = new Class<?>[2];
         paramTypes[0] = FileSystemOptions.class;
         paramTypes[1] = value.getClass();
-
         try {
             final Method method = builder.getClass().getMethod(methodName, paramTypes);
             final Object[] params = new Object[2];
@@ -290,6 +286,5 @@ public class VFSFileSystem extends DefaultFileSystem {
         } catch (final Exception ex) {
             log.warn("Cannot access property '" + key + "'! Ignoring.", ex);
         }
-
     }
 }
