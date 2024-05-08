@@ -346,6 +346,14 @@ public class TestDefaultImmutableConfiguration {
     }
 
     @Test
+    public void testContainsValueDefaultImplementation() {
+        config.map.put("test", "213123");
+        assertFalse(config.containsValue(""));
+        assertFalse(config.containsValue(null));
+        assertTrue(config.containsValue("213123"));
+    }
+
+    @Test
     public void testGetDuration() {
         final Duration d = Duration.ofSeconds(1);
         config.map.put("durationD", d.toString());
@@ -361,14 +369,6 @@ public class TestDefaultImmutableConfiguration {
     public void testGetDurationIncompatibleType() {
         config.map.put("test.empty", "");
         assertThrows(ConversionException.class, () -> config.getDuration("test.empty"));
-    }
-
-    @Test
-    public void testContainsValueDefaultImplementation() {
-        config.map.put("test", "213123");
-        assertFalse(config.containsValue(""));
-        assertFalse(config.containsValue(null));
-        assertTrue(config.containsValue("213123"));
     }
 
     @Test

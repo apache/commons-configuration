@@ -554,6 +554,17 @@ public class TestPropertiesConfiguration {
         testCompress840(object);
     }
 
+    @Test
+    void testConfiguration() throws ConfigurationException {
+        Configurations configManager = new Configurations();
+        Configuration config = configManager.properties("src/test/resources/config/test.properties");
+
+        assertTrue(config.containsValue("jndivalue2"));
+        assertFalse(config.containsValue("notFound"));
+        assertFalse(config.containsValue(null));
+        assertFalse(config.containsValue(""));
+    }
+
     /**
      * Tests copying another configuration into the test configuration. This test ensures that the layout object is informed
      * about the newly added properties.
@@ -1213,17 +1224,6 @@ public class TestPropertiesConfiguration {
     public void testNewLineEscaping() {
         final List<Object> list = conf.getList("test.path");
         assertEquals(Arrays.asList("C:\\path1\\", "C:\\path2\\", "C:\\path3\\complex\\test\\"), list);
-    }
-
-    @Test
-    void testConfiguration() throws ConfigurationException {
-        Configurations configManager = new Configurations();
-        Configuration config = configManager.properties("src/test/resources/config/test.properties");
-
-        assertTrue(config.containsValue("jndivalue2"));
-        assertFalse(config.containsValue("notFound"));
-        assertFalse(config.containsValue(null));
-        assertFalse(config.containsValue(""));
     }
 
     /**

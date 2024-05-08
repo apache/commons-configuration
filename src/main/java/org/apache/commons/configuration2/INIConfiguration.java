@@ -204,11 +204,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
 public class INIConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
 
     /**
-     * The empty key.
-     */
-    private static final String EMPTY_KEY = " ";
-
-    /**
      * Builds instances of INIConfiguration.
      *
      * @since 2.9.0
@@ -306,6 +301,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             };
         }
     }
+
+    /**
+     * The empty key.
+     */
+    private static final String EMPTY_KEY = " ";
 
     /**
      * The default characters that signal the start of a comment line.

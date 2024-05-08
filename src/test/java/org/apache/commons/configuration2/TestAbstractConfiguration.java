@@ -60,6 +60,21 @@ public abstract class TestAbstractConfiguration {
     protected abstract AbstractConfiguration getEmptyConfiguration();
 
     @Test
+    public void givenNullIteratorTestContains() {
+        final AbstractConfiguration config = getConfiguration();
+
+        assertThrows(NullPointerException.class, () -> config.contains(null, "value1"));
+    }
+
+    @Test
+    public void givenNullValueTestContains() {
+        AbstractConfiguration config = getConfiguration();
+        Iterator<String> keys = config.getKeys();
+        assertFalse(config.contains(keys, null));
+        assertFalse(config.contains(keys, ""));
+    }
+
+    @Test
     public void testAddPropertyDirect() {
         final AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
@@ -79,12 +94,10 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testContainsValue() {
+    public void testClearProperty() {
         final Configuration config = getConfiguration();
-        assertFalse(config.containsValue(null));
-        assertFalse(config.containsValue(""));
-        assertTrue(config.containsValue("value1"));
-        assertFalse(config.containsValue("value99999"));
+        config.clearProperty("key2");
+        assertFalse(config.containsKey("key2"));
     }
 
     @Test
@@ -95,32 +108,19 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void givenNullIteratorTestContains() {
-        final AbstractConfiguration config = getConfiguration();
-
-        assertThrows(NullPointerException.class, () -> config.contains(null, "value1"));
-    }
-
-    @Test
-    public void givenNullValueTestContains() {
-        AbstractConfiguration config = getConfiguration();
-        Iterator<String> keys = config.getKeys();
-        assertFalse(config.contains(keys, null));
-        assertFalse(config.contains(keys, ""));
-    }
-
-    @Test
-    public void testClearProperty() {
-        final Configuration config = getConfiguration();
-        config.clearProperty("key2");
-        assertFalse(config.containsKey("key2"));
-    }
-
-    @Test
     public void testContainsKey() {
         final Configuration config = getConfiguration();
         assertTrue(config.containsKey("key1"));
         assertFalse(config.containsKey("key3"));
+    }
+
+    @Test
+    public void testContainsValue() {
+        final Configuration config = getConfiguration();
+        assertFalse(config.containsValue(null));
+        assertFalse(config.containsValue(""));
+        assertTrue(config.containsValue("value1"));
+        assertFalse(config.containsValue("value99999"));
     }
 
     /**

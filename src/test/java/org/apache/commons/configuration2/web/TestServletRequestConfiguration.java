@@ -94,6 +94,12 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         assertThrows(UnsupportedOperationException.class, super::testClearProperty);
     }
 
+    @Test
+    public void testContainsValue() {
+        assertFalse(getConfiguration().containsValue(null));
+        assertFalse(getConfiguration().containsValue(""));
+    }
+
     /**
      * Tests a list with elements that contain an escaped list delimiter.
      */
@@ -115,11 +121,5 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
             expected.add(value.replace("\\", ""));
         }
         assertEquals(expected, v);
-    }
-
-    @Test
-    public void testContainsValue() {
-        assertFalse(getConfiguration().containsValue(null));
-        assertFalse(getConfiguration().containsValue(""));
     }
 }

@@ -381,6 +381,13 @@ public class TestDataConfiguration {
     }
 
     @Test
+    public void testContainsValue() {
+        final Configuration config = conf.getConfiguration();
+        assertFalse(config.containsValue(null));
+        assertTrue(config.containsValue(""));
+    }
+
+    @Test
     public void testConversionException() throws Exception {
         conf.addProperty("key1", new Object());
         conf.addProperty("key2", "xxxxxx");
@@ -1964,12 +1971,5 @@ public class TestDataConfiguration {
     @Test
     public void testNullConfiguration() {
         assertThrows(NullPointerException.class, () -> new DataConfiguration(null));
-    }
-
-    @Test
-    public void testContainsValue() {
-        final Configuration config = conf.getConfiguration();
-        assertFalse(config.containsValue(null));
-        assertTrue(config.containsValue(""));
     }
 }

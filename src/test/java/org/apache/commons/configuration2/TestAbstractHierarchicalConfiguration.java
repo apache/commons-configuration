@@ -509,6 +509,12 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     @Test
+    public void testContainsValue() {
+        assertFalse(config.containsValue(null));
+        assertFalse(config.containsValue(""));
+    }
+
+    @Test
     public void testGetKeys() {
         final List<String> keys = new ArrayList<>();
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
@@ -940,11 +946,5 @@ public class TestAbstractHierarchicalConfiguration {
     @Test
     public void testSize() {
         assertEquals(2, config.size());
-    }
-
-    @Test
-    public void testContainsValue() {
-        assertFalse(config.containsValue(null));
-        assertFalse(config.containsValue(""));
     }
 }

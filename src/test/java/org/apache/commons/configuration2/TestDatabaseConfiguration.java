@@ -108,6 +108,15 @@ public class TestDatabaseConfiguration {
         listener = null; // mark as checked
     }
 
+    @Test
+    void containsValueInternal() throws ConfigurationException {
+        final DatabaseConfiguration config = helper.setUpConfig();
+        config.addPropertyDirect("test", "test1");
+
+        assertTrue(config.containsValueInternal("test1"));
+        assertFalse(config.containsValue("test9999"));
+    }
+
     @BeforeEach
     public void setUp() throws Exception {
         /*
@@ -171,24 +180,6 @@ public class TestDatabaseConfiguration {
         config.addPropertyDirect("boolean", Boolean.TRUE);
 
         assertTrue(config.containsKey("boolean"));
-    }
-
-    @Test
-    void testContainsValue() throws ConfigurationException {
-        final DatabaseConfiguration config = helper.setUpConfig();
-        config.addPropertyDirect("test", "test1");
-
-        assertTrue(config.containsValue("test1"));
-        assertFalse(config.containsValue("test9999"));
-    }
-
-    @Test
-    void containsValueInternal() throws ConfigurationException {
-        final DatabaseConfiguration config = helper.setUpConfig();
-        config.addPropertyDirect("test", "test1");
-
-        assertTrue(config.containsValueInternal("test1"));
-        assertFalse(config.containsValue("test9999"));
     }
 
     /**
@@ -357,6 +348,15 @@ public class TestDatabaseConfiguration {
         final Configuration config = setUpConfig();
         assertTrue(config.containsKey("key1"));
         assertTrue(config.containsKey("key2"));
+    }
+
+    @Test
+    void testContainsValue() throws ConfigurationException {
+        final DatabaseConfiguration config = helper.setUpConfig();
+        config.addPropertyDirect("test", "test1");
+
+        assertTrue(config.containsValue("test1"));
+        assertFalse(config.containsValue("test9999"));
     }
 
     /**

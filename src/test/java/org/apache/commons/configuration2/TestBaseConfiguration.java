@@ -179,6 +179,11 @@ public class TestBaseConfiguration {
     }
 
     @Test
+    public void testContainsValue() {
+        assertFalse(config.containsValue(null));
+    }
+
+    @Test
     public void testGetBigDecimal() {
         config.setProperty("numberBigD", "123.456");
         final BigDecimal number = new BigDecimal("123.456");
@@ -717,10 +722,5 @@ public class TestBaseConfiguration {
     @Test
     public void testThrowExceptionOnMissing() {
         assertTrue(config.isThrowExceptionOnMissing());
-    }
-
-    @Test
-    public void testContainsValue() {
-        assertFalse(config.containsValue(null));
     }
 }

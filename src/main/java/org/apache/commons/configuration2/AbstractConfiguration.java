@@ -407,6 +407,23 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * Checks if the specified value exists in the properties structure mapped by the provided keys.
+     *
+     * @param keys an Iterator of String keys to search for the value
+     * @param value the String value to search for in the properties
+     * @return true if the value is found in the properties, false otherwise
+     * @since 2.11.0
+     */
+    protected boolean contains(final Iterator<String> keys, final Object value) {
+        while (keys.hasNext()) {
+            if (Objects.equals(value, getProperty(keys.next()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
      */
     @Override
@@ -414,20 +431,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         beginRead(false);
         try {
             return containsKeyInternal(key);
-        } finally {
-            endRead();
-        }
-    }
-
-    /**
-     * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
-     * @since 2.11.0
-     */
-    @Override
-    public final boolean containsValue(final Object value) {
-        beginRead(false);
-        try {
-            return containsValueInternal(value);
         } finally {
             endRead();
         }
@@ -442,6 +445,20 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     protected abstract boolean containsKeyInternal(String key);
+
+    /**
+     * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
+     * @since 2.11.0
+     */
+    @Override
+    public final boolean containsValue(final Object value) {
+        beginRead(false);
+        try {
+            return containsValueInternal(value);
+        } finally {
+            endRead();
+        }
+    }
 
     /**
      * Tests whether this configuration contains one or more matches to this value. This operation stops at first match but may be more expensive than the
@@ -1548,23 +1565,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             keyIt.next();
         }
         return size;
-    }
-
-    /**
-     * Checks if the specified value exists in the properties structure mapped by the provided keys.
-     *
-     * @param keys an Iterator of String keys to search for the value
-     * @param value the String value to search for in the properties
-     * @return true if the value is found in the properties, false otherwise
-     * @since 2.11.0
-     */
-    protected boolean contains(final Iterator<String> keys, final Object value) {
-        while (keys.hasNext()) {
-            if (Objects.equals(value, getProperty(keys.next()))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

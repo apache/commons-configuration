@@ -117,6 +117,12 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
     }
 
     @Test
+    public void testContainsValue() {
+        assertFalse(getConfiguration().containsValue(null));
+        assertFalse(getConfiguration().containsValue(""));
+    }
+
+    @Test
     public void testGetMap() {
         final Map<String, Object> map = new HashMap<>();
 
@@ -161,11 +167,5 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
     public void testNullMap() {
         assertThrows(NullPointerException.class, () -> new MapConfiguration((Map) null));
         assertThrows(NullPointerException.class, () -> new MapConfiguration((Properties) null));
-    }
-
-    @Test
-    public void testContainsValue() {
-        assertFalse(getConfiguration().containsValue(null));
-        assertFalse(getConfiguration().containsValue(""));
     }
 }
