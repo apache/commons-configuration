@@ -53,10 +53,6 @@ public class VFSFileSystem extends DefaultFileSystem {
      */
     private static final class VFSURLStreamHandler extends URLStreamHandler {
 
-        public VFSURLStreamHandler(final FileName file) {
-            // empty
-        }
-
         @Override
         protected URLConnection openConnection(final URL url) throws IOException {
             throw new IOException("VFS URLs can only be used with VFS APIs");
@@ -226,7 +222,7 @@ public class VFSFileSystem extends DefaultFileSystem {
                 path = resolveURI(file);
             }
 
-            final URLStreamHandler handler = new VFSURLStreamHandler(path);
+            final URLStreamHandler handler = new VFSURLStreamHandler();
             return new URL(null, path.getURI(), handler);
         } catch (final FileSystemException fse) {
             throw new ConfigurationRuntimeException("Could not parse basePath: " + basePath + " and fileName: " + file, fse);
@@ -261,7 +257,7 @@ public class VFSFileSystem extends DefaultFileSystem {
                 return null;
             }
             final FileName path = file.getName();
-            final URLStreamHandler handler = new VFSURLStreamHandler(path);
+            final URLStreamHandler handler = new VFSURLStreamHandler();
             return new URL(null, path.getURI(), handler);
         } catch (final FileSystemException | MalformedURLException fse) {
             return null;
