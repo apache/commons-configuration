@@ -94,6 +94,11 @@ public class TestAbstractConfigurationBasicFeatures {
         }
 
         @Override
+        protected boolean containsValueInternal(String value) {
+            return config.containsValue(value);
+        }
+
+        @Override
         protected Iterator<String> getKeysInternal() {
             return config.getKeys();
         }

@@ -420,6 +420,20 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
+     * @since 2.11.0
+     */
+    @Override
+    public final boolean containsValue(final String value) {
+        beginRead(false);
+        try {
+            return containsValueInternal(value);
+        } finally {
+            endRead();
+        }
+    }
+
+    /**
      * Actually checks whether the specified key is contained in this configuration. This method is called by
      * {@code containsKey()}. It has to be defined by concrete subclasses.
      *
@@ -428,6 +442,22 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     protected abstract boolean containsKeyInternal(String key);
+
+    /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the {@link #containsKeyInternal containsKey} method.
+     * <p>The implementation of this method will be different depending on the type of Configuration used.</p>
+     *
+     * <p>Note that this method is identical in functionality to
+     * {@link #containsValue containsValue}, (which is part of the {@link ImmutableConfiguration} interface).</p>
+     *
+     * @param value a value to search for
+     * @return {@code true} if and only if some key maps to the {@code value} argument in this hashtable as determined
+     * by the {@code equals} method; {@code false} otherwise.
+     * @throws NullPointerException if the value is {@code null}
+     * @since 2.11.0
+     */
+    protected abstract boolean containsValueInternal(String value);
 
     /**
      * Helper method for obtaining a property value with a type conversion.
@@ -1515,6 +1545,23 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             keyIt.next();
         }
         return size;
+    }
+
+    /**
+     * Checks if the specified value exists in the properties structure mapped by the provided keys.
+     *
+     * @param keys an Iterator of String keys to search for the value
+     * @param value the String value to search for in the properties
+     * @return true if the value is found in the properties, false otherwise
+     * @since 2.11.0
+     */
+    protected boolean contains(final Iterator<String> keys, final String value) {
+        while (keys.hasNext()) {
+            if (value.equals(getProperty(keys.next()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

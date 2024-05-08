@@ -479,6 +479,25 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the containsKey method.
+     * @since 2.11.0
+     */
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, value, null) {
+            @Override
+            protected Boolean performOperation() throws SQLException {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, valueColumn), false, value)) {
+                    return rs.next();
+                }
+            }
+        };
+        final Boolean result = op.execute();
+        return result != null && result.booleanValue();
+    }
+
+    /**
      * Extracts the value of a property from the given result set. The passed in {@code ResultSet} was created by a SELECT
      * statement on the underlying database table. This implementation reads the value of the column determined by the
      * {@code valueColumn} property. Normally the contained value is directly returned. However, if it is of type

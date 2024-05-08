@@ -941,4 +941,9 @@ public class TestAbstractHierarchicalConfiguration {
     public void testSize() {
         assertEquals(2, config.size());
     }
+
+    @Test
+    public void testContainsValue() {
+        assertThrows(NullPointerException.class, () -> config.containsValue(null));
+    }
 }

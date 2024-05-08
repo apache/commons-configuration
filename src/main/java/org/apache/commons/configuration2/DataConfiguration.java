@@ -214,6 +214,16 @@ public class DataConfiguration extends AbstractConfiguration {
     }
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the containsKey method.
+     * @since 2.11.0
+     */
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return configuration.containsValue(value);
+    }
+
+    /**
      * Gets an array of BigDecimals associated with the given configuration key. If the key doesn't map to an existing object
      * an empty array is returned.
      *

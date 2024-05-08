@@ -132,6 +132,16 @@ public class SubsetConfiguration extends AbstractConfiguration {
     }
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first match
+     * but may be more expensive than the containsKey method.
+     * @since 2.11.0
+     */
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return parent.containsValue(value);
+    }
+
+    /**
      * Gets the key in the subset configuration associated to the specified key in the parent configuration.
      *
      * @param key The key in the parent configuration.

@@ -63,6 +63,24 @@ public interface ImmutableConfiguration {
     boolean containsKey(String key);
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the {@link #containsKey containsKey} method.
+     *
+     * @param value value whose presence in this configuration is to be tested
+     * @return {@code true} if this configuration maps one or more keys to the specified value, false otherwise.
+     * @since 2.11.0
+     */
+    default boolean containsValue(final String value) {
+        final Iterator<String> keys = getKeys();
+        while (keys.hasNext()) {
+            if (value.equals(getProperty(keys.next()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Gets an object of the specified type associated with the given configuration key. If the key doesn't map to an
      * existing object, the method returns null unless {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
      * {@code true}.

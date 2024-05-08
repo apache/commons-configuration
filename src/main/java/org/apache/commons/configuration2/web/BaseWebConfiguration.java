@@ -69,6 +69,16 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     }
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first match
+     * but may be more expensive than the containsKey method
+     * @since 2.11.0
+     */
+    @Override
+    protected boolean containsValueInternal(final String value) {
+        return contains(getKeys(), value);
+    }
+
+    /**
      * Takes care of list delimiters in property values. This method checks if delimiter parsing is enabled and the passed
      * in value contains a delimiter character. If this is the case, a split operation is performed.
      *

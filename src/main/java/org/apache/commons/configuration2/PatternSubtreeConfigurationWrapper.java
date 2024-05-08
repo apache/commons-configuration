@@ -131,6 +131,16 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     /**
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
+     * match but may be more expensive than the containsKey method.
+     * @since 2.11.0
+     */
+    @Override
+    protected boolean containsValueInternal(String value) {
+        return config.containsValue(value);
+    }
+
+    /**
      * Returns the wrapped configuration as a {@code FileBased} object. If this cast is not possible, an exception is
      * thrown.
      *

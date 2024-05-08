@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -217,8 +218,7 @@ public class TestDefaultImmutableConfiguration {
 
         @Override
         public Iterator<String> getKeys() {
-            // Super is not a default method.
-            return null;
+            return this.map.keySet().iterator();
         }
 
         @Override
@@ -360,6 +360,12 @@ public class TestDefaultImmutableConfiguration {
     public void testGetDurationIncompatibleType() {
         config.map.put("test.empty", "");
         assertThrows(ConversionException.class, () -> config.getDuration("test.empty"));
+    }
+
+    @Test
+    public void testContainsValueDefaultImplementation() {
+        config.map.put("test", "213123");
+        assertTrue(config.containsValue("213123"));
     }
 
     @Test

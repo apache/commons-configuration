@@ -26,6 +26,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.junit.jupiter.api.Test;
@@ -90,5 +91,11 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
     @Test
     public void testClearProperty() {
         assertThrows(UnsupportedOperationException.class, super::testClearProperty);
+    }
+
+    @Test
+    public void testContainsValue() {
+        final Configuration config = getConfiguration();
+        assertThrows(NullPointerException.class, () -> config.containsValue(null));
     }
 }

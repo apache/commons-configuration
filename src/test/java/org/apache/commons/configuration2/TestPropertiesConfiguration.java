@@ -73,6 +73,7 @@ import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
@@ -1212,6 +1213,15 @@ public class TestPropertiesConfiguration {
     public void testNewLineEscaping() {
         final List<Object> list = conf.getList("test.path");
         assertEquals(Arrays.asList("C:\\path1\\", "C:\\path2\\", "C:\\path3\\complex\\test\\"), list);
+    }
+
+    @Test
+    void testConfiguration() throws ConfigurationException {
+        Configurations configManager = new Configurations();
+        Configuration config = configManager.properties("src/test/resources/config/test.properties");
+
+        assertTrue(config.containsValue("jndivalue2"));
+        assertFalse(config.containsValue("notFound"));
     }
 
     /**

@@ -173,6 +173,24 @@ public class TestDatabaseConfiguration {
         assertTrue(config.containsKey("boolean"));
     }
 
+    @Test
+    void testContainsValue() throws ConfigurationException {
+        final DatabaseConfiguration config = helper.setUpConfig();
+        config.addPropertyDirect("test", "test1");
+
+        assertTrue(config.containsValue("test1"));
+        assertFalse(config.containsValue("test9999"));
+    }
+
+    @Test
+    void containsValueInternal() throws ConfigurationException {
+        final DatabaseConfiguration config = helper.setUpConfig();
+        config.addPropertyDirect("test", "test1");
+
+        assertTrue(config.containsValueInternal("test1"));
+        assertFalse(config.containsValue("test9999"));
+    }
+
     /**
      * Tests whether a commit is performed after a property was added.
      */

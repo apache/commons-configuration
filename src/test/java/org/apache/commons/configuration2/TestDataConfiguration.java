@@ -1965,4 +1965,10 @@ public class TestDataConfiguration {
     public void testNullConfiguration() {
         assertThrows(NullPointerException.class, () -> new DataConfiguration(null));
     }
+
+    @Test
+    public void testContainsValue() {
+        final Configuration config = conf.getConfiguration();
+        assertFalse(config.containsValue(null));
+    }
 }

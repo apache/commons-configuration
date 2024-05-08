@@ -162,4 +162,9 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         assertThrows(NullPointerException.class, () -> new MapConfiguration((Map) null));
         assertThrows(NullPointerException.class, () -> new MapConfiguration((Properties) null));
     }
+
+    @Test
+    public void testContainsValue() {
+        assertFalse(getConfiguration().containsValue(null), "should return false");
+    }
 }
