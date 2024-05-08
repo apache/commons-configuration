@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2.web;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,7 +29,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.junit.jupiter.api.Test;
@@ -101,7 +101,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
 
     @Test
     public void testContainsValue() {
-        final Configuration config = getConfiguration();
-        assertThrows(NullPointerException.class, () -> config.containsValue(null));
+        assertFalse(getConfiguration().containsValue(null));
+        assertFalse(getConfiguration().containsValue(""));
     }
 }

@@ -137,7 +137,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(final String value) {
+    protected boolean containsValueInternal(final Object value) {
         return parent.containsValue(value);
     }
 

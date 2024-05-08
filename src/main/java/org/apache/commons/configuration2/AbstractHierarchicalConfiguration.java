@@ -461,7 +461,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(final String value) {
+    protected boolean containsValueInternal(final Object value) {
         return contains(getKeys(), value);
     }
 

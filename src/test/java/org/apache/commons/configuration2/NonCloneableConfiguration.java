@@ -51,7 +51,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration {
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(String value) {
+    protected boolean containsValueInternal(Object value) {
         return false;
     }
 

@@ -26,7 +26,7 @@
     <release version="2.11.0" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
       <action type="add" issue="CONFIGURATION-844" dev="ggregory" due-to="Thomas Steiner, Gary Gregory">Add support for empty sections #408.</action>
-      <action type="add" dev="ggregory" due-to="Rikkarth, Gary Gregory">Add ImmutableConfiguration.containsValue(String).</action>
+      <action type="add" dev="ggregory" due-to="Rikkarth, Gary Gregory">Add ImmutableConfiguration.containsValue(Object).</action>
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if DataConfiguration.DataConfiguration(Configuration) is called with null.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fail-fast with a NullPointerException if XMLPropertiesConfiguration.XMLPropertiesConfiguration(Element) is called with null.</action>

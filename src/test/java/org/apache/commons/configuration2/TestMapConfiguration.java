@@ -165,6 +165,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
 
     @Test
     public void testContainsValue() {
-        assertFalse(getConfiguration().containsValue(null), "should return false");
+        assertFalse(getConfiguration().containsValue(null));
+        assertFalse(getConfiguration().containsValue(""));
     }
 }

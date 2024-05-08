@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -118,7 +119,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
 
     @Test
     public void testContainsValue() {
-        final Configuration config = getConfiguration();
-        assertThrows(NullPointerException.class, () -> config.containsValue(null));
+        assertFalse(getConfiguration().containsValue(null));
+        assertFalse(getConfiguration().containsValue(""));
     }
 }

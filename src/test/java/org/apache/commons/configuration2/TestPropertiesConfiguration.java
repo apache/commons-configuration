@@ -1222,6 +1222,8 @@ public class TestPropertiesConfiguration {
 
         assertTrue(config.containsValue("jndivalue2"));
         assertFalse(config.containsValue("notFound"));
+        assertFalse(config.containsValue(null));
+        assertFalse(config.containsValue(""));
     }
 
     /**

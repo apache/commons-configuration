@@ -484,8 +484,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(final String value) {
-        final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, value, null) {
+    protected boolean containsValueInternal(final Object value) {
+        final AbstractJdbcOperation<Boolean> op = new AbstractJdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, value) {
             @Override
             protected Boolean performOperation() throws SQLException {
                 try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, valueColumn), false, value)) {

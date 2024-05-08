@@ -94,7 +94,7 @@ public class TestAbstractConfigurationBasicFeatures {
         }
 
         @Override
-        protected boolean containsValueInternal(String value) {
+        protected boolean containsValueInternal(Object value) {
             return config.containsValue(value);
         }
 

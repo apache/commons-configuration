@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
@@ -70,10 +71,10 @@ public interface ImmutableConfiguration {
      * @return {@code true} if this configuration maps one or more keys to the specified value, false otherwise.
      * @since 2.11.0
      */
-    default boolean containsValue(final String value) {
+    default boolean containsValue(final Object value) {
         final Iterator<String> keys = getKeys();
         while (keys.hasNext()) {
-            if (value.equals(getProperty(keys.next()))) {
+            if (Objects.equals(value, getProperty(keys.next()))) {
                 return true;
             }
         }

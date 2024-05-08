@@ -304,7 +304,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(final String value) {
+    protected boolean containsValueInternal(final Object value) {
         return configList.stream().anyMatch(config -> config.containsValue(value));
     }
 

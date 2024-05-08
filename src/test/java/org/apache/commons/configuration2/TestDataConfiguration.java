@@ -1970,5 +1970,6 @@ public class TestDataConfiguration {
     public void testContainsValue() {
         final Configuration config = conf.getConfiguration();
         assertFalse(config.containsValue(null));
+        assertTrue(config.containsValue(""));
     }
 }

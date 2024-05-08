@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -365,6 +366,8 @@ public class TestDefaultImmutableConfiguration {
     @Test
     public void testContainsValueDefaultImplementation() {
         config.map.put("test", "213123");
+        assertFalse(config.containsValue(""));
+        assertFalse(config.containsValue(null));
         assertTrue(config.containsValue("213123"));
     }
 

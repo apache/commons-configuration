@@ -153,7 +153,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(final String value) {
+    protected boolean containsValueInternal(final Object value) {
         return contains(getKeys(), value);
     }
 

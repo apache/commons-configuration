@@ -81,6 +81,8 @@ public abstract class TestAbstractConfiguration {
     @Test
     public void testContainsValue() {
         final Configuration config = getConfiguration();
+        assertFalse(config.containsValue(null));
+        assertFalse(config.containsValue(""));
         assertTrue(config.containsValue("value1"));
         assertFalse(config.containsValue("value99999"));
     }
@@ -103,8 +105,8 @@ public abstract class TestAbstractConfiguration {
     public void givenNullValueTestContains() {
         AbstractConfiguration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
-
-        assertThrows(NullPointerException.class, () -> config.contains(keys, null));
+        assertFalse(config.contains(keys, null));
+        assertFalse(config.contains(keys, ""));
     }
 
     @Test

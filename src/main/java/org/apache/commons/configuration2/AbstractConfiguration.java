@@ -424,7 +424,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.11.0
      */
     @Override
-    public final boolean containsValue(final String value) {
+    public final boolean containsValue(final Object value) {
         beginRead(false);
         try {
             return containsValueInternal(value);
@@ -444,20 +444,23 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected abstract boolean containsKeyInternal(String key);
 
     /**
-     * Tests whether this configuration contains one or more matches to this value. This operation stops at first
-     * match but may be more expensive than the {@link #containsKeyInternal containsKey} method.
-     * <p>The implementation of this method will be different depending on the type of Configuration used.</p>
+     * Tests whether this configuration contains one or more matches to this value. This operation stops at first match but may be more expensive than the
+     * {@link #containsKeyInternal containsKey} method.
+     * <p>
+     * The implementation of this method will be different depending on the type of Configuration used.
+     * </p>
      *
-     * <p>Note that this method is identical in functionality to
-     * {@link #containsValue containsValue}, (which is part of the {@link ImmutableConfiguration} interface).</p>
+     * <p>
+     * Note that this method is identical in functionality to {@link #containsValue containsValue}, (which is part of the {@link ImmutableConfiguration}
+     * interface).
+     * </p>
      *
-     * @param value a value to search for
-     * @return {@code true} if and only if some key maps to the {@code value} argument in this hashtable as determined
-     * by the {@code equals} method; {@code false} otherwise.
-     * @throws NullPointerException if the value is {@code null}
+     * @param value the value in question
+     * @return {@code true} if and only if some key maps to the {@code value} argument in this configuration as determined by the {@code equals} method;
+     *         {@code false} otherwise.
      * @since 2.11.0
      */
-    protected abstract boolean containsValueInternal(String value);
+    protected abstract boolean containsValueInternal(Object value);
 
     /**
      * Helper method for obtaining a property value with a type conversion.
@@ -1555,9 +1558,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return true if the value is found in the properties, false otherwise
      * @since 2.11.0
      */
-    protected boolean contains(final Iterator<String> keys, final String value) {
+    protected boolean contains(final Iterator<String> keys, final Object value) {
         while (keys.hasNext()) {
-            if (value.equals(getProperty(keys.next()))) {
+            if (Objects.equals(value, getProperty(keys.next()))) {
                 return true;
             }
         }
