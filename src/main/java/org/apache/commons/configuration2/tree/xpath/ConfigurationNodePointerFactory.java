@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 
 /**
  * <p>
- * Implementation of the {@code NodePointerFactory} interface for configuration nodes.
+ * Implements the {@code NodePointerFactory} interface for configuration nodes.
  * </p>
  * <p>
  * This class is able to create {@code NodePointer}s for the nodes of hierarchical configurations. Because there is no
