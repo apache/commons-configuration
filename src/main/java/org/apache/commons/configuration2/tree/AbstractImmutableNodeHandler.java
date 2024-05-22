@@ -113,7 +113,7 @@ abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode
      */
     @Override
     public boolean isDefined(final ImmutableNode node) {
-        return AbstractImmutableNodeHandler.checkIfNodeDefined(node);
+        return checkIfNodeDefined(node);
     }
 
     @Override
