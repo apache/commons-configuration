@@ -419,7 +419,6 @@
             <source>${maven.compiler.source}</source>
             <failOnError>false</failOnError>
             <links>
-              <link>${commons.javadoc8.java.link}</link>
               <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
               <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
             </links>
