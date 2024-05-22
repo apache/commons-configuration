@@ -49,9 +49,9 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
             // Don't handle as an Iterable.
             result.add(value);
         } else if (value instanceof Iterable) {
-            AbstractListDelimiterHandler.flattenIterator(handler, result, ((Iterable<?>) value).iterator(), limit, dejaVu);
+            flattenIterator(handler, result, ((Iterable<?>) value).iterator(), limit, dejaVu);
         } else if (value instanceof Iterator) {
-            AbstractListDelimiterHandler.flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
+            flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
         } else if (value != null) {
             if (value.getClass().isArray()) {
                 for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
