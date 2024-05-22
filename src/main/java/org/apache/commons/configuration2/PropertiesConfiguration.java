@@ -1059,7 +1059,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @return A String.
      */
     public static String getInclude() {
-        return PropertiesConfiguration.include;
+        return include;
     }
 
     /**
@@ -1072,7 +1072,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 2.5
      */
     public static String getIncludeOptional() {
-        return PropertiesConfiguration.includeOptional;
+        return includeOptional;
     }
 
     /**
@@ -1106,7 +1106,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @param inc A String.
      */
     public static void setInclude(final String inc) {
-        PropertiesConfiguration.include = inc;
+        include = inc;
     }
 
     /**
@@ -1119,7 +1119,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 2.5
      */
     public static void setIncludeOptional(final String inc) {
-        PropertiesConfiguration.includeOptional = inc;
+        includeOptional = inc;
     }
 
     /**
@@ -1316,7 +1316,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 2.6
      */
     public ConfigurationConsumer<ConfigurationException> getIncludeListener() {
-        return includeListener != null ? includeListener : PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
+        return includeListener != null ? includeListener : DEFAULT_INCLUDE_LISTENER;
     }
 
     /**
