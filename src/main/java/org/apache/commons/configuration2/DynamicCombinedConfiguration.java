@@ -746,7 +746,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return new ConfigurationInterpolator() {
             @Override
             protected Lookup fetchLookupForPrefix(final String prefix) {
-                return ConfigurationInterpolator.nullSafeLookup(getInterpolator().getLookups().get(prefix));
+                return nullSafeLookup(getInterpolator().getLookups().get(prefix));
             }
         };
     }
