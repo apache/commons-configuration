@@ -165,9 +165,8 @@ public class ConfigurationInterpolator {
          * @param props initialization properties
          */
         DefaultPrefixLookupsHolder(final Properties props) {
-            final Map<String, Lookup> lookups =
-                    props.containsKey(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY)
-                        ? parseLookups(props.getProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY))
+            final Map<String, Lookup> lookups = props.containsKey(DEFAULT_PREFIX_LOOKUPS_PROPERTY)
+                        ? parseLookups(props.getProperty(DEFAULT_PREFIX_LOOKUPS_PROPERTY))
                         : createDefaultLookups();
 
             defaultLookups = Collections.unmodifiableMap(lookups);
