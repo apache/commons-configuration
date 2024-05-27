@@ -40,7 +40,13 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     @Override
     public Object getProperty(final String name) {
         final String[] propValue = source.getStringArray(name);
-        return propValue != null && propValue.length == 1 ? propValue[0] : propValue;
+        if (propValue == null || propValue.length == 0) {
+            return null;
+        } else if (propValue.length == 1) {
+            return propValue[0];
+        } else {
+            return propValue;
+        }
     }
 
     @Override
