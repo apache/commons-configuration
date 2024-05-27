@@ -19,6 +19,7 @@ package org.apache.commons.configuration2.spring;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.junit.jupiter.api.AfterAll;
@@ -64,6 +65,8 @@ public class TestConfigurationPropertySource {
 
     private static final String TEST_SYSTEM_PROPERTY = "test.system.property";
 
+    private static final String TEST_NULL_PROPERTY = "test.null.property";
+
     private static final String TEST_VALUE = "testVALUE";
 
     private static final String TEST_SYSTEM_VALUE = "testVALUEforSystemEnv";
@@ -79,6 +82,7 @@ public class TestConfigurationPropertySource {
         propertiesConfiguration.addProperty(TEST_PROPERTY, TEST_VALUE);
         propertiesConfiguration.addProperty(TEST_LIST_PROPERTY, TEST_LIST_PROPERTY_VALUE);
         propertiesConfiguration.addProperty(TEST_SYSTEM_PROPERTY, TEST_SYSTEM_PROPERTY_VALUE);
+        propertiesConfiguration.addProperty(TEST_NULL_PROPERTY, null);
         return new ConfigurationPropertySource("test configuration", propertiesConfiguration);
     }
 
@@ -101,6 +105,9 @@ public class TestConfigurationPropertySource {
     @Value("${" + TEST_SYSTEM_PROPERTY + "}")
     private String systemPropertyValue;
 
+    @Value("${" + TEST_NULL_PROPERTY + ":false}")
+    private boolean booleanNullValue;
+
     @Test
     public void testSystemPropertyValueInjection() {
         assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
@@ -116,4 +123,8 @@ public class TestConfigurationPropertySource {
         assertArrayEquals(TEST_LIST_VALUE, listValue);
     }
 
+    @Test
+    public void testNullValueInjection() {
+        assertFalse(booleanNullValue);
+    }
 }
