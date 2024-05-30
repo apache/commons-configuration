@@ -55,8 +55,8 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * @return the value of the {@code at} attribute (can be <b>null</b>)
      */
     public String getAt() {
-        final String result = this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
-        return result == null ? this.getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT) : result;
+        final String result = getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
+        return result == null ? getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT) : result;
     }
 
     /**
@@ -108,7 +108,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * @return the value of the {@code forceCreate} attribute
      */
     public boolean isForceCreate() {
-        return this.getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_FORCECREATE, false);
+        return getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_FORCECREATE, false);
     }
 
     /**
@@ -117,9 +117,9 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * @return a flag if this declaration points to an optional configuration
      */
     public boolean isOptional() {
-        Boolean value = this.getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_OPTIONAL_RES, null);
+        Boolean value = getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_OPTIONAL_RES, null);
         if (value == null) {
-            value = this.getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_OPTIONAL, Boolean.FALSE);
+            value = getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_OPTIONAL, Boolean.FALSE);
         }
         return value.booleanValue();
     }
