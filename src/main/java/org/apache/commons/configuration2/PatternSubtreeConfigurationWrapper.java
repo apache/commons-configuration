@@ -136,7 +136,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(Object value) {
+    protected boolean containsValueInternal(final Object value) {
         return config.containsValue(value);
     }
 
