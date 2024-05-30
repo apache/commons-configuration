@@ -556,8 +556,8 @@ public class TestPropertiesConfiguration {
 
     @Test
     void testConfiguration() throws ConfigurationException {
-        Configurations configManager = new Configurations();
-        Configuration config = configManager.properties("src/test/resources/config/test.properties");
+        final Configurations configManager = new Configurations();
+        final Configuration config = configManager.properties("src/test/resources/config/test.properties");
 
         assertTrue(config.containsValue("jndivalue2"));
         assertFalse(config.containsValue("notFound"));
