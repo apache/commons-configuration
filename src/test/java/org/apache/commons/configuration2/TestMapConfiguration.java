@@ -116,6 +116,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         assertEquals("value1", config.getString("key1"));
     }
 
+    @Override
     @Test
     public void testContainsValue() {
         assertFalse(getConfiguration().containsValue(null));
