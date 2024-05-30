@@ -267,12 +267,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     protected void addNodesInternal(final String key, final Collection<? extends ImmutableNode> nodes) {
-        this.getCurrentConfig().addNodes(key, nodes);
+        getCurrentConfig().addNodes(key, nodes);
     }
 
     @Override
     protected void addPropertyInternal(final String key, final Object value) {
-        this.getCurrentConfig().addProperty(key, value);
+        getCurrentConfig().addProperty(key, value);
     }
 
     /**
@@ -324,38 +324,38 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     protected void clearInternal() {
-        this.getCurrentConfig().clear();
+        getCurrentConfig().clear();
     }
 
     @Override
     protected void clearPropertyDirect(final String key) {
-        this.getCurrentConfig().clearProperty(key);
+        getCurrentConfig().clearProperty(key);
     }
 
     @Override
     protected Object clearTreeInternal(final String key) {
-        this.getCurrentConfig().clearTree(key);
+        getCurrentConfig().clearTree(key);
         return Collections.emptyList();
     }
 
     @Override
     public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key) {
-        return this.getCurrentConfig().configurationAt(key);
+        return getCurrentConfig().configurationAt(key);
     }
 
     @Override
     public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key, final boolean supportUpdates) {
-        return this.getCurrentConfig().configurationAt(key, supportUpdates);
+        return getCurrentConfig().configurationAt(key, supportUpdates);
     }
 
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-        return this.getCurrentConfig().configurationsAt(key);
+        return getCurrentConfig().configurationsAt(key);
     }
 
     @Override
     protected boolean containsKeyInternal(final String key) {
-        return this.getCurrentConfig().containsKey(key);
+        return getCurrentConfig().containsKey(key);
     }
 
     /**
@@ -364,8 +364,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(Object value) {
-        return this.getCurrentConfig().contains(getKeys(), value);
+    protected boolean containsValueInternal(final Object value) {
+        return getCurrentConfig().contains(getKeys(), value);
     }
 
     /**
@@ -415,52 +415,52 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public BigDecimal getBigDecimal(final String key) {
-        return this.getCurrentConfig().getBigDecimal(key);
+        return getCurrentConfig().getBigDecimal(key);
     }
 
     @Override
     public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
-        return this.getCurrentConfig().getBigDecimal(key, defaultValue);
+        return getCurrentConfig().getBigDecimal(key, defaultValue);
     }
 
     @Override
     public BigInteger getBigInteger(final String key) {
-        return this.getCurrentConfig().getBigInteger(key);
+        return getCurrentConfig().getBigInteger(key);
     }
 
     @Override
     public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
-        return this.getCurrentConfig().getBigInteger(key, defaultValue);
+        return getCurrentConfig().getBigInteger(key, defaultValue);
     }
 
     @Override
     public boolean getBoolean(final String key) {
-        return this.getCurrentConfig().getBoolean(key);
+        return getCurrentConfig().getBoolean(key);
     }
 
     @Override
     public boolean getBoolean(final String key, final boolean defaultValue) {
-        return this.getCurrentConfig().getBoolean(key, defaultValue);
+        return getCurrentConfig().getBoolean(key, defaultValue);
     }
 
     @Override
     public Boolean getBoolean(final String key, final Boolean defaultValue) {
-        return this.getCurrentConfig().getBoolean(key, defaultValue);
+        return getCurrentConfig().getBoolean(key, defaultValue);
     }
 
     @Override
     public byte getByte(final String key) {
-        return this.getCurrentConfig().getByte(key);
+        return getCurrentConfig().getByte(key);
     }
 
     @Override
     public byte getByte(final String key, final byte defaultValue) {
-        return this.getCurrentConfig().getByte(key, defaultValue);
+        return getCurrentConfig().getByte(key, defaultValue);
     }
 
     @Override
     public Byte getByte(final String key, final Byte defaultValue) {
-        return this.getCurrentConfig().getByte(key, defaultValue);
+        return getCurrentConfig().getByte(key, defaultValue);
     }
 
     /**
@@ -539,47 +539,47 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public double getDouble(final String key) {
-        return this.getCurrentConfig().getDouble(key);
+        return getCurrentConfig().getDouble(key);
     }
 
     @Override
     public double getDouble(final String key, final double defaultValue) {
-        return this.getCurrentConfig().getDouble(key, defaultValue);
+        return getCurrentConfig().getDouble(key, defaultValue);
     }
 
     @Override
     public Double getDouble(final String key, final Double defaultValue) {
-        return this.getCurrentConfig().getDouble(key, defaultValue);
+        return getCurrentConfig().getDouble(key, defaultValue);
     }
 
     @Override
     public float getFloat(final String key) {
-        return this.getCurrentConfig().getFloat(key);
+        return getCurrentConfig().getFloat(key);
     }
 
     @Override
     public float getFloat(final String key, final float defaultValue) {
-        return this.getCurrentConfig().getFloat(key, defaultValue);
+        return getCurrentConfig().getFloat(key, defaultValue);
     }
 
     @Override
     public Float getFloat(final String key, final Float defaultValue) {
-        return this.getCurrentConfig().getFloat(key, defaultValue);
+        return getCurrentConfig().getFloat(key, defaultValue);
     }
 
     @Override
     public int getInt(final String key) {
-        return this.getCurrentConfig().getInt(key);
+        return getCurrentConfig().getInt(key);
     }
 
     @Override
     public int getInt(final String key, final int defaultValue) {
-        return this.getCurrentConfig().getInt(key, defaultValue);
+        return getCurrentConfig().getInt(key, defaultValue);
     }
 
     @Override
     public Integer getInteger(final String key, final Integer defaultValue) {
-        return this.getCurrentConfig().getInteger(key, defaultValue);
+        return getCurrentConfig().getInteger(key, defaultValue);
     }
 
     public String getKeyPattern() {
@@ -588,42 +588,42 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     protected Iterator<String> getKeysInternal() {
-        return this.getCurrentConfig().getKeys();
+        return getCurrentConfig().getKeys();
     }
 
     @Override
     protected Iterator<String> getKeysInternal(final String prefix) {
-        return this.getCurrentConfig().getKeys(prefix);
+        return getCurrentConfig().getKeys(prefix);
     }
 
     @Override
     public List<Object> getList(final String key) {
-        return this.getCurrentConfig().getList(key);
+        return getCurrentConfig().getList(key);
     }
 
     @Override
     public List<Object> getList(final String key, final List<?> defaultValue) {
-        return this.getCurrentConfig().getList(key, defaultValue);
+        return getCurrentConfig().getList(key, defaultValue);
     }
 
     @Override
     public long getLong(final String key) {
-        return this.getCurrentConfig().getLong(key);
+        return getCurrentConfig().getLong(key);
     }
 
     @Override
     public long getLong(final String key, final long defaultValue) {
-        return this.getCurrentConfig().getLong(key, defaultValue);
+        return getCurrentConfig().getLong(key, defaultValue);
     }
 
     @Override
     public Long getLong(final String key, final Long defaultValue) {
-        return this.getCurrentConfig().getLong(key, defaultValue);
+        return getCurrentConfig().getLong(key, defaultValue);
     }
 
     @Override
     protected int getMaxIndexInternal(final String key) {
-        return this.getCurrentConfig().getMaxIndex(key);
+        return getCurrentConfig().getMaxIndex(key);
     }
 
     /**
@@ -653,27 +653,27 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public Properties getProperties(final String key) {
-        return this.getCurrentConfig().getProperties(key);
+        return getCurrentConfig().getProperties(key);
     }
 
     @Override
     protected Object getPropertyInternal(final String key) {
-        return this.getCurrentConfig().getProperty(key);
+        return getCurrentConfig().getProperty(key);
     }
 
     @Override
     public short getShort(final String key) {
-        return this.getCurrentConfig().getShort(key);
+        return getCurrentConfig().getShort(key);
     }
 
     @Override
     public short getShort(final String key, final short defaultValue) {
-        return this.getCurrentConfig().getShort(key, defaultValue);
+        return getCurrentConfig().getShort(key, defaultValue);
     }
 
     @Override
     public Short getShort(final String key, final Short defaultValue) {
-        return this.getCurrentConfig().getShort(key, defaultValue);
+        return getCurrentConfig().getShort(key, defaultValue);
     }
 
     /**
@@ -704,17 +704,17 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public String getString(final String key) {
-        return this.getCurrentConfig().getString(key);
+        return getCurrentConfig().getString(key);
     }
 
     @Override
     public String getString(final String key, final String defaultValue) {
-        return this.getCurrentConfig().getString(key, defaultValue);
+        return getCurrentConfig().getString(key, defaultValue);
     }
 
     @Override
     public String[] getStringArray(final String key) {
-        return this.getCurrentConfig().getStringArray(key);
+        return getCurrentConfig().getStringArray(key);
     }
 
     /**
@@ -727,7 +727,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         if (loggerName != null) {
             config.setLogger(new ConfigurationLogger(loggerName));
         }
-        config.setExpressionEngine(this.getExpressionEngine());
+        config.setExpressionEngine(getExpressionEngine());
         config.setConversionExpressionEngine(getConversionExpressionEngine());
         config.setListDelimiterHandler(getListDelimiterHandler());
         copyEventListeners(config);
@@ -753,7 +753,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     public Configuration interpolatedConfiguration() {
-        return this.getCurrentConfig().interpolatedConfiguration();
+        return getCurrentConfig().interpolatedConfiguration();
     }
 
     /**
@@ -773,7 +773,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     protected boolean isEmptyInternal() {
-        return this.getCurrentConfig().isEmpty();
+        return getCurrentConfig().isEmpty();
     }
 
     /**
@@ -883,16 +883,16 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     @Override
     protected void setPropertyInternal(final String key, final Object value) {
-        this.getCurrentConfig().setProperty(key, value);
+        getCurrentConfig().setProperty(key, value);
     }
 
     @Override
     protected int sizeInternal() {
-        return this.getCurrentConfig().size();
+        return getCurrentConfig().size();
     }
 
     @Override
     public Configuration subset(final String prefix) {
-        return this.getCurrentConfig().subset(prefix);
+        return getCurrentConfig().subset(prefix);
     }
 }
