@@ -42,11 +42,11 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
         final String[] propValue = source.getStringArray(name);
         if (propValue == null || propValue.length == 0) {
             return null;
-        } else if (propValue.length == 1) {
-            return propValue[0];
-        } else {
-            return propValue;
         }
+        if (propValue.length == 1) {
+            return propValue[0];
+        }
+        return propValue;
     }
 
     @Override
