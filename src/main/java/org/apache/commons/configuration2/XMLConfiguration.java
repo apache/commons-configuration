@@ -944,7 +944,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         } catch (final SAXParseException spe) {
             throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
         } catch (final Exception e) {
-            this.getLogger().debug("Unable to load the configuration: " + e);
+            getLogger().debug("Unable to load the configuration: " + e);
             throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
