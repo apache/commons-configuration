@@ -142,7 +142,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @since 2.11.0
      */
     @Override
-    protected boolean containsValueInternal(Object value) {
+    protected boolean containsValueInternal(final Object value) {
         return store.containsValue(value);
     }
 
