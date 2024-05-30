@@ -115,6 +115,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
         }
     }
 
+    @Override
     @Test
     public void testContainsValue() {
         assertFalse(getConfiguration().containsValue(null));
