@@ -109,16 +109,6 @@ public class TestConfigurationPropertySource {
     private boolean booleanNullValue;
 
     @Test
-    public void testSystemPropertyValueInjection() {
-        assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
-    }
-
-    @Test
-    public void testValueInjection() {
-        assertEquals(TEST_VALUE, value);
-    }
-
-    @Test
     public void testListValueInjection() {
         assertArrayEquals(TEST_LIST_VALUE, listValue);
     }
@@ -126,5 +116,15 @@ public class TestConfigurationPropertySource {
     @Test
     public void testNullValueInjection() {
         assertFalse(booleanNullValue);
+    }
+
+    @Test
+    public void testSystemPropertyValueInjection() {
+        assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
+    }
+
+    @Test
+    public void testValueInjection() {
+        assertEquals(TEST_VALUE, value);
     }
 }
