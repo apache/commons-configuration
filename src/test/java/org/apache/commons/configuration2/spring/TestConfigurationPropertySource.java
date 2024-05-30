@@ -17,7 +17,9 @@
 
 package org.apache.commons.configuration2.spring;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.junit.jupiter.api.AfterAll;
@@ -59,20 +61,34 @@ public class TestConfigurationPropertySource {
 
     private static final String TEST_PROPERTY = "test.property";
 
+    private static final String TEST_LIST_PROPERTY = "test.list.property";
+
     private static final String TEST_SYSTEM_PROPERTY = "test.system.property";
 
+    private static final String TEST_NULL_PROPERTY = "test.null.property";
+
     private static final String TEST_VALUE = "testVALUE";
+
+    private static final String TEST_SYSTEM_VALUE = "testVALUEforSystemEnv";
+
+    private static final String TEST_SYSTEM_PROPERTY_VALUE = "${sys:" + TEST_SYSTEM_PROPERTY + "}";
+
+    private static final String[] TEST_LIST_PROPERTY_VALUE = new String[] {TEST_SYSTEM_PROPERTY_VALUE, TEST_VALUE};
+
+    private static final String[] TEST_LIST_VALUE = new String[] {TEST_SYSTEM_VALUE, TEST_VALUE};
 
     private static ConfigurationPropertySource createConfigPropertySource() {
         final PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
         propertiesConfiguration.addProperty(TEST_PROPERTY, TEST_VALUE);
-        propertiesConfiguration.addProperty(TEST_SYSTEM_PROPERTY, "${sys:" + TEST_SYSTEM_PROPERTY + "}");
+        propertiesConfiguration.addProperty(TEST_LIST_PROPERTY, TEST_LIST_PROPERTY_VALUE);
+        propertiesConfiguration.addProperty(TEST_SYSTEM_PROPERTY, TEST_SYSTEM_PROPERTY_VALUE);
+        propertiesConfiguration.addProperty(TEST_NULL_PROPERTY, null);
         return new ConfigurationPropertySource("test configuration", propertiesConfiguration);
     }
 
     @BeforeAll
     public static void setUp() {
-        System.setProperty(TEST_SYSTEM_PROPERTY, TEST_VALUE);
+        System.setProperty(TEST_SYSTEM_PROPERTY, TEST_SYSTEM_VALUE);
     }
 
     @AfterAll
@@ -83,12 +99,18 @@ public class TestConfigurationPropertySource {
     @Value("${" + TEST_PROPERTY + "}")
     private String value;
 
+    @Value("${" + TEST_LIST_PROPERTY + "}")
+    private String[] listValue;
+
     @Value("${" + TEST_SYSTEM_PROPERTY + "}")
     private String systemPropertyValue;
 
+    @Value("${" + TEST_NULL_PROPERTY + ":false}")
+    private boolean booleanNullValue;
+
     @Test
     public void testSystemPropertyValueInjection() {
-        assertEquals(TEST_VALUE, systemPropertyValue);
+        assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
     }
 
     @Test
@@ -96,4 +118,13 @@ public class TestConfigurationPropertySource {
         assertEquals(TEST_VALUE, value);
     }
 
+    @Test
+    public void testListValueInjection() {
+        assertArrayEquals(TEST_LIST_VALUE, listValue);
+    }
+
+    @Test
+    public void testNullValueInjection() {
+        assertFalse(booleanNullValue);
+    }
 }
