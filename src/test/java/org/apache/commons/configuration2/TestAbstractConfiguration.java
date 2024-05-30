@@ -68,8 +68,8 @@ public abstract class TestAbstractConfiguration {
 
     @Test
     public void givenNullValueTestContains() {
-        AbstractConfiguration config = getConfiguration();
-        Iterator<String> keys = config.getKeys();
+        final AbstractConfiguration config = getConfiguration();
+        final Iterator<String> keys = config.getKeys();
         assertFalse(config.contains(keys, null));
         assertFalse(config.contains(keys, ""));
     }
