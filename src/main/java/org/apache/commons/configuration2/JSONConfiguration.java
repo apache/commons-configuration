@@ -90,7 +90,7 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
 
     @Override
     public void write(final Writer out) throws ConfigurationException, IOException {
-        this.mapper.writer().writeValue(out, constructMap(this.getNodeModel().getNodeHandler().getRootNode()));
+        this.mapper.writer().writeValue(out, constructMap(getNodeModel().getNodeHandler().getRootNode()));
     }
 
 }
