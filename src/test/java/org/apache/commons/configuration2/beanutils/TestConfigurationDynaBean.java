@@ -53,22 +53,22 @@ public class TestConfigurationDynaBean {
      * The set of property names we expect to have returned when calling {@code getDynaProperties()}. You should update this
      * list when new properties are added to TestBean.
      */
-    private String[] properties = {"booleanProperty", "booleanSecond", "doubleProperty", "floatProperty", "intProperty", "longProperty", "mappedProperty.key1",
-        "mappedProperty.key2", "mappedProperty.key3", "mappedIntProperty.key1", "shortProperty", "stringProperty", "byteProperty", "charProperty"};
+    private final String[] properties = {"booleanProperty", "booleanSecond", "doubleProperty", "floatProperty", "intProperty", "longProperty",
+            "mappedProperty.key1", "mappedProperty.key2", "mappedProperty.key3", "mappedIntProperty.key1", "shortProperty", "stringProperty", "byteProperty",
+            "charProperty"};
 
-    private Object[] values = {Boolean.TRUE, Boolean.TRUE, Double.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE,
-        Long.MAX_VALUE, "First Value", "Second Value", "Third Value", Integer.MAX_VALUE, Short.MAX_VALUE,
-        "This is a string", Byte.MAX_VALUE, Character.MAX_VALUE};
+    private final Object[] values = {Boolean.TRUE, Boolean.TRUE, Double.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE, Long.MAX_VALUE, "First Value",
+            "Second Value", "Third Value", Integer.MAX_VALUE, Short.MAX_VALUE, "This is a string", Byte.MAX_VALUE, Character.MAX_VALUE};
 
-    private int[] intArray = {0, 10, 20, 30, 40};
-    private boolean[] booleanArray = {true, false, true, false, true};
-    private char[] charArray = {'a', 'b', 'c', 'd', 'e'};
-    private byte[] byteArray = {0, 10, 20, 30, 40};
-    private long[] longArray = {0, 10, 20, 30, 40};
-    private short[] shortArray = {0, 10, 20, 30, 40};
-    private float[] floatArray = {0, 10, 20, 30, 40};
-    private double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
-    private String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
+    private final int[] intArray = {0, 10, 20, 30, 40};
+    private final boolean[] booleanArray = {true, false, true, false, true};
+    private final char[] charArray = {'a', 'b', 'c', 'd', 'e'};
+    private final byte[] byteArray = {0, 10, 20, 30, 40};
+    private final long[] longArray = {0, 10, 20, 30, 40};
+    private final short[] shortArray = {0, 10, 20, 30, 40};
+    private final float[] floatArray = {0, 10, 20, 30, 40};
+    private final double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
+    private final String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
     /**
      * Creates the underlying configuration object for the dyna bean.
