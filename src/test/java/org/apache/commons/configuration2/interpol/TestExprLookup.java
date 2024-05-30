@@ -44,7 +44,7 @@ public class TestExprLookup {
 
     public static class Utility {
 
-        private String message;
+        private final String message;
 
         public Utility(final String msg) {
             this.message = msg;
