@@ -73,9 +73,9 @@ public class TestConfigurationPropertySource {
 
     private static final String TEST_SYSTEM_PROPERTY_VALUE = "${sys:" + TEST_SYSTEM_PROPERTY + "}";
 
-    private static final String[] TEST_LIST_PROPERTY_VALUE = new String[] {TEST_SYSTEM_PROPERTY_VALUE, TEST_VALUE};
+    private static final String[] TEST_LIST_PROPERTY_VALUE = {TEST_SYSTEM_PROPERTY_VALUE, TEST_VALUE};
 
-    private static final String[] TEST_LIST_VALUE = new String[] {TEST_SYSTEM_VALUE, TEST_VALUE};
+    private static final String[] TEST_LIST_VALUE = {TEST_SYSTEM_VALUE, TEST_VALUE};
 
     private static ConfigurationPropertySource createConfigPropertySource() {
         final PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
