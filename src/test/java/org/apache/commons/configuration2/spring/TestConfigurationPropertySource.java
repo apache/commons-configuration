@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.spring;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.junit.jupiter.api.AfterAll;
@@ -67,6 +68,8 @@ public class TestConfigurationPropertySource {
 
     private static final String TEST_NULL_PROPERTY = "test.null.property";
 
+    private static final String TEST_EMPTY_PROPERTY = "test.empty.property";
+
     private static final String TEST_VALUE = "testVALUE";
 
     private static final String TEST_SYSTEM_VALUE = "testVALUEforSystemEnv";
@@ -83,6 +86,7 @@ public class TestConfigurationPropertySource {
         propertiesConfiguration.addProperty(TEST_LIST_PROPERTY, TEST_LIST_PROPERTY_VALUE);
         propertiesConfiguration.addProperty(TEST_SYSTEM_PROPERTY, TEST_SYSTEM_PROPERTY_VALUE);
         propertiesConfiguration.addProperty(TEST_NULL_PROPERTY, null);
+        propertiesConfiguration.addProperty(TEST_EMPTY_PROPERTY, "");
         return new ConfigurationPropertySource("test configuration", propertiesConfiguration);
     }
 
@@ -106,16 +110,17 @@ public class TestConfigurationPropertySource {
     private String systemPropertyValue;
 
     @Value("${" + TEST_NULL_PROPERTY + ":false}")
-    private boolean booleanNullValue;
+    private boolean booleanNullValueDefaultFalse;
+
+    @Value("${" + TEST_NULL_PROPERTY + ":true}")
+    private boolean booleanNullValueDefaultTrue;
+
+    @Value("${" + TEST_EMPTY_PROPERTY + ":defaultShouldNotApply}")
+    private String emptyPropertyValue;
 
     @Test
     public void testListValueInjection() {
         assertArrayEquals(TEST_LIST_VALUE, listValue);
-    }
-
-    @Test
-    public void testNullValueInjection() {
-        assertFalse(booleanNullValue);
     }
 
     @Test
@@ -124,7 +129,13 @@ public class TestConfigurationPropertySource {
     }
 
     @Test
-    public void testValueInjection() {
-        assertEquals(TEST_VALUE, value);
+    public void testNullValueInjection() {
+        assertFalse(booleanNullValueDefaultFalse);
+        assertTrue(booleanNullValueDefaultTrue);
+    }
+
+    @Test
+    public void testEmptyStringValueInjection() {
+        assertEquals("", emptyPropertyValue);
     }
 }
