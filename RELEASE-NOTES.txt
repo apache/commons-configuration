@@ -1,4 +1,76 @@
 Apache Commons Configuration
+Version 2.11.0
+Release Notes
+
+Introducing Apache Commons Configuration
+----------------------------------------
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+
+Minor release with new features and updated dependencies; requires Java 8 or above.
+
+Changes in this version include:
+
+New features
+------------
+
+* CONFIGURATION-844:  Add support for empty sections #408. Thanks to Thomas Steiner, Gary Gregory.
+*                     Add ImmutableConfiguration.containsValue(Object). Thanks to Rikkarth, Gary Gregory.
+
+Fixed Bugs
+----------
+
+*                     Fail-fast with a NullPointerException if DataConfiguration.DataConfiguration(Configuration) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if XMLPropertiesConfiguration.XMLPropertiesConfiguration(Element) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if a SubsetConfiguration constructor is called with a null Configuration. Thanks to Gary Gregory.
+* CONFIGURATION-843:  Methods should not be empty #393. Thanks to Gary Gregory.
+*                     Guard MapConfiguration against null maps #381. Thanks to Heewon Lee, Gary Gregory.
+*                     Fail-fast with a NullPointerException if AppletConfiguration(Applet) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletConfiguration(Servlet) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletConfiguration(ServletConfig) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletContextConfiguration(Servlet) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletContextConfiguration(ServletContext) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletFilterConfiguration(FilterConfig) is called with null. Thanks to Gary Gregory.
+*                     Fail-fast with a NullPointerException if ServletRequestConfiguration(ServletRequest) is called with null. Thanks to Gary Gregory.
+*                     Deprecate DatabaseConfiguration.getDatasource() in favor of getDataSource(). Thanks to Gary Gregory.
+*                     Fix PMD DynamicCombinedConfiguration in AbstractImmutableNodeHandler. Thanks to Gary Gregory.
+*                     Fix PMD DynamicCombinedConfiguration in AbstractListDelimiterHandler. Thanks to Gary Gregory.
+*                     Fix PMD DynamicCombinedConfiguration in DefaultPrefixLookupsHolder. Thanks to Gary Gregory.
+*                     Fix PMD DynamicCombinedConfiguration in DynamicCombinedConfiguration. Thanks to Gary Gregory.
+*                     Fix PMD DynamicCombinedConfiguration in PropertiesConfiguration. Thanks to Gary Gregory.
+* CONFIGURATION-846:  Restore previous behavior allowing Spring to inject multiple values #425. Thanks to Andrea Bollini, Gary Gregory, Tim Donohue, kbarlowgw.
+* CONFIGURATION-847:  Property with an empty string value was not processed #431. Thanks to Andrea Bollini, Gary Gregory, Tim Donohue, kbarlowgw.
+
+Changes
+-------
+
+*                     Bump commons-logging:commons-logging from 1.3.0 to 1.3.2 #390, #418. Thanks to Dependabot.
+*                     Bump commons-io:commons-io from 2.15.1 to 2.16.1 #394, #400. Thanks to Dependabot.
+*                     Bump org.apache.commons:commons-parent from 67 to 70 #396. Thanks to Dependabot.
+*                     Bump slf4j.version from 2.0.12 to 2.0.13 #403. Thanks to Dependabot.
+*                     Bump org.apache.commons:commons-text from 1.11.0 to 1.12.0 #404. Thanks to Dependabot.
+*                     Bump spring.version from 5.3.33 to 5.3.35 #424. Thanks to Gary Gregory.
+*                     Bump commons-codec:commons-codec from 1.16.1 to 1.17.0. Thanks to Gary Gregory.
+*                     Bump com.fasterxml.jackson.core:jackson-databind from 2.17.0 to 2.17.1 #417. Thanks to Gary Gregory.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_configuration.cgi
+
+-----------------------------------------------------------------------------
+Apache Commons Configuration
 Version 2.10.1
 Release Notes
 
