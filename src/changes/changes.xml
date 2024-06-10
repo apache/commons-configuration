@@ -23,6 +23,11 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
+    <release version="2.11.1" date="YYYY-MM-DD" description="This is a feature and maintenance release. Java 8 or later is required.">
+      <!-- FIX -->
+      <!-- ADD -->
+      <!-- UPDATE -->
+    </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
       <action type="add" issue="CONFIGURATION-844" dev="ggregory" due-to="Thomas Steiner, Gary Gregory">Add support for empty sections #408.</action>
