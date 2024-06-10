@@ -22,6 +22,8 @@ Release Notes
 Introducing Apache Commons Configuration
 ----------------------------------------
 
+The Apache Commons Team is pleased to announce Commons Configuration ${version}.
+
 This document contains the release notes for this version of the Commons
 Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
@@ -126,5 +128,8 @@ patches, or suggestions for improvement, see the Apache ${project.name} website:
 ${project.url}
 
 Download it from ${project.url}/download_configuration.cgi
+
+Enjoy!
+Apache Commons Team
 
 -----------------------------------------------------------------------------
