@@ -27,6 +27,7 @@
       <!-- FIX -->
       <!-- ADD -->
       <!-- UPDATE -->
+      <action type="add" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 70 to 71 #434.</action> 
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
