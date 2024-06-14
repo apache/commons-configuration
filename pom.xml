@@ -63,7 +63,7 @@
     <log4j.version>2.23.1</log4j.version>
     <slf4j.version>2.0.13</slf4j.version>
     <!-- Spring 6 requires Java 17 -->
-    <spring.version>5.3.35</spring.version>
+    <spring.version>6.1.9</spring.version>
     <japicmp.skip>false</japicmp.skip>
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.10.1</commons.bc.version>
