@@ -934,7 +934,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Save the configuration to the specified writer.
      *
-     * @param writer - The writer to save the configuration to.
+     * @param writer   The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the configuration
      * @throws IOException if an I/O error occurs.
      */
