@@ -33,5 +33,19 @@
       "country": "UK",
       "capital": "London"
     }
+  ],
+  "books": [
+    {
+      "details": {
+        "title": "No Longer Human",
+        "author": "Osamu Dazai"
+      }
+    },
+    {
+      "details": {
+        "title": "White Nights",
+        "author": "Fyodor Dostoevsky"
+      }
+    }
   ]
 }

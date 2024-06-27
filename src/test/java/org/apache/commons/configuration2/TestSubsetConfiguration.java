@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,6 +39,7 @@ import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.junit.jupiter.api.Test;
 
@@ -363,5 +366,38 @@ public class TestSubsetConfiguration {
 
         subset.setThrowExceptionOnMissing(true);
         assertThrows(NoSuchElementException.class, () -> config.getString("foo"));
+    }
+
+    /**
+     * Tests CONFIGURATION-848.
+     */
+    @Test
+    public void testSubsetConfigurationWithIndexAndDelimiter() throws FileNotFoundException, ConfigurationException {
+        JSONConfiguration jsonConfiguration = new JSONConfiguration();
+        jsonConfiguration.read(new FileReader(ConfigurationAssert.getTestFile("test.json").getAbsolutePath()));
+
+        // 1. using composite configuration
+        List<Configuration> list = new ArrayList<>();
+        list.add(jsonConfiguration);
+        list.add(jsonConfiguration);
+        CompositeConfiguration composite = new CompositeConfiguration(list);
+        Configuration subset = composite.subset("books(0).details");
+        assertFalse(subset.isEmpty());
+        assertEquals(2, subset.size());
+        assertEquals("No Longer Human", subset.getString("title"));
+
+
+        // 2. using '.' delimiter
+        subset = new SubsetConfiguration(jsonConfiguration, "books(0).details", ".");
+        assertFalse(subset.isEmpty());
+        assertEquals(2, subset.size());
+        assertEquals("No Longer Human", subset.getString("title"));
+
+
+        // 3. using '@' delimiter
+        subset = new SubsetConfiguration(jsonConfiguration, "books(1)@details", "@");
+        assertFalse(subset.isEmpty());
+        assertEquals(2, subset.size());
+        assertEquals("White Nights", subset.getString("title"));
     }
 }
