@@ -44,7 +44,6 @@ Apache Commons Configuration
 ===================
 
 [![Java CI](https://github.com/apache/commons-configuration/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/maven.yml)
-[![Coverage Status](https://codecov.io/gh/apache/commons-configuration/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/?gav=true)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.11.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.11.0)
 [![CodeQL](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml)
