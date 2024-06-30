@@ -21,14 +21,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * * A specialized iterator implementation used by {@link AbstractConfiguration} to return an iteration over all keys
+ * A specialized iterator implementation used by {@link AbstractConfiguration} to return an iteration over all keys
  * starting with a specified prefix.
- *
  * <p>
  * This class is basically a stripped-down version of the {@code FilterIterator} class of Commons Collections
  * </p>
  */
 final class PrefixedKeysIterator implements Iterator<String> {
+
     /** Stores the wrapped iterator. */
     private final Iterator<String> iterator;
 
@@ -55,12 +55,12 @@ final class PrefixedKeysIterator implements Iterator<String> {
         this(wrappedIterator, keyPrefix, ".");
     }
 
-     /**
-     * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix as well as
-     * the delimiter for the preix for the accepted keys.
+    /**
+     * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix as well as the delimiter for the preix for the
+     * accepted keys.
      *
      * @param wrappedIterator the wrapped iterator
-     * @param keyPrefix the prefix of the allowed keys
+     * @param keyPrefix       the prefix of the allowed keys
      * @param prefixDelimiter the prefix delimiter
      * @since 2.10.0
      */
@@ -71,9 +71,9 @@ final class PrefixedKeysIterator implements Iterator<String> {
     }
 
     /**
-     * Returns a flag whether there are more elements in the iteration.
+     * Tests whether there are more elements in the iteration.
      *
-     * @return a flag if there is a next element
+     * @return whether there are more elements in the iteration.
      */
     @Override
     public boolean hasNext() {
