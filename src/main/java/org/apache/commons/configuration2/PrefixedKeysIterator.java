@@ -126,4 +126,19 @@ final class PrefixedKeysIterator implements Iterator<String> {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        // @formatter:off
+        return new StringBuilder()
+            .append("PrefixedKeysIterator [prefix=")
+            .append(prefix)
+            .append(", delimiter=")
+            .append(delimiter)
+            .append(", nextElement=")
+            .append(nextElement)
+            .append("]")
+            .toString();
+        // @formatter:on
+    }
 }
