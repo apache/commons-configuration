@@ -111,7 +111,7 @@ final class PrefixedKeysIterator implements Iterator<String> {
     }
 
     /**
-     * Determines the next element in the iteration. The return value indicates whether such an element can be found.
+     * Sets the next element in the iteration. The return value indicates whether such an element can be found.
      *
      * @return a flag whether a next element exists
      */
