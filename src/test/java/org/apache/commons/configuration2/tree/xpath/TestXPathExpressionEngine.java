@@ -266,6 +266,7 @@ public class TestXPathExpressionEngine {
         for (final NodePointerFactory factory : factories) {
             if (factory instanceof ConfigurationNodePointerFactory) {
                 found = true;
+                break;
             }
         }
         assertTrue(found);
