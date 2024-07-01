@@ -119,13 +119,13 @@ public class TestConfigurationPropertySource {
     private String emptyPropertyValue;
 
     @Test
-    public void testListValueInjection() {
-        assertArrayEquals(TEST_LIST_VALUE, listValue);
+    public void testEmptyStringValueInjection() {
+        assertEquals("", emptyPropertyValue);
     }
 
     @Test
-    public void testSystemPropertyValueInjection() {
-        assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
+    public void testListValueInjection() {
+        assertArrayEquals(TEST_LIST_VALUE, listValue);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TestConfigurationPropertySource {
     }
 
     @Test
-    public void testEmptyStringValueInjection() {
-        assertEquals("", emptyPropertyValue);
+    public void testSystemPropertyValueInjection() {
+        assertEquals(TEST_SYSTEM_VALUE, systemPropertyValue);
     }
 }
