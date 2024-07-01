@@ -25,6 +25,9 @@
   <body>
     <release version="2.11.1" date="YYYY-MM-DD" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">PropertyConverter.to(Class, Object, DefaultConversionHandler) doesn't convert custom java.lang.Number subclasses.</action> 
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">DefaultConversionHandler.convertValue(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses.</action> 
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">DefaultConversionHandler.to(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses.</action> 
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add PrefixedKeysIterator.toString() to package-private PrefixedKeysIterator.</action> 
       <!-- UPDATE -->

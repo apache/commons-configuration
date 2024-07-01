@@ -38,6 +38,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -137,6 +138,7 @@ public final class PropertyConverter {
             if (BigDecimal.class.equals(cls)) {
                 return toBigDecimal(value);
             }
+            return toNumber(value, cls);
         } else if (Date.class.equals(cls)) {
             return toDate(value, convHandler.getDateFormat());
         } else if (Calendar.class.equals(cls)) {
@@ -592,8 +594,8 @@ public final class PropertyConverter {
         if (value instanceof Number) {
             return (Number) value;
         }
-        final String str = value.toString();
-        if (str.startsWith(HEX_PREFIX)) {
+        final String str = Objects.toString(value, null);
+        if (StringUtils.startsWithAny(str, HEX_PREFIX)) {
             try {
                 return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
             } catch (final NumberFormatException nex) {
@@ -601,7 +603,7 @@ public final class PropertyConverter {
             }
         }
 
-        if (str.startsWith(BIN_PREFIX)) {
+        if (StringUtils.startsWithAny(str, BIN_PREFIX)) {
             try {
                 return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
             } catch (final NumberFormatException nex) {

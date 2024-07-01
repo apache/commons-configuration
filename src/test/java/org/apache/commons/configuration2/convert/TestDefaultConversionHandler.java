@@ -222,6 +222,20 @@ public class TestDefaultConversionHandler {
         assertEquals(Arrays.asList(Integer.valueOf(REPLACEMENT), Integer.valueOf(src[1].toString())), col);
     }
 
+    @Test
+    public void testToCustomNumber() {
+        // convertValue()
+        assertEquals(new MyNumber(1), DefaultConversionHandler.INSTANCE.convertValue(new MyNumber(1), MyNumber.class, null));
+        assertEquals(new MyNumber(2), DefaultConversionHandler.INSTANCE.convertValue(new MyNumber(2), MyNumber.class, null));
+        assertEquals(new MyNumber(3), DefaultConversionHandler.INSTANCE.convertValue("3", MyNumber.class, null));
+        assertNull(DefaultConversionHandler.INSTANCE.convertValue(null, MyNumber.class, null));
+        // to()
+        assertEquals(new MyNumber(1), DefaultConversionHandler.INSTANCE.to(new MyNumber(1), MyNumber.class, null));
+        assertEquals(new MyNumber(2), DefaultConversionHandler.INSTANCE.to(new MyNumber(2), MyNumber.class, null));
+        assertEquals(new MyNumber(3), DefaultConversionHandler.INSTANCE.to("3", MyNumber.class, null));
+        assertNull(DefaultConversionHandler.INSTANCE.to(null, MyNumber.class, null));
+    }
+
     /**
      * Tests whether a conversion to a date object is possible if a specific date format is used.
      */

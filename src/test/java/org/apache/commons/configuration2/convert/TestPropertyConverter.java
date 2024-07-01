@@ -97,6 +97,13 @@ public class TestPropertyConverter {
     }
 
     @Test
+    public void testToCustomNumber() {
+        assertEquals(new MyNumber(1), PropertyConverter.to(MyNumber.class, "1", null));
+        assertEquals(new MyNumber(2), PropertyConverter.to(MyNumber.class, new MyNumber(2), null));
+        assertEquals(new MyNumber(0), PropertyConverter.to(MyNumber.class, null, null));
+    }
+
+    @Test
     public void testToEnumFromEnum() {
         assertEquals(ElementType.METHOD, PropertyConverter.toEnum(ElementType.METHOD, ENUM_CLASS));
     }
