@@ -93,6 +93,11 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class AbstractConfiguration extends BaseEventSource implements Configuration {
 
     /**
+     * Default configuration delimiter for properties and keys.
+     */
+    static final String DELIMITER = ".";
+
+    /**
      * Checks an object provided as default value for the {@code getArray()} method. Throws an exception if this is not an
      * array with the correct component type.
      *
@@ -1569,7 +1574,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     @Override
     public Configuration subset(final String prefix) {
-        return new SubsetConfiguration(this, prefix, ".");
+        return new SubsetConfiguration(this, prefix, DELIMITER);
     }
 
     /**

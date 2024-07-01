@@ -52,7 +52,7 @@ final class PrefixedKeysIterator implements Iterator<String> {
      * @param keyPrefix the prefix of the allowed keys
      */
     public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix) {
-        this(wrappedIterator, keyPrefix, ".");
+        this(wrappedIterator, keyPrefix, AbstractConfiguration.DELIMITER);
     }
 
     /**

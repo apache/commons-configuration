@@ -242,7 +242,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     @Override
     protected Iterator<String> getKeysInternal(final String prefix) {
         // build the path
-        final String[] splitPath = StringUtils.split(prefix, ".");
+        final String[] splitPath = StringUtils.split(prefix, DELIMITER);
 
         final List<String> path = Arrays.asList(splitPath);
 
@@ -354,7 +354,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
                 final StringBuilder keyBuilder = new StringBuilder();
                 keyBuilder.append(prefix);
                 if (keyBuilder.length() > 0) {
-                    keyBuilder.append(".");
+                    keyBuilder.append(DELIMITER);
                 }
                 keyBuilder.append(name);
 

@@ -510,6 +510,21 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix) {
+        return getKeysInternal(prefix, DELIMITER);
+    }
+
+    /**
+     * Gets an iterator with all keys defined in this configuration that start with the given prefix. The returned keys
+     * will not contain any indices. This implementation tries to locate a node whose key is the same as the passed in
+     * prefix. Then the subtree of this node is traversed, and the keys of all nodes encountered (including attributes) are
+     * added to the result set.
+     *
+     * @param prefix the prefix of the keys to start with
+     * @param delimiter TODO
+     * @return an iterator with the found keys
+     */
+    @Override
+    protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
         final DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         if (containsKey(prefix)) {
             // explicitly add the prefix
@@ -528,7 +543,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
 
         return visitor.getKeyList().iterator();
     }
-
     /**
      * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method. If the passed in

@@ -67,7 +67,6 @@ public class TestSubsetConfiguration848 {
     }
 
     @Test
-    @Disabled
     public void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
         try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
