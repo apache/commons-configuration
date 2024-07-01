@@ -36,13 +36,13 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests <a href="https://issues.apache.org/jira/browse/CONFIGURATION-848">CONFIGURATION-848</a> and {@link SubsetConfiguration}.
  */
-public class TestSubsetConfiguration440 {
+public class TestSubsetConfiguration848 {
 
     @Test
     @Disabled
     public void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
-        try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-440.json").getAbsolutePath())) {
+        try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);
         }
         // 1. using composite configuration
@@ -70,7 +70,7 @@ public class TestSubsetConfiguration440 {
     @Disabled
     public void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
-        try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-440.json").getAbsolutePath())) {
+        try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);
         }
         final SubsetConfiguration subset = new SubsetConfiguration(jsonConfiguration, "capitals(0)", ".");
