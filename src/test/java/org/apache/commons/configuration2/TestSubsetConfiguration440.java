@@ -34,13 +34,10 @@ import org.junit.jupiter.api.Test;
 // import org.junit.Test;
 
 /**
- * Test case for the {@link SubsetConfiguration} class.
+ * Tests <a href="https://issues.apache.org/jira/browse/CONFIGURATION-848">CONFIGURATION-848</a> and {@link SubsetConfiguration}.
  */
 public class TestSubsetConfiguration440 {
 
-    /**
-     * Tests CONFIGURATION-848.
-     */
     @Test
     @Disabled
     public void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
