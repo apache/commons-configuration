@@ -55,6 +55,7 @@ import java.util.List;
  * @since 1.3
  */
 public class BaseEventSource implements EventSource {
+
     /** The list for managing registered event listeners. */
     private EventListenerList eventListeners;
 
