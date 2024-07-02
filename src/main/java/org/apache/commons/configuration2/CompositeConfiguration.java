@@ -352,6 +352,13 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     @Override
+    protected Iterator<String> getKeysInternal(final String key, final String delimiter) {
+        final Set<String> keys = new LinkedHashSet<>();
+        configList.forEach(config -> config.getKeys(key, delimiter).forEachRemaining(keys::add));
+        return keys.iterator();
+    }
+
+    @Override
     public List<Object> getList(final String key, final List<?> defaultValue) {
         final List<Object> list = new ArrayList<>();
 
