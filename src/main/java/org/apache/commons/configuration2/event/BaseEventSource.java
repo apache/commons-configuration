@@ -107,12 +107,12 @@ public class BaseEventSource implements EventSource {
     }
 
     /**
-     * Overrides the {@code clone()} method to correctly handle so far registered event listeners. This implementation
-     * ensures that the clone will have empty event listener lists, i.e. the listeners registered at an
-     * {@code BaseEventSource} object will not be copied.
+     * Overrides the {@code clone()} method to correctly handle so far registered event listeners. This implementation ensures that the clone will have empty
+     * event listener lists, i.e. the listeners registered at an {@code BaseEventSource} object will not be copied.
      *
      * @return the cloned object
-     * @throws CloneNotSupportedException if cloning is not allowed
+     * @throws CloneNotSupportedException if the object's class does not support the {@code Cloneable} interface. Subclasses that override the {@code clone}
+     *                                    method can also throw this exception to indicate that an instance cannot be cloned.
      * @since 1.4
      */
     @Override
