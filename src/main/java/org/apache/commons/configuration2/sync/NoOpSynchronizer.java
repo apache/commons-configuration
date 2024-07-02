@@ -34,6 +34,7 @@ package org.apache.commons.configuration2.sync;
  * @since 2.0
  */
 public enum NoOpSynchronizer implements Synchronizer {
+
     /** The single shared instance of this class. */
     INSTANCE;
 
