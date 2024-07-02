@@ -194,7 +194,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private AtomicReference<ConfigurationInterpolator> interpolator;
 
     /** The object responsible for synchronization. */
-    private volatile Synchronizer synchronizer;
+    private volatile Synchronizer synchronizer = NoOpSynchronizer.INSTANCE;
 
     /** The object used for dealing with encoded property values. */
     private ConfigurationDecoder configurationDecoder;
@@ -1183,8 +1183,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final Synchronizer getSynchronizer() {
-        final Synchronizer sync = synchronizer;
-        return sync != null ? sync : NoOpSynchronizer.INSTANCE;
+        return synchronizer;
     }
 
     @Override
@@ -1528,7 +1527,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final void setSynchronizer(final Synchronizer synchronizer) {
-        this.synchronizer = synchronizer;
+        this.synchronizer = synchronizer != null ? synchronizer : NoOpSynchronizer.INSTANCE;
     }
 
     /**
