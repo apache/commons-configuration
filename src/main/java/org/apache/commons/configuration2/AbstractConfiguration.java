@@ -53,6 +53,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableSupplier;
 
 /**
  * <p>
@@ -226,14 +228,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     @Override
     public final void addProperty(final String key, final Object value) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.ADD_PROPERTY, key, value, true);
             addPropertyInternal(key, value);
             fireEvent(ConfigurationEvent.ADD_PROPERTY, key, value, false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -265,16 +264,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * structure (i.e. the parent-child-relationships will get lost). So when dealing with hierarchical configuration
      * objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be used.
      *
-     * @param c the configuration to be appended (can be <b>null</b>, then this operation will have no effect)
+     * @param configuration the configuration to be appended (can be <b>null</b>, then this operation will have no effect)
      * @since 1.5
      */
-    public void append(final Configuration c) {
-        if (c != null) {
-            c.lock(LockMode.READ);
+    public void append(final Configuration configuration) {
+        if (configuration != null) {
+            configuration.lock(LockMode.READ);
             try {
-                c.getKeys().forEachRemaining(key -> addProperty(key, encodeForCopy(c.getProperty(key))));
+                configuration.getKeys().forEachRemaining(key -> addProperty(key, encodeForCopy(configuration.getProperty(key))));
             } finally {
-                c.unlock(LockMode.READ);
+                configuration.unlock(LockMode.READ);
             }
         }
     }
@@ -314,14 +313,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     @Override
     public final void clear() {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.CLEAR, null, null, true);
             clearInternal();
             fireEvent(ConfigurationEvent.CLEAR, null, null, false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -368,14 +364,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final void clearProperty(final String key) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, true);
             clearPropertyDirect(key);
             fireEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -433,12 +426,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final boolean containsKey(final String key) {
-        beginRead(false);
-        try {
-            return containsKeyInternal(key);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> containsKeyInternal(key), false);
     }
 
     /**
@@ -457,12 +445,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final boolean containsValue(final Object value) {
-        beginRead(false);
-        try {
-            return containsValueInternal(value);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> containsValueInternal(value), false);
     }
 
     /**
@@ -535,16 +518,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * hierarchical configuration objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be
      * used.
      *
-     * @param c the configuration to copy (can be <b>null</b>, then this operation will have no effect)
+     * @param configuration the configuration to copy (can be <b>null</b>, then this operation will have no effect)
      * @since 1.5
      */
-    public void copy(final Configuration c) {
-        if (c != null) {
-            c.lock(LockMode.READ);
+    public void copy(final Configuration configuration) {
+        if (configuration != null) {
+            configuration.lock(LockMode.READ);
             try {
-                c.getKeys().forEachRemaining(key -> setProperty(key, encodeForCopy(c.getProperty(key))));
+                configuration.getKeys().forEachRemaining(key -> setProperty(key, encodeForCopy(configuration.getProperty(key))));
             } finally {
-                c.unlock(LockMode.READ);
+                configuration.unlock(LockMode.READ);
             }
         }
     }
@@ -885,12 +868,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final Iterator<String> getKeys() {
-        beginRead(false);
-        try {
-            return getKeysInternal();
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getKeysInternal(), false);
     }
 
     /**
@@ -900,12 +878,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final Iterator<String> getKeys(final String prefix) {
-        beginRead(false);
-        try {
-            return getKeysInternal(prefix);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getKeysInternal(prefix), false);
     }
 
     /**
@@ -915,12 +888,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final Iterator<String> getKeys(final String prefix, final String delimiter) {
-        beginRead(false);
-        try {
-            return getKeysInternal(prefix, delimiter);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getKeysInternal(prefix, delimiter), false);
     }
 
     /**
@@ -1104,12 +1072,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final Object getProperty(final String key) {
-        beginRead(false);
-        try {
-            return getPropertyInternal(key);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getPropertyInternal(key), false);
     }
 
     /**
@@ -1275,12 +1238,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final boolean isEmpty() {
-        beginRead(false);
-        try {
-            return isEmptyInternal();
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> isEmptyInternal(), false);
     }
 
     /**
@@ -1488,14 +1446,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     @Override
     public final void setProperty(final String key, final Object value) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.SET_PROPERTY, key, value, true);
             setPropertyInternal(key, value);
             fireEvent(ConfigurationEvent.SET_PROPERTY, key, value, false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -1548,12 +1503,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final int size() {
-        beginRead(false);
-        try {
-            return sizeInternal();
-        } finally {
-            endRead();
-        }
+        return syncRead(this::sizeInternal, false);
     }
 
     /**
@@ -1574,6 +1524,42 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public Configuration subset(final String prefix) {
         return new SubsetConfiguration(this, prefix, DELIMITER);
+    }
+
+    void syncRead(final Runnable runnable, final boolean optimize) {
+        beginRead(optimize);
+        try {
+            runnable.run();
+        } finally {
+            endRead();
+        }
+    }
+
+    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
+        beginRead(optimize);
+        try {
+            return supplier.get();
+        } finally {
+            endRead();
+        }
+    }
+
+    <T> T syncReadValue(final T value, final boolean optimize) {
+        beginRead(optimize);
+        try {
+            return value;
+        } finally {
+            endRead();
+        }
+    }
+
+    <E extends Throwable> void syncWrite(final FailableRunnable<E> runnable, final boolean optimize) throws E {
+        beginWrite(optimize);
+        try {
+            runnable.run();
+        } finally {
+            endWrite();
+        }
     }
 
     /**

@@ -798,12 +798,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 1.3
      */
     public String getPublicID() {
-        beginRead(false);
-        try {
-            return publicID;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(publicID, false);
     }
 
     /**
@@ -839,12 +834,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 1.3
      */
     public String getSystemID() {
-        beginRead(false);
-        try {
-            return systemID;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(systemID, false);
     }
 
     /**
@@ -1006,12 +996,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 1.3
      */
     public void setPublicID(final String publicID) {
-        beginWrite(false);
-        try {
-            this.publicID = publicID;
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> this.publicID = publicID, false);
     }
 
     /**
@@ -1058,12 +1043,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 1.3
      */
     public void setSystemID(final String systemID) {
-        beginWrite(false);
-        try {
-            this.systemID = systemID;
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> this.systemID = systemID, false);
     }
 
     /**
@@ -1085,21 +1065,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @throws ConfigurationException if the validation fails.
      */
     public void validate() throws ConfigurationException {
-        beginWrite(false);
-        try {
-            final Transformer transformer = createTransformer();
-            final Source source = new DOMSource(createDocument());
-            final StringWriter writer = new StringWriter();
-            final Result result = new StreamResult(writer);
-            XMLDocumentHelper.transform(transformer, source, result);
-            final Reader reader = new StringReader(writer.getBuffer().toString());
-            final DocumentBuilder builder = createDocumentBuilder();
-            builder.parse(new InputSource(reader));
-        } catch (final SAXException | IOException | ParserConfigurationException pce) {
-            throw new ConfigurationException("Validation failed", pce);
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> {
+            try {
+                final StringWriter writer = new StringWriter();
+                final Result result = new StreamResult(writer);
+                XMLDocumentHelper.transform(createTransformer(), new DOMSource(createDocument()), result);
+                final Reader reader = new StringReader(writer.getBuffer().toString());
+                createDocumentBuilder().parse(new InputSource(reader));
+            } catch (final SAXException | IOException | ParserConfigurationException pce) {
+                throw new ConfigurationException("Validation failed", pce);
+            }
+        }, false);
     }
 
     /**

@@ -46,4 +46,6 @@
   <suppress checks="SuperClone" files="src[/\\]test[/\\]java[/\\]org[/\\]apache[/\\]commons[/\\]configuration2[/\\]TestConfigurationUtils.java" />
   <!-- Class can't be final for Mockito -->
   <suppress checks="FinalClass" files="src[/\\]test[/\\]java[/\\]org[/\\]apache[/\\]commons[/\\]configuration2[/\\]io[/\\]TestFileHandler.java" />
+  <!-- False positive -->
+  <suppress checks="SuperClone" files="AbstractHierarchicalConfiguration.java" lines="412"/>
 </suppressions>

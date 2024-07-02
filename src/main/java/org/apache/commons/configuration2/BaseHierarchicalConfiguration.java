@@ -386,18 +386,10 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key) {
-        List<ImmutableNode> nodes;
-        beginRead(false);
-        try {
-            nodes = fetchFilteredNodeResults(key);
-        } finally {
-            endRead();
-        }
-
+        List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
         if (nodes.size() != 1) {
             return Collections.emptyList();
         }
-
         return nodes.get(0).stream().map(this::createIndependentSubConfigurationForNode).collect(Collectors.toList());
     }
 
@@ -450,12 +442,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key, final boolean supportUpdates) {
-        beginRead(false);
-        try {
-            return supportUpdates ? createConnectedSubConfiguration(key) : createIndependentSubConfiguration(key);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> supportUpdates ? createConnectedSubConfiguration(key) : createIndependentSubConfiguration(key), false);
     }
 
     /**
@@ -464,13 +451,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-        List<ImmutableNode> nodes;
-        beginRead(false);
-        try {
-            nodes = fetchFilteredNodeResults(key);
-        } finally {
-            endRead();
-        }
+        List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
         return nodes.stream().map(this::createIndependentSubConfigurationForNode).collect(Collectors.toList());
     }
 
@@ -483,17 +464,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         if (!supportUpdates) {
             return configurationsAt(key);
         }
-
-        InMemoryNodeModel parentModel;
-        beginRead(false);
-        try {
-            parentModel = getSubConfigurationParentModel();
-        } finally {
-            endRead();
-        }
-
-        final Collection<NodeSelector> selectors = parentModel.selectAndTrackNodes(key, this);
-        return createConnectedSubConfigurations(this, selectors);
+        final InMemoryNodeModel parentModel = syncRead(this::getSubConfigurationParentModel, false);
+        return createConnectedSubConfigurations(this, parentModel.selectAndTrackNodes(key, this));
     }
 
     /**
@@ -764,15 +736,14 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public Configuration subset(final String prefix) {
-        beginRead(false);
-        try {
+        return syncRead(() -> {
             final List<QueryResult<ImmutableNode>> results = fetchNodeList(prefix);
             if (results.isEmpty()) {
                 return new BaseHierarchicalConfiguration();
             }
-
             final BaseHierarchicalConfiguration parent = this;
             final BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration() {
+
                 @Override
                 public ConfigurationInterpolator getInterpolator() {
                     return parent.getInterpolator();
@@ -785,14 +756,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                 }
             };
             result.getModel().setRootNode(createSubsetRootNode(results));
-
             if (result.isEmpty()) {
                 return new BaseHierarchicalConfiguration();
             }
             result.setSynchronizer(getSynchronizer());
             return result;
-        } finally {
-            endRead();
-        }
+        }, false);
     }
 }

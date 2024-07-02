@@ -1286,12 +1286,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 2.0
      */
     public String getFooter() {
-        beginRead(false);
-        try {
-            return getLayout().getFooterComment();
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getLayout().getFooterComment(), false);
     }
 
     /**
@@ -1301,12 +1296,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 1.1
      */
     public String getHeader() {
-        beginRead(false);
-        try {
-            return getLayout().getHeaderComment();
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getLayout().getHeaderComment(), false);
     }
 
     /**
@@ -1507,12 +1497,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 2.0
      */
     public void setFooter(final String footer) {
-        beginWrite(false);
-        try {
-            getLayout().setFooterComment(footer);
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> getLayout().setFooterComment(footer), false);
     }
 
     /**
@@ -1522,12 +1507,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 1.1
      */
     public void setHeader(final String header) {
-        beginWrite(false);
-        try {
-            getLayout().setHeaderComment(header);
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> getLayout().setHeaderComment(header), false);
     }
 
     /**

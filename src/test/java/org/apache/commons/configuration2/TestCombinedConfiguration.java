@@ -766,9 +766,11 @@ public class TestCombinedConfiguration {
         final BaseConfiguration conf1 = new BaseConfiguration();
         final String key = "x1";
         conf1.addProperty(key, 1);
+        assertEquals(1, conf1.getProperty(key));
 
         final CombinedConfiguration conf2 = new CombinedConfiguration();
         conf2.addConfiguration(conf1, null, "");
+        assertEquals(conf1, conf2.getConfiguration(0));
 
         // Actual test
         final Iterator<String> keys = conf2.getKeys();

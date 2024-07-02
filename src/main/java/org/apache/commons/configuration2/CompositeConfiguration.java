@@ -142,14 +142,12 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @since 1.8
      */
     public void addConfiguration(final Configuration config, final boolean asInMemory) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             if (!configList.contains(config)) {
                 if (asInMemory) {
                     replaceInMemoryConfiguration(config);
                     inMemoryConfigIsChild = true;
                 }
-
                 if (!inMemoryConfigIsChild) {
                     // As the inMemoryConfiguration contains all manually added
                     // keys, we must make sure that it is always last. "Normal", non
@@ -161,14 +159,11 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
                     // only the order in which child configurations are added is relevant
                     configList.add(config);
                 }
-
                 if (config instanceof AbstractConfiguration) {
                     ((AbstractConfiguration) config).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
                 }
             }
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -194,22 +189,18 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @since 2.3
      */
     public void addConfigurationFirst(final Configuration config, final boolean asInMemory) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             if (!configList.contains(config)) {
                 if (asInMemory) {
                     replaceInMemoryConfiguration(config);
                     inMemoryConfigIsChild = true;
                 }
                 configList.add(0, config);
-
                 if (config instanceof AbstractConfiguration) {
                     ((AbstractConfiguration) config).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
                 }
             }
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -315,12 +306,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @return the configuration at this index
      */
     public Configuration getConfiguration(final int index) {
-        beginRead(false);
-        try {
-            return configList.get(index);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> configList.get(index), false);
     }
 
     /**
@@ -329,12 +315,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @return the in memory configuration
      */
     public Configuration getInMemoryConfiguration() {
-        beginRead(false);
-        try {
-            return inMemoryConfiguration;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(inMemoryConfiguration, false);
     }
 
     @Override
@@ -395,12 +376,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @return the number of configuration
      */
     public int getNumberOfConfigurations() {
-        beginRead(false);
-        try {
-            return configList.size();
-        } finally {
-            endRead();
-        }
+        return syncRead(configList::size, false);
     }
 
     /**
@@ -474,16 +450,13 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param config The configuration to remove
      */
     public void removeConfiguration(final Configuration config) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             // Make sure that you can't remove the inMemoryConfiguration from
             // the CompositeConfiguration object
             if (!config.equals(inMemoryConfiguration)) {
                 configList.remove(config);
             }
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**

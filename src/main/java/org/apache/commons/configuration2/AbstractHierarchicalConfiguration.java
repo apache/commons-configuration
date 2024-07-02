@@ -299,15 +299,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         if (nodes == null || nodes.isEmpty()) {
             return;
         }
-
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.ADD_NODES, key, nodes, true);
             addNodesInternal(key, nodes);
             fireEvent(ConfigurationEvent.ADD_NODES, key, nodes, false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -384,13 +380,10 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public final void clearTree(final String key) {
-        beginWrite(false);
-        try {
+        syncWrite(() -> {
             fireEvent(ConfigurationEvent.CLEAR_TREE, key, null, true);
             fireEvent(ConfigurationEvent.CLEAR_TREE, key, clearTreeInternal(key), false);
-        } finally {
-            endWrite();
-        }
+        }, false);
     }
 
     /**
@@ -414,24 +407,22 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the copy
      * @since 1.2
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object clone() {
-        beginRead(false);
-        try {
-            @SuppressWarnings("unchecked") // clone returns the same type
-            final AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) super.clone();
-            copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
-            copy.cloneInterpolator(this);
-            copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
-            copy.nodeModel = cloneNodeModel();
-
-            return copy;
-        } catch (final CloneNotSupportedException cex) {
-            // should not happen
-            throw new ConfigurationRuntimeException(cex);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> {
+            try {
+                AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) AbstractHierarchicalConfiguration.super.clone();
+                copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
+                copy.cloneInterpolator(this);
+                copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
+                copy.nodeModel = cloneNodeModel();
+                return copy;
+            } catch (final CloneNotSupportedException cex) {
+                // should not happen
+                throw new ConfigurationRuntimeException(cex);
+            }
+        }, false);
     }
 
     /**
@@ -553,12 +544,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public final int getMaxIndex(final String key) {
-        beginRead(false);
-        try {
-            return getMaxIndexInternal(key);
-        } finally {
-            endRead();
-        }
+        return syncRead(() -> getMaxIndexInternal(key), false);
     }
 
     /**
@@ -590,12 +576,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public NodeModel<T> getNodeModel() {
-        beginRead(false);
-        try {
-            return getModel();
-        } finally {
-            endRead();
-        }
+        return syncRead(this::getModel, false);
     }
 
     /**
@@ -625,12 +606,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     @Override
     public final String getRootElementName() {
-        beginRead(false);
-        try {
-            return getRootElementNameInternal();
-        } finally {
-            endRead();
-        }
+        return syncRead(this::getRootElementNameInternal, false);
     }
 
     /**

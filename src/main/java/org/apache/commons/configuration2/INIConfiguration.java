@@ -602,12 +602,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 2.5
      */
     public String getCommentLeadingCharsUsedInInput() {
-        beginRead(false);
-        try {
-            return commentCharsUsedInInput;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(commentCharsUsedInInput, false);
     }
 
     /**
@@ -660,18 +655,16 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Gets a set containing the sections in this ini configuration. Note that changes to this set do not affect the
+     * Gets a set containing the sections in this INI configuration. Note that changes to this set do not affect the
      * configuration.
      *
      * @return a set containing the sections.
      */
     public Set<String> getSections() {
-        final Set<String> sections = new LinkedHashSet<>();
-        boolean globalSection = false;
-        boolean inSection = false;
-
-        beginRead(false);
-        try {
+        return syncRead(() -> {
+            final Set<String> sections = new LinkedHashSet<>();
+            boolean globalSection = false;
+            boolean inSection = false;
             for (final ImmutableNode node : getModel().getNodeHandler().getRootNode().getChildren()) {
                 if (isSectionNode(node)) {
                     inSection = true;
@@ -681,11 +674,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     sections.add(null);
                 }
             }
-        } finally {
-            endRead();
-        }
-
-        return sections;
+            return sections;
+        }, false);
     }
 
     /**
@@ -695,12 +685,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 2.5
      */
     public String getSeparatorUsedInInput() {
-        beginRead(false);
-        try {
-            return separatorUsedInInput;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(separatorUsedInInput, false);
     }
 
     /**
@@ -710,12 +695,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 2.2
      */
     public String getSeparatorUsedInOutput() {
-        beginRead(false);
-        try {
-            return separatorUsedInOutput;
-        } finally {
-            endRead();
-        }
+        return syncReadValue(separatorUsedInOutput, false);
     }
 
     /**
@@ -923,12 +903,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @since 2.2
      */
     public void setSeparatorUsedInOutput(final String separator) {
-        beginWrite(false);
-        try {
-            this.separatorUsedInOutput = separator;
-        } finally {
-            endWrite();
-        }
+        syncWrite(() -> this.separatorUsedInOutput = separator, false);
     }
 
     /**
@@ -940,12 +915,10 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      */
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException {
-        final PrintWriter out = new PrintWriter(writer);
-        boolean first = true;
-        final String separator = getSeparatorUsedInOutput();
-
-        beginRead(false);
-        try {
+        syncRead(() -> {
+            final PrintWriter out = new PrintWriter(writer);
+            boolean first = true;
+            final String separator = getSeparatorUsedInOutput();
             for (final ImmutableNode node : getModel().getNodeHandler().getRootNode().getChildren()) {
                 if (isSectionNode(node)) {
                     if (!first) {
@@ -964,9 +937,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             }
             out.println();
             out.flush();
-        } finally {
-            endRead();
-        }
+
+        }, false);
     }
 
     /**
