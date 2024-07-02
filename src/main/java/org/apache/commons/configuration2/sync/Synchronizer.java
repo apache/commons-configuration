@@ -44,6 +44,7 @@ package org.apache.commons.configuration2.sync;
  * @since 2.0
  */
 public interface Synchronizer {
+
     /**
      * Notifies this {@code Synchronizer} that the current thread is going to start a read operation on the managed
      * configuration. This call can block if a concrete implementation decides that the thread has to wait until a specific
