@@ -46,14 +46,14 @@ public final class MyNumber extends Number {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof MyNumber)) {
             return false;
         }
-        MyNumber other = (MyNumber) obj;
+        final MyNumber other = (MyNumber) obj;
         return value == other.value;
     }
 
