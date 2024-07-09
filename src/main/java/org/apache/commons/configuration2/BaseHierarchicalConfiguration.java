@@ -386,7 +386,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key) {
-        List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
+        final List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
         if (nodes.size() != 1) {
             return Collections.emptyList();
         }
@@ -451,7 +451,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-        List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
+        final List<ImmutableNode> nodes = syncRead(() -> fetchFilteredNodeResults(key), false);
         return nodes.stream().map(this::createIndependentSubConfigurationForNode).collect(Collectors.toList());
     }
 
