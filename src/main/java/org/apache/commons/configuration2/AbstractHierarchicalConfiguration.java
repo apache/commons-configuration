@@ -412,7 +412,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     public Object clone() {
         return syncRead(() -> {
             try {
-                AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) AbstractHierarchicalConfiguration.super.clone();
+                final AbstractHierarchicalConfiguration<T> copy = (AbstractHierarchicalConfiguration<T>) AbstractHierarchicalConfiguration.super.clone();
                 copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
                 copy.cloneInterpolator(this);
                 copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
