@@ -76,19 +76,19 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  * </pre>
  *
  * </li>
- * <li>The <i>key</i> may use any character, separators must be escaped:
+ * <li>The <em>key</em> may use any character, separators must be escaped:
  *
  * <pre>
  *  key\:foo = bar
  * </pre>
  *
  * </li>
- * <li><i>value</i> may be separated on different lines if a backslash is placed at the end of the line that continues
+ * <li><em>value</em> may be separated on different lines if a backslash is placed at the end of the line that continues
  * below.</li>
  * <li>The list delimiter facilities provided by {@link AbstractConfiguration} are supported, too. If an appropriate
  * {@link ListDelimiterHandler} is set (for instance a
  * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler D efaultListDelimiterHandler} object
- * configured with a comma as delimiter character), <i>value</i> can contain <em>value delimiters</em> and will then be
+ * configured with a comma as delimiter character), <em>value</em> can contain <em>value delimiters</em> and will then be
  * interpreted as a list of tokens. So the following property definition
  *
  * <pre>
@@ -99,7 +99,7 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  * {@link AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)} method. Per default, list splitting is
  * disabled.</li>
  * <li>Commas in each token are escaped placing a backslash right before the comma.</li>
- * <li>If a <i>key</i> is used more than once, the values are appended like if they were on the same line separated with
+ * <li>If a <em>key</em> is used more than once, the values are appended like if they were on the same line separated with
  * commas. <em>Note</em>: When the configuration file is written back to disk the associated
  * {@link PropertiesConfigurationLayout} object (see below) will try to preserve as much of the original format as
  * possible, i.e. properties with multiple values defined on a single line will also be written back on a single line,
