@@ -104,7 +104,7 @@ public class TestNodeNameMatchers {
     public void testEqualsNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
-        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
+        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
     }
 
     /**
