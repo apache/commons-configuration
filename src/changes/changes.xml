@@ -38,6 +38,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.17.2 #447.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-codec:commons-codec from 1.17.0 to 1.17.1 #449.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.15.0 #450.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.hamcrest:hamcrest from 2.2 to 3.0 #454.</action>
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
