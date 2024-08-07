@@ -39,6 +39,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-codec:commons-codec from 1.17.0 to 1.17.1 #449.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.16.0 #450, #458.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.hamcrest:hamcrest from 2.2 to 3.0 #454.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump slf4j.version from 2.0.13 to 2.0.14 #457.</action> 
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
