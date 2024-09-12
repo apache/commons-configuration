@@ -368,27 +368,39 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
                     node.addValue(config);
                 }
             } else {
-                if ("string".equals(qName)) {
+                switch (qName) {
+                case "string":
                     peekNE().addValue(buffer.toString());
-                } else if ("integer".equals(qName)) {
+                    break;
+                case "integer":
                     peekNE().addIntegerValue(buffer.toString());
-                } else if ("real".equals(qName)) {
+                    break;
+                case "real":
                     peekNE().addRealValue(buffer.toString());
-                } else if ("true".equals(qName)) {
+                    break;
+                case "true":
                     peekNE().addTrueValue();
-                } else if ("false".equals(qName)) {
+                    break;
+                case "false":
                     peekNE().addFalseValue();
-                } else if ("data".equals(qName)) {
+                    break;
+                case "data":
                     peekNE().addDataValue(buffer.toString());
-                } else if ("date".equals(qName)) {
+                    break;
+                case "date":
                     try {
                         peekNE().addDateValue(buffer.toString());
                     } catch (final IllegalArgumentException iex) {
                         getLogger().warn("Ignoring invalid date property " + buffer);
                     }
-                } else if ("array".equals(qName)) {
+                    break;
+                case "array": {
                     final ArrayNodeBuilder array = (ArrayNodeBuilder) pop();
                     peekNE().addList(array);
+                    break;
+                }
+                default:
+                    break;
                 }
 
                 // remove the plist node on the stack once the value has been parsed,
