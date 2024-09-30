@@ -42,7 +42,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump slf4j.version from 2.0.13 to 2.0.16 #457, #462, #464.</action> 
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump spring.version from 5.3.35 to 5.3.39.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.2 to 2.3 #473.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.23.1 to 2.24.0 #475.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.23.1 to 2.24.1 #475, #486.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-io:commons-io from 2.16.1 to 2.17.0 #480.</action>
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
