@@ -16,11 +16,8 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.sync.Synchronizer;
 
@@ -115,7 +112,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyContains(final Methods... expMethods) {
-        assertThat(methods.toString(), containsString(constructExpectedMethods(expMethods)));
+        assertTrue(methods.toString().contains(constructExpectedMethods(expMethods)));
     }
 
     /**
@@ -124,7 +121,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyEnd(final Methods... expMethods) {
-        assertThat(methods.toString(), endsWith(constructExpectedMethods(expMethods)));
+        assertTrue(methods.toString().endsWith(constructExpectedMethods(expMethods)));
     }
 
     /**
@@ -133,6 +130,6 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyStart(final Methods... expMethods) {
-        assertThat(methods.toString(), startsWith(constructExpectedMethods(expMethods)));
+        assertTrue(methods.toString().startsWith(constructExpectedMethods(expMethods)));
     }
 }

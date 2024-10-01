@@ -16,10 +16,9 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -62,7 +61,7 @@ public class TestXMLListHandling {
     private static void checkCommaSeparated(final String xml, final String key, final String... values) {
         final String strValues = StringUtils.join(values, ',');
         final String element = element(key, strValues);
-        assertThat(xml, containsString(element));
+        assertTrue(xml.contains(element));
     }
 
     /**
@@ -74,7 +73,7 @@ public class TestXMLListHandling {
      */
     private static void checkSplit(final String xml, final String key, final String... values) {
         for (final String v : values) {
-            assertThat(xml, containsString(element(key, v)));
+            assertTrue(xml.contains(element(key, v)));
         }
     }
 

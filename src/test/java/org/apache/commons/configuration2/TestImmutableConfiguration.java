@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,7 +73,7 @@ public class TestImmutableConfiguration {
         config.setThrowExceptionOnMissing(true);
         final ImmutableConfiguration ic = ConfigurationUtils.unmodifiableConfiguration(config);
         final NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> ic.getString(property));
-        assertThat(e.getMessage(), containsString(property));
+        assertTrue(e.getMessage().contains(property));
     }
 
     /**

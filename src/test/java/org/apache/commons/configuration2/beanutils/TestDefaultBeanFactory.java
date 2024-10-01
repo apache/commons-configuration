@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2.beanutils;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -240,9 +238,9 @@ public class TestDefaultBeanFactory {
         final ConfigurationRuntimeException crex = assertThrows(ConfigurationRuntimeException.class,
                 () -> DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl));
         final String msg = crex.getMessage();
-        assertThat(msg, containsString(BeanCreationTestCtorBean.class.getName()));
-        assertThat(msg, containsString(TEST_STRING));
-        assertThat(msg, containsString("(" + getClass().getName() + ')'));
+        assertTrue(msg.contains(BeanCreationTestCtorBean.class.getName()));
+        assertTrue(msg.contains(TEST_STRING));
+        assertTrue(msg.contains("(" + getClass().getName() + ')'));
     }
 
     /**

@@ -16,11 +16,10 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -207,7 +206,7 @@ public class TestNodeSelector {
         final String key2 = "anotherSelectionKey";
         final NodeSelector selector = new NodeSelector(KEY).subSelector(key2);
         final String s = selector.toString();
-        assertThat(s, containsString(KEY));
-        assertThat(s, containsString(key2));
+        assertTrue(s.contains(KEY));
+        assertTrue(s.contains(key2));
     }
 }

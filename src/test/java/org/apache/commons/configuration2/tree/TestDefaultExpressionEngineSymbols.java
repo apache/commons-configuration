@@ -16,10 +16,9 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -127,11 +126,11 @@ public class TestDefaultExpressionEngineSymbols {
     public void testToString() {
         final DefaultExpressionEngineSymbols symbols = builder().create();
         final String s = symbols.toString();
-        assertThat(s, containsString("propertyDelimiter=" + symbols.getPropertyDelimiter()));
-        assertThat(s, containsString("escapedDelimiter=" + symbols.getEscapedDelimiter()));
-        assertThat(s, containsString("indexStart=" + symbols.getIndexStart()));
-        assertThat(s, containsString("indexEnd=" + symbols.getIndexEnd()));
-        assertThat(s, containsString("attributeStart=" + symbols.getAttributeStart()));
-        assertThat(s, containsString("attributeEnd=" + symbols.getAttributeEnd()));
+        assertTrue(s.contains("propertyDelimiter=" + symbols.getPropertyDelimiter()));
+        assertTrue(s.contains("escapedDelimiter=" + symbols.getEscapedDelimiter()));
+        assertTrue(s.contains("indexStart=" + symbols.getIndexStart()));
+        assertTrue(s.contains("indexEnd=" + symbols.getIndexEnd()));
+        assertTrue(s.contains("attributeStart=" + symbols.getAttributeStart()));
+        assertTrue(s.contains("attributeEnd=" + symbols.getAttributeEnd()));
     }
 }

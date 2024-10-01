@@ -18,8 +18,6 @@
 package org.apache.commons.configuration2;
 
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -1054,7 +1052,7 @@ public class TestXMLConfiguration {
         final String content = "<configuration><test>1</test></configuration>";
         final ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
         final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(bis));
-        assertThat(e.getMessage(), containsString("FileHandler"));
+        assertTrue(e.getMessage().contains("FileHandler"));
     }
 
     @Test
@@ -1159,7 +1157,7 @@ public class TestXMLConfiguration {
         final StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);
         final String content = writer.toString();
-        assertThat("Path not found: ", content, containsString("<path>C:\\Temp</path>"));
+        assertTrue(content.contains("<path>C:\\Temp</path>"), "Path not found: ");
         saveTestConfig();
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
@@ -1223,7 +1221,7 @@ public class TestXMLConfiguration {
         assertEquals(SYSTEM_ID, conf.getSystemID());
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertThat(out.toString(), containsString(DOCTYPE));
+        assertTrue(out.toString().contains(DOCTYPE));
     }
 
     /**
@@ -1238,7 +1236,7 @@ public class TestXMLConfiguration {
         conf.setSystemID(SYSTEM_ID);
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertThat(out.toString(), containsString(DOCTYPE + "testconfig" + DOCTYPE_DECL));
+        assertTrue(out.toString().contains(DOCTYPE + "testconfig" + DOCTYPE_DECL));
     }
 
     /**
@@ -1253,7 +1251,7 @@ public class TestXMLConfiguration {
 
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertThat(out.toString(), containsString("encoding=\"" + ENCODING + "\""));
+        assertTrue(out.toString().contains("encoding=\"" + ENCODING + "\""));
     }
 
     /**
@@ -1282,7 +1280,7 @@ public class TestXMLConfiguration {
 
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertThat("Encoding was written to file", out.toString(), containsString("encoding=\"UTF-"));
+        assertTrue(out.toString().contains("encoding=\"UTF-"), "Encoding was written to file");
     }
 
     @Test
@@ -1293,7 +1291,7 @@ public class TestXMLConfiguration {
 
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertThat("Encoding was not written to file", out.toString(), containsString("testconfig xmlns:ex=\"http://example.com/\""));
+        assertTrue(out.toString().contains("testconfig xmlns:ex=\"http://example.com/\""), "Encoding was not written to file");
     }
 
     @Test
@@ -1305,7 +1303,7 @@ public class TestXMLConfiguration {
 
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertThat("Encoding was not written to file", out.toString(), containsString("configuration xmlns:foo=\"http://example.com/\""));
+        assertTrue(out.toString().contains("configuration xmlns:foo=\"http://example.com/\""), "Encoding was not written to file");
     }
 
     /**

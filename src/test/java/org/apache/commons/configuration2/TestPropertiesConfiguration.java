@@ -18,10 +18,6 @@
 package org.apache.commons.configuration2;
 
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -995,7 +991,7 @@ public class TestPropertiesConfiguration {
 
         // ensure that the written properties file contains no Unicode escapes
         for (final String line : Files.readAllLines(TEST_SAVE_PROPERTIES_FILE.toPath())) {
-            assertThat(line, not(containsString("\\u")));
+            assertFalse(line.contains("\\u"));
         }
     }
 
@@ -1005,8 +1001,14 @@ public class TestPropertiesConfiguration {
     @Test
     public void testKeepSeparators() throws ConfigurationException, IOException {
         saveTestConfig();
-        final String[] separatorTests = {"test.separator.equal = foo", "test.separator.colon : foo", "test.separator.tab\tfoo", "test.separator.whitespace foo",
-            "test.separator.no.space=foo"};
+        // @formatter:off
+        final Set<String> separatorTests = new HashSet<>(Arrays.asList(
+                "test.separator.equal = foo",
+                "test.separator.colon : foo",
+                "test.separator.tab\tfoo",
+                "test.separator.whitespace foo",
+                "test.separator.no.space=foo"));
+        // @formatter:on
         final Set<String> foundLines = new HashSet<>();
         try (BufferedReader in = new BufferedReader(new FileReader(TEST_SAVE_PROPERTIES_FILE))) {
             String s;
@@ -1018,7 +1020,7 @@ public class TestPropertiesConfiguration {
                 }
             }
         }
-        assertThat(foundLines, containsInAnyOrder(separatorTests));
+        assertEquals(separatorTests, foundLines);
     }
 
     /**
@@ -1057,7 +1059,7 @@ public class TestPropertiesConfiguration {
         new FileHandler(conf).save(out);
         final String content = out.toString();
         assertEquals(0, content.indexOf("# My header" + eol + eol));
-        assertThat(content, containsString("prop = value" + eol));
+        assertTrue(content.contains("prop = value" + eol));
     }
 
     /**
@@ -1272,7 +1274,7 @@ public class TestPropertiesConfiguration {
         conf = new PropertiesConfiguration();
         try (Reader in = new FileReader(ConfigurationAssert.getTestFile("test.properties"))) {
             final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(in));
-            assertThat(e.getMessage(), containsString("FileHandler"));
+            assertTrue(e.getMessage().contains("FileHandler"));
         }
     }
 
