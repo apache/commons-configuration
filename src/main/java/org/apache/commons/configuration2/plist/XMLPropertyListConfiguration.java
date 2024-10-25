@@ -202,7 +202,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * @param value the value to be added
          */
         public void addDataValue(final String value) {
-            addValue(java.util.Base64.getMimeDecoder().decode(value.getBytes(DATA_ENCODING)));
+            addValue(Base64.getMimeDecoder().decode(value.getBytes(DATA_ENCODING)));
         }
 
         /**
