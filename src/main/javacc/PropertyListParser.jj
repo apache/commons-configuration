@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 
-import org.apache.commons.codec.binary.Hex;
-
 /**
  * JavaCC based parser for the PropertyList format.
  *
