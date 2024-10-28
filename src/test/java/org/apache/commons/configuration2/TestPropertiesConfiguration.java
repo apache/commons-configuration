@@ -64,7 +64,6 @@ import java.util.PriorityQueue;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -894,8 +893,8 @@ public class TestPropertiesConfiguration {
             jup.load(in);
         }
 
-        @SuppressWarnings("unchecked")
-        final Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        Set<Object> pcKeys = new HashSet<>();
+        conf.getKeys().forEachRemaining(pcKeys::add);
         assertEquals(jup.keySet(), pcKeys);
 
         for (final Object key : jup.keySet()) {
@@ -936,8 +935,8 @@ public class TestPropertiesConfiguration {
         }
 
         // ... and compare the properties to the originals
-        @SuppressWarnings("unchecked")
-        final Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        Set<Object> pcKeys = new HashSet<>();
+        conf.getKeys().forEachRemaining(pcKeys::add);
         assertEquals(testProps.keySet(), pcKeys);
 
         for (final Object key : testProps.keySet()) {
@@ -980,8 +979,8 @@ public class TestPropertiesConfiguration {
         }
 
         // ... and compare the properties to the originals
-        @SuppressWarnings("unchecked")
-        final Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        Set<Object> pcKeys = new HashSet<>();
+        conf.getKeys().forEachRemaining(pcKeys::add);
         assertEquals(testProps.keySet(), pcKeys);
 
         for (final Object key : testProps.keySet()) {
