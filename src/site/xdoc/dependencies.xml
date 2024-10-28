@@ -58,13 +58,6 @@
                         <td><a href="https://commons.apache.org/proper/commons-beanutils/">commons-beanutils</a></td>
                     </tr>
                     <tr>
-                        <td>
-                          PropertyListConfiguration<br/>
-                          XMLPropertyListConfiguration
-                        </td>
-                        <td><a href="https://commons.apache.org/proper/commons-codec/">commons-codec</a></td>
-                    </tr>
-                    <tr>
                         <td>JSONConfiguration</td>
                         <td><a href="https://github.com/FasterXML/jackson-databind">com.fasterxml.jackson.core:jackson-databind</a></td>
                     </tr>
