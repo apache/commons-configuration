@@ -46,13 +46,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
+import jakarta.mail.internet.InternetAddress;
+
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import jakarta.mail.internet.InternetAddress;
 
 /**
  */
