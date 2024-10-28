@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test case for the {@link ServletFilterConfiguration} class.
  */
-public class TestServletFilterConfiguration extends TestAbstractConfiguration {
+public class TestJakartaServletFilterConfiguration extends TestAbstractConfiguration {
     private static final class MockFilterConfig implements FilterConfig {
         private final Properties parameters = new Properties();
 
@@ -49,8 +49,8 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
         }
 
         @Override
-        public Enumeration<?> getInitParameterNames() {
-            return parameters.keys();
+        public Enumeration<String> getInitParameterNames() {
+            return (Enumeration) parameters.keys();
         }
 
         @Override
@@ -71,14 +71,14 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
         config.setInitParameter("list", "value1, value2");
         config.setInitParameter("listesc", "value1\\,value2");
 
-        final AbstractConfiguration resultConfig = new ServletFilterConfiguration(config);
+        final AbstractConfiguration resultConfig = new JakartaServletFilterConfiguration(config);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }
 
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
-        return new ServletFilterConfiguration(new MockFilterConfig());
+        return new JakartaServletFilterConfiguration(new MockFilterConfig());
     }
 
     @Override

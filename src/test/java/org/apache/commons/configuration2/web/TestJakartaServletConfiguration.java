@@ -24,10 +24,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
@@ -36,9 +35,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
 /**
- * Test case for the {@link ServletContextConfiguration} class.
+ * Test case for the {@link ServletConfiguration} class.
  */
-public class TestServletContextConfiguration extends TestAbstractConfiguration {
+public class TestJakartaServletConfiguration extends TestAbstractConfiguration {
 
     @Override
     protected AbstractConfiguration getConfiguration() {
@@ -48,14 +47,8 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
         parameters.setProperty("list", "value1, value2");
         parameters.setProperty("listesc", "value1\\,value2");
 
-        // create a servlet context
-        final ServletContext context = mockServletConfig(parameters);
+        final ServletConfig config = mockServletConfig(parameters);
 
-        // create a servlet config
-        final ServletConfig config = mock(ServletConfig.class);
-        when(config.getServletContext()).thenReturn(context);
-
-        // create a servlet
         final Servlet servlet = new HttpServlet() {
             /**
              * Serial version UID.
@@ -68,17 +61,14 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
             }
         };
 
-        final AbstractConfiguration resultConfig = new ServletContextConfiguration(servlet);
-        resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        return resultConfig;
+        final AbstractConfiguration servletConfiguration = new JakartaServletConfiguration(servlet);
+        servletConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return servletConfiguration;
     }
 
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
-        // create a servlet context
-        final ServletContext context = mockServletConfig(new Properties());
-
-        return new ServletContextConfiguration(context);
+        return new JakartaServletConfiguration(mockServletConfig(new Properties()));
     }
 
     /**
@@ -87,14 +77,14 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
      * @param parameters the init parameters to use
      * @return The created mock
      */
-    private ServletContext mockServletConfig(final Properties parameters) {
-        final ServletContext context = mock(ServletContext.class);
-        when(context.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
-        when(context.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
+    private ServletConfig mockServletConfig(final Properties parameters) {
+        final ServletConfig config = mock(ServletConfig.class);
+        when(config.getInitParameterNames()).thenAnswer(invocation -> parameters.keys());
+        when(config.getInitParameter(ArgumentMatchers.any())).thenAnswer(invocation -> {
             final String name = invocation.getArgument(0, String.class);
             return parameters.getProperty(name);
         });
-        return context;
+        return config;
     }
 
     @Override

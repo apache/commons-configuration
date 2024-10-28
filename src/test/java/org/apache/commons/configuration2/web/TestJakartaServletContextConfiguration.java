@@ -24,10 +24,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
@@ -38,7 +38,7 @@ import org.mockito.ArgumentMatchers;
 /**
  * Test case for the {@link ServletContextConfiguration} class.
  */
-public class TestServletContextConfiguration extends TestAbstractConfiguration {
+public class TestJakartaServletContextConfiguration extends TestAbstractConfiguration {
 
     @Override
     protected AbstractConfiguration getConfiguration() {
@@ -68,7 +68,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
             }
         };
 
-        final AbstractConfiguration resultConfig = new ServletContextConfiguration(servlet);
+        final AbstractConfiguration resultConfig = new JakartaServletContextConfiguration(servlet);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }
@@ -78,7 +78,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
         // create a servlet context
         final ServletContext context = mockServletConfig(new Properties());
 
-        return new ServletContextConfiguration(context);
+        return new JakartaServletContextConfiguration(context);
     }
 
     /**

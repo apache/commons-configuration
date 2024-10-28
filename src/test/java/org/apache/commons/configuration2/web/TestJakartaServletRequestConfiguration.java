@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -41,7 +41,7 @@ import org.mockito.ArgumentMatchers;
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
  */
-public class TestServletRequestConfiguration extends TestAbstractConfiguration {
+public class TestJakartaServletRequestConfiguration extends TestAbstractConfiguration {
     /**
      * Returns a new servlet request configuration that is backed by the passed in configuration.
      *
@@ -56,7 +56,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
             return base.getStringArray(key);
         });
 
-        final AbstractConfiguration config = new ServletRequestConfiguration(request);
+        final AbstractConfiguration config = new JakartaServletRequestConfiguration(request);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return config;
     }
@@ -79,7 +79,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         when(request.getParameter(ArgumentMatchers.any())).thenReturn(null);
         when(request.getParameterMap()).thenAnswer(invocation -> new HashMap<>());
 
-        return new ServletRequestConfiguration(request);
+        return new JakartaServletRequestConfiguration(request);
     }
 
     @Override
