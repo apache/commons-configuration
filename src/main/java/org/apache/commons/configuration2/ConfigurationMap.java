@@ -180,7 +180,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      *
      * @param key the key (will be converted to a string)
      * @param value the value
-     * @return the old value of this key or <b>null</b> if it is new
+     * @return the old value of this key or <strong>null</strong> if it is new
      * @see java.util.Map#put(Object, Object)
      */
     @Override

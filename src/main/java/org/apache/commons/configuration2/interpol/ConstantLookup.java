@@ -73,12 +73,12 @@ public class ConstantLookup implements Lookup {
     }
 
     /**
-     * Looks up a variable. The passed in variable name is interpreted as the name of a <b>static final</b> member field of
+     * Looks up a variable. The passed in variable name is interpreted as the name of a <strong>static final</strong> member field of
      * a class. If the value has already been obtained, it can be retrieved from an internal cache. Otherwise this method
      * will invoke the {@code resolveField()} method and pass in the name of the class and the field.
      *
      * @param var the name of the variable to be resolved
-     * @return the value of this variable or <b>null</b> if it cannot be resolved
+     * @return the value of this variable or <strong>null</strong> if it cannot be resolved
      */
     @Override
     public Object lookup(final String var) {

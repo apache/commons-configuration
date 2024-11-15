@@ -187,7 +187,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
 
         /**
          * Returns the only text node of an element for update. This method is called when the element's text changes. Then all
-         * text nodes except for the first are removed. A reference to the first is returned or <b>null</b> if there is no text
+         * text nodes except for the first are removed. A reference to the first is returned or <strong>null</strong> if there is no text
          * node at all.
          *
          * @param elem the element
@@ -559,7 +559,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @param node a builder for the current node
      * @param refValue stores the text value of the element
      * @param element the current XML element
-     * @param elemRefs a map for assigning references objects to nodes; can be <b>null</b>, then reference objects are
+     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are
      *        irrelevant
      * @param trim a flag whether the text content of elements should be trimmed; this controls the whitespace handling
      * @param level the current level in the hierarchy
@@ -618,7 +618,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @param value the value of the child element
      * @param trim flag whether texts of elements should be trimmed
      * @param attrmap a map with the attributes of the current node
-     * @param elemRefs a map for assigning references objects to nodes; can be <b>null</b>, then reference objects are
+     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are
      *        irrelevant
      * @return the first child node added to the parent
      */
@@ -749,7 +749,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Gets the XML document this configuration was loaded from. The return value is <b>null</b> if this configuration
+     * Gets the XML document this configuration was loaded from. The return value is <strong>null</strong> if this configuration
      * was not loaded from a XML document.
      *
      * @return the XML document this configuration was loaded from
@@ -761,7 +761,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
 
     /**
      * Gets the {@code DocumentBuilder} object that is used for loading documents. If no specific builder has been set,
-     * this method returns <b>null</b>.
+     * this method returns <strong>null</strong>.
      *
      * @return the {@code DocumentBuilder} for loading new documents
      * @since 1.2
@@ -791,7 +791,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Gets the public ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
+     * Gets the public ID of the DOCTYPE declaration from the loaded XML document. This is <strong>null</strong> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a public ID.
      *
      * @return the public ID
@@ -827,7 +827,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Gets the system ID of the DOCTYPE declaration from the loaded XML document. This is <b>null</b> if no document has
+     * Gets the system ID of the DOCTYPE declaration from the loaded XML document. This is <strong>null</strong> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a system ID.
      *
      * @return the system ID

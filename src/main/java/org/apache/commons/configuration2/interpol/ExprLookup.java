@@ -297,7 +297,7 @@ public class ExprLookup implements Lookup {
     /**
      * Sets the {@code ConfigurationInterpolator} to be used by this object.
      *
-     * @param interpolator the {@code ConfigurationInterpolator} (may be <b>null</b>)
+     * @param interpolator the {@code ConfigurationInterpolator} (may be <strong>null</strong>)
      * @since 2.0
      */
     public void setInterpolator(final ConfigurationInterpolator interpolator) {

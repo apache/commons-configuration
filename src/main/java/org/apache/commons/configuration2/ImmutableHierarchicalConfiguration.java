@@ -38,7 +38,7 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  */
 public interface ImmutableHierarchicalConfiguration extends ImmutableConfiguration {
     /**
-     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
+     * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
      * @return the current expression engine
@@ -78,7 +78,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     /**
      * Returns an immutable hierarchical configuration for the node specified by the given key. This is a short form for
      * {@code immutableConfigurationAt(key,
-     * <b>false</b>)}.
+     * <strong>false</strong>)}.
      *
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree

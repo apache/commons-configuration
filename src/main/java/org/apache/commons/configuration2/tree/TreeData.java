@@ -130,7 +130,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     }
 
     /**
-     * Gets the parent node of the specified node. Result is <b>null</b> for the root node. If the passed in node cannot
+     * Gets the parent node of the specified node. Result is <strong>null</strong> for the root node. If the passed in node cannot
      * be resolved, an exception is thrown.
      *
      * @param node the node in question

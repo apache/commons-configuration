@@ -92,9 +92,9 @@ final class NodeTracker {
         /**
          * Returns an instance with the detached flag set to true. This method is called if the selector of a tracked node does
          * not match a single node any more. It is possible to pass in a new node instance which becomes the current tracked
-         * node. If this is <b>null</b>, the previous node instance is used.
+         * node. If this is <strong>null</strong>, the previous node instance is used.
          *
-         * @param newNode the new tracked node instance (may be <b>null</b>)
+         * @param newNode the new tracked node instance (may be <strong>null</strong>)
          * @return the updated instance
          */
         public TrackedNodeData detach(final ImmutableNode newNode) {
@@ -103,7 +103,7 @@ final class NodeTracker {
         }
 
         /**
-         * Gets the node model to be used in detached mode. This is <b>null</b> if the represented tracked node is not
+         * Gets the node model to be used in detached mode. This is <strong>null</strong> if the represented tracked node is not
          * detached.
          *
          * @return the node model in detached mode
@@ -141,10 +141,10 @@ final class NodeTracker {
 
         /**
          * An observer for this tracked node was removed. This method returns a new instance with an adjusted observer count. If
-         * there are no more observers, result is <b>null</b>. This means that this node is no longer tracked and can be
+         * there are no more observers, result is <strong>null</strong>. This means that this node is no longer tracked and can be
          * released.
          *
-         * @return the updated instance or <b>null</b>
+         * @return the updated instance or <strong>null</strong>
          */
         public TrackedNodeData observerRemoved() {
             return observerCount <= 1 ? null : new TrackedNodeData(node, observerCount - 1, getDetachedModel());
@@ -178,7 +178,7 @@ final class NodeTracker {
      * transaction. This method checks whether the affected node is the root node of the current transaction. If so, it is
      * cleared.
      *
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <b>null</b>)
+     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
      * @param e the current selector and {@code TrackedNodeData}
      * @return the new {@code TrackedNodeData} object to be used for this tracked node
      */
@@ -192,7 +192,7 @@ final class NodeTracker {
      * applied to the current root node. It may become detached if there is no match.
      *
      * @param root the root node
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <b>null</b>)
+     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
      * @param resolver the {@code NodeKeyResolver}
      * @param handler the {@code NodeHandler}
      * @param e the current selector and {@code TrackedNodeData}
@@ -281,10 +281,10 @@ final class NodeTracker {
     /**
      * Gets the detached node model for the specified tracked node. When a node becomes detached, operations on it are
      * independent from the original model. To implement this, a separate node model is created wrapping this tracked node.
-     * This model can be queried by this method. If the node affected is not detached, result is <b>null</b>.
+     * This model can be queried by this method. If the node affected is not detached, result is <strong>null</strong>.
      *
      * @param selector the {@code NodeSelector}
-     * @return the detached node model for this node or <b>null</b>
+     * @return the detached node model for this node or <strong>null</strong>
      * @throws ConfigurationRuntimeException if no data for this selector is available
      */
     public InMemoryNodeModel getDetachedNodeModel(final NodeSelector selector) {
@@ -412,13 +412,13 @@ final class NodeTracker {
      * Updates tracking information after the node structure has been changed. This method iterates over all tracked nodes.
      * The selectors are evaluated again to update the node reference. If this fails for a selector, the previous node is
      * reused; this tracked node is then detached. The passed in {@code NodeSelector} is the selector of the tracked node
-     * which is the target of the current transaction. (It is <b>null</b> if the transaction is not executed on a tracked
+     * which is the target of the current transaction. (It is <strong>null</strong> if the transaction is not executed on a tracked
      * node.) This is used to handle a special case: if the tracked node becomes detached by an operation targeting itself,
      * this means that the node has been cleared by this operation. In this case, the previous node instance is not used,
      * but an empty node is created.
      *
      * @param root the root node
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <b>null</b>)
+     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
      * @param resolver the {@code NodeKeyResolver}
      * @param handler the {@code NodeHandler}
      * @return the updated instance

@@ -67,7 +67,7 @@ public class ReloadingEvent extends Event {
      * {@link ReloadingController} when it was asked to do a reloading check. This is a generic mechanism to pass arbitrary
      * data to reloading listeners.
      *
-     * @return additional data about the reload operation (can be <b>null</b>)
+     * @return additional data about the reload operation (can be <strong>null</strong>)
      */
     public Object getData() {
         return data;

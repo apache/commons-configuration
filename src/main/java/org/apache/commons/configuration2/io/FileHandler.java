@@ -165,7 +165,7 @@ public class FileHandler {
     };
 
     /**
-     * Helper method for checking a file handler which is to be copied. Throws an exception if the handler is <b>null</b>.
+     * Helper method for checking a file handler which is to be copied. Throws an exception if the handler is <strong>null</strong>.
      *
      * @param c the {@code FileHandler} from which to copy the location
      * @return the same {@code FileHandler}
@@ -180,7 +180,7 @@ public class FileHandler {
     /**
      * A helper method for closing a stream. Occurring exceptions will be ignored.
      *
-     * @param cl the stream to be closed (may be <b>null</b>)
+     * @param cl the stream to be closed (may be <strong>null</strong>)
      */
     private static void closeSilent(final Closeable cl) {
         try {
@@ -194,7 +194,7 @@ public class FileHandler {
 
     /**
      * Creates a {@code File} object from the content of the given {@code FileLocator} object. If the locator is not
-     * defined, result is <b>null</b>.
+     * defined, result is <strong>null</strong>.
      *
      * @param loc the {@code FileLocator}
      * @return a {@code File} object pointing to the associated file
@@ -222,7 +222,7 @@ public class FileHandler {
      * Creates a new {@code FileHandler} instance from properties stored in a map. This method tries to extract a
      * {@link FileLocator} from the map. A new {@code FileHandler} is created based on this {@code FileLocator}.
      *
-     * @param map the map (may be <b>null</b>)
+     * @param map the map (may be <strong>null</strong>)
      * @return the newly created {@code FileHandler}
      * @see FileLocatorUtils#fromMap(Map)
      */
@@ -276,8 +276,8 @@ public class FileHandler {
      * created. This constructor is a possibility to associate a file location with a {@code FileBased} object.
      *
      * @param obj the {@code FileBased} object to manage
-     * @param c the {@code FileHandler} from which to copy the location (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code FileHandler} is <b>null</b>
+     * @param c the {@code FileHandler} from which to copy the location (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the {@code FileHandler} is <strong>null</strong>
      */
     public FileHandler(final FileBased obj, final FileHandler c) {
         this(obj, checkSourceHandler(c).getFileLocator());
@@ -297,8 +297,8 @@ public class FileHandler {
     /**
      * Adds a listener to this {@code FileHandler}. It is notified about property changes and IO operations.
      *
-     * @param l the listener to be added (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the listener is <b>null</b>
+     * @param l the listener to be added (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the listener is <strong>null</strong>
      */
     public void addFileHandlerListener(final FileHandlerListener l) {
         if (l == null) {
@@ -432,7 +432,7 @@ public class FileHandler {
     }
 
     /**
-     * Gets the encoding of the associated file. Result can be <b>null</b> if no encoding has been set.
+     * Gets the encoding of the associated file. Result can be <strong>null</strong> if no encoding has been set.
      *
      * @return the encoding of the associated file
      */
@@ -445,7 +445,7 @@ public class FileHandler {
      * different than &quot;file&quot;, or the file is within a compressed archive, the return value will not point to a
      * valid file object.
      *
-     * @return the location as {@code File} object; this can be <b>null</b>
+     * @return the location as {@code File} object; this can be <strong>null</strong>
      */
     public File getFile() {
         return createFile(getFileLocator());
@@ -482,7 +482,7 @@ public class FileHandler {
     }
 
     /**
-     * Gets the {@code FileSystem} to be used by this object when locating files. Result is never <b>null</b>; if no file
+     * Gets the {@code FileSystem} to be used by this object when locating files. Result is never <strong>null</strong>; if no file
      * system has been set, the default file system is returned.
      *
      * @return the used {@code FileSystem}
@@ -493,7 +493,7 @@ public class FileHandler {
 
     /**
      * Gets the {@code FileLocationStrategy} to be applied when accessing the associated file. This method never returns
-     * <b>null</b>. If a {@code FileLocationStrategy} has been set, it is returned. Otherwise, result is the default
+     * <strong>null</strong>. If a {@code FileLocationStrategy} has been set, it is returned. Otherwise, result is the default
      * {@code FileLocationStrategy}.
      *
      * @return the {@code FileLocationStrategy} to be used
@@ -519,7 +519,7 @@ public class FileHandler {
      * Gets the location of the associated file as a URL. If a URL is set, it is directly returned. Otherwise, an attempt
      * to locate the referenced file is made.
      *
-     * @return a URL to the associated file; can be <b>null</b> if the location is unspecified
+     * @return a URL to the associated file; can be <strong>null</strong> if the location is unspecified
      */
     public URL getURL() {
         final FileLocator locator = getFileLocator();
@@ -543,7 +543,7 @@ public class FileHandler {
 
     /**
      * Checks whether the associated {@code FileBased} object implements the {@code FileLocatorAware} interface. If this is
-     * the case, a {@code FileLocator} instance is injected which returns only <b>null</b> values. This method is called if
+     * the case, a {@code FileLocator} instance is injected which returns only <strong>null</strong> values. This method is called if
      * no file location is available (e.g. if data is to be loaded from a stream). The encoding of the injected locator is
      * derived from this object.
      */
@@ -557,7 +557,7 @@ public class FileHandler {
     /**
      * Tests whether a location is defined for this {@code FileHandler}.
      *
-     * @return <b>true</b> if a location is defined, <b>false</b> otherwise
+     * @return <strong>true</strong> if a location is defined, <strong>false</strong> otherwise
      */
     public boolean isLocationDefined() {
         return FileLocatorUtils.isLocationDefined(getFileLocator());
@@ -621,7 +621,7 @@ public class FileHandler {
     }
 
     /**
-     * Loads the associated file from the specified stream, using the specified encoding. If the encoding is <b>null</b>,
+     * Loads the associated file from the specified stream, using the specified encoding. If the encoding is <strong>null</strong>,
      * the default encoding is used.
      *
      * @param in the input stream
@@ -792,7 +792,7 @@ public class FileHandler {
      * each access. By calling this method such an attempt is performed once, and the results of a successful localization
      * are stored. Hence, later access to the referenced file can be more efficient. Also, all properties pointing to the
      * referenced file in this object's {@code FileLocator} are set (i.e. the URL, the base path, and the file name). If the
-     * referenced file cannot be located, result is <b>false</b>. This means that the information in the current
+     * referenced file cannot be located, result is <strong>false</strong>. This means that the information in the current
      * {@code FileLocator} is insufficient or wrong. If the {@code FileLocator} is already fully defined, it is not changed.
      *
      * @return a flag whether the referenced file could be located successfully
@@ -924,7 +924,7 @@ public class FileHandler {
     }
 
     /**
-     * Saves the associated file to the specified stream using the specified encoding. If the encoding is <b>null</b>, the
+     * Saves the associated file to the specified stream using the specified encoding. If the encoding is <strong>null</strong>, the
      * default encoding is used.
      *
      * @param out the output stream
@@ -1072,7 +1072,7 @@ public class FileHandler {
      * defined URL, the base path will be ignored. The base path can also be a URL, in which case the file name is
      * interpreted in this URL's context. If other methods are used for determining the location of the associated file
      * (e.g. {@code setFile()} or {@code setURL()}), the base path is automatically set. Setting the base path using this
-     * method automatically sets the URL to <b>null</b> because it has to be determined anew based on the file name and the
+     * method automatically sets the URL to <strong>null</strong> because it has to be determined anew based on the file name and the
      * base path.
      *
      * @param basePath the base path.
@@ -1123,8 +1123,8 @@ public class FileHandler {
     /**
      * Sets the file to be accessed by this {@code FileHandler} as a {@code FileLocator} object.
      *
-     * @param locator the {@code FileLocator} with the definition of the file to be accessed (must not be <b>null</b>
-     * @throws IllegalArgumentException if the {@code FileLocator} is <b>null</b>
+     * @param locator the {@code FileLocator} with the definition of the file to be accessed (must not be <strong>null</strong>
+     * @throws IllegalArgumentException if the {@code FileLocator} is <strong>null</strong>
      */
     public void setFileLocator(final FileLocator locator) {
         if (locator == null) {
@@ -1138,7 +1138,7 @@ public class FileHandler {
     /**
      * Sets the name of the file. The passed in file name can contain a relative path. It must be used when referring files
      * with relative paths from classpath. Use {@code setPath()} to set a full qualified file name. The URL is set to
-     * <b>null</b> as it has to be determined anew based on the file name and the base path.
+     * <strong>null</strong> as it has to be determined anew based on the file name and the base path.
      *
      * @param fileName the name of the file
      */
@@ -1154,7 +1154,7 @@ public class FileHandler {
     }
 
     /**
-     * Sets the {@code FileSystem} to be used by this object when locating files. If a <b>null</b> value is passed in, the
+     * Sets the {@code FileSystem} to be used by this object when locating files. If a <strong>null</strong> value is passed in, the
      * file system is reset to the default file system.
      *
      * @param fileSystem the {@code FileSystem}
@@ -1170,7 +1170,7 @@ public class FileHandler {
 
     /**
      * Sets the {@code FileLocationStrategy} to be applied when accessing the associated file. The strategy is stored in the
-     * underlying {@link FileLocator}. The argument can be <b>null</b>; this causes the default {@code FileLocationStrategy}
+     * underlying {@link FileLocator}. The argument can be <strong>null</strong>; this causes the default {@code FileLocationStrategy}
      * to be used.
      *
      * @param strategy the {@code FileLocationStrategy}
@@ -1201,7 +1201,7 @@ public class FileHandler {
     /**
      * Sets the location of the associated file as a URL. For loading this can be an arbitrary URL with a supported
      * protocol. If the file is to be saved, too, a URL with the &quot;file&quot; protocol should be provided. This method
-     * sets the file name and the base path to <b>null</b>. They have to be determined anew based on the new URL.
+     * sets the file name and the base path to <strong>null</strong>. They have to be determined anew based on the new URL.
      *
      * @param url the location of the file as URL
      */
@@ -1212,7 +1212,7 @@ public class FileHandler {
     /**
      * Sets the location of the associated file as a URL. For loading this can be an arbitrary URL with a supported
      * protocol. If the file is to be saved, too, a URL with the &quot;file&quot; protocol should be provided. This method
-     * sets the file name and the base path to <b>null</b>. They have to be determined anew based on the new URL.
+     * sets the file name and the base path to <strong>null</strong>. They have to be determined anew based on the new URL.
      *
      * @param url the location of the file as URL
      * @param urlConnectionOptions URL connection options

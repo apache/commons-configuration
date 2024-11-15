@@ -131,7 +131,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code MultiFileConfigurationBuilder} without setting initialization parameters.
      *
      * @param resCls the result configuration class
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls) {
         super(resCls);
@@ -142,7 +142,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
         super(resCls, params);
@@ -155,7 +155,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
      * @param allowFailOnInit a flag whether initialization errors should be ignored
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         super(resCls, params, allowFailOnInit);

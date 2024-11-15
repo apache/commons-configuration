@@ -94,7 +94,7 @@ import org.apache.commons.lang3.StringUtils;
  * for {@code windowColors}, which has multiple values defined in one line using the separator character.</li>
  * <li>The {@code AppVendor} property appears twice. The comment lines are concatenated, so that
  * {@code layout.getComment("AppVendor");} will result in {@code Application vendor&lt;CR&gt;Another vendor}, with
- * {@code &lt;CR&gt;} meaning the line separator. In addition the &quot;single line&quot; flag is set to <b>false</b>
+ * {@code &lt;CR&gt;} meaning the line separator. In addition the &quot;single line&quot; flag is set to <strong>false</strong>
  * for this property. When the file is saved, two property definitions will be written (in series).</li>
  * </ul>
  *
@@ -184,7 +184,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Gets the comment for this property. The comment is returned as it is, without processing of comment characters.
          *
-         * @return the comment (can be <b>null</b>)
+         * @return the comment (can be <strong>null</strong>)
          */
         public String getComment() {
             return Objects.toString(comment, null);
@@ -232,7 +232,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Sets the comment for this property.
          *
-         * @param s the new comment (can be <b>null</b>)
+         * @param s the new comment (can be <strong>null</strong>)
          */
         public void setComment(final String s) {
             if (s == null) {
@@ -273,7 +273,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param comment the comment string to be processed
      * @param commentChar determines the presence of comment characters
-     * @return the canonical comment string (can be <b>null</b>)
+     * @return the canonical comment string (can be <strong>null</strong>)
      */
     private static String constructCanonicalComment(final String comment, final boolean commentChar) {
         return comment == null ? null : trimComment(comment, commentChar);
@@ -294,7 +294,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * character.
      *
      * @param s the comment line
-     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
+     * @param comment if <strong>true</strong>, a comment character will always be enforced; if <strong>false</strong>, it will be removed
      * @return the line without comment character
      */
     static String stripCommentChar(final String s, final boolean comment) {
@@ -324,7 +324,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * comment text or ensures that every line starts with a valid comment character.
      *
      * @param s the string to be processed
-     * @param comment if <b>true</b>, a comment character will always be enforced; if <b>false</b>, it will be removed
+     * @param comment if <strong>true</strong>, a comment character will always be enforced; if <strong>false</strong>, it will be removed
      * @return the trimmed comment
      */
     static String trimComment(final String s, final boolean comment) {
@@ -463,7 +463,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param commentLines a list with comment lines
      * @param from the start index
      * @param to the end index (inclusive)
-     * @return the comment string (<b>null</b> if it is undefined)
+     * @return the comment string (<strong>null</strong> if it is undefined)
      */
     private String extractComment(final List<String> commentLines, final int from, final int to) {
         if (to < from) {
@@ -517,14 +517,14 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
 
     /**
      * Gets the comment for the specified property key in a canonical form. &quot;Canonical&quot; means that either all
-     * lines start with a comment character or none. If the {@code commentChar} parameter is <b>false</b>, all comment
+     * lines start with a comment character or none. If the {@code commentChar} parameter is <strong>false</strong>, all comment
      * characters are removed, so that the result is only the plain text of the comment. Otherwise it is ensured that each
      * line of the comment starts with a comment character. Also, line breaks in the comment are normalized to the line
      * separator &quot;\n&quot;.
      *
      * @param key the key of the property
      * @param commentChar determines whether all lines should start with comment characters or not
-     * @return the canonical comment for this key (can be <b>null</b>)
+     * @return the canonical comment for this key (can be <strong>null</strong>)
      */
     public String getCanonicalComment(final String key, final boolean commentChar) {
         return constructCanonicalComment(getComment(key), commentChar);
@@ -535,7 +535,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * {@code getCanonicalHeaderComment()}, but reads the footer comment.
      *
      * @param commentChar determines the presence of comment characters
-     * @return the footer comment (can be <b>null</b>)
+     * @return the footer comment (can be <strong>null</strong>)
      * @see #getCanonicalHeaderComment(boolean)
      * @since 2.0
      */
@@ -548,7 +548,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * parameter it can be specified whether comment characters should be stripped or be always present.
      *
      * @param commentChar determines the presence of comment characters
-     * @return the header comment (can be <b>null</b>)
+     * @return the header comment (can be <strong>null</strong>)
      */
     public String getCanonicalHeaderComment(final boolean commentChar) {
         return constructCanonicalComment(getHeaderComment(), commentChar);
@@ -559,7 +559,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * {@code setComment()} or when it was loaded from a properties file). No modifications are performed.
      *
      * @param key the key of the property
-     * @return the comment for this key (can be <b>null</b>)
+     * @return the comment for this key (can be <strong>null</strong>)
      */
     public String getComment(final String key) {
         return fetchLayoutData(key).getComment();
@@ -569,7 +569,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the footer comment of the represented properties file. This method returns the footer comment exactly as it
      * was set using {@code setFooterComment()} or extracted from the loaded properties file.
      *
-     * @return the footer comment (can be <b>null</b>)
+     * @return the footer comment (can be <strong>null</strong>)
      * @since 2.0
      */
     public String getFooterComment() {
@@ -590,7 +590,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the header comment of the represented properties file. This method returns the header comment exactly as it
      * was set using {@code setHeaderComment()} or extracted from the loaded properties file.
      *
-     * @return the header comment (can be <b>null</b>)
+     * @return the header comment (can be <strong>null</strong>)
      */
     public String getHeaderComment() {
         return headerComment;
@@ -794,7 +794,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * character is added automatically.
      *
      * @param key the key of the property
-     * @param comment the comment for this key (can be <b>null</b>, then the comment will be removed)
+     * @param comment the comment for this key (can be <strong>null</strong>, then the comment will be removed)
      */
     public void setComment(final String key, final String comment) {
         fetchLayoutData(key).setComment(comment);
@@ -826,7 +826,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * properties when writing the configuration. This is an easy way of determining the properties separator globally. To
      * be compatible with the properties format only the characters {@code =} and {@code :} (with or without whitespace)
      * should be used, but this method does not enforce this - it accepts arbitrary strings. If the global separator is set
-     * to <b>null</b>, property separators are not changed. This is the default behavior as it produces results that are
+     * to <strong>null</strong>, property separators are not changed. This is the default behavior as it produces results that are
      * closer to the original properties file.
      *
      * @param globalSeparator the separator to be used for all properties

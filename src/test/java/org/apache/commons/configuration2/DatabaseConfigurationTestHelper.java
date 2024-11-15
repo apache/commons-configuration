@@ -220,7 +220,7 @@ public class DatabaseConfigurationTestHelper {
      *
      * @param <T> the type of the result configuration
      * @param configCls the configuration class
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -231,7 +231,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
      *
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
      * @return the parameters object
      */
     public DatabaseBuilderParameters setUpMultiParameters(final String configName) {

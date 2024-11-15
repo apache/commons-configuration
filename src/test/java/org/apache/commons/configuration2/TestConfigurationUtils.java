@@ -183,7 +183,7 @@ public class TestConfigurationUtils {
     }
 
     /**
-     * Tests cloning a <b>null</b> configuration.
+     * Tests cloning a <strong>null</strong> configuration.
      */
     @Test
     public void testCloneConfigurationNull() {

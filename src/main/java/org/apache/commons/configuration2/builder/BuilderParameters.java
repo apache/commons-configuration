@@ -44,7 +44,7 @@ public interface BuilderParameters {
     /**
      * Gets a map with all parameters defined by this objects. The keys of the map correspond to concrete properties
      * supported by the {@code Configuration} implementation class the builder produces. The values are the corresponding
-     * property values. The return value must not be <b>null</b>.
+     * property values. The return value must not be <strong>null</strong>.
      *
      * @return a map with builder parameters
      */

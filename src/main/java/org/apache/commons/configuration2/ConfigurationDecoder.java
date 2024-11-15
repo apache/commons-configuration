@@ -39,7 +39,7 @@ public interface ConfigurationDecoder {
      * implementation has to be perform an appropriate decoding and return the result. This result is passed to the calling
      * application; so it should be in a readable form.
      *
-     * @param s the string to be decoded (not <b>null</b>)
+     * @param s the string to be decoded (not <strong>null</strong>)
      * @return the decoded string
      */
     String decode(String s);

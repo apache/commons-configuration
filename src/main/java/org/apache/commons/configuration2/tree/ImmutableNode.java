@@ -160,7 +160,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Adds all attributes of the given map to this builder. This method works like {@link #addAttribute(String, Object)},
          * but it allows setting multiple attributes at once.
          *
-         * @param attrs the map with attributes to be added (may be <b>null</b>
+         * @param attrs the map with attributes to be added (may be <strong>null</strong>
          * @return a reference to this object for method chaining
          */
         public Builder addAttributes(final Map<String, ?> attrs) {
@@ -173,9 +173,9 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
 
         /**
          * Adds a child node to this builder. The passed in node becomes a child of the newly created node. If it is
-         * <b>null</b>, it is ignored.
+         * <strong>null</strong>, it is ignored.
          *
-         * @param c the child node (must not be <b>null</b>)
+         * @param c the child node (must not be <strong>null</strong>)
          * @return a reference to this object for method chaining
          */
         public Builder addChild(final ImmutableNode c) {
@@ -303,7 +303,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * child nodes are always defined.
      *
      * @param child the child node to be checked
-     * @throws IllegalArgumentException if the child node is <b>null</b>
+     * @throws IllegalArgumentException if the child node is <strong>null</strong>
      */
     private static void checkChildNode(final ImmutableNode child) {
         if (child == null) {
@@ -338,9 +338,9 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Creates a new {@code ImmutableNode} instance which is a copy of this object, but has the given child node added.
      *
-     * @param child the child node to be added (must not be <b>null</b>)
+     * @param child the child node to be added (must not be <strong>null</strong>)
      * @return the new node with the child node added
-     * @throws IllegalArgumentException if the child node is <b>null</b>
+     * @throws IllegalArgumentException if the child node is <strong>null</strong>
      */
     public ImmutableNode addChild(final ImmutableNode child) {
         checkChildNode(child);
@@ -472,9 +472,9 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * new one. If the child to be replaced cannot be found, the same node instance is returned.
      *
      * @param oldChild the child node to be replaced
-     * @param newChild the replacing child node (must not be <b>null</b>)
+     * @param newChild the replacing child node (must not be <strong>null</strong>)
      * @return the new node with the child replaced
-     * @throws IllegalArgumentException if the new child node is <b>null</b>
+     * @throws IllegalArgumentException if the new child node is <strong>null</strong>
      */
     public ImmutableNode replaceChild(final ImmutableNode oldChild, final ImmutableNode newChild) {
         checkChildNode(newChild);
@@ -497,7 +497,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * ones in the passed in collection. With this method all children can be replaced in a single step. For the collection
      * the same rules apply as for {@link Builder#addChildren(Collection)}.
      *
-     * @param newChildren the collection with the new children (may be <b>null</b>)
+     * @param newChildren the collection with the new children (may be <strong>null</strong>)
      * @return the new node with replaced children
      */
     public ImmutableNode replaceChildren(final Collection<ImmutableNode> newChildren) {
@@ -524,7 +524,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Returns a new {@code ImmutableNode} instance which is a copy of this object, but with all attributes added defined by
      * the given map. This method is analogous to {@link #setAttribute(String, Object)}, but all attributes in the given map
-     * are added. If the map is <b>null</b> or empty, this method has no effect.
+     * are added. If the map is <strong>null</strong> or empty, this method has no effect.
      *
      * @param newAttributes the map with attributes to be added
      * @return the new node with these attributes

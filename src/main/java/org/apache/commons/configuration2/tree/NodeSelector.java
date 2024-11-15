@@ -33,7 +33,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * e.g. if a sub key is to be constructed from another sub key. {@code NodeSelector} provides the {@code select()}
  * method which evaluates the wrapped keys on a specified root node and returns the resulting unique target node. The
  * class expects that the key(s) stored in an instance select exactly one target node. If this is not the case, result
- * is <b>null</b> indicating that the selection criteria are not sufficient.
+ * is <strong>null</strong> indicating that the selection criteria are not sufficient.
  * </p>
  * <p>
  * Implementation node: Instances of this class are immutable. They can be shared between arbitrary components.
@@ -116,12 +116,12 @@ public class NodeSelector {
     /**
      * Applies this {@code NodeSelector} on the specified root node. This method applies the selection criteria stored in
      * this object and tries to determine a single target node. If this is successful, the target node is returned.
-     * Otherwise, result is <b>null</b>.
+     * Otherwise, result is <strong>null</strong>.
      *
      * @param root the root node on which to apply this selector
      * @param resolver the {@code NodeKeyResolver}
      * @param handler the {@code NodeHandler}
-     * @return the selected target node or <b>null</b>
+     * @return the selected target node or <strong>null</strong>
      */
     public ImmutableNode select(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler) {
         List<ImmutableNode> nodes = new LinkedList<>();

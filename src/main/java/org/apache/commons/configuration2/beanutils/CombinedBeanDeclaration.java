@@ -53,7 +53,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
      *
      * @param decl the child declarations
-     * @throws NullPointerException if the array with child declarations is <b>null</b>
+     * @throws NullPointerException if the array with child declarations is <strong>null</strong>
      */
     public CombinedBeanDeclaration(final BeanDeclaration... decl) {
         childDeclarations = new ArrayList<>(Arrays.asList(decl));
@@ -72,8 +72,8 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
 
     /**
      * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for the bean class name.
-     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean class, result is
-     * <b>null</b>.
+     * The first non-<strong>null</strong> value is returned. If none of the child declarations have a defined bean class, result is
+     * <strong>null</strong>.
      */
     @Override
     public String getBeanClassName() {
@@ -82,8 +82,8 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
 
     /**
      * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory name.
-     * The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory name,
-     * result is <b>null</b>.
+     * The first non-<strong>null</strong> value is returned. If none of the child declarations have a defined bean factory name,
+     * result is <strong>null</strong>.
      */
     @Override
     public String getBeanFactoryName() {
@@ -92,8 +92,8 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
 
     /**
      * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for a bean factory
-     * parameter. The first non-<b>null</b> value is returned. If none of the child declarations have a defined bean factory
-     * parameter, result is <b>null</b>.
+     * parameter. The first non-<strong>null</strong> value is returned. If none of the child declarations have a defined bean factory
+     * parameter, result is <strong>null</strong>.
      */
     @Override
     public Object getBeanFactoryParameter() {
@@ -112,7 +112,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
 
     /**
      * {@inheritDoc} This implementation iterates over the list of child declarations and asks them for constructor
-     * arguments. The first non-<b>null</b> and non empty collection is returned. If none of the child declarations provide
+     * arguments. The first non-<strong>null</strong> and non empty collection is returned. If none of the child declarations provide
      * constructor arguments, result is an empty collection.
      */
     @Override

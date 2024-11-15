@@ -61,7 +61,7 @@ public interface ExpressionEngine {
      *
      * @param <T> the type of the node to be processed
      * @param node the node, for which the key must be constructed
-     * @param parentKey the key of this node's parent (can be <b>null</b> for the root node)
+     * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
      * @param handler the {@code NodeHandler} for accessing the node
      * @return the canonical key of this node
      */
@@ -74,7 +74,7 @@ public interface ExpressionEngine {
      *
      * @param <T> the type of the node to be processed
      * @param node the node, for which the key must be constructed
-     * @param parentKey the key of this node's parent (can be <b>null</b> for the root node)
+     * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
      * @param handler the {@code NodeHandler} for accessing the node
      * @return this node's key
      */
@@ -104,7 +104,7 @@ public interface ExpressionEngine {
      * @param root the root node of a hierarchy of nodes
      * @param key the key to be evaluated
      * @param handler the {@code NodeHandler} for accessing the node
-     * @return a list with the results that are matched by the key (should never be <b>null</b>)
+     * @return a list with the results that are matched by the key (should never be <strong>null</strong>)
      */
     <T> List<QueryResult<T>> query(T root, String key, NodeHandler<T> handler);
 }

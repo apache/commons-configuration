@@ -77,7 +77,7 @@ public final class FileLocator {
          * Creates a new instance of {@code FileLocatorBuilder} and initializes the builder's properties from the passed in
          * {@code FileLocator} object.
          *
-         * @param src the source {@code FileLocator} (may be <b>null</b>)
+         * @param src the source {@code FileLocator} (may be <strong>null</strong>)
          */
         FileLocatorBuilder(final FileLocator src) {
             if (src != null) {
@@ -246,7 +246,7 @@ public final class FileLocator {
     }
 
     /**
-     * Gets the base path stored in this locator or <b>null</b> if it is undefined.
+     * Gets the base path stored in this locator or <strong>null</strong> if it is undefined.
      *
      * @return the base path
      */
@@ -255,7 +255,7 @@ public final class FileLocator {
     }
 
     /**
-     * Gets the encoding stored in this locator or <b>null</b> if it is undefined.
+     * Gets the encoding stored in this locator or <strong>null</strong> if it is undefined.
      *
      * @return the encoding
      */
@@ -264,7 +264,7 @@ public final class FileLocator {
     }
 
     /**
-     * Gets the file name stored in this locator or <b>null</b> if it is undefined.
+     * Gets the file name stored in this locator or <strong>null</strong> if it is undefined.
      *
      * @return the file name
      */
@@ -273,7 +273,7 @@ public final class FileLocator {
     }
 
     /**
-     * Gets the {@code FileSystem} to be used for accessing the file referenced by this locator or <b>null</b> if it is
+     * Gets the {@code FileSystem} to be used for accessing the file referenced by this locator or <strong>null</strong> if it is
      * undefined.
      *
      * @return the {@code FileSystem}
@@ -284,7 +284,7 @@ public final class FileLocator {
 
     /**
      * Gets the {@code FileLocationStrategy} to be used for locating the referenced file. If no specific
-     * {@code FileLocationStrategy} has been set, result is <b>null</b>. This means that the default strategy should be
+     * {@code FileLocationStrategy} has been set, result is <strong>null</strong>. This means that the default strategy should be
      * used.
      *
      * @return the {@code FileLocationStrategy} to be used
@@ -294,7 +294,7 @@ public final class FileLocator {
     }
 
     /**
-     * Gets the URL pointing to the referenced source file or <b>null</b> if it is undefined.
+     * Gets the URL pointing to the referenced source file or <strong>null</strong> if it is undefined.
      *
      * @return the source URL
      */

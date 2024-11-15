@@ -109,7 +109,7 @@ import org.apache.commons.lang3.StringUtils;
  * cc.clearProperty(&quot;gui.background&quot;);
  * </pre>
  *
- * Will a {@code cc.containsKey("gui.background")} now return <b>false</b>? No, it won't! The {@code clearProperty()}
+ * Will a {@code cc.containsKey("gui.background")} now return <strong>false</strong>? No, it won't! The {@code clearProperty()}
  * operation is executed on the node set of the combined configuration, which was constructed from the nodes of the two
  * child configurations. It causes the value of the <em>background</em> node to be cleared, which is also part of the
  * first child configuration. This modification of one of its child configurations causes the
@@ -355,7 +355,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Creates a new instance of {@code CombinedConfiguration} and initializes the combiner to be used.
      *
-     * @param comb the node combiner (can be <b>null</b>, then a union combiner is used as default)
+     * @param comb the node combiner (can be <strong>null</strong>, then a union combiner is used as default)
      */
     public CombinedConfiguration(final NodeCombiner comb) {
         nodeCombiner = comb != null ? comb : DEFAULT_COMBINER;
@@ -366,7 +366,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Adds a new configuration to this combined configuration. The new configuration is not given a name. Its properties
      * will be added under the root of the combined node structure.
      *
-     * @param config the configuration to add (must not be <b>null</b>)
+     * @param config the configuration to add (must not be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config) {
         addConfiguration(config, null, null);
@@ -376,8 +376,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Adds a new configuration to this combined configuration with an optional name. The new configuration's properties
      * will be added under the root of the combined node structure.
      *
-     * @param config the configuration to add (must not be <b>null</b>)
-     * @param name the name of this configuration (can be <b>null</b>)
+     * @param config the configuration to add (must not be <strong>null</strong>)
+     * @param name the name of this configuration (can be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config, final String name) {
         addConfiguration(config, name, null);
@@ -391,9 +391,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * expression engine). For instance if you pass in the string {@code "database.tables"}, all properties of the added
      * configuration will occur in this branch.
      *
-     * @param config the configuration to add (must not be <b>null</b>)
-     * @param name the name of this configuration (can be <b>null</b>)
-     * @param at the position of this configuration in the combined tree (can be <b>null</b>)
+     * @param config the configuration to add (must not be <strong>null</strong>)
+     * @param name the name of this configuration (can be <strong>null</strong>)
+     * @param at the position of this configuration in the combined tree (can be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config, final String name, final String at) {
         if (config == null) {
@@ -570,7 +570,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Gets the configuration with the given name. This can be <b>null</b> if no such configuration exists.
+     * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
      * @param name the name of the configuration
      * @return the configuration with this name
@@ -604,7 +604,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
-     * @return a set with the names of the contained configurations (never <b>null</b>)
+     * @return a set with the names of the contained configurations (never <strong>null</strong>)
      */
     public Set<String> getConfigurationNames() {
         beginRead(true);
@@ -687,7 +687,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets the configuration source, in which the specified key is defined. This method will determine the configuration
      * node that is identified by the given key. The following constellations are possible:
      * <ul>
-     * <li>If no node object is found for this key, <b>null</b> is returned.</li>
+     * <li>If no node object is found for this key, <strong>null</strong> is returned.</li>
      * <li>If the key maps to multiple nodes belonging to different configuration sources, a
      * {@code IllegalArgumentException} is thrown (in this case no unique source can be determined).</li>
      * <li>If exactly one node is found for the key, the (child) configuration object, to which the node belongs is
@@ -697,9 +697,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * </ul>
      *
      * @param key the key of a configuration property
-     * @return the configuration, to which this property belongs or <b>null</b> if the key cannot be resolved
+     * @return the configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
-     *         the key is <b>null</b>
+     *         the key is <strong>null</strong>
      * @since 1.5
      */
     public Configuration getSource(final String key) {
@@ -842,7 +842,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Removes the configuration with the specified name.
      *
      * @param name the name of the configuration to be removed
-     * @return the removed configuration (<b>null</b> if this configuration was not found)
+     * @return the removed configuration (<strong>null</strong> if this configuration was not found)
      */
     public Configuration removeConfiguration(final String name) {
         final Configuration conf = getConfiguration(name);
@@ -891,7 +891,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
 
     /**
      * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
-     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
+     * be <strong>null</strong>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
      * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
      *
      * @param nodeCombiner the node combiner

@@ -100,7 +100,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Fires a SAX element start event.
      *
      * @param name the name of the actual element
-     * @param attribs the attributes of this element (can be <b>null</b>)
+     * @param attribs the attributes of this element (can be <strong>null</strong>)
      */
     protected void fireElementStart(final String name, final Attributes attribs) {
         if (getException() == null) {
@@ -124,7 +124,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Gets the DTD handler. This class does not support DTD handlers, so this method always returns <b>null</b>.
+     * Gets the DTD handler. This class does not support DTD handlers, so this method always returns <strong>null</strong>.
      *
      * @return the DTD handler
      */
@@ -135,7 +135,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
 
     /**
      * Gets the entity resolver. This class does not support an entity resolver, so this method always returns
-     * <b>null</b>.
+     * <strong>null</strong>.
      *
      * @return the entity resolver
      */
@@ -145,7 +145,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     }
 
     /**
-     * Gets the error handler. This class does not support an error handler, so this method always returns <b>null</b>.
+     * Gets the error handler. This class does not support an error handler, so this method always returns <strong>null</strong>.
      *
      * @return the error handler
      */
@@ -157,7 +157,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets a reference to an exception that occurred during parsing.
      *
-     * @return a SAXExcpetion or <b>null</b> if none occurred
+     * @return a SAXExcpetion or <strong>null</strong> if none occurred
      */
     public SAXException getException() {
         return exception;
@@ -167,7 +167,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Dummy implementation of the interface method.
      *
      * @param name the name of the feature
-     * @return always <b>false</b> (no features are supported)
+     * @return always <strong>false</strong> (no features are supported)
      */
     @Override
     public boolean getFeature(final String name) {
@@ -182,7 +182,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     public abstract Configuration getParsedConfiguration();
 
     /**
-     * Dummy implementation of the interface method. No properties are supported, so this method always returns <b>null</b>.
+     * Dummy implementation of the interface method. No properties are supported, so this method always returns <strong>null</strong>.
      *
      * @param name the name of the requested property
      * @return the property value

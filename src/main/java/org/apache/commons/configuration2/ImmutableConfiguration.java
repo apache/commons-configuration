@@ -44,7 +44,7 @@ import org.apache.commons.configuration2.ex.ConversionException;
  * will be returned if the queried property cannot be found in the configuration. The behavior of the methods that do
  * not take a default value in case of a missing property is not defined by this interface and depends on a concrete
  * implementation. E.g. the {@link AbstractConfiguration} class, which is the base class of most configuration
- * implementations provided by this package, per default returns <b>null</b> if a property is not found, but provides
+ * implementations provided by this package, per default returns <strong>null</strong> if a property is not found, but provides
  * the {@link AbstractConfiguration#setThrowExceptionOnMissing(boolean) setThrowExceptionOnMissing()} method, with which
  * it can be configured to throw a {@code NoSuchElementException} exception in that case. (Note that getter methods for
  * primitive types in {@code AbstractConfiguration} always throw an exception for missing properties because there is no
@@ -259,12 +259,12 @@ public interface ImmutableConfiguration {
 
     /**
      * Gets a collection of typed objects associated with the given configuration key. This method works like
-     * {@link #getCollection(Class, String, Collection, Collection)} passing in <b>null</b> as default value.
+     * {@link #getCollection(Class, String, Collection, Collection)} passing in <strong>null</strong> as default value.
      *
      * @param <T> the element type of the result list
      * @param cls the element class of the result list
      * @param key the configuration key
-     * @param target the target collection (may be <b>null</b>)
+     * @param target the target collection (may be <strong>null</strong>)
      * @return the collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
@@ -278,19 +278,19 @@ public interface ImmutableConfiguration {
      * retrieved should be added to a specific kind of collection, e.g. a set to remove duplicates. The return value is as
      * follows:
      * <ul>
-     * <li>If the key does not map to an existing object and the default value is <b>null</b>, the method returns
-     * <b>null</b>.</li>
-     * <li>If the target collection is not <b>null</b> and data has been added (either from the resolved property value or
+     * <li>If the key does not map to an existing object and the default value is <strong>null</strong>, the method returns
+     * <strong>null</strong>.</li>
+     * <li>If the target collection is not <strong>null</strong> and data has been added (either from the resolved property value or
      * from the default collection), the target collection is returned.</li>
-     * <li>If the target collection is <b>null</b> and data has been added (either from the resolved property value or from
+     * <li>If the target collection is <strong>null</strong> and data has been added (either from the resolved property value or from
      * the default collection), return value is the target collection created by this method.</li>
      * </ul>
      *
      * @param <T> the element type of the result list
      * @param cls the element class of the result list
      * @param key the configuration key
-     * @param target the target collection (may be <b>null</b>)
-     * @param defaultValue the default value (may be <b>null</b>)
+     * @param target the target collection (may be <strong>null</strong>)
+     * @param defaultValue the default value (may be <strong>null</strong>)
      * @return the collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
@@ -378,12 +378,12 @@ public interface ImmutableConfiguration {
      * value of the string property identified by the given key. This value is then passed to the provided
      * {@code ConfigurationDecoder}. The value returned by the {@code ConfigurationDecoder} is passed to the caller. If the
      * key is not associated with a value, the decoder is not invoked; depending on this configuration's settings either
-     * <b>null</b> is returned or an exception is thrown.
+     * <strong>null</strong> is returned or an exception is thrown.
      *
      * @param key the configuration key
-     * @param decoder the {@code ConfigurationDecoder} (must not be <b>null</b>)
+     * @param decoder the {@code ConfigurationDecoder} (must not be <strong>null</strong>)
      * @return the plain string value of the specified encoded property
-     * @throws IllegalArgumentException if a <b>null</b> decoder is passed
+     * @throws IllegalArgumentException if a <strong>null</strong> decoder is passed
      */
     String getEncodedString(String key, ConfigurationDecoder decoder);
 

@@ -158,8 +158,8 @@ public class BuilderConfigurationWrapperFactory {
      *
      * @param <T> the type of the configuration objects returned by this method
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
-     *        must not be <b>null</b>
-     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <b>null</b>)
+     *        must not be <strong>null</strong>
+     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
      * @param evSrcSupport the level of {@code EventSource} support
      * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
@@ -183,7 +183,7 @@ public class BuilderConfigurationWrapperFactory {
      * Gets an array with the classes the generated proxy has to support.
      *
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
-     *        must not be <b>null</b>
+     *        must not be <strong>null</strong>
      * @param evSrcSupport the level of {@code EventSource} support
      * @return an array with the interface classes to implement
      */
@@ -219,8 +219,8 @@ public class BuilderConfigurationWrapperFactory {
      *
      * @param <T> the type of the configuration objects returned by this method
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
-     *        must not be <b>null</b>
-     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <b>null</b>)
+     *        must not be <strong>null</strong>
+     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
      * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error occurs when creating the

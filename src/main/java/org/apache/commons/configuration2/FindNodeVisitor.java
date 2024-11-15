@@ -45,14 +45,14 @@ final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
     /**
      * Returns a flag whether the search node was found in the last search operation.
      *
-     * @return <b>true</b> if the search node was found; <b>false</b> otherwise
+     * @return <strong>true</strong> if the search node was found; <strong>false</strong> otherwise
      */
     public boolean isFound() {
         return found;
     }
 
     /**
-     * Resets this visitor. This method sets the {@code found} property to <b>false</b> again, so that this instance can be
+     * Resets this visitor. This method sets the {@code found} property to <strong>false</strong> again, so that this instance can be
      * used to inspect another nodes hierarchy.
      */
     public void reset() {
@@ -60,7 +60,7 @@ final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
     }
 
     /**
-     * {@inheritDoc} This implementation returns <b>true</b> as soon as the node was found.
+     * {@inheritDoc} This implementation returns <strong>true</strong> as soon as the node was found.
      */
     @Override
     public boolean terminate() {

@@ -105,8 +105,8 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * Creates a new instance of {@code ImmutableConfigurationInvocationHandler} and initializes it with the wrapped
      * configuration object.
      *
-     * @param configuration the wrapped {@code Configuration} (must not be <b>null</b>)
-     * @throws NullPointerException if the {@code Configuration} is <b>null</b>
+     * @param configuration the wrapped {@code Configuration} (must not be <strong>null</strong>)
+     * @throws NullPointerException if the {@code Configuration} is <strong>null</strong>
      */
     public ImmutableConfigurationInvocationHandler(final Configuration configuration) {
         wrappedConfiguration = Objects.requireNonNull(configuration, "configuration");

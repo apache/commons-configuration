@@ -56,10 +56,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
 
     /**
      * Gets the default encoding for the specified configuration class. If an encoding has been set for the specified
-     * class (or one of its super classes), it is returned. Otherwise, result is <b>null</b>.
+     * class (or one of its super classes), it is returned. Otherwise, result is <strong>null</strong>.
      *
      * @param configClass the configuration class in question
-     * @return the default encoding for this class (may be <b>null</b>)
+     * @return the default encoding for this class (may be <strong>null</strong>)
      */
     public static String getDefaultEncoding(final Class<?> configClass) {
         String enc = DEFAULT_ENCODINGS.get(configClass);
@@ -100,11 +100,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Sets a default encoding for a specific configuration class. This encoding is used if an instance of this
      * configuration class is to be created and no encoding has been set in the parameters object for this builder. The
      * encoding passed here not only applies to the specified class but also to its sub classes. If the encoding is
-     * <b>null</b>, it is removed.
+     * <strong>null</strong>, it is removed.
      *
-     * @param configClass the name of the configuration class (must not be <b>null</b>)
+     * @param configClass the name of the configuration class (must not be <strong>null</strong>)
      * @param encoding the default encoding for this class
-     * @throws IllegalArgumentException if the class is <b>null</b>
+     * @throws IllegalArgumentException if the class is <strong>null</strong>
      */
     public static void setDefaultEncoding(final Class<?> configClass, final String encoding) {
         if (configClass == null) {
@@ -130,8 +130,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class.
      *
-     * @param resCls the result class (must not be <b>null</b>
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls) {
         super(resCls);
@@ -141,9 +141,9 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class
      * and sets initialization parameters.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
      * @param params a map with initialization parameters
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
         super(resCls, params);
@@ -153,10 +153,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class
      * and sets initialization parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
      * @param params a map with initialization parameters
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         super(resCls, params, allowFailOnInit);
@@ -190,7 +190,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Gets the {@code FileHandler} associated with this builder. If already a result object has been created, this
      * {@code FileHandler} can be used to save it. Otherwise, the {@code FileHandler} from the initialization parameters is
-     * returned (which is not associated with a {@code FileBased} object). Result is never <b>null</b>.
+     * returned (which is not associated with a {@code FileBased} object). Result is never <strong>null</strong>.
      *
      * @return the {@code FileHandler} associated with this builder
      */
@@ -260,7 +260,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Gets a flag whether auto save mode is currently active.
      *
-     * @return <b>true</b> if auto save is enabled, <b>false</b> otherwise
+     * @return <strong>true</strong> if auto save is enabled, <strong>false</strong> otherwise
      */
     public synchronized boolean isAutoSave() {
         return autoSaveListener != null;
@@ -292,7 +292,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Enables or disables auto save mode. If auto save mode is enabled, every update of the managed configuration causes it
      * to be saved automatically; so changes are directly written to disk.
      *
-     * @param enabled <b>true</b> if auto save mode is to be enabled, <b>false</b> otherwise
+     * @param enabled <strong>true</strong> if auto save mode is to be enabled, <strong>false</strong> otherwise
      */
     public synchronized void setAutoSave(final boolean enabled) {
         if (enabled) {

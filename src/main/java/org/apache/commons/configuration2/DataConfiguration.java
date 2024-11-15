@@ -1208,9 +1208,9 @@ public class DataConfiguration extends AbstractConfiguration {
 
     /**
      * Gets the original conversion handler set for this configuration. If this is not a
-     * {@code DefaultConversionHandler}, result is <b>null</b>.
+     * {@code DefaultConversionHandler}, result is <strong>null</strong>.
      *
-     * @return the original conversion handler or <b>null</b>
+     * @return the original conversion handler or <strong>null</strong>
      */
     private DefaultConversionHandler getOriginalConversionHandler() {
         final ConversionHandler handler = super.getConversionHandler();

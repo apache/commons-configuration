@@ -306,7 +306,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Writes a file for testing reload operations.
      *
-     * @param f the file to be written or <b>null</b> for creating a new one
+     * @param f the file to be written or <strong>null</strong> for creating a new one
      * @param tagIdx the index of the tag
      * @param value the value of the reload test property
      * @return the file that was written
@@ -320,7 +320,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Helper method for writing a test file for reloading. The file will be created in the test directory. It is also
      * scheduled for automatic deletion after the test.
      *
-     * @param f the file to be written or <b>null</b> for creating a new one
+     * @param f the file to be written or <strong>null</strong> for creating a new one
      * @param content the content of the file
      * @return the {@code File} object for the test file
      * @throws IOException if an error occurs

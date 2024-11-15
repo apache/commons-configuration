@@ -170,9 +170,9 @@ public final class BeanHelper {
     /**
      * Creates a {@code DynaBean} instance which wraps the passed in bean.
      *
-     * @param bean the bean to be wrapped (must not be <b>null</b>)
+     * @param bean the bean to be wrapped (must not be <strong>null</strong>)
      * @return a {@code DynaBean} wrapping the passed in bean
-     * @throws IllegalArgumentException if the bean is <b>null</b>
+     * @throws IllegalArgumentException if the bean is <strong>null</strong>
      * @since 2.0
      */
     public static DynaBean createWrapDynaBean(final Object bean) {
@@ -285,7 +285,7 @@ public final class BeanHelper {
      *
      * @param bean the bean instance
      * @param propName the name of the property in question
-     * @return <b>true</b> if this property can be written, <b>false</b> otherwise
+     * @return <strong>true</strong> if this property can be written, <strong>false</strong> otherwise
      */
     private static boolean isPropertyWriteable(final Object bean, final String propName) {
         return BEAN_UTILS_BEAN.getPropertyUtils().isWriteable(bean, propName);
@@ -337,7 +337,7 @@ public final class BeanHelper {
     /**
      * Constructs a new instance of {@code BeanHelper} and sets the specified default {@code BeanFactory}.
      *
-     * @param defaultBeanFactory the default {@code BeanFactory} (can be <b>null</b>, then a default instance is used)
+     * @param defaultBeanFactory the default {@code BeanFactory} (can be <strong>null</strong>, then a default instance is used)
      */
     public BeanHelper(final BeanFactory defaultBeanFactory) {
         this.defaultBeanFactory = defaultBeanFactory != null ? defaultBeanFactory : DefaultBeanFactory.INSTANCE;
@@ -372,7 +372,7 @@ public final class BeanHelper {
      * The main method for creating and initializing beans from a configuration. This method will return an initialized
      * instance of the bean class specified in the passed in bean declaration. If this declaration does not contain the
      * class of the bean, the passed in default class will be used. From the bean declaration the factory to be used for
-     * creating the bean is queried. The declaration may here return <b>null</b>, then a default factory is used. This
+     * creating the bean is queried. The declaration may here return <strong>null</strong>, then a default factory is used. This
      * factory is then invoked to perform the create operation.
      *
      * @param data the bean declaration
@@ -417,7 +417,7 @@ public final class BeanHelper {
      * Deregisters the bean factory with the given name. After that this factory cannot be used any longer.
      *
      * @param name the name of the factory to be deregistered
-     * @return the factory that was registered under this name; <b>null</b> if there was no such factory
+     * @return the factory that was registered under this name; <strong>null</strong> if there was no such factory
      */
     public BeanFactory deregisterBeanFactory(final String name) {
         return beanFactories.remove(name);

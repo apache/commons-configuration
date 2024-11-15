@@ -63,10 +63,10 @@ public final class InterpolatorSpecification {
      */
     public static class Builder {
         /**
-         * Helper method for checking a lookup. Throws an exception if the lookup is <b>null</b>.
+         * Helper method for checking a lookup. Throws an exception if the lookup is <strong>null</strong>.
          *
          * @param lookup the lookup to be checked
-         * @throws IllegalArgumentException if the lookup is <b>null</b>
+         * @throws IllegalArgumentException if the lookup is <strong>null</strong>
          */
         private static void checkLookup(final Lookup lookup) {
             if (lookup == null) {
@@ -121,9 +121,9 @@ public final class InterpolatorSpecification {
         /**
          * Adds the given {@code Lookup} object to the list of default lookups.
          *
-         * @param lookup the {@code Lookup} (must not be <b>null</b>)
+         * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
          * @return a reference to this builder for method chaining
-         * @throws IllegalArgumentException if the {@code Lookup} is <b>null</b>
+         * @throws IllegalArgumentException if the {@code Lookup} is <strong>null</strong>
          */
         public Builder withDefaultLookup(final Lookup lookup) {
             checkLookup(lookup);
@@ -133,11 +133,11 @@ public final class InterpolatorSpecification {
 
         /**
          * Adds the content of the given collection to the default lookups managed by this builder. The collection can be
-         * <b>null</b>, then this method has no effect.
+         * <strong>null</strong>, then this method has no effect.
          *
          * @param lookups the collection with lookups to be added
          * @return a reference to this builder for method chaining
-         * @throws IllegalArgumentException if the collection contains <b>null</b> entries
+         * @throws IllegalArgumentException if the collection contains <strong>null</strong> entries
          */
         public Builder withDefaultLookups(final Collection<? extends Lookup> lookups) {
             if (lookups != null) {
@@ -150,7 +150,7 @@ public final class InterpolatorSpecification {
          * Sets the {@code ConfigurationInterpolator} instance for the {@code InterpolatorSpecification}. This means that a
          * {@code ConfigurationInterpolator} has been created and set up externally and can be used directly.
          *
-         * @param ci the {@code ConfigurationInterpolator} (can be <b>null</b>)
+         * @param ci the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
          * @return a reference to this builder for method chaining
          */
         public Builder withInterpolator(final ConfigurationInterpolator ci) {
@@ -162,7 +162,7 @@ public final class InterpolatorSpecification {
          * Sets an optional parent {@code ConfigurationInterpolator}. If defined, this object is set as parent of a newly
          * created {@code ConfigurationInterpolator} instance.
          *
-         * @param parent the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
+         * @param parent the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
          * @return a reference to this builder for method chaining
          */
         public Builder withParentInterpolator(final ConfigurationInterpolator parent) {
@@ -173,8 +173,8 @@ public final class InterpolatorSpecification {
         /**
          * Adds a {@code Lookup} object for a given prefix.
          *
-         * @param prefix the prefix (must not be <b>null</b>)
-         * @param lookup the {@code Lookup} (must not be <b>null</b>)
+         * @param prefix the prefix (must not be <strong>null</strong>)
+         * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
          * @return a reference to this builder for method chaining
          * @throws IllegalArgumentException if a required parameter is missing
          */
@@ -188,12 +188,12 @@ public final class InterpolatorSpecification {
         }
 
         /**
-         * Adds the content of the given map to the prefix lookups managed by this builder. The map can be <b>null</b>, then
+         * Adds the content of the given map to the prefix lookups managed by this builder. The map can be <strong>null</strong>, then
          * this method has no effect.
          *
          * @param lookups the map with prefix lookups to be added
          * @return a reference to this builder for method chaining
-         * @throws IllegalArgumentException if the map contains <b>null</b> values
+         * @throws IllegalArgumentException if the map contains <strong>null</strong> values
          */
         public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
             if (lookups != null) {
@@ -247,7 +247,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets a collection with the default lookups.
      *
-     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
+     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Collection<Lookup> getDefaultLookups() {
         return defaultLookups;
@@ -256,7 +256,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the {@code ConfigurationInterpolator} instance to be used directly.
      *
-     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
+     * @return the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getInterpolator() {
         return interpolator;
@@ -265,7 +265,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the parent {@code ConfigurationInterpolator} object.
      *
-     * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
+     * @return the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getParentInterpolator() {
         return parentInterpolator;
@@ -275,7 +275,7 @@ public final class InterpolatorSpecification {
      * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
      * {@code Lookup} objects.
      *
-     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <b>null</b>)
+     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Map<String, Lookup> getPrefixLookups() {
         return prefixLookups;

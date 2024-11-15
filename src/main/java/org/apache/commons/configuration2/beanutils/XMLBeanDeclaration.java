@@ -297,7 +297,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The passed in
      * key points to the bean declaration.
      *
-     * @param config the configuration (must not be <b>null</b>)
+     * @param config the configuration (must not be <strong>null</strong>)
      * @param key the key to the bean declaration (this key must point to exactly one bean declaration or a
      *        {@code IllegalArgumentException} exception will be thrown)
      * @param <T> the node type of the configuration
@@ -311,9 +311,9 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
      * optional declarations.
      *
-     * @param config the configuration (must not be <b>null</b>)
+     * @param config the configuration (must not be <strong>null</strong>)
      * @param key the key to the bean declaration
-     * @param optional a flag whether this declaration is optional; if set to <b>true</b>, no exception will be thrown if
+     * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
      * @param <T> the node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
@@ -325,15 +325,15 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
      * optional declarations and a default bean class name. The passed in key points to the bean declaration. If the key
-     * does not exist and the boolean argument is <b>true</b>, the declaration is initialized with an empty configuration.
+     * does not exist and the boolean argument is <strong>true</strong>, the declaration is initialized with an empty configuration.
      * It is possible to create objects from such an empty declaration if a default class is provided. If the key on the
-     * other hand has multiple values or is undefined and the boolean argument is <b>false</b>, a
+     * other hand has multiple values or is undefined and the boolean argument is <strong>false</strong>, a
      * {@code IllegalArgumentException} exception will be thrown. It is possible to set a default bean class name; this name
      * is used if the configuration does not contain a bean class.
      *
-     * @param config the configuration (must not be <b>null</b>)
+     * @param config the configuration (must not be <strong>null</strong>)
      * @param key the key to the bean declaration
-     * @param optional a flag whether this declaration is optional; if set to <b>true</b>, no exception will be thrown if
+     * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
      * @param defBeanClsName a default bean class name
      * @param <T> the node type of the configuration
@@ -398,7 +398,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      *
      * @param nodeData the node
      * @param attribute the name of the attribute
-     * @return the string value of this attribute (can be <b>null</b>)
+     * @return the string value of this attribute (can be <strong>null</strong>)
      */
     private String getAttribute(final NodeData<?> nodeData, final String attribute) {
         final Object value = nodeData.getAttribute(attribute);
@@ -478,7 +478,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
 
     /**
      * Gets the name of the default bean class. This class is used if no bean class is specified in the configuration. It
-     * may be <b>null</b> if no default class was set.
+     * may be <strong>null</strong> if no default class was set.
      *
      * @return the default bean class name
      * @since 2.0

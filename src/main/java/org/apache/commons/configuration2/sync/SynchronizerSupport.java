@@ -35,7 +35,7 @@ package org.apache.commons.configuration2.sync;
  */
 public interface SynchronizerSupport {
     /**
-     * Gets the {@code Synchronizer} used by this object. An implementation must not return <b>null</b>. If no
+     * Gets the {@code Synchronizer} used by this object. An implementation must not return <strong>null</strong>. If no
      * {@code Synchronizer} has been set so far, a meaningful default {@code Synchronizer} has to be returned.
      *
      * @return the {@code Synchronizer} used by this object
@@ -46,7 +46,7 @@ public interface SynchronizerSupport {
      * Locks this object for the specified mode. This call may block until this object is released from other lock
      * operations. When it returns the caller can access the object in a way compatible to the specified {@code LockMode}.
      * When done the {@code unlock()} must be called with the same {@code LockMode} argument. In practice, a
-     * <b>try</b>-<b>finally</b> construct should be used as in the following example:
+     * <strong>try</strong>-<strong>finally</strong> construct should be used as in the following example:
      *
      * <pre>
      * SynchronizerSupport syncSupport = ...;
@@ -72,7 +72,7 @@ public interface SynchronizerSupport {
     /**
      * Sets the {@code Synchronizer} to be used by this object. Calling this method and setting an appropriate
      * {@code Synchronizer} determines whether this object can be accessed in a thread-safe way or not. The argument may be
-     * <b>null</b>; in this case an implementation should switch to a default {@code Synchronizer}.
+     * <strong>null</strong>; in this case an implementation should switch to a default {@code Synchronizer}.
      *
      * @param sync the {@code Synchronizer} for this object
      */

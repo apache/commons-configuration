@@ -130,7 +130,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware {
     /**
-     * Container for array elements. <b>Do not use this class !</b> It is used internally by XMLPropertyConfiguration to
+     * Container for array elements. <strong>Do not use this class !</strong> It is used internally by XMLPropertyConfiguration to
      * parse the configuration file, it may be removed at any moment in the future.
      */
     private static final class ArrayNodeBuilder extends PListNodeBuilder {

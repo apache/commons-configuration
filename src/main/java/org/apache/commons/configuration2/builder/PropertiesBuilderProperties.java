@@ -50,7 +50,7 @@ public interface PropertiesBuilderProperties<T> {
     }
 
     /**
-     * Sets a flag whether include files are supported by the properties configuration object. If set to <b>true</b>, files
+     * Sets a flag whether include files are supported by the properties configuration object. If set to <strong>true</strong>, files
      * listed by an include property are loaded automatically.
      *
      * @param f the value of the flag

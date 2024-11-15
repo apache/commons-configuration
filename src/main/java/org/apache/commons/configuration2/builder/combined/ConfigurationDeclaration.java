@@ -52,7 +52,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Gets the value of the {@code at} attribute.
      *
-     * @return the value of the {@code at} attribute (can be <b>null</b>)
+     * @return the value of the {@code at} attribute (can be <strong>null</strong>)
      */
     public String getAt() {
         final String result = getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
@@ -60,7 +60,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     }
 
     /**
-     * Gets the bean's class name. This implementation will always return <b>null</b>.
+     * Gets the bean's class name. This implementation will always return <strong>null</strong>.
      *
      * @return the name of the bean's class
      */
@@ -91,9 +91,9 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
 
     /**
      * Gets the name for the represented configuration source. The name is optional, so this method can return
-     * <b>null</b>.
+     * <strong>null</strong>.
      *
-     * @return the name of the associated configuration source or <b>null</b>
+     * @return the name of the associated configuration source or <strong>null</strong>
      */
     public String getName() {
         return getConfiguration().getString(CombinedConfigurationBuilder.ATTR_NAME);

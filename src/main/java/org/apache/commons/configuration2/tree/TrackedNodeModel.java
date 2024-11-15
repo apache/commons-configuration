@@ -74,8 +74,8 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * {@code SubnodeConfiguration}, there is typically no way to discard the model explicitly. Therefore, it makes sense to
      * do this automatically on finalization.
      *
-     * @param modelSupport the underlying {@code InMemoryNodeModelSupport} (must not be <b>null</b>)
-     * @param sel the selector to the root node of this model (must not be <b>null</b>)
+     * @param modelSupport the underlying {@code InMemoryNodeModelSupport} (must not be <strong>null</strong>)
+     * @param sel the selector to the root node of this model (must not be <strong>null</strong>)
      * @param untrackOnFinalize a flag whether the tracked node should be released on finalization
      * @throws IllegalArgumentException if a required parameter is missing
      */

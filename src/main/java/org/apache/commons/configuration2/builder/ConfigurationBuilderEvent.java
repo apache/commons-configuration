@@ -58,8 +58,8 @@ public class ConfigurationBuilderEvent extends Event {
     /**
      * Creates a new instance of {@code ConfigurationBuilderEvent} and sets basic properties.
      *
-     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <b>null</b>)
-     * @param evType the type of this event (must not be <b>null</b>)
+     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <strong>null</strong>)
+     * @param evType the type of this event (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is null
      */
     public ConfigurationBuilderEvent(final ConfigurationBuilder<?> source, final EventType<? extends ConfigurationBuilderEvent> evType) {

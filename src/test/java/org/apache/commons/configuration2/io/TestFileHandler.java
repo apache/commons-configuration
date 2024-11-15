@@ -284,7 +284,7 @@ public class TestFileHandler {
     /**
      * Creates a test file with test content and allows specifying a file name.
      *
-     * @param f the file to be created (may be <b>null</b>)
+     * @param f the file to be created (may be <strong>null</strong>)
      * @return the File object pointing to the test file
      */
     private File createTestFile(final File f) {

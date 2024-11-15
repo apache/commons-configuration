@@ -134,8 +134,8 @@ public class DefaultConfigurationKey {
 
         /**
          * Returns the current key of the iteration (without skipping to the next element). The boolean parameter indicates
-         * wheter a decorated key should be returned. This affects only attribute keys: if the parameter is <b>false</b>, the
-         * attribute markers are stripped from the key; if it is <b>true</b>, they remain.
+         * wheter a decorated key should be returned. This affects only attribute keys: if the parameter is <strong>false</strong>, the
+         * attribute markers are stripped from the key; if it is <strong>true</strong>, they remain.
          *
          * @param decorated a flag if the decorated key is to be returned
          * @return the current key
@@ -263,7 +263,7 @@ public class DefaultConfigurationKey {
         /**
          * Returns a flag whether the current key refers to a property (i.e. is no special attribute key). Usually this method
          * will return the opposite of {@code isAttribute()}, but if the delimiters for normal properties and attributes are set
-         * to the same string, it is possible that both methods return <b>true</b>.
+         * to the same string, it is possible that both methods return <strong>true</strong>.
          *
          * @return a flag if the current key is a property key
          * @see #isAttribute()
@@ -321,8 +321,8 @@ public class DefaultConfigurationKey {
 
         /**
          * Returns the next key part of this configuration key. The boolean parameter indicates wheter a decorated key should be
-         * returned. This affects only attribute keys: if the parameter is <b>false</b>, the attribute markers are stripped from
-         * the key; if it is <b>true</b>, they remain.
+         * returned. This affects only attribute keys: if the parameter is <strong>false</strong>, the attribute markers are stripped from
+         * the key; if it is <strong>true</strong>, they remain.
          *
          * @param decorated a flag if the decorated key is to be returned
          * @return the next key part
@@ -396,8 +396,8 @@ public class DefaultConfigurationKey {
     /**
      * Creates a new instance of {@code DefaultConfigurationKey} and sets the associated expression engine.
      *
-     * @param engine the expression engine (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the expression engine is <b>null</b>
+     * @param engine the expression engine (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the expression engine is <strong>null</strong>
      */
     public DefaultConfigurationKey(final DefaultExpressionEngine engine) {
         this(engine, null);
@@ -407,9 +407,9 @@ public class DefaultConfigurationKey {
      * Creates a new instance of {@code DefaultConfigurationKey} and sets the associated expression engine and an initial
      * key.
      *
-     * @param engine the expression engine (must not be <b>null</b>)
+     * @param engine the expression engine (must not be <strong>null</strong>)
      * @param key the key to be wrapped
-     * @throws IllegalArgumentException if the expression engine is <b>null</b>
+     * @throws IllegalArgumentException if the expression engine is <strong>null</strong>
      */
     public DefaultConfigurationKey(final DefaultExpressionEngine engine, final String key) {
         if (engine == null) {
@@ -436,7 +436,7 @@ public class DefaultConfigurationKey {
 
     /**
      * Appends the name of a property to this key. If necessary, a property delimiter will be added. If the boolean argument
-     * is set to <b>true</b>, property delimiters contained in the property name will be escaped.
+     * is set to <strong>true</strong>, property delimiters contained in the property name will be escaped.
      *
      * @param property the name of the property to be added
      * @param escape a flag if property delimiters in the passed in property name should be escaped
@@ -660,7 +660,7 @@ public class DefaultConfigurationKey {
      * Tests if the specified key represents an attribute according to the current expression engine.
      *
      * @param key the key to be checked
-     * @return <b>true</b> if this is an attribute key, <b>false</b> otherwise
+     * @return <strong>true</strong> if this is an attribute key, <strong>false</strong> otherwise
      */
     public boolean isAttributeKey(final String key) {
         if (key == null) {

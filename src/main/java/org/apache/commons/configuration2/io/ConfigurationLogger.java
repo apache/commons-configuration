@@ -99,8 +99,8 @@ public class ConfigurationLogger {
      * Creates a new instance of {@code ConfigurationLogger} that uses a logger whose name is derived from the provided
      * class.
      *
-     * @param logCls the class whose name is to be used for logging (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the logger class is <b>null</b>
+     * @param logCls the class whose name is to be used for logging (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the logger class is <strong>null</strong>
      */
     public ConfigurationLogger(final Class<?> logCls) {
         this(createLoggerForClass(logCls));
@@ -118,8 +118,8 @@ public class ConfigurationLogger {
     /**
      * Creates a new instance of {@code ConfigurationLogger} that uses the specified logger name.
      *
-     * @param loggerName the logger name (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the logger name is <b>null</b>
+     * @param loggerName the logger name (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the logger name is <strong>null</strong>
      */
     public ConfigurationLogger(final String loggerName) {
         this(createLoggerForName(loggerName));
@@ -174,7 +174,7 @@ public class ConfigurationLogger {
     /**
      * Returns a flag whether logging on debug level is enabled.
      *
-     * @return <b>true</b> if debug logging is enabled, <b>false</b> otherwise
+     * @return <strong>true</strong> if debug logging is enabled, <strong>false</strong> otherwise
      */
     public boolean isDebugEnabled() {
         return getLog().isDebugEnabled();
@@ -183,7 +183,7 @@ public class ConfigurationLogger {
     /**
      * Returns a flag whether logging on info level is enabled.
      *
-     * @return <b>true</b> if debug logging is enabled, <b>false</b> otherwise
+     * @return <strong>true</strong> if debug logging is enabled, <strong>false</strong> otherwise
      */
     public boolean isInfoEnabled() {
         return getLog().isInfoEnabled();

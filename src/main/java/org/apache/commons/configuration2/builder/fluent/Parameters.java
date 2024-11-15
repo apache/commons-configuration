@@ -131,7 +131,7 @@ public final class Parameters {
      * Because {@code DefaultParametersManager} is thread-safe, it makes sense to share a single instance between multiple
      * {@code Parameters} objects; that way the same initialization is performed on newly created parameters objects.
      *
-     * @param manager the {@code DefaultParametersHandler} (may be <b>null</b>, then a new default instance is created)
+     * @param manager the {@code DefaultParametersHandler} (may be <strong>null</strong>, then a new default instance is created)
      */
     public Parameters(final DefaultParametersManager manager) {
         defaultParametersManager = manager != null ? manager : new DefaultParametersManager();
@@ -252,8 +252,8 @@ public final class Parameters {
      * method which just delegates to the associated {@code DefaultParametersManager}.
      *
      * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <b>null</b>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <b>null</b>)
+     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
      * @see DefaultParametersManager
      */
@@ -267,8 +267,8 @@ public final class Parameters {
      * {@code DefaultParametersManager}.
      *
      * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <b>null</b>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <b>null</b>)
+     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be
      *        applied
      * @throws IllegalArgumentException if a required parameter is missing

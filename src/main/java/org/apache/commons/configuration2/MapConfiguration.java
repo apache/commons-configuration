@@ -214,7 +214,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     /**
      * Returns the flag whether trimming of property values is disabled.
      *
-     * @return <b>true</b> if trimming of property values is disabled; <b>false</b> otherwise
+     * @return <strong>true</strong> if trimming of property values is disabled; <strong>false</strong> otherwise
      * @since 1.7
      */
     public boolean isTrimmingDisabled() {

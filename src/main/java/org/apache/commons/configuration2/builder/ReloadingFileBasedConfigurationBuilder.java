@@ -81,8 +81,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class.
      *
-     * @param resCls the result class (must not be <b>null</b>
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls) {
         super(resCls);
@@ -93,9 +93,9 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
      * @param params a map with initialization parameters
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
         super(resCls, params);
@@ -106,10 +106,10 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>
      * @param params a map with initialization parameters
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         super(resCls, params, allowFailOnInit);

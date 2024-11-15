@@ -38,7 +38,7 @@ import java.util.List;
  * With the {@code detailEvents} property the number of detail events can be controlled. Some methods in configuration
  * classes are implemented in a way that they call other methods that can generate their own events. One example is the
  * {@code setProperty()} method that can be implemented as a combination of {@code clearProperty()} and
- * {@code addProperty()}. With {@code detailEvents} set to <b>true</b>, all involved methods will generate events (i.e.
+ * {@code addProperty()}. With {@code detailEvents} set to <strong>true</strong>, all involved methods will generate events (i.e.
  * listeners will receive property set events, property clear events, and property add events). If this mode is turned
  * off (which is the default), detail events are suppressed, so only property set events will be received. Note that the
  * number of received detail events may differ for different configuration implementations.
@@ -82,7 +82,7 @@ public class BaseEventSource implements EventSource {
      * than the passed in limit.
      *
      * @param limit the limit to be compared to
-     * @return <b>true</b> if the counter is greater than the limit, <b>false</b> otherwise
+     * @return <strong>true</strong> if the counter is greater than the limit, <strong>false</strong> otherwise
      */
     private boolean checkDetailEvents(final int limit) {
         synchronized (lockDetailEventsCount) {
@@ -125,8 +125,8 @@ public class BaseEventSource implements EventSource {
     /**
      * Copies all event listener registrations maintained by this object to the specified {@code BaseEventSource} object.
      *
-     * @param source the target source for the copy operation (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the target source is <b>null</b>
+     * @param source the target source for the copy operation (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the target source is <strong>null</strong>
      * @since 2.0
      */
     public void copyEventListeners(final BaseEventSource source) {
@@ -142,8 +142,8 @@ public class BaseEventSource implements EventSource {
      *
      * @param type the event's type
      * @param opType the operation type related to this error
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param propName the name of the affected property (can be <strong>null</strong>)
+     * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param ex the {@code Throwable} object that caused this error event
      * @return the event object
      */
@@ -157,8 +157,8 @@ public class BaseEventSource implements EventSource {
      * {@code fireEvent()} if it decides that an event needs to be generated.
      *
      * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param propName the name of the affected property (can be <strong>null</strong>)
+     * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param before the before update flag
      * @param <T> the type of the event to be created
      * @return the newly created event object
@@ -173,8 +173,8 @@ public class BaseEventSource implements EventSource {
      *
      * @param eventType the event's type
      * @param operationType the type of the failed operation
-     * @param propertyName the name of the affected property (can be <b>null</b>)
-     * @param propertyValue the value of the affected property (can be <b>null</b>)
+     * @param propertyName the name of the affected property (can be <strong>null</strong>)
+     * @param propertyValue the value of the affected property (can be <strong>null</strong>)
      * @param cause the {@code Throwable} object that caused this error event
      * @param <T> the event type
      */
@@ -194,8 +194,8 @@ public class BaseEventSource implements EventSource {
      * event is allowed (making use of the {@code detailEvents} property), and if listeners are registered.
      *
      * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param propName the name of the affected property (can be <strong>null</strong>)
+     * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param before the before update flag
      * @param <T> the type of the event to be fired
      */

@@ -467,7 +467,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Allows setting the logger to be used by this object. This method makes it possible for clients to exactly control
      * logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that want to enable
-     * logging should call this method during their initialization with the logger to be used. Passing in <b>null</b> as
+     * logging should call this method during their initialization with the logger to be used. Passing in <strong>null</strong> as
      * argument disables logging.
      *
      * @param log the new logger

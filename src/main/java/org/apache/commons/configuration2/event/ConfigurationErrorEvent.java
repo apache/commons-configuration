@@ -122,7 +122,7 @@ public class ConfigurationErrorEvent extends Event {
     /**
      * Gets the name of the property that was accessed when this error occurred.
      *
-     * @return the property name related to this error (may be <b>null</b>)
+     * @return the property name related to this error (may be <strong>null</strong>)
      */
     public String getPropertyName() {
         return propertyName;
@@ -131,7 +131,7 @@ public class ConfigurationErrorEvent extends Event {
     /**
      * Gets the value of the property that was accessed when this error occurred.
      *
-     * @return the property value related this error (may be <b>null</b>)
+     * @return the property value related this error (may be <strong>null</strong>)
      */
     public Object getPropertyValue() {
         return propertyValue;

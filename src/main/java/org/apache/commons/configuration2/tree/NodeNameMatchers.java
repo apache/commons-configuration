@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum NodeNameMatchers implements NodeMatcher<String> {
     /**
-     * A matcher for exact node name matches. This matcher returns <b>true</b> if and only if the name of the passed in node
+     * A matcher for exact node name matches. This matcher returns <strong>true</strong> if and only if the name of the passed in node
      * equals exactly the given criterion string.
      */
     EQUALS {

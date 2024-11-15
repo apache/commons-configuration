@@ -95,7 +95,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Creates a CompositeConfiguration object with a specified <em>in-memory configuration</em>. This configuration will
      * store any changes made to the {@code CompositeConfiguration}. Note: Use this constructor if you want to set a special
      * type of in-memory configuration. If you have a configuration which should act as both a child configuration and as
-     * in-memory configuration, use {@link #addConfiguration(Configuration, boolean)} with a value of <b>true</b> instead.
+     * in-memory configuration, use {@link #addConfiguration(Configuration, boolean)} with a value of <strong>true</strong> instead.
      *
      * @param inMemoryConfiguration the in memory configuration to use
      */
@@ -137,7 +137,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * its role as in-memory configuration to the new one.
      *
      * @param config the configuration to be added
-     * @param asInMemory <b>true</b> if this configuration becomes the new <em>in-memory</em> configuration, <b>false</b>
+     * @param asInMemory <strong>true</strong> if this configuration becomes the new <em>in-memory</em> configuration, <strong>false</strong>
      *        otherwise
      * @since 1.8
      */
@@ -184,7 +184,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * configurations at its current position, but it passes its role as in-memory configuration to the new one.
      *
      * @param config the configuration to be added
-     * @param asInMemory <b>true</b> if this configuration becomes the new <em>in-memory</em> configuration, <b>false</b>
+     * @param asInMemory <strong>true</strong> if this configuration becomes the new <em>in-memory</em> configuration, <strong>false</strong>
      *        otherwise
      * @since 2.3
      */
@@ -397,8 +397,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * <ul>
      * <li>If exactly one child configuration contains the key, this configuration is returned as the source configuration.
      * This may be the <em>in memory configuration</em> (this has to be explicitly checked by the calling application).</li>
-     * <li>If none of the child configurations contain the key, <b>null</b> is returned.</li>
-     * <li>If the key is contained in multiple child configurations or if the key is <b>null</b>, a
+     * <li>If none of the child configurations contain the key, <strong>null</strong> is returned.</li>
+     * <li>If the key is contained in multiple child configurations or if the key is <strong>null</strong>, a
      * {@code IllegalArgumentException} is thrown. In this case the source configuration cannot be determined.</li>
      * </ul>
      *

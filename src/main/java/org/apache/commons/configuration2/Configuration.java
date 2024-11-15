@@ -39,7 +39,7 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  * will be returned if the queried property cannot be found in the configuration. The behavior of the methods that do
  * not take a default value in case of a missing property is not defined by this interface and depends on a concrete
  * implementation. E.g. the {@link AbstractConfiguration} class, which is the base class of most configuration
- * implementations provided by this package, per default returns <b>null</b> if a property is not found, but provides
+ * implementations provided by this package, per default returns <strong>null</strong> if a property is not found, but provides
  * the {@link AbstractConfiguration#setThrowExceptionOnMissing(boolean) setThrowExceptionOnMissing()} method, with which
  * it can be configured to throw a {@code NoSuchElementException} exception in that case. (Note that getter methods for
  * primitive types in {@code AbstractConfiguration} always throw an exception for missing properties because there is no
@@ -93,7 +93,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * Gets the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
      * for variable substitution.
      *
-     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
+     * @return the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     ConfigurationInterpolator getInterpolator();
 
@@ -105,8 +105,8 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * to the {@link #setInterpolator(ConfigurationInterpolator)} method which sets the passed in object as is without
      * adding this special lookup.
      *
-     * @param prefixLookups the map with {@code Lookup} objects associated with specific prefixes (can be <b>null</b>)
-     * @param defLookups a collection with default {@code Lookup} objects (can be <b>null</b>)
+     * @param prefixLookups the map with {@code Lookup} objects associated with specific prefixes (can be <strong>null</strong>)
+     * @param defLookups a collection with default {@code Lookup} objects (can be <strong>null</strong>)
      * @see ConfigurationInterpolator
      */
     void installInterpolator(Map<String, ? extends Lookup> prefixLookups, Collection<? extends Lookup> defLookups);
@@ -114,7 +114,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
     /**
      * Sets the {@code ConfigurationInterpolator} object to be used by this {@code Configuration}. This object is invoked
      * for each access of a string property in order to substitute variables which may be contained. The argument can be
-     * <b>null</b> to disable interpolation at all.
+     * <strong>null</strong> to disable interpolation at all.
      *
      * @param ci the new {@code ConfigurationInterpolator}
      */

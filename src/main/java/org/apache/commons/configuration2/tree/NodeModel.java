@@ -46,7 +46,7 @@ public interface NodeModel<T> {
      * given key.
      *
      * @param key the key
-     * @param nodes the collection of nodes to be added (may be <b>null</b>)
+     * @param nodes the collection of nodes to be added (may be <strong>null</strong>)
      * @param resolver the {@code NodeKeyResolver}
      * @throws IllegalArgumentException if the key references an attribute (of course, it is not possible to add something
      *         to an attribute)
@@ -73,7 +73,7 @@ public interface NodeModel<T> {
 
     /**
      * Clears the value of a property. This method is similar to {@link #clearTree(String, NodeKeyResolver)}: However, the
-     * nodes referenced by the passed in key are not removed completely, but only their value is set to <b>null</b>.
+     * nodes referenced by the passed in key are not removed completely, but only their value is set to <strong>null</strong>.
      *
      * @param key the key selecting the properties to be cleared
      * @param resolver the {@code NodeKeyResolver}
@@ -124,7 +124,7 @@ public interface NodeModel<T> {
     /**
      * Sets a new root node for this model. The whole structure is replaced by the new node and its children.
      *
-     * @param newRoot the new root node to be set (can be <b>null</b>, then an empty root node is set)
+     * @param newRoot the new root node to be set (can be <strong>null</strong>, then an empty root node is set)
      */
     void setRootNode(T newRoot);
 }

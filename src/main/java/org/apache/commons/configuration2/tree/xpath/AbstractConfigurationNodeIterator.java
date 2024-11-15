@@ -45,7 +45,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Generates a qualified name with a namespace prefix.
      *
      * @param prefix the prefix
-     * @param name the name (may be <b>null</b>)
+     * @param name the name (may be <strong>null</strong>)
      * @return the qualified name
      */
     protected static String prefixName(final String prefix, final String name) {

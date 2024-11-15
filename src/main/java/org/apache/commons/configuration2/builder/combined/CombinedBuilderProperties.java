@@ -72,8 +72,8 @@ public interface CombinedBuilderProperties<T> {
      * Registers the given {@code ConfigurationBuilderProvider} for the specified tag name. This means that whenever this
      * tag is encountered in a configuration definition file, the corresponding builder provider is invoked.
      *
-     * @param tagName the name of the tag (must not be <b>null</b>)
-     * @param provider the {@code ConfigurationBuilderProvider} (must not be <b>null</b>)
+     * @param tagName the name of the tag (must not be <strong>null</strong>)
+     * @param provider the {@code ConfigurationBuilderProvider} (must not be <strong>null</strong>)
      * @return a reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */
@@ -127,7 +127,7 @@ public interface CombinedBuilderProperties<T> {
     /**
      * Sets a flag whether the child configurations created by a {@code CombinedConfigurationBuilder} should inherit the
      * settings defined for the builder. This is typically useful because for configurations coming from homogeneous sources
-     * often similar conventions are used. Therefore, this flag is <b>true</b> per default.
+     * often similar conventions are used. Therefore, this flag is <strong>true</strong> per default.
      *
      * @param f the flag whether settings should be inherited by child configurations
      * @return a reference to this object for method chaining

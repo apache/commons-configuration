@@ -43,13 +43,13 @@ public interface ReloadingDetector {
      * Checks whether all criteria for a reload operation are fulfilled. This method is called by external components to
      * find out when reloading should take place.
      *
-     * @return <b>true</b> if a reload operation should be performed, <b>false</b> otherwise
+     * @return <strong>true</strong> if a reload operation should be performed, <strong>false</strong> otherwise
      */
     boolean isReloadingRequired();
 
     /**
      * Notifies this object that a reload operation has been performed. This method is called after
-     * {@code reloadingRequired()} has returned <b>true</b>. It can be used to reset internal state in order to detect the
+     * {@code reloadingRequired()} has returned <strong>true</strong>. It can be used to reset internal state in order to detect the
      * next reload operation.
      */
     void reloadingPerformed();

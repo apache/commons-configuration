@@ -48,7 +48,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * node, the new nodes are added to this node. Otherwise a new node will be created at the specified position in the
      * hierarchy.
      *
-     * @param key the key where the nodes are to be added; can be <b>null </b>, then they are added to the root node
+     * @param key the key where the nodes are to be added; can be <strong>null </strong>, then they are added to the root node
      * @param nodes a collection with the {@code Node} objects to be added
      */
     void addNodes(String key, Collection<? extends T> nodes);
@@ -85,7 +85,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
     /**
      * Returns a hierarchical subnode configuration for the node specified by the given key. This is a short form for
      * {@code configurationAt(key,
-     * <b>false</b>)}.
+     * <strong>false</strong>)}.
      *
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree
@@ -108,8 +108,8 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * </p>
      * <p>
      * With the {@code supportUpdate} flag the behavior of the returned sub configuration regarding updates of its parent
-     * configuration can be determined. If set to <b>false</b>, the configurations return on independent nodes structures.
-     * So changes made on one configuration cannot be seen by the other one. A value of <b>true</b> in contrast creates a
+     * configuration can be determined. If set to <strong>false</strong>, the configurations return on independent nodes structures.
+     * So changes made on one configuration cannot be seen by the other one. A value of <strong>true</strong> in contrast creates a
      * direct connection between both configurations - they are then using the same underlying data structures as much as
      * possible. There are however changes which break this connection; for instance, if the sub tree the sub configuration
      * belongs to is completely removed from the parent configuration. If such a change happens, the sub configuration
@@ -169,7 +169,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
      * will be interpreted by this engine.
      *
-     * @param expressionEngine the new expression engine; can be <b>null</b>, then the default expression engine will be
+     * @param expressionEngine the new expression engine; can be <strong>null</strong>, then the default expression engine will be
      *        used
      */
     void setExpressionEngine(ExpressionEngine expressionEngine);

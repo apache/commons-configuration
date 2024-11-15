@@ -51,7 +51,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
-     * <b>null</b>, then a default factory will be used.
+     * <strong>null</strong>, then a default factory will be used.
      *
      * @return the name of the bean factory
      */
@@ -68,7 +68,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a map with properties that should be initialized on the newly created bean. The map's keys are the names of
-     * the properties; the corresponding values are the properties' values. The return value can be <b>null</b> if no
+     * the properties; the corresponding values are the properties' values. The return value can be <strong>null</strong> if no
      * properties should be set.
      *
      * @return a map with properties to be initialized
@@ -77,7 +77,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a collection with constructor arguments. This data is used to determine the constructor of the bean class to
-     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <b>null</b> or an
+     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <strong>null</strong> or an
      * empty collection; then the standard constructor of the bean class is called.
      *
      * @return a collection with the arguments to be passed to the bean class's constructor

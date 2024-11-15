@@ -80,7 +80,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} with a default executor service.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <b>null</b>)
+     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
      * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
      * @param triggerPeriod the period in which the controller is triggered
      * @param unit the time unit for the period
@@ -93,11 +93,11 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} and sets all parameters.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <b>null</b>)
+     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
      * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
      * @param triggerPeriod the period in which the controller is triggered
      * @param unit the time unit for the period
-     * @param exec the executor service to use (can be <b>null</b>, then a default executor service is created
+     * @param exec the executor service to use (can be <strong>null</strong>, then a default executor service is created
      * @throws IllegalArgumentException if a required argument is missing
      */
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit,
@@ -152,7 +152,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Shuts down this trigger and optionally shuts down the {@code ScheduledExecutorService} used by this object. This
      * method should be called if this trigger is no more needed. It ensures that the trigger is stopped. If the parameter
-     * is <b>true</b>, the executor service is also shut down. This should be done if this trigger is the only user of this
+     * is <strong>true</strong>, the executor service is also shut down. This should be done if this trigger is the only user of this
      * executor service.
      *
      * @param shutdownExecutor a flag whether the associated {@code ScheduledExecutorService} is to be shut down

@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
  */
 abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode> {
     /**
-     * Checks if the passed in node is defined. Result is <b>true</b> if the node contains any data.
+     * Checks if the passed in node is defined. Result is <strong>true</strong> if the node contains any data.
      *
      * @param node the node in question
-     * @return <b>true</b> if the node is defined, <b>false</b> otherwise
+     * @return <strong>true</strong> if the node is defined, <strong>false</strong> otherwise
      */
     static boolean checkIfNodeDefined(final ImmutableNode node) {
         return node.getValue() != null || !node.getChildren().isEmpty() || !node.getAttributes().isEmpty();

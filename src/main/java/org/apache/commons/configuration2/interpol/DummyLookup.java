@@ -21,7 +21,7 @@ package org.apache.commons.configuration2.interpol;
  * A simple dummy {@code Lookup} implementation.
  * </p>
  * <p>
- * This implementation always returns <b>null</b> for a passed in variable indicating that it cannot resolve that
+ * This implementation always returns <strong>null</strong> for a passed in variable indicating that it cannot resolve that
  * variable. This is useful for instance as an application of the <em>null object</em> pattern.
  * </p>
  * <p>
@@ -36,7 +36,7 @@ public enum DummyLookup implements Lookup {
     INSTANCE;
 
     /**
-     * {@inheritDoc} This implementation always returns <b>null</b>.
+     * {@inheritDoc} This implementation always returns <strong>null</strong>.
      */
     @Override
     public Object lookup(final String variable) {

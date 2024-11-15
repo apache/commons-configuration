@@ -69,7 +69,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     static final ListDelimiterHandler LIST_DELIMITER_HANDLER = DisabledListDelimiterHandler.INSTANCE;
 
     /**
-     * Obtains a {@code ConfigurationInterpolator}. If the passed in one is not <b>null</b>, it is used. Otherwise, a
+     * Obtains a {@code ConfigurationInterpolator}. If the passed in one is not <strong>null</strong>, it is used. Otherwise, a
      * default one is returned.
      *
      * @param ci the {@code ConfigurationInterpolator} provided by the caller
@@ -89,7 +89,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * Performs the conversion from the passed in source object to the specified target class. This method is called for
      * each conversion to be done. The source object has already been passed to the {@link ConfigurationInterpolator}, so
      * interpolation does not have to be done again. (The passed in {@code ConfigurationInterpolator} may still be necessary
-     * for extracting values from complex objects; it is guaranteed to be non <b>null</b>.) The source object may be a
+     * for extracting values from complex objects; it is guaranteed to be non <strong>null</strong>.) The source object may be a
      * complex object, e.g. a collection or an array. This base implementation checks whether the source object is complex.
      * If so, it delegates to {@link #extractConversionValue(Object, Class, ConfigurationInterpolator)} to obtain a single
      * value. Eventually, {@link #convertValue(Object, Class, ConfigurationInterpolator)} is called with the single value to
@@ -98,7 +98,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param <T> the desired target type of the conversion
      * @param src the source object to be converted
      * @param targetCls the desired target class
-     * @param ci the {@code ConfigurationInterpolator} (not <b>null</b>)
+     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
      * @return the converted value
      * @throws ConversionException if conversion is not possible
      */
@@ -123,13 +123,13 @@ public class DefaultConversionHandler implements ConversionHandler {
 
     /**
      * Performs a conversion of a single value to the specified target class. The passed in source object is guaranteed to
-     * be a single value, but it can be <b>null</b>. Derived classes that want to extend the available conversions, but are
+     * be a single value, but it can be <strong>null</strong>. Derived classes that want to extend the available conversions, but are
      * happy with the handling of complex objects, just need to override this method.
      *
      * @param <T> the desired target type of the conversion
      * @param src the source object (a single value)
      * @param targetCls the target class of the conversion
-     * @param ci the {@code ConfigurationInterpolator} (not <b>null</b>)
+     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
      * @return the converted value
      * @throws ConversionException if conversion is not possible
      */
@@ -151,8 +151,8 @@ public class DefaultConversionHandler implements ConversionHandler {
      *
      * @param container the complex object
      * @param targetCls the target class of the conversion
-     * @param ci the {@code ConfigurationInterpolator} (not <b>null</b>)
-     * @return the value to be converted (may be <b>null</b> if no values are found)
+     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
+     * @return the value to be converted (may be <strong>null</strong> if no values are found)
      */
     protected Object extractConversionValue(final Object container, final Class<?> targetCls, final ConfigurationInterpolator ci) {
         final Collection<?> values = extractValues(container, 1);
@@ -212,7 +212,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * </ul>
      *
      * @param src the source object
-     * @return <b>true</b> if this is a complex object, <b>false</b> otherwise
+     * @return <strong>true</strong> if this is a complex object, <strong>false</strong> otherwise
      */
     protected boolean isComplexObject(final Object src) {
         return src instanceof Iterator<?> || src instanceof Iterable<?> || src != null && src.getClass().isArray();
@@ -220,8 +220,8 @@ public class DefaultConversionHandler implements ConversionHandler {
 
     /**
      * Tests whether the passed in object represents an empty element. This method is called by conversion methods to arrays
-     * or collections. If it returns <b>true</b>, the resulting array or collection will be empty. This implementation
-     * returns <b>true</b> if and only if the passed in object is an empty string. With this method it can be controlled if
+     * or collections. If it returns <strong>true</strong>, the resulting array or collection will be empty. This implementation
+     * returns <strong>true</strong> if and only if the passed in object is an empty string. With this method it can be controlled if
      * and how empty elements in configurations are handled.
      *
      * @param src the object to be tested
@@ -263,7 +263,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * {@inheritDoc} This implementation extracts all values stored in the passed in source object, converts them to the
      * target type, and adds them to a result array. Arrays of objects and of primitive types are supported. If the source
-     * object is <b>null</b>, result is <b>null</b>, too.
+     * object is <strong>null</strong>, result is <strong>null</strong>, too.
      */
     @Override
     public Object toArray(final Object src, final Class<?> elemClass, final ConfigurationInterpolator ci) {
@@ -280,10 +280,10 @@ public class DefaultConversionHandler implements ConversionHandler {
 
     /**
      * {@inheritDoc} This implementation extracts all values stored in the passed in source object, converts them to the
-     * target type, and adds them to the target collection. The target collection must not be <b>null</b>. If the source
-     * object is <b>null</b>, nothing is added to the collection.
+     * target type, and adds them to the target collection. The target collection must not be <strong>null</strong>. If the source
+     * object is <strong>null</strong>, nothing is added to the collection.
      *
-     * @throws IllegalArgumentException if the target collection is <b>null</b>
+     * @throws IllegalArgumentException if the target collection is <strong>null</strong>
      */
     @Override
     public <T> void toCollection(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci, final Collection<T> dest) {

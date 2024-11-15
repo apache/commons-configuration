@@ -25,7 +25,7 @@ public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<Configu
     /**
      * Creates a new instance of {@code ErrorListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<b>null</b> if the source need not to be checked)
+     * @param source the event source (<strong>null</strong> if the source need not to be checked)
      */
     public ErrorListenerTestImpl(final Object source) {
         super(source);

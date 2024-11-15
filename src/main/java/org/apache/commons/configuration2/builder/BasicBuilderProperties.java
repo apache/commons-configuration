@@ -106,7 +106,7 @@ public interface BasicBuilderProperties<T> {
      * Sets the value of the <em>listDelimiterHandler</em> property. This property defines the object responsible for
      * dealing with list delimiter and escaping characters. Note:
      * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration} does not allow setting this
-     * property to <b>null</b>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
+     * property to <strong>null</strong>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
      *
      * @param handler the {@code ListDelimiterHandler}
      * @return a reference to this object for method chaining
@@ -150,7 +150,7 @@ public interface BasicBuilderProperties<T> {
      * instance against concurrent access. The concrete {@code Synchronizer} implementation used determines whether a
      * configuration instance is thread-safe or not.
      *
-     * @param sync the {@code Synchronizer} to be used (a value of <b>null</b> means that a default {@code Synchronizer} is
+     * @param sync the {@code Synchronizer} to be used (a value of <strong>null</strong> means that a default {@code Synchronizer} is
      *        used)
      * @return a reference to this object for method chaining
      */
@@ -158,8 +158,8 @@ public interface BasicBuilderProperties<T> {
 
     /**
      * Sets the value of the <em>throwExceptionOnMissing</em> property. This property controls the configuration's behavior
-     * if missing properties are queried: a value of <b>true</b> causes the configuration to throw an exception, for a value
-     * of <b>false</b> it will return <b>null</b> values. (Note: Methods returning a primitive data type will always throw
+     * if missing properties are queried: a value of <strong>true</strong> causes the configuration to throw an exception, for a value
+     * of <strong>false</strong> it will return <strong>null</strong> values. (Note: Methods returning a primitive data type will always throw
      * an exception if the property is not defined.)
      *
      * @param b the value of the property
