@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -42,6 +41,7 @@ import org.apache.commons.configuration2.tree.NodeTreeWalker;
 import org.apache.commons.configuration2.tree.QueryResult;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
 import org.apache.commons.configuration2.tree.TrackedNodeModel;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * <p>
@@ -292,7 +292,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @return a flag whether the value was changed
          */
         private boolean valueChanged(final Object interpolatedValue, final Object value) {
-            return !Objects.equals(interpolatedValue, value);
+            return ObjectUtils.notEqual(interpolatedValue, value);
         }
 
         @Override

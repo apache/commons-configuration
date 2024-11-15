@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -410,7 +411,7 @@ public final class FileLocatorUtils {
      * @return the {@code FileSystem} to be used for this {@code FileLocator}
      */
     static FileSystem getFileSystem(final FileLocator locator) {
-        return locator == null || locator.getFileSystem() == null ? DEFAULT_FILE_SYSTEM : locator.getFileSystem();
+        return locator != null ? ObjectUtils.defaultIfNull(locator.getFileSystem(), DEFAULT_FILE_SYSTEM) : DEFAULT_FILE_SYSTEM;
     }
 
     /**
@@ -422,7 +423,7 @@ public final class FileLocatorUtils {
      * @return the {@code FileLocationStrategy} for this {@code FileLocator}
      */
     static FileLocationStrategy getLocationStrategy(final FileLocator locator) {
-        return locator == null || locator.getLocationStrategy() == null ? DEFAULT_LOCATION_STRATEGY : locator.getLocationStrategy();
+        return locator != null ? ObjectUtils.defaultIfNull(locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY) : DEFAULT_LOCATION_STRATEGY;
     }
 
     /**
