@@ -49,6 +49,7 @@
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
       org.apache.commons.beanutils.*;resolution:=optional,
+      org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
       javax.servlet.*;resolution:=optional,
@@ -137,6 +138,13 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.9.4</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.17.1</version>
       <optional>true</optional>
     </dependency>
 
