@@ -58,7 +58,6 @@ public interface ImmutableConfiguration {
      * Checks if the configuration contains the specified key.
      *
      * @param key the key whose presence in this configuration is to be tested
-     *
      * @return {@code true} if the configuration contains a value for this key, {@code false} otherwise
      */
     boolean containsKey(String key);
@@ -106,9 +105,7 @@ public interface ImmutableConfiguration {
      * @param cls the target class of the value
      * @param key the key of the value
      * @param defaultValue the default value
-     *
      * @return the value of the requested type for the key
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the requested
      *         type
      *
@@ -123,7 +120,6 @@ public interface ImmutableConfiguration {
      * @param cls the type expected for the elements of the array
      * @param key The configuration key.
      * @return The associated array if the key is found, and the value compatible with the type specified.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with a list of the specified class.
      *
@@ -139,11 +135,9 @@ public interface ImmutableConfiguration {
      * @param key the configuration key.
      * @param defaultValue the default value
      * @return The associated array if the key is found, and the value compatible with the type specified.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with an array of the specified class.
      * @throws IllegalArgumentException if the default value is not an array of the specified type
-     *
      * @since 2.0
      * @deprecated This method should not be used any more because its signature does not allow type-safe invocations; use
      *             {@link #get(Class, String, Object)} instead which offers the same functionality; for instance, to query
@@ -166,7 +160,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     *
      * @return The associated BigDecimal if key is found and has valid format, default value otherwise.
      */
     BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
@@ -175,7 +168,6 @@ public interface ImmutableConfiguration {
      * Gets a {@link BigInteger} associated with the given configuration key.
      *
      * @param key The configuration key.
-     *
      * @return The associated BigInteger if key is found and has valid format
      */
     BigInteger getBigInteger(String key);
@@ -186,7 +178,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     *
      * @return The associated BigInteger if key is found and has valid format, default value otherwise.
      */
     BigInteger getBigInteger(String key, BigInteger defaultValue);
@@ -394,7 +385,6 @@ public interface ImmutableConfiguration {
      * @param enumType the {@code Class} object of the enum type from which to return a constant
      * @param key The configuration key.
      * @return The associated enum.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String.
      * @since 2.8.0
@@ -416,7 +406,6 @@ public interface ImmutableConfiguration {
      * @param enumType the {@code Class} object of the enum type from which to return a constant
      * @param defaultValue The default value.
      * @return The associated enum if key is found and has valid format, default value otherwise.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Enum.
      * @since 2.8.0
@@ -555,7 +544,6 @@ public interface ImmutableConfiguration {
      * @param cls the class expected for the elements of the list
      * @param key The configuration key.
      * @return The associated list if the key is found.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with a list of the specified class.
      *
@@ -575,7 +563,6 @@ public interface ImmutableConfiguration {
      * @param key the configuration key.
      * @param defaultValue the default value.
      * @return The associated List.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with a list of the specified class.
      *
@@ -592,7 +579,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @return The associated List.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         List.
      */
@@ -605,7 +591,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of strings.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         List.
      * @see #getList(Class, String, List)
@@ -629,7 +614,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated long.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Long.
      */
@@ -642,7 +626,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated long if key is found and has valid format, default value otherwise.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Long.
      */
@@ -681,7 +664,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @return The associated short.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Short.
      */
@@ -693,7 +675,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated short.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Short.
      */
@@ -706,7 +687,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated short if key is found and has valid format, default value otherwise.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Short.
      */
@@ -717,7 +697,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @return The associated string.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String.
      */
@@ -730,7 +709,6 @@ public interface ImmutableConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated string if key is found and has valid format, default value otherwise.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String.
      */
@@ -742,7 +720,6 @@ public interface ImmutableConfiguration {
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String/List of Strings.
      */

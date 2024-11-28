@@ -1032,11 +1032,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key The configuration key.
      * @param defaults Any default values for the returned {@code Properties} object. Ignored if {@code null}.
-     *
      * @return The associated properties if key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a String/List of Strings.
-     *
      * @throws IllegalArgumentException if one of the tokens is malformed (does not contain an equals sign).
      */
     public Properties getProperties(final String key, final Properties defaults) {
@@ -1125,7 +1122,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a String/List of Strings.
      * @see #setListDelimiterHandler(ListDelimiterHandler)
      */
@@ -1204,7 +1200,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate
-     *
      * @return returns the key name with the ${key} substituted
      */
     protected String interpolate(final String base) {

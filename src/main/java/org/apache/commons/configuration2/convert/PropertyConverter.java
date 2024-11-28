@@ -413,7 +413,6 @@ public final class PropertyConverter {
      * @param cls the type of the enumeration
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an enumeration
-     *
      * @since 1.5
      */
     static <E extends Enum<E>> E toEnum(final Object value, final Class<E> cls) throws ConversionException {
@@ -480,7 +479,6 @@ public final class PropertyConverter {
      * @param value the value to convert
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a InetAddress
-     *
      * @since 1.5
      */
     static InetAddress toInetAddress(final Object value) throws ConversionException {
@@ -520,7 +518,6 @@ public final class PropertyConverter {
      *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an email address
-     *
      * @since 1.5
      */
     static Object toInternetAddress(final Object value, final String targetClassName) throws ConversionException {

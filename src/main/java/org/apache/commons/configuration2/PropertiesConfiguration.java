@@ -648,7 +648,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@code &lt;value&gt;})
          *
          * @return A string containing a property value or null
-         *
          * @throws IOException in case of an I/O error
          */
         public String readProperty() throws IOException {
@@ -916,7 +915,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key The key of the property
          * @param values The array of values of the property
-         *
          * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final List<?> values) throws IOException {
@@ -930,7 +928,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key the key of the property
          * @param value the value of the property
-         *
          * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final Object value) throws IOException {

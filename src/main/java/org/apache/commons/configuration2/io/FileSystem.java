@@ -56,7 +56,6 @@ public abstract class FileSystem {
      * @param urlConnectionOptions Ignored.
      * @return TODO
      * @throws ConfigurationException TODO
-     *
      * @since 2.8.0
      */
     public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException {

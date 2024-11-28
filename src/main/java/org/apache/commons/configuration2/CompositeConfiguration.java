@@ -383,7 +383,6 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Read property from underlying composite
      *
      * @param key key to use for mapping
-     *
      * @return object associated with the given configuration key.
      */
     @Override

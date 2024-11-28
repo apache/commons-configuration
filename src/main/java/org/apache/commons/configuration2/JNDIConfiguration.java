@@ -91,7 +91,6 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * properties.
      *
      * @param prefix the prefix
-     *
      * @throws NamingException thrown if an error occurs when initializing the default context
      */
     public JNDIConfiguration(final String prefix) throws NamingException {
