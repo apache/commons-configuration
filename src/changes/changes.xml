@@ -45,7 +45,8 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.2 to 2.3 #473.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.23.1 to 2.24.2 #475, #486, #514.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-io:commons-io from 2.16.1 to 2.18.0 #480, #513.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-dbcp2 from 2.12.0 to 2.13.0 #515.</action> 
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-dbcp2 from 2.12.0 to 2.13.0 #515.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-text from 1.12.0 to 1.13.0 #521.</action> 
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
