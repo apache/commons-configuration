@@ -59,7 +59,7 @@ import org.apache.commons.lang3.StringUtils;
  * <p>
  * The big advantage of this class is that it creates a truly hierarchical structure of all the properties stored in the
  * contained configurations - even if some of them are no hierarchical configurations per se. So all enhanced features
- * provided by a hierarchical configuration (e.g. choosing an expression engine) are applicable.
+ * provided by a hierarchical configuration (for example choosing an expression engine) are applicable.
  * </p>
  * <p>
  * The class works by registering itself as an event listener at all added configurations. So it gets notified whenever

@@ -59,7 +59,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * longer overlapping nodes, there is no way to have a synchronization here).
  * </p>
  * <p>
- * When a subnode configuration is created, it inherits the settings of its parent configuration, e.g. some flags like
+ * When a subnode configuration is created, it inherits the settings of its parent configuration, for example some flags like
  * the {@code throwExceptionOnMissing} flag or the settings for handling list delimiters) or the expression engine. If
  * these settings are changed later in either the subnode or the parent configuration, the changes are not visible for
  * each other. So you could create a subnode configuration, and change its expression engine without affecting the

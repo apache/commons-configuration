@@ -265,7 +265,7 @@ final class NodeTracker {
 
     /**
      * Marks all tracked nodes as detached. This method is called if there are some drastic changes on the underlying node
-     * structure, e.g. if the root node was replaced.
+     * structure, for example if the root node was replaced.
      *
      * @return the updated instance
      */

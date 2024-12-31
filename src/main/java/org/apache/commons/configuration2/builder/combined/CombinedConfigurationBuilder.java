@@ -152,7 +152,7 @@ import org.xml.sax.EntityResolver;
  * </p>
  * <p>
  * The default configuration object returned by this builder is an instance of the {@link CombinedConfiguration} class.
- * This allows for convenient access to the configuration objects maintained by the combined configuration (e.g. for
+ * This allows for convenient access to the configuration objects maintained by the combined configuration (for example for
  * updates of single configuration objects). It has also the advantage that the properties stored in all declared
  * configuration objects are collected and transformed into a single hierarchical structure, which can be accessed using
  * different expression engines. The actual {@code CombinedConfiguration} implementation can be overridden by specifying
@@ -847,7 +847,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * Gets the configuration object that is currently constructed. This method can be called during construction of the
-     * result configuration. It is intended for internal usage, e.g. some specialized builder providers need access to this
+     * result configuration. It is intended for internal usage, for example some specialized builder providers need access to this
      * configuration to perform advanced initialization.
      *
      * @return the configuration that us currently under construction
@@ -959,7 +959,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * Initializes a parameters object for a child builder. This combined configuration builder has a bunch of properties
-     * which may be inherited by child configurations, e.g. the base path, the file system, etc. While processing the
+     * which may be inherited by child configurations, for example the base path, the file system, etc. While processing the
      * builders for child configurations, this method is called for each parameters object for a child builder. It
      * initializes some properties of the passed in parameters objects which are derived from this parent builder.
      *

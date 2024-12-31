@@ -74,7 +74,7 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * they contain a list delimiter character. If this is the case and if list splitting is enabled, the string is split
  * and multiple values are added for this property. List splitting is controlled by a {@link ListDelimiterHandler}
  * object which can be set using the {@link #setListDelimiterHandler(ListDelimiterHandler)} method. It is disabled per
- * default. To enable this feature, set a suitable {@code ListDelimiterHandler}, e.g. an instance of
+ * default. To enable this feature, set a suitable {@code ListDelimiterHandler}, for example an instance of
  * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler DefaultListDelimiterHandler} configured
  * with the desired list delimiter character.</li>
  * <li>Allows specifying how missing properties are treated. Per default the get methods returning an object will return
@@ -87,7 +87,7 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * </ul>
  * <p>
  * Most methods defined by the {@code Configuration} interface are already implemented in this class. Many method
- * implementations perform basic book-keeping tasks (e.g. firing events, handling synchronization), and then delegate to
+ * implementations perform basic book-keeping tasks (for example firing events, handling synchronization), and then delegate to
  * other (protected) methods executing the actual work. Subclasses override these protected methods to define or adapt
  * behavior. The public entry point methods are final to prevent subclasses from breaking basic functionality.
  * </p>
@@ -217,7 +217,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Adds a special {@link EventListener} object to this configuration that will log all internal errors. This method is
-     * intended to be used by certain derived classes, for which it is known that they can fail on property access (e.g.
+     * intended to be used by certain derived classes, for which it is known that they can fail on property access (for example
      * {@code DatabaseConfiguration}).
      *
      * @since 1.4
@@ -1305,7 +1305,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Sets the {@code ConversionHandler} to be used by this instance. The {@code ConversionHandler} is responsible for
      * every kind of data type conversion. It is consulted by all get methods returning results in specific data types. A
      * newly created configuration uses a default {@code ConversionHandler} implementation. This can be changed while
-     * initializing the configuration (e.g. via a builder). Note that access to this property is not synchronized.
+     * initializing the configuration (for example via a builder). Note that access to this property is not synchronized.
      *
      * @param conversionHandler the {@code ConversionHandler} to be used (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the {@code ConversionHandler} is <strong>null</strong>

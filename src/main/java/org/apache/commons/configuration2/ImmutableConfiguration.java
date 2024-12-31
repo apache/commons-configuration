@@ -266,7 +266,7 @@ public interface ImmutableConfiguration {
      * Gets a collection of typed objects associated with the given configuration key using the values in the specified
      * default collection if the key does not map to an existing object. This method is similar to {@code getList()},
      * however, it allows specifying a target collection. Results are added to this collection. This is useful if the data
-     * retrieved should be added to a specific kind of collection, e.g. a set to remove duplicates. The return value is as
+     * retrieved should be added to a specific kind of collection, for example a set to remove duplicates. The return value is as
      * follows:
      * <ul>
      * <li>If the key does not map to an existing object and the default value is <strong>null</strong>, the method returns

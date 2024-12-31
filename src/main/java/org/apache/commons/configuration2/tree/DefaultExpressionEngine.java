@@ -296,7 +296,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      *                    ...
      * </pre>
      * <p>
-     * In this example a database structure is defined, e.g. all fields of the first table could be accessed using the key
+     * In this example a database structure is defined, for example all fields of the first table could be accessed using the key
      * {@code tables.table(0).fields.field.name}. If now properties are to be added, it must be exactly specified at which
      * position in the hierarchy the new property is to be inserted. So to add a new field name to a table it is not enough
      * to say just

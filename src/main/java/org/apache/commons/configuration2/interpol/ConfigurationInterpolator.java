@@ -196,7 +196,7 @@ public class ConfigurationInterpolator {
         }
 
         /** Attempt to extract a simple value from {@code obj} for use in string conversion.
-         * If the input represents a collection of some sort (e.g., an iterable or array),
+         * If the input represents a collection of some sort (for example, an iterable or array),
          * the first item from the collection is returned.
          * @param obj input object
          * @return extracted simple object
@@ -304,8 +304,8 @@ public class ConfigurationInterpolator {
      *
      * <p>
      * All of the lookups present in the returned map are from {@link DefaultLookups}. However, not all of the
-     * available lookups are included by default. Specifically, lookups that can execute code (e.g.,
-     * {@link DefaultLookups#SCRIPT SCRIPT}) and those that can result in contact with remote servers (e.g.,
+     * available lookups are included by default. Specifically, lookups that can execute code (for example,
+     * {@link DefaultLookups#SCRIPT SCRIPT}) and those that can result in contact with remote servers (for example,
      * {@link DefaultLookups#URL URL} and {@link DefaultLookups#DNS DNS}) are not included. If this behavior
      * must be modified, users can define the {@value #DEFAULT_PREFIX_LOOKUPS_PROPERTY} system property
      * with a comma-separated list of {@link DefaultLookups} enum names to be included in the set of defaults.
@@ -600,7 +600,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Checks whether a value to be interpolated consists of single, simple variable reference, e.g.,
+     * Checks whether a value to be interpolated consists of single, simple variable reference, for example,
      * <code>${myvar}</code>. In this case, the variable is resolved directly without using the
      * {@code StringSubstitutor}.
      *

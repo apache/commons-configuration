@@ -30,7 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * </p>
  * <p>
  * An instance of this class is initialized with the key of a node. It is also possible to concatenate multiple keys -
- * e.g. if a sub key is to be constructed from another sub key. {@code NodeSelector} provides the {@code select()}
+ * for example if a sub key is to be constructed from another sub key. {@code NodeSelector} provides the {@code select()}
  * method which evaluates the wrapped keys on a specified root node and returns the resulting unique target node. The
  * class expects that the key(s) stored in an instance select exactly one target node. If this is not the case, result
  * is <strong>null</strong> indicating that the selection criteria are not sufficient.

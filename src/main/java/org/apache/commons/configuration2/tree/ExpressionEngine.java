@@ -25,7 +25,7 @@ import java.util.List;
  * <p>
  * An <em>expression engine</em> knows how to map a key for a configuration's property to a single or a set of
  * configuration nodes. Thus it defines the way how properties are addressed in this configuration. Methods of a
- * configuration that have to handle property keys (e.g. {@code getProperty()} or {@code addProperty()} do not interpret
+ * configuration that have to handle property keys (for example {@code getProperty()} or {@code addProperty()} do not interpret
  * the passed in keys on their own, but delegate this task to an associated expression engine. This expression engine
  * will then find out, which configuration nodes are addressed by the key.
  * </p>
@@ -69,7 +69,7 @@ public interface ExpressionEngine {
 
     /**
      * Returns the key for the specified node in the expression language supported by an implementation. This method is
-     * called whenever a property key for a node has to be constructed, e.g. by the
+     * called whenever a property key for a node has to be constructed, for example by the
      * {@link org.apache.commons.configuration2.Configuration#getKeys() getKeys()} method.
      *
      * @param <T> the type of the node to be processed

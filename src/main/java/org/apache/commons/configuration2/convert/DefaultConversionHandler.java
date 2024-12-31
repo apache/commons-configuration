@@ -90,7 +90,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * each conversion to be done. The source object has already been passed to the {@link ConfigurationInterpolator}, so
      * interpolation does not have to be done again. (The passed in {@code ConfigurationInterpolator} may still be necessary
      * for extracting values from complex objects; it is guaranteed to be non <strong>null</strong>.) The source object may be a
-     * complex object, e.g. a collection or an array. This base implementation checks whether the source object is complex.
+     * complex object, for example a collection or an array. This base implementation checks whether the source object is complex.
      * If so, it delegates to {@link #extractConversionValue(Object, Class, ConfigurationInterpolator)} to obtain a single
      * value. Eventually, {@link #convertValue(Object, Class, ConfigurationInterpolator)} is called with the single value to
      * be converted.
@@ -171,7 +171,7 @@ public class DefaultConversionHandler implements ConversionHandler {
 
     /**
      * Extracts a maximum number of values contained in the given source object and returns them as flat collection. This
-     * method is useful if the caller only needs a subset of values, e.g. only the first one.
+     * method is useful if the caller only needs a subset of values, for example only the first one.
      *
      * @param source the source object (may be a single value or a complex object)
      * @param limit the number of elements to extract

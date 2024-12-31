@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@code InMemoryNodeModel}. The reason for using an {@code InMemoryNodeModelSupport} object rather than an
  * {@code InMemoryNodeModel} directly is that this additional layer of indirection can be used for performing special
  * initializations on the model before it is returned to the {@code TrackedNodeModel} object. This is needed by some
- * dynamic configuration implementations, e.g. by {@code CombinedConfiguration}.
+ * dynamic configuration implementations, for example by {@code CombinedConfiguration}.
  * </p>
  * <p>
  * If the tracked node acting as root node is exclusively used by this model, it should be released when this model is

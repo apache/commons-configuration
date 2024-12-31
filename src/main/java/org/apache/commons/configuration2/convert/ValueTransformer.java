@@ -23,7 +23,7 @@ package org.apache.commons.configuration2.convert;
  * </p>
  * <p>
  * Some {@code Configuration} implementations require a special encoding of their property values before they get
- * written on disk. In some constellations, e.g. when a property with multiple values is to be forced on a single line,
+ * written on disk. In some constellations, for example when a property with multiple values is to be forced on a single line,
  * this encoding has to be done together with the escaping of list delimiter characters - which is in the responsibility
  * of {@link ListDelimiterHandler}.
  * </p>

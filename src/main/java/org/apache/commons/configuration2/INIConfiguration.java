@@ -173,7 +173,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * This explains how the keys for the properties can be constructed. You can also use other methods of
  * {@link HierarchicalConfiguration} for querying or manipulating the hierarchy of configuration nodes, for instance the
  * {@code configurationAt()} method for obtaining the data of a specific section. However, be careful that the storage
- * scheme described above is not violated (e.g. by adding multiple levels of nodes or inserting duplicate section
+ * scheme described above is not violated (for example by adding multiple levels of nodes or inserting duplicate section
  * nodes). Otherwise, the special methods for ini configurations may not work correctly!
  * </p>
  * <p>
@@ -772,7 +772,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * </pre>
      *
      * Note that a comment character is only recognized if there is at least one whitespace character before it. So it can
-     * appear in the property value, e.g.:
+     * appear in the property value, for example:
      *
      * <pre>
      * C:\\Windows;C:\\Windows\\system32

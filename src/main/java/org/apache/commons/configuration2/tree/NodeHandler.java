@@ -158,7 +158,7 @@ public interface NodeHandler<T> {
     int indexOfChild(T parent, T child);
 
     /**
-     * Checks whether the specified node is defined. Nodes are &quot;defined&quot; if they contain any data, e.g. a value,
+     * Checks whether the specified node is defined. Nodes are &quot;defined&quot; if they contain any data, for example a value,
      * or attributes, or defined children.
      *
      * @param node the node to test

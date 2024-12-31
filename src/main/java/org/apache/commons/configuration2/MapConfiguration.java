@@ -45,8 +45,8 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * <p>
  * An important use case of this class is to treat a map as a {@code Configuration} allowing access to its data through
  * the richer interface. This can be a bit problematic in some cases because the map may contain values that need not
- * adhere to the default storage scheme used by typical configuration implementations, e.g. regarding lists. In such
- * cases care must be taken when manipulating the data through the {@code Configuration} interface, e.g. by calling
+ * adhere to the default storage scheme used by typical configuration implementations, for example regarding lists. In such
+ * cases care must be taken when manipulating the data through the {@code Configuration} interface, for example by calling
  * {@code addProperty()}; results may be different than expected.
  * </p>
  * <p>
@@ -54,7 +54,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * String is queried, it is passed to the current {@link org.apache.commons.configuration2.convert.ListDelimiterHandler
  * ListDelimiterHandler} which may generate multiple values. Note that per default a list delimiter handler is set which
  * does not do any list splitting, so this feature is disabled. It can be enabled by setting a properly configured
- * {@code ListDelimiterHandler} implementation, e.g. a
+ * {@code ListDelimiterHandler} implementation, for example a
  * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler DefaultListDelimiterHandler} object.
  * </p>
  * <p>

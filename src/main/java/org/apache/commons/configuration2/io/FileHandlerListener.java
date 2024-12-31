@@ -22,7 +22,7 @@ package org.apache.commons.configuration2.io;
  * </p>
  * <p>
  * Objects implementing this interface are notified when properties of a {@code FileHandler} change or when a load or
- * save operation is performed. This can be useful for various use cases, e.g. when monitoring file-based
+ * save operation is performed. This can be useful for various use cases, for example when monitoring file-based
  * configurations.
  * </p>
  *

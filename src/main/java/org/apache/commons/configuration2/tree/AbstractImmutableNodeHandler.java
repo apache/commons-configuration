@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * </p>
  * <p>
  * This class already implements all methods which need no other information than the passed in node object.
- * Functionality which requires additional state (e.g. querying the root node or a parent node) has to be added by
+ * Functionality which requires additional state (for example querying the root node or a parent node) has to be added by
  * concrete sub classes.
  * </p>
  *

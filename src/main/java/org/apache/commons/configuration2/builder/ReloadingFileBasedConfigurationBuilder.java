@@ -45,7 +45,7 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * </p>
  * <p>
  * This builder does not actively trigger the {@code ReloadingController} to perform a reload check. This has to be done
- * by an external component, e.g. a timer.
+ * by an external component, for example a timer.
  * </p>
  *
  * @since 2.0

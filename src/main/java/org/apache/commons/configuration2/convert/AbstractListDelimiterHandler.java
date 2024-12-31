@@ -125,7 +125,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * contained elements are added to the resulting iteration.</li>
      * <li>Arrays are treated as {@code Iterable} objects.</li>
      * <li>All other types are directly inserted.</li>
-     * <li>Recursive combinations are supported, e.g. a collection containing an array that contains strings: The resulting
+     * <li>Recursive combinations are supported, for example a collection containing an array that contains strings: The resulting
      * collection will only contain primitive objects.</li>
      * </ul>
      */

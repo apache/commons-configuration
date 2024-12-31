@@ -82,7 +82,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -101,7 +101,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -253,7 +253,7 @@ public final class ConfigurationUtils {
      * Converts the passed in {@code Configuration} object to a hierarchical one using the specified
      * {@code ExpressionEngine}. This conversion works by adding the keys found in the configuration to a newly created
      * hierarchical configuration. When adding new keys to a hierarchical configuration the keys are interpreted by its
-     * {@code ExpressionEngine}. If they contain special characters (e.g. brackets) that are treated in a special way by the
+     * {@code ExpressionEngine}. If they contain special characters (for example brackets) that are treated in a special way by the
      * default expression engine, it may be necessary using a specific engine that can deal with such characters. Otherwise
      * <strong>null</strong> can be passed in for the {@code ExpressionEngine}; then the default expression engine is used. If the
      * passed in configuration is already hierarchical, it is directly returned. (However, the {@code ExpressionEngine} is
@@ -296,7 +296,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -315,7 +315,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -398,7 +398,7 @@ public final class ConfigurationUtils {
 
     /**
      * Enables runtime exceptions for the specified configuration object. This method can be used for configuration
-     * implementations that may face errors on normal property access, e.g. {@code DatabaseConfiguration} or
+     * implementations that may face errors on normal property access, for example {@code DatabaseConfiguration} or
      * {@code JNDIConfiguration}. Per default such errors are simply logged and then ignored. This implementation will
      * register a special {@link EventListener} that throws a runtime exception (namely a
      * {@code ConfigurationRuntimeException}) on each received error event.

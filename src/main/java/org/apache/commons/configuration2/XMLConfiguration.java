@@ -79,11 +79,11 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * Like other file based configuration classes this class maintains the name and path to the loaded configuration file.
  * These properties can be altered using several setter methods, but they are not modified by {@code save()} and
- * {@code load()} methods. If XML documents contain relative paths to other documents (e.g. to a DTD), these references
+ * {@code load()} methods. If XML documents contain relative paths to other documents (for example to a DTD), these references
  * are resolved based on the path set for this configuration.
  * </p>
  * <p>
- * By inheriting from {@link AbstractConfiguration} this class provides some extended functionality, e.g. interpolation
+ * By inheriting from {@link AbstractConfiguration} this class provides some extended functionality, for example interpolation
  * of property values. Like in {@link PropertiesConfiguration} property values can contain delimiter characters (the
  * comma ',' per default) and are then split into multiple values. This works for XML attributes and text content of
  * elements as well. The delimiter can be escaped by a backslash. As an example consider the following XML fragment:
@@ -103,7 +103,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * escaped, so that no splitting is performed.
  * </p>
  * <p>
- * The configuration API allows setting multiple values for a single attribute, e.g. something like the following is
+ * The configuration API allows setting multiple values for a single attribute, for example something like the following is
  * legal (assuming that the default expression engine is used):
  * </p>
  *

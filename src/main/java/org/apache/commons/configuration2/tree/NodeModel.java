@@ -28,7 +28,7 @@ import java.util.Collection;
  * </p>
  * <p>
  * The idea behind this interface is that concrete implementations can be used by hierarchical configurations. This
- * makes it possible to integrate various hierarchical structures with the API of a hierarchical configuration, e.g.
+ * makes it possible to integrate various hierarchical structures with the API of a hierarchical configuration, for example
  * configuration nodes stored in memory, JNDI contexts, or other structures. The configuration object interacts with the
  * underlying data structure via this interface. For more complex operations access to an {@link ExpressionEngine} may
  * be required in order to interpret the passed in keys. For these purposes a {@link NodeKeyResolver} has to be provided
@@ -93,7 +93,7 @@ public interface NodeModel<T> {
     /**
      * Gets a representation of the data stored in this model in form of a nodes hierarchy of {@code ImmutableNode}
      * objects. A concrete model implementation can use an arbitrary means to store its data. When a model's data is to be
-     * used together with other functionality of the <em>Configuration</em> library (e.g. when combining multiple
+     * used together with other functionality of the <em>Configuration</em> library (for example when combining multiple
      * configuration sources) it has to be transformed into a common format. This is done by this method.
      * {@code ImmutableNode} is a generic representation of a hierarchical structure. Thus, it should be possible to
      * generate a corresponding structure from arbitrary model data.

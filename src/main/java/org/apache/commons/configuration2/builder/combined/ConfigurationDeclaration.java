@@ -28,7 +28,7 @@ import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
  * <p>
  * Instances of this class are able to extract all information about a configuration source from the configuration
  * definition file. The declaration of a configuration source is very similar to a bean declaration processed by
- * {@code XMLBeanDeclaration}. There are very few differences, e.g. some reserved attributes like {@code optional} and
+ * {@code XMLBeanDeclaration}. There are very few differences, for example some reserved attributes like {@code optional} and
  * {@code at}, and the fact that a bean factory is never needed.
  * </p>
  *

@@ -54,7 +54,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * A specialized visitor base class that can be used for storing the tree of configuration nodes. The basic idea is that
      * each node can be associated with a reference object. This reference object has a concrete meaning in a derived class,
-     * e.g. an entry in a JNDI context or an XML element. When the configuration tree is set up, the {@code load()} method
+     * for example an entry in a JNDI context or an XML element. When the configuration tree is set up, the {@code load()} method
      * is responsible for setting the reference objects. When the configuration tree is later modified, new nodes do not
      * have a defined reference object. This visitor class processes all nodes and finds the ones without a defined
      * reference object. For those nodes the {@code insert()} method is called, which must be defined in concrete sub
@@ -663,7 +663,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Initializes properties of a sub configuration. A sub configuration inherits some settings from its parent, e.g. the
+     * Initializes properties of a sub configuration. A sub configuration inherits some settings from its parent, for example the
      * expression engine or the synchronizer. The corresponding values are copied by this method.
      *
      * @param sub the sub configuration to be initialized

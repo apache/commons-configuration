@@ -293,7 +293,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
 
     /**
      * {@inheritDoc} This implementation returns a copy of the internal parameters map with the values set so far.
-     * Collection structures (e.g. for lookup objects) are stored as defensive copies, so the original data cannot be
+     * Collection structures (for example for lookup objects) are stored as defensive copies, so the original data cannot be
      * modified.
      */
     @Override
@@ -316,7 +316,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * this method is to let a concrete implementation decide which properties can be inherited. Because parameters are
      * basically organized as a map it would be possible to simply copy over all properties from the source object. However,
      * this is not appropriate in all cases. For instance, some properties - like a {@code ConfigurationInterpolator} - are
-     * tightly connected to a configuration and cannot be reused in a different context. For other properties, e.g. a file
+     * tightly connected to a configuration and cannot be reused in a different context. For other properties, for example a file
      * name, it does not make sense to copy it. Therefore, an implementation has to be explicit in the properties it wants
      * to take over.
      *

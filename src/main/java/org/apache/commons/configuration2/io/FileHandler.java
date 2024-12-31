@@ -88,7 +88,7 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  * <ul>
  * <li>{@code FileLocatorAware}: In this case an object with the current file location is injected before the load or
- * save operation is executed. This is useful for {@code FileBased} objects that depend on their current location, e.g.
+ * save operation is executed. This is useful for {@code FileBased} objects that depend on their current location, for example
  * to resolve relative path names.</li>
  * <li>{@code SynchronizerSupport}: If this interface is implemented, load and save operations obtain a write lock on
  * the {@code FileBased} object before they access it. (In case of a save operation, a read lock would probably be
@@ -544,7 +544,7 @@ public class FileHandler {
     /**
      * Checks whether the associated {@code FileBased} object implements the {@code FileLocatorAware} interface. If this is
      * the case, a {@code FileLocator} instance is injected which returns only <strong>null</strong> values. This method is called if
-     * no file location is available (e.g. if data is to be loaded from a stream). The encoding of the injected locator is
+     * no file location is available (for example if data is to be loaded from a stream). The encoding of the injected locator is
      * derived from this object.
      */
     private void injectNullFileLocator() {
@@ -646,7 +646,7 @@ public class FileHandler {
 
     /**
      * Loads the associated file from the given file name. The file name is interpreted in the context of the already set
-     * location (e.g. if it is a relative file name, a base path is applied if available). The underlying location is not
+     * location (for example if it is a relative file name, a base path is applied if available). The underlying location is not
      * changed.
      *
      * @param fileName the name of the file to be loaded
@@ -788,7 +788,7 @@ public class FileHandler {
     /**
      * Locates the referenced file if necessary and ensures that the associated {@link FileLocator} is fully initialized.
      * When accessing the referenced file the information stored in the associated {@code FileLocator} is used. If this
-     * information is incomplete (e.g. only the file name is set), an attempt to locate the file may have to be performed on
+     * information is incomplete (for example only the file name is set), an attempt to locate the file may have to be performed on
      * each access. By calling this method such an attempt is performed once, and the results of a successful localization
      * are stored. Hence, later access to the referenced file can be more efficient. Also, all properties pointing to the
      * referenced file in this object's {@code FileLocator} are set (i.e. the URL, the base path, and the file name). If the
@@ -818,7 +818,7 @@ public class FileHandler {
     }
 
     /**
-     * Prepares a builder for a {@code FileLocator} which does not have a defined file location. Other properties (e.g.
+     * Prepares a builder for a {@code FileLocator} which does not have a defined file location. Other properties (for example
      * encoding or file system) are initialized from the {@code FileLocator} associated with this object.
      *
      * @return the initialized builder for a {@code FileLocator}
@@ -1071,7 +1071,7 @@ public class FileHandler {
      * for locating the file are quite tolerant. For instance if the file name is already an absolute path or a fully
      * defined URL, the base path will be ignored. The base path can also be a URL, in which case the file name is
      * interpreted in this URL's context. If other methods are used for determining the location of the associated file
-     * (e.g. {@code setFile()} or {@code setURL()}), the base path is automatically set. Setting the base path using this
+     * (for example {@code setFile()} or {@code setURL()}), the base path is automatically set. Setting the base path using this
      * method automatically sets the URL to <strong>null</strong> because it has to be determined anew based on the file name and the
      * base path.
      *

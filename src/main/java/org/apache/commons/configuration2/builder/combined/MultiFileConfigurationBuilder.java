@@ -330,7 +330,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @return the configuration builder for the configuration corresponding to the current evaluation of the file name
      *         pattern
-     * @throws ConfigurationException if the builder cannot be determined (e.g. due to missing initialization parameters)
+     * @throws ConfigurationException if the builder cannot be determined (for example due to missing initialization parameters)
      */
     public FileBasedConfigurationBuilder<T> getManagedBuilder() throws ConfigurationException {
         final Map<String, Object> params = getParameters();

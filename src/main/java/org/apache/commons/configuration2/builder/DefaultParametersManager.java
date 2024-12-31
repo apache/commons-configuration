@@ -149,7 +149,7 @@ public class DefaultParametersManager {
      * PropertiesBuilderParameters} (although, for technical reasons, this relation is not reflected in the Java classes). A
      * {@link DefaultParametersHandler} object defined for a base interface can also deal with parameter objects "derived"
      * from this base interface (i.e. supporting a super set of the methods defined by the base interface). Now there may be
-     * the use case that there is an implementation of {@code DefaultParametersHandler} for a base interface (e.g.
+     * the use case that there is an implementation of {@code DefaultParametersHandler} for a base interface (for example
      * {@code FileBasedBuilderParameters}), but it should only process specific derived interfaces (say
      * {@code PropertiesBuilderParameters}, but not
      * {@link org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters XMLBuilderParameters}). This can be

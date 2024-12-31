@@ -31,7 +31,7 @@ import java.util.List;
  * </p>
  * <p>
  * An instance of this class does not define any state; therefore, it can be shared and used concurrently. The
- * {@code INSTANCE} member field can be used for accessing a default instance. If desired (e.g. for testing purposes),
+ * {@code INSTANCE} member field can be used for accessing a default instance. If desired (for example for testing purposes),
  * new instances can be created.
  * </p>
  *

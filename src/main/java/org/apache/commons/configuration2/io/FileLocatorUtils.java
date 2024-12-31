@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  * <p>
  * The methods of this class are used behind the scenes when retrieving configuration files based on different criteria,
- * e.g. URLs, files, or more complex search strategies. They also implement functionality required by the default
+ * for example URLs, files, or more complex search strategies. They also implement functionality required by the default
  * {@link FileSystem} implementations. Most methods are intended to be used internally only by other classes in the
  * {@code io} package.
  * </p>
@@ -222,7 +222,7 @@ public final class FileLocatorUtils {
     /**
      * Returns a {@code FileLocatorBuilder} which is already initialized with the properties of the passed in
      * {@code FileLocator}. This builder can be used to create a {@code FileLocator} object which shares properties of the
-     * original locator (e.g. the {@code FileSystem} or the encoding), but points to a different file. An example use case
+     * original locator (for example the {@code FileSystem} or the encoding), but points to a different file. An example use case
      * is as follows:
      *
      * <pre>
@@ -337,7 +337,7 @@ public final class FileLocatorUtils {
     }
 
     /**
-     * Tries to convert the specified base path and file name into a file object. This method is called e.g. by the save()
+     * Tries to convert the specified base path and file name into a file object. This method is called for example by the save()
      * methods of file based configurations. The parameter strings can be relative files, absolute files and URLs as well.
      * This implementation checks first whether the passed in file name is absolute. If this is the case, it is returned.
      * Otherwise further checks are performed whether the base path and file name can be combined to a valid URL or a valid

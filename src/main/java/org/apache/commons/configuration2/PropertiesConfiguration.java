@@ -251,7 +251,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * The goal is to allow both of them be used interchangeably when reading and writing properties files without losing or
      * changing information.
      * <p>
-     * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8 encoding (which is e.g. the new default
+     * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8 encoding (which is for example the new default
      * for resource bundle properties files since Java 9), Unicode escapes are no longer required and avoiding them makes
      * properties files more readable with regular text editors.
      * <p>
@@ -272,7 +272,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
         /**
          * Whether characters less than {@code \u0020} and characters greater than {@code \u007E} in property keys or values
-         * should be escaped using Unicode escape sequences. Not necessary when e.g. writing as UTF-8.
+         * should be escaped using Unicode escape sequences. Not necessary when for example writing as UTF-8.
          */
         private final boolean escapeUnicode;
 
@@ -1436,7 +1436,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
     /**
      * This method is invoked by the associated {@link PropertiesConfigurationLayout} object for each property definition
-     * detected in the parsed properties file. Its task is to check whether this is a special property definition (e.g. the
+     * detected in the parsed properties file. Its task is to check whether this is a special property definition (for example the
      * {@code include} property). If not, the property must be added to this configuration. The return value indicates
      * whether the property should be treated as a normal property. If it is <strong>false</strong>, the layout object will ignore
      * this property.

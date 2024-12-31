@@ -41,7 +41,7 @@ import java.util.Objects;
  * <p>
  * This class expects the managed controller objects to be passed to the constructor. From this list a defensive copy is
  * created so that it cannot be changed later on. Derived classes can override the {@link #getSubControllers()} method
- * if they need another way to handle child controllers (e.g. a more dynamic way). However, they are then responsible to
+ * if they need another way to handle child controllers (for example a more dynamic way). However, they are then responsible to
  * ensure a safe access to this list in a multi-threaded environment.
  * </p>
  *

@@ -62,7 +62,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * <li>All initialization properties can be set in one or multiple calls of the {@code configure()} method. In each call
  * an arbitrary number of {@link BuilderParameters} objects can be passed. The API allows method chaining and is
  * intended to be used from Java code.</li>
- * <li>If builder instances are created by other means - e.g. using a dependency injection framework -, the fluent API
+ * <li>If builder instances are created by other means - for example using a dependency injection framework -, the fluent API
  * approach may not be suitable. For those use cases it is also possible to pass in all initialization parameters as a
  * map. The keys of the map have to match initialization properties of the {@code ImmutableConfiguration} object to be
  * created, the values are the corresponding property values. For instance, the key <em>throwExceptionOnMissing</em> in

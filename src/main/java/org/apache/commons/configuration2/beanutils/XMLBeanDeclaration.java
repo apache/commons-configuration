@@ -60,7 +60,7 @@ import org.apache.commons.lang3.StringUtils;
  * <dl>
  * <dt>{@code config-class}</dt>
  * <dd>Here the full qualified name of the bean's class can be specified. An instance of this class will be created. If
- * this attribute is not specified, the bean class must be provided in another way, e.g. as the {@code defaultClass}
+ * this attribute is not specified, the bean class must be provided in another way, for example as the {@code defaultClass}
  * passed to the {@code BeanHelper} class.</dd>
  * <dt>{@code config-factory}</dt>
  * <dd>This attribute can contain the name of the {@link BeanFactory} that should be used for creating the bean. If it

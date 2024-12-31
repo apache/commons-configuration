@@ -30,9 +30,9 @@ import java.util.Map;
  * </p>
  * <p>
  * This interface defines methods for retrieving all information about a bean that should be created from a
- * configuration file, e.g. the bean's properties or the factory to use for creating the instance. With different
+ * configuration file, for example the bean's properties or the factory to use for creating the instance. With different
  * implementations different &quot;layouts&quot; of bean declarations can be supported. For instance if an XML
- * configuration file is used, all features of XML (e.g. attributes, nested elements) can be used to define the bean. In
+ * configuration file is used, all features of XML (for example attributes, nested elements) can be used to define the bean. In
  * a properties file the declaration format is more limited. The purpose of this interface is to abstract from the
  * concrete declaration format.
  * </p>
@@ -86,7 +86,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a map with declarations for beans that should be set as properties of the newly created bean. This allows for
-     * complex initialization scenarios: a bean for a bean that contains complex properties (e.g. other beans) can have
+     * complex initialization scenarios: a bean for a bean that contains complex properties (for example other beans) can have
      * nested declarations for defining these complex properties. The returned map's key are the names of the properties to
      * initialize. The values are either {@code BeanDeclaration} implementations or collections thereof. They will be
      * treated like this declaration (in a recursive manner), and the resulting beans are assigned to the corresponding

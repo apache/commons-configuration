@@ -35,7 +35,7 @@ public interface ReloadingDetectorFactory {
     /**
      * Creates a new {@code ReloadingDetector} object based on the passed in parameters. The {@code FileHandler} points to
      * the file to be monitored. (It may be different from the {@code FileHandler} managed by the parameters object.) The
-     * {@code FileBasedBuilderParametersImpl} object may contain additional information for configuring the detector, e.g. a
+     * {@code FileBasedBuilderParametersImpl} object may contain additional information for configuring the detector, for example a
      * refresh delay.
      *
      * @param handler the handler of the file to be monitored

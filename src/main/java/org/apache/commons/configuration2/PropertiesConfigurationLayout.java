@@ -41,7 +41,7 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  * <p>
  * Instances of this class are associated with a {@code PropertiesConfiguration} object. They are responsible for
- * analyzing properties files and for extracting as much information about the file layout (e.g. empty lines, comments)
+ * analyzing properties files and for extracting as much information about the file layout (for example empty lines, comments)
  * as possible. When the properties file is written back again it should be close to the original.
  * </p>
  * <p>

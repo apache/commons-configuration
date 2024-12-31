@@ -59,7 +59,7 @@ public class ConfigurationLookup implements Lookup {
 
     /**
      * {@inheritDoc} This implementation calls {@code getProperty()} on the associated configuration. The return value is
-     * directly returned. Note that this may be a complex object, e.g. a collection or an array.
+     * directly returned. Note that this may be a complex object, for example a collection or an array.
      */
     @Override
     public Object lookup(final String variable) {

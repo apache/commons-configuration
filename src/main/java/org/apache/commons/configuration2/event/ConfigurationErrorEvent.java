@@ -21,7 +21,7 @@ package org.apache.commons.configuration2.event;
  * An event class that is used for reporting errors that occurred while processing configuration properties.
  * </p>
  * <p>
- * Some configuration implementations (e.g. {@link org.apache.commons.configuration2.DatabaseConfiguration} or
+ * Some configuration implementations (for example {@link org.apache.commons.configuration2.DatabaseConfiguration} or
  * {@link org.apache.commons.configuration2.JNDIConfiguration} use an underlying storage that can throw an exception on
  * each property access. In earlier versions of this library such exceptions were logged and then silently ignored. This
  * makes it impossible for a client to find out that something went wrong.
@@ -35,7 +35,7 @@ package org.apache.commons.configuration2.event;
  * This class defines similar properties to the {@link ConfigurationEvent} class. This makes it possible to find out
  * which operation was performed on a configuration causing this error event. In addition, a {@code Throwable} object is
  * available representing the occurred error. Note that depending on the event type and the occurred exception not all
- * of the other properties (e.g. name of the affected property or its value) may be available.
+ * of the other properties (for example name of the affected property or its value) may be available.
  * </p>
  *
  * @since 1.4

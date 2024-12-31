@@ -447,7 +447,7 @@ public class TestDefaultExpressionEngine {
     }
 
     /**
-     * Tests using invalid keys, e.g. if something should be added to attributes.
+     * Tests using invalid keys, for example if something should be added to attributes.
      */
     @Test
     public void testPrepareAddInvalidKey() {

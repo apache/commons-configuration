@@ -207,7 +207,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Boolean. Internally the {@code org.apache.commons.lang.BooleanUtils} class from
      * the <a href="https://commons.apache.org/lang/">Commons Lang</a> project is used to perform this conversion. This
-     * class accepts some more tokens for the boolean value of <strong>true</strong>, e.g. {@code yes} and {@code on}. Please refer to
+     * class accepts some more tokens for the boolean value of <strong>true</strong>, for example {@code yes} and {@code on}. Please refer to
      * the documentation of this class for more details.
      *
      * @param value the value to convert
@@ -514,7 +514,7 @@ public final class PropertyConverter {
      * Converts the specified value into an email address with the given class name.
      *
      * @param value the value to convert
-     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, e.g.,
+     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, for example,
      *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an email address

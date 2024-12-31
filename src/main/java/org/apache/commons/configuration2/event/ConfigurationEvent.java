@@ -22,7 +22,7 @@ package org.apache.commons.configuration2.event;
  * </p>
  * <p>
  * Event objects of this type are used for &quot;raw&quot; events, i.e. unfiltered modifications of any kind. A level
- * with semantically higher events (e.g. for property changes) may be built on top of this fundamental event mechanism.
+ * with semantically higher events (for example for property changes) may be built on top of this fundamental event mechanism.
  * </p>
  * <p>
  * Each event can contain the following data:

@@ -63,7 +63,7 @@ public interface ConversionHandler {
     <T> T to(Object src, Class<T> targetCls, ConfigurationInterpolator ci);
 
     /**
-     * Converts the given object to an array of the specified element type. The object can be a single value (e.g. a String,
+     * Converts the given object to an array of the specified element type. The object can be a single value (for example a String,
      * a primitive, etc.) or a complex object containing multiple values (like a collection or another array). In the latter
      * case all elements contained in the complex object are converted to the target type. If the value(s) cannot be
      * converted to the desired target class, a {@link ConversionException} is thrown. Note that the result type of this

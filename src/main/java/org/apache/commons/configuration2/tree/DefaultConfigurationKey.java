@@ -700,7 +700,7 @@ public class DefaultConfigurationKey {
     }
 
     /**
-     * Sets the new length of this configuration key. With this method it is possible to truncate the key, e.g. to return to
+     * Sets the new length of this configuration key. With this method it is possible to truncate the key, for example to return to
      * a state prior calling some {@code append()} methods. The semantic is the same as the {@code setLength()} method of
      * {@code StringBuilder}.
      *

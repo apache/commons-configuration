@@ -55,7 +55,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     int getMaxIndex(String key);
 
     /**
-     * Gets the name of the root element of this configuration. This information may be of use in some cases, e.g. for
+     * Gets the name of the root element of this configuration. This information may be of use in some cases, for example for
      * sub configurations created using the {@code immutableConfigurationsAt()} method. The exact meaning of the string
      * returned by this method is specific to a concrete implementation. For instance, an XML configuration might return the
      * name of the document element.

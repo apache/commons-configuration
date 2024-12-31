@@ -51,7 +51,7 @@ import org.apache.commons.configuration2.tree.NodeCombiner;
  * <p>
  * This Configuration implementation uses the configured {@code Synchronizer} to guard itself against concurrent access.
  * If there are multiple threads accessing an instance concurrently, a fully functional {@code Synchronizer}
- * implementation (e.g. {@code ReadWriteSynchronizer}) has to be used to ensure consistency and to avoid exceptions. The
+ * implementation (for example {@code ReadWriteSynchronizer}) has to be used to ensure consistency and to avoid exceptions. The
  * {@code Synchronizer} assigned to an instance is also passed to child configuration objects when they are created.
  * </p>
  *
