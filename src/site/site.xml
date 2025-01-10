@@ -35,7 +35,7 @@
 
     <menu name="Documentation">
       <item name="Building"                             href="/building.html"/>
-      <item name="Release History"                      href="/changes-report.html"/>
+      <item name="Release History"                      href="/changes.html"/>
       <item name="${project.version}" collapse="true"   href="/index.html">
         <item name="User's Guide"                       href="/userguide/user_guide.html"/>
         <item name="Upgrade Guide: 1.x to 2.0"          href="/userguide/upgradeto2_0.html"/>
