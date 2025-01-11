@@ -48,7 +48,7 @@
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
-      org.apache.commons.beanutils.*;resolution:=optional,
+      org.apache.commons.beanutils2.*;resolution:=optional,
       org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
@@ -136,9 +136,9 @@
     </dependency>
 
     <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.10.0</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-beanutils2</artifactId>
+      <version>2.0.0-M1</version>
       <optional>true</optional>
     </dependency>
 
