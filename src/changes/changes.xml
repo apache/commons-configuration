@@ -47,7 +47,8 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-io:commons-io from 2.16.1 to 2.18.0 #480, #513.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-dbcp2 from 2.12.0 to 2.13.0 #515.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-text from 1.12.0 to 1.13.0 #521.</action> 
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.0.</action> 
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-pool2 from 2.12.0 to 2.12.1 #532.</action>
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
