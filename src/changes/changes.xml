@@ -39,7 +39,6 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.18.2 #447, #483, #518.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-codec:commons-codec from 1.17.0 to 1.18.0 #449, #533.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #450, #458, #471.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.hamcrest:hamcrest from 2.2 to 3.0 #454.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump slf4j.version from 2.0.13 to 2.0.16 #457, #462, #464.</action> 
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump spring.version from 5.3.35 to 5.3.39.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.2 to 2.3 #473.</action>
