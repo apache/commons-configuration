@@ -69,9 +69,17 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /** @see org.apache.commons.configuration2.AbstractConfiguration#throwExceptionOnMissing **/
     private boolean throwExceptionOnMissing = true;
 
+    /**
+     * Constructs a new instance.
+     */
     public ConfigurationPropertiesFactoryBean() {
     }
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param configuration The configuration to compose.
+     */
     public ConfigurationPropertiesFactoryBean(final Configuration configuration) {
         Assert.notNull(configuration, "configuration");
         this.compositeConfiguration = new CompositeConfiguration(configuration);
