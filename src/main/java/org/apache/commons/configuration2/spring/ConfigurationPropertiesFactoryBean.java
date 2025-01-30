@@ -53,7 +53,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param <T> the type of the array
      * @return the defensive copy of the array
      */
-    private static <T> T[] defensiveCopy(final T[] src) {
+    private static <T> T[] clone(final T[] src) {
         return src != null ? src.clone() : null;
     }
 
@@ -116,11 +116,11 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     }
 
     public Configuration[] getConfigurations() {
-        return defensiveCopy(configurations);
+        return clone(configurations);
     }
 
     public Resource[] getLocations() {
-        return defensiveCopy(locations);
+        return clone(locations);
     }
 
     /**
@@ -157,7 +157,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param configurations commons configurations objects which will be used as properties.
      */
     public void setConfigurations(final Configuration... configurations) {
-        this.configurations = defensiveCopy(configurations);
+        this.configurations = clone(configurations);
     }
 
     /**
@@ -167,7 +167,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param locations resources of configuration files
      */
     public void setLocations(final Resource... locations) {
-        this.locations = defensiveCopy(locations);
+        this.locations = clone(locations);
     }
 
     /**
