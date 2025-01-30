@@ -111,14 +111,29 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         }
     }
 
+    /**
+     * Gets the composite configuration.
+     *
+     * @return the composite configuration.
+     */
     public CompositeConfiguration getConfiguration() {
         return compositeConfiguration;
     }
 
+    /**
+     * Gets a copy of the configurations.
+     *
+     * @return a copy of the configurations.
+     */
     public Configuration[] getConfigurations() {
         return clone(configurations);
     }
 
+    /**
+     * Gets a copy of the resource locations.
+     *
+     * @return a copy of the resource locations.
+     */
     public Resource[] getLocations() {
         return clone(locations);
     }
@@ -147,6 +162,11 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         return true;
     }
 
+    /**
+     * Tests the underlying CompositeConfiguration throwExceptionOnMissing flag.
+     *
+     * @return the underlying CompositeConfiguration throwExceptionOnMissing flag.
+     */
     public boolean isThrowExceptionOnMissing() {
         return throwExceptionOnMissing;
     }
@@ -171,7 +191,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     }
 
     /**
-     * Sets the underlying Commons CompositeConfiguration throwExceptionOnMissing flag.
+     * Sets the underlying CompositeConfiguration throwExceptionOnMissing flag.
      *
      * @see org.apache.commons.configuration2.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
      * @param throwExceptionOnMissing The new value for the property
