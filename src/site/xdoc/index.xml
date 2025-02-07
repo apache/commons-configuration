@@ -15,16 +15,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
+    <title>Java Configuration API</title>
     <author email="pete@kazmier.com">Pete Kazmier</author>
     <author email="mpoeschl@marmot.at">Martin Poeschl</author>
     <author email="jason@zenplex.com">Jason van Zyl</author>
     <author email="epugh@upstate.com">Eric Pugh</author>
     <author email="tobrien@discursive.com">Tim O'Brien</author>
     <author email="rgoers@apache.org">Ralph Goers</author>
-    <title>Java Configuration API</title>
   </properties>
 
   <body>
@@ -43,7 +44,7 @@ Integer integer = config.getInteger("number");
       </p>
       <p>
         Configuration parameters may be loaded from the following sources:
-
+      </p>
         <ul>
           <li>Properties files</li>
           <li>XML documents</li>
@@ -55,7 +56,7 @@ Integer integer = config.getInteger("number");
           <li>Applet parameters</li>
           <li>Servlet parameters</li>
         </ul>
-
+      <p>
         Configuration objects are created using configuration builders.
         Different configuration sources can be mixed using a <code>CombinedConfigurationBuilder</code> and
         a <code>CombinedConfiguration</code>. Additional sources of configuration parameters can

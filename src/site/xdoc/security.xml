@@ -6,7 +6,9 @@
     in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
     ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under 
     the License. -->
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
         <title>Apache Commons Configuration Security Reports</title>
         <author email="dev@commons.apache.org">Commons Team</author>
@@ -45,6 +47,7 @@
                     On 2022-07-06, the Apache Commons Configuration team disclosed
                     <a href="https://www.cve.org/CVERecord?id=CVE-2022-33980">CVE-2022-33980</a>
                     . Key takeaways:
+                </p>
                     <ul>
                         <li>
                             If you rely on software that uses a version of commons-configuration prior to 2.8.0, you are likely
@@ -58,7 +61,6 @@
                             untrusted input.
                         </li>
                     </ul>
-                </p>
                 <p>
                     Apache Commons Configuration is a library to read configuration data from a variety of sources.
                     It supports variable interpolation with lookups using various mechanisms, such as system properties
@@ -94,6 +96,7 @@
                 </p>
                 <p>
                     References:
+                </p>
                     <ul>
                         <li>
                             <a href="https://lists.apache.org/thread/tdf5n7j80lfxdhs2764vn0xmpfodm87s">Announcement on dev@commons.apache.org</a>
@@ -108,7 +111,6 @@
                             <a href="https://securitylab.github.com/advisories/GHSL-2022-017_Apache_Commons_Configuration/">GHSL advisory</a>
                         </li>
                     </ul>
-                </p>
              </subsection>
              <subsection name="CVE-2024-29131 prior to 2.10.1, Out-of-bounds Write vulnerability">
                <p>
