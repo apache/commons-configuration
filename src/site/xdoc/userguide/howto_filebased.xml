@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>File-based Configurations</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -58,6 +59,7 @@
           FileBasedBuilderProperties</a></code> interface can be passed to the
           builder's <code>configure()</code> method. Using this interface the
           location of the file to be loaded can be provided in multiple ways:
+        </p>
           <ul>
             <li>With the <code>setFile()</code> method the data file can be
             specified as a <code>java.io.File</code> object.</li>
@@ -69,6 +71,7 @@
             <li>With <code>setPath()</code> an absolute path to the file to be
             loaded can be provided.</li>
           </ul>
+        <p>
           A parameters object for file-based configurations is typically obtained
           from a <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameters.html">
           Parameters</a></code> instance. Here the <code>fileBased()</code> method
@@ -308,6 +311,7 @@ PropertyListConfiguration config = builder.getConfiguration();
         <p>
           <code>FileHandler</code> has the two methods <code>load()</code> and
           <code>save()</code>. They work as follows:
+        </p>
           <ul>
             <li>The location of the managed file is evaluated, and a corresponding
             stream is opened. Depending on the way the location was specified,
@@ -318,7 +322,6 @@ PropertyListConfiguration config = builder.getConfiguration();
             <code>FileBased</code>'s <code>read()</code> or <code>write()</code>
             method.</li>
           </ul>
-        </p>
         <p>
           Next to these simple <code>load()</code> and <code>save()</code>
           methods a number of overloaded methods exists which expect additional
@@ -329,6 +332,7 @@ PropertyListConfiguration config = builder.getConfiguration();
           methods for all the supported variants for defining a file. When
           making use of these methods the following points have to be kept in
           mind:
+        </p>
           <ul>
             <li>The location stored in the <code>FileHandler</code> instance is
             not changed; it is completely by-passed by these methods. Only
@@ -345,7 +349,6 @@ PropertyListConfiguration config = builder.getConfiguration();
             <code>clear()</code> method first to ensure that old properties are
             wiped out.</li>
           </ul>
-        </p>
         <p>
           When constructing a <code>FileHandler</code> instance the
           <code>FileBased</code> object it operates on has to be passed to the
@@ -412,10 +415,12 @@ handler.save(out);
         <p>
           <em>Commons Configuration</em> provides two mechanisms to customize the
           way configuration files are accessed:
+        </p>
           <ul>
             <li>File systems</li>
             <li>File location strategies</li>
           </ul>
+        <p>
           They are described in the following sub sections.
         </p>
         </subsection>
@@ -514,7 +519,6 @@ URL locate(FileSystem fileSystem, FileLocator locator);
         following table describes the available <code>FileLocationStrategy</code>
         implementations:
       </p>
-      <p>
         <table>
           <tr>
             <th>Location Strategy class</th>
@@ -609,15 +613,16 @@ URL locate(FileSystem fileSystem, FileLocator locator);
             </td>
           </tr>
         </table>
-      </p>
       <p>
         As an example, consider that an application wants configuration files
         to be looked up (in this order)
+      </p>
         <ul>
           <li>by their URL</li>
           <li>by the file system (which will evaluate base path and file name)</li>
           <li>on the classpath</li>
         </ul>
+      <p>
         Then a concrete location strategy could be constructed as follows:
       </p>
      <source><![CDATA[

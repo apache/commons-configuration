@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Creating Configurations</title>
  </properties>
@@ -85,6 +86,7 @@
       builder implementations and defines a framework for creating and
       initializing configuration objects. The functionality provided is as
       follows:
+    </p>
       <ul>
         <li>When an instance of <code>BasicConfigurationBuilder</code> is
         constructed the class of the <code>Configuration</code> implementation
@@ -107,6 +109,7 @@
         instance to be created the next time <code>getConfiguration()</code>
         is invoked.</li>
       </ul>
+    <p>
       Note that these methods are all properly synchronized so that the builder
       class is thread-safe.
     </p>
@@ -191,6 +194,7 @@ XMLBuilderParams xmlParams = params.xml()
       now a short overview over the existing parameter objects and the
       corresponding methods in the <code>Parameters</code> class should be
       sufficient:
+    </p>
       <table>
       <tr>
         <th><code>Parameters</code> method</th>
@@ -261,7 +265,6 @@ XMLBuilderParams xmlParams = params.xml()
         DatabaseConfiguration</a></code>.</td>
       </tr>
       </table>
-    </p>
     <p>
       After a parameters object has been created and initialized via its fluent
       <code>set()</code> methods, it can be passed to a configuration builder's
@@ -359,6 +362,7 @@ XMLBuilderParams xmlParams = params.xml()
       implementations in place that we want to register on a <code>Parameters</code>
       object. (The next section will focus on the implementation of handlers.)
       In this example the following is to be achieved:
+    </p>
       <ul>
         <li>There is a <code>CommonDefaultsHandler</code> class setting
         default initialization parameters to be applied for all configuration
@@ -371,6 +375,7 @@ XMLBuilderParams xmlParams = params.xml()
         properties. This is implemented by a handler class called
         <code>PropertiesDefaultHandler</code>.</li>
       </ul>
+    <p>
       The code for this initialization could look as follows:
     </p>
     <source><![CDATA[

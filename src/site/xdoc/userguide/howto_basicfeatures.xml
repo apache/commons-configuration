@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Basic Features</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -209,6 +210,7 @@ application.title = ${application.name} ${application.version}
       that the context is the current configuration instance if the prefix is
       missing. The following table lists a few of the prefixes supported by default.
       (See the next section for more details.)
+    </p>
       <table border="1">
       <tr>
         <th>Prefix</th>
@@ -237,6 +239,7 @@ application.title = ${application.name} ${application.version}
         This is indicated by the <code>env</code> prefix.</td>
       </tr>
       </table>
+    <p>
       Here are some examples (again using properties syntax):
     </p>
     <source><![CDATA[
@@ -249,6 +252,7 @@ java.home = ${env:JAVA_HOME}
     <p>
       Below is some more information related to variable interpolation users
       should be aware of:
+    </p>
       <ul>
         <li>If a variable cannot be resolved, e.g. because the name is invalid
         or an unknown prefix is used, it won't be replaced, but is returned as
@@ -266,7 +270,6 @@ java.home = ${env:JAVA_HOME}
         exception is the generic <code>getProperty()</code> method which
         returns the raw property value.</li>
       </ul>
-    </p>
     </subsection>
 
     <subsection name="Default interpolation lookups">
@@ -296,10 +299,12 @@ org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPref
         <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html#URL">url</a></code>, and
         <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html#SCRIPT">script</a></code> lookups.
         These lookups are still present in the library but must be explicitly enabled by either
+    </p>
         <ol> 
             <li>listing them in the system property described above (along with all other enabled lookups), or</li>
             <li>adding them programmatically using the techniques laid out in the next section.</li>
-        </ol>.
+        </ol>
+    <p>
         Users who do not make use of these disabled lookups do not need to make any changes to their code or
         deployment scripts when upgrading from previous versions to <code>2.8.0</code>.
     </p>
@@ -495,6 +500,7 @@ int theAnswer = config.getInt("answer");
       work in the same way: they obtain the actual value of the property and
       attempt a data type conversion if necessary. In addition, there are
       generic methods for accessing properties in specific data types:
+    </p>
       <dl>
         <dt>&lt;T&gt; get(Class&lt;T&gt; cls, String key);</dt>
         <dd>Obtains the value of the specified property and tries to convert it
@@ -506,6 +512,7 @@ int theAnswer = config.getInt("answer");
         to the specified target type. If the key cannot be resolved, the
         specified default value is returned (which may be <b>null</b>).</dd>
       </dl>
+    <p>
       In fact, all specialized <code>get()</code> methods are based on these
       generic methods.
     </p>
@@ -527,6 +534,7 @@ int[] result = config.getInt(int[].class, "myIntArrayKey");
       necessary because the element type of the collection cannot be
       determined automatically as in case of arrays). These are the following
       ones:
+    </p>
       <dl>
         <dt>&lt;T&gt; List&lt;T&gt; getList(Class&lt;T&gt; cls, String key);</dt>
         <dd>Returns a list of the specified element class.</dd>
@@ -537,7 +545,6 @@ int[] result = config.getInt(int[].class, "myIntArrayKey");
         be stored in a different collection type, e.g. a set to remove
         duplicates.</dd>
       </dl>
-    </p>
     <p>
       These methods obtain all values stored for the property with the
       passed in key. For each value a conversion to the desired target type is
@@ -594,6 +601,7 @@ int[] result = config.getInt(int[].class, "myIntArrayKey");
       conversions. <code>DefaultConversionHandler</code> has some protected
       methods which can be overridden by subclasses in order to extend data type
       conversions:
+    </p>
       <dl>
         <dt><code>convertValue()</code></dt>
         <dd>This is the main conversion method for single values. It is called
@@ -630,7 +638,6 @@ int[] result = config.getInt(int[].class, "myIntArrayKey");
         in order to gain more control over the whole conversion process, this
         method is a good candidate for overriding.</dd>
       </dl>
-    </p>
     <p>
       After a custom <code>ConversionHandler</code> implementation has been
       created, it can be installed at a configuration instance by using the

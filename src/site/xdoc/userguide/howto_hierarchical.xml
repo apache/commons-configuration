@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Hierarchical Configurations</title>
  </properties>
@@ -47,6 +48,7 @@
       but the information provided here (especially the rules for accessing
       properties) applies to other hierarchical configurations as well.
       Examples for other hierarchical configuration classes are
+    </p>
       <ul>
         <li><code><a href="../apidocs/org/apache/commons/configuration2/CombinedConfiguration.html">
         CombinedConfiguration</a></code></li>
@@ -59,8 +61,6 @@
         <li><code><a href="../apidocs/org/apache/commons/configuration2/YAMLConfiguration.html">
         YAMLConfiguration</a></code></li>
       </ul>
-    </p>
-
     <subsection name="Accessing properties in hierarchical configurations">
     <p>
       We will start with a simple XML document to show some basics
@@ -133,6 +133,7 @@ List<Object> buttons = config.getList("buttons.name");
       This listing demonstrates some important points about constructing the
       keys for accessing properties in hierarchical configuration sources and about
       features of <code>HierarchicalConfiguration</code> in general:
+    </p>
       <ul>
         <li>
           Nested elements are accessed using a dot notation. In
@@ -181,7 +182,6 @@ List<Object> buttons = config.getList("buttons.name");
           using list splitting is rather untypical for this format.
         </li>
       </ul>
-    </p>
     <p>
       The next section will show how data in a more complex XML
       document can be processed.
@@ -323,6 +323,7 @@ if(prop instanceof Collection)
     <p>
       We will now provide some configuration keys and show the results
       of a <code>getProperty()</code> call with these keys as arguments.
+    </p>
       <dl>
       <dt><code>tables.table(0).name</code></dt>
       <dd>
@@ -368,7 +369,6 @@ if(prop instanceof Collection)
         values [<em>long, long</em>].
       </dd>
       </dl>
-    </p>
     <p>
       These examples should make the usage of indices quite clear.
       Because each configuration key can contain an arbitrary number
