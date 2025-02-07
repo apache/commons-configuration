@@ -35,7 +35,7 @@
       <item name="Download" href="/download_configuration.cgi" />
       <item name="Javadoc">
         <item name="Javadoc Current" href="/apidocs/index.html" />
-        <item name="Javadoc Archive 2.x" href="https://javadoc.io/doc/org.apache.commons/commons-configuration2/" />
+        <item name="Javadoc Archive" href="https://javadoc.io/doc/org.apache.commons/commons-configuration2/" />
       </item>
       <!-- End: For all components. -->
       <!-- Specific to this component: -->
