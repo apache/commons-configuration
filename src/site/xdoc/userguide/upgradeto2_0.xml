@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Migration Guide: 1.x to 2.0</title>
  </properties>
@@ -31,7 +32,6 @@
       areas in which major changes have been implemented; here problems are
       likely to be encountered during migration. It has the following content:
     </p>
-    <p>
       <ul>
         <li><a href="#Introduction">Introduction</a></li>
         <li><a href="#Structural_Changes">Structural Changes</a></li>
@@ -42,7 +42,6 @@
         <li><a href="#Concurrency_Issues">Concurrency Issues</a></li>
         <li><a href="#Events">Events</a></li>
       </ul>
-    </p>
 
     <subsection name="Introduction">
     <p>
@@ -207,6 +206,7 @@ config.setListDelimiter(';');
 ]]></source>
     <p>
       While this code is easy to write, there are some non-obvious problems:
+    </p>
       <ul>
         <li>Some settings influence the loading of the configuration data. In
         this example, the definition of the list delimiter and the
@@ -219,7 +219,6 @@ config.setListDelimiter(';');
         <li>The various set methods are not thread-safe; if this configuration
         instance is to be accessed from another thread, there may be problems.</li>
       </ul>
-    </p>
     <p>
       To overcome these problems, <em>Commons Configuration</em> uses a
       different approach for the creation of configuration objects based on
@@ -310,11 +309,11 @@ PropertiesConfiguration config = builder.getConfiguration();
       creating a
       <a href="howto_combinedbuilder.html#Combining_Configuration_Sources">combined
       configuration</a> out of multiple sources:
+    </p>
       <ul>
         <li>The already deprecated <code>ConfigurationFactory</code> class</li>
         <li>The <code>DefaultConfigurationBuilder</code> class</li>
       </ul>
-    </p>
     <p>
       The former has been removed. The functionality provided by
       <code>DefaultConfigurationBuilder</code> is still available, but the
@@ -411,6 +410,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       thread, there is no need for any synchronization. Typical usage modes are
       reflected by different default implementations of the
       <code>Synchronizer</code> interface:
+    </p>
       <ul>
         <li><code><a href="../apidocs/org/apache/commons/configuration2/sync/NoOpSynchronizer.html">
         NoOpSynchronizer</a></code> does not use any synchronization at all.
@@ -420,6 +420,7 @@ PropertiesConfiguration config = builder.getConfiguration();
         ReadWriteSynchronizer</a></code> implements synchronization based on a
         read/write lock.</li>
       </ul>
+    <p>
       Note that the default option is <code>NoOpSynchronizer</code>. This means
       that configuration objects are not thread-safe per default! You have to
       change the synchronizer in order to make them safe for concurrent access.
@@ -444,6 +445,7 @@ PropertiesConfiguration config = builder.getConfiguration();
     <p>
       There are some other changes on classes with the goal to make them
       well-behaving citizens in a concurrent environment. This includes:
+    </p>
       <ul>
         <li>Some classes have been made immutable, passing all information to the
         constructor rather than using bean-style properties for their
@@ -457,7 +459,6 @@ PropertiesConfiguration config = builder.getConfiguration();
         <a href="https://issues.apache.org/jira/browse/CONFIGURATION-486">CONFIGURATION-486</a>
         for further details.</li>
       </ul>
-    </p>
     <p>
       Please refer to <a href="howto_concurrency.html">Configurations and
       Concurrent Access</a> for a full description of this complex topic.
