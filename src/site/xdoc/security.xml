@@ -42,6 +42,17 @@
                 Team. Thank you.
             </p>
 
+            <subsection name="Security Model">
+                <p>
+                    The <a href="https://commons.apache.org/security.html#Security_Model">Apache Commons security model</a>
+                    specifies that in general it is unsafe to pass possibly-malicious input to Commons libraries.
+                    For Commons Configuration 2.x, loading untrusted configuration files or performing operations
+                    on them should not allow code execution, and should not cause 'denial of service' situations.
+                    'Denial of service' here means causing resource usage that is disproportionate to the size of
+                    the input.
+                </p>
+            </subsection>
+
             <subsection name="CVE-2022-33980 prior to 2.8.0, RCE when applied to untrusted input">
                 <p>
                     On 2022-07-06, the Apache Commons Configuration team disclosed
