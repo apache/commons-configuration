@@ -38,9 +38,6 @@
     <commons.release.version>2.11.0</commons.release.version>
     <commons.release.next>2.11.1</commons.release.next>
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
-    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
-    <commons.release.2.version>1.10</commons.release.2.version>
-    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
     <maven.compiler.source>1.8</maven.compiler.source>
