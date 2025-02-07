@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Configuration Builder Howto</title>
  </properties>
@@ -32,6 +33,7 @@
       <code>DefaultConfigurationBuilder</code> is the option of choice for
       applications that have to deal with multiple configuration sources. It
       provides the following features:
+    </p>
       <ul>
         <li>Various configuration sources can be combined to a single
         <a href="howto_combinedconfiguration.html#Combined Configuration">
@@ -46,7 +48,6 @@
         <li><code>DefaultConfigurationBuilder</code> is extensible. Custom
         configuration sources can be added.</li>
       </ul>
-    </p>
     <p>
       This document starts with some explanations of
       <code>DefaultConfigurationBuilder</code> basics. Then the <em>configuration
@@ -418,7 +419,6 @@ Configuration config = builder.getConfiguration(true);
       file to be loaded or a reloading strategy). Below is a list of all
       tags which can be used out of the box:
     </p>
-    <p>
       <dl>
         <dt>properties</dt>
         <dd>With this element properties files can be included. The name of
@@ -488,7 +488,6 @@ Configuration config = builder.getConfiguration(true);
         This works in the same way as the <code>&lt;system&gt;</code> tag for
         Java system properties.</dd>
       </dl>
-    </p>
     <p>
       In the declaration of a configuration source it is possible to set
       properties on the corresponding configuration objects. Configuration
@@ -529,7 +528,6 @@ Configuration config = builder.getConfiguration(true);
       <code>DefaultConfigurationBuilder</code> when it creates the objects.
       These attributes are listed in the following table:
     </p>
-    <p>
     <table border="1">
     <tr>
       <th>Attribute</th>
@@ -584,7 +582,6 @@ Configuration config = builder.getConfiguration(true);
       have any effect).</td>
     </tr>
     </table>
-    </p>
     <p>
       <em>Note:</em> In older versions of Commons Configuration the attributes
       <code>config-at</code> and <code>config-optional</code> were named

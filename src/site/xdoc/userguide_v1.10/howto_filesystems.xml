@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>File Systems</title>
   <author email="rgoers@apache.org">Ralph Goers</author>
@@ -40,6 +41,7 @@
       <subsection name="Configuration">
       <p>
         The FileSystem used by Commons Configuration can be set in one of several ways:
+      </p>
         <ol>
           <li>A system property named "org.apache.commons.configuration.filesystem" can be defined
           with the full class name of the desired <code>FileSystem</code> implementation to set the
@@ -58,7 +60,6 @@
           Both <code>AbstractFileConfiguration</code> and <code>AbstractHierarchicalFileConfiguration</code>
           implement <code>FileSystemBased</code></li>
         </ol>
-      </p>
       <p>
         The example that follows shows how to add <code>FileSystem</code> configuration to
         <code>DefaultConfigurationBuilder</code>.

@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Basic Features</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -172,6 +173,7 @@ application.title = ${application.name} ${application.version}
       the variable is to be evaluated in a certain context. We have already seen
       that the context is the current configuration instance if the prefix is
       missing. The following other prefix names are supported by default:
+    </p>
       <table border="1">
       <tr>
         <th>Prefix</th>
@@ -200,6 +202,7 @@ application.title = ${application.name} ${application.version}
         This is indicated by the <code>env</code> prefix.</td>
       </tr>
       </table>
+    <p>
       Here are some examples (again using properties syntax):
     </p>
     <source><![CDATA[
