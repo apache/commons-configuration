@@ -419,9 +419,17 @@
             <source>${maven.compiler.source}</source>
             <failOnError>false</failOnError>
             <links>
-              <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
+              <link>https://docs.spring.io/spring-framework/docs/${spring.version}/javadoc-api/</link>
               <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
             </links>
+            <additionalDependencies>
+              <additionalDependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+                <scope>test</scope>
+              </additionalDependency>
+            </additionalDependencies>
           </configuration>
         </plugin>
       </plugins>
@@ -631,7 +639,7 @@
           <failOnError>false</failOnError>
           <links>
             <link>https://docs.oracle.com/javase/8/docs/api/</link>
-            <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
+            <link>https://docs.spring.io/spring-framework/docs/5.3.39/javadoc-api/</link>
             <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
           </links>
         </configuration>
