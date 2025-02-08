@@ -41,23 +41,17 @@ class PropertyListParser {
     /**
      * Remove the quotes at the beginning and at the end of the specified String.
      */
-    protected String removeQuotes(String s)
-    {
-        if (s == null)
-        {
+    protected String removeQuotes(String s) {
+        if (s == null) {
             return null;
         }
-
-        if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2)
-        {
+        if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2) {
             s = s.substring(1, s.length() - 1);
         }
-
         return s;
     }
 
-    protected String unescapeQuotes(String s)
-    {
+    protected String unescapeQuotes(String s) {
         return s.replaceAll("\\\\\"", "\"");
     }
 
@@ -65,35 +59,24 @@ class PropertyListParser {
      * Remove the white spaces and the data delimiters from the specified
      * string and parse it as a byte array.
      */
-    protected byte[] filterData(String s) throws ParseException
-    {
-        if (s == null)
-        {
+    protected byte[] filterData(String s) throws ParseException {
+        if (s == null) {
             return null;
         }
-
         // remove the delimiters
-        if (s.startsWith("<") && s.endsWith(">") && s.length() >= 2)
-        {
+        if (s.startsWith("<") && s.endsWith(">") && s.length() >= 2) {
             s = s.substring(1, s.length() - 1);
         }
-
         // remove the white spaces
         s = s.replaceAll("\\s", "");
-
         // add a leading 0 to ensure well formed bytes
-        if (s.length() % 2 != 0)
-        {
+        if (s.length() % 2 != 0) {
             s = "0" + s;
         }
-
         // parse and return the bytes
-        try
-        {
+        try {
             return Hex.decodeHex(s.toCharArray());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw (ParseException) new ParseException("Unable to parse the byte[] : " + e.getMessage());
         }
     }
@@ -101,8 +84,7 @@ class PropertyListParser {
     /**
      * Parse a date formatted as <*D2002-03-22 11:30:00 +0100>
      */
-    protected Date parseDate(String s) throws ParseException
-    {
+    protected Date parseDate(String s) throws ParseException {
         return PropertyListConfiguration.parseDate(s);
     }
 
