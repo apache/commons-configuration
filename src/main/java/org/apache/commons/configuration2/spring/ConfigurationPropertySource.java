@@ -29,10 +29,21 @@ import org.springframework.core.env.EnumerablePropertySource;
  */
 public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration> {
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param name the associated name.
+     */
     protected ConfigurationPropertySource(final String name) {
         super(name);
     }
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param name   the associated name.
+     * @param source the source object.
+     */
     public ConfigurationPropertySource(final String name, final Configuration source) {
         super(name, source);
     }

@@ -89,6 +89,9 @@ public final class InterpolatorSpecification {
         /** Function used to convert interpolated values to strings. */
         private Function<Object, String> stringConverter;
 
+        /**
+         * Constructs a new instance.
+         */
         public Builder() {
             prefixLookups = new HashMap<>();
             defLookups = new LinkedList<>();

@@ -211,14 +211,25 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     public static class Builder {
 
         /**
-         * The flag for decision, whether inline comments on the section line are allowed.
+         * Whether in-line comments on the section line are allowed.
          */
         private boolean sectionInLineCommentsAllowed;
 
+        /**
+         * Builds a new INIConfiguration.
+         *
+         * @return a new INIConfiguration.
+         */
         public INIConfiguration build() {
             return new INIConfiguration(sectionInLineCommentsAllowed);
         }
 
+        /**
+         * Sets whether in-line comments on the section line are allowed.
+         *
+         * @param sectionInLineCommentsAllowed Whether in-line comments on the section line are allowed.
+         * @return this instance.
+         */
         public Builder setSectionInLineCommentsAllowed(final boolean sectionInLineCommentsAllowed) {
             this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
             return this;
