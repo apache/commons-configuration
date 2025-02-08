@@ -37,7 +37,7 @@
       <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">New web configurations using the jakarta.servlet namespace are now available</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 70 to 81 #434, #453, #466, #470, #479, #486, #491, #499, #537.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-logging:commons-logging from 1.3.2 to 1.3.4 #442, #467.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-logging:commons-logging from 1.3.2 to 1.3.5 #442, #467.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.18.2 #447, #483, #518.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-codec:commons-codec from 1.17.0 to 1.18.0 #449, #533.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #450, #458, #471.</action>
