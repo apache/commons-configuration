@@ -50,8 +50,8 @@ limitations under the License.
                 <p>
                     The <a href="https://commons.apache.org/security.html#Security_Model">Apache Commons security model</a>
                     specifies that it is unsafe to pass possibly malicious input to Commons libraries.
-                    For Commons Configuration 2.x, loading untrusted configuration files or performing operations
-                    on them should not allow code execution, and should not cause any denial of service situations.
+                    For Commons Configuration 2.x, the library is designed to support processing untrusted configuration files,
+                    without allowing those to trigger arbitrary code execution or denial of service situations.
                     'Denial of service' here means causing resource usage disproportionate to the input size.
                 </p>
             </subsection>
