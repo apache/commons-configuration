@@ -1200,7 +1200,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate
-     * @return returns the key name with the ${key} substituted
+     * @return the key name with the ${key} substituted
      */
     protected String interpolate(final String base) {
         return Objects.toString(interpolate((Object) base), null);
