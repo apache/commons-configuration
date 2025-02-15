@@ -473,7 +473,7 @@ public class TestINIConfiguration {
     }
 
     /**
-     * Test of getSections method, of class {@link INIConfiguration} .
+     * Test of getSections method, of class {@link INIConfiguration}.
      */
     @Test
     public void testGetSections() {

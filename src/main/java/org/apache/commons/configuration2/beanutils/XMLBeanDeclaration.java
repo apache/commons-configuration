@@ -566,7 +566,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Tests if the specified child node name is reserved and thus should be ignored. This method is called when processing
      * child nodes of this bean declaration. It is then possible to ignore some nodes with a specific meaning. This
-     * implementation delegates to {@link #isReservedName(String)} .
+     * implementation delegates to {@link #isReservedName(String)}.
      *
      * @param name the name of the child node to be checked
      * @return a flag whether this name is reserved
