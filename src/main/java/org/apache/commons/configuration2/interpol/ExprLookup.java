@@ -210,7 +210,7 @@ public class ExprLookup implements Lookup {
     private String suffixMatcher = DEFAULT_SUFFIX;
 
     /**
-     * The default constructor. Will get used when the Lookup is constructed via configuration.
+     * Constructs a new instance. Will get used when the Lookup is constructed via configuration.
      */
     public ExprLookup() {
     }
