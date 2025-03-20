@@ -85,8 +85,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
         }
         if (test instanceof NodeNameTest) {
             final NodeNameTest nameTest = (NodeNameTest) test;
-            final QName name = nameTest.getNodeName();
-            return nameTest.isWildcard() ? createSubNodeListForWildcardName(node, name) : createSubNodeListForName(node, name);
+            final QName qName = nameTest.getNodeName();
+            return nameTest.isWildcard() ? createSubNodeListForWildcardName(node, qName) : createSubNodeListForName(node, qName);
         }
         if (test instanceof NodeTypeTest) {
             final NodeTypeTest typeTest = (NodeTypeTest) test;
@@ -120,16 +120,16 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Obtains the list of selected sub nodes for a {@code NodeNameTest} with a wildcard name.
      *
      * @param node the current node
-     * @param name the name to be selected
+     * @param qName the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForWildcardName(final T node, final QName name) {
+    private List<T> createSubNodeListForWildcardName(final T node, final QName qName) {
         final List<T> children = getNodeHandler().getChildren(node);
-        if (name.getPrefix() == null) {
+        if (qName.getPrefix() == null) {
             return children;
         }
         final List<T> prefixChildren = new ArrayList<>(children.size());
-        final String prefix = prefixName(name.getPrefix(), null);
+        final String prefix = prefixName(qName.getPrefix(), null);
         children.forEach(child -> {
             if (StringUtils.startsWith(getNodeHandler().nodeName(child), prefix)) {
                 prefixChildren.add(child);

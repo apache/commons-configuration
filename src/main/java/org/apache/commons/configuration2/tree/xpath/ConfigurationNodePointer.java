@@ -78,12 +78,12 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the attributes that match the given name.
      *
-     * @param name the attribute name
+     * @param qName the attribute name
      * @return the iterator for the attributes
      */
     @Override
-    public NodeIterator attributeIterator(final QName name) {
-        return new ConfigurationNodeIteratorAttribute<>(this, name);
+    public NodeIterator attributeIterator(final QName qName) {
+        return new ConfigurationNodeIteratorAttribute<>(this, qName);
     }
 
     /**

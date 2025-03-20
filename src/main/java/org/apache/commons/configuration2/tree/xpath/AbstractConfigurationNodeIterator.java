@@ -56,11 +56,11 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Returns the qualified name from the given {@code QName}. If the name has no namespace, result is the simple name.
      * Otherwise, the namespace prefix is added.
      *
-     * @param name the {@code QName}
+     * @param qName the {@code QName}
      * @return the qualified name
      */
-    protected static String qualifiedName(final QName name) {
-        return name.getPrefix() == null ? name.getName() : prefixName(name.getPrefix(), name.getName());
+    protected static String qualifiedName(final QName qName) {
+        return qName.getPrefix() == null ? qName.getName() : prefixName(qName.getPrefix(), qName.getName());
     }
 
     /** Stores the parent node pointer. */

@@ -110,9 +110,9 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testGetName() {
-        final QName name = pointer.getName();
-        assertEquals(ATTR_NAME, name.getName());
-        assertNull(name.getPrefix());
+        final QName qName = pointer.getName();
+        assertEquals(ATTR_NAME, qName.getName());
+        assertNull(qName.getPrefix());
     }
 
     /**
