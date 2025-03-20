@@ -102,11 +102,11 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Obtains the list of selected nodes for a {@code NodeNameTest} with either a simple or a qualified name.
      *
      * @param node the current node
-     * @param name the name to be selected
+     * @param qName the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForName(final T node, final QName name) {
-        final String compareName = qualifiedName(name);
+    private List<T> createSubNodeListForName(final T node, final QName qName) {
+        final String compareName = qualifiedName(qName);
         final List<T> result = new ArrayList<>();
         getNodeHandler().getChildren(node).forEach(child -> {
             if (StringUtils.equals(compareName, getNodeHandler().nodeName(child))) {
