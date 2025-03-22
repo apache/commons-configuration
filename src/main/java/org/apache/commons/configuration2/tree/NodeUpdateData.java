@@ -36,8 +36,8 @@ import java.util.Map;
  * update based on a passed in instance.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of nodes involved in this update operation
+ * @since 2.0
  */
 public class NodeUpdateData<T> {
     /**

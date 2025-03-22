@@ -30,8 +30,8 @@ package org.apache.commons.configuration2.event;
  * components.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of events processed by the listener
+ * @since 2.0
  */
 public final class EventListenerRegistrationData<T extends Event> {
     /** Constant for the factor used by the calculation of the hash code. */

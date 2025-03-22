@@ -31,8 +31,8 @@ import org.apache.commons.lang3.StringUtils;
  * implement specific behavior based on the concrete node type (child node or attribute node).
  * </p>
  *
- * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
+ * @since 1.3
  */
 abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /** Constant for the prefix separator. */

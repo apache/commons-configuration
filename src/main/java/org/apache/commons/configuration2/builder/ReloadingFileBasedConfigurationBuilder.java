@@ -48,8 +48,8 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * by an external component, for example a timer.
  * </p>
  *
- * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @since 2.0
  */
 public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends FileBasedConfigurationBuilder<T>
     implements ReloadingControllerSupport {

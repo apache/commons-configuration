@@ -148,8 +148,8 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * undesired effects. For concrete subclasses dealing with specific node structures, this situation may be different.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes managed by this hierarchical configuration
+ * @since 2.0
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {

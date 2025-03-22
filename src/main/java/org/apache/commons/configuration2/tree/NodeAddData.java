@@ -42,8 +42,8 @@ import java.util.List;
  * operation) and the new node</li>
  * </ul>
  *
- * @since 1.3
  * @param <T> the type of nodes this class can handle
+ * @since 1.3
  */
 public class NodeAddData<T> {
     /**

@@ -28,8 +28,8 @@ package org.apache.commons.configuration2.builder;
  * initialization.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of parameters supported by this handler
+ * @since 2.0
  */
 public interface DefaultParametersHandler<T> {
     /**

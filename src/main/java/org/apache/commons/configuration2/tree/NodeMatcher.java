@@ -33,8 +33,8 @@ package org.apache.commons.configuration2.tree;
  * between multiple components.
  * </p>
  *
- * @since 2.0
  * @param <C> the type of the criterion evaluated by this matcher
+ * @since 2.0
  */
 public interface NodeMatcher<C> {
     /**

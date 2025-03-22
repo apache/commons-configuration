@@ -30,8 +30,8 @@ package org.apache.commons.configuration2.tree;
  * traversal process.
  * </p>
  *
- * @since 1.3
  * @param <T> the type of the nodes processed by this visitor
+ * @since 1.3
  */
 public interface ConfigurationNodeVisitor<T> {
     /**

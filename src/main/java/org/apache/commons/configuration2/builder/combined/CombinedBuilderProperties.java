@@ -35,8 +35,8 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @since 2.0
  * @param <T> the return type of all methods for allowing method chaining
+ * @since 2.0
  */
 public interface CombinedBuilderProperties<T> {
     /**

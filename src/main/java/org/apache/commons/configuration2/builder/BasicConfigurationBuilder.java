@@ -85,8 +85,8 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * {@code ImmutableConfiguration} instance is returned until the builder is reset.
  * </p>
  *
- * @since 2.0
  * @param <T> the concrete type of {@code ImmutableConfiguration} objects created by this builder
+ * @since 2.0
  */
 public class BasicConfigurationBuilder<T extends ImmutableConfiguration> implements ConfigurationBuilder<T> {
     /**

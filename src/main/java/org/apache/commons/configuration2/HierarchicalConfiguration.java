@@ -36,8 +36,8 @@ import org.apache.commons.configuration2.tree.NodeModelSupport;
  * structures.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes used by this hierarchical configuration
+ * @since 2.0
  */
 public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHierarchicalConfiguration, NodeModelSupport<T> {
     /**

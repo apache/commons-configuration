@@ -35,8 +35,8 @@ import java.util.Collection;
  * which knows how to deal with keys.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes managed by this model
+ * @since 2.0
  */
 public interface NodeModel<T> {
     /**

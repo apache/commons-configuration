@@ -34,8 +34,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Implementation note: Instances are immutable. They are created using the static factory methods.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result nodes
+ * @since 2.0
  */
 public final class QueryResult<T> {
     /**

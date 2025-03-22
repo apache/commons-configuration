@@ -34,8 +34,8 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * This is needed for queries using JXPath.
  * </p>
  *
- * @since 1.3
  * @param <T> the type of the nodes this pointer deals with
+ * @since 1.3
  */
 final class ConfigurationNodePointer<T> extends NodePointer {
     /**

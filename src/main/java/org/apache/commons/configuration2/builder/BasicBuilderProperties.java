@@ -42,8 +42,8 @@ import org.apache.commons.configuration2.sync.Synchronizer;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
+ * @since 2.0
  */
 public interface BasicBuilderProperties<T> {
     /**
