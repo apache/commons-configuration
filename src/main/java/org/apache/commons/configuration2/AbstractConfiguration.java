@@ -1273,8 +1273,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code LockMode} argument. Subclasses can override these protected methods to perform additional steps when a
      * configuration is locked.
      *
-     * @since 2.0
      * @throws NullPointerException if the argument is <strong>null</strong>
+     * @since 2.0
      */
     @Override
     public final void lock(final LockMode mode) {
