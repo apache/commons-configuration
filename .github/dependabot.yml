@@ -20,6 +20,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "friday"
+    ignore:
+      # Spring 6 requires Java 17
+      - dependency-name: "org.springframework*"
+        versions: "[6,)"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
