@@ -50,7 +50,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @return the directory to be used
      */
     private static String fetchHomeDirectory(final String homeDir) {
-        return homeDir != null ? homeDir : SystemProperties.getUserName();
+        return homeDir != null ? homeDir : SystemProperties.getUserHome();
     }
 
     /** The home directory to be searched for the requested file. */

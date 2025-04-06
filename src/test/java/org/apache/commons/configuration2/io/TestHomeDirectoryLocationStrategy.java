@@ -71,7 +71,7 @@ public class TestHomeDirectoryLocationStrategy {
     @Test
     public void testInitDefaults() {
         final HomeDirectoryLocationStrategy strategy = new HomeDirectoryLocationStrategy();
-        assertEquals(SystemProperties.getUserName(), strategy.getHomeDirectory());
+        assertEquals(SystemProperties.getUserHome(), strategy.getHomeDirectory());
         assertFalse(strategy.isEvaluateBasePath());
     }
 

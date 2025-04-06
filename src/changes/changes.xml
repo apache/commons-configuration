@@ -32,6 +32,7 @@
       <action type="fix" issue="CONFIGURATION-848" dev="ggregory" due-to="Laszlo Hujber, Gary Gregory">CompositeConfiguration does not account for delimiters as it did in 2.9.0.</action>
       <action type="fix" dev="ggregory" due-to="Arnout Engelen, Gary Gregory">Describe the security model #540.</action>
       <action type="fix" dev="ggregory" due-to="Arnout Engelen, Gary Gregory">De-emphasize the 1.x version line on the website #539.</action>
+      <action type="fix" issue="CONFIGURATION-851" dev="ggregory" due-to="Scott Babcock, Gary Gregory">HomeDirectoryLocationStrategy no longer resolves the user HOME directory correctly.</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add PrefixedKeysIterator.toString() to package-private PrefixedKeysIterator.</action> 
       <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">New web configurations using the jakarta.servlet namespace are now available</action>
