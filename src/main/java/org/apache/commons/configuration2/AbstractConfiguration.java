@@ -1521,19 +1521,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return new SubsetConfiguration(this, prefix, DELIMITER);
     }
 
-    void syncRead(final Runnable runnable, final boolean optimize) {
+    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
         beginRead(optimize);
         try {
-            runnable.run();
+            return supplier.get();
         } finally {
             endRead();
         }
     }
 
-    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
+    void syncRead(final Runnable runnable, final boolean optimize) {
         beginRead(optimize);
         try {
-            return supplier.get();
+            runnable.run();
         } finally {
             endRead();
         }

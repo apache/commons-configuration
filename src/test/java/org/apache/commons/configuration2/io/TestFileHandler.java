@@ -302,6 +302,10 @@ public class TestFileHandler {
         });
     }
 
+    private Path createTestPath() {
+        return createTestFile().toPath();
+    }
+
     private URI createTestURI() {
         return createTestFile().toURI();
     }
@@ -680,10 +684,6 @@ public class TestFileHandler {
             handler.load(in);
         }
         assertEquals(CONTENT, content.getContent());
-    }
-
-    private Path createTestPath() {
-        return createTestFile().toPath();
     }
 
     /**
