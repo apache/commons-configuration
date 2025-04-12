@@ -15,9 +15,8 @@
 ## specific language governing permissions and limitations
 ## under the License.
 ##
-Apache Commons Configuration
-Version ${version}
-Release Notes
+${project.name} ${version} Release Notes
+------------------------------------------------
 
 Introducing Apache Commons Configuration
 ----------------------------------------
