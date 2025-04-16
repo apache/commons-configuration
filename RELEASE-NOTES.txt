@@ -1,3 +1,53 @@
+The Apache Commons Configuration team is pleased to announce the commons-configuration2-2.11.1 release!
+
+Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+
+Changes in this version include:
+
+New features:
+o Add PrefixedKeysIterator.toString() to package-private PrefixedKeysIterator. Thanks to Gary Gregory.
+o New web configurations using the jakarta.servlet namespace are now available  Issue: CONFIGURATION-836. Thanks to Emmanuel Bourg.
+
+Fixed Bugs:
+o PropertyConverter.to(Class, Object, DefaultConversionHandler) doesn't convert custom java.lang.Number subclasses. Thanks to Gary Gregory.
+o DefaultConversionHandler.convertValue(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses. Thanks to Gary Gregory.
+o DefaultConversionHandler.to(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses. Thanks to Gary Gregory.
+o SubsetConfiguration does not account for delimiters as it did in 2.9.0.  Issue: CONFIGURATION-848. Thanks to Laszlo Hujber, Gary Gregory.
+o CompositeConfiguration does not account for delimiters as it did in 2.9.0.  Issue: CONFIGURATION-848. Thanks to Laszlo Hujber, Gary Gregory.
+o Describe the security model #540. Thanks to Arnout Engelen, Gary Gregory.
+o De-emphasize the 1.x version line on the website #539. Thanks to Arnout Engelen, Gary Gregory.
+o HomeDirectoryLocationStrategy no longer resolves the user HOME directory correctly.  Issue: CONFIGURATION-851. Thanks to Scott Babcock, Gary Gregory.
+
+Changes:
+o Bump org.apache.commons:commons-parent from 70 to 81 #434, #453, #466, #470, #479, #486, #491, #499, #537. Thanks to Gary Gregory, Dependabot.
+o Bump commons-logging:commons-logging from 1.3.2 to 1.3.5 #442, #467. Thanks to Gary Gregory, Dependabot.
+o Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.18.3 #447, #483, #518. Thanks to Gary Gregory, Dependabot.
+o Bump commons-codec:commons-codec from 1.17.0 to 1.18.0 #449, #533. Thanks to Gary Gregory, Dependabot.
+o Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #450, #458, #471. Thanks to Gary Gregory, Dependabot.
+o Bump slf4j.version from 2.0.13 to 2.0.17 #457, #462, #464, #549. Thanks to Gary Gregory, Dependabot.
+o Bump spring.version from 5.3.35 to 5.3.39. Thanks to Gary Gregory.
+o Bump org.yaml:snakeyaml from 2.2 to 2.4 #473. Thanks to Gary Gregory, Dependabot.
+o Bump log4j.version from 2.23.1 to 2.24.3 #475, #486, #514, #519. Thanks to Gary Gregory, Dependabot.
+o Bump commons-io:commons-io from 2.16.1 to 2.19.0 #480, #513. Thanks to Gary Gregory, Dependabot.
+o Bump org.apache.commons:commons-dbcp2 from 2.12.0 to 2.13.0 #515. Thanks to Gary Gregory, Dependabot.
+o Bump org.apache.commons:commons-text from 1.12.0 to 1.13.1 #521. Thanks to Gary Gregory, Dependabot.
+o Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.1. Thanks to Gary Gregory.
+o Bump org.apache.commons:commons-pool2 from 2.12.0 to 2.12.1 #532. Thanks to Gary Gregory, Dependabot.
+o Bump org.dbunit:dbunit from 2.8.0 to 3.0.0 #534. Thanks to Gary Gregory, Dependabot.
+o Bump org.apache.commons:commons-vfs2 from 2.9.0 to 2.10.0. Thanks to Gary Gregory, Dependabot.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_configuration.cgi
+
+-----------------------------------------------------------------------------
+
 Apache Commons Configuration
 Version 2.11.0
 Release Notes
