@@ -63,7 +63,7 @@
     <spring.version>5.3.39</spring.version>
     <japicmp.skip>false</japicmp.skip>
     <!-- Commons Release Plugin -->
-    <commons.bc.version>2.10.1</commons.bc.version>
+    <commons.bc.version>2.11.0</commons.bc.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
