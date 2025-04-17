@@ -1,6 +1,19 @@
-The Apache Commons Configuration team is pleased to announce the commons-configuration2-2.11.1 release!
+Apache Commons Configuration
+Version 2.11.1
+Release Notes
+
+Introducing Apache Commons Configuration
+----------------------------------------
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
 
 Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+
+Minor release with new features and updated dependencies; requires Java 8 or above.
 
 Changes in this version include:
 
