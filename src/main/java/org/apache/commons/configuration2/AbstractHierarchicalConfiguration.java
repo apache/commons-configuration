@@ -513,6 +513,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param prefix the prefix of the keys to start with
      * @param delimiter TODO
      * @return an iterator with the found keys
+     * @since 2.12.0
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
