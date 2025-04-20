@@ -29,7 +29,7 @@ import jakarta.servlet.ServletContext;
  * A configuration wrapper to read the initialization parameters of a servlet context. This configuration is read only,
  * adding or removing a property will throw an UnsupportedOperationException.
  *
- * @since 2.12
+ * @since 2.12.0
  */
 public class JakartaServletContextConfiguration extends BaseWebConfiguration {
 

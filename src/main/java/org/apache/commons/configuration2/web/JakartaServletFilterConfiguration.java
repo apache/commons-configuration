@@ -28,7 +28,7 @@ import jakarta.servlet.FilterConfig;
  * A configuration wrapper around a {@link FilterConfig}. This configuration is read only, adding or removing a property
  * will throw an UnsupportedOperationException.
  *
- * @since 2.12
+ * @since 2.12.0
  */
 public class JakartaServletFilterConfiguration extends BaseWebConfiguration {
 

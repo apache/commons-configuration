@@ -30,7 +30,7 @@ import jakarta.servlet.ServletRequest;
  * A configuration wrapper to read the parameters of a servlet request. This configuration is read only, adding or
  * removing a property will throw an UnsupportedOperationException.
  *
- * @since 2.12
+ * @since 2.12.0
  */
 public class JakartaServletRequestConfiguration extends BaseWebConfiguration {
 

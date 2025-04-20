@@ -29,7 +29,7 @@ import jakarta.servlet.ServletConfig;
  * A configuration wrapper around a {@link ServletConfig}. This configuration is read only, adding or removing a
  * property will throw an UnsupportedOperationException.
  *
- * @since 2.12
+ * @since 2.12.0
  */
 public class JakartaServletConfiguration extends BaseWebConfiguration {
 
