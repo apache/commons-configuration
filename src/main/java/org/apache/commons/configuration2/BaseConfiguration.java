@@ -156,7 +156,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     /**
-     * Read property from underlying map.
+     * Reads property from underlying map.
      *
      * @param key key to use for mapping
      * @return object associated with the given configuration key.
