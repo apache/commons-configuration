@@ -887,7 +887,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a comment.
+         * Writes a comment.
          *
          * @param comment the comment to write
          * @throws IOException if an I/O error occurs.
@@ -911,7 +911,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key The key of the property
          * @param values The array of values of the property
@@ -924,7 +924,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key the key of the property
          * @param value the value of the property

@@ -327,7 +327,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Write a list property.
+     * Writes a list property.
      *
      * @param out the output stream
      * @param key the key of the property
@@ -338,7 +338,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Write a property.
+     * Writes a property.
      *
      * @param out the output stream
      * @param key the key of the property
