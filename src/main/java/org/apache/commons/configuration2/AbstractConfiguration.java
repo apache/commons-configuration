@@ -190,7 +190,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Whether the configuration should throw NoSuchElementExceptions or simply return null when a property does not exist.
      * Defaults to return null.
      */
-    private boolean throwExceptionOnMissing;
+    private volatile boolean throwExceptionOnMissing;
 
     /** Stores a reference to the object that handles variable interpolation. */
     private AtomicReference<ConfigurationInterpolator> interpolator;
