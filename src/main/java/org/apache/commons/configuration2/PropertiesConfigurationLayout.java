@@ -380,7 +380,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     private final AtomicInteger loadCounter;
 
     /** Stores the force single line flag. */
-    private boolean forceSingleLine;
+    private volatile boolean forceSingleLine;
 
     /** Seen includes. */
     private final ArrayDeque<URL> seenStack = new ArrayDeque<>();
