@@ -24,6 +24,10 @@
   </properties>
   <body>
     <release version="2.12.1" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+       <!-- FIX -->
+       <!-- ADD -->
+       <!-- UPDATE -->
+       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.19.0 #565.</action>
     </release>
     <release version="2.12.0" date="2025-04-22" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
