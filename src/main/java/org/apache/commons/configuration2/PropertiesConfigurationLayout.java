@@ -658,32 +658,30 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     public void load(final PropertiesConfiguration config, final Reader reader) throws ConfigurationException {
         loadCounter.incrementAndGet();
         @SuppressWarnings("resource") // createPropertiesReader wraps the reader.
-        final PropertiesConfiguration.PropertiesReader pReader = config.getIOFactory().createPropertiesReader(reader);
-
+        final PropertiesConfiguration.PropertiesReader propReader = config.getIOFactory().createPropertiesReader(reader);
         try {
-            while (pReader.nextProperty()) {
-                if (config.propertyLoaded(pReader.getPropertyName(), pReader.getPropertyValue(), seenStack)) {
-                    final boolean contained = layoutData.containsKey(pReader.getPropertyName());
+            while (propReader.nextProperty()) {
+                if (config.propertyLoaded(propReader.getPropertyName(), propReader.getPropertyValue(), seenStack)) {
+                    final boolean contained = layoutData.containsKey(propReader.getPropertyName());
                     int blankLines = 0;
-                    int idx = checkHeaderComment(pReader.getCommentLines());
-                    while (idx < pReader.getCommentLines().size() && StringUtils.isEmpty(pReader.getCommentLines().get(idx))) {
+                    int idx = checkHeaderComment(propReader.getCommentLines());
+                    while (idx < propReader.getCommentLines().size() && StringUtils.isEmpty(propReader.getCommentLines().get(idx))) {
                         idx++;
                         blankLines++;
                     }
-                    final String comment = extractComment(pReader.getCommentLines(), idx, pReader.getCommentLines().size() - 1);
-                    final PropertyLayoutData data = fetchLayoutData(pReader.getPropertyName());
+                    final String comment = extractComment(propReader.getCommentLines(), idx, propReader.getCommentLines().size() - 1);
+                    final PropertyLayoutData data = fetchLayoutData(propReader.getPropertyName());
                     if (contained) {
                         data.addComment(comment);
                         data.setSingleLine(false);
                     } else {
                         data.setComment(comment);
                         data.setBlankLines(blankLines);
-                        data.setSeparator(pReader.getPropertySeparator());
+                        data.setSeparator(propReader.getPropertySeparator());
                     }
                 }
             }
-
-            setFooterComment(extractComment(pReader.getCommentLines(), 0, pReader.getCommentLines().size() - 1));
+            setFooterComment(extractComment(propReader.getCommentLines(), 0, propReader.getCommentLines().size() - 1));
         } catch (final IOException ioex) {
             throw new ConfigurationException(ioex);
         } finally {
@@ -724,42 +722,36 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     public void save(final PropertiesConfiguration config, final Writer writer) throws ConfigurationException {
         try {
             @SuppressWarnings("resource") // createPropertiesReader wraps the writer.
-            final PropertiesConfiguration.PropertiesWriter pWriter = config.getIOFactory().createPropertiesWriter(writer, config.getListDelimiterHandler());
-            pWriter.setGlobalSeparator(getGlobalSeparator());
+            final PropertiesConfiguration.PropertiesWriter propWriter = config.getIOFactory().createPropertiesWriter(writer, config.getListDelimiterHandler());
+            propWriter.setGlobalSeparator(getGlobalSeparator());
             if (getLineSeparator() != null) {
-                pWriter.setLineSeparator(getLineSeparator());
+                propWriter.setLineSeparator(getLineSeparator());
             }
-
             if (headerComment != null) {
-                writeComment(pWriter, getCanonicalHeaderComment(true));
+                writeComment(propWriter, getCanonicalHeaderComment(true));
             }
-
             boolean firstKey = true;
             for (final String key : getKeys()) {
                 if (config.containsKeyInternal(key)) {
                     // preset header comment needs to be separated from key
                     if (firstKey && headerComment != null && getBlankLinesBefore(key) == 0) {
-                        pWriter.writeln(null);
+                        propWriter.writeln(null);
                     }
-
                     // Output blank lines before property
                     for (int i = 0; i < getBlankLinesBefore(key); i++) {
-                        pWriter.writeln(null);
+                        propWriter.writeln(null);
                     }
-
                     // Output the comment
-                    writeComment(pWriter, getCanonicalComment(key, true));
-
+                    writeComment(propWriter, getCanonicalComment(key, true));
                     // Output the property and its value
                     final boolean singleLine = isForceSingleLine() || isSingleLine(key);
-                    pWriter.setCurrentSeparator(getSeparator(key));
-                    pWriter.writeProperty(key, config.getPropertyInternal(key), singleLine);
+                    propWriter.setCurrentSeparator(getSeparator(key));
+                    propWriter.writeProperty(key, config.getPropertyInternal(key), singleLine);
                 }
                 firstKey = false;
             }
-
-            writeComment(pWriter, getCanonicalFooterCooment(true));
-            pWriter.flush();
+            writeComment(propWriter, getCanonicalFooterCooment(true));
+            propWriter.flush();
         } catch (final IOException ioex) {
             throw new ConfigurationException(ioex);
         }
