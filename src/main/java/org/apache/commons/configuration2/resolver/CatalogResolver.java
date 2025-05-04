@@ -36,7 +36,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Thin wrapper around xml commons CatalogResolver to allow list of catalogs to be provided.
+ * Thin wrapper around XML commons CatalogResolver to allow list of catalogs to be provided.
  *
  * @since 1.7
  */

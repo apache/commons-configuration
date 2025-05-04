@@ -377,7 +377,7 @@ Configuration config = wrapperFactory.createBuilderConfigurationWrapper(
         If you've used this with Commons Configuration 1.x, just replace the spring-modules-jakarta-commons classname with
         <code>ConfigurationPropertiesFactoryBean</code>.
 
-        Here is a sample xml configuration:
+        Here is a sample XML configuration:
       </p>
       <source><![CDATA[
 <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

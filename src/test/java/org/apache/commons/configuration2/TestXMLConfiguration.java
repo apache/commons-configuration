@@ -65,7 +65,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * test for loading and saving xml properties files
+ * test for loading and saving XML properties files
  */
 public class TestXMLConfiguration {
     /**
@@ -319,7 +319,7 @@ public class TestXMLConfiguration {
 
     @Test
     public void testAddProperty() {
-        // add a property to a non initialized xml configuration
+        // add a property to a non initialized XML configuration
         final XMLConfiguration config = new XMLConfiguration();
         config.addProperty("test.string", "hello");
 

@@ -45,7 +45,7 @@ import org.apache.commons.text.lookup.StringLookup;
  * String str = lookup.lookup("'$[element] ' + String.trimToEmpty('$[space.description]')");
  * </pre>
  *
- * In the example above TEST_FILE contains xml that looks like:
+ * In the example above TEST_FILE contains XML that looks like:
  *
  * <pre>
  * &lt;configuration&gt;
