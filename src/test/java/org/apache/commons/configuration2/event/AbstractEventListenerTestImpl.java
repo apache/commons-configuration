@@ -40,7 +40,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     /**
      * Creates a new instance of {@code AbstractEventListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<b>null</b> if the source need not to be checked)
+     * @param source the event source (<strong>null</strong> if the source need not to be checked)
      */
     protected AbstractEventListenerTestImpl(final Object source) {
         expectedSource = source;

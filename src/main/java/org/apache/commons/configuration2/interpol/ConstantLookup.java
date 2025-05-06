@@ -61,8 +61,8 @@ public class ConstantLookup implements Lookup {
     /**
      * Loads the class with the specified name. If an application has special needs regarding the class loaders to be used,
      * it can hook in here. This implementation delegates to the {@code getClass()} method of Commons Lang's
-     * <code><a href="https://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
-     * ClassUtils</a></code>.
+     * <a href="https://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
+     * ClassUtils</a>.
      *
      * @param className the name of the class to be loaded
      * @return the corresponding class object
@@ -73,12 +73,12 @@ public class ConstantLookup implements Lookup {
     }
 
     /**
-     * Looks up a variable. The passed in variable name is interpreted as the name of a <b>static final</b> member field of
+     * Looks up a variable. The passed in variable name is interpreted as the name of a <strong>static final</strong> member field of
      * a class. If the value has already been obtained, it can be retrieved from an internal cache. Otherwise this method
      * will invoke the {@code resolveField()} method and pass in the name of the class and the field.
      *
      * @param var the name of the variable to be resolved
-     * @return the value of this variable or <b>null</b> if it cannot be resolved
+     * @return the value of this variable or <strong>null</strong> if it cannot be resolved
      */
     @Override
     public Object lookup(final String var) {

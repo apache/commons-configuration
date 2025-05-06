@@ -54,7 +54,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * A specialized visitor base class that can be used for storing the tree of configuration nodes. The basic idea is that
      * each node can be associated with a reference object. This reference object has a concrete meaning in a derived class,
-     * e.g. an entry in a JNDI context or an XML element. When the configuration tree is set up, the {@code load()} method
+     * for example an entry in a JNDI context or an XML element. When the configuration tree is set up, the {@code load()} method
      * is responsible for setting the reference objects. When the configuration tree is later modified, new nodes do not
      * have a defined reference object. This visitor class processes all nodes and finds the ones without a defined
      * reference object. For those nodes the {@code insert()} method is called, which must be defined in concrete sub
@@ -69,9 +69,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param newNode the node to be inserted
          * @param parent the parent node
-         * @param sibling1 the sibling after which the node is to be inserted; can be <b>null</b> if the new node is going to be
+         * @param sibling1 the sibling after which the node is to be inserted; can be <strong>null</strong> if the new node is going to be
          *        the first child node
-         * @param sibling2 the sibling before which the node is to be inserted; can be <b>null</b> if the new node is going to
+         * @param sibling2 the sibling before which the node is to be inserted; can be <strong>null</strong> if the new node is going to
          *        be the last child node
          * @param refHandler the {@code ReferenceNodeHandler}
          */
@@ -362,7 +362,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a new instance of {@code BaseHierarchicalConfiguration} and copies all data contained in the specified
      * configuration into the new one.
      *
-     * @param c the configuration that is to be copied (if <b>null</b>, this constructor will behave like the standard
+     * @param c the configuration that is to be copied (if <strong>null</strong>, this constructor will behave like the standard
      *        constructor)
      * @since 1.4
      */
@@ -419,7 +419,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
 
     /**
      * {@inheritDoc} This is a short form for {@code configurationAt(key,
-     * <b>false</b>)}.
+     * <strong>false</strong>)}.
      *
      * @throws ConfigurationRuntimeException if the key does not select a single node
      */
@@ -429,11 +429,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * {@inheritDoc} The result of this implementation depends on the {@code supportUpdates} flag: If it is <b>false</b>, a
+     * {@inheritDoc} The result of this implementation depends on the {@code supportUpdates} flag: If it is <strong>false</strong>, a
      * plain {@code BaseHierarchicalConfiguration} is returned using the selected node as root node. This is suitable for
      * read-only access to properties. Because the configuration returned in this case is not connected to the parent
      * configuration, updates on properties made by one configuration are not reflected by the other one. A value of
-     * <b>true</b> for this parameter causes a tracked node to be created, and result is a {@link SubnodeConfiguration}
+     * <strong>true</strong> for this parameter causes a tracked node to be created, and result is a {@link SubnodeConfiguration}
      * based on this tracked node. This configuration is really connected to its parent, so that updated properties are
      * visible on both.
      *
@@ -663,7 +663,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Initializes properties of a sub configuration. A sub configuration inherits some settings from its parent, e.g. the
+     * Initializes properties of a sub configuration. A sub configuration inherits some settings from its parent, for example the
      * expression engine or the synchronizer. The corresponding values are copied by this method.
      *
      * @param sub the sub configuration to be initialized

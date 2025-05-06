@@ -17,9 +17,6 @@
 
 package org.apache.commons.configuration2;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,8 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
@@ -130,27 +129,23 @@ public abstract class TestAbstractConfiguration {
     public void testGetBigIntegerConversion() {
         final Configuration config = getConfiguration();
         final ConversionException cex = assertThrows(ConversionException.class, () -> config.getBigInteger("key1"));
-        assertThat(cex.getMessage(), containsString("'key1'"));
-        assertThat(cex.getMessage(), containsString(BigInteger.class.getName()));
-        assertThat(cex.getMessage(), containsString(config.getString("key1")));
+        assertTrue(cex.getMessage().contains("'key1'"));
+        assertTrue(cex.getMessage().contains(BigInteger.class.getName()));
+        assertTrue(cex.getMessage().contains(config.getString("key1")));
     }
 
     @Test
     public void testGetKeys() {
         final Configuration config = getConfiguration();
         final Iterator<String> keys = config.getKeys();
-
-        final String[] expectedKeys = {"key1", "key2", "list", "listesc"};
-
+        final Set<String> expectedKeys = new HashSet<>(Arrays.asList("key1", "key2", "list", "listesc"));
         assertNotNull(keys);
         assertTrue(keys.hasNext());
-
-        final List<String> actualKeys = new ArrayList<>();
+        final Set<String> actualKeys = new HashSet<>();
         while (keys.hasNext()) {
             actualKeys.add(keys.next());
         }
-
-        assertThat("keys", actualKeys, containsInAnyOrder(expectedKeys));
+        assertEquals(actualKeys, expectedKeys, "keys");
     }
 
     @Test

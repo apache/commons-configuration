@@ -106,7 +106,7 @@ import org.apache.commons.lang3.StringUtils;
  * </pre>
  *
  * The configuration can be instructed to perform commits after database updates. This is achieved by setting the
- * {@code commits} parameter of the constructors to <b>true</b>. If commits should not be performed (which is the
+ * {@code commits} parameter of the constructors to <strong>true</strong>. If commits should not be performed (which is the
  * default behavior), it should be ensured that the connections returned by the {@code DataSource} are in auto-commit
  * mode.
  * <p>
@@ -212,7 +212,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         }
 
         /**
-         * Gets the current connection. This method can be called while {@code execute()} is running. It returns <b>null</b>
+         * Gets the current connection. This method can be called while {@code execute()} is running. It returns <strong>null</strong>
          * otherwise.
          *
          * @return the current connection
@@ -668,7 +668,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Sets the auto commit flag. If set to <b>true</b>, this configuration performs a commit after each database update.
+     * Sets the auto commit flag. If set to <strong>true</strong>, this configuration performs a commit after each database update.
      *
      * @param autoCommit the auto commit flag
      */

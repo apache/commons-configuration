@@ -251,7 +251,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * The goal is to allow both of them be used interchangeably when reading and writing properties files without losing or
      * changing information.
      * <p>
-     * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8 encoding (which is e.g. the new default
+     * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8 encoding (which is for example the new default
      * for resource bundle properties files since Java 9), Unicode escapes are no longer required and avoiding them makes
      * properties files more readable with regular text editors.
      * <p>
@@ -272,7 +272,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
         /**
          * Whether characters less than {@code \u0020} and characters greater than {@code \u007E} in property keys or values
-         * should be escaped using Unicode escape sequences. Not necessary when e.g. writing as UTF-8.
+         * should be escaped using Unicode escape sequences. Not necessary when for example writing as UTF-8.
          */
         private final boolean escapeUnicode;
 
@@ -541,7 +541,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
         /**
          * Gets the name of the last read property. This method can be called after {@link #nextProperty()} was invoked and
-         * its return value was <b>true</b>.
+         * its return value was <strong>true</strong>.
          *
          * @return the name of the last read property
          * @since 1.3
@@ -563,7 +563,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
         /**
          * Gets the value of the last read property. This method can be called after {@link #nextProperty()} was invoked and
-         * its return value was <b>true</b>.
+         * its return value was <strong>true</strong>.
          *
          * @return the value of the last read property
          * @since 1.3
@@ -608,8 +608,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
         /**
          * Parses the next property from the input stream and stores the found name and value in internal fields. These fields
-         * can be obtained using the provided getter methods. The return value indicates whether EOF was reached (<b>false</b>)
-         * or whether further properties are available (<b>true</b>).
+         * can be obtained using the provided getter methods. The return value indicates whether EOF was reached (<strong>false</strong>)
+         * or whether further properties are available (<strong>true</strong>).
          *
          * @return a flag if further properties are available
          * @throws IOException if an error occurs
@@ -648,7 +648,6 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@code &lt;value&gt;})
          *
          * @return A string containing a property value or null
-         *
          * @throws IOException in case of an I/O error
          */
         public String readProperty() throws IOException {
@@ -888,7 +887,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a comment.
+         * Writes a comment.
          *
          * @param comment the comment to write
          * @throws IOException if an I/O error occurs.
@@ -900,7 +899,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Helper method for writing a line with the platform specific line ending.
          *
-         * @param s the content of the line (may be <b>null</b>)
+         * @param s the content of the line (may be <strong>null</strong>)
          * @throws IOException if an error occurs
          * @since 1.3
          */
@@ -912,11 +911,10 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key The key of the property
          * @param values The array of values of the property
-         *
          * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final List<?> values) throws IOException {
@@ -926,11 +924,10 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key the key of the property
          * @param value the value of the property
-         *
          * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final Object value) throws IOException {
@@ -1430,7 +1427,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      *
      * @param basePath the base path
      * @param fileName the file name
-     * @return the URL of the include file or <b>null</b> if it cannot be resolved
+     * @return the URL of the include file or <strong>null</strong> if it cannot be resolved
      */
     private URL locateIncludeFile(final String basePath, final String fileName) {
         final FileLocator includeLocator = FileLocatorUtils.fileLocator(locator).sourceURL(null).basePath(basePath).fileName(fileName).create();
@@ -1439,9 +1436,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
     /**
      * This method is invoked by the associated {@link PropertiesConfigurationLayout} object for each property definition
-     * detected in the parsed properties file. Its task is to check whether this is a special property definition (e.g. the
+     * detected in the parsed properties file. Its task is to check whether this is a special property definition (for example the
      * {@code include} property). If not, the property must be added to this configuration. The return value indicates
-     * whether the property should be treated as a normal property. If it is <b>false</b>, the layout object will ignore
+     * whether the property should be treated as a normal property. If it is <strong>false</strong>, the layout object will ignore
      * this property.
      *
      * @param key the property key
@@ -1525,7 +1522,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     }
 
     /**
-     * Controls whether additional files can be loaded by the {@code include = <xxx>} statement or not. This is <b>true</b>
+     * Controls whether additional files can be loaded by the {@code include = <xxx>} statement or not. This is <strong>true</strong>
      * per default.
      *
      * @param includesAllowed True if Includes are allowed.
@@ -1541,8 +1538,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * you want to use a custom {@code IOFactory} for changing the {@code PropertiesReader}, you cannot load the
      * configuration data in the constructor.
      *
-     * @param ioFactory the new {@code IOFactory} (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code IOFactory} is <b>null</b>
+     * @param ioFactory the new {@code IOFactory} (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the {@code IOFactory} is <strong>null</strong>
      * @since 1.7
      */
     public void setIOFactory(final IOFactory ioFactory) {
@@ -1556,7 +1553,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Sets the associated layout object.
      *
-     * @param layout the new layout object; can be <b>null</b>, then a new layout object will be created
+     * @param layout the new layout object; can be <strong>null</strong>, then a new layout object will be created
      * @since 1.3
      */
     public void setLayout(final PropertiesConfigurationLayout layout) {

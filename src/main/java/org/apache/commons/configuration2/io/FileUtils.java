@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * This class is a subset of org.apache.commons.io.FileUtils, git-svn-id:
  * https://svn.apache.org/repos/asf/commons/proper/io/trunk@1423916 13f79535-47bb-0310-9956-ffa450edef68. The subset is
- * determined by {@link FileLocatorUtils}. The copied constants and methods are <em>literally</em> copied.<br />
+ * determined by {@link FileLocatorUtils}. The copied constants and methods are <em>literally</em> copied.
  *
  * See CONFIGURATION-521 for a discussion.
  */

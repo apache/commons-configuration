@@ -148,8 +148,8 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * undesired effects. For concrete subclasses dealing with specific node structures, this situation may be different.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes managed by this hierarchical configuration
+ * @since 2.0
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {
@@ -291,7 +291,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * hierarchy. Implementation node: This method performs some book-keeping and then delegates to
      * {@code addNodesInternal()}.
      *
-     * @param key the key where the nodes are to be added; can be <b>null</b>, then they are added to the root node
+     * @param key the key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
      * @param nodes a collection with the {@code Node} objects to be added
      */
     @Override
@@ -310,7 +310,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Actually adds a collection of new nodes to this configuration. This method is called by {@code addNodes()}. It can be
      * overridden by subclasses that need to adapt this operation.
      *
-     * @param key the key where the nodes are to be added; can be <b>null</b>, then they are added to the root node
+     * @param key the key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
      * @param nodes a collection with the {@code Node} objects to be added
      * @since 2.0
      */
@@ -436,7 +436,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Checks if the specified key is contained in this configuration. Note that for this configuration the term
      * &quot;contained&quot; means that the key has an associated value. If there is a node for this key that has no value
-     * but children (either defined or undefined), this method will still return <b>false </b>.
+     * but children (either defined or undefined), this method will still return <strong>false </strong>.
      *
      * @param key the key to be checked
      * @return a flag if this key is contained in this configuration
@@ -468,7 +468,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Gets the expression engine used by this configuration. This method will never return <b>null</b>; if no specific
+     * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
      * @return the current expression engine
@@ -513,6 +513,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param prefix the prefix of the keys to start with
      * @param delimiter TODO
      * @return an iterator with the found keys
+     * @since 2.12.0
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
@@ -729,7 +730,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
      * will be interpreted by this engine.
      *
-     * @param expressionEngine the new expression engine; can be <b>null</b>, then the default expression engine will be
+     * @param expressionEngine the new expression engine; can be <strong>null</strong>, then the default expression engine will be
      *        used
      * @since 1.3
      */
@@ -769,7 +770,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param result the {@code QueryResult}
      * @param handler the {@code NodeHandler}
-     * @return the value of this result (may be <b>null</b>)
+     * @return the value of this result (may be <strong>null</strong>)
      */
     private Object valueFromResult(final QueryResult<T> result, final NodeHandler<T> handler) {
         return result.isAttributeResult() ? result.getAttributeValue(handler) : handler.getValue(result.getNode());

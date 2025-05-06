@@ -91,7 +91,7 @@ public class DefaultParametersManager {
          *
          * @param h the handler to be checked
          * @param startCls the start class
-         * @return <b>true</b> if this instance refers to this occurrence, <b>false</b> otherwise
+         * @return <strong>true</strong> if this instance refers to this occurrence, <strong>false</strong> otherwise
          */
         public boolean isOccurrence(final DefaultParametersHandler<?> h, final Class<?> startCls) {
             return h == handler && (startCls == null || startCls.equals(startClass));
@@ -113,7 +113,7 @@ public class DefaultParametersManager {
      * objects registered at this instance. Using this method the passed in parameters object can be populated with default
      * values.
      *
-     * @param params the parameters object to be initialized (may be <b>null</b>, then this method has no effect)
+     * @param params the parameters object to be initialized (may be <strong>null</strong>, then this method has no effect)
      */
     public void initializeParameters(final BuilderParameters params) {
         if (params != null) {
@@ -129,8 +129,8 @@ public class DefaultParametersManager {
      * they were registered. So handlers registered later may override the values set by handlers registered earlier.
      *
      * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <b>null</b>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <b>null</b>)
+     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
      */
     public <T> void registerDefaultsHandler(final Class<T> paramsClass, final DefaultParametersHandler<? super T> handler) {
@@ -149,19 +149,19 @@ public class DefaultParametersManager {
      * PropertiesBuilderParameters} (although, for technical reasons, this relation is not reflected in the Java classes). A
      * {@link DefaultParametersHandler} object defined for a base interface can also deal with parameter objects "derived"
      * from this base interface (i.e. supporting a super set of the methods defined by the base interface). Now there may be
-     * the use case that there is an implementation of {@code DefaultParametersHandler} for a base interface (e.g.
+     * the use case that there is an implementation of {@code DefaultParametersHandler} for a base interface (for example
      * {@code FileBasedBuilderParameters}), but it should only process specific derived interfaces (say
      * {@code PropertiesBuilderParameters}, but not
      * {@link org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters XMLBuilderParameters}). This can be
      * achieved by passing in {@code PropertiesBuilderParameters} as start class. In this case,
      * {@code DefaultParametersManager} ensures that the handler is only called on parameter objects having both the start
-     * class and the actual type supported by the handler as base interfaces. The passed in start class can be <b>null</b>;
+     * class and the actual type supported by the handler as base interfaces. The passed in start class can be <strong>null</strong>;
      * then the parameter class supported by the handler is used (which is the default behavior of the
      * {@link #registerDefaultsHandler(Class, DefaultParametersHandler)} method).
      *
      * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <b>null</b>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <b>null</b>)
+     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be
      *        applied
      * @throws IllegalArgumentException if a required parameter is missing
@@ -189,7 +189,7 @@ public class DefaultParametersManager {
     /**
      * Removes the specified {@code DefaultParametersHandler} from this instance if it is in combination with the given
      * start class. If this handler has been registered multiple times for different start classes, only occurrences for the
-     * given start class are removed. The {@code startClass} parameter can be <b>null</b>, then all occurrences of the
+     * given start class are removed. The {@code startClass} parameter can be <strong>null</strong>, then all occurrences of the
      * handler are removed.
      *
      * @param handler the {@code DefaultParametersHandler} to be removed

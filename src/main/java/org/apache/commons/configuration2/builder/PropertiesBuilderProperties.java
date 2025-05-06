@@ -34,8 +34,8 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
+ * @since 2.0
  */
 public interface PropertiesBuilderProperties<T> {
     /**
@@ -50,7 +50,7 @@ public interface PropertiesBuilderProperties<T> {
     }
 
     /**
-     * Sets a flag whether include files are supported by the properties configuration object. If set to <b>true</b>, files
+     * Sets a flag whether include files are supported by the properties configuration object. If set to <strong>true</strong>, files
      * listed by an include property are loaded automatically.
      *
      * @param f the value of the flag

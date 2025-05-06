@@ -35,8 +35,8 @@ import org.apache.commons.lang3.SystemProperties;
  * </p>
  * <p>
  * When constructing an instance it can be configured whether the base path should be taken into account. If this option
- * is set, the base path is appended to the home directory if it is not <b>null</b>. This is useful for instance to
- * select a specific sub directory of the user's home directory. If this option is set to <b>false</b>, the base path is
+ * is set, the base path is appended to the home directory if it is not <strong>null</strong>. This is useful for instance to
+ * select a specific sub directory of the user's home directory. If this option is set to <strong>false</strong>, the base path is
  * always ignored, and only the file name is evaluated.
  * </p>
  */
@@ -50,7 +50,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @return the directory to be used
      */
     private static String fetchHomeDirectory(final String homeDir) {
-        return homeDir != null ? homeDir : SystemProperties.getUserName();
+        return homeDir != null ? homeDir : SystemProperties.getUserHome();
     }
 
     /** The home directory to be searched for the requested file. */
@@ -61,7 +61,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
 
     /**
      * Creates a new instance of {@code HomeDirectoryLocationStrategy} with default settings. The home directory is set to
-     * the user's home directory. The base path flag is set to <b>false</b> (which means that the base path is ignored).
+     * the user's home directory. The base path flag is set to <strong>false</strong> (which means that the base path is ignored).
      */
     public HomeDirectoryLocationStrategy() {
         this(false);
@@ -80,7 +80,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
     /**
      * Creates a new instance of {@code HomeDirectoryLocationStrategy} and initializes it with the specified settings.
      *
-     * @param homeDir the path to the home directory (can be <b>null</b>)
+     * @param homeDir the path to the home directory (can be <strong>null</strong>)
      * @param withBasePath a flag whether the base path should be evaluated
      */
     public HomeDirectoryLocationStrategy(final String homeDir, final boolean withBasePath) {
@@ -121,7 +121,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
 
     /**
      * {@inheritDoc} This implementation searches in the home directory for a file described by the passed in
-     * {@code FileLocator}. If the locator defines a base path and the {@code evaluateBasePath} property is <b>true</b>, a
+     * {@code FileLocator}. If the locator defines a base path and the {@code evaluateBasePath} property is <strong>true</strong>, a
      * sub directory of the home directory is searched.
      */
     @Override

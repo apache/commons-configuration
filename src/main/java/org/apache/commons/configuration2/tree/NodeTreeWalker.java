@@ -31,7 +31,7 @@ import java.util.List;
  * </p>
  * <p>
  * An instance of this class does not define any state; therefore, it can be shared and used concurrently. The
- * {@code INSTANCE} member field can be used for accessing a default instance. If desired (e.g. for testing purposes),
+ * {@code INSTANCE} member field can be used for accessing a default instance. If desired (for example for testing purposes),
  * new instances can be created.
  * </p>
  *
@@ -72,7 +72,7 @@ public class NodeTreeWalker {
      * @param visitor the visitor
      * @param handler the handler
      * @param <T> the type of the nodes involved
-     * @return <b>true</b> if a walk operation can be performed, <b>false</b> otherwise
+     * @return <strong>true</strong> if a walk operation can be performed, <strong>false</strong> otherwise
      * @throws IllegalArgumentException if a required parameter is missing
      */
     private static <T> boolean checkParameters(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
@@ -110,11 +110,11 @@ public class NodeTreeWalker {
      * etc. In this mode of traversal, there is no direct connection between the encounter of a node and its children.
      * <strong>Therefore, on the visitor object only the {@code visitBeforeChildren()} method gets called!</strong>.
      *
-     * @param root the root node of the hierarchy to be processed (may be <b>null</b>, then this call has no effect)
-     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <b>null</b>)
-     * @param handler the {@code NodeHandler} (must not be <b>null</b>)
+     * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
+     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
+     * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
      * @param <T> the type of the nodes involved
-     * @throws IllegalArgumentException if a required parameter is <b>null</b>
+     * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T> void walkBFS(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         if (checkParameters(root, visitor, handler)) {
@@ -128,11 +128,11 @@ public class NodeTreeWalker {
      * recursively all of its children are processed, and eventually
      * {@link ConfigurationNodeVisitor#visitAfterChildren(Object, NodeHandler)} gets invoked.
      *
-     * @param root the root node of the hierarchy to be processed (may be <b>null</b>, then this call has no effect)
-     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <b>null</b>)
-     * @param handler the {@code NodeHandler} (must not be <b>null</b>)
+     * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
+     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
+     * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
      * @param <T> the type of the nodes involved
-     * @throws IllegalArgumentException if a required parameter is <b>null</b>
+     * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T> void walkDFS(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         if (checkParameters(root, visitor, handler)) {

@@ -18,8 +18,6 @@
 package org.apache.commons.configuration2.plist;
 
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -85,7 +83,7 @@ public class TestXMLPropertyListConfiguration {
             values.append("<string>").append(v).append("</string>");
         }
         final String content = out.toString().replaceAll("[ \n\r]", "");
-        assertThat(content, containsString(String.format("<key>array</key><array>%s</array>", values)));
+        assertTrue(content.contains(String.format("<key>array</key><array>%s</array>", values)));
     }
 
     /**
@@ -465,7 +463,7 @@ public class TestXMLPropertyListConfiguration {
 
         try (Writer out = new FileWriter(newFile(tempFolder))) {
             final ConfigurationException e = assertThrows(ConfigurationException.class, () -> config.write(out));
-            assertThat(e.getMessage(), containsString("FileHandler"));
+            assertTrue(e.getMessage().contains("FileHandler"));
         }
     }
 }

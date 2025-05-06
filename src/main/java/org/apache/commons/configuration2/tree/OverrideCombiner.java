@@ -59,7 +59,7 @@ public class OverrideCombiner extends NodeCombiner {
 
     /**
      * Tests if a child node of the second node can be combined with the given child node of the first node. If this is the
-     * case, the corresponding node will be returned, otherwise <b>null</b>. This implementation checks whether the child
+     * case, the corresponding node will be returned, otherwise <strong>null</strong>. This implementation checks whether the child
      * node occurs only once in both hierarchies and is no known list node.
      *
      * @param node1 the first node

@@ -80,7 +80,7 @@ abstract class HierarchicalConfigurationConverter {
      * proper event handling.
      *
      * @param name the name of the new element
-     * @param value the element's value; can be <b>null</b> if the element does not have any value
+     * @param value the element's value; can be <strong>null</strong> if the element does not have any value
      */
     protected abstract void elementStart(String name, Object value);
 

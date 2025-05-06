@@ -64,7 +64,7 @@ public interface ListDelimiterHandler {
      * value contains list delimiter characters and - if so - escape them accordingly.
      *
      * @param value the value to be escaped
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
+     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
      * @return the escaped value
      */
     Object escape(Object value, ValueTransformer transformer);
@@ -75,14 +75,14 @@ public interface ListDelimiterHandler {
      * configuration representation. This may require an advanced escaping in some cases.
      *
      * @param values the list with all the values to be converted to a single value
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <b>null</b>)
+     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
      * @return the resulting escaped value
      */
     Object escapeList(List<?> values, ValueTransformer transformer);
 
     /**
      * Extracts all values contained in the specified object up to the given limit. The passed in object is evaluated (if
-     * necessary in a recursive way). If it is a complex object (e.g. a collection or an array), all its elements are
+     * necessary in a recursive way). If it is a complex object (for example a collection or an array), all its elements are
      * processed recursively and added to a target collection. The process stops if the limit is reached, but depending on
      * the input object, it might be exceeded. (The limit is just an indicator to stop the process to avoid unnecessary work
      * if the caller is only interested in a few values.)
@@ -98,7 +98,7 @@ public interface ListDelimiterHandler {
 
     /**
      * Parses the specified value for list delimiters and splits it if necessary. The passed in object can be either a
-     * single value or a complex one, e.g. a collection, an array, or an {@code Iterable}. It is the responsibility of this
+     * single value or a complex one, for example a collection, an array, or an {@code Iterable}. It is the responsibility of this
      * method to return an {@code Iterable} which contains all extracted values.
      *
      * @param value the value to be parsed

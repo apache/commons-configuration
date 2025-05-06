@@ -85,7 +85,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Checks whether a map with parameters is present. Throws an exception if not.
      *
      * @param params the map with parameters to check
-     * @throws IllegalArgumentException if the map is <b>null</b>
+     * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     private static void checkParameters(final Map<String, Object> params) {
         if (params == null) {
@@ -115,7 +115,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * like {@link #fetchAndCheckPrefixLookups(Map)}, but tests the default lookups collection.
      *
      * @param params the map with parameters
-     * @return the collection with default lookups (may be <b>null</b>)
+     * @return the collection with default lookups (may be <strong>null</strong>)
      * @throws IllegalArgumentException if invalid data is found
      */
     private static Collection<? extends Lookup> fetchAndCheckDefaultLookups(final Map<String, Object> params) {
@@ -155,11 +155,11 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Obtains the {@code BeanHelper} object from the specified map with parameters. This method can be used to obtain an
      * instance from a parameters map that has been set via the {@code setBeanHelper()} method. If no such instance is
-     * found, result is <b>null</b>.
+     * found, result is <strong>null</strong>.
      *
-     * @param params the map with parameters (must not be <b>null</b>)
-     * @return the {@code BeanHelper} stored in this map or <b>null</b>
-     * @throws IllegalArgumentException if the map is <b>null</b>
+     * @param params the map with parameters (must not be <strong>null</strong>)
+     * @return the {@code BeanHelper} stored in this map or <strong>null</strong>
+     * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static BeanHelper fetchBeanHelper(final Map<String, Object> params) {
         checkParameters(params);
@@ -170,7 +170,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains the collection with default lookups from the parameters map.
      *
      * @param params the map with parameters
-     * @return the collection with default lookups (may be <b>null</b>)
+     * @return the collection with default lookups (may be <strong>null</strong>)
      */
     private static Collection<? extends Lookup> fetchDefaultLookups(final Map<String, Object> params) {
         // This is safe to cast because we either have full control over the map
@@ -185,9 +185,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains a specification for a {@link ConfigurationInterpolator} from the specified map with parameters. All
      * properties related to interpolation are evaluated and added to the specification object.
      *
-     * @param params the map with parameters (must not be <b>null</b>)
+     * @param params the map with parameters (must not be <strong>null</strong>)
      * @return an {@code InterpolatorSpecification} object constructed with data from the map
-     * @throws IllegalArgumentException if the map is <b>null</b> or contains invalid data
+     * @throws IllegalArgumentException if the map is <strong>null</strong> or contains invalid data
      */
     public static InterpolatorSpecification fetchInterpolatorSpecification(final Map<String, Object> params) {
         checkParameters(params);
@@ -221,7 +221,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains the map with prefix lookups from the parameters map.
      *
      * @param params the map with parameters
-     * @return the map with prefix lookups (may be <b>null</b>)
+     * @return the map with prefix lookups (may be <strong>null</strong>)
      */
     private static Map<String, ? extends Lookup> fetchPrefixLookups(final Map<String, Object> params) {
         // This is safe to cast because we either have full control over the map
@@ -282,10 +282,10 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
 
     /**
      * Obtains the value of the specified property from the internal map. This method can be used by derived classes if a
-     * specific property is to be accessed. If the given key is not found, result is <b>null</b>.
+     * specific property is to be accessed. If the given key is not found, result is <strong>null</strong>.
      *
      * @param key the key of the property in question
-     * @return the value of the property with this key or <b>null</b>
+     * @return the value of the property with this key or <strong>null</strong>
      */
     protected Object fetchProperty(final String key) {
         return properties.get(key);
@@ -293,7 +293,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
 
     /**
      * {@inheritDoc} This implementation returns a copy of the internal parameters map with the values set so far.
-     * Collection structures (e.g. for lookup objects) are stored as defensive copies, so the original data cannot be
+     * Collection structures (for example for lookup objects) are stored as defensive copies, so the original data cannot be
      * modified.
      */
     @Override
@@ -316,12 +316,12 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * this method is to let a concrete implementation decide which properties can be inherited. Because parameters are
      * basically organized as a map it would be possible to simply copy over all properties from the source object. However,
      * this is not appropriate in all cases. For instance, some properties - like a {@code ConfigurationInterpolator} - are
-     * tightly connected to a configuration and cannot be reused in a different context. For other properties, e.g. a file
+     * tightly connected to a configuration and cannot be reused in a different context. For other properties, for example a file
      * name, it does not make sense to copy it. Therefore, an implementation has to be explicit in the properties it wants
      * to take over.
      *
      * @param source the source properties to inherit from
-     * @throws IllegalArgumentException if the source map is <b>null</b>
+     * @throws IllegalArgumentException if the source map is <strong>null</strong>
      */
     public void inheritFrom(final Map<String, ?> source) {
         if (source == null) {
@@ -336,8 +336,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * parameters object to the internal storage which are not already in. So properties already defined in this object take
      * precedence. Property names starting with the reserved parameter prefix are ignored.
      *
-     * @param p the object whose properties should be merged (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the passed in object is <b>null</b>
+     * @param p the object whose properties should be merged (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the passed in object is <strong>null</strong>
      */
     public void merge(final BuilderParameters p) {
         if (p == null) {
@@ -379,7 +379,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     }
 
     /**
-     * {@inheritDoc} A defensive copy of the passed in collection is created. A <b>null</b> argument causes all default
+     * {@inheritDoc} A defensive copy of the passed in collection is created. A <strong>null</strong> argument causes all default
      * lookups to be removed from the internal parameters map.
      */
     @Override
@@ -403,7 +403,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Sets the value of the <em>listDelimiterHandler</em> property. This property defines the object responsible for
      * dealing with list delimiter and escaping characters. Note:
      * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration} does not allow setting this
-     * property to <b>null</b>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
+     * property to <strong>null</strong>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
      *
      * @param handler the {@code ListDelimiterHandler}
      * @return a reference to this object for method chaining
@@ -435,7 +435,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     }
 
     /**
-     * {@inheritDoc} A defensive copy of the passed in map is created. A <b>null</b> argument causes all prefix lookups to
+     * {@inheritDoc} A defensive copy of the passed in map is created. A <strong>null</strong> argument causes all prefix lookups to
      * be removed from the internal parameters map.
      */
     @Override
@@ -469,8 +469,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
 
     /**
      * Sets the value of the <em>throwExceptionOnMissing</em> property. This property controls the configuration's behavior
-     * if missing properties are queried: a value of <b>true</b> causes the configuration to throw an exception, for a value
-     * of <b>false</b> it will return <b>null</b> values. (Note: Methods returning a primitive data type will always throw
+     * if missing properties are queried: a value of <strong>true</strong> causes the configuration to throw an exception, for a value
+     * of <strong>false</strong> it will return <strong>null</strong> values. (Note: Methods returning a primitive data type will always throw
      * an exception if the property is not defined.)
      *
      * @param b the value of the property
@@ -483,7 +483,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
 
     /**
      * Sets a property for this parameters object. Properties are stored in an internal map. With this method a new entry
-     * can be added to this map. If the value is <b>null</b>, the key is removed from the internal map. This method can be
+     * can be added to this map. If the value is <strong>null</strong>, the key is removed from the internal map. This method can be
      * used by sub classes which also store properties in a map.
      *
      * @param key the key of the property

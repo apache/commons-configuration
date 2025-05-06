@@ -62,7 +62,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * <li>All initialization properties can be set in one or multiple calls of the {@code configure()} method. In each call
  * an arbitrary number of {@link BuilderParameters} objects can be passed. The API allows method chaining and is
  * intended to be used from Java code.</li>
- * <li>If builder instances are created by other means - e.g. using a dependency injection framework -, the fluent API
+ * <li>If builder instances are created by other means - for example using a dependency injection framework -, the fluent API
  * approach may not be suitable. For those use cases it is also possible to pass in all initialization parameters as a
  * map. The keys of the map have to match initialization properties of the {@code ImmutableConfiguration} object to be
  * created, the values are the corresponding property values. For instance, the key <em>throwExceptionOnMissing</em> in
@@ -85,8 +85,8 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * {@code ImmutableConfiguration} instance is returned until the builder is reset.
  * </p>
  *
- * @since 2.0
  * @param <T> the concrete type of {@code ImmutableConfiguration} objects created by this builder
+ * @since 2.0
  */
 public class BasicConfigurationBuilder<T extends ImmutableConfiguration> implements ConfigurationBuilder<T> {
     /**
@@ -133,8 +133,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class. No
      * initialization properties are set.
      *
-     * @param resCls the result class (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @param resCls the result class (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls) {
         this(resCls, null);
@@ -144,9 +144,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class and an
      * initial set of builder parameters. The <em>allowFailOnInit</em> flag is set to <strong>false</strong>.
      *
-     * @param resCls the result class (must not be <b>null</b>)
+     * @param resCls the result class (must not be <strong>null</strong>)
      * @param params a map with initialization parameters
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
         this(resCls, params, false);
@@ -154,14 +154,14 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
 
     /**
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class, an
-     * initial set of builder parameters, and the <em>allowFailOnInit</em> flag. The map with parameters may be <b>null</b>,
+     * initial set of builder parameters, and the <em>allowFailOnInit</em> flag. The map with parameters may be <strong>null</strong>,
      * in this case no initialization parameters are set.
      *
-     * @param resCls the result class (must not be <b>null</b>)
+     * @param resCls the result class (must not be <strong>null</strong>)
      * @param params a map with initialization parameters
      * @param allowFailOnInit a flag whether exceptions on initializing a newly created {@code ImmutableConfiguration}
      *        object are allowed
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         if (resCls == null) {
@@ -178,7 +178,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * {@inheritDoc} This implementation also takes care that the event listener is added to the managed configuration
      * object.
      *
-     * @throws IllegalArgumentException if the event type or the listener is <b>null</b>
+     * @throws IllegalArgumentException if the event type or the listener is <strong>null</strong>
      */
     @Override
     public <E extends Event> void addEventListener(final EventType<E> eventType, final EventListener<? super E> listener) {
@@ -188,7 +188,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Adds the content of the given map to the already existing initialization parameters.
      *
-     * @param params the map with additional initialization parameters; may be <b>null</b>, then this call has no effect
+     * @param params the map with additional initialization parameters; may be <strong>null</strong>, then this call has no effect
      * @return a reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> addParameters(final Map<String, Object> params) {
@@ -219,7 +219,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param params an arbitrary number of objects with builder parameters
      * @return a reference to this builder for method chaining
-     * @throws NullPointerException if a <b>null</b> array is passed
+     * @throws NullPointerException if a <strong>null</strong> array is passed
      */
     public BasicConfigurationBuilder<T> configure(final BuilderParameters... params) {
         final Map<String, Object> newParams = new HashMap<>();
@@ -241,8 +241,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * detected again.</li>
      * </ul>
      *
-     * @param controller the {@code ReloadingController} to connect to (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the controller is <b>null</b>
+     * @param controller the {@code ReloadingController} to connect to (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the controller is <strong>null</strong>
      */
     public final void connectToReloadingController(final ReloadingController controller) {
         if (controller == null) {
@@ -256,8 +256,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * This method is intended to be used by derived classes which support inheritance of their properties to other builder
      * objects.
      *
-     * @param target the target configuration builder (must not be <b>null</b>)
-     * @throws NullPointerException if the target builder is <b>null</b>
+     * @param target the target configuration builder (must not be <strong>null</strong>)
+     * @throws NullPointerException if the target builder is <strong>null</strong>
      */
     protected synchronized void copyEventListeners(final BasicConfigurationBuilder<?> target) {
         copyEventListeners(target, eventListeners);
@@ -268,9 +268,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * intended to be used by derived classes which have to deal with managed configuration builders that need to be
      * initialized with event listeners.
      *
-     * @param target the target configuration builder (must not be <b>null</b>)
+     * @param target the target configuration builder (must not be <strong>null</strong>)
      * @param listeners the event listeners to be copied over
-     * @throws NullPointerException if the target builder is <b>null</b>
+     * @throws NullPointerException if the target builder is <strong>null</strong>
      */
     protected void copyEventListeners(final BasicConfigurationBuilder<?> target, final EventListenerList listeners) {
         target.eventListeners.addAll(listeners);
@@ -606,7 +606,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Sets the initialization parameters of this builder. Already existing parameters are replaced by the content of the
      * given map.
      *
-     * @param params the new initialization parameters of this builder; can be <b>null</b>, then all initialization
+     * @param params the new initialization parameters of this builder; can be <strong>null</strong>, then all initialization
      *        parameters are removed
      * @return a reference to this builder for method chaining
      */
@@ -618,7 +618,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Replaces the current map with parameters by a new one.
      *
-     * @param newParams the map with new parameters (may be <b>null</b>)
+     * @param newParams the map with new parameters (may be <strong>null</strong>)
      */
     private void updateParameters(final Map<String, Object> newParams) {
         final Map<String, Object> map = new HashMap<>();

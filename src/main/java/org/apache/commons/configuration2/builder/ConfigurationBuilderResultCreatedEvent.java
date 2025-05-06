@@ -58,9 +58,9 @@ public class ConfigurationBuilderResultCreatedEvent extends ConfigurationBuilder
     /**
      * Creates a new instance of {@code ConfigurationBuilderResultCreatedEvent} and initializes its properties.
      *
-     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <b>null</b>)
-     * @param evType the type of this event (must not be <b>null</b>)
-     * @param createdConfiguration the newly created {@code ImmutableConfiguration} object (must not be <b>null</b>)
+     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <strong>null</strong>)
+     * @param evType the type of this event (must not be <strong>null</strong>)
+     * @param createdConfiguration the newly created {@code ImmutableConfiguration} object (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is null
      */
     public ConfigurationBuilderResultCreatedEvent(final ConfigurationBuilder<?> source,

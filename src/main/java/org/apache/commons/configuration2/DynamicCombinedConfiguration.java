@@ -51,7 +51,7 @@ import org.apache.commons.configuration2.tree.NodeCombiner;
  * <p>
  * This Configuration implementation uses the configured {@code Synchronizer} to guard itself against concurrent access.
  * If there are multiple threads accessing an instance concurrently, a fully functional {@code Synchronizer}
- * implementation (e.g. {@code ReadWriteSynchronizer}) has to be used to ensure consistency and to avoid exceptions. The
+ * implementation (for example {@code ReadWriteSynchronizer}) has to be used to ensure consistency and to avoid exceptions. The
  * {@code Synchronizer} assigned to an instance is also passed to child configuration objects when they are created.
  * </p>
  *
@@ -141,7 +141,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
          * Decrements the lock counter and checks whether it has reached 0. In this cause, the operation is complete, and the
          * lock can be released.
          *
-         * @return <b>true</b> if the lock count reaches 0, <b>false</b> otherwise
+         * @return <strong>true</strong> if the lock count reaches 0, <strong>false</strong> otherwise
          */
         public boolean decrementLockCountAndCheckRelease() {
             return --lockCount == 0;
@@ -197,7 +197,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /** Stores a map with the named configurations. */
     private final Map<String, Configuration> namedConfigurations = new HashMap<>();
 
-    /** The key pattern for the CombinedConfiguration map */
+    /** The key pattern for the CombinedConfiguration map. */
     private String keyPattern;
 
     /** Stores the combiner. */
@@ -222,7 +222,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Creates a new instance of {@code DynamicCombinedConfiguration} and initializes the combiner to be used.
      *
-     * @param comb the node combiner (can be <b>null</b>, then a union combiner is used as default)
+     * @param comb the node combiner (can be <strong>null</strong>, then a union combiner is used as default)
      */
     public DynamicCombinedConfiguration(final NodeCombiner comb) {
         setNodeCombiner(comb);
@@ -238,9 +238,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * expression engine). For instance if you pass in the string {@code "database.tables"}, all properties of the added
      * configuration will occur in this branch.
      *
-     * @param config the configuration to add (must not be <b>null</b>)
-     * @param name the name of this configuration (can be <b>null</b>)
-     * @param at the position of this configuration in the combined tree (can be <b>null</b>)
+     * @param config the configuration to add (must not be <strong>null</strong>)
+     * @param name the name of this configuration (can be <strong>null</strong>)
+     * @param at the position of this configuration in the combined tree (can be <strong>null</strong>)
      */
     @Override
     public void addConfiguration(final Configuration config, final String name, final String at) {
@@ -482,7 +482,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Gets the configuration with the given name. This can be <b>null</b> if no such configuration exists.
+     * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
      * @param name the name of the configuration
      * @return the configuration with this name
@@ -501,7 +501,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
-     * @return a set with the names of the contained configurations (never <b>null</b>)
+     * @return a set with the names of the contained configurations (never <strong>null</strong>)
      */
     @Override
     public Set<String> getConfigurationNames() {
@@ -582,6 +582,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return getCurrentConfig().getInteger(key, defaultValue);
     }
 
+    /**
+     * Gets the key pattern for the CombinedConfiguration map.
+     *
+     * @return the key pattern for the CombinedConfiguration map.
+     */
     public String getKeyPattern() {
         return this.keyPattern;
     }
@@ -680,7 +685,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Gets the configuration source, in which the specified key is defined. This method will determine the configuration
      * node that is identified by the given key. The following constellations are possible:
      * <ul>
-     * <li>If no node object is found for this key, <b>null</b> is returned.</li>
+     * <li>If no node object is found for this key, <strong>null</strong> is returned.</li>
      * <li>If the key maps to multiple nodes belonging to different configuration sources, a
      * {@code IllegalArgumentException} is thrown (in this case no unique source can be determined).</li>
      * <li>If exactly one node is found for the key, the (child) configuration object, to which the node belongs is
@@ -690,9 +695,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * </ul>
      *
      * @param key the key of a configuration property
-     * @return the configuration, to which this property belongs or <b>null</b> if the key cannot be resolved
+     * @return the configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
-     *         the key is <b>null</b>
+     *         the key is <strong>null</strong>
      */
     @Override
     public Configuration getSource(final String key) {
@@ -767,6 +772,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         getCurrentConfig().invalidate();
     }
 
+    /**
+     * Invalidates all CombinedConfigurations.
+     */
     public void invalidateAll() {
         configs.values().forEach(CombinedConfiguration::invalidate);
     }
@@ -815,7 +823,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Removes the configuration with the specified name.
      *
      * @param name the name of the configuration to be removed
-     * @return the removed configuration (<b>null</b> if this configuration was not found)
+     * @return the removed configuration (<strong>null</strong> if this configuration was not found)
      */
     @Override
     public Configuration removeConfiguration(final String name) {
@@ -852,6 +860,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return super.removeEventListener(eventType, listener);
     }
 
+    /**
+     * Sets the key pattern for the CombinedConfiguration map.
+     *
+     * @param pattern the key pattern for the CombinedConfiguration map.
+     */
     public void setKeyPattern(final String pattern) {
         this.keyPattern = pattern;
     }
@@ -867,7 +880,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
 
     /**
      * Sets the node combiner. This object will be used when the combined node structure is to be constructed. It must not
-     * be <b>null</b>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
+     * be <strong>null</strong>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
      * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
      *
      * @param nodeCombiner the node combiner

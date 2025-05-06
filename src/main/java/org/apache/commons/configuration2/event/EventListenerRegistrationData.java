@@ -30,8 +30,8 @@ package org.apache.commons.configuration2.event;
  * components.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of events processed by the listener
+ * @since 2.0
  */
 public final class EventListenerRegistrationData<T extends Event> {
     /** Constant for the factor used by the calculation of the hash code. */
@@ -46,9 +46,9 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Creates a new instance of {@code EventListenerRegistrationData}.
      *
-     * @param type the event type (must not be <b>null</b>)
-     * @param lstnr the event listener (must not be <b>null</b>)
-     * @throws IllegalArgumentException if a required parameter is <b>null</b>
+     * @param type the event type (must not be <strong>null</strong>)
+     * @param lstnr the event listener (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public EventListenerRegistrationData(final EventType<T> type, final EventListener<? super T> lstnr) {
         if (type == null) {

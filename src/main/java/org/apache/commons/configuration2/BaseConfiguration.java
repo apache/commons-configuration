@@ -128,7 +128,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * check if the configuration contains the key
      *
      * @param key the configuration key
-     *
      * @return {@code true} if Configuration contain given key, {@code false} otherwise.
      */
     @Override
@@ -157,10 +156,9 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     /**
-     * Read property from underlying map.
+     * Reads property from underlying map.
      *
      * @param key key to use for mapping
-     *
      * @return object associated with the given configuration key.
      */
     @Override

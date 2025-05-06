@@ -35,7 +35,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * <p>
  * <strong>Note that the methods defined by this interface are not intended to be called directly by client
  * code!</strong> Rather, they are used internally when doing I/O operations with a {@link FileHandler}. A
- * {@code FileHandler} supports additional functionality (e.g. it evaluates some additional interfaces the
+ * {@code FileHandler} supports additional functionality (for example it evaluates some additional interfaces the
  * {@code FileBased} object may implement); this functionality is not available on a direct method invocation, so this
  * may lead to unpredictable results.
  * </p>
@@ -47,7 +47,7 @@ public interface FileBased {
      *
      * @param in the reader
      * @throws IOException if an I/O error occurs.
-     * @throws ConfigurationException if a non-I/O related problem occurs, e.g. the data read does not have the expected
+     * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */
     void read(Reader in) throws ConfigurationException, IOException;
@@ -58,7 +58,7 @@ public interface FileBased {
      *
      * @param out the writer
      * @throws IOException if an I/O error occurs.
-     * @throws ConfigurationException if a non-I/O related problem occurs, e.g. the data read does not have the expected
+     * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */
     void write(Writer out) throws ConfigurationException, IOException;

@@ -22,7 +22,7 @@ package org.apache.commons.configuration2.reloading;
  */
 public class AlwaysReloadingDetector implements ReloadingDetector {
     /**
-     * {@inheritDoc} This implementation always returns <b>true</b>.
+     * {@inheritDoc} This implementation always returns <strong>true</strong>.
      */
     @Override
     public boolean isReloadingRequired() {

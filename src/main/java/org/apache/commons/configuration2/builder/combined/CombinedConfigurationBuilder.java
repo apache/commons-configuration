@@ -152,7 +152,7 @@ import org.xml.sax.EntityResolver;
  * </p>
  * <p>
  * The default configuration object returned by this builder is an instance of the {@link CombinedConfiguration} class.
- * This allows for convenient access to the configuration objects maintained by the combined configuration (e.g. for
+ * This allows for convenient access to the configuration objects maintained by the combined configuration (for example for
  * updates of single configuration objects). It has also the advantage that the properties stored in all declared
  * configuration objects are collected and transformed into a single hierarchical structure, which can be accessed using
  * different expression engines. The actual {@code CombinedConfiguration} implementation can be overridden by specifying
@@ -379,10 +379,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
         /**
          * Gets the {@code ConfigurationBuilder} with the given name. If no such builder is defined in the definition
-         * configuration, result is <b>null</b>.
+         * configuration, result is <strong>null</strong>.
          *
          * @param name the name of the builder in question
-         * @return the builder with this name or <b>null</b>
+         * @return the builder with this name or <strong>null</strong>
          */
         public ConfigurationBuilder<? extends Configuration> getNamedBuilder(final String name) {
             return namedBuilders.get(name);
@@ -817,7 +817,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Returns a map with the current prefix lookup objects. This map is obtained from the {@code ConfigurationInterpolator}
      * of the configuration under construction.
      *
-     * @return the map with current prefix lookups (may be <b>null</b>)
+     * @return the map with current prefix lookups (may be <strong>null</strong>)
      */
     private Map<String, ? extends Lookup> fetchPrefixLookups() {
         final CombinedConfiguration cc = getConfigurationUnderConstruction();
@@ -847,7 +847,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * Gets the configuration object that is currently constructed. This method can be called during construction of the
-     * result configuration. It is intended for internal usage, e.g. some specialized builder providers need access to this
+     * result configuration. It is intended for internal usage, for example some specialized builder providers need access to this
      * configuration to perform advanced initialization.
      *
      * @return the configuration that us currently under construction
@@ -959,7 +959,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * Initializes a parameters object for a child builder. This combined configuration builder has a bunch of properties
-     * which may be inherited by child configurations, e.g. the base path, the file system, etc. While processing the
+     * which may be inherited by child configurations, for example the base path, the file system, etc. While processing the
      * builders for child configurations, this method is called for each parameters object for a child builder. It
      * initializes some properties of the passed in parameters objects which are derived from this parent builder.
      *
@@ -1066,7 +1066,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * sources.
      *
      * @param config the definition configuration
-     * @return the default {@code FileSystem} (may be <b>null</b>)
+     * @return the default {@code FileSystem} (may be <strong>null</strong>)
      * @throws ConfigurationException if an error occurs
      */
     protected FileSystem initFileSystem(final HierarchicalConfiguration<?> config) throws ConfigurationException {
@@ -1133,7 +1133,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * configured, all of its properties are added to the system properties.
      *
      * @param config the definition configuration
-     * @param basePath the base path defined for this builder (may be <b>null</b>)
+     * @param basePath the base path defined for this builder (may be <strong>null</strong>)
      * @throws ConfigurationException if an error occurs.
      */
     protected void initSystemProperties(final HierarchicalConfiguration<?> config, final String basePath) throws ConfigurationException {
@@ -1153,7 +1153,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * supports all default providers and custom providers added through the parameters object as well.
      *
      * @param tagName the name of the tag
-     * @return the provider that was registered for this tag or <b>null</b> if there is none
+     * @return the provider that was registered for this tag or <strong>null</strong> if there is none
      */
     protected ConfigurationBuilderProvider providerForTag(final String tagName) {
         return currentParameters.providerForTag(tagName);

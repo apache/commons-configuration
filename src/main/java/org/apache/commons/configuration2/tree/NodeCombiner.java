@@ -26,7 +26,7 @@ import java.util.Set;
  * </p>
  * <p>
  * A <em>node combiner</em> is an object that knows how two hierarchical node structures can be combined into a single
- * one. Of course, there are many possible ways of implementing such a combination, e.g. constructing a union, an
+ * one. Of course, there are many possible ways of implementing such a combination, for example constructing a union, an
  * intersection, or an "override" structure (were nodes in the first hierarchy take precedence over nodes in the second
  * hierarchy). This abstract base class only provides some helper methods and defines the common interface for node
  * combiners. Concrete sub classes will implement the diverse combination algorithms.

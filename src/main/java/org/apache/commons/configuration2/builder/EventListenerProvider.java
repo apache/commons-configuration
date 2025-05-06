@@ -38,7 +38,7 @@ public interface EventListenerProvider {
      * Gets an {@code EventListenerList} object with information about event listener registrations. All listeners
      * contained in this object are added to the processing {@code ConfigurationBuilder}.
      *
-     * @return the {@code EventListenerList} with event listener registrations (must not be <b>null</b>)
+     * @return the {@code EventListenerList} with event listener registrations (must not be <strong>null</strong>)
      */
     EventListenerList getListeners();
 }

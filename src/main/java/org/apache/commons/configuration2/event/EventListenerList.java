@@ -190,8 +190,8 @@ public class EventListenerList {
     /**
      * Adds all event listener registrations stored in the specified {@code EventListenerList} to this list.
      *
-     * @param c the list to be copied (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the list to be copied is <b>null</b>
+     * @param c the list to be copied (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the list to be copied is <strong>null</strong>
      */
     public void addAll(final EventListenerList c) {
         if (c == null) {
@@ -204,9 +204,9 @@ public class EventListenerList {
      * Adds the specified listener registration data object to the internal list of event listeners. This is an alternative
      * registration method; the event type and the listener are passed as a single data object.
      *
-     * @param regData the registration data object (must not be <b>null</b>)
+     * @param regData the registration data object (must not be <strong>null</strong>)
      * @param <T> the type of events processed by this listener
-     * @throws IllegalArgumentException if the registration data object is <b>null</b>
+     * @throws IllegalArgumentException if the registration data object is <strong>null</strong>
      */
     public <T extends Event> void addEventListener(final EventListenerRegistrationData<T> regData) {
         if (regData == null) {
@@ -219,10 +219,10 @@ public class EventListenerList {
      * Adds an event listener for the specified event type. This listener is notified about events of this type and all its
      * sub types.
      *
-     * @param type the event type (must not be <b>null</b>)
-     * @param listener the listener to be registered (must not be <b>null</b>)
+     * @param type the event type (must not be <strong>null</strong>)
+     * @param listener the listener to be registered (must not be <strong>null</strong>)
      * @param <T> the type of events processed by this listener
-     * @throws IllegalArgumentException if a required parameter is <b>null</b>
+     * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T extends Event> void addEventListener(final EventType<T> type, final EventListener<? super T> listener) {
         listeners.add(new EventListenerRegistrationData<>(type, listener));
@@ -238,8 +238,8 @@ public class EventListenerList {
     /**
      * Fires an event to all registered listeners matching the event type.
      *
-     * @param event the event to be fired (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the event is <b>null</b>
+     * @param event the event to be fired (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the event is <strong>null</strong>
      */
     public void fire(final Event event) {
         if (event == null) {
@@ -330,7 +330,7 @@ public class EventListenerList {
      * Removes the event listener registration for the given event type and listener. An event listener instance may be
      * registered multiple times for different event types. Therefore, when removing a listener the event type of the
      * registration in question has to be specified. The return value indicates whether a registration was removed. A value
-     * of <b>false</b> means that no such combination of event type and listener was found.
+     * of <strong>false</strong> means that no such combination of event type and listener was found.
      *
      * @param eventType the event type
      * @param listener the event listener to be removed

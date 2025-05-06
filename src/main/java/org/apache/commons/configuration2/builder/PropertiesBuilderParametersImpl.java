@@ -28,7 +28,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * A specialized parameter class for configuring {@code PropertiesConfiguration} instances.
  * </p>
  * <p>
- * This class allows setting of some properties specific to properties configuration, e.g. the layout object. By
+ * This class allows setting of some properties specific to properties configuration, for example the layout object. By
  * inheriting from {@link FileBasedBuilderParametersImpl}, basic properties and properties related to file-based
  * configurations are available, too.
  * </p>

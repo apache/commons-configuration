@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>XML Configurations</title>
  </properties>
@@ -260,6 +261,7 @@ XMLConfiguration config = builder.getConfiguration();
         <code><a href="../apidocs/org/apache/commons/configuration2/builder/XMLBuilderProperties.html">
         XMLBuilderProperties</a></code> interface defines settings specific to
         XML configurations. This includes
+      </p>
         <ul>
           <li>a custom <code>DocumentBuilder</code></li>
           <li>a custom <code>EntityResolver</code></li>
@@ -267,7 +269,6 @@ XMLConfiguration config = builder.getConfiguration();
           validation is to be performed</li>
           <li>the public and the system ID of the document when it is written</li>
         </ul>
-      </p>
       <p>
         A parameters object for an XML configuration can be obtained using
         the <code>xml()</code> method of a

@@ -68,7 +68,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
             }
         };
 
-        final ServletContextConfiguration resultConfig = new ServletContextConfiguration(servlet);
+        final AbstractConfiguration resultConfig = new ServletContextConfiguration(servlet);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }

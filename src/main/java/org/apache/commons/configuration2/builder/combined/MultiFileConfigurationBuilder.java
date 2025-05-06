@@ -66,8 +66,8 @@ import org.apache.commons.lang3.concurrent.ConcurrentUtils;
  * builders for managed configurations.
  * </p>
  *
- * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @since 2.0
  */
 public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {
     /**
@@ -131,7 +131,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code MultiFileConfigurationBuilder} without setting initialization parameters.
      *
      * @param resCls the result configuration class
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls) {
         super(resCls);
@@ -142,7 +142,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
         super(resCls, params);
@@ -155,7 +155,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
      * @param allowFailOnInit a flag whether initialization errors should be ignored
-     * @throws IllegalArgumentException if the result class is <b>null</b>
+     * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         super(resCls, params, allowFailOnInit);
@@ -330,7 +330,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @return the configuration builder for the configuration corresponding to the current evaluation of the file name
      *         pattern
-     * @throws ConfigurationException if the builder cannot be determined (e.g. due to missing initialization parameters)
+     * @throws ConfigurationException if the builder cannot be determined (for example due to missing initialization parameters)
      */
     public FileBasedConfigurationBuilder<T> getManagedBuilder() throws ConfigurationException {
         final Map<String, Object> params = getParameters();

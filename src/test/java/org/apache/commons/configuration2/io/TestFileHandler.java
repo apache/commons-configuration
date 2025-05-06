@@ -35,7 +35,6 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -46,8 +45,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -284,7 +286,7 @@ public class TestFileHandler {
     /**
      * Creates a test file with test content and allows specifying a file name.
      *
-     * @param f the file to be created (may be <b>null</b>)
+     * @param f the file to be created (may be <strong>null</strong>)
      * @return the File object pointing to the test file
      */
     private File createTestFile(final File f) {
@@ -298,6 +300,18 @@ public class TestFileHandler {
             }
             return file;
         });
+    }
+
+    private Path createTestPath() {
+        return createTestFile().toPath();
+    }
+
+    private URI createTestURI() {
+        return createTestFile().toURI();
+    }
+
+    private URL createTestURL() throws MalformedURLException {
+        return createTestURI().toURL();
     }
 
     /**
@@ -482,7 +496,7 @@ public class TestFileHandler {
     @Test
     public void testIsLocationDefinedURL() throws IOException {
         final FileHandler handler = new FileHandler();
-        handler.setURL(createTestFile().toURI().toURL());
+        handler.setURL(createTestURL());
         assertTrue(handler.isLocationDefined());
     }
 
@@ -632,10 +646,9 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadFromReader() throws Exception {
-        final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        try (Reader in = new FileReader(file)) {
+        try (Reader in = new FileReader(createTestFile())) {
             handler.load(in);
         }
         assertEquals(CONTENT, content.getContent());
@@ -665,10 +678,9 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadFromStream() throws Exception {
-        final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        try (FileInputStream in = new FileInputStream(file)) {
+        try (InputStream in = Files.newInputStream(createTestPath())) {
             handler.load(in);
         }
         assertEquals(CONTENT, content.getContent());
@@ -679,10 +691,9 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadFromURL() throws Exception {
-        final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        handler.load(file.toURI().toURL());
+        handler.load(createTestURL());
         assertEquals(CONTENT, content.getContent());
     }
 
@@ -691,10 +702,9 @@ public class TestFileHandler {
      */
     @Test
     public void testLoadFromURLLocation() throws Exception {
-        final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        handler.setURL(file.toURI().toURL());
+        handler.setURL(createTestURL());
         handler.load();
         assertEquals(CONTENT, content.getContent());
     }

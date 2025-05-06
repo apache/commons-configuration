@@ -29,8 +29,8 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * A specialized {@code NodePointer} implementation for the attributes of a configuration node.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes this pointer deals with
+ * @since 2.0
  */
 final class ConfigurationAttributePointer<T> extends NodePointer {
     /**

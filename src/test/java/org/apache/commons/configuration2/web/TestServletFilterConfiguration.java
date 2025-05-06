@@ -71,7 +71,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
         config.setInitParameter("list", "value1, value2");
         config.setInitParameter("listesc", "value1\\,value2");
 
-        final ServletFilterConfiguration resultConfig = new ServletFilterConfiguration(config);
+        final AbstractConfiguration resultConfig = new ServletFilterConfiguration(config);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }

@@ -57,8 +57,8 @@ public class Event extends EventObject {
     /**
      * Creates a new instance of {@code Event} and sets basic properties.
      *
-     * @param source the object on which the Event initially occurred (must not be <b>null</b>)
-     * @param evType the type of this event (must not be <b>null</b>)
+     * @param source the object on which the Event initially occurred (must not be <strong>null</strong>)
+     * @param evType the type of this event (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is null
      */
     public Event(final Object source, final EventType<? extends Event> evType) {

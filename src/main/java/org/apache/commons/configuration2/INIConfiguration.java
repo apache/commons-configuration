@@ -68,11 +68,11 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * The format of ini files is fairly straight forward and is composed of three components:
  * </p>
  * <ul>
- * <li><b>Sections:</b> Ini files are split into sections, each section starting with a section declaration. A section
+ * <li><strong>Sections:</strong> Ini files are split into sections, each section starting with a section declaration. A section
  * declaration starts with a '[' and ends with a ']'. Sections occur on one line only.</li>
- * <li><b>Parameters:</b> Items in a section are known as parameters. Parameters have a typical {@code key = value}
+ * <li><strong>Parameters:</strong> Items in a section are known as parameters. Parameters have a typical {@code key = value}
  * format.</li>
- * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.</li>
+ * <li><strong>Comments:</strong> Lines starting with a ';' are assumed to be comments.</li>
  * </ul>
  * <p>
  * There are various implementations of the ini file format by various vendors which has caused a number of differences
@@ -82,14 +82,14 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * Some of the differences supported are as follows:
  * </p>
  * <ul>
- * <li><b>Comments:</b> The '#' character is also accepted as a comment signifier.</li>
- * <li><b>Key value separator:</b> The ':' character is also accepted in place of '=' to separate keys and values in
+ * <li><strong>Comments:</strong> The '#' character is also accepted as a comment signifier.</li>
+ * <li><strong>Key value separator:</strong> The ':' character is also accepted in place of '=' to separate keys and values in
  * parameters, for example {@code var1 : foo}.</li>
- * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed, this configuration does however support
+ * <li><strong>Duplicate sections:</strong> Typically duplicate sections are not allowed, this configuration does however support
  * this feature. In the event of a duplicate section, the two section's values are merged so that there is only a single
  * section. <strong>Note</strong>: This also affects the internal data of the configuration. If it is saved, only a
  * single section is written!</li>
- * <li><b>Duplicate parameters:</b> Typically duplicate parameters are only allowed if they are in two different
+ * <li><strong>Duplicate parameters:</strong> Typically duplicate parameters are only allowed if they are in two different
  * sections, thus they are local to sections; this configuration simply merges duplicates; if a section has a duplicate
  * parameter the values are then added to the key as a list.</li>
  * </ul>
@@ -173,7 +173,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * This explains how the keys for the properties can be constructed. You can also use other methods of
  * {@link HierarchicalConfiguration} for querying or manipulating the hierarchy of configuration nodes, for instance the
  * {@code configurationAt()} method for obtaining the data of a specific section. However, be careful that the storage
- * scheme described above is not violated (e.g. by adding multiple levels of nodes or inserting duplicate section
+ * scheme described above is not violated (for example by adding multiple levels of nodes or inserting duplicate section
  * nodes). Otherwise, the special methods for ini configurations may not work correctly!
  * </p>
  * <p>
@@ -211,14 +211,25 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     public static class Builder {
 
         /**
-         * The flag for decision, whether inline comments on the section line are allowed.
+         * Whether in-line comments on the section line are allowed.
          */
         private boolean sectionInLineCommentsAllowed;
 
+        /**
+         * Builds a new INIConfiguration.
+         *
+         * @return a new INIConfiguration.
+         */
         public INIConfiguration build() {
             return new INIConfiguration(sectionInLineCommentsAllowed);
         }
 
+        /**
+         * Sets whether in-line comments on the section line are allowed.
+         *
+         * @param sectionInLineCommentsAllowed Whether in-line comments on the section line are allowed.
+         * @return this instance.
+         */
         public Builder setSectionInLineCommentsAllowed(final boolean sectionInLineCommentsAllowed) {
             this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
             return this;
@@ -632,11 +643,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * initialized with the first occurrence of the section. (This can only happen if {@code addProperty()} has been used in
      * a way that does not conform to the storage scheme used by {@code INIConfiguration}. If used correctly, there will not
      * be duplicate sections.)</li>
-     * <li>There is special support for the global section: Passing in <b>null</b> as section name returns a configuration
+     * <li>There is special support for the global section: Passing in <strong>null</strong> as section name returns a configuration
      * with the content of the global section (which may also be empty).</li>
      * </ul>
      *
-     * @param name the name of the section in question; <b>null</b> represents the global section
+     * @param name the name of the section in question; <strong>null</strong> represents the global section
      * @return a configuration containing only the properties of the specified section
      */
     public SubnodeConfiguration getSection(final String name) {
@@ -772,7 +783,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * </pre>
      *
      * Note that a comment character is only recognized if there is at least one whitespace character before it. So it can
-     * appear in the property value, e.g.:
+     * appear in the property value, for example:
      *
      * <pre>
      * C:\\Windows;C:\\Windows\\system32

@@ -127,7 +127,7 @@ public final class URLConnectionOptions {
     }
 
     /**
-     * Whether to cache.
+     * Gets whether to cache.
      *
      * @return Whether to cache.
      */

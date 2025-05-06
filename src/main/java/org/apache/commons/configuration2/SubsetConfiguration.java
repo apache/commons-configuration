@@ -93,9 +93,9 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Create a subset of the specified configuration
      *
-     * @param parent The parent configuration (must not be <b>null</b>)
+     * @param parent The parent configuration (must not be <strong>null</strong>)
      * @param prefix The prefix used to select the properties
-     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
+     * @throws IllegalArgumentException if the parent configuration is <strong>null</strong>
      */
     public SubsetConfiguration(final Configuration parent, final String prefix) {
         this(parent, prefix, null);
@@ -104,10 +104,10 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Create a subset of the specified configuration
      *
-     * @param parent The parent configuration (must not be <b>null</b>)
+     * @param parent The parent configuration (must not be <strong>null</strong>)
      * @param prefix The prefix used to select the properties
      * @param delimiter The prefix delimiter
-     * @throws NullPointerException if the parent configuration is <b>null</b>
+     * @throws NullPointerException if the parent configuration is <strong>null</strong>
      */
     public SubsetConfiguration(final Configuration parent, final String prefix, final String delimiter) {
         this.parent = Objects.requireNonNull(parent, "parent");

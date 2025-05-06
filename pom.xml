@@ -16,15 +16,15 @@
   limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>71</version>
+    <version>83</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.11.1-SNAPSHOT</version>
+  <version>2.12.1-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -35,12 +35,9 @@
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.11.0</commons.release.version>
-    <commons.release.next>2.11.1</commons.release.next>
+    <commons.release.version>2.12.0</commons.release.version>
+    <commons.release.next>2.12.1</commons.release.next>
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
-    <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
-    <commons.release.2.version>1.10</commons.release.2.version>
-    <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -60,17 +57,18 @@
       org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <log4j.version>2.23.1</log4j.version>
-    <slf4j.version>2.0.13</slf4j.version>
+    <log4j.version>2.24.3</log4j.version>
+    <slf4j.version>2.0.17</slf4j.version>
     <!-- Spring 6 requires Java 17 -->
-    <spring.version>5.3.35</spring.version>
+    <spring.version>5.3.39</spring.version>
     <japicmp.skip>false</japicmp.skip>
     <!-- Commons Release Plugin -->
-    <commons.bc.version>2.10.1</commons.bc.version>
+    <commons.bc.version>2.11.0</commons.bc.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
-    <project.build.outputTimestamp>2024-06-10T19:02:53Z</project.build.outputTimestamp>
+    <!-- project.build.outputTimestamp is managed by Maven plugins, see https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
+    <project.build.outputTimestamp>2025-04-29T15:33:20Z</project.build.outputTimestamp>
     <!-- JaCoCo: Don't make code coverage worse than: -->
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
     <commons.jacoco.classRatio>0.96</commons.jacoco.classRatio>
@@ -110,18 +108,18 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.15.0</version>
+      <version>3.17.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.12.0</version>
+      <version>1.13.1</version>
     </dependency>
 
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.5</version>
       <exclusions>
         <exclusion>
           <groupId>logkit</groupId>
@@ -137,14 +135,14 @@
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.9.4</version>
+      <version>1.10.1</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.17.1</version>
+      <version>1.18.0</version>
       <optional>true</optional>
     </dependency>
 
@@ -158,14 +156,28 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-vfs2</artifactId>
-      <version>2.9.0</version>
+      <version>2.10.0</version>
+      <optional>true</optional>
+    </dependency>
+    <!-- Workaround for https://github.com/moditect/moditect/issues/259 -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore-nio</artifactId>
+      <version>4.4.16</version>
+      <optional>true</optional>
+    </dependency>
+    <!-- Workaround for https://github.com/moditect/moditect/issues/259 -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.19.0</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
-      <version>1.3</version>
+      <version>1.4.0</version>
       <optional>true</optional>
       <exclusions>
         <exclusion>
@@ -232,16 +244,25 @@
     </dependency>
 
     <dependency>
+      <!-- For org.apache.commons.configuration2.web -->
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>2.2</version>
+      <version>2.4</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.17.2</version>
+      <version>2.19.0</version>
       <optional>true</optional>
     </dependency>
 
@@ -250,21 +271,14 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
-      <version>2.12.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.16.1</version>
+      <version>2.13.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
-      <version>2.12.0</version>
+      <version>2.12.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -279,7 +293,7 @@
     <dependency>
       <groupId>org.dbunit</groupId>
       <artifactId>dbunit</artifactId>
-      <version>2.8.0</version>
+      <version>3.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -290,16 +304,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>2.2</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.11.0</version>
+      <version>${commons.mockito.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -419,9 +426,17 @@
             <source>${maven.compiler.source}</source>
             <failOnError>false</failOnError>
             <links>
-              <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
+              <link>https://docs.spring.io/spring-framework/docs/${spring.version}/javadoc-api/</link>
               <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
             </links>
+            <additionalDependencies>
+              <additionalDependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+                <scope>test</scope>
+              </additionalDependency>
+            </additionalDependencies>
           </configuration>
         </plugin>
       </plugins>
@@ -505,6 +520,7 @@
             <exclude>velocity.log</exclude>
             <exclude>src/test/resources/test.json</exclude>
             <exclude>src/test/resources/test.yaml</exclude>
+            <exclude>src/conf/cpd-exclusions.txt</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -529,6 +545,7 @@
           <excludeRoots>
             <excludeRoot>target/generated-sources/javacc</excludeRoot>
           </excludeRoots>
+          <excludeFromFailureFile>src/conf/cpd-exclusions.txt</excludeFromFailureFile>
         </configuration>
       </plugin>
     </plugins>
@@ -603,6 +620,7 @@
             <exclude>velocity.log</exclude>
             <exclude>src/test/resources/test.json</exclude>
             <exclude>src/test/resources/test.yaml</exclude>
+            <exclude>src/conf/cpd-exclusions.txt</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -628,7 +646,7 @@
           <failOnError>false</failOnError>
           <links>
             <link>https://docs.oracle.com/javase/8/docs/api/</link>
-            <link>https://docs.spring.io/spring/docs/${spring.version}/javadoc-api/</link>
+            <link>https://docs.spring.io/spring-framework/docs/5.3.39/javadoc-api/</link>
             <link>https://commons.apache.org/proper/commons-text/javadocs/api-release/</link>
           </links>
         </configuration>
@@ -757,7 +775,7 @@
       <email>ggregory at apache.org</email>
       <url>https://www.garygregory.com</url>
       <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
         <role>PMC Member</role>
       </roles>

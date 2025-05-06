@@ -34,8 +34,8 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * This is needed for queries using JXPath.
  * </p>
  *
- * @since 1.3
  * @param <T> the type of the nodes this pointer deals with
+ * @since 1.3
  */
 final class ConfigurationNodePointer<T> extends NodePointer {
     /**
@@ -78,12 +78,12 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the attributes that match the given name.
      *
-     * @param name the attribute name
+     * @param qName the attribute name
      * @return the iterator for the attributes
      */
     @Override
-    public NodeIterator attributeIterator(final QName name) {
-        return new ConfigurationNodeIteratorAttribute<>(this, name);
+    public NodeIterator attributeIterator(final QName qName) {
+        return new ConfigurationNodeIteratorAttribute<>(this, qName);
     }
 
     /**

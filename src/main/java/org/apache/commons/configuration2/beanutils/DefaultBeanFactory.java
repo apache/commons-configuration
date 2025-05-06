@@ -95,7 +95,7 @@ public class DefaultBeanFactory implements BeanFactory {
      * @param <T> the type of the bean to be created
      * @return the single matching constructor
      * @throws ConfigurationRuntimeException if no single matching constructor can be found
-     * @throws NullPointerException if the bean class or bean declaration are <b>null</b>
+     * @throws NullPointerException if the bean class or bean declaration are <strong>null</strong>
      */
     protected static <T> Constructor<T> findMatchingConstructor(final Class<T> beanClass, final BeanDeclaration data) {
         final List<Constructor<T>> matchingConstructors = findMatchingConstructors(beanClass, data);
@@ -127,10 +127,10 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Gets constructor arguments from a bean declaration. Deals with <b>null</b> values.
+     * Gets constructor arguments from a bean declaration. Deals with <strong>null</strong> values.
      *
      * @param data the bean declaration
-     * @return the collection with constructor arguments (never <b>null</b>)
+     * @return the collection with constructor arguments (never <strong>null</strong>)
      */
     private static Collection<ConstructorArg> getConstructorArgs(final BeanDeclaration data) {
         Collection<ConstructorArg> args = data.getConstructorArgs();
@@ -164,10 +164,10 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Fetches constructor arguments from the given bean declaration. Handles <b>null</b> values safely.
+     * Fetches constructor arguments from the given bean declaration. Handles <strong>null</strong> values safely.
      *
      * @param data the bean declaration
-     * @return the collection with constructor arguments (never <b>null</b>)
+     * @return the collection with constructor arguments (never <strong>null</strong>)
      */
     private static Collection<ConstructorArg> nullSafeConstructorArgs(final BeanDeclaration data) {
         Collection<ConstructorArg> args = data.getConstructorArgs();
@@ -191,7 +191,7 @@ public class DefaultBeanFactory implements BeanFactory {
      * Constructs a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
      * conversions.
      *
-     * @param convHandler the {@code ConversionHandler}; can be <b>null</b>, then a default handler is used
+     * @param convHandler the {@code ConversionHandler}; can be <strong>null</strong>, then a default handler is used
      * @since 2.0
      */
     public DefaultBeanFactory(final ConversionHandler convHandler) {
@@ -262,7 +262,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Gets the default bean class used by this factory. This is always <b>null</b> for this implementation.
+     * Gets the default bean class used by this factory. This is always <strong>null</strong> for this implementation.
      *
      * @return the default bean class
      */

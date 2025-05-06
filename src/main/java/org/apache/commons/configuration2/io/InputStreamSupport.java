@@ -41,7 +41,7 @@ public interface InputStreamSupport {
      * Reads the content of this object from the specified {@code InputStream}.
      *
      * @param in the input stream
-     * @throws ConfigurationException if a non-I/O related problem occurs, e.g. the data read does not have the expected
+     * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      * @throws IOException if an I/O error occurs.
      */

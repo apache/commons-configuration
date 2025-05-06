@@ -363,7 +363,7 @@ public class TestSubnodeConfiguration {
     }
 
     /**
-     * Tests detaching a subnode configuration if an exception is thrown during reconstruction. This can happen e.g. if the
+     * Tests detaching a subnode configuration if an exception is thrown during reconstruction. This can happen for example if the
      * expression engine is changed for the parent.
      */
     @Test

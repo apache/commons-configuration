@@ -34,8 +34,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Implementation note: Instances are immutable. They are created using the static factory methods.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result nodes
+ * @since 2.0
  */
 public final class QueryResult<T> {
     /**
@@ -139,10 +139,10 @@ public final class QueryResult<T> {
     }
 
     /**
-     * Returns a flag whether this is a result of type attribute. If result is <b>true</b>, the attribute name and value can
+     * Returns a flag whether this is a result of type attribute. If result is <strong>true</strong>, the attribute name and value can
      * be queried. Otherwise, only the result node is available.
      *
-     * @return <b>true</b> for an attribute result, <b>false</b> otherwise
+     * @return <strong>true</strong> for an attribute result, <strong>false</strong> otherwise
      */
     public boolean isAttributeResult() {
         return StringUtils.isNotEmpty(getAttributeName());

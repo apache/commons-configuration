@@ -81,10 +81,10 @@ public interface NodeHandler<T> {
      * for some node implementations it may be by far more efficient to count the children than to query a list of all
      * children and determine its size. A concrete implementation can choose the most efficient way to determine the number
      * of children. If a child name is passed in, only the children with this name are taken into account. If the name
-     * <b>null</b> is passed, the total number of children must be returned.
+     * <strong>null</strong> is passed, the total number of children must be returned.
      *
      * @param node the node
-     * @param name the name of the children in question (can be <b>null</b> for all children)
+     * @param name the name of the children in question (can be <strong>null</strong> for all children)
      * @return the number of the selected children
      */
     int getChildrenCount(T node, String name);
@@ -158,7 +158,7 @@ public interface NodeHandler<T> {
     int indexOfChild(T parent, T child);
 
     /**
-     * Checks whether the specified node is defined. Nodes are &quot;defined&quot; if they contain any data, e.g. a value,
+     * Checks whether the specified node is defined. Nodes are &quot;defined&quot; if they contain any data, for example a value,
      * or attributes, or defined children.
      *
      * @param node the node to test

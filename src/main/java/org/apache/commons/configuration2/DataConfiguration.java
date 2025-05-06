@@ -229,7 +229,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated BigDecimal array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigDecimals.
      */
     public BigDecimal[] getBigDecimalArray(final String key) {
@@ -243,7 +242,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated BigDecimal array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigDecimals.
      */
     public BigDecimal[] getBigDecimalArray(final String key, final BigDecimal... defaultValue) {
@@ -256,7 +254,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated BigDecimal list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigDecimals.
      */
     public List<BigDecimal> getBigDecimalList(final String key) {
@@ -270,7 +267,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of BigDecimals.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigDecimals.
      */
     public List<BigDecimal> getBigDecimalList(final String key, final List<BigDecimal> defaultValue) {
@@ -283,7 +279,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated BigInteger array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigIntegers.
      */
     public BigInteger[] getBigIntegerArray(final String key) {
@@ -297,7 +292,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated BigInteger array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigIntegers.
      */
     public BigInteger[] getBigIntegerArray(final String key, final BigInteger... defaultValue) {
@@ -310,7 +304,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated BigInteger list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigIntegers.
      */
     public List<BigInteger> getBigIntegerList(final String key) {
@@ -324,7 +317,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of BigIntegers.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigIntegers.
      */
     public List<BigInteger> getBigIntegerList(final String key, final List<BigInteger> defaultValue) {
@@ -337,7 +329,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated boolean array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of booleans.
      */
     public boolean[] getBooleanArray(final String key) {
@@ -351,7 +342,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated boolean array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of booleans.
      */
     public boolean[] getBooleanArray(final String key, final boolean... defaultValue) {
@@ -364,7 +354,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Boolean list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of booleans.
      */
     public List<Boolean> getBooleanList(final String key) {
@@ -378,7 +367,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Booleans.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of booleans.
      */
     public List<Boolean> getBooleanList(final String key, final List<Boolean> defaultValue) {
@@ -391,7 +379,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated byte array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of bytes.
      */
     public byte[] getByteArray(final String key) {
@@ -405,7 +392,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated byte array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of bytes.
      */
     public byte[] getByteArray(final String key, final byte... defaultValue) {
@@ -418,7 +404,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Byte list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of bytes.
      */
     public List<Byte> getByteList(final String key) {
@@ -432,7 +417,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Bytes.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of bytes.
      */
     public List<Byte> getByteList(final String key, final List<Byte> defaultValue) {
@@ -446,7 +430,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Calendar.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Calendar.
      */
     public Calendar getCalendar(final String key) {
@@ -461,7 +444,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Calendar.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Calendar.
      */
     public Calendar getCalendar(final String key, final Calendar defaultValue) {
@@ -476,7 +458,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Calendar.
      */
     public Calendar getCalendar(final String key, final Calendar defaultValue, final String format) {
@@ -490,7 +471,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Calendar.
      */
     public Calendar getCalendar(final String key, final String format) {
@@ -512,7 +492,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Calendar array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public Calendar[] getCalendarArray(final String key) {
@@ -528,7 +507,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Calendar array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public Calendar[] getCalendarArray(final String key, final Calendar... defaultValue) {
@@ -544,7 +522,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public Calendar[] getCalendarArray(final String key, final Calendar[] defaultValue, final String format) {
@@ -559,7 +536,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public Calendar[] getCalendarArray(final String key, final String format) {
@@ -573,7 +549,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Calendar list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public List<Calendar> getCalendarList(final String key) {
@@ -589,7 +564,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Calendar list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public List<Calendar> getCalendarList(final String key, final List<Calendar> defaultValue) {
@@ -605,7 +579,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public List<Calendar> getCalendarList(final String key, final List<Calendar> defaultValue, final String format) {
@@ -619,7 +592,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Calendar list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
     public List<Calendar> getCalendarList(final String key, final String format) {
@@ -631,7 +603,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Color.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Color.
      */
     public Color getColor(final String key) {
@@ -645,7 +616,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Color.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Color.
      */
     public Color getColor(final String key, final Color defaultValue) {
@@ -658,7 +628,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Color array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Colors.
      */
     public Color[] getColorArray(final String key) {
@@ -672,7 +641,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Color array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Colors.
      */
     public Color[] getColorArray(final String key, final Color... defaultValue) {
@@ -685,7 +653,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Color list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Colors.
      */
     public List<Color> getColorList(final String key) {
@@ -699,7 +666,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Colors.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Colors.
      */
     public List<Color> getColorList(final String key, final List<Color> defaultValue) {
@@ -730,7 +696,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Date.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Date.
      */
     public Date getDate(final String key) {
@@ -745,7 +710,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Date.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Date.
      */
     public Date getDate(final String key, final Date defaultValue) {
@@ -760,7 +724,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Date.
      */
     public Date getDate(final String key, final Date defaultValue, final String format) {
@@ -774,7 +737,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Date.
      */
     public Date getDate(final String key, final String format) {
@@ -795,7 +757,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Date array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public Date[] getDateArray(final String key) {
@@ -810,7 +771,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Date array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public Date[] getDateArray(final String key, final Date... defaultValue) {
@@ -826,7 +786,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public Date[] getDateArray(final String key, final Date[] defaultValue, final String format) {
@@ -840,13 +799,21 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public Date[] getDateArray(final String key, final String format) {
         return getDateArray(key, EMPTY_DATE_ARRAY, format);
     }
 
+    /**
+     * Gets a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
+     * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, a new list is returned.
+     *
+     * @param key The configuration key.
+     * @return The associated Date list if the key is found. If the key doesn't map to an existing object, a new list is returned.
+     * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
+     */
     public List<Date> getDateList(final String key) {
         return getDateList(key, new ArrayList<>());
     }
@@ -859,7 +826,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Date list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public List<Date> getDateList(final String key, final List<Date> defaultValue) {
@@ -875,7 +841,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param defaultValue The default value.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public List<Date> getDateList(final String key, final List<Date> defaultValue, final String format) {
@@ -889,7 +854,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param format The non-localized {@link java.text.DateFormat} pattern.
      * @return The associated Date list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
     public List<Date> getDateList(final String key, final String format) {
@@ -911,7 +875,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated double array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of doubles.
      */
     public double[] getDoubleArray(final String key) {
@@ -925,7 +888,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated double array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of doubles.
      */
     public double[] getDoubleArray(final String key, final double... defaultValue) {
@@ -938,7 +900,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Double list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of doubles.
      */
     public List<Double> getDoubleList(final String key) {
@@ -952,7 +913,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Doubles.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of doubles.
      */
     public List<Double> getDoubleList(final String key, final List<Double> defaultValue) {
@@ -965,7 +925,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated float array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of floats.
      */
     public float[] getFloatArray(final String key) {
@@ -979,7 +938,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated float array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of floats.
      */
     public float[] getFloatArray(final String key, final float... defaultValue) {
@@ -992,7 +950,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Float list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of floats.
      */
     public List<Float> getFloatList(final String key) {
@@ -1006,7 +963,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Floats.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of floats.
      */
     public List<Float> getFloatList(final String key, final List<Float> defaultValue) {
@@ -1019,7 +975,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated int array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of integers.
      */
     public int[] getIntArray(final String key) {
@@ -1033,7 +988,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated int array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of integers.
      */
     public int[] getIntArray(final String key, final int... defaultValue) {
@@ -1046,7 +1000,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Integer list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of integers.
      */
     public List<Integer> getIntegerList(final String key) {
@@ -1060,7 +1013,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Integers.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of integers.
      */
     public List<Integer> getIntegerList(final String key, final List<Integer> defaultValue) {
@@ -1077,7 +1029,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Locale.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Locale.
      */
     public Locale getLocale(final String key) {
@@ -1091,7 +1042,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated Locale.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a Locale.
      */
     public Locale getLocale(final String key, final Locale defaultValue) {
@@ -1104,7 +1054,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Locale array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Locales.
      */
     public Locale[] getLocaleArray(final String key) {
@@ -1118,7 +1067,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Locale array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Locales.
      */
     public Locale[] getLocaleArray(final String key, final Locale... defaultValue) {
@@ -1131,7 +1079,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Locale list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Locales.
      */
     public List<Locale> getLocaleList(final String key) {
@@ -1145,7 +1092,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Locales.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Locales.
      */
     public List<Locale> getLocaleList(final String key, final List<Locale> defaultValue) {
@@ -1158,7 +1104,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated long array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of longs.
      */
     public long[] getLongArray(final String key) {
@@ -1172,7 +1117,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated long array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of longs.
      */
     public long[] getLongArray(final String key, final long... defaultValue) {
@@ -1185,7 +1129,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Long list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of longs.
      */
     public List<Long> getLongList(final String key) {
@@ -1199,7 +1142,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Longs.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of longs.
      */
     public List<Long> getLongList(final String key, final List<Long> defaultValue) {
@@ -1208,9 +1150,9 @@ public class DataConfiguration extends AbstractConfiguration {
 
     /**
      * Gets the original conversion handler set for this configuration. If this is not a
-     * {@code DefaultConversionHandler}, result is <b>null</b>.
+     * {@code DefaultConversionHandler}, result is <strong>null</strong>.
      *
-     * @return the original conversion handler or <b>null</b>
+     * @return the original conversion handler or <strong>null</strong>
      */
     private DefaultConversionHandler getOriginalConversionHandler() {
         final ConversionHandler handler = super.getConversionHandler();
@@ -1228,7 +1170,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated short array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of shorts.
      */
     public short[] getShortArray(final String key) {
@@ -1242,7 +1183,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated short array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of shorts.
      */
     public short[] getShortArray(final String key, final short... defaultValue) {
@@ -1255,7 +1195,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated Short list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of shorts.
      */
     public List<Short> getShortList(final String key) {
@@ -1269,7 +1208,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of Shorts.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of shorts.
      */
     public List<Short> getShortList(final String key, final List<Short> defaultValue) {
@@ -1281,7 +1219,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URI.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not an URI.
      */
     public URI getURI(final String key) {
@@ -1295,7 +1232,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated URI.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not an URI.
      */
     public URI getURI(final String key, final URI defaultValue) {
@@ -1308,7 +1244,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URI array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URIs.
      */
     public URI[] getURIArray(final String key) {
@@ -1322,7 +1257,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated URI array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URIs.
      */
     public URI[] getURIArray(final String key, final URI... defaultValue) {
@@ -1335,7 +1269,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URI list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URIs.
      */
     public List<URI> getURIList(final String key) {
@@ -1349,7 +1282,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of URIs.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URIs.
      */
     public List<URI> getURIList(final String key, final List<URI> defaultValue) {
@@ -1361,7 +1293,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URL.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not an URL.
      */
     public URL getURL(final String key) {
@@ -1375,7 +1306,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated URL.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not an URL.
      */
     public URL getURL(final String key, final URL defaultValue) {
@@ -1388,7 +1318,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URL array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URLs.
      */
     public URL[] getURLArray(final String key) {
@@ -1402,7 +1331,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated URL array if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URLs.
      */
     public URL[] getURLArray(final String key, final URL... defaultValue) {
@@ -1415,7 +1343,6 @@ public class DataConfiguration extends AbstractConfiguration {
      *
      * @param key The configuration key.
      * @return The associated URL list if the key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URLs.
      */
     public List<URL> getURLList(final String key) {
@@ -1429,7 +1356,6 @@ public class DataConfiguration extends AbstractConfiguration {
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List of URLs.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URLs.
      */
     public List<URL> getURLList(final String key, final List<URL> defaultValue) {

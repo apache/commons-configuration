@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Configuration Events Howto</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -43,6 +44,7 @@
       <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html">
       ConfigurationEvent</a></code> object. The event object contains all
       information available about the modification, including:
+    </p>
       <ul>
         <li>A source object, which is usually the configuration object that was
         modified.</li>
@@ -58,6 +60,7 @@
         is performed. This allows event listeners to react at the correct point
         of time.</li>
       </ul>
+    <p>
       Depending on the event type not all of this data may be available.
     </p>
     <p>
@@ -67,7 +70,6 @@
       is an incomplete list of available event types with the configuration
       classes, in which they are defined:
     </p>
-    <p>
       <dl>
         <dt>AbstractConfiguration</dt>
         <dd>EVENT_ADD_PROPERTY (a property was added; the name of the affected
@@ -92,7 +94,6 @@
         to map the property key as it was received from the subnode configuration
         into the namespace of the parent configuration.)</em></dd>
       </dl>
-    </p>
     </subsection>
 
     <subsection name="An example">

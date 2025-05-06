@@ -33,10 +33,10 @@ import java.net.URLStreamHandler;
  */
 public class FileURLStreamHandler extends URLStreamHandler {
     @Override
-    protected URLConnection openConnection(final URL u) throws IOException {
-        final File file = new File(u.getFile());
+    protected URLConnection openConnection(final URL url) throws IOException {
+        final File file = new File(url.getFile());
 
-        return new URLConnection(u) {
+        return new URLConnection(url) {
 
             @Override
             public void connect() throws IOException {

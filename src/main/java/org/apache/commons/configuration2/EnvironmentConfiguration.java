@@ -33,7 +33,7 @@ import java.util.HashMap;
  *
  * <p>
  * Usage of this class is easy: After an instance has been created the get methods provided by the {@code Configuration}
- * interface can be used for querying environment variables, e.g.:
+ * interface can be used for querying environment variables, for example:
  * </p>
  *
  * <pre>

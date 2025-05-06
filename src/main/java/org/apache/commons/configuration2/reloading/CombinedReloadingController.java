@@ -41,7 +41,7 @@ import java.util.Objects;
  * <p>
  * This class expects the managed controller objects to be passed to the constructor. From this list a defensive copy is
  * created so that it cannot be changed later on. Derived classes can override the {@link #getSubControllers()} method
- * if they need another way to handle child controllers (e.g. a more dynamic way). However, they are then responsible to
+ * if they need another way to handle child controllers (for example a more dynamic way). However, they are then responsible to
  * ensure a safe access to this list in a multi-threaded environment.
  * </p>
  *
@@ -69,7 +69,7 @@ public class CombinedReloadingController extends ReloadingController {
         /**
          * {@inheritDoc} This implementation delegates to the managed controllers. For all of them the
          * {@code checkForReloading()} method is called, giving them the chance to trigger a reload if necessary. If one of
-         * these calls returns <b>true</b>, the result of this method is <b>true</b>, otherwise <b>false</b>.
+         * these calls returns <strong>true</strong>, the result of this method is <strong>true</strong>, otherwise <strong>false</strong>.
          */
         @Override
         public boolean isReloadingRequired() {
@@ -93,7 +93,7 @@ public class CombinedReloadingController extends ReloadingController {
      *
      * @param subCtrls the collection with sub controllers
      * @return a copy of the collection to be stored in the newly created instance
-     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
+     * @throws IllegalArgumentException if the passed in collection is <strong>null</strong> or contains <strong>null</strong> entries
      */
     private static Collection<ReloadingController> checkManagedControllers(final Collection<? extends ReloadingController> subCtrls) {
         if (subCtrls == null) {
@@ -117,9 +117,9 @@ public class CombinedReloadingController extends ReloadingController {
      * Creates a new instance of {@code CombinedReloadingController} and initializes it with the {@code ReloadingController}
      * objects to be managed.
      *
-     * @param subCtrls the collection with sub {@code ReloadingController}s (must not be <b>null</b> or contain <b>null</b>
+     * @param subCtrls the collection with sub {@code ReloadingController}s (must not be <strong>null</strong> or contain <strong>null</strong>
      *        entries)
-     * @throws IllegalArgumentException if the passed in collection is <b>null</b> or contains <b>null</b> entries
+     * @throws IllegalArgumentException if the passed in collection is <strong>null</strong> or contains <strong>null</strong> entries
      */
     public CombinedReloadingController(final Collection<? extends ReloadingController> subCtrls) {
         super(DUMMY);

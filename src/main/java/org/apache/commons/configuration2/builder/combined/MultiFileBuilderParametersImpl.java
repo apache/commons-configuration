@@ -52,11 +52,11 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
 
     /**
      * Obtains an instance of this class from the given map with parameters. If this map does not contain an instance,
-     * result is <b>null</b>. This is equivalent to {@code fromParameters(params, false)}.
+     * result is <strong>null</strong>. This is equivalent to {@code fromParameters(params, false)}.
      *
-     * @param params the map with parameters (must not be <b>null</b>)
-     * @return an instance of this class fetched from the map or <b>null</b>
-     * @throws NullPointerException if the map with parameters is <b>null</b>
+     * @param params the map with parameters (must not be <strong>null</strong>)
+     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params) {
         return fromParameters(params, false);
@@ -66,12 +66,12 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      * Obtains an instance of this class from the given map with parameters and creates a new object if such an instance
      * cannot be found. This method can be used to obtain an instance from a map which has been created using the
      * {@code getParameters()} method. If the map does not contain an instance under the expected key and the
-     * {@code createIfMissing} parameter is <b>true</b>, a new instance is created. Otherwise, result is <b>null</b>.
+     * {@code createIfMissing} parameter is <strong>true</strong>, a new instance is created. Otherwise, result is <strong>null</strong>.
      *
-     * @param params the map with parameters (must not be <b>null</b>)
+     * @param params the map with parameters (must not be <strong>null</strong>)
      * @param createIfMissing a flag whether a new instance should be created if necessary
-     * @return an instance of this class fetched from the map or <b>null</b>
-     * @throws NullPointerException if the map with parameters is <b>null</b>
+     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params, final boolean createIfMissing) {
         MultiFileBuilderParametersImpl instance = (MultiFileBuilderParametersImpl) params.get(PARAM_KEY);

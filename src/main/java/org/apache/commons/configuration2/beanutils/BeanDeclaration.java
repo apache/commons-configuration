@@ -30,9 +30,9 @@ import java.util.Map;
  * </p>
  * <p>
  * This interface defines methods for retrieving all information about a bean that should be created from a
- * configuration file, e.g. the bean's properties or the factory to use for creating the instance. With different
+ * configuration file, for example the bean's properties or the factory to use for creating the instance. With different
  * implementations different &quot;layouts&quot; of bean declarations can be supported. For instance if an XML
- * configuration file is used, all features of XML (e.g. attributes, nested elements) can be used to define the bean. In
+ * configuration file is used, all features of XML (for example attributes, nested elements) can be used to define the bean. In
  * a properties file the declaration format is more limited. The purpose of this interface is to abstract from the
  * concrete declaration format.
  * </p>
@@ -51,7 +51,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
-     * <b>null</b>, then a default factory will be used.
+     * <strong>null</strong>, then a default factory will be used.
      *
      * @return the name of the bean factory
      */
@@ -68,7 +68,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a map with properties that should be initialized on the newly created bean. The map's keys are the names of
-     * the properties; the corresponding values are the properties' values. The return value can be <b>null</b> if no
+     * the properties; the corresponding values are the properties' values. The return value can be <strong>null</strong> if no
      * properties should be set.
      *
      * @return a map with properties to be initialized
@@ -77,7 +77,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a collection with constructor arguments. This data is used to determine the constructor of the bean class to
-     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <b>null</b> or an
+     * be invoked. The values of the arguments are passed to the constructor. An implementation can return <strong>null</strong> or an
      * empty collection; then the standard constructor of the bean class is called.
      *
      * @return a collection with the arguments to be passed to the bean class's constructor
@@ -86,7 +86,7 @@ public interface BeanDeclaration {
 
     /**
      * Gets a map with declarations for beans that should be set as properties of the newly created bean. This allows for
-     * complex initialization scenarios: a bean for a bean that contains complex properties (e.g. other beans) can have
+     * complex initialization scenarios: a bean for a bean that contains complex properties (for example other beans) can have
      * nested declarations for defining these complex properties. The returned map's key are the names of the properties to
      * initialize. The values are either {@code BeanDeclaration} implementations or collections thereof. They will be
      * treated like this declaration (in a recursive manner), and the resulting beans are assigned to the corresponding

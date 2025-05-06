@@ -53,7 +53,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param <T> the type of the array
      * @return the defensive copy of the array
      */
-    private static <T> T[] defensiveCopy(final T[] src) {
+    private static <T> T[] clone(final T[] src) {
         return src != null ? src.clone() : null;
     }
 
@@ -69,9 +69,17 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /** @see org.apache.commons.configuration2.AbstractConfiguration#throwExceptionOnMissing **/
     private boolean throwExceptionOnMissing = true;
 
+    /**
+     * Constructs a new instance.
+     */
     public ConfigurationPropertiesFactoryBean() {
     }
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param configuration The configuration to compose.
+     */
     public ConfigurationPropertiesFactoryBean(final Configuration configuration) {
         Assert.notNull(configuration, "configuration");
         this.compositeConfiguration = new CompositeConfiguration(configuration);
@@ -103,16 +111,31 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         }
     }
 
+    /**
+     * Gets the composite configuration.
+     *
+     * @return the composite configuration.
+     */
     public CompositeConfiguration getConfiguration() {
         return compositeConfiguration;
     }
 
+    /**
+     * Gets a copy of the configurations.
+     *
+     * @return a copy of the configurations.
+     */
     public Configuration[] getConfigurations() {
-        return defensiveCopy(configurations);
+        return clone(configurations);
     }
 
+    /**
+     * Gets a copy of the resource locations.
+     *
+     * @return a copy of the resource locations.
+     */
     public Resource[] getLocations() {
-        return defensiveCopy(locations);
+        return clone(locations);
     }
 
     /**
@@ -139,6 +162,11 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         return true;
     }
 
+    /**
+     * Tests the underlying CompositeConfiguration throwExceptionOnMissing flag.
+     *
+     * @return the underlying CompositeConfiguration throwExceptionOnMissing flag.
+     */
     public boolean isThrowExceptionOnMissing() {
         return throwExceptionOnMissing;
     }
@@ -149,7 +177,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param configurations commons configurations objects which will be used as properties.
      */
     public void setConfigurations(final Configuration... configurations) {
-        this.configurations = defensiveCopy(configurations);
+        this.configurations = clone(configurations);
     }
 
     /**
@@ -159,11 +187,11 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param locations resources of configuration files
      */
     public void setLocations(final Resource... locations) {
-        this.locations = defensiveCopy(locations);
+        this.locations = clone(locations);
     }
 
     /**
-     * Sets the underlying Commons CompositeConfiguration throwExceptionOnMissing flag.
+     * Sets the underlying CompositeConfiguration throwExceptionOnMissing flag.
      *
      * @see org.apache.commons.configuration2.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
      * @param throwExceptionOnMissing The new value for the property

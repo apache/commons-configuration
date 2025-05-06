@@ -324,7 +324,7 @@ public class TestHierarchicalConfiguration {
     }
 
     /**
-     * Tests the configurationsAt() method if the sub configurations are not connected..
+     * Tests the configurationsAt() method if the sub configurations are not connected.
      */
     @Test
     public void testConfigurationsAtNoUpdate() {

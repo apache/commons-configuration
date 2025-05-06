@@ -32,8 +32,8 @@ import org.xml.sax.EntityResolver;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
+ * @since 2.0
  */
 public interface XMLBuilderProperties<T> {
     /**
@@ -64,7 +64,7 @@ public interface XMLBuilderProperties<T> {
     /**
      * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
      *
-     * @param f the flag value, <b>true</b> for schema validation, <b>false</b> for DTD validation
+     * @param f the flag value, <strong>true</strong> for schema validation, <strong>false</strong> for DTD validation
      * @return a reference to this object for method chaining
      */
     T setSchemaValidation(boolean f);

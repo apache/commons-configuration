@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -42,7 +43,6 @@ import java.util.TimeZone;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -130,7 +130,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware {
     /**
-     * Container for array elements. <b>Do not use this class !</b> It is used internally by XMLPropertyConfiguration to
+     * Container for array elements. <strong>Do not use this class !</strong> It is used internally by XMLPropertyConfiguration to
      * parse the configuration file, it may be removed at any moment in the future.
      */
     private static final class ArrayNodeBuilder extends PListNodeBuilder {
@@ -202,7 +202,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * @param value the value to be added
          */
         public void addDataValue(final String value) {
-            addValue(Base64.decodeBase64(value.getBytes(DATA_ENCODING)));
+            addValue(Base64.getMimeDecoder().decode(value.getBytes(DATA_ENCODING)));
         }
 
         /**
@@ -368,27 +368,39 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
                     node.addValue(config);
                 }
             } else {
-                if ("string".equals(qName)) {
+                switch (qName) {
+                case "string":
                     peekNE().addValue(buffer.toString());
-                } else if ("integer".equals(qName)) {
+                    break;
+                case "integer":
                     peekNE().addIntegerValue(buffer.toString());
-                } else if ("real".equals(qName)) {
+                    break;
+                case "real":
                     peekNE().addRealValue(buffer.toString());
-                } else if ("true".equals(qName)) {
+                    break;
+                case "true":
                     peekNE().addTrueValue();
-                } else if ("false".equals(qName)) {
+                    break;
+                case "false":
                     peekNE().addFalseValue();
-                } else if ("data".equals(qName)) {
+                    break;
+                case "data":
                     peekNE().addDataValue(buffer.toString());
-                } else if ("date".equals(qName)) {
+                    break;
+                case "date":
                     try {
                         peekNE().addDateValue(buffer.toString());
                     } catch (final IllegalArgumentException iex) {
                         getLogger().warn("Ignoring invalid date property " + buffer);
                     }
-                } else if ("array".equals(qName)) {
+                    break;
+                case "array": {
                     final ArrayNodeBuilder array = (ArrayNodeBuilder) pop();
                     peekNE().addList(array);
+                    break;
+                }
+                default:
+                    break;
                 }
 
                 // remove the plist node on the stack once the value has been parsed,
@@ -626,7 +638,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
             final Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         } else if (value instanceof byte[]) {
-            final String base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
+            final String base64 = new String(Base64.getMimeEncoder().encode((byte[]) value), DATA_ENCODING);
             out.println(padding + "<data>" + StringEscapeUtils.escapeXml10(base64) + "</data>");
         } else if (value != null) {
             out.println(padding + "<string>" + StringEscapeUtils.escapeXml10(String.valueOf(value)) + "</string>");

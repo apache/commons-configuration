@@ -22,7 +22,7 @@ package org.apache.commons.configuration2.beanutils;
  * </p>
  * <p>
  * An object implementing this interface is passed to a {@link BeanFactory}. The interface also contains methods for the
- * creation and initialization of nested beans (e.g. constructor arguments or complex properties of the bean to be
+ * creation and initialization of nested beans (for example constructor arguments or complex properties of the bean to be
  * created).
  * </p>
  *

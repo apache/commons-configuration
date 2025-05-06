@@ -145,7 +145,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * Returns a set with the entries contained in this configuration-based map.
      *
      * @return a set with the contained entries
-     * @see java.util.Map#entrySet()
+     * @see Map#entrySet()
      */
     @Override
     public Set<Map.Entry<Object, Object>> entrySet() {
@@ -158,7 +158,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      *
      * @param key the key
      * @return the value of this key
-     * @see java.util.Map#get(Object)
+     * @see Map#get(Object)
      */
     @Override
     public Object get(final Object key) {
@@ -180,8 +180,8 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      *
      * @param key the key (will be converted to a string)
      * @param value the value
-     * @return the old value of this key or <b>null</b> if it is new
-     * @see java.util.Map#put(Object, Object)
+     * @return the old value of this key or <strong>null</strong> if it is new
+     * @see Map#put(Object, Object)
      */
     @Override
     public Object put(final Object key, final Object value) {

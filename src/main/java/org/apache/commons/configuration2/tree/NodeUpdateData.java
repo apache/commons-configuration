@@ -36,8 +36,8 @@ import java.util.Map;
  * update based on a passed in instance.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of nodes involved in this update operation
+ * @since 2.0
  */
 public class NodeUpdateData<T> {
     /**
@@ -83,7 +83,7 @@ public class NodeUpdateData<T> {
 
     /**
      * Creates a new instance of {@code NodeUpdateData} and initializes all its properties. All passed in collections are
-     * optional and can be <b>null</b>.
+     * optional and can be <strong>null</strong>.
      *
      * @param changedValues the map defining the changed values
      * @param newValues the collection with the new values

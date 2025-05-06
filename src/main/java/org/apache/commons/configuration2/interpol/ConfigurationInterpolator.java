@@ -52,7 +52,7 @@ import org.apache.commons.text.StringSubstitutor;
  * for it. Then the name of the variable is passed to this object to obtain the actual value. It is also possible to
  * define an arbitrary number of default lookup objects, which are used for variables that do not have a prefix or that
  * cannot be resolved by their associated lookup object. When adding default lookup objects their order matters; they
- * are queried in this order, and the first non-<b>null</b> variable value is used.
+ * are queried in this order, and the first non-<strong>null</strong> variable value is used.
  * </p>
  * <p>
  * After an instance has been created it does not contain any {@code Lookup} objects. The current set of lookup objects
@@ -196,7 +196,7 @@ public class ConfigurationInterpolator {
         }
 
         /** Attempt to extract a simple value from {@code obj} for use in string conversion.
-         * If the input represents a collection of some sort (e.g., an iterable or array),
+         * If the input represents a collection of some sort (for example, an iterable or array),
          * the first item from the collection is returned.
          * @param obj input object
          * @return extracted simple object
@@ -285,9 +285,9 @@ public class ConfigurationInterpolator {
      * {@code InterpolatorSpecification} already contains a {@code ConfigurationInterpolator} object, it is used directly.
      * Otherwise, a new instance is created and initialized with the properties stored in the specification.
      *
-     * @param spec the {@code InterpolatorSpecification} (must not be <b>null</b>)
+     * @param spec the {@code InterpolatorSpecification} (must not be <strong>null</strong>)
      * @return the {@code ConfigurationInterpolator} obtained or created based on the given specification
-     * @throws IllegalArgumentException if the specification is <b>null</b>
+     * @throws IllegalArgumentException if the specification is <strong>null</strong>
      * @since 2.0
      */
     public static ConfigurationInterpolator fromSpecification(final InterpolatorSpecification spec) {
@@ -304,8 +304,8 @@ public class ConfigurationInterpolator {
      *
      * <p>
      * All of the lookups present in the returned map are from {@link DefaultLookups}. However, not all of the
-     * available lookups are included by default. Specifically, lookups that can execute code (e.g.,
-     * {@link DefaultLookups#SCRIPT SCRIPT}) and those that can result in contact with remote servers (e.g.,
+     * available lookups are included by default. Specifically, lookups that can execute code (for example,
+     * {@link DefaultLookups#SCRIPT SCRIPT}) and those that can result in contact with remote servers (for example,
      * {@link DefaultLookups#URL URL} and {@link DefaultLookups#DNS DNS}) are not included. If this behavior
      * must be modified, users can define the {@value #DEFAULT_PREFIX_LOOKUPS_PROPERTY} system property
      * with a comma-separated list of {@link DefaultLookups} enum names to be included in the set of defaults.
@@ -407,12 +407,12 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Utility method for obtaining a {@code Lookup} object in a safe way. This method always returns a non-<b>null</b>
-     * {@code Lookup} object. If the passed in {@code Lookup} is not <b>null</b>, it is directly returned. Otherwise, result
+     * Utility method for obtaining a {@code Lookup} object in a safe way. This method always returns a non-<strong>null</strong>
+     * {@code Lookup} object. If the passed in {@code Lookup} is not <strong>null</strong>, it is directly returned. Otherwise, result
      * is a dummy {@code Lookup} which does not provide any values.
      *
      * @param lookup the {@code Lookup} to check
-     * @return a non-<b>null</b> {@code Lookup} object
+     * @return a non-<strong>null</strong> {@code Lookup} object
      * @since 2.0
      */
     public static Lookup nullSafeLookup(Lookup lookup) {
@@ -451,19 +451,19 @@ public class ConfigurationInterpolator {
      * all variables without a special prefix. If no default {@code Lookup} objects are present, such variables won't be
      * processed.
      *
-     * @param defaultLookup the default {@code Lookup} object to be added (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code Lookup} object is <b>null</b>
+     * @param defaultLookup the default {@code Lookup} object to be added (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the {@code Lookup} object is <strong>null</strong>
      */
     public void addDefaultLookup(final Lookup defaultLookup) {
         defaultLookups.add(defaultLookup);
     }
 
     /**
-     * Adds all {@code Lookup} objects in the given collection as default lookups. The collection can be <b>null</b>, then
-     * this method has no effect. It must not contain <b>null</b> entries.
+     * Adds all {@code Lookup} objects in the given collection as default lookups. The collection can be <strong>null</strong>, then
+     * this method has no effect. It must not contain <strong>null</strong> entries.
      *
      * @param lookups the {@code Lookup} objects to be added as default lookups
-     * @throws IllegalArgumentException if the collection contains a <b>null</b> entry
+     * @throws IllegalArgumentException if the collection contains a <strong>null</strong> entry
      */
     public void addDefaultLookups(final Collection<? extends Lookup> lookups) {
         if (lookups != null) {
@@ -484,8 +484,8 @@ public class ConfigurationInterpolator {
 
     /**
      * Obtains the lookup object for the specified prefix. This method is called by the {@code lookup()} method. This
-     * implementation will check whether a lookup object is registered for the given prefix. If not, a <b>null</b> lookup
-     * object will be returned (never <b>null</b>).
+     * implementation will check whether a lookup object is registered for the given prefix. If not, a <strong>null</strong> lookup
+     * object will be returned (never <strong>null</strong>).
      *
      * @param prefix the prefix
      * @return the lookup object to be used for this prefix
@@ -518,7 +518,7 @@ public class ConfigurationInterpolator {
     /**
      * Gets the parent {@code ConfigurationInterpolator}.
      *
-     * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
+     * @return the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getParentInterpolator() {
         return this.parentInterpolator;
@@ -600,7 +600,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Checks whether a value to be interpolated consists of single, simple variable reference, e.g.,
+     * Checks whether a value to be interpolated consists of single, simple variable reference, for example,
      * <code>${myvar}</code>. In this case, the variable is resolved directly without using the
      * {@code StringSubstitutor}.
      *
@@ -626,9 +626,9 @@ public class ConfigurationInterpolator {
      * Registers the given {@code Lookup} object for the specified prefix at this instance. From now on this lookup object
      * will be used for variables that have the specified prefix.
      *
-     * @param prefix the variable prefix (must not be <b>null</b>)
-     * @param lookup the {@code Lookup} object to be used for this prefix (must not be <b>null</b>)
-     * @throws IllegalArgumentException if either the prefix or the {@code Lookup} object is <b>null</b>
+     * @param prefix the variable prefix (must not be <strong>null</strong>)
+     * @param lookup the {@code Lookup} object to be used for this prefix (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if either the prefix or the {@code Lookup} object is <strong>null</strong>
      */
     public void registerLookup(final String prefix, final Lookup lookup) {
         if (prefix == null) {
@@ -642,11 +642,11 @@ public class ConfigurationInterpolator {
 
     /**
      * Registers all {@code Lookup} objects in the given map with their prefixes at this {@code ConfigurationInterpolator}.
-     * Using this method multiple {@code Lookup} objects can be registered at once. If the passed in map is <b>null</b>,
+     * Using this method multiple {@code Lookup} objects can be registered at once. If the passed in map is <strong>null</strong>,
      * this method does not have any effect.
      *
-     * @param lookups the map with lookups to register (may be <b>null</b>)
-     * @throws IllegalArgumentException if the map contains <b>entries</b>
+     * @param lookups the map with lookups to register (may be <strong>null</strong>)
+     * @throws IllegalArgumentException if the map contains <strong>entries</strong>
      */
     public void registerLookups(final Map<String, ? extends Lookup> lookups) {
         if (lookups != null) {
@@ -672,7 +672,7 @@ public class ConfigurationInterpolator {
      * {@code ConfigurationInterpolator} is available, this object is asked to resolve the variable.
      *
      * @param var the name of the variable whose value is to be looked up which may contain a prefix.
-     * @return the value of this variable or <b>null</b> if it cannot be resolved
+     * @return the value of this variable or <strong>null</strong> if it cannot be resolved
      */
     public Object resolve(final String var) {
         if (var == null) {
@@ -707,7 +707,7 @@ public class ConfigurationInterpolator {
      * Interpolates a string value that consists of a single variable.
      *
      * @param strValue the string to be interpolated
-     * @return the resolved value or <b>null</b> if resolving failed
+     * @return the resolved value or <strong>null</strong> if resolving failed
      */
     private Object resolveSingleVariable(final String strValue) {
         return resolve(extractVariableName(strValue));
@@ -727,7 +727,7 @@ public class ConfigurationInterpolator {
      * Sets the parent {@code ConfigurationInterpolator}. This object is used if the {@code Lookup} objects registered at
      * this object cannot resolve a variable.
      *
-     * @param parentInterpolator the parent {@code ConfigurationInterpolator} object (can be <b>null</b>)
+     * @param parentInterpolator the parent {@code ConfigurationInterpolator} object (can be <strong>null</strong>)
      */
     public void setParentInterpolator(final ConfigurationInterpolator parentInterpolator) {
         this.parentInterpolator = parentInterpolator;

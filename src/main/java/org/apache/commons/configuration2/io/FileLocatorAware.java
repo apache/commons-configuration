@@ -41,7 +41,7 @@ public interface FileLocatorAware {
      * valid for the following invocation of {@code read()} or {@code write(}. Depending on the state of the
      * {@code FileHandler} and which of its methods was called, the object may not be fully initialized. For instance, if
      * the {@code FileHandler}'s {@code load(InputStream)} method was called, no file information is available, and all
-     * methods of the {@code FileLocator} will return <b>null</b>.
+     * methods of the {@code FileLocator} will return <strong>null</strong>.
      *
      * @param locator the current {@code FileLocator}
      */

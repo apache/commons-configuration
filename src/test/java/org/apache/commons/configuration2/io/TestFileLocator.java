@@ -16,12 +16,11 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.net.URL;
@@ -172,11 +171,11 @@ public class TestFileLocator {
         final FileLocator loc = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).encoding(ENCODING).fileSystem(fileSystem)
             .sourceURL(sourceURL).locationStrategy(locationStrategy).create();
         final String s = loc.toString();
-        assertThat(s, containsString("fileName=" + FILE_NAME));
-        assertThat(s, containsString("basePath=" + BASE_PATH));
-        assertThat(s, containsString("sourceURL=" + sourceURL));
-        assertThat(s, containsString("encoding=" + ENCODING));
-        assertThat(s, containsString("fileSystem=" + fileSystem));
-        assertThat(s, containsString("locationStrategy=" + locationStrategy));
+        assertTrue(s.contains("fileName=" + FILE_NAME));
+        assertTrue(s.contains("basePath=" + BASE_PATH));
+        assertTrue(s.contains("sourceURL=" + sourceURL));
+        assertTrue(s.contains("encoding=" + ENCODING));
+        assertTrue(s.contains("fileSystem=" + fileSystem));
+        assertTrue(s.contains("locationStrategy=" + locationStrategy));
     }
 }

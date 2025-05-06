@@ -143,7 +143,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
 
     /**
      * Creates an empty XMLPropertyConfiguration object which can be used to synthesize a new Properties file by adding
-     * values and then saving(). An object constructed by this C'tor can not be tickled into loading included files because
+     * values and then saving(). An object constructed by this constructor cannot be tickled into loading included files because
      * it cannot supply a base for relative includes.
      */
     public XMLPropertiesConfiguration() {
@@ -327,7 +327,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Write a list property.
+     * Writes a list property.
      *
      * @param out the output stream
      * @param key the key of the property
@@ -338,7 +338,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     }
 
     /**
-     * Write a property.
+     * Writes a property.
      *
      * @param out the output stream
      * @param key the key of the property

@@ -48,7 +48,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
      * @param base the configuration with the underlying values
      * @return the servlet request configuration
      */
-    private ServletRequestConfiguration createConfiguration(final Configuration base) {
+    private AbstractConfiguration createConfiguration(final Configuration base) {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameterMap()).thenAnswer(invocation -> new ConfigurationMap(base));
         when(request.getParameterValues(ArgumentMatchers.any())).thenAnswer(invocation -> {
@@ -56,7 +56,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
             return base.getStringArray(key);
         });
 
-        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
+        final AbstractConfiguration config = new ServletRequestConfiguration(request);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return config;
     }

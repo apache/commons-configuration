@@ -61,7 +61,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
             }
         };
 
-        final ServletConfiguration servletConfiguration = new ServletConfiguration(servlet);
+        final AbstractConfiguration servletConfiguration = new ServletConfiguration(servlet);
         servletConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return servletConfiguration;
     }

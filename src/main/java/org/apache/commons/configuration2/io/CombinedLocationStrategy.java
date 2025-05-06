@@ -28,9 +28,9 @@ import java.util.Collections;
  * </p>
  * <p>
  * A collection with the wrapped {@code FileLocationStrategy} objects is passed at construction time. During a
- * [{@code locate()} operation the wrapped strategies are called one after the other until one returns a non <b>null</b>
+ * [{@code locate()} operation the wrapped strategies are called one after the other until one returns a non <strong>null</strong>
  * URL. This URL is returned. If none of the wrapped strategies is able to resolve the passed in {@link FileLocator},
- * result is <b>null</b>. This is similar to the <em>chain of responsibility</em> design pattern.
+ * result is <strong>null</strong>. This is similar to the <em>chain of responsibility</em> design pattern.
  * </p>
  * <p>
  * This class, together with the provided concrete {@code FileLocationStrategy} implementations, offers a convenient way
@@ -48,10 +48,10 @@ public class CombinedLocationStrategy implements FileLocationStrategy {
 
     /**
      * Creates a new instance of {@code CombinedLocationStrategy} and initializes it with the provided sub strategies. The
-     * passed in collection must not be <b>null</b> or contain <b>null</b> elements.
+     * passed in collection must not be <strong>null</strong> or contain <strong>null</strong> elements.
      *
      * @param subs the collection with sub strategies
-     * @throws IllegalArgumentException if the collection is <b>null</b> or has <b>null</b> elements
+     * @throws IllegalArgumentException if the collection is <strong>null</strong> or has <strong>null</strong> elements
      */
     public CombinedLocationStrategy(final Collection<? extends FileLocationStrategy> subs) {
         if (subs == null) {

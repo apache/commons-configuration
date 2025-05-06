@@ -31,7 +31,7 @@ import java.util.Set;
  * <p>
  * This base class provides a fully functional implementation for parsing a value object which can deal with different
  * cases like collections, arrays, iterators, etc. This logic is typically needed by every concrete subclass. Other
- * methods are partly implemented handling special corner cases like <b>null</b> values; concrete subclasses do not have
+ * methods are partly implemented handling special corner cases like <strong>null</strong> values; concrete subclasses do not have
  * do implement the corresponding checks.
  * </p>
  *
@@ -100,7 +100,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * subclasses have to implement their specific escaping logic here, so that the list delimiters they support are
      * properly escaped.
      *
-     * @param s the string to be escaped (not <b>null</b>)
+     * @param s the string to be escaped (not <strong>null</strong>)
      * @return the escaped string
      */
     protected abstract String escapeString(String s);
@@ -125,7 +125,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * contained elements are added to the resulting iteration.</li>
      * <li>Arrays are treated as {@code Iterable} objects.</li>
      * <li>All other types are directly inserted.</li>
-     * <li>Recursive combinations are supported, e.g. a collection containing an array that contains strings: The resulting
+     * <li>Recursive combinations are supported, for example a collection containing an array that contains strings: The resulting
      * collection will only contain primitive objects.</li>
      * </ul>
      */
@@ -135,7 +135,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     }
 
     /**
-     * {@inheritDoc} This implementation handles the case that the passed in string is <b>null</b>. In this case, an empty
+     * {@inheritDoc} This implementation handles the case that the passed in string is <strong>null</strong>. In this case, an empty
      * collection is returned. Otherwise, this method delegates to {@link #splitString(String, boolean)}.
      */
     @Override
@@ -144,10 +144,10 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     }
 
     /**
-     * Actually splits the passed in string which is guaranteed to be not <b>null</b>. This method is called by the base
+     * Actually splits the passed in string which is guaranteed to be not <strong>null</strong>. This method is called by the base
      * implementation of the {@code split()} method. Here the actual splitting logic has to be implemented.
      *
-     * @param s the string to be split (not <b>null</b>)
+     * @param s the string to be split (not <strong>null</strong>)
      * @param trim a flag whether the single components have to be trimmed
      * @return a collection with the extracted components of the passed in string
      */

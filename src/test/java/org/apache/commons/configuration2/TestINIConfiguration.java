@@ -18,8 +18,6 @@
 package org.apache.commons.configuration2;
 
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -475,7 +473,7 @@ public class TestINIConfiguration {
     }
 
     /**
-     * Test of getSections method, of class {@link INIConfiguration} .
+     * Test of getSections method, of class {@link INIConfiguration}.
      */
     @Test
     public void testGetSections() {
@@ -846,7 +844,7 @@ public class TestINIConfiguration {
         load(conf, data);
         assertEquals("dotValue", conf.getString("section3.key..dot"));
         final String output = saveToString(conf);
-        assertThat(output, containsString("key.dot = dotValue"));
+        assertTrue(output.contains("key.dot = dotValue"));
     }
 
     @Test

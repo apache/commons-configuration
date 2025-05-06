@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -465,7 +463,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
         interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
         final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
-        assertThat(result, matchesPattern("\\d{4}-\\d{2}-\\d{2}"));
+        assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
     }
 
     /**

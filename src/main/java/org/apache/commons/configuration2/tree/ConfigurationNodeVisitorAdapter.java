@@ -29,7 +29,7 @@ package org.apache.commons.configuration2.tree;
  */
 public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisitor<T> {
     /**
-     * {@inheritDoc} This implementation returns always <b>false</b>; this means that all nodes in the current hierarchy are
+     * {@inheritDoc} This implementation returns always <strong>false</strong>; this means that all nodes in the current hierarchy are
      * traversed.
      */
     @Override

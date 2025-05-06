@@ -195,7 +195,7 @@ final class XMLDocumentHelper {
      * Note that already a copy of this document is created. This is done for the following reasons:
      * <ul>
      * <li>It is a defensive copy.</li>
-     * <li>An identity transformation on a document may change certain nodes, e.g. CDATA sections. When later on again
+     * <li>An identity transformation on a document may change certain nodes, for example CDATA sections. When later on again
      * copies of this document are created it has to be ensured that these copies have the same structure than the original
      * document stored in this instance.</li>
      * </ul>

@@ -149,10 +149,11 @@
     <module name="UpperEll" />
     <module name="ImportOrder">
       <property name="option" value="top"/>
-      <property name="groups" value="java,javax,org"/>
+      <property name="groups" value="java,javax,jakarta,org"/>
       <property name="ordered" value="true"/>
       <property name="separated" value="true"/>
     </module>
+    <module name="TypecastParenPad" />    
   </module>
   <!-- @author tags are deprecated -->
   <module name="RegexpSingleline">

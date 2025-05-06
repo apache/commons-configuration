@@ -139,35 +139,49 @@ public final class PropertyConverter {
                 return toBigDecimal(value);
             }
             return toNumber(value, cls);
-        } else if (Date.class.equals(cls)) {
+        }
+        if (Date.class.equals(cls)) {
             return toDate(value, convHandler.getDateFormat());
-        } else if (Calendar.class.equals(cls)) {
+        }
+        if (Calendar.class.equals(cls)) {
             return toCalendar(value, convHandler.getDateFormat());
-        } else if (File.class.equals(cls)) {
+        }
+        if (File.class.equals(cls)) {
             return toFile(value);
-        } else if (Path.class.equals(cls)) {
+        }
+        if (Path.class.equals(cls)) {
             return toPath(value);
-        } else if (URI.class.equals(cls)) {
+        }
+        if (URI.class.equals(cls)) {
             return toURI(value);
-        } else if (URL.class.equals(cls)) {
+        }
+        if (URL.class.equals(cls)) {
             return toURL(value);
-        } else if (Pattern.class.equals(cls)) {
+        }
+        if (Pattern.class.equals(cls)) {
             return toPattern(value);
-        } else if (Locale.class.equals(cls)) {
+        }
+        if (Locale.class.equals(cls)) {
             return toLocale(value);
-        } else if (cls.isEnum()) {
+        }
+        if (cls.isEnum()) {
             return convertToEnum(cls, value);
-        } else if (Color.class.equals(cls)) {
+        }
+        if (Color.class.equals(cls)) {
             return toColor(value);
-        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
+        }
+        if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
             // javamail-1.* With javax.mail.* namespace.
             return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAVAX);
-        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
+        }
+        if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
             // javamail-2.0+, with jakarta.mail.* namespace.
             return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAKARTA);
-        } else if (InetAddress.class.isAssignableFrom(cls)) {
+        }
+        if (InetAddress.class.isAssignableFrom(cls)) {
             return toInetAddress(value);
-        } else if (Duration.class.equals(cls)) {
+        }
+        if (Duration.class.equals(cls)) {
             return toDuration(value);
         }
 
@@ -207,7 +221,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Boolean. Internally the {@code org.apache.commons.lang.BooleanUtils} class from
      * the <a href="https://commons.apache.org/lang/">Commons Lang</a> project is used to perform this conversion. This
-     * class accepts some more tokens for the boolean value of <b>true</b>, e.g. {@code yes} and {@code on}. Please refer to
+     * class accepts some more tokens for the boolean value of <strong>true</strong>, for example {@code yes} and {@code on}. Please refer to
      * the documentation of this class for more details.
      *
      * @param value the value to convert
@@ -413,7 +427,6 @@ public final class PropertyConverter {
      * @param cls the type of the enumeration
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an enumeration
-     *
      * @since 1.5
      */
     static <E extends Enum<E>> E toEnum(final Object value, final Class<E> cls) throws ConversionException {
@@ -480,7 +493,6 @@ public final class PropertyConverter {
      * @param value the value to convert
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a InetAddress
-     *
      * @since 1.5
      */
     static InetAddress toInetAddress(final Object value) throws ConversionException {
@@ -516,11 +528,10 @@ public final class PropertyConverter {
      * Converts the specified value into an email address with the given class name.
      *
      * @param value the value to convert
-     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, e.g.,
+     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, for example,
      *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an email address
-     *
      * @since 1.5
      */
     static Object toInternetAddress(final Object value, final String targetClassName) throws ConversionException {
@@ -585,7 +596,7 @@ public final class PropertyConverter {
      * types. Note that the return value is not in always of the specified target class, but only if a new object has to be
      * created.
      *
-     * @param value the value to be converted (must not be <b>null</b>)
+     * @param value the value to be converted (must not be <strong>null</strong>)
      * @param targetClass the target class of the conversion (must be derived from {@link Number})
      * @return the converted number
      * @throws ConversionException if the object cannot be converted

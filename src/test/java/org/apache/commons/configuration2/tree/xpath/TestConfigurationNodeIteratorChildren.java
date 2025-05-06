@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,7 +60,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
         final List<NodePointer> nodes = iterationElements(iterator);
         for (int i = 0; i < expectedIndices.length; i++) {
             final ImmutableNode child = (ImmutableNode) nodes.get(i).getImmediateNode();
-            assertThat(child.getValue().toString(), endsWith(String.valueOf(expectedIndices[i])));
+            assertTrue(child.getValue().toString().endsWith(String.valueOf(expectedIndices[i])));
         }
     }
 

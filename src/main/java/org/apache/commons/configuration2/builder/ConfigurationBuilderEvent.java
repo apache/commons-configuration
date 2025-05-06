@@ -47,7 +47,7 @@ public class ConfigurationBuilderEvent extends Event {
     /**
      * The specific event type for configuration request events. Events of this type are generated each time the builder's
      * {@code getConfiguration()} method is called (before the managed configuration is actually accessed and the lock is
-     * acquired). This gives listeners the opportunity to perform some checks which may invalidate the configuration, e.g.
+     * acquired). This gives listeners the opportunity to perform some checks which may invalidate the configuration, for example
      * trigger a reload check. <strong>Note:</strong> A listener must not call the builder's {@code getConfiguration()}
      * method - this will cause an infinite loop!
      *
@@ -58,8 +58,8 @@ public class ConfigurationBuilderEvent extends Event {
     /**
      * Creates a new instance of {@code ConfigurationBuilderEvent} and sets basic properties.
      *
-     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <b>null</b>)
-     * @param evType the type of this event (must not be <b>null</b>)
+     * @param source the {@code ConfigurationBuilder} object which triggered this event (must not be <strong>null</strong>)
+     * @param evType the type of this event (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is null
      */
     public ConfigurationBuilderEvent(final ConfigurationBuilder<?> source, final EventType<? extends ConfigurationBuilderEvent> evType) {

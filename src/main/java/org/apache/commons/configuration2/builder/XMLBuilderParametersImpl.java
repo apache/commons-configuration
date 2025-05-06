@@ -57,10 +57,10 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     private static final String PROP_SCHEMA_VALIDATION = "schemaValidation";
 
     /**
-     * Gets the {@code EntityResolver} stored in this parameters object. Result is <b>null</b> if no such object has been
+     * Gets the {@code EntityResolver} stored in this parameters object. Result is <strong>null</strong> if no such object has been
      * set.
      *
-     * @return the {@code EntityResolver} or <b>null</b>
+     * @return the {@code EntityResolver} or <strong>null</strong>
      */
     public EntityResolver getEntityResolver() {
         return (EntityResolver) fetchProperty(PROP_ENTITY_RESOLVER);

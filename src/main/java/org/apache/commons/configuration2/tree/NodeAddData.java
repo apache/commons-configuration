@@ -42,8 +42,8 @@ import java.util.List;
  * operation) and the new node</li>
  * </ul>
  *
- * @since 1.3
  * @param <T> the type of nodes this class can handle
+ * @since 1.3
  */
 public class NodeAddData<T> {
     /**
@@ -113,7 +113,7 @@ public class NodeAddData<T> {
      * Then {@code username} is the name of the new node, but the nodes {@code connection} and {@code settings} must be
      * added to the parent node first. In this example these names would be returned by this method.
      *
-     * @return a list with the names of nodes that must be added as parents of the new node (never <b>null</b>)
+     * @return a list with the names of nodes that must be added as parents of the new node (never <strong>null</strong>)
      */
     public List<String> getPathNodes() {
         return pathNodes;
@@ -122,7 +122,7 @@ public class NodeAddData<T> {
     /**
      * Returns a flag if the new node to be added is an attribute.
      *
-     * @return <b>true</b> for an attribute node, <b>false</b> for a child node
+     * @return <strong>true</strong> for an attribute node, <strong>false</strong> for a child node
      */
     public boolean isAttribute() {
         return attribute;

@@ -70,7 +70,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
      * object.
      *
      * @param event the configuration change event
-     * @return <b>true</b> if a save operation should be performed, <b>false</b> otherwise
+     * @return <strong>true</strong> if a save operation should be performed, <strong>false</strong> otherwise
      */
     private boolean autoSaveRequired(final ConfigurationEvent event) {
         return !event.isBeforeUpdate() && !inLoadOperation();
@@ -122,7 +122,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
      * which is associated with a new file handler. It updates the internal file handler reference and performs necessary
      * listener registrations.
      *
-     * @param fh the new {@code FileHandler} (can be <b>null</b>)
+     * @param fh the new {@code FileHandler} (can be <strong>null</strong>)
      */
     public synchronized void updateFileHandler(final FileHandler fh) {
         if (handler != null) {

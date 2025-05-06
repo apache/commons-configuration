@@ -29,8 +29,8 @@ import java.util.Map;
  * processing of complex update operations.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes supported by this resolver
+ * @since 2.0
  */
 public interface NodeKeyResolver<T> {
     /**
@@ -71,7 +71,7 @@ public interface NodeKeyResolver<T> {
 
     /**
      * Performs a query for the specified key on the given root node returning only node results. Some operations require
-     * results of type node and do not support attributes (e.g. for tracking nodes). This operation can be used in such
+     * results of type node and do not support attributes (for example for tracking nodes). This operation can be used in such
      * cases. It works like {@code resolveKey()}, but filters only for results of type node.
      *
      * @param root the root node

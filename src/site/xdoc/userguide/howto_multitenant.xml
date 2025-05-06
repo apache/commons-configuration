@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
     <title>Mutli-tenant Configurations</title>
     <author email="rgoers@apache.org">Ralph Goers</author>
@@ -132,6 +133,7 @@
           In this example configuration definition file for a
           <code>CombinedConfigurationBuilder</code> two configuration sources
           are declared:
+        </p>
           <ul>
             <li>A multi-file source with a file pattern containing a system
             property. This means that depending on the current value of this
@@ -143,7 +145,6 @@
             default values in case no configuration file could be loaded by the
             multi-file source.</li>
           </ul>
-        </p>
         <p>
           Of special importance is the declaration of the result configuration
           in form of the <code>&lt;result&gt;</code> element in the <em>header</em>
@@ -184,6 +185,7 @@
           configuration type are defined by the
           <code><a href="../apidocs/org/apache/commons/configuration2/builder/MultiFileBuilderProperties.html">
           MultiFileBuilderProperties</a></code> interface. They include
+        </p>
           <ul>
             <li>The pattern string for determining the name of the
             configuration file to be loaded. This is of course the most
@@ -195,7 +197,6 @@
             configuration files to be loaded are XML documents, validation
             could be enabled via these parameters.</li>
           </ul>
-        </p>
         <p>
           Below is a code fragment demonstrating the set up of a
           <code>MultiFileConfigurationBuilder</code> which loads configuration

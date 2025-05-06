@@ -211,7 +211,7 @@ public class TestXPathExpressionEngine {
     }
 
     /**
-     * Tests whether the key of an attribute can be generated..
+     * Tests whether the key of an attribute can be generated.
      */
     @Test
     public void testNodeKeyAttribute() {

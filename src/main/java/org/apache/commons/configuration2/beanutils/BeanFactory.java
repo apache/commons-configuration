@@ -44,18 +44,18 @@ public interface BeanFactory {
      * the bean. It is up to a concrete implementation how the bean is created and initialized.
      *
      * @param bcc the context object for the bean to be created
-     * @return the new bean instance (should not be <b>null</b>)
+     * @return the new bean instance (should not be <strong>null</strong>)
      * @throws Exception if an error occurs (the helper classes for creating beans will catch this generic exception and
      *         wrap it in a configuration exception)
      */
     Object createBean(BeanCreationContext bcc) throws Exception;
 
     /**
-     * Gets the default bean class of this bean factory. If an implementation here returns a non <b>null</b> value, bean
+     * Gets the default bean class of this bean factory. If an implementation here returns a non <strong>null</strong> value, bean
      * declarations using this factory do not need to provide the name of the bean class. In such a case an instance of the
      * default class will be created.
      *
-     * @return the default class of this factory or <b>null</b> if there is none
+     * @return the default class of this factory or <strong>null</strong> if there is none
      */
     Class<?> getDefaultBeanClass();
 }

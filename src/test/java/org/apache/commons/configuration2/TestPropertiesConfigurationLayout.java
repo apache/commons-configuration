@@ -82,7 +82,7 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Adds a comment line.
          *
-         * @param s the comment (can be <b>null</b>, then a blank line is added)
+         * @param s the comment (can be <strong>null</strong>, then a blank line is added)
          */
         public void addComment(final String s) {
             if (s != null) {

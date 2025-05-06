@@ -82,7 +82,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -101,7 +101,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -115,15 +115,15 @@ public final class ConfigurationUtils {
 
     /**
      * Casts the specified object to an {@code EventSource} if possible. The boolean argument determines the method's
-     * behavior if the object does not implement the {@code EventSource} event: if set to <b>false</b>, a
-     * {@code ConfigurationRuntimeException} is thrown; if set to <b>true</b>, a dummy {@code EventSource} is returned; on
+     * behavior if the object does not implement the {@code EventSource} event: if set to <strong>false</strong>, a
+     * {@code ConfigurationRuntimeException} is thrown; if set to <strong>true</strong>, a dummy {@code EventSource} is returned; on
      * this object all methods can be called, but they do not have any effect.
      *
      * @param obj the object to be cast as {@code EventSource}
      * @param mockIfUnsupported a flag whether a mock object should be returned if necessary
      * @return an {@code EventSource}
      * @throws ConfigurationRuntimeException if the object cannot be cast to {@code EventSource} and the mock flag is
-     *         <b>false</b>
+     *         <strong>false</strong>
      * @since 2.0
      */
     public static EventSource asEventSource(final Object obj, final boolean mockIfUnsupported) {
@@ -165,8 +165,8 @@ public final class ConfigurationUtils {
      * Clones the given configuration object if this is possible. If the passed in configuration object implements the
      * {@code Cloneable} interface, its {@code clone()} method will be invoked. Otherwise an exception will be thrown.
      *
-     * @param config the configuration object to be cloned (can be <b>null</b>)
-     * @return the cloned configuration (<b>null</b> if the argument was <b>null</b>, too)
+     * @param config the configuration object to be cloned (can be <strong>null</strong>)
+     * @return the cloned configuration (<strong>null</strong> if the argument was <strong>null</strong>, too)
      * @throws ConfigurationRuntimeException if cloning is not supported for this object
      * @since 1.3
      */
@@ -213,7 +213,7 @@ public final class ConfigurationUtils {
      * @param sync the {@code Synchronizer} object to be cloned
      * @return the clone of this {@code Synchronizer}
      * @throws ConfigurationRuntimeException if no clone can be created
-     * @throws IllegalArgumentException if <b>null</b> is passed in
+     * @throws IllegalArgumentException if <strong>null</strong> is passed in
      */
     public static Synchronizer cloneSynchronizer(final Synchronizer sync) {
         if (sync == null) {
@@ -241,8 +241,8 @@ public final class ConfigurationUtils {
      * directly returned. Otherwise all properties are copied into a new hierarchical configuration.
      *
      * @param conf the configuration to convert
-     * @return the new hierarchical configuration (the result is <b>null</b> if and only if the passed in configuration is
-     *         <b>null</b>)
+     * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
+     *         <strong>null</strong>)
      * @since 1.3
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(final Configuration conf) {
@@ -253,16 +253,16 @@ public final class ConfigurationUtils {
      * Converts the passed in {@code Configuration} object to a hierarchical one using the specified
      * {@code ExpressionEngine}. This conversion works by adding the keys found in the configuration to a newly created
      * hierarchical configuration. When adding new keys to a hierarchical configuration the keys are interpreted by its
-     * {@code ExpressionEngine}. If they contain special characters (e.g. brackets) that are treated in a special way by the
+     * {@code ExpressionEngine}. If they contain special characters (for example brackets) that are treated in a special way by the
      * default expression engine, it may be necessary using a specific engine that can deal with such characters. Otherwise
-     * <b>null</b> can be passed in for the {@code ExpressionEngine}; then the default expression engine is used. If the
+     * <strong>null</strong> can be passed in for the {@code ExpressionEngine}; then the default expression engine is used. If the
      * passed in configuration is already hierarchical, it is directly returned. (However, the {@code ExpressionEngine} is
-     * set if it is not <b>null</b>.) Otherwise all properties are copied into a new hierarchical configuration.
+     * set if it is not <strong>null</strong>.) Otherwise all properties are copied into a new hierarchical configuration.
      *
      * @param conf the configuration to convert
-     * @param engine the {@code ExpressionEngine} for the hierarchical configuration or <b>null</b> for the default
-     * @return the new hierarchical configuration (the result is <b>null</b> if and only if the passed in configuration is
-     *         <b>null</b>)
+     * @param engine the {@code ExpressionEngine} for the hierarchical configuration or <strong>null</strong> for the default
+     * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
+     *         <strong>null</strong>)
      * @since 1.6
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(final Configuration conf, final ExpressionEngine engine) {
@@ -296,7 +296,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -315,7 +315,7 @@ public final class ConfigurationUtils {
      * </p>
      * <p>
      * <em>Note:</em> This method is not able to handle some specifics of configurations derived from
-     * {@code AbstractConfiguration} (e.g. list delimiters). For a full support of all of these features the {@code copy()}
+     * {@code AbstractConfiguration} (for example list delimiters). For a full support of all of these features the {@code copy()}
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
@@ -334,7 +334,7 @@ public final class ConfigurationUtils {
      * @param ifcs an array with the interface classes the proxy must implement
      * @param c the configuration object to be wrapped
      * @return a proxy object for an immutable configuration
-     * @throws NullPointerException if the configuration is <b>null</b>
+     * @throws NullPointerException if the configuration is <strong>null</strong>
      */
     private static ImmutableConfiguration createUnmodifiableConfiguration(final Class<?>[] ifcs, final Configuration c) {
         return (ImmutableConfiguration) Proxy.newProxyInstance(ConfigurationUtils.class.getClassLoader(), ifcs, new ImmutableConfigurationInvocationHandler(c));
@@ -398,7 +398,7 @@ public final class ConfigurationUtils {
 
     /**
      * Enables runtime exceptions for the specified configuration object. This method can be used for configuration
-     * implementations that may face errors on normal property access, e.g. {@code DatabaseConfiguration} or
+     * implementations that may face errors on normal property access, for example {@code DatabaseConfiguration} or
      * {@code JNDIConfiguration}. Per default such errors are simply logged and then ignored. This implementation will
      * register a special {@link EventListener} that throws a runtime exception (namely a
      * {@code ConfigurationRuntimeException}) on each received error event.
@@ -490,9 +490,9 @@ public final class ConfigurationUtils {
      * interface. Through this interface the configuration cannot be manipulated. It is also not possible to cast the
      * returned object back to a {@code Configuration} instance to circumvent this protection.
      *
-     * @param c the {@code Configuration} to be wrapped (must not be <b>null</b>)
+     * @param c the {@code Configuration} to be wrapped (must not be <strong>null</strong>)
      * @return an {@code ImmutableConfiguration} view on the specified {@code Configuration} object
-     * @throws NullPointerException if the passed in {@code Configuration} is <b>null</b>
+     * @throws NullPointerException if the passed in {@code Configuration} is <strong>null</strong>
      * @since 2.0
      */
     public static ImmutableConfiguration unmodifiableConfiguration(final Configuration c) {
@@ -503,9 +503,9 @@ public final class ConfigurationUtils {
      * Creates an {@code ImmutableHierarchicalConfiguration} from the given {@code HierarchicalConfiguration} object. This
      * method works exactly like the method with the same name, but it operates on hierarchical configurations.
      *
-     * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be <b>null</b>)
+     * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be <strong>null</strong>)
      * @return an {@code ImmutableHierarchicalConfiguration} view on the specified {@code HierarchicalConfiguration} object
-     * @throws NullPointerException if the passed in {@code HierarchicalConfiguration} is <b>null</b>
+     * @throws NullPointerException if the passed in {@code HierarchicalConfiguration} is <strong>null</strong>
      * @since 2.0
      */
     public static ImmutableHierarchicalConfiguration unmodifiableConfiguration(final HierarchicalConfiguration<?> c) {

@@ -74,11 +74,11 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * they contain a list delimiter character. If this is the case and if list splitting is enabled, the string is split
  * and multiple values are added for this property. List splitting is controlled by a {@link ListDelimiterHandler}
  * object which can be set using the {@link #setListDelimiterHandler(ListDelimiterHandler)} method. It is disabled per
- * default. To enable this feature, set a suitable {@code ListDelimiterHandler}, e.g. an instance of
+ * default. To enable this feature, set a suitable {@code ListDelimiterHandler}, for example an instance of
  * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler DefaultListDelimiterHandler} configured
  * with the desired list delimiter character.</li>
  * <li>Allows specifying how missing properties are treated. Per default the get methods returning an object will return
- * <b>null</b> if the searched property key is not found (and no default value is provided). With the
+ * <strong>null</strong> if the searched property key is not found (and no default value is provided). With the
  * {@code setThrowExceptionOnMissing()} method this behavior can be changed to throw an exception when a requested
  * property cannot be found.</li>
  * <li>Basic event support. Whenever this configuration is modified registered event listeners are notified. Refer to
@@ -87,7 +87,7 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * </ul>
  * <p>
  * Most methods defined by the {@code Configuration} interface are already implemented in this class. Many method
- * implementations perform basic book-keeping tasks (e.g. firing events, handling synchronization), and then delegate to
+ * implementations perform basic book-keeping tasks (for example firing events, handling synchronization), and then delegate to
  * other (protected) methods executing the actual work. Subclasses override these protected methods to define or adapt
  * behavior. The public entry point methods are final to prevent subclasses from breaking basic functionality.
  * </p>
@@ -115,14 +115,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Checks whether the specified value is <b>null</b> and throws an exception in this case. This method is used by
-     * conversion methods returning primitive Java types. Here values to be returned must not be <b>null</b>.
+     * Checks whether the specified value is <strong>null</strong> and throws an exception in this case. This method is used by
+     * conversion methods returning primitive Java types. Here values to be returned must not be <strong>null</strong>.
      *
      * @param <T> the type of the object to be checked
      * @param key the key which caused the problem
      * @param value the value to be checked
      * @return the passed in value for chaining this method call
-     * @throws NoSuchElementException if the value is <b>null</b>
+     * @throws NoSuchElementException if the value is <strong>null</strong>
      */
     private static <T> T checkNonNullValue(final String key, final T value) {
         if (value == null) {
@@ -137,7 +137,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param ci the {@code ConfigurationInterpolator} in question
      * @param targetConf the target configuration of the searched lookup
-     * @return the found {@code Lookup} object or <b>null</b>
+     * @return the found {@code Lookup} object or <strong>null</strong>
      */
     private static Lookup findConfigurationLookup(final ConfigurationInterpolator ci, final ImmutableConfiguration targetConf) {
         for (final Lookup l : ci.getDefaultLookups()) {
@@ -150,7 +150,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Handles the default collection for a collection conversion. This method fills the target collection with the content
-     * of the default collection. Both collections may be <b>null</b>.
+     * of the default collection. Both collections may be <strong>null</strong>.
      *
      * @param target the target collection
      * @param defaultValue the default collection
@@ -190,7 +190,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Whether the configuration should throw NoSuchElementExceptions or simply return null when a property does not exist.
      * Defaults to return null.
      */
-    private boolean throwExceptionOnMissing;
+    private volatile boolean throwExceptionOnMissing;
 
     /** Stores a reference to the object that handles variable interpolation. */
     private AtomicReference<ConfigurationInterpolator> interpolator;
@@ -217,7 +217,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Adds a special {@link EventListener} object to this configuration that will log all internal errors. This method is
-     * intended to be used by certain derived classes, for which it is known that they can fail on property access (e.g.
+     * intended to be used by certain derived classes, for which it is known that they can fail on property access (for example
      * {@code DatabaseConfiguration}).
      *
      * @since 1.4
@@ -264,7 +264,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * structure (i.e. the parent-child-relationships will get lost). So when dealing with hierarchical configuration
      * objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be used.
      *
-     * @param configuration the configuration to be appended (can be <b>null</b>, then this operation will have no effect)
+     * @param configuration the configuration to be appended (can be <strong>null</strong>, then this operation will have no effect)
      * @since 1.5
      */
     public void append(final Configuration configuration) {
@@ -434,7 +434,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code containsKey()}. It has to be defined by concrete subclasses.
      *
      * @param key the key in question
-     * @return <b>true</b> if this key is contained in this configuration, <b>false</b> otherwise
+     * @return <strong>true</strong> if this key is contained in this configuration, <strong>false</strong> otherwise
      * @since 2.0
      */
     protected abstract boolean containsKeyInternal(String key);
@@ -495,7 +495,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Performs a conversion to an array result class. This implementation delegates to the {@link ConversionHandler} to
-     * perform the actual type conversion. If this results in a <b>null</b> result (because the property is undefined), the
+     * perform the actual type conversion. If this results in a <strong>null</strong> result (because the property is undefined), the
      * default value is returned. It is checked whether the default value is an array with the correct component type. If
      * not, an exception is thrown.
      *
@@ -518,7 +518,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * hierarchical configuration objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be
      * used.
      *
-     * @param configuration the configuration to copy (can be <b>null</b>, then this operation will have no effect)
+     * @param configuration the configuration to copy (can be <strong>null</strong>, then this operation will have no effect)
      * @since 1.5
      */
     public void copy(final Configuration configuration) {
@@ -588,7 +588,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * this configuration.
      *
      * @param ci the {@code ConfigurationInterpolator} in question
-     * @return the found {@code Lookup} object or <b>null</b>
+     * @return the found {@code Lookup} object or <strong>null</strong>
      */
     private Lookup findConfigurationLookup(final ConfigurationInterpolator ci) {
         return findConfigurationLookup(ci, this);
@@ -635,7 +635,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * {@inheritDoc} This implementation delegates to the {@link ConversionHandler} to perform the actual type conversion.
-     * If this results in a <b>null</b> result (because the property is undefined), the default value is returned. It is
+     * If this results in a <strong>null</strong> result (because the property is undefined), the default value is returned. It is
      * checked whether the default value is an array with the correct component type. If not, an exception is thrown.
      *
      * @throws IllegalArgumentException if the default value is not a compatible array
@@ -1032,11 +1032,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key The configuration key.
      * @param defaults Any default values for the returned {@code Properties} object. Ignored if {@code null}.
-     *
      * @return The associated properties if key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a String/List of Strings.
-     *
      * @throws IllegalArgumentException if one of the tokens is malformed (does not contain an equals sign).
      */
     public Properties getProperties(final String key, final Properties defaults) {
@@ -1125,7 +1122,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     *
      * @throws ConversionException is thrown if the key maps to an object that is not a String/List of Strings.
      * @see #setListDelimiterHandler(ListDelimiterHandler)
      */
@@ -1137,7 +1133,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Gets the object responsible for synchronizing this configuration. All access to this configuration - both read and
-     * write access - is controlled by this object. This implementation never returns <b>null</b>. If no
+     * write access - is controlled by this object. This implementation never returns <strong>null</strong>. If no
      * {@code Synchronizer} has been set, a {@link NoOpSynchronizer} is returned. So, per default, instances of
      * {@code AbstractConfiguration} are not thread-safe unless a suitable {@code Synchronizer} is set!
      *
@@ -1155,7 +1151,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Initializes the logger. Supports <b>null</b> input. This method can be called by derived classes in order to enable
+     * Initializes the logger. Supports <strong>null</strong> input. This method can be called by derived classes in order to enable
      * logging.
      *
      * @param log the logger
@@ -1204,8 +1200,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate
-     *
-     * @return returns the key name with the ${key} substituted
+     * @return the key name with the ${key} substituted
      */
     protected String interpolate(final String base) {
         return Objects.toString(interpolate((Object) base), null);
@@ -1245,16 +1240,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Actually checks whether this configuration contains data. This method is called by {@code isEmpty()}. It has to be
      * defined by concrete subclasses.
      *
-     * @return <b>true</b> if this configuration contains no data, <b>false</b> otherwise
+     * @return <strong>true</strong> if this configuration contains no data, <strong>false</strong> otherwise
      * @since 2.0
      */
     protected abstract boolean isEmptyInternal();
 
     /**
      * Checks whether the specified object is a scalar value. This method is called by {@code getList()} and
-     * {@code getStringArray()} if the property requested is not a string, a list, or an array. If it returns <b>true</b>,
+     * {@code getStringArray()} if the property requested is not a string, a list, or an array. If it returns <strong>true</strong>,
      * the calling method transforms the value to a string and returns a list or an array with this single element. This
-     * implementation returns <b>true</b> if the value is of a wrapper type for a primitive type.
+     * implementation returns <strong>true</strong> if the value is of a wrapper type for a primitive type.
      *
      * @param value the value to be checked
      * @return a flag whether the value is a scalar
@@ -1278,8 +1273,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code LockMode} argument. Subclasses can override these protected methods to perform additional steps when a
      * configuration is locked.
      *
+     * @throws NullPointerException if the argument is <strong>null</strong>
      * @since 2.0
-     * @throws NullPointerException if the argument is <b>null</b>
      */
     @Override
     public final void lock(final LockMode mode) {
@@ -1310,10 +1305,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Sets the {@code ConversionHandler} to be used by this instance. The {@code ConversionHandler} is responsible for
      * every kind of data type conversion. It is consulted by all get methods returning results in specific data types. A
      * newly created configuration uses a default {@code ConversionHandler} implementation. This can be changed while
-     * initializing the configuration (e.g. via a builder). Note that access to this property is not synchronized.
+     * initializing the configuration (for example via a builder). Note that access to this property is not synchronized.
      *
-     * @param conversionHandler the {@code ConversionHandler} to be used (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code ConversionHandler} is <b>null</b>
+     * @param conversionHandler the {@code ConversionHandler} to be used (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the {@code ConversionHandler} is <strong>null</strong>
      * @since 2.0
      */
     public void setConversionHandler(final ConversionHandler conversionHandler) {
@@ -1353,7 +1348,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * {@inheritDoc} This implementation sets the passed in object without further modifications. A <b>null</b> argument is
+     * {@inheritDoc} This implementation sets the passed in object without further modifications. A <strong>null</strong> argument is
      * allowed; this disables interpolation.
      *
      * @since 2.0
@@ -1378,8 +1373,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * exceptions.
      * </p>
      *
-     * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code ListDelimiterHandler} is <b>null</b>
+     * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the {@code ListDelimiterHandler} is <strong>null</strong>
      * @since 2.0
      */
     public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
@@ -1393,7 +1388,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Allows setting the logger to be used by this configuration object. This method makes it possible for clients to
      * exactly control logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that
      * want to enable logging should call this method during their initialization with the logger to be used. It is legal to
-     * pass a <b>null</b> logger; in this case, logging will be disabled.
+     * pass a <strong>null</strong> logger; in this case, logging will be disabled.
      *
      * @param log the new logger
      * @since 2.0
@@ -1429,7 +1424,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * should better call {@link #installInterpolator(Map, Collection)} to define the {@code ConfigurationInterpolator} in a
      * single step.
      *
-     * @param lookups a map with new {@code Lookup} objects and their prefixes (may be <b>null</b>)
+     * @param lookups a map with new {@code Lookup} objects and their prefixes (may be <strong>null</strong>)
      * @since 2.0
      */
     public void setPrefixLookups(final Map<String, ? extends Lookup> lookups) {
@@ -1476,7 +1471,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Sets the object responsible for synchronizing this configuration. This method has to be called with a suitable
      * {@code Synchronizer} object when initializing this configuration instance in order to make it thread-safe.
      *
-     * @param synchronizer the new {@code Synchronizer}; can be <b>null</b>, then this instance uses a
+     * @param synchronizer the new {@code Synchronizer}; can be <strong>null</strong>, then this instance uses a
      *        {@link NoOpSynchronizer}
      * @since 2.0
      */
@@ -1487,8 +1482,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Allows to set the {@code throwExceptionOnMissing} flag. This flag controls the behavior of property getter methods
-     * that return objects if the requested property is missing. If the flag is set to <b>false</b> (which is the default
-     * value), these methods will return <b>null</b>. If set to <b>true</b>, they will throw a
+     * that return objects if the requested property is missing. If the flag is set to <strong>false</strong> (which is the default
+     * value), these methods will return <strong>null</strong>. If set to <strong>true</strong>, they will throw a
      * {@code NoSuchElementException} exception. Note that getter methods for primitive data types are not affected by this
      * flag.
      *
@@ -1526,19 +1521,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return new SubsetConfiguration(this, prefix, DELIMITER);
     }
 
-    void syncRead(final Runnable runnable, final boolean optimize) {
+    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
         beginRead(optimize);
         try {
-            runnable.run();
+            return supplier.get();
         } finally {
             endRead();
         }
     }
 
-    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
+    void syncRead(final Runnable runnable, final boolean optimize) {
         beginRead(optimize);
         try {
-            return supplier.get();
+            runnable.run();
         } finally {
             endRead();
         }
@@ -1567,7 +1562,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code LockMode} argument. Subclasses can override these protected methods to perform additional steps when a
      * configuration's lock is released.
      *
-     * @throws NullPointerException if the argument is <b>null</b>
+     * @throws NullPointerException if the argument is <strong>null</strong>
      */
     @Override
     public final void unlock(final LockMode mode) {

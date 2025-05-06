@@ -55,9 +55,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Looks up an instance of this class in the specified parameters map. This is equivalent to
      * {@code fromParameters(params, false);}
      *
-     * @param params the map with parameters (must not be <b>null</b>
-     * @return the instance obtained from the map or <b>null</b>
-     * @throws NullPointerException if the map is <b>null</b>
+     * @param params the map with parameters (must not be <strong>null</strong>
+     * @return the instance obtained from the map or <strong>null</strong>
+     * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params) {
         return fromParameters(params, false);
@@ -68,11 +68,11 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * This method can be used to obtain an instance of this class which has been stored in a parameters map. It is
      * compatible with the {@code getParameters()} method.
      *
-     * @param params the map with parameters (must not be <b>null</b>
-     * @param createIfMissing determines the behavior if no instance is found in the map; if <b>true</b>, a new instance
-     *        with default settings is created; if <b>false</b>, <b>null</b> is returned
-     * @return the instance obtained from the map or <b>null</b>
-     * @throws NullPointerException if the map is <b>null</b>
+     * @param params the map with parameters (must not be <strong>null</strong>
+     * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
+     *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
+     * @return the instance obtained from the map or <strong>null</strong>
+     * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
         CombinedBuilderParametersImpl result = (CombinedBuilderParametersImpl) params.get(PARAM_KEY);
@@ -123,7 +123,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Gets the base path for relative names of configuration sources. Result may be <b>null</b> if no base path has been
+     * Gets the base path for relative names of configuration sources. Result may be <strong>null</strong> if no base path has been
      * set.
      *
      * @return the base path for resolving relative file names
@@ -134,7 +134,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
 
     /**
      * Gets the {@code DefaultParametersManager} object for initializing parameter objects for child configuration
-     * sources. This method never returns <b>null</b>. If no manager was set, a new instance is created right now.
+     * sources. This method never returns <strong>null</strong>. If no manager was set, a new instance is created right now.
      *
      * @return the {@code DefaultParametersManager} for child configuration sources
      */
@@ -168,7 +168,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets the parameters object for the definition configuration builder if present.
      *
-     * @return the parameters object for the definition configuration builder or <b>null</b>
+     * @return the parameters object for the definition configuration builder or <strong>null</strong>
      */
     public BuilderParameters getDefinitionBuilderParameters() {
         return definitionBuilderParameters;
@@ -219,11 +219,11 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Returns the {@code ConfigurationBuilderProvider} which is registered for the specified tag name or <b>null</b> if
+     * Returns the {@code ConfigurationBuilderProvider} which is registered for the specified tag name or <strong>null</strong> if
      * there is no registration for this tag.
      *
      * @param tagName the tag name
-     * @return the provider registered for this tag or <b>null</b>
+     * @return the provider registered for this tag or <strong>null</strong>
      */
     public ConfigurationBuilderProvider providerForTag(final String tagName) {
         return providers.get(tagName);
@@ -255,9 +255,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * registered. This method works like the method with the same name, but the map with providers is obtained from the
      * passed in parameters object.
      *
-     * @param params the parameters object from which to copy providers(must not be <b>null</b>)
+     * @param params the parameters object from which to copy providers(must not be <strong>null</strong>)
      * @return a reference to this object for method chaining
-     * @throws IllegalArgumentException if the source parameters object is <b>null</b>
+     * @throws IllegalArgumentException if the source parameters object is <strong>null</strong>
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final CombinedBuilderParametersImpl params) {
         if (params == null) {
@@ -272,10 +272,10 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * providers contained in a parameters object and adds all standard providers. This way it is possible to override a
      * standard provider by registering a provider object for the same tag name at the parameters object.
      *
-     * @param providers a map with tag names and corresponding providers (must not be <b>null</b> or contain <b>null</b>
+     * @param providers a map with tag names and corresponding providers (must not be <strong>null</strong> or contain <strong>null</strong>
      *        entries)
      * @return a reference to this object for method chaining
-     * @throws IllegalArgumentException if the map with providers is <b>null</b> or contains <b>null</b> entries
+     * @throws IllegalArgumentException if the map with providers is <strong>null</strong> or contains <strong>null</strong> entries
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final Map<String, ConfigurationBuilderProvider> providers) {
         if (providers == null) {
@@ -293,8 +293,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Registers the given {@code ConfigurationBuilderProvider} for the specified tag name. This means that whenever this
      * tag is encountered in a configuration definition file, the corresponding builder provider is invoked.
      *
-     * @param tagName the name of the tag (must not be <b>null</b>)
-     * @param provider the {@code ConfigurationBuilderProvider} (must not be <b>null</b>)
+     * @param tagName the name of the tag (must not be <strong>null</strong>)
+     * @param provider the {@code ConfigurationBuilderProvider} (must not be <strong>null</strong>)
      * @return a reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */

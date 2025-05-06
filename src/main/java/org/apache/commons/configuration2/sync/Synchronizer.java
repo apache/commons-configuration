@@ -23,7 +23,7 @@ package org.apache.commons.configuration2.sync;
  * <p>
  * Each {@code Configuration} object derived from {@link org.apache.commons.configuration2.AbstractConfiguration
  * AbstractConfiguration} has an associated {@code Synchronizer} object. Before an operation on the configuration is
- * performed (e.g. a property read or an update), the {@code Synchronizer} is invoked. Depending on the concrete
+ * performed (for example a property read or an update), the {@code Synchronizer} is invoked. Depending on the concrete
  * implementation of the {@code Synchronizer} used, the configuration can be made thread-safe.
  * </p>
  * <p>

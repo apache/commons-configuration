@@ -17,8 +17,6 @@
 package org.apache.commons.configuration2.tree;
 
 import static org.apache.commons.configuration2.ConfigurationAssert.checkEquals;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -133,8 +131,8 @@ public class TestQueryResult {
     public void testToStringAttributeResult() {
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
         final String s = result.toString();
-        assertThat(s, containsString("attribute=" + ATTR));
-        assertThat(s, containsString("parentNode=" + attributeNode));
+        assertTrue(s.contains("attribute=" + ATTR));
+        assertTrue(s.contains("parentNode=" + attributeNode));
     }
 
     /**
@@ -143,6 +141,6 @@ public class TestQueryResult {
     @Test
     public void testToStringNodeResult() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        assertThat(result.toString(), containsString("resultNode=" + resultNode));
+        assertTrue(result.toString().contains("resultNode=" + resultNode));
     }
 }

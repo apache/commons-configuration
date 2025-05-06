@@ -22,7 +22,7 @@ package org.apache.commons.configuration2.event;
  * </p>
  * <p>
  * Event objects of this type are used for &quot;raw&quot; events, i.e. unfiltered modifications of any kind. A level
- * with semantically higher events (e.g. for property changes) may be built on top of this fundamental event mechanism.
+ * with semantically higher events (for example for property changes) may be built on top of this fundamental event mechanism.
  * </p>
  * <p>
  * Each event can contain the following data:
@@ -52,7 +52,7 @@ package org.apache.commons.configuration2.event;
  * <dt>CLEAR_PROPERTY</dt>
  * <dd>If a property is removed from a configuration (by calling the {@code clearProperty()} method), an event of this
  * type is fired. In this case the event object only stores the name of the removed property, the value is
- * <b>null</b>.</dd>
+ * <strong>null</strong>.</dd>
  * <dt>CLEAR</dt>
  * <dd>This event is fired when the whole configuration is cleared. The corresponding event object contains no
  * additional data.</dd>
@@ -157,7 +157,7 @@ public class ConfigurationEvent extends Event {
     }
 
     /**
-     * Gets the name of the affected property. This can be <b>null</b> if no property change has lead to this event.
+     * Gets the name of the affected property. This can be <strong>null</strong> if no property change has lead to this event.
      *
      * @return the name of the property
      */
@@ -168,7 +168,7 @@ public class ConfigurationEvent extends Event {
     /**
      * Gets the value of the affected property if available.
      *
-     * @return the value of the property; can be <b>null</b>
+     * @return the value of the property; can be <strong>null</strong>
      */
     public Object getPropertyValue() {
         return propertyValue;
@@ -177,7 +177,7 @@ public class ConfigurationEvent extends Event {
     /**
      * Returns a flag if this event was generated before or after an update.
      *
-     * @return <b>true</b> if this event was generated before an update; <b>false</b> otherwise
+     * @return <strong>true</strong> if this event was generated before an update; <strong>false</strong> otherwise
      */
     public boolean isBeforeUpdate() {
         return beforeUpdate;

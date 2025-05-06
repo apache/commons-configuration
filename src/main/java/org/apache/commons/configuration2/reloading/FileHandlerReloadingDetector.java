@@ -36,7 +36,7 @@ import org.apache.commons.configuration2.io.FileLocatorUtils;
  * <p>
  * Because file I/O may be expensive it is possible to configure a refresh delay as a time in milliseconds. This is the
  * minimum interval between two checks. If the {@code isReloadingRequired()} method is called in shorter intervals, it
- * does not perform a check, but directly returns <b>false</b>.
+ * does not perform a check, but directly returns <strong>false</strong>.
  * </p>
  * <p>
  * To initialize an instance either {@code isReloadingRequired()} or {@code reloadingPerformed()} can be called. The
@@ -57,7 +57,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Helper method for transforming a URL into a file object. This method handles file: and jar: URLs.
      *
      * @param url the URL to be converted
-     * @return the resulting file or <b>null </b>
+     * @return the resulting file or <strong>null </strong>
      */
     private static File fileFromURL(final URL url) {
         if (JAR_PROTOCOL.equals(url.getProtocol())) {
@@ -95,7 +95,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Creates a new instance of {@code FileHandlerReloadingDetector} and initializes it with the {@code FileHandler} to
      * monitor and a default refresh delay.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can be <b>null</b>)
+     * @param handler the {@code FileHandler} associated with this detector (can be <strong>null</strong>)
      */
     public FileHandlerReloadingDetector(final FileHandler handler) {
         this(handler, DEFAULT_REFRESH_DELAY_MILLIS);
@@ -106,7 +106,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * monitor and the refresh delay. The handler is directly used, no copy is created. So it is possible to change the
      * location monitored by manipulating the {@code FileHandler} object.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can be <b>null</b>)
+     * @param handler the {@code FileHandler} associated with this detector (can be <strong>null</strong>)
      * @param refreshDelayMillis the refresh delay; a value of 0 means that a check is performed in all cases
      */
     public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelayMillis) {
@@ -115,9 +115,9 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     }
 
     /**
-     * Gets the monitored {@code File} or <b>null</b> if it does not exist.
+     * Gets the monitored {@code File} or <strong>null</strong> if it does not exist.
      *
-     * @return the monitored {@code File} or <b>null</b>
+     * @return the monitored {@code File} or <strong>null</strong>
      */
     private File getExistingFile() {
         File file = getFile();
@@ -130,10 +130,10 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
 
     /**
      * Gets the {@code File} object which is monitored by this object. This method is called every time the file's last
-     * modification time is needed. If it returns <b>null</b>, no check is performed. This base implementation obtains the
+     * modification time is needed. If it returns <strong>null</strong>, no check is performed. This base implementation obtains the
      * {@code File} from the associated {@code FileHandler}. It can also deal with URLs to jar files.
      *
-     * @return the {@code File} to be monitored (can be <b>null</b>)
+     * @return the {@code File} to be monitored (can be <strong>null</strong>)
      */
     protected File getFile() {
         final URL url = getFileHandler().getURL();

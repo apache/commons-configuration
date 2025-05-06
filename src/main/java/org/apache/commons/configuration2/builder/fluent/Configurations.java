@@ -84,7 +84,7 @@ public class Configurations {
     /**
      * Creates a new instance of {@code Configurations} and initializes it with the specified {@code Parameters} object.
      *
-     * @param params the {@code Parameters} (may be <b>null</b>, then a default instance is created)
+     * @param params the {@code Parameters} (may be <strong>null</strong>, then a default instance is created)
      */
     public Configurations(final Parameters params) {
         parameters = params != null ? params : new Parameters();

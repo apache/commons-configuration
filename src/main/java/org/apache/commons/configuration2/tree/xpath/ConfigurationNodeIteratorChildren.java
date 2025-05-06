@@ -31,8 +31,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A specialized iterator implementation for the child nodes of a configuration node.
  *
- * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
+ * @since 1.3
  */
 final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNodeIterator<T> {
 
@@ -85,8 +85,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
         }
         if (test instanceof NodeNameTest) {
             final NodeNameTest nameTest = (NodeNameTest) test;
-            final QName name = nameTest.getNodeName();
-            return nameTest.isWildcard() ? createSubNodeListForWildcardName(node, name) : createSubNodeListForName(node, name);
+            final QName qName = nameTest.getNodeName();
+            return nameTest.isWildcard() ? createSubNodeListForWildcardName(node, qName) : createSubNodeListForName(node, qName);
         }
         if (test instanceof NodeTypeTest) {
             final NodeTypeTest typeTest = (NodeTypeTest) test;
@@ -102,11 +102,11 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Obtains the list of selected nodes for a {@code NodeNameTest} with either a simple or a qualified name.
      *
      * @param node the current node
-     * @param name the name to be selected
+     * @param qName the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForName(final T node, final QName name) {
-        final String compareName = qualifiedName(name);
+    private List<T> createSubNodeListForName(final T node, final QName qName) {
+        final String compareName = qualifiedName(qName);
         final List<T> result = new ArrayList<>();
         getNodeHandler().getChildren(node).forEach(child -> {
             if (StringUtils.equals(compareName, getNodeHandler().nodeName(child))) {
@@ -120,16 +120,16 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Obtains the list of selected sub nodes for a {@code NodeNameTest} with a wildcard name.
      *
      * @param node the current node
-     * @param name the name to be selected
+     * @param qName the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForWildcardName(final T node, final QName name) {
+    private List<T> createSubNodeListForWildcardName(final T node, final QName qName) {
         final List<T> children = getNodeHandler().getChildren(node);
-        if (name.getPrefix() == null) {
+        if (qName.getPrefix() == null) {
             return children;
         }
         final List<T> prefixChildren = new ArrayList<>(children.size());
-        final String prefix = prefixName(name.getPrefix(), null);
+        final String prefix = prefixName(qName.getPrefix(), null);
         children.forEach(child -> {
             if (StringUtils.startsWith(getNodeHandler().nodeName(child), prefix)) {
                 prefixChildren.add(child);

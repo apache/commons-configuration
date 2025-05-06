@@ -17,7 +17,7 @@
 package org.apache.commons.configuration2;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.sql.Connection;
 
 import javax.sql.DataSource;
@@ -181,7 +181,7 @@ public class DatabaseConfigurationTestHelper {
         // prepare the database
         final Connection conn = ds.getConnection();
         final IDatabaseConnection connection = new DatabaseConnection(conn);
-        final IDataSet dataSet = new XmlDataSet(new FileInputStream(ConfigurationAssert.getTestFile("dataset.xml")));
+        final IDataSet dataSet = new XmlDataSet(Files.newInputStream(ConfigurationAssert.getTestPath("dataset.xml")));
 
         try {
             DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
@@ -220,7 +220,7 @@ public class DatabaseConfigurationTestHelper {
      *
      * @param <T> the type of the result configuration
      * @param configCls the configuration class
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -231,7 +231,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
      *
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
      * @return the parameters object
      */
     public DatabaseBuilderParameters setUpMultiParameters(final String configName) {

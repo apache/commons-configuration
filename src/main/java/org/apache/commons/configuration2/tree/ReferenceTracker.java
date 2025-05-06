@@ -88,7 +88,7 @@ final class ReferenceTracker {
      * Gets the reference object associated with the given node.
      *
      * @param node the node
-     * @return the reference object for this node or <b>null</b>
+     * @return the reference object for this node or <strong>null</strong>
      */
     public Object getReference(final ImmutableNode node) {
         return references.get(node);

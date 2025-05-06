@@ -42,7 +42,7 @@ public final class ConstructorArg {
      *
      * @param decl the {@code BeanDeclaration}
      * @return the newly created instance of this class
-     * @throws NullPointerException if the {@code BeanDeclaration} is <b>null</b>
+     * @throws NullPointerException if the {@code BeanDeclaration} is <strong>null</strong>
      */
     public static ConstructorArg forBeanDeclaration(final BeanDeclaration decl) {
         return forBeanDeclaration(decl, null);
@@ -56,7 +56,7 @@ public final class ConstructorArg {
      * @param beanDeclaration the {@code BeanDeclaration}
      * @param typeName the name of the data type of this argument
      * @return the newly created instance of this class
-     * @throws NullPointerException if the {@code BeanDeclaration} is <b>null</b>
+     * @throws NullPointerException if the {@code BeanDeclaration} is <strong>null</strong>
      */
     public static ConstructorArg forBeanDeclaration(final BeanDeclaration beanDeclaration, final String typeName) {
         Objects.requireNonNull(beanDeclaration, "beanDeclaration");
@@ -67,7 +67,7 @@ public final class ConstructorArg {
      * Creates a new instance of {@code ConstructorArg} for the specified simple value. The value is passed to the
      * constructor invocation.
      *
-     * @param value the value of this constructor argument (may be <b>null</b>)
+     * @param value the value of this constructor argument (may be <strong>null</strong>)
      * @return the newly created instance of this class
      */
     public static ConstructorArg forValue(final Object value) {
@@ -78,7 +78,7 @@ public final class ConstructorArg {
      * Creates a new instance of {@code ConstructorArg} for the specified simple value and sets the type name explicitly.
      * The type name is used to match this argument against the parameter type of a constructor or the bean class.
      *
-     * @param value the value of this constructor argument (may be <b>null</b>)
+     * @param value the value of this constructor argument (may be <strong>null</strong>)
      * @param typeName the name of the data type of this argument
      * @return the newly created instance of this class
      */
@@ -109,11 +109,11 @@ public final class ConstructorArg {
     }
 
     /**
-     * Gets the {@code BeanDeclaration} referenced by this constructor argument. A return value of <b>null</b> means that
+     * Gets the {@code BeanDeclaration} referenced by this constructor argument. A return value of <strong>null</strong> means that
      * this constructor argument does not have a bean declaration as value; in this case, the value can be queried using the
      * {@link #getValue()} method.
      *
-     * @return the referenced {@code BeanDeclaration} or <b>null</b>
+     * @return the referenced {@code BeanDeclaration} or <strong>null</strong>
      */
     public BeanDeclaration getBeanDeclaration() {
         return beanDeclaration;
@@ -124,7 +124,7 @@ public final class ConstructorArg {
      * a specific constructor if there are ambiguities. Note that it does not necessarily has to match the data type of this
      * argument's value because a type conversion may be performed before invoking the constructor.
      *
-     * @return the data type name of this argument if defined or <b>null</b> otherwise
+     * @return the data type name of this argument if defined or <strong>null</strong> otherwise
      */
     public String getTypeName() {
         return typeName;
@@ -132,7 +132,7 @@ public final class ConstructorArg {
 
     /**
      * Gets the value of this constructor argument. This method can be queried if {@link #isNestedBeanDeclaration()}
-     * returns <b>false</b>. Note that a return value of <b>null</b> is legal (to pass <b>null</b> to a constructor
+     * returns <strong>false</strong>. Note that a return value of <strong>null</strong> is legal (to pass <strong>null</strong> to a constructor
      * argument).
      *
      * @return the simple value of this constructor argument
@@ -143,7 +143,7 @@ public final class ConstructorArg {
 
     /**
      * Tests whether this constructor argument represents a {@code BeanDeclaration}. If this method returns
-     * <b>true</b>, the actual value of this argument can be obtained by resolving the bean declaration returned by
+     * <strong>true</strong>, the actual value of this argument can be obtained by resolving the bean declaration returned by
      * {@link #getBeanDeclaration()}. Otherwise, this argument has a simple value which can be queried using
      * {@link #getValue()}.
      *
@@ -156,13 +156,13 @@ public final class ConstructorArg {
     /**
      * Checks whether this constructor argument is compatible with the given class. This method is called to determine a
      * matching constructor. It compares the argument's data type with the class name if it is defined. If no type name has
-     * been set, result is <b>true</b> as it is assumed that a type conversion can be performed when calling the
+     * been set, result is <strong>true</strong> as it is assumed that a type conversion can be performed when calling the
      * constructor. This means that per default only the number of constructor arguments is checked to find a matching
      * constructor. Only if there are multiple constructors with the same number of arguments, explicit type names have to
      * be provided to select a specific constructor.
      *
      * @param argCls the class of the constructor argument to compare with
-     * @return <b>true</b> if this constructor argument is compatible with this class, <b>false</b> otherwise
+     * @return <strong>true</strong> if this constructor argument is compatible with this class, <strong>false</strong> otherwise
      */
     public boolean matches(final Class<?> argCls) {
         if (argCls == null) {

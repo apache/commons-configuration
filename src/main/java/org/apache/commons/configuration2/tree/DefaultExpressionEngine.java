@@ -114,8 +114,8 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     /**
      * Creates a new instance of {@code DefaultExpressionEngine} and initializes its symbols.
      *
-     * @param syms the object with the symbols (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the symbols are <b>null</b>
+     * @param syms the object with the symbols (must not be <strong>null</strong>)
+     * @throws IllegalArgumentException if the symbols are <strong>null</strong>
      */
     public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms) {
         this(syms, null);
@@ -126,9 +126,9 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * node names. The passed in matcher is always used when the names of nodes have to be matched against parts of
      * configuration keys.
      *
-     * @param syms the object with the symbols (must not be <b>null</b>)
-     * @param nodeNameMatcher the matcher for node names; can be <b>null</b>, then a default matcher is used
-     * @throws IllegalArgumentException if the symbols are <b>null</b>
+     * @param syms the object with the symbols (must not be <strong>null</strong>)
+     * @param nodeNameMatcher the matcher for node names; can be <strong>null</strong>, then a default matcher is used
+     * @throws IllegalArgumentException if the symbols are <strong>null</strong>
      */
     public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms, final NodeMatcher<String> nodeNameMatcher) {
         if (syms == null) {
@@ -149,7 +149,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     /**
      * {@inheritDoc} This implementation works similar to {@code nodeKey()}; however, each key returned by this method has
      * an index (except for the root node). The parent key is prepended to the name of the current node in any case and
-     * without further checks. If it is <b>null</b>, only the name of the current node with its index is returned.
+     * without further checks. If it is <strong>null</strong>, only the name of the current node with its index is returned.
      */
     @Override
     public <T> String canonicalKey(final T node, final String parentKey, final NodeHandler<T> handler) {
@@ -296,7 +296,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      *                    ...
      * </pre>
      * <p>
-     * In this example a database structure is defined, e.g. all fields of the first table could be accessed using the key
+     * In this example a database structure is defined, for example all fields of the first table could be accessed using the key
      * {@code tables.table(0).fields.field.name}. If now properties are to be added, it must be exactly specified at which
      * position in the hierarchy the new property is to be inserted. So to add a new field name to a table it is not enough
      * to say just

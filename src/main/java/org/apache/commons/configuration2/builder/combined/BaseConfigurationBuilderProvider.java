@@ -100,10 +100,10 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Creates a new instance of {@code BaseConfigurationBuilderProvider} and initializes all its properties.
      *
-     * @param bldrCls the name of the builder class (must not be <b>null</b>)
-     * @param reloadBldrCls the name of a builder class to be used if reloading support is required (<b>null</b> if
+     * @param bldrCls the name of the builder class (must not be <strong>null</strong>)
+     * @param reloadBldrCls the name of a builder class to be used if reloading support is required (<strong>null</strong> if
      *        reloading is not supported)
-     * @param configCls the name of the configuration class (must not be <b>null</b>)
+     * @param configCls the name of the configuration class (must not be <strong>null</strong>)
      * @param paramCls a collection with the names of parameters classes
      * @throws IllegalArgumentException if a required parameter is missing
      */
@@ -256,7 +256,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
 
     /**
      * Gets the name of the class of the builder created by this provider if the reload flag is set. If this method
-     * returns <b>null</b>, reloading builders are not supported by this provider.
+     * returns <strong>null</strong>, reloading builders are not supported by this provider.
      *
      * @return the reloading builder class
      */
