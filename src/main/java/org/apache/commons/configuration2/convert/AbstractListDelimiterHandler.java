@@ -40,10 +40,10 @@ import java.util.Set;
 public abstract class AbstractListDelimiterHandler implements ListDelimiterHandler {
 
     static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
-        dejaVu.add(value);
         if (value instanceof String) {
             return handler.split((String) value, true);
         }
+        dejaVu.add(value);
         final Collection<Object> result = new LinkedList<>();
         if (value instanceof Path) {
             // Don't handle as an Iterable.
