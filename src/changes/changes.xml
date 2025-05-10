@@ -27,6 +27,7 @@
        <!-- FIX -->
        <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "throwExceptionOnMissing" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.AbstractConfiguration] At AbstractConfiguration.java:[line 1493] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
        <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "forceSingleLine" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.PropertiesConfigurationLayout] At PropertiesConfigurationLayout.java:[line 821] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
+       <action type="fix" dev="ggregory" due-to="Willy van Diepen, Gary Gregory, Rob Tompkins" issue="CONFIGURATION-849">Fix undoubling of strings #569.</action>
        <!-- ADD -->
        <!-- UPDATE -->
        <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.19.0 #565.</action>
