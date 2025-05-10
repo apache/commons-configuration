@@ -69,6 +69,12 @@ public class TestYAMLConfiguration {
     }
 
     @Test
+    public void testDoubleStringValues() {
+        final Object property = yamlConfiguration.getProperty("key5.example");
+        assertEquals(Arrays.asList("", "", "value"), property);
+    }
+
+    @Test
     public void testGetPropertyDictionary() {
         assertEquals("Martin D'vloper", yamlConfiguration.getProperty("martin.name"));
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
@@ -107,12 +113,6 @@ public class TestYAMLConfiguration {
     public void testGetPropertyVeryNestedProperties() {
         final Object property = yamlConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
-    }
-
-    @Test
-    public void testDoubleStringValues() {
-        final Object property = yamlConfiguration.getProperty("key5.example");
-        assertEquals(Arrays.asList("", "", "value"), property);
     }
 
     @Test
