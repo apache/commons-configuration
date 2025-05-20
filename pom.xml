@@ -50,6 +50,7 @@
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
       javax.servlet.*;resolution:=optional,
+      jakarta.servlet.*;resolution:=optional,
       org.apache.commons.jexl2.*;resolution:=optional,
       org.apache.commons.vfs2.*;resolution:=optional,
       org.springframework.*;resolution:=optional,
