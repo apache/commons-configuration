@@ -61,7 +61,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests to iterate over all attributes.
      */
     @Test
-    public void testIterateAllAttributes() {
+    void testIterateAllAttributes() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "*"));
         assertEquals(3, iteratorSize(it));
         final List<NodePointer> attrs = iterationElements(it);
@@ -78,7 +78,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests whether a specific attribute with a namespace can be selected.
      */
     @Test
-    public void testIterateNamespaceAttribute() {
+    void testIterateNamespaceAttribute() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "attr"));
         assertEquals(1, iteratorSize(it));
         assertEquals(NS_ATTR, iterationElements(it).get(0).getName().getName());
@@ -88,7 +88,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests iteration if an unknown namespace is specified.
      */
     @Test
-    public void testIterateNamespaceUnknown() {
+    void testIterateNamespaceUnknown() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName("test", "*"));
         assertEquals(0, iteratorSize(it));
     }
@@ -97,7 +97,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests whether a wildcard can be used together with a namespace.
      */
     @Test
-    public void testIterateNamespaceWildcard() {
+    void testIterateNamespaceWildcard() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "*"));
         assertEquals(1, iteratorSize(it));
         assertEquals(NS_ATTR, iterationElements(it).get(0).getName().getName());
@@ -107,7 +107,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests to iterate over attributes with a specific name.
      */
     @Test
-    public void testIterateSpecificAttribute() {
+    void testIterateSpecificAttribute() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, TEST_ATTR));
         assertEquals(1, iteratorSize(it));
         assertEquals(TEST_ATTR, iterationElements(it).get(0).getName().getName());
@@ -117,7 +117,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
      * Tests to iterate over non existing attributes.
      */
     @Test
-    public void testIterateUnknownAttribute() {
+    void testIterateUnknownAttribute() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "unknown"));
         assertEquals(0, iteratorSize(it));
     }

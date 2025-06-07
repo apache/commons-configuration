@@ -39,7 +39,7 @@ public class TestManagedReloadingDetector {
      * Tests the refresh() method.
      */
     @Test
-    public void testRefresh() {
+    void testRefresh() {
         strategy.refresh();
         assertTrue(strategy.isReloadingRequired());
         assertTrue(strategy.isReloadingRequired());
@@ -49,7 +49,7 @@ public class TestManagedReloadingDetector {
      * Tests whether the reloading state can be reset again.
      */
     @Test
-    public void testReloadingPerformed() {
+    void testReloadingPerformed() {
         strategy.refresh();
         strategy.reloadingPerformed();
         assertFalse(strategy.isReloadingRequired());
@@ -59,7 +59,7 @@ public class TestManagedReloadingDetector {
      * Tests the result of isReloadingRequired() for a newly created instance.
      */
     @Test
-    public void testReloadingRequiredInitial() {
+    void testReloadingRequiredInitial() {
         assertFalse(strategy.isReloadingRequired());
     }
 }

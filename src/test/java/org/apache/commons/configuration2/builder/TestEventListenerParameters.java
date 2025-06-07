@@ -35,7 +35,7 @@ public class TestEventListenerParameters {
      * Tests whether an event listener with its type can be added.
      */
     @Test
-    public void testAddEventListener() {
+    void testAddEventListener() {
         final EventListenerTestImpl listener = new EventListenerTestImpl(null);
         final EventListenerParameters parameters = new EventListenerParameters();
         assertSame(parameters, parameters.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener));
@@ -49,7 +49,7 @@ public class TestEventListenerParameters {
      * Tests whether an event listener registration can be added.
      */
     @Test
-    public void testAddEventListenerRegistration() {
+    void testAddEventListenerRegistration() {
         final EventListenerRegistrationData<ConfigurationEvent> reg = new EventListenerRegistrationData<>(ConfigurationEvent.SET_PROPERTY,
             new EventListenerTestImpl(null));
         final EventListenerParameters parameters = new EventListenerParameters();
@@ -61,7 +61,7 @@ public class TestEventListenerParameters {
      * Tests the map with parameters.
      */
     @Test
-    public void testGetParameters() {
+    void testGetParameters() {
         final EventListenerParameters parameters = new EventListenerParameters();
         assertTrue(parameters.getParameters().isEmpty());
     }
@@ -70,7 +70,7 @@ public class TestEventListenerParameters {
      * Tests that the list of event listeners is empty for a newly created instance.
      */
     @Test
-    public void testRegistrationsAfterCreation() {
+    void testRegistrationsAfterCreation() {
         final EventListenerParameters parameters = new EventListenerParameters();
         assertTrue(parameters.getListeners().getRegistrations().isEmpty());
     }

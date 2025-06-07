@@ -89,7 +89,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a builder can be reused.
      */
     @Test
-    public void testBuilderReuse() {
+    void testBuilderReuse() {
         builder
             .withDefaultLookup(createLookup())
             .withInterpolator(mock(ConfigurationInterpolator.class))
@@ -121,7 +121,7 @@ public class TestInterpolatorSpecification {
      * Tests whether an instance with all possible properties can be set.
      */
     @Test
-    public void testCreateInstance() {
+    void testCreateInstance() {
         final Lookup prefLook1 = createLookup();
         final Lookup prefLook2 = createLookup();
         final Lookup defLook1 = createLookup();
@@ -149,7 +149,7 @@ public class TestInterpolatorSpecification {
      * Tests whether lookups can be set passing in full collections.
      */
     @Test
-    public void testCreateInstanceCollections() {
+    void testCreateInstanceCollections() {
         final Lookup prefLook1 = createLookup();
         final Lookup prefLook2 = createLookup();
         final Lookup defLook1 = createLookup();
@@ -169,7 +169,7 @@ public class TestInterpolatorSpecification {
      * Tests that the collection with default lookups cannot be modified.
      */
     @Test
-    public void testGetDefaultLookupsModify() {
+    void testGetDefaultLookupsModify() {
         final InterpolatorSpecification spec = builder.withDefaultLookup(createLookup()).create();
         final Collection<Lookup> lookups = spec.getDefaultLookups();
         final Lookup lookup = createLookup();
@@ -180,7 +180,7 @@ public class TestInterpolatorSpecification {
      * Tests that the map with prefix lookups cannot be modified.
      */
     @Test
-    public void testGetPrefixLookupsModify() {
+    void testGetPrefixLookupsModify() {
         final InterpolatorSpecification spec = builder.withPrefixLookup(PREFIX1, createLookup()).create();
         final Lookup lookup = createLookup();
         assertThrows(UnsupportedOperationException.class, () -> spec.getPrefixLookups().put(PREFIX1, lookup));
@@ -190,7 +190,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a null default lookup causes an exception.
      */
     @Test
-    public void testWithDefaultLookupNull() {
+    void testWithDefaultLookupNull() {
         assertThrows(IllegalArgumentException.class, () -> builder.withDefaultLookup(null));
     }
 
@@ -198,7 +198,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a null collection with default lookups is accepted.
      */
     @Test
-    public void testWithDefaultLookupsNull() {
+    void testWithDefaultLookupsNull() {
         final InterpolatorSpecification spec = builder.withDefaultLookups(null).create();
         assertTrue(spec.getDefaultLookups().isEmpty());
     }
@@ -207,7 +207,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a null prefix lookup causes an exception.
      */
     @Test
-    public void testWithPrefixLookupNoLookup() {
+    void testWithPrefixLookupNoLookup() {
         assertThrows(IllegalArgumentException.class, () -> builder.withPrefixLookup(PREFIX1, null));
     }
 
@@ -215,7 +215,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a null prefix causes an exception.
      */
     @Test
-    public void testWithPrefixLookupNoPrefix() {
+    void testWithPrefixLookupNoPrefix() {
         final Lookup lookup = createLookup();
         assertThrows(IllegalArgumentException.class, () -> builder.withPrefixLookup(null, lookup));
     }
@@ -224,7 +224,7 @@ public class TestInterpolatorSpecification {
      * Tests whether a null map with prefix lookups is accepted.
      */
     @Test
-    public void testWithPrefixLookupsNull() {
+    void testWithPrefixLookupsNull() {
         final InterpolatorSpecification spec = builder.withPrefixLookups(null).create();
         assertTrue(spec.getPrefixLookups().isEmpty());
     }

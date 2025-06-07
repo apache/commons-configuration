@@ -126,7 +126,7 @@ public class TestXMLListHandling {
      * Tests that a list item can be added without affecting the format.
      */
     @Test
-    public void testAddListItem() throws ConfigurationException {
+    void testAddListItem() throws ConfigurationException {
         config.addProperty(KEY_VALUES, "d");
         config.addProperty(KEY_SPLIT, "3");
         final String xml = saveToString();
@@ -140,7 +140,7 @@ public class TestXMLListHandling {
      * This should fail with a meaningful exception message.
      */
     @Test
-    public void testIncompatibleListDelimiterOnSaving() {
+    void testIncompatibleListDelimiterOnSaving() {
         config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
         assertThrows(ConfigurationRuntimeException.class, this::saveToString);
     }
@@ -149,7 +149,7 @@ public class TestXMLListHandling {
      * Tests whether a list consisting of multiple elements where some elements define multiple values is handled correctly.
      */
     @Test
-    public void testMixedList() throws ConfigurationException {
+    void testMixedList() throws ConfigurationException {
         final List<String> expected = Arrays.asList("foo", "blah", "bar", "baz");
         assertEquals(expected, config.getList("mixed.values"));
         final String xml = saveToString();
@@ -162,7 +162,7 @@ public class TestXMLListHandling {
      * Tests that a list item can be removed without affecting the format.
      */
     @Test
-    public void testRemoveListItem() throws ConfigurationException {
+    void testRemoveListItem() throws ConfigurationException {
         config.clearProperty(KEY_VALUES + "(2)");
         config.clearProperty(KEY_SPLIT + "(1)");
         final String xml = saveToString();
@@ -175,7 +175,7 @@ public class TestXMLListHandling {
      * Tests that the list format is kept if properties are not touched,
      */
     @Test
-    public void testSaveNoChanges() throws ConfigurationException {
+    void testSaveNoChanges() throws ConfigurationException {
         final String xml = saveToString();
 
         checkSplit(xml, ELEM_SPLIT, "1", "2");

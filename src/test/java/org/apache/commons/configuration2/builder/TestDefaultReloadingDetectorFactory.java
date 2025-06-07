@@ -42,7 +42,7 @@ public class TestDefaultReloadingDetectorFactory {
      * Tests whether a reloading detector is created correctly.
      */
     @Test
-    public void testCreateReloadingDetector() throws ConfigurationException {
+    void testCreateReloadingDetector() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final Long refreshDelay = 10000L;
@@ -56,7 +56,7 @@ public class TestDefaultReloadingDetectorFactory {
      * Tests whether an undefined refresh delay is handled correctly.
      */
     @Test
-    public void testCreateReloadingDetectorDefaultRefreshDelay() throws ConfigurationException {
+    void testCreateReloadingDetectorDefaultRefreshDelay() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);

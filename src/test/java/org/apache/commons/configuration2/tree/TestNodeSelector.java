@@ -70,7 +70,7 @@ public class TestNodeSelector {
      * Tests equals() if the expected result is false.
      */
     @Test
-    public void testEqualsFalse() {
+    void testEqualsFalse() {
         final NodeSelector selector = new NodeSelector(KEY);
         NodeSelector sel2 = new NodeSelector("other" + KEY);
         ConfigurationAssert.checkEquals(selector, sel2, false);
@@ -82,7 +82,7 @@ public class TestNodeSelector {
      * Tests equals() with other objects.
      */
     @Test
-    public void testEqualsOtherObjects() {
+    void testEqualsOtherObjects() {
         final NodeSelector selector = new NodeSelector(KEY);
         ConfigurationAssert.checkEquals(selector, null, false);
         ConfigurationAssert.checkEquals(selector, this, false);
@@ -92,7 +92,7 @@ public class TestNodeSelector {
      * Tests equals() if the expected result is true.
      */
     @Test
-    public void testEqualsTrue() {
+    void testEqualsTrue() {
         final NodeSelector selector = new NodeSelector(KEY);
         ConfigurationAssert.checkEquals(selector, selector, true);
         final NodeSelector sel2 = new NodeSelector(KEY);
@@ -106,7 +106,7 @@ public class TestNodeSelector {
      * Tests whether attribute results are ignored when evaluating the key.
      */
     @Test
-    public void testSelectIgnoreAttributeResults() {
+    void testSelectIgnoreAttributeResults() {
         final NodeKeyResolver<ImmutableNode> resolverMock = NodeStructureHelper.createResolverMock();
         final List<QueryResult<ImmutableNode>> results = new LinkedList<>();
         results.add(QueryResult.createAttributeResult(NodeStructureHelper.nodeForKey(root, "tables/table(0)"), "type"));
@@ -124,7 +124,7 @@ public class TestNodeSelector {
      * Tests a select operation with a key yielding multiple target nodes.
      */
     @Test
-    public void testSelectMultipleTargets() {
+    void testSelectMultipleTargets() {
         final NodeSelector selector = new NodeSelector("tables.table.name");
         assertNull(selector.select(root, resolver, handler));
     }
@@ -133,7 +133,7 @@ public class TestNodeSelector {
      * Tests a select operation if the key selects an attribute node.
      */
     @Test
-    public void testSelectSingleAttributeKey() {
+    void testSelectSingleAttributeKey() {
         final NodeKeyResolver<ImmutableNode> resolverMock = NodeStructureHelper.createResolverMock();
 
         when(resolverMock.resolveKey(root, KEY, handler)).thenReturn(Collections.singletonList(QueryResult.createAttributeResult(root, KEY)));
@@ -146,7 +146,7 @@ public class TestNodeSelector {
      * Tests a successful select operation for a single key.
      */
     @Test
-    public void testSelectSingleKeySuccess() {
+    void testSelectSingleKeySuccess() {
         final NodeSelector selector = new NodeSelector("tables.table(0).name");
         final ImmutableNode target = selector.select(root, resolver, handler);
         assertEquals("name", target.getNodeName());
@@ -157,7 +157,7 @@ public class TestNodeSelector {
      * Tests a select operation with a sub key.
      */
     @Test
-    public void testSelectSubKey() {
+    void testSelectSubKey() {
         final NodeSelector selectorParent = new NodeSelector("tables.table(0)");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
         final ImmutableNode target = selector.select(root, resolver, handler);
@@ -169,7 +169,7 @@ public class TestNodeSelector {
      * the final key reduces the result set to a single node.
      */
     @Test
-    public void testSelectSubKeyComplexEvaluation() {
+    void testSelectSubKeyComplexEvaluation() {
         final NodeSelector first = new NodeSelector("tables.table");
         final NodeSelector second = first.subSelector("fields");
         final int fldIdx = NodeStructureHelper.fieldsLength(1) - 1;
@@ -182,7 +182,7 @@ public class TestNodeSelector {
      * Tests a select operation with a sub key which produces multiple results.
      */
     @Test
-    public void testSelectSubKeyMultipleResults() {
+    void testSelectSubKeyMultipleResults() {
         final NodeSelector selectorParent = new NodeSelector("tables.table");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
         assertNull(selector.select(root, resolver, handler));
@@ -192,7 +192,7 @@ public class TestNodeSelector {
      * Tests select() if a key is used which does not yield any results.
      */
     @Test
-    public void testSelectSubKeyUnknown() {
+    void testSelectSubKeyUnknown() {
         final NodeSelector selectorParent = new NodeSelector("tables.unknown");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
         assertNull(selector.select(root, resolver, handler));
@@ -202,7 +202,7 @@ public class TestNodeSelector {
      * Tests the string representation.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final String key2 = "anotherSelectionKey";
         final NodeSelector selector = new NodeSelector(KEY).subSelector(key2);
         final String s = selector.toString();

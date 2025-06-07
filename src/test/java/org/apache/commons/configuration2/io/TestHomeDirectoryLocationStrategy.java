@@ -69,7 +69,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests whether default values are correctly set by the constructor.
      */
     @Test
-    public void testInitDefaults() {
+    void testInitDefaults() {
         final HomeDirectoryLocationStrategy strategy = new HomeDirectoryLocationStrategy();
         assertEquals(SystemProperties.getUserHome(), strategy.getHomeDirectory());
         assertFalse(strategy.isEvaluateBasePath());
@@ -79,7 +79,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests whether the base is actually evaluated if the flag is set.
      */
     @Test
-    public void testLocateFailedWithBasePath() throws IOException {
+    void testLocateFailedWithBasePath() throws IOException {
         newFile(FILE_NAME, tempFolder);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
@@ -90,7 +90,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests whether a file can be located if the base path is ignored.
      */
     @Test
-    public void testLocateSuccessIgnoreBasePath() throws IOException {
+    void testLocateSuccessIgnoreBasePath() throws IOException {
         final File file = newFile(FILE_NAME, tempFolder);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(false);
@@ -102,7 +102,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests whether a file in a sub folder can be located.
      */
     @Test
-    public void testLocateSuccessInSubFolder() throws IOException {
+    void testLocateSuccessInSubFolder() throws IOException {
         final File sub = newFolder(BASE_PATH, tempFolder);
         final File file = new File(sub, FILE_NAME);
         assertTrue(file.createNewFile());
@@ -116,7 +116,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests a locate() operation which evaluates the base path if no base path is set.
      */
     @Test
-    public void testLocateSuccessNoBasePath() throws IOException {
+    void testLocateSuccessNoBasePath() throws IOException {
         final File file = newFile(FILE_NAME, tempFolder);
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
@@ -128,7 +128,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Tests a locate() operation if no file name is specified.
      */
     @Test
-    public void testNoFileName() {
+    void testNoFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
         assertNull(strategy.locate(fileSystem, locator));

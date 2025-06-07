@@ -77,7 +77,7 @@ public class TestNullCompositeConfiguration {
      * sequence
      */
     @Test
-    public void testAddingProperty() throws Exception {
+    void testAddingProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
@@ -93,7 +93,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testAddRemoveConfigurations() throws Exception {
+    void testAddRemoveConfigurations() throws Exception {
         cc.addConfiguration(conf1);
         assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf1);
@@ -107,7 +107,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testCantRemoveMemoryConfig() throws Exception {
+    void testCantRemoveMemoryConfig() throws Exception {
         cc.clear();
         assertEquals(1, cc.getNumberOfConfigurations());
 
@@ -118,7 +118,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testCheckingInMemoryConfiguration() throws Exception {
+    void testCheckingInMemoryConfiguration() throws Exception {
         final String testKey = "testKey";
         final Configuration defaults = new PropertiesConfiguration();
         defaults.setProperty(testKey, "testValue");
@@ -142,7 +142,7 @@ public class TestNullCompositeConfiguration {
      * Tests setting values. These are set in memory mode only!
      */
     @Test
-    public void testClearingProperty() throws Exception {
+    void testClearingProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         cc.clearProperty("test.short");
@@ -153,7 +153,7 @@ public class TestNullCompositeConfiguration {
      * Tests getting a default when the key doesn't exist
      */
     @Test
-    public void testDefaultValueWhenKeyMissing() throws Exception {
+    void testDefaultValueWhenKeyMissing() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         assertEquals("default", cc.getString("bogus", "default"));
@@ -165,7 +165,7 @@ public class TestNullCompositeConfiguration {
      * Tests {@code getKeys(String key)} preserves the order
      */
     @Test
-    public void testGetKeys2PreservesOrder() throws Exception {
+    void testGetKeys2PreservesOrder() throws Exception {
         cc.addConfiguration(conf1);
         final List<String> orderedList = new ArrayList<>();
         for (final Iterator<String> keys = conf1.getKeys("test"); keys.hasNext();) {
@@ -182,7 +182,7 @@ public class TestNullCompositeConfiguration {
      * Tests {@code getKeys()} preserves the order
      */
     @Test
-    public void testGetKeysPreservesOrder() throws Exception {
+    void testGetKeysPreservesOrder() throws Exception {
         cc.addConfiguration(conf1);
         final List<String> orderedList = new ArrayList<>();
         for (final Iterator<String> keys = conf1.getKeys(); keys.hasNext();) {
@@ -196,7 +196,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetList() {
+    void testGetList() {
         final Configuration conf1 = new BaseConfiguration();
         conf1.addProperty("array", "value1");
         conf1.addProperty("array", "value2");
@@ -221,7 +221,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetProperty() throws Exception {
+    void testGetProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
         assertEquals("test.properties", cc.getString("propertyInOrder"));
@@ -233,7 +233,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetPropertyMissing() throws Exception {
+    void testGetPropertyMissing() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
 
@@ -244,7 +244,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetPropertyWIncludes() throws Exception {
+    void testGetPropertyWIncludes() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
         final List<Object> l = cc.getList("packages");
@@ -252,7 +252,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetStringWithDefaults() {
+    void testGetStringWithDefaults() {
         final BaseConfiguration defaults = new BaseConfiguration();
         defaults.addProperty("default", "default string");
 
@@ -272,7 +272,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGettingConfiguration() throws Exception {
+    void testGettingConfiguration() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         assertEquals(PropertiesConfiguration.class, cc.getConfiguration(0).getClass());
@@ -283,7 +283,7 @@ public class TestNullCompositeConfiguration {
      * Tests retrieving subsets of configurations
      */
     @Test
-    public void testGettingSubset() throws Exception {
+    void testGettingSubset() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
@@ -298,7 +298,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testGetVector() {
+    void testGetVector() {
         final Configuration conf1 = new BaseConfiguration();
         conf1.addProperty("array", "value1");
         conf1.addProperty("array", "value2");
@@ -321,7 +321,7 @@ public class TestNullCompositeConfiguration {
      * Tests {@code List} parsing.
      */
     @Test
-    public void testList() throws Exception {
+    void testList() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
@@ -339,7 +339,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testMultipleTypesOfConfigs() throws Exception {
+    void testMultipleTypesOfConfigs() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         assertEquals(1, cc.getInt("test.short"));
@@ -351,7 +351,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testPropertyExistsInOnlyOneConfig() throws Exception {
+    void testPropertyExistsInOnlyOneConfig() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         assertEquals("value", cc.getString("element"));
@@ -361,7 +361,7 @@ public class TestNullCompositeConfiguration {
      * Tests setting values. These are set in memory mode only!
      */
     @Test
-    public void testSettingMissingProperty() throws Exception {
+    void testSettingMissingProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         cc.setProperty("my.new.property", "supernew");
@@ -372,7 +372,7 @@ public class TestNullCompositeConfiguration {
      * Tests {@code String} array parsing.
      */
     @Test
-    public void testStringArray() throws Exception {
+    void testStringArray() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
@@ -389,7 +389,7 @@ public class TestNullCompositeConfiguration {
      * Tests subsets and still can resolve elements
      */
     @Test
-    public void testSubsetCanResolve() throws Exception {
+    void testSubsetCanResolve() throws Exception {
         cc = new CompositeConfiguration();
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("subset.tempfile", "${java.io.tmpdir}/file.tmp");
@@ -401,7 +401,7 @@ public class TestNullCompositeConfiguration {
     }
 
     @Test
-    public void testThrowExceptionOnMissing() {
+    void testThrowExceptionOnMissing() {
         assertFalse(cc.isThrowExceptionOnMissing());
     }
 }

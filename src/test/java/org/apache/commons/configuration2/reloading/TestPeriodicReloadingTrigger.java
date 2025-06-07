@@ -84,7 +84,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests whether a default executor service is created if necessary.
      */
     @Test
-    public void testDefaultExecutor() {
+    void testDefaultExecutor() {
         final PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT);
         assertNotNull(trigger.getExecutorService());
     }
@@ -93,7 +93,7 @@ public class TestPeriodicReloadingTrigger {
      * Tries to create an instance without a controller.
      */
     @Test
-    public void testInitNoController() {
+    void testInitNoController() {
         assertThrows(IllegalArgumentException.class, () -> new PeriodicReloadingTrigger(null, CTRL_PARAM, PERIOD, UNIT));
     }
 
@@ -101,7 +101,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests that a newly created trigger is not running.
      */
     @Test
-    public void testIsRunningAfterInit() {
+    void testIsRunningAfterInit() {
         assertFalse(createTrigger().isRunning());
     }
 
@@ -109,7 +109,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests a shutdown operation.
      */
     @Test
-    public void testShutdown() {
+    void testShutdown() {
         final ScheduledFuture<Void> future = createFutureMock();
 
         whenScheduled().thenReturn(future);
@@ -129,7 +129,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests a shutdown operation which excludes the executor service.
      */
     @Test
-    public void testShutdownNoExecutor() {
+    void testShutdownNoExecutor() {
         createTrigger().shutdown(false);
     }
 
@@ -137,7 +137,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests whether the trigger can be started.
      */
     @Test
-    public void testStart() {
+    void testStart() {
         final ScheduledFuture<Void> future = createFutureMock();
         final MutableObject<Runnable> refTask = new MutableObject<>();
 
@@ -161,7 +161,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests whether start() is a noop if the trigger is already running.
      */
     @Test
-    public void testStartTwice() {
+    void testStartTwice() {
         final ScheduledFuture<Void> future = createFutureMock();
 
         whenScheduled().thenReturn(future);
@@ -178,7 +178,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests whether a running trigger can be stopped.
      */
     @Test
-    public void testStop() {
+    void testStop() {
         final ScheduledFuture<Void> future = createFutureMock();
 
         whenScheduled().thenReturn(future);
@@ -198,7 +198,7 @@ public class TestPeriodicReloadingTrigger {
      * Tests stop() if the trigger is not running.
      */
     @Test
-    public void testStopNotRunning() {
+    void testStopNotRunning() {
         createTrigger().stop();
     }
 

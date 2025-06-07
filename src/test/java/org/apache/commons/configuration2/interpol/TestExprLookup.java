@@ -81,7 +81,7 @@ public class TestExprLookup {
      * Tests whether variables can be queried.
      */
     @Test
-    public void testGetVariables() {
+    void testGetVariables() {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
@@ -92,7 +92,7 @@ public class TestExprLookup {
      * Tests that getVariables() returns a copy of the original variables.
      */
     @Test
-    public void testGetVariablesDefensiveCopy() {
+    void testGetVariablesDefensiveCopy() {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
@@ -102,7 +102,7 @@ public class TestExprLookup {
     }
 
     @Test
-    public void testLookup() throws Exception {
+    void testLookup() throws Exception {
         final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
         final Log log = LogFactory.getLog("TestLogger");
         //final Logger logger = ((Log4JLogger) log).getLogger();
@@ -127,7 +127,7 @@ public class TestExprLookup {
     }
 
     @Test
-    public void testLookupLog4j1() throws Exception {
+    void testLookupLog4j1() throws Exception {
         final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
         final Log log = LogFactory.getLog("TestLogger");
         if (log instanceof Log4JLogger) {
@@ -157,7 +157,7 @@ public class TestExprLookup {
      * Tests a lookup() operation if no ConfigurationInterpolator object has been set.
      */
     @Test
-    public void testLookupNoConfigurationInterpolator() {
+    void testLookupNoConfigurationInterpolator() {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
@@ -169,7 +169,7 @@ public class TestExprLookup {
      * Tests an expression that does not yield a string.
      */
     @Test
-    public void testLookupNonStringExpression() throws ConfigurationException {
+    void testLookupNonStringExpression() throws ConfigurationException {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         final ExprLookup lookup = new ExprLookup(vars);
@@ -184,7 +184,7 @@ public class TestExprLookup {
      * Tests an expression that yields a null value.
      */
     @Test
-    public void testLookupNullExpression() throws ConfigurationException {
+    void testLookupNullExpression() throws ConfigurationException {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         final ExprLookup lookup = new ExprLookup(vars);

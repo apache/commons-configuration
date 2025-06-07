@@ -64,7 +64,7 @@ public class TestNodeNameMatchers {
      * Tests the equalsIgnoreCase mather if the expected result is true.
      */
     @Test
-    public void testEqualsIgnoreCaseMatch() {
+    void testEqualsIgnoreCaseMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME));
         assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
@@ -75,7 +75,7 @@ public class TestNodeNameMatchers {
      * Tests the equalsIgnoreCase matcher if the expected result is false.
      */
     @Test
-    public void testEqualsIgnoreCaseNoMatch() {
+    void testEqualsIgnoreCaseNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME + "_other"));
     }
@@ -84,7 +84,7 @@ public class TestNodeNameMatchers {
      * Tests whether the equalsIgnoreCase matcher is null-safe.
      */
     @Test
-    public void testEqualsIgnoreCaseNullCriterion() {
+    void testEqualsIgnoreCaseNullCriterion() {
         checkMatcherWithNullInput(NodeNameMatchers.EQUALS_IGNORE_CASE);
     }
 
@@ -92,7 +92,7 @@ public class TestNodeNameMatchers {
      * Tests the equals matcher if the expected result is true.
      */
     @Test
-    public void testEqualsMatch() {
+    void testEqualsMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
     }
@@ -101,7 +101,7 @@ public class TestNodeNameMatchers {
      * Tests the equals matcher for a non matching name.
      */
     @Test
-    public void testEqualsNoMatch() {
+    void testEqualsNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
         assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
@@ -111,7 +111,7 @@ public class TestNodeNameMatchers {
      * Tests whether the equals matcher can handle a null criterion.
      */
     @Test
-    public void testEqualsNullCriterion() {
+    void testEqualsNullCriterion() {
         checkMatcherWithNullInput(NodeNameMatchers.EQUALS);
     }
 }

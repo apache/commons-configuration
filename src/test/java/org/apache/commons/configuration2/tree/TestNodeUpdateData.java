@@ -46,7 +46,7 @@ public class TestNodeUpdateData {
      * Tests that the map with changed values cannot be modified.
      */
     @Test
-    public void testGetChangedValuesModify() {
+    void testGetChangedValuesModify() {
         final Map<QueryResult<Object>, Object> map = new HashMap<>();
         map.put(result("n1"), 42);
         final NodeUpdateData<Object> data = new NodeUpdateData<>(map, null, null, null);
@@ -59,7 +59,7 @@ public class TestNodeUpdateData {
      * Tests that the collection with new values cannot be modified.
      */
     @Test
-    public void testGetNewValuesModify() {
+    void testGetNewValuesModify() {
         final Collection<Object> col = new LinkedList<>();
         col.add(42);
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, col, null, null);
@@ -71,7 +71,7 @@ public class TestNodeUpdateData {
      * Tests that the collection with removed nodes cannot be modified.
      */
     @Test
-    public void testGetRemovedNodesModify() {
+    void testGetRemovedNodesModify() {
         final Collection<QueryResult<Object>> col = new LinkedList<>();
         col.add(result("n1"));
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);
@@ -84,7 +84,7 @@ public class TestNodeUpdateData {
      * Tests whether a defensive copy is created from the changed values.
      */
     @Test
-    public void testInitChangedValuesDefensiveCopy() {
+    void testInitChangedValuesDefensiveCopy() {
         final Map<QueryResult<Object>, Object> map = new HashMap<>();
         map.put(result("test"), "value");
         final NodeUpdateData<Object> data = new NodeUpdateData<>(map, null, null, null);
@@ -97,7 +97,7 @@ public class TestNodeUpdateData {
      * Tests whether a defensive copy is created from the new values.
      */
     @Test
-    public void testInitNewValuesDefensiveCopy() {
+    void testInitNewValuesDefensiveCopy() {
         final Collection<Object> col = new LinkedList<>();
         col.add(42);
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, col, null, null);
@@ -111,7 +111,7 @@ public class TestNodeUpdateData {
      * Tests whether null parameters for collections are converted to empty collections.
      */
     @Test
-    public void testInitNoData() {
+    void testInitNoData() {
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, null, null);
         assertTrue(data.getChangedValues().isEmpty());
         assertTrue(data.getNewValues().isEmpty());
@@ -122,7 +122,7 @@ public class TestNodeUpdateData {
      * Tests whether a defensive copy is created from the removed nodes.
      */
     @Test
-    public void testInitRemovedNodesDefensiveCopy() {
+    void testInitRemovedNodesDefensiveCopy() {
         final Collection<QueryResult<Object>> col = new LinkedList<>();
         col.add(result("n1"));
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);

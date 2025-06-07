@@ -64,7 +64,7 @@ public class TestConfigurationDeclaration {
      * Tests access to certain reserved attributes of a ConfigurationDeclaration.
      */
     @Test
-    public void testConfigurationDeclarationGetAttributes() {
+    void testConfigurationDeclarationGetAttributes() {
         final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty("xml.fileName", "test.xml");
         ConfigurationDeclaration decl = createDeclaration(config.configurationAt("xml"));
@@ -95,7 +95,7 @@ public class TestConfigurationDeclaration {
      * Tests the isReservedNode() method of ConfigurationDeclaration.
      */
     @Test
-    public void testConfigurationDeclarationIsReserved() {
+    void testConfigurationDeclarationIsReserved() {
         final ConfigurationDeclaration decl = createDeclaration(null);
         assertTrue(decl.isReservedAttributeName("at"));
         assertTrue(decl.isReservedAttributeName("optional"));
@@ -107,7 +107,7 @@ public class TestConfigurationDeclaration {
      * Tests if the at attribute is correctly detected as reserved attribute.
      */
     @Test
-    public void testConfigurationDeclarationIsReservedAt() {
+    void testConfigurationDeclarationIsReservedAt() {
         checkOldReservedAttribute("at");
     }
 
@@ -115,7 +115,7 @@ public class TestConfigurationDeclaration {
      * Tests if the optional attribute is correctly detected as reserved attribute.
      */
     @Test
-    public void testConfigurationDeclarationIsReservedOptional() {
+    void testConfigurationDeclarationIsReservedOptional() {
         checkOldReservedAttribute("optional");
     }
 
@@ -123,7 +123,7 @@ public class TestConfigurationDeclaration {
      * Tests whether an invalid value of an optional attribute is detected.
      */
     @Test
-    public void testConfigurationDeclarationOptionalAttributeInvalid() {
+    void testConfigurationDeclarationOptionalAttributeInvalid() {
         final HierarchicalConfiguration<?> factory = new BaseHierarchicalConfiguration();
         factory.addProperty("xml.fileName", "test.xml");
         factory.setProperty("xml[@optional]", "invalid value");

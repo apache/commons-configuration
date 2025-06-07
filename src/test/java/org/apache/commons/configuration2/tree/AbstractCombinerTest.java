@@ -79,7 +79,7 @@ public abstract class AbstractCombinerTest {
      * Tests a newly created combiner.
      */
     @Test
-    public void testInit() {
+    void testInit() {
         assertTrue(combiner.getListNodes().isEmpty());
         assertFalse(combiner.isListNode(NodeStructureHelper.createNode("test", null)));
     }

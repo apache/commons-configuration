@@ -49,7 +49,7 @@ public class TestSubsetConfiguration {
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
     @Test
-    public void testClear() {
+    void testClear() {
         final Configuration config = new BaseConfiguration();
         config.setProperty("test.key1", "value1");
         config.setProperty("testing.key2", "value1");
@@ -65,12 +65,12 @@ public class TestSubsetConfiguration {
      * Tries to create an instance without a parent configuration.
      */
     @Test
-    public void testConstructNullParent() {
+    void testConstructNullParent() {
         assertThrows(NullPointerException.class, () -> new SubsetConfiguration(null, ""));
     }
 
     @Test
-    public void testGetChildKey() {
+    void testGetChildKey() {
         final Configuration conf = new BaseConfiguration();
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
@@ -84,7 +84,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetKeys() {
+    void testGetKeys() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test", "value0");
         conf.setProperty("test.key1", "value1");
@@ -99,7 +99,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetKeysWithPrefix() {
+    void testGetKeysWithPrefix() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test.abc", "value0");
         conf.setProperty("test.abc.key1", "value1");
@@ -114,7 +114,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetList() {
+    void testGetList() {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.setProperty("test.abc", "value0,value1");
@@ -129,7 +129,7 @@ public class TestSubsetConfiguration {
      * Tests whether the list delimiter handler from the parent configuration is used.
      */
     @Test
-    public void testGetListDelimiterHandlerFromParent() {
+    void testGetListDelimiterHandlerFromParent() {
         final BaseConfiguration config = new BaseConfiguration();
         final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
@@ -138,7 +138,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetParent() {
+    void testGetParent() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
 
@@ -146,7 +146,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetParentKey() {
+    void testGetParentKey() {
         final Configuration conf = new BaseConfiguration();
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
@@ -160,7 +160,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetPrefix() {
+    void testGetPrefix() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
 
@@ -168,7 +168,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testGetProperty() {
+    void testGetProperty() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test.key1", "value1");
         conf.setProperty("testing.key2", "value1");
@@ -180,7 +180,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testInterpolationForKeysOfTheParent() {
+    void testInterpolationForKeysOfTheParent() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("test", "junit");
         config.setProperty("prefix.key", "${test}");
@@ -192,7 +192,7 @@ public class TestSubsetConfiguration {
      * Tests manipulating the interpolator.
      */
     @Test
-    public void testInterpolator() {
+    void testInterpolator() {
         final BaseConfiguration config = new BaseConfiguration();
         final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         InterpolationTestHelper.testGetInterpolator(subset);
@@ -202,7 +202,7 @@ public class TestSubsetConfiguration {
      * Tests whether a list delimiter handler is used correctly.
      */
     @Test
-    public void testListDelimiterHandling() {
+    void testListDelimiterHandling() {
         final BaseConfiguration config = new BaseConfiguration();
         final Configuration subset = config.subset("prefix");
         config.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
@@ -215,7 +215,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testLocalLookupsInInterpolatorAreInherited() {
+    void testLocalLookupsInInterpolatorAreInherited() {
         final BaseConfiguration config = new BaseConfiguration();
         final ConfigurationInterpolator interpolator = config.getInterpolator();
         interpolator.registerLookup("brackets", key -> "(" + key + ")");
@@ -225,7 +225,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testNested() throws Exception {
+    void testNested() throws Exception {
         final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert.getTestFile(TEST_FILE)));
         final Configuration config = builder.getConfiguration();
@@ -245,7 +245,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testPrefixDelimiter() {
+    void testPrefixDelimiter() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("part1.part2@test.key1", "value1");
         config.setProperty("part1.part2", "value2");
@@ -264,7 +264,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testPrefixDelimiterNegativeTest() {
+    void testPrefixDelimiterNegativeTest() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("part1.part2@test.key1", "value1");
         config.setProperty("part3.part4@testing.key2", "value2");
@@ -303,7 +303,7 @@ public class TestSubsetConfiguration {
      * Tests whether the list delimiter handler is also set for the parent configuration.
      */
     @Test
-    public void testSetListDelimiterHandlerInParent() {
+    void testSetListDelimiterHandlerInParent() {
         final BaseConfiguration config = new BaseConfiguration();
         final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
@@ -316,7 +316,7 @@ public class TestSubsetConfiguration {
      * list delimiter handler.
      */
     @Test
-    public void testSetListDelimiterHandlerParentNotSupported() {
+    void testSetListDelimiterHandlerParentNotSupported() {
         final Configuration config = mock(Configuration.class);
         final SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
@@ -325,7 +325,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testSetPrefix() {
+    void testSetPrefix() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, null, ".");
         subset.setPrefix("prefix");
@@ -334,7 +334,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testSetProperty() {
+    void testSetProperty() {
         final Configuration conf = new BaseConfiguration();
         final Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
@@ -350,7 +350,7 @@ public class TestSubsetConfiguration {
     }
 
     @Test
-    public void testThrowExceptionOnMissing() {
+    void testThrowExceptionOnMissing() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
 

@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 public class TestPropertiesSequence {
     @Test
-    public void testConfigurationValuesInSameOrderFromFile() throws Exception {
+    void testConfigurationValuesInSameOrderFromFile() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
@@ -58,7 +58,7 @@ public class TestPropertiesSequence {
     }
 
     @Test
-    public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception {
+    void testConfigurationValuesInSameOrderWithManualAdd() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
@@ -88,7 +88,7 @@ public class TestPropertiesSequence {
     }
 
     @Test
-    public void testMappingInSameOrder() throws Exception {
+    void testMappingInSameOrder() throws Exception {
         final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 

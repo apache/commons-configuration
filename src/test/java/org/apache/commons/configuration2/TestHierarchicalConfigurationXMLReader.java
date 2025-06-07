@@ -50,7 +50,7 @@ public class TestHierarchicalConfigurationXMLReader {
     }
 
     @Test
-    public void testParse() throws Exception {
+    void testParse() throws Exception {
         final SAXSource source = new SAXSource(parser, new InputSource());
         final DOMResult result = new DOMResult();
         final Transformer trans = TransformerFactory.newInstance().newTransformer();

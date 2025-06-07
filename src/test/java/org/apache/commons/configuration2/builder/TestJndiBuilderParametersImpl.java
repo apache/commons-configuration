@@ -44,7 +44,7 @@ public class TestJndiBuilderParametersImpl {
      * Tests whether the parameters map contains inherited properties, too.
      */
     @Test
-    public void testGetParametersBaseProperties() {
+    void testGetParametersBaseProperties() {
         params.setPrefix("somePrefix");
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> paramsMap = params.getParameters();
@@ -55,7 +55,7 @@ public class TestJndiBuilderParametersImpl {
      * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testSetBeanProperties() throws Exception {
+    void testSetBeanProperties() throws Exception {
         final Context ctx = mock(Context.class);
         final String prefix = "testJndiPrefix";
         BeanHelper.setProperty(params, "context", ctx);
@@ -69,7 +69,7 @@ public class TestJndiBuilderParametersImpl {
      * Tests whether a JNDI context can be set.
      */
     @Test
-    public void testSetContext() {
+    void testSetContext() {
         final Context ctx = mock(Context.class);
         assertSame(params, params.setContext(ctx));
         final Map<String, Object> paramsMap = params.getParameters();
@@ -80,7 +80,7 @@ public class TestJndiBuilderParametersImpl {
      * Tests whether a prefix can be set.
      */
     @Test
-    public void testSetPrefix() {
+    void testSetPrefix() {
         final String prefix = "testJndiPrefix";
         assertSame(params, params.setPrefix(prefix));
         final Map<String, Object> paramsMap = params.getParameters();

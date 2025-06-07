@@ -28,7 +28,7 @@ public class TestPatternSubtreeConfigurationWrapper {
      * Tests a read operation if the wrapped configuration does not implement FileBased.
      */
     @Test
-    public void testReadNotFileBased() {
+    void testReadNotFileBased() {
         assertThrows(NullPointerException.class, () -> {
             new PatternSubtreeConfigurationWrapper(null, "");
         });

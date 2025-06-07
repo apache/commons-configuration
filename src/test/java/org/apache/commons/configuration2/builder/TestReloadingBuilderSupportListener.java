@@ -40,7 +40,7 @@ public class TestReloadingBuilderSupportListener {
      * Tests that the builder is reset when a reloading event notification occurs.
      */
     @Test
-    public void testResetBuilderOnReloadingEvent() {
+    void testResetBuilderOnReloadingEvent() {
         final ReloadingDetector detector = mock(ReloadingDetector.class);
 
         when(detector.isReloadingRequired()).thenReturn(true);
@@ -61,7 +61,7 @@ public class TestReloadingBuilderSupportListener {
      * Tests that the controller's reloading state is reset when a new result object is created.
      */
     @Test
-    public void testResetReloadingStateOnResultCreation() throws ConfigurationException {
+    void testResetReloadingStateOnResultCreation() throws ConfigurationException {
         final ReloadingController controller = mock(ReloadingController.class);
 
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);

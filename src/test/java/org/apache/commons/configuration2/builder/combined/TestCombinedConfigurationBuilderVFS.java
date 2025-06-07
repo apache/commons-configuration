@@ -51,7 +51,7 @@ public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurati
      * Tests if the base path is correctly evaluated.
      */
     @Test
-    public void testSetConfigurationBasePath() throws ConfigurationException {
+    void testSetConfigurationBasePath() throws ConfigurationException {
         final File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         final Map<String, Object> params = new HashMap<>();
         params.put("fileName", "test.properties");

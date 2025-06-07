@@ -133,7 +133,7 @@ public class TestConfigurationInterpolator {
      * Tests whether multiple default lookups can be added.
      */
     @Test
-    public void testAddDefaultLookups() {
+    void testAddDefaultLookups() {
         final List<Lookup> lookups = new ArrayList<>();
         lookups.add(setUpTestLookup());
         lookups.add(setUpTestLookup("test", "value"));
@@ -146,13 +146,13 @@ public class TestConfigurationInterpolator {
      * Tests whether a null collection of default lookups is handled correctly.
      */
     @Test
-    public void testAddDefaultLookupsNull() {
+    void testAddDefaultLookupsNull() {
         interpolator.addDefaultLookups(null);
         assertTrue(interpolator.getDefaultLookups().isEmpty());
     }
 
     @Test
-    public void testDefaultStringLookupsHolderAllLookups() {
+    void testDefaultStringLookupsHolderAllLookups() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY,
                 "BASE64_DECODER BASE64_ENCODER const, date, dns, environment "
@@ -182,21 +182,21 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolderGivenSingleLookup() {
+    void testDefaultStringLookupsHolderGivenSingleLookup() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder");
         checkDefaultPrefixLookupsHolder(props, "base64", StringLookupFactory.KEY_BASE64_ENCODER);
     }
 
     @Test
-    public void testDefaultStringLookupsHolderGivenSingleLookupWeirdString() {
+    void testDefaultStringLookupsHolderGivenSingleLookupWeirdString() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " \n \t  ,, DnS , , ");
         checkDefaultPrefixLookupsHolder(props, StringLookupFactory.KEY_DNS);
     }
 
     @Test
-    public void testDefaultStringLookupsHolderInvalidLookupsDefinition() {
+    void testDefaultStringLookupsHolderInvalidLookupsDefinition() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
         final Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props));
@@ -204,7 +204,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolderLookupsPropertyEmptyAndBlank() {
+    void testDefaultStringLookupsHolderLookupsPropertyEmptyAndBlank() {
         final Properties propsWithNull = new Properties();
         propsWithNull.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "");
 
@@ -217,7 +217,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolderLookupsPropertyNotPresent() {
+    void testDefaultStringLookupsHolderLookupsPropertyNotPresent() {
         checkDefaultPrefixLookupsHolder(new Properties(),
                 "base64",
                 StringLookupFactory.KEY_BASE64_DECODER,
@@ -237,7 +237,7 @@ public class TestConfigurationInterpolator {
     }
 
     @Test
-    public void testDefaultStringLookupsHolderMultipleLookups() {
+    void testDefaultStringLookupsHolderMultipleLookups() {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "dns, url script ");
 
@@ -251,7 +251,7 @@ public class TestConfigurationInterpolator {
      * Tests deregistering a lookup object.
      */
     @Test
-    public void testDeregisterLookup() {
+    void testDeregisterLookup() {
         final Lookup lookup = mock(Lookup.class);
         interpolator.registerLookup(TEST_PREFIX, lookup);
         assertTrue(interpolator.deregisterLookup(TEST_PREFIX));
@@ -263,7 +263,7 @@ public class TestConfigurationInterpolator {
      * Tests deregistering an unknown lookup object.
      */
     @Test
-    public void testDeregisterLookupNonExisting() {
+    void testDeregisterLookupNonExisting() {
         assertFalse(interpolator.deregisterLookup(TEST_PREFIX));
     }
 
@@ -271,7 +271,7 @@ public class TestConfigurationInterpolator {
      * Tests whether the flag for substitution in variable names can be modified.
      */
     @Test
-    public void testEnableSubstitutionInVariables() {
+    void testEnableSubstitutionInVariables() {
         assertFalse(interpolator.isEnableSubstitutionInVariables());
         interpolator.addDefaultLookup(setUpTestLookup("java.version", "1.4"));
         interpolator.addDefaultLookup(setUpTestLookup("jre-1.4", "C:\\java\\1.4"));
@@ -286,7 +286,7 @@ public class TestConfigurationInterpolator {
      * Tests fromSpecification() if the specification contains an instance.
      */
     @Test
-    public void testFromSpecificationInterpolator() {
+    void testFromSpecificationInterpolator() {
         final ConfigurationInterpolator ci = mock(ConfigurationInterpolator.class);
         final InterpolatorSpecification spec = new InterpolatorSpecification.Builder().withDefaultLookup(mock(Lookup.class))
             .withParentInterpolator(interpolator).withInterpolator(ci).create();
@@ -297,7 +297,7 @@ public class TestConfigurationInterpolator {
      * Tests fromSpecification() if a new instance has to be created.
      */
     @Test
-    public void testFromSpecificationNewInstance() {
+    void testFromSpecificationNewInstance() {
         final Lookup defLookup = mock(Lookup.class);
         final Lookup preLookup = mock(Lookup.class);
         final Function<Object, String> stringConverter = obj -> Objects.toString(obj, null);
@@ -319,7 +319,7 @@ public class TestConfigurationInterpolator {
      * Tries to obtain an instance from a null specification.
      */
     @Test
-    public void testFromSpecificationNull() {
+    void testFromSpecificationNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigurationInterpolator.fromSpecification(null));
     }
 
@@ -327,7 +327,7 @@ public class TestConfigurationInterpolator {
      * Tests whether modification of the list of default lookups does not affect the object.
      */
     @Test
-    public void testGetDefaultLookupsModify() {
+    void testGetDefaultLookupsModify() {
         final List<Lookup> lookups = interpolator.getDefaultLookups();
         lookups.add(setUpTestLookup());
         assertTrue(interpolator.getDefaultLookups().isEmpty());
@@ -337,7 +337,7 @@ public class TestConfigurationInterpolator {
      * Tests whether default prefix lookups can be queried as a map.
      */
     @Test
-    public void testGetDefaultPrefixLookups() {
+    void testGetDefaultPrefixLookups() {
         final EnumSet<DefaultLookups> excluded = EnumSet.of(
                 DefaultLookups.DNS,
                 DefaultLookups.URL,
@@ -361,7 +361,7 @@ public class TestConfigurationInterpolator {
      * Tests that the map with default lookups cannot be modified.
      */
     @Test
-    public void testGetDefaultPrefixLookupsModify() {
+    void testGetDefaultPrefixLookupsModify() {
         final Map<String, Lookup> lookups = ConfigurationInterpolator.getDefaultPrefixLookups();
         final Lookup lookup = mock(Lookup.class);
         assertThrows(UnsupportedOperationException.class, () -> lookups.put("test", lookup));
@@ -373,7 +373,7 @@ public class TestConfigurationInterpolator {
      * Tests that modification of the map with lookups does not affect the object.
      */
     @Test
-    public void testGetLookupsModify() {
+    void testGetLookupsModify() {
         final Map<String, Lookup> lookups = interpolator.getLookups();
         lookups.put(TEST_PREFIX, setUpTestLookup());
         assertTrue(interpolator.getLookups().isEmpty());
@@ -383,7 +383,7 @@ public class TestConfigurationInterpolator {
      * Tests creating an instance. Does it contain some predefined lookups and a default string converter?
      */
     @Test
-    public void testInit() {
+    void testInit() {
         assertTrue(interpolator.getDefaultLookups().isEmpty());
         assertTrue(interpolator.getLookups().isEmpty());
         assertNull(interpolator.getParentInterpolator());
@@ -395,7 +395,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation of an array argument.
      */
     @Test
-    public void testInterpolateArray() {
+    void testInterpolateArray() {
         final int[] value = {1, 2};
         assertSame(value, interpolator.interpolate(value));
     }
@@ -404,7 +404,7 @@ public class TestConfigurationInterpolator {
      * Tests that a blank variable definition does not cause problems.
      */
     @Test
-    public void testInterpolateBlankVariable() {
+    void testInterpolateBlankVariable() {
         final String value = "${ }";
         assertEquals(value, interpolator.interpolate(value));
     }
@@ -413,7 +413,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation of a collection argument.
      */
     @Test
-    public void testInterpolateCollection() {
+    void testInterpolateCollection() {
         final List<Integer> value = Arrays.asList(1, 2);
         assertSame(value, interpolator.interpolate(value));
     }
@@ -422,7 +422,7 @@ public class TestConfigurationInterpolator {
      * Tests that an empty variable definition does not cause problems.
      */
     @Test
-    public void testInterpolateEmptyVariable() {
+    void testInterpolateEmptyVariable() {
         final String value = "${}";
         assertEquals(value, interpolator.interpolate(value));
     }
@@ -431,7 +431,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation of a non string argument.
      */
     @Test
-    public void testInterpolateObject() {
+    void testInterpolateObject() {
         final Object value = 42;
         assertSame(value, interpolator.interpolate(value));
     }
@@ -440,7 +440,7 @@ public class TestConfigurationInterpolator {
      * Tests a successful interpolation of a string value.
      */
     @Test
-    public void testInterpolateString() {
+    void testInterpolateString() {
         final String value = "${" + TEST_PREFIX + ':' + TEST_NAME + "}";
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         assertEquals(TEST_VALUE, interpolator.interpolate(value));
@@ -450,7 +450,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation with a variable which cannot be resolved.
      */
     @Test
-    public void testInterpolateStringUnknownVariable() {
+    void testInterpolateStringUnknownVariable() {
         final String value = "${unknownVariable}";
         assertEquals(value, interpolator.interpolate(value));
     }
@@ -460,7 +460,7 @@ public class TestConfigurationInterpolator {
      * the potential to fail. Part of CONFIGURATION-764.
      */
     @Test
-    public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
+    void testInterpolationBeginningAndEndingRiskyVariableLookups() {
         interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
         final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
         assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
@@ -470,7 +470,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation with multiple variables containing arrays.
      */
     @Test
-    public void testInterpolationMultipleArrayVariables() {
+    void testInterpolationMultipleArrayVariables() {
         final String value = "${single}bc${multi}23${empty}${null}";
         final int[] multi = {1, 0, 0};
         final String[] single = {"a"};
@@ -487,7 +487,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation with multiple variables containing collections and iterators.
      */
     @Test
-    public void testInterpolationMultipleCollectionVariables() {
+    void testInterpolationMultipleCollectionVariables() {
         final String value = "${single}bc${multi}23${empty}${null}${multiIt}${emptyIt}${nullIt}";
         final List<Integer> multi = Arrays.asList(1, 0, 0);
         final List<String> single = Arrays.asList("a");
@@ -507,7 +507,7 @@ public class TestConfigurationInterpolator {
      * Tests interpolation with variables containing multiple simple non-string variables.
      */
     @Test
-    public void testInterpolationMultipleSimpleNonStringVariables() {
+    void testInterpolationMultipleSimpleNonStringVariables() {
         final String value = "${x} = ${y} is ${result}";
         interpolator.addDefaultLookup(setUpTestLookup("x", 1));
         interpolator.addDefaultLookup(setUpTestLookup("y", 2));
@@ -519,7 +519,7 @@ public class TestConfigurationInterpolator {
      * Tests a property value consisting of multiple variables.
      */
     @Test
-    public void testInterpolationMultipleVariables() {
+    void testInterpolationMultipleVariables() {
         final String value = "The ${subject} jumps over ${object}.";
         interpolator.addDefaultLookup(setUpTestLookup("subject", "quick brown fox"));
         interpolator.addDefaultLookup(setUpTestLookup("object", "the lazy dog"));
@@ -531,7 +531,7 @@ public class TestConfigurationInterpolator {
      * should be returned verbatim.
      */
     @Test
-    public void testInterpolationSingleArrayVariable() {
+    void testInterpolationSingleArrayVariable() {
         final int[] value = {42, -1};
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
@@ -542,7 +542,7 @@ public class TestConfigurationInterpolator {
      * should be returned verbatim.
      */
     @Test
-    public void testInterpolationSingleCollectionVariable() {
+    void testInterpolationSingleCollectionVariable() {
         final List<Integer> value = Arrays.asList(42);
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
@@ -552,7 +552,7 @@ public class TestConfigurationInterpolator {
      * Tests an interpolation that consists of a single variable only. The variable's value should be returned verbatim.
      */
     @Test
-    public void testInterpolationSingleVariable() {
+    void testInterpolationSingleVariable() {
         final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
@@ -562,7 +562,7 @@ public class TestConfigurationInterpolator {
      * Tests an interpolation that consists of a single undefined variable only with and without a default value.
      */
     @Test
-    public void testInterpolationSingleVariableDefaultValue() {
+    void testInterpolationSingleVariableDefaultValue() {
         final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals("${I_am_not_defined}", interpolator.interpolate("${I_am_not_defined}"));
@@ -574,7 +574,7 @@ public class TestConfigurationInterpolator {
      * Tests a variable declaration which lacks the trailing closing bracket.
      */
     @Test
-    public void testInterpolationVariableIncomplete() {
+    void testInterpolationVariableIncomplete() {
         final String value = "${" + TEST_NAME;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, "someValue"));
         assertEquals(value, interpolator.interpolate(value));
@@ -584,7 +584,7 @@ public class TestConfigurationInterpolator {
      * Tests nullSafeLookup() if a lookup object was provided.
      */
     @Test
-    public void testNullSafeLookupExisting() {
+    void testNullSafeLookupExisting() {
         final Lookup look = mock(Lookup.class);
         assertSame(look, ConfigurationInterpolator.nullSafeLookup(look));
     }
@@ -593,7 +593,7 @@ public class TestConfigurationInterpolator {
      * Tests whether nullSafeLookup() can handle null input.
      */
     @Test
-    public void testNullSafeLookupNull() {
+    void testNullSafeLookupNull() {
         final Lookup lookup = ConfigurationInterpolator.nullSafeLookup(null);
         assertNull(lookup.lookup("someVar"));
     }
@@ -602,7 +602,7 @@ public class TestConfigurationInterpolator {
      * Tests that the prefix set cannot be modified.
      */
     @Test
-    public void testPrefixSetModify() {
+    void testPrefixSetModify() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         final Iterator<String> it = interpolator.prefixSet().iterator();
         it.next();
@@ -613,7 +613,7 @@ public class TestConfigurationInterpolator {
      * Tests registering a lookup object at an instance.
      */
     @Test
-    public void testRegisterLookup() {
+    void testRegisterLookup() {
         final Lookup lookup = mock(Lookup.class);
         interpolator.registerLookup(TEST_PREFIX, lookup);
         assertSame(lookup, interpolator.getLookups().get(TEST_PREFIX));
@@ -625,7 +625,7 @@ public class TestConfigurationInterpolator {
      * Tests registering a null lookup object. This should cause an exception.
      */
     @Test
-    public void testRegisterLookupNull() {
+    void testRegisterLookupNull() {
         assertThrows(IllegalArgumentException.class, () -> interpolator.registerLookup(TEST_PREFIX, null));
     }
 
@@ -633,7 +633,7 @@ public class TestConfigurationInterpolator {
      * Tests registering a lookup object for an undefined prefix. This should cause an exception.
      */
     @Test
-    public void testRegisterLookupNullPrefix() {
+    void testRegisterLookupNullPrefix() {
         final Lookup lookup = mock(Lookup.class);
         assertThrows(IllegalArgumentException.class, () -> interpolator.registerLookup(null, lookup));
 
@@ -644,7 +644,7 @@ public class TestConfigurationInterpolator {
      * Tests whether a map with lookup objects can be registered.
      */
     @Test
-    public void testRegisterLookups() {
+    void testRegisterLookups() {
         final Lookup l1 = setUpTestLookup();
         final Lookup l2 = setUpTestLookup("someVar", "someValue");
         final Map<String, Lookup> lookups = new HashMap<>();
@@ -664,7 +664,7 @@ public class TestConfigurationInterpolator {
      * Tests whether a null map with lookup objects is handled correctly.
      */
     @Test
-    public void testRegisterLookupsNull() {
+    void testRegisterLookupsNull() {
         interpolator.registerLookups(null);
         assertTrue(interpolator.getLookups().isEmpty());
     }
@@ -673,7 +673,7 @@ public class TestConfigurationInterpolator {
      * Tests whether a default lookup object can be removed.
      */
     @Test
-    public void testRemoveDefaultLookup() {
+    void testRemoveDefaultLookup() {
         final List<Lookup> lookups = new ArrayList<>();
         lookups.add(setUpTestLookup());
         lookups.add(setUpTestLookup("test", "value"));
@@ -687,7 +687,7 @@ public class TestConfigurationInterpolator {
      * Tests whether a non existing default lookup object can be removed.
      */
     @Test
-    public void testRemoveDefaultLookupNonExisting() {
+    void testRemoveDefaultLookupNonExisting() {
         assertFalse(interpolator.removeDefaultLookup(setUpTestLookup()));
     }
 
@@ -695,7 +695,7 @@ public class TestConfigurationInterpolator {
      * Tests looking up a variable without a prefix. This should trigger the default lookup object.
      */
     @Test
-    public void testResolveDefault() {
+    void testResolveDefault() {
         final Lookup l1 = mock(Lookup.class);
         final Lookup l2 = mock(Lookup.class);
         final Lookup l3 = mock(Lookup.class);
@@ -716,7 +716,7 @@ public class TestConfigurationInterpolator {
      * prefix is not able to resolve the variable.
      */
     @Test
-    public void testResolveDefaultAfterPrefixFails() {
+    void testResolveDefaultAfterPrefixFails() {
         final String varName = TEST_PREFIX + ':' + TEST_NAME + "2";
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         interpolator.addDefaultLookup(setUpTestLookup(varName, TEST_VALUE));
@@ -727,7 +727,7 @@ public class TestConfigurationInterpolator {
      * Tests an empty variable name without a prefix.
      */
     @Test
-    public void testResolveDefaultEmptyVarName() {
+    void testResolveDefaultEmptyVarName() {
         interpolator.addDefaultLookup(setUpTestLookup("", TEST_VALUE));
         assertEquals(TEST_VALUE, interpolator.resolve(""));
     }
@@ -736,7 +736,7 @@ public class TestConfigurationInterpolator {
      * Tests the empty variable prefix. This is a special case, but legal.
      */
     @Test
-    public void testResolveEmptyPrefix() {
+    void testResolveEmptyPrefix() {
         interpolator.registerLookup("", setUpTestLookup());
         assertEquals(TEST_VALUE, interpolator.resolve(":" + TEST_NAME));
     }
@@ -745,7 +745,7 @@ public class TestConfigurationInterpolator {
      * Tests an empty variable name.
      */
     @Test
-    public void testResolveEmptyVarName() {
+    void testResolveEmptyVarName() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup("", TEST_VALUE));
         assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ":"));
     }
@@ -754,7 +754,7 @@ public class TestConfigurationInterpolator {
      * Tests looking up a variable without a prefix when no default lookup is specified. Result should be null in this case.
      */
     @Test
-    public void testResolveNoDefault() {
+    void testResolveNoDefault() {
         assertNull(interpolator.resolve(TEST_NAME));
     }
 
@@ -762,7 +762,7 @@ public class TestConfigurationInterpolator {
      * Tests looking up a null variable. Result should be null, too.
      */
     @Test
-    public void testResolveNull() {
+    void testResolveNull() {
         assertNull(interpolator.resolve(null));
     }
 
@@ -771,7 +771,7 @@ public class TestConfigurationInterpolator {
      * instance.
      */
     @Test
-    public void testResolveParentVariableFound() {
+    void testResolveParentVariableFound() {
         final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
         interpolator.setParentInterpolator(parent);
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
@@ -782,7 +782,7 @@ public class TestConfigurationInterpolator {
      * Tests whether the parent {@code ConfigurationInterpolator} is invoked if the test instance cannot resolve a variable.
      */
     @Test
-    public void testResolveParentVariableNotFound() {
+    void testResolveParentVariableNotFound() {
         final ConfigurationInterpolator parent = mock(ConfigurationInterpolator.class);
 
         when(parent.resolve(TEST_NAME)).thenReturn(TEST_VALUE);
@@ -799,7 +799,7 @@ public class TestConfigurationInterpolator {
      * variable's prefix.
      */
     @Test
-    public void testResolveWithPrefix() {
+    void testResolveWithPrefix() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME));
     }
@@ -808,7 +808,7 @@ public class TestConfigurationInterpolator {
      * Tests the behavior of the lookup method for variables with an unknown prefix. These variables should not be resolved.
      */
     @Test
-    public void testResolveWithUnknownPrefix() {
+    void testResolveWithUnknownPrefix() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         assertNull(interpolator.resolve("UnknownPrefix:" + TEST_NAME));
         assertNull(interpolator.resolve(":" + TEST_NAME));
@@ -818,7 +818,7 @@ public class TestConfigurationInterpolator {
      * Tests that a custom string converter can be used.
      */
     @Test
-    public void testSetStringConverter() {
+    void testSetStringConverter() {
         final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
         interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
         interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
@@ -831,7 +831,7 @@ public class TestConfigurationInterpolator {
      * Tests that the default string converter can be reapplied by passing {@code null}.
      */
     @Test
-    public void testSetStringConverterNullArgumentUsesDefault() {
+    void testSetStringConverterNullArgumentUsesDefault() {
         final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
         interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
         interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));

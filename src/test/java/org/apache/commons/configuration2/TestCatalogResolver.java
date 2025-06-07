@@ -68,14 +68,14 @@ public class TestCatalogResolver {
     }
 
     @Test
-    public void testDebug() throws Exception {
+    void testDebug() throws Exception {
         resolver.setDebug(true);
         // There is no really good way to check this except to do something
         // that causes debug output.
     }
 
     @Test
-    public void testLogger() throws Exception {
+    void testLogger() throws Exception {
         final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
         resolver.setLogger(log);
         assertNotNull(resolver.getLogger());
@@ -83,12 +83,12 @@ public class TestCatalogResolver {
     }
 
     @Test
-    public void testPublic() {
+    void testPublic() {
         assertDoesNotThrow(() -> load(PUBLIC_FILE));
     }
 
     @Test
-    public void testRewriteSystem() {
+    void testRewriteSystem() {
         assertDoesNotThrow(() -> load(REWRITE_SYSTEM_FILE));
     }
 
@@ -96,7 +96,7 @@ public class TestCatalogResolver {
      * Tests that the schema can be resolved and that XMLConfiguration will validate the file using the schema.
      */
     @Test
-    public void testSchemaResolver() {
+    void testSchemaResolver() {
         assertDoesNotThrow(() -> load(REWRITE_SCHEMA_FILE));
     }
 }

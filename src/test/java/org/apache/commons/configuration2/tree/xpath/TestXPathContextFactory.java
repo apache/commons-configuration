@@ -42,7 +42,7 @@ public class TestXPathContextFactory {
      * Tests whether a correct context is created.
      */
     @Test
-    public void testCreateContext() {
+    void testCreateContext() {
         final ImmutableNode node = new ImmutableNode.Builder().name("testRoot").create();
         final NodeHandler<ImmutableNode> handler = new InMemoryNodeModel(node).getNodeHandler();
         final JXPathContext context = factory.createContext(node, handler);

@@ -68,7 +68,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests escapeList(). This operation is not supported.
      */
     @Test
-    public void testEscapeList() {
+    void testEscapeList() {
         final List<Object> values = Arrays.asList(VALUES);
         assertThrows(UnsupportedOperationException.class, () -> handler.escapeList(values, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
@@ -77,7 +77,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a non-string value is correctly escaped. The object should not be modified.
      */
     @Test
-    public void testEscapeNonStringValue() {
+    void testEscapeNonStringValue() {
         final Object value = 42;
         assertEquals(value, handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
@@ -86,7 +86,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether the transformer is correctly called when escaping a non string value.
      */
     @Test
-    public void testEscapeNonStringValueTransformer() {
+    void testEscapeNonStringValueTransformer() {
         final ValueTransformer trans = mock(ValueTransformer.class);
         final Object value = 42;
 
@@ -102,7 +102,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a string value is correctly escaped. The string should not be modified.
      */
     @Test
-    public void testEscapeStringValue() {
+    void testEscapeStringValue() {
         assertEquals(STR_VALUE, handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
 
@@ -110,7 +110,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether the transformer is correctly invoked when escaping a string.
      */
     @Test
-    public void testEscapeStringValueTransformer() {
+    void testEscapeStringValueTransformer() {
         final ValueTransformer trans = mock(ValueTransformer.class);
         final String testStr = "Some other string";
 
@@ -126,7 +126,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a limit is applied when extracting values from an array.
      */
     @Test
-    public void testFlattenArrayWithLimit() {
+    void testFlattenArrayWithLimit() {
         final Collection<?> res = handler.flatten(VALUES, 1);
         assertEquals(1, res.size());
         assertEquals(VALUES[0], res.iterator().next());
@@ -136,7 +136,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether elements can be extracted from a collection that contains an array if a limit is specified.
      */
     @Test
-    public void testFlattenCollectionWithArrayWithLimit() {
+    void testFlattenCollectionWithArrayWithLimit() {
         final Collection<Object> src = new ArrayList<>(2);
         src.add(STR_VALUE);
         src.add(VALUES);
@@ -151,7 +151,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a limit is applied when extracting elements from a collection.
      */
     @Test
-    public void testFlattenCollectionWithLimit() {
+    void testFlattenCollectionWithLimit() {
         final Collection<Object> src = Arrays.asList(VALUES);
         final Collection<?> res = handler.flatten(src, 1);
         assertEquals(1, res.size());
@@ -162,7 +162,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether the values of an array can be extracted.
      */
     @Test
-    public void testParseArray() {
+    void testParseArray() {
         checkIterator(handler.parse(VALUES));
     }
 
@@ -170,7 +170,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether the values of an Iterable object can be extracted.
      */
     @Test
-    public void testParseIterable() {
+    void testParseIterable() {
         checkIterator(handler.parse(Arrays.asList(VALUES)));
     }
 
@@ -178,7 +178,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether the values of an Iterator object can be extracted.
      */
     @Test
-    public void testParseIterator() {
+    void testParseIterator() {
         checkIterator(handler.parse(Arrays.asList(VALUES).iterator()));
     }
 
@@ -186,7 +186,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a null value can be parsed.
      */
     @Test
-    public void testParseNull() {
+    void testParseNull() {
         assertFalse(handler.parse(null).iterator().hasNext());
     }
 
@@ -194,7 +194,7 @@ public class TestDisabledListDelimiterHandler {
      * Tests whether a simple string value can be parsed.
      */
     @Test
-    public void testParseSimpleValue() {
+    void testParseSimpleValue() {
         final Iterator<?> it = handler.parse(STR_VALUE).iterator();
         assertEquals(STR_VALUE, it.next());
         assertFalse(it.hasNext());

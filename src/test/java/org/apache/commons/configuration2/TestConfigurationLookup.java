@@ -41,7 +41,7 @@ public class TestConfigurationLookup {
      * Tries to create an instance without a configuration.
      */
     @Test
-    public void testInitNoConfig() {
+    void testInitNoConfig() {
         assertThrows(IllegalArgumentException.class, () -> new ConfigurationLookup(null));
     }
 
@@ -49,7 +49,7 @@ public class TestConfigurationLookup {
      * Tests lookup() for a complex property value.
      */
     @Test
-    public void testLookupComplex() {
+    void testLookupComplex() {
         final int count = 5;
         final Configuration conf = new BaseConfiguration();
         for (int i = 0; i < count; i++) {
@@ -69,7 +69,7 @@ public class TestConfigurationLookup {
      * Tests lookup() if the variable cannot be resolved.
      */
     @Test
-    public void testLookupNotFound() {
+    void testLookupNotFound() {
         final Configuration conf = new BaseConfiguration();
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         assertNull(lookup.lookup(VAR));
@@ -79,7 +79,7 @@ public class TestConfigurationLookup {
      * Tests lookup() if the variable cannot be resolved, and the configuration throws an exception.
      */
     @Test
-    public void testLookupNotFoundEx() {
+    void testLookupNotFoundEx() {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setThrowExceptionOnMissing(true);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
@@ -90,7 +90,7 @@ public class TestConfigurationLookup {
      * Tests whether an existing variable can be resolved.
      */
     @Test
-    public void testLookupSuccess() {
+    void testLookupSuccess() {
         final Configuration conf = new BaseConfiguration();
         conf.addProperty(VAR, VALUE);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);

@@ -40,7 +40,7 @@ public class TestStrictConfigurationComparator {
      * Tests the comparator.
      */
     @Test
-    public void testCompare() {
+    void testCompare() {
         // Identity comparison for empty configuration
         assertTrue(comparator.compare(configuration, configuration));
 
@@ -70,7 +70,7 @@ public class TestStrictConfigurationComparator {
     }
 
     @Test
-    public void testCompareNull() {
+    void testCompareNull() {
         assertTrue(comparator.compare(null, null));
         assertFalse(comparator.compare(configuration, null));
         assertFalse(comparator.compare(null, configuration));

@@ -44,7 +44,7 @@ public class TestFileSystemLocationStrategy {
      * Tests a locate() operation.
      */
     @Test
-    public void testLocate() {
+    void testLocate() {
         final FileSystem fs = mock(FileSystem.class);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final String basePath = "testBasePath";

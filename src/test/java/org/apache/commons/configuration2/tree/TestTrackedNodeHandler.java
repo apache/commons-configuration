@@ -55,7 +55,7 @@ public class TestTrackedNodeHandler {
      * Tests whether a parent node can be queried.
      */
     @Test
-    public void testGetParent() {
+    void testGetParent() {
         final ImmutableNode node = new ImmutableNode.Builder().name("node").create();
         final ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
 
@@ -71,7 +71,7 @@ public class TestTrackedNodeHandler {
      * Tests whether the correct root node is returned.
      */
     @Test
-    public void testGetRootNode() {
+    void testGetRootNode() {
         assertSame(root, handler.getRootNode());
     }
 }

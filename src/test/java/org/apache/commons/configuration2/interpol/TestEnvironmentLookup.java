@@ -40,7 +40,7 @@ public class TestEnvironmentLookup {
      * Tests whether environment variables can be queried.
      */
     @Test
-    public void testLookup() {
+    void testLookup() {
         for (final Map.Entry<String, String> e : System.getenv().entrySet()) {
             assertEquals(e.getValue(), lookup.lookup(e.getKey()), "Wrong value for " + e.getKey());
         }
@@ -50,7 +50,7 @@ public class TestEnvironmentLookup {
      * Tries to lookup a non existing property.
      */
     @Test
-    public void testLookupNonExisting() {
+    void testLookupNonExisting() {
         assertNull(lookup.lookup("a non existing variable!"));
     }
 }

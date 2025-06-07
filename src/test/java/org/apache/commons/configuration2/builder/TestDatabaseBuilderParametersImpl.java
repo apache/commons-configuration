@@ -44,7 +44,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testBeanProperties() throws Exception {
+    void testBeanProperties() throws Exception {
         BeanHelper.setProperty(params, "table", "testTable");
         BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
         final Map<String, Object> map = params.getParameters();
@@ -56,7 +56,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the auto commit flag can be set.
      */
     @Test
-    public void testSetAutoCommit() {
+    void testSetAutoCommit() {
         assertSame(params, params.setAutoCommit(true));
         assertEquals(Boolean.TRUE, params.getParameters().get("autoCommit"));
     }
@@ -65,7 +65,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the configuration name can be set.
      */
     @Test
-    public void testSetConfigurationName() {
+    void testSetConfigurationName() {
         final String confName = "TestConfiguration";
         assertSame(params, params.setConfigurationName(confName));
         assertEquals(confName, params.getParameters().get("configurationName"));
@@ -75,7 +75,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the configuration name column can be set.
      */
     @Test
-    public void testSetConfigurationNameColumn() {
+    void testSetConfigurationNameColumn() {
         final String colName = "CONFIG_COLUMN";
         assertSame(params, params.setConfigurationNameColumn(colName));
         assertEquals(colName, params.getParameters().get("configurationNameColumn"));
@@ -85,7 +85,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the data source property can be set.
      */
     @Test
-    public void testSetDataSource() {
+    void testSetDataSource() {
         final DataSource src = mock(DataSource.class);
         assertSame(params, params.setDataSource(src));
         assertSame(src, params.getParameters().get("dataSource"));
@@ -95,7 +95,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the key column name can be set.
      */
     @Test
-    public void testSetKeyColumn() {
+    void testSetKeyColumn() {
         final String colName = "KEY_COLUMN";
         assertSame(params, params.setKeyColumn(colName));
         assertEquals(colName, params.getParameters().get("keyColumn"));
@@ -105,7 +105,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the table name can be set.
      */
     @Test
-    public void testSetTable() {
+    void testSetTable() {
         final String table = "TestTable";
         assertSame(params, params.setTable(table));
         assertEquals(table, params.getParameters().get("table"));
@@ -115,7 +115,7 @@ public class TestDatabaseBuilderParametersImpl {
      * Tests whether the value column name can be set.
      */
     @Test
-    public void testSetValueColumn() {
+    void testSetValueColumn() {
         final String colName = "VALUE_COLUMN";
         assertSame(params, params.setValueColumn(colName));
         assertEquals(colName, params.getParameters().get("valueColumn"));

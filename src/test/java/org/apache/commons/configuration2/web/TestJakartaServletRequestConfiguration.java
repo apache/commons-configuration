@@ -105,7 +105,7 @@ public class TestJakartaServletRequestConfiguration extends TestAbstractConfigur
      * Tests a list with elements that contain an escaped list delimiter.
      */
     @Test
-    public void testListWithEscapedElements() {
+    void testListWithEscapedElements() {
         final String[] values = {"test1", "test2\\,test3", "test4\\,test5"};
         final String listKey = "test.list";
 

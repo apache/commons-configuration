@@ -180,7 +180,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether configuration listeners can be added.
      */
     @Test
-    public void testAddConfigurationListener() throws ConfigurationException {
+    void testAddConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = createEventListener();
         final EventListener<ConfigurationEvent> l2 = createEventListener();
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
@@ -196,7 +196,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether additional parameters can be added.
      */
     @Test
-    public void testAddParameters() {
+    void testAddParameters() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         final Map<String, Object> params = createTestParameters();
@@ -211,7 +211,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether null parameters are handled correctly by addParameters().
      */
     @Test
-    public void testAddParametersNull() {
+    void testAddParametersNull() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         final Map<String, Object> params = builder.getParameters();
@@ -223,7 +223,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a configured BeanHelper is used for result creation.
      */
     @Test
-    public void testBeanHelperInConfiguration() throws ConfigurationException {
+    void testBeanHelperInConfiguration() throws ConfigurationException {
         final Set<Class<?>> classesPassedToFactory = new HashSet<>();
         final BeanFactory factory = new DefaultBeanFactory() {
             @Override
@@ -243,7 +243,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether parameters can be set using the configure() method.
      */
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new BasicBuilderParameters().setListDelimiterHandler(listHandler).setThrowExceptionOnMissing(true));
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
@@ -254,7 +254,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a builder can be connected to a reloading controller.
      */
     @Test
-    public void testConnectToReloadingController() throws ConfigurationException {
+    void testConnectToReloadingController() throws ConfigurationException {
         final ReloadingDetector detector = mock(ReloadingDetector.class);
         final ReloadingController controller = new ReloadingController(detector);
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
@@ -277,7 +277,7 @@ public class TestBasicConfigurationBuilder {
      * Tries to connect to a null reloading controller.
      */
     @Test
-    public void testConnectToReloadingControllerNull() {
+    void testConnectToReloadingControllerNull() {
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         assertThrows(IllegalArgumentException.class, () -> builder.connectToReloadingController(null));
     }
@@ -286,7 +286,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether event listeners can be copied to another builder.
      */
     @Test
-    public void testCopyEventListeners() throws ConfigurationException {
+    void testCopyEventListeners() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = createEventListener();
         final EventListener<ConfigurationEvent> l2 = createEventListener();
         final EventListener<ConfigurationErrorEvent> l3 = new ErrorListenerTestImpl(null);
@@ -313,7 +313,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether configuration listeners can be defined via the configure() method.
      */
     @Test
-    public void testEventListenerConfiguration() throws ConfigurationException {
+    void testEventListenerConfiguration() throws ConfigurationException {
         final EventListenerTestImpl listener1 = new EventListenerTestImpl(null);
         final EventListenerRegistrationData<ConfigurationErrorEvent> regData = new EventListenerRegistrationData<>(ConfigurationErrorEvent.WRITE,
             new ErrorListenerTestImpl(null));
@@ -328,7 +328,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether the builder can create a correctly initialized configuration object.
      */
     @Test
-    public void testGetConfiguration() throws ConfigurationException {
+    void testGetConfiguration() throws ConfigurationException {
         final PropertiesConfiguration config = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new BasicBuilderParameters().setListDelimiterHandler(listHandler).setThrowExceptionOnMissing(true)).getConfiguration();
         assertTrue(config.isThrowExceptionOnMissing());
@@ -339,7 +339,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether the builder can be accessed by multiple threads and that only a single result object is produced.
      */
     @Test
-    public void testGetConfigurationConcurrently() throws Exception {
+    void testGetConfigurationConcurrently() throws Exception {
         final int threadCount = 32;
         final CountDownLatch startLatch = new CountDownLatch(1);
         final CountDownLatch endLatch = new CountDownLatch(threadCount);
@@ -362,7 +362,7 @@ public class TestBasicConfigurationBuilder {
      * Tests that the map with parameters cannot be modified.
      */
     @Test
-    public void testGetParametersModify() {
+    void testGetParametersModify() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         final Map<String, Object> parameters = builder.getParameters();
@@ -373,7 +373,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a check for the correct bean class is made.
      */
     @Test
-    public void testGetResultDeclarationInvalidBeanClass() {
+    void testGetResultDeclarationInvalidBeanClass() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class,
             createTestParameters()) {
             @Override
@@ -388,7 +388,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a configuration implementing {@code Initializable} is correctly handled.
      */
     @Test
-    public void testInitializableCalled() throws ConfigurationException {
+    void testInitializableCalled() throws ConfigurationException {
         final BasicConfigurationBuilder<InitializableConfiguration> builder = new BasicConfigurationBuilder<>(InitializableConfiguration.class);
         builder.configure(new BasicBuilderParameters().setThrowExceptionOnMissing(true));
         final InitializableConfiguration config = builder.getConfiguration();
@@ -399,7 +399,7 @@ public class TestBasicConfigurationBuilder {
      * Tests an exception during configuration initialization if the allowFailOnInit flag is true.
      */
     @Test
-    public void testInitializationErrorAllowed() throws ConfigurationException {
+    void testInitializationErrorAllowed() throws ConfigurationException {
         final BasicConfigurationBuilderInitFailImpl builder = new BasicConfigurationBuilderInitFailImpl(true);
         final PropertiesConfiguration config = builder.getConfiguration();
         assertTrue(config.isEmpty());
@@ -409,7 +409,7 @@ public class TestBasicConfigurationBuilder {
      * Tests an exception during configuration initialization if the allowFailOnInit flag is false.
      */
     @Test
-    public void testInitializationErrorNotAllowed() {
+    void testInitializationErrorNotAllowed() {
         final BasicConfigurationBuilderInitFailImpl builder = new BasicConfigurationBuilderInitFailImpl(false);
         assertThrows(ConfigurationException.class, builder::getConfiguration);
     }
@@ -418,7 +418,7 @@ public class TestBasicConfigurationBuilder {
      * Tries to create an instance without a result class.
      */
     @Test
-    public void testInitNoClass() {
+    void testInitNoClass() {
         assertThrows(IllegalArgumentException.class, () -> new BasicConfigurationBuilder<Configuration>(null));
     }
 
@@ -426,7 +426,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether initialization parameters can be passed to the constructor.
      */
     @Test
-    public void testInitWithParameters() {
+    void testInitWithParameters() {
         final Map<String, Object> params = createTestParameters();
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params);
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
@@ -437,7 +437,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a copy of the passed in parameters is created.
      */
     @Test
-    public void testInitWithParametersDefensiveCopy() {
+    void testInitWithParametersDefensiveCopy() {
         final Map<String, Object> params = createTestParameters();
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params);
         params.put("anotherParameter", "value");
@@ -449,7 +449,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether null parameters are handled correctly.
      */
     @Test
-    public void testInitWithParametersNull() {
+    void testInitWithParametersNull() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, null);
         assertTrue(builder.getParameters().isEmpty());
     }
@@ -458,7 +458,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether configuration listeners can be removed.
      */
     @Test
-    public void testRemoveConfigurationListener() throws ConfigurationException {
+    void testRemoveConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = createEventListener();
         final EventListener<ConfigurationEvent> l2 = createEventListener();
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
@@ -477,7 +477,7 @@ public class TestBasicConfigurationBuilder {
      * reset.
      */
     @Test
-    public void testRemoveConfigurationListenersOnReset() throws ConfigurationException {
+    void testRemoveConfigurationListenersOnReset() throws ConfigurationException {
         final EventListenerTestImpl listener = new EventListenerTestImpl(null);
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new EventListenerParameters().addEventListener(ConfigurationEvent.ANY, listener));
@@ -491,7 +491,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether parameters starting with a reserved prefix are filtered out before result objects are initialized.
      */
     @Test
-    public void testReservedParameter() throws ConfigurationException {
+    void testReservedParameter() throws ConfigurationException {
         final Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
         params.put("config-test", "a test");
@@ -504,7 +504,7 @@ public class TestBasicConfigurationBuilder {
      * Tests a full reset of the builder.
      */
     @Test
-    public void testReset() throws ConfigurationException {
+    void testReset() throws ConfigurationException {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         final PropertiesConfiguration config = builder.getConfiguration();
@@ -518,7 +518,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether all parameters can be reset.
      */
     @Test
-    public void testResetParameters() {
+    void testResetParameters() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         builder.resetParameters();
@@ -529,7 +529,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether a reset of the result object can be performed.
      */
     @Test
-    public void testResetResult() throws ConfigurationException {
+    void testResetResult() throws ConfigurationException {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         final PropertiesConfiguration config = builder.getConfiguration();
@@ -543,7 +543,7 @@ public class TestBasicConfigurationBuilder {
      * Tests whether new parameters can be set to replace existing ones.
      */
     @Test
-    public void testSetParameters() {
+    void testSetParameters() {
         final Map<String, Object> params1 = new HashMap<>();
         params1.put("someParameter", "value");
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params1);

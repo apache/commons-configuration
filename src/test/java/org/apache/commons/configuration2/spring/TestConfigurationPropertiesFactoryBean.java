@@ -48,12 +48,12 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testAfterPropertiesSet() throws Exception {
+    void testAfterPropertiesSet() throws Exception {
         assertThrows(IllegalArgumentException.class, configurationFactory::afterPropertiesSet);
     }
 
     @Test
-    public void testGetConfigurationDefensiveCopy() {
+    void testGetConfigurationDefensiveCopy() {
         final Configuration[] configs = {new PropertiesConfiguration(), new XMLConfiguration()};
         configurationFactory.setConfigurations(configs);
 
@@ -63,7 +63,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testGetLocationsDefensiveCopy() {
+    void testGetLocationsDefensiveCopy() {
         final Resource[] locations = {new ClassPathResource("f1"), new ClassPathResource("f2")};
         configurationFactory.setLocations(locations);
 
@@ -73,7 +73,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testGetObject() throws Exception {
+    void testGetObject() throws Exception {
         configurationFactory.setConfigurations(new BaseConfiguration());
         assertNull(configurationFactory.getObject());
         configurationFactory.afterPropertiesSet();
@@ -81,14 +81,14 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testInitialConfiguration() throws Exception {
+    void testInitialConfiguration() throws Exception {
         configurationFactory = new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
         assertNotNull(configurationFactory.getConfiguration());
     }
 
     @Test
-    public void testLoadResources() throws Exception {
+    void testLoadResources() throws Exception {
         configurationFactory.setLocations(new ClassPathResource("testConfigurationFactoryBean.file"));
         configurationFactory.setConfigurations(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
@@ -98,7 +98,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testMergeConfigurations() throws Exception {
+    void testMergeConfigurations() throws Exception {
         final Configuration one = new BaseConfiguration();
         one.setProperty("foo", "bar");
         final String properties = "## some header \n" + "foo = bar1\n" + "bar = foo\n";
@@ -115,7 +115,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testSetConfigurationsDefensiveCopy() {
+    void testSetConfigurationsDefensiveCopy() {
         final Configuration[] configs = {new PropertiesConfiguration(), new XMLConfiguration()};
         final Configuration[] configsUpdate = configs.clone();
 
@@ -125,7 +125,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testSetLocationsDefensiveCopy() {
+    void testSetLocationsDefensiveCopy() {
         final Resource[] locations = {new ClassPathResource("f1"), new ClassPathResource("f2")};
         final Resource[] locationsUpdate = locations.clone();
 
@@ -135,7 +135,7 @@ public class TestConfigurationPropertiesFactoryBean {
     }
 
     @Test
-    public void testSetLocationsNull() {
+    void testSetLocationsNull() {
         configurationFactory.setLocations(null);
         assertNull(configurationFactory.getLocations());
     }

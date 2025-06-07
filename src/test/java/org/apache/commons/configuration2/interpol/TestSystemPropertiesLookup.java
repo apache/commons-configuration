@@ -40,7 +40,7 @@ public class TestSystemPropertiesLookup {
      * Tests whether system properties can be looked up.
      */
     @Test
-    public void testLookupProperties() {
+    void testLookupProperties() {
         for (final Map.Entry<Object, Object> e : System.getProperties().entrySet()) {
             assertEquals(e.getValue(), lookup.lookup(String.valueOf(e.getKey())), "Wrong property value for " + e.getKey());
         }
@@ -50,7 +50,7 @@ public class TestSystemPropertiesLookup {
      * Tests whether an unknown property is handled correctly.
      */
     @Test
-    public void testLookupUnknownProperty() {
+    void testLookupUnknownProperty() {
         assertNull(lookup.lookup("a non existing system property!"));
     }
 }

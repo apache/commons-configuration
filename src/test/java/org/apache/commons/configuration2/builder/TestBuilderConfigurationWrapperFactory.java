@@ -63,7 +63,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests whether the returned configuration correctly wraps the builder.
      */
     @Test
-    public void testConfigurationBuilderWrapper() {
+    void testConfigurationBuilderWrapper() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         conf.addProperty("test1", "value1");
@@ -79,7 +79,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tries to create a wrapper without passing a builder.
      */
     @Test
-    public void testCreateBuilderConfigurationWrapperNoBuilder() {
+    void testCreateBuilderConfigurationWrapperNoBuilder() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         assertThrows(IllegalArgumentException.class, () -> factory.createBuilderConfigurationWrapper(Configuration.class, null));
     }
@@ -88,7 +88,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tries to create a wrapper without passing an interface class.
      */
     @Test
-    public void testCreateBuilderConfigurationWrapperNoClass() {
+    void testCreateBuilderConfigurationWrapperNoClass() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(new BaseHierarchicalConfiguration());
         assertThrows(IllegalArgumentException.class, () -> factory.createBuilderConfigurationWrapper(null, builder));
@@ -100,7 +100,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests the default event source support level.
      */
     @Test
-    public void testDefaultEventSourceSupport() {
+    void testDefaultEventSourceSupport() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         assertEquals(EventSourceSupport.NONE, factory.getEventSourceSupport());
     }
@@ -109,7 +109,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests whether EventSource methods can be delegated to the builder.
      */
     @Test
-    public void testEventSourceSupportBuilder() throws ConfigurationException {
+    void testEventSourceSupportBuilder() throws ConfigurationException {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         final EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
         final EventListener<ConfigurationEvent> l2 = new EventListenerTestImpl(null);
@@ -130,7 +130,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests the EventSource support level 'dummy'.
      */
     @Test
-    public void testEventSourceSupportDummy() {
+    void testEventSourceSupportDummy() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.DUMMY);
@@ -144,7 +144,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests whether event source support of level builder is possible even for a mock builder.
      */
     @Test
-    public void testEventSourceSupportMockBuilder() {
+    void testEventSourceSupportMockBuilder() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         final EventListenerTestImpl listener = new EventListenerTestImpl(null);
@@ -161,7 +161,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Tests the factory if support for EventSource is disabled.
      */
     @Test
-    public void testEventSourceSupportNone() {
+    void testEventSourceSupportNone() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();

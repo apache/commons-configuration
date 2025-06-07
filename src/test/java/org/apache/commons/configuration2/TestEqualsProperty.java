@@ -30,7 +30,7 @@ public class TestEqualsProperty {
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Test
-    public void testEquals() throws Exception {
+    void testEquals() throws Exception {
         final PropertiesConfiguration conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.setFileName(testProperties);

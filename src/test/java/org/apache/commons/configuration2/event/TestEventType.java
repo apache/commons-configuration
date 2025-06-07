@@ -37,7 +37,7 @@ public class TestEventType {
      * Tests the string representation.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final String s = eventType.toString();
         assertEquals("EventType [ TEST ]", s);
     }

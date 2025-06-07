@@ -56,7 +56,7 @@ public class TestConstantLookup {
      * Tests accessing the cache by querying a variable twice.
      */
     @Test
-    public void testLookupCache() {
+    void testLookupCache() {
         testLookupConstant();
         testLookupConstant();
     }
@@ -65,7 +65,7 @@ public class TestConstantLookup {
      * Tests resolving a valid constant.
      */
     @Test
-    public void testLookupConstant() {
+    void testLookupConstant() {
         assertEquals(FIELD, lookup.lookup(variable("FIELD")));
     }
 
@@ -73,7 +73,7 @@ public class TestConstantLookup {
      * Tries to resolve a variable with an invalid syntax: The name does not contain a dot as a field separator.
      */
     @Test
-    public void testLookupInvalidSyntax() {
+    void testLookupInvalidSyntax() {
         assertNull(lookup.lookup("InvalidVariableName"));
     }
 
@@ -81,7 +81,7 @@ public class TestConstantLookup {
      * Tests resolving a non existing constant. Result should be null.
      */
     @Test
-    public void testLookupNonExisting() {
+    void testLookupNonExisting() {
         assertNull(lookup.lookup(variable("NO_FIELD")));
     }
 
@@ -89,7 +89,7 @@ public class TestConstantLookup {
      * Tests resolving a non string constant. Then looks the same variable up from the cache.
      */
     @Test
-    public void testLookupNonStringFromCache() {
+    void testLookupNonStringFromCache() {
         final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
         final Object expected = KeyEvent.VK_ESCAPE;
         assertEquals(expected, lookup.lookup(var));
@@ -100,7 +100,7 @@ public class TestConstantLookup {
      * Tests looking up a null variable.
      */
     @Test
-    public void testLookupNull() {
+    void testLookupNull() {
         assertNull(lookup.lookup(null));
     }
 
@@ -108,7 +108,7 @@ public class TestConstantLookup {
      * Tests resolving a private constant. Because a private field cannot be accessed this should again yield null.
      */
     @Test
-    public void testLookupPrivate() {
+    void testLookupPrivate() {
         assertNull(lookup.lookup(variable("PRIVATE_FIELD")));
     }
 
@@ -116,7 +116,7 @@ public class TestConstantLookup {
      * Tests resolving a field from an unknown class.
      */
     @Test
-    public void testLookupUnknownClass() {
+    void testLookupUnknownClass() {
         assertNull(lookup.lookup("org.apache.commons.configuration.NonExistingConfig." + FIELD));
     }
 

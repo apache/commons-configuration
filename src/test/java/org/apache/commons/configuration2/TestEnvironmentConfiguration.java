@@ -43,7 +43,7 @@ public class TestEnvironmentConfiguration {
      * Tries to add another property. This should cause an exception.
      */
     @Test
-    public void testAddProperty() {
+    void testAddProperty() {
         assertThrows(UnsupportedOperationException.class, () -> config.addProperty("JAVA_HOME", "C:\\java"));
     }
 
@@ -51,7 +51,7 @@ public class TestEnvironmentConfiguration {
      * Tests removing all properties. This should not be possible.
      */
     @Test
-    public void testClear() {
+    void testClear() {
         assertThrows(UnsupportedOperationException.class, config::clear);
     }
 
@@ -59,7 +59,7 @@ public class TestEnvironmentConfiguration {
      * Tests removing properties. This should not be possible.
      */
     @Test
-    public void testClearProperty() {
+    void testClearProperty() {
         final String key = config.getKeys().next();
         assertThrows(UnsupportedOperationException.class, () -> config.clearProperty(key));
     }
@@ -69,7 +69,7 @@ public class TestEnvironmentConfiguration {
      * set in each environment.)
      */
     @Test
-    public void testInit() {
+    void testInit() {
         boolean found = false;
         assertFalse(config.isEmpty());
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
@@ -85,7 +85,7 @@ public class TestEnvironmentConfiguration {
      * Tries to set the value of a property. This should cause an exception.
      */
     @Test
-    public void testSetProperty() {
+    void testSetProperty() {
         assertThrows(UnsupportedOperationException.class, () -> config.setProperty("JAVA_HOME", "C:\\java"));
     }
 }

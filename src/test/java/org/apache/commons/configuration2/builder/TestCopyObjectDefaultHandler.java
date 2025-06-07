@@ -34,7 +34,7 @@ public class TestCopyObjectDefaultHandler {
      * Tests whether a base type can be initialized with default values. Unknown properties should silently be ignored.
      */
     @Test
-    public void testInitializeDefaultsBaseType() {
+    void testInitializeDefaultsBaseType() {
         final Long refresh = 50000L;
         final XMLBuilderParametersImpl paramsXml = new XMLBuilderParametersImpl();
         paramsXml.setValidating(true).setExpressionEngine(mock(ExpressionEngine.class)).setReloadingRefreshDelay(refresh);
@@ -48,7 +48,7 @@ public class TestCopyObjectDefaultHandler {
      * Tests whether exceptions during copying are re-thrown as runtime exceptions.
      */
     @Test
-    public void testInitializeDefaultsException() {
+    void testInitializeDefaultsException() {
         final ExpressionEngine engine = mock(ExpressionEngine.class);
         final XMLBuilderParametersImpl source = new XMLBuilderParametersImpl();
         source.setExpressionEngine(engine);
@@ -67,7 +67,7 @@ public class TestCopyObjectDefaultHandler {
      * Tests whether default values can be copied onto an object of the same type.
      */
     @Test
-    public void testInitializeDefaultsSameType() {
+    void testInitializeDefaultsSameType() {
         final Long refresh = 50000L;
         final FileBasedBuilderParametersImpl source = new FileBasedBuilderParametersImpl();
         source.setReloadingRefreshDelay(refresh).setThrowExceptionOnMissing(true);
@@ -83,7 +83,7 @@ public class TestCopyObjectDefaultHandler {
      * Tries to create an instance without a source object.
      */
     @Test
-    public void testInitNull() {
+    void testInitNull() {
         assertThrows(IllegalArgumentException.class, () -> new CopyObjectDefaultHandler(null));
     }
 }

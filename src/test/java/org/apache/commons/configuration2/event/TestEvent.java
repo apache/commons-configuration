@@ -29,7 +29,7 @@ public class TestEvent {
      * Tries to create an instance without a source.
      */
     @Test
-    public void testInitNoSource() {
+    void testInitNoSource() {
         assertThrows(IllegalArgumentException.class, () -> new Event(null, Event.ANY));
     }
 
@@ -37,7 +37,7 @@ public class TestEvent {
      * Tries to create an instance without a type.
      */
     @Test
-    public void testInitNoType() {
+    void testInitNoType() {
         assertThrows(IllegalArgumentException.class, () -> new Event(this, null));
     }
 
@@ -45,7 +45,7 @@ public class TestEvent {
      * Tests the string representation.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final Event event = new Event(this, Event.ANY);
         final String s = event.toString();
         assertEquals("Event [ source=" + this + " eventType=" + Event.ANY + " ]", s);

@@ -28,7 +28,7 @@ public class TestDummyLookup {
      * Tests the lookup() method.
      */
     @Test
-    public void testLookup() {
+    void testLookup() {
         assertNull(DummyLookup.INSTANCE.lookup("someVariable"));
         assertNull(DummyLookup.INSTANCE.lookup(null));
     }

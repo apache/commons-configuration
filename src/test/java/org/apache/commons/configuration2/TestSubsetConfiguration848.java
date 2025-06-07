@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 public class TestSubsetConfiguration848 {
 
     @Test
-    public void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
+    void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
         try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);
@@ -66,7 +66,7 @@ public class TestSubsetConfiguration848 {
     }
 
     @Test
-    public void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
+    void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
         try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);

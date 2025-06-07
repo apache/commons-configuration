@@ -63,7 +63,7 @@ public class TestConfigurationSet {
      * Class under test for Iterator iterator()
      */
     @Test
-    public void testIterator() {
+    void testIterator() {
         final Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
             final Map.Entry<Object, Object> entry = iterator.next();
@@ -81,7 +81,7 @@ public class TestConfigurationSet {
     }
 
     @Test
-    public void testSize() {
+    void testSize() {
         assertEquals(properties.length, set.size());
     }
 }

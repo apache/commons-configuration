@@ -205,7 +205,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Tests concurrent access to a reloading builder for combined configurations.
      */
     @Test
-    public void testConcurrentGetAndReload() throws Exception {
+    void testConcurrentGetAndReload() throws Exception {
         final int threadCount = 4;
         final int loopCount = 100;
         final ReloadingDetectorFactory detectorFactory = (handler, params) -> new RandomReloadingDetector();
@@ -242,7 +242,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Tests whether the default definition builder is capable of detecting a change in the definition configuration.
      */
     @Test
-    public void testReloadDefinitionFileDefaultBuilder() throws ConfigurationException, IOException, InterruptedException {
+    void testReloadDefinitionFileDefaultBuilder() throws ConfigurationException, IOException, InterruptedException {
         final File defFile = newFile(tempFolder);
         builder.configure(parameters.combined().setDefinitionBuilderParameters(parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
         checkReloadDefinitionFile(defFile);
@@ -253,7 +253,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * definition configuration is provided.
      */
     @Test
-    public void testReloadDefinitionFileExplicitBuilder() throws ConfigurationException, IOException, InterruptedException {
+    void testReloadDefinitionFileExplicitBuilder() throws ConfigurationException, IOException, InterruptedException {
         final File defFile = newFile(tempFolder);
         builder.configure(parameters.combined().setDefinitionBuilder(
             new ReloadingFileBasedConfigurationBuilder<>(XMLConfiguration.class).configure(parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile))));
@@ -264,7 +264,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Tests whether a changed file is detected on disk.
      */
     @Test
-    public void testReloadFromFile() throws ConfigurationException, IOException {
+    void testReloadFromFile() throws ConfigurationException, IOException {
         final File xmlConf1 = writeReloadFile(null, 1, 0);
         final File xmlConf2 = writeReloadFile(null, 2, 0);
         final ReloadingDetectorFactory detectorFactory = (handler, params) -> new AlwaysReloadingDetector();

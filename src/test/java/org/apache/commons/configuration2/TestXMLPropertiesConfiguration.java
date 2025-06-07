@@ -66,7 +66,7 @@ public class TestXMLPropertiesConfiguration {
     public File tempFolder;
 
     @Test
-    public void testDOMLoad() throws Exception {
+    void testDOMLoad() throws Exception {
         // Edge case
         assertThrows(NullPointerException.class, () -> new XMLPropertiesConfiguration(null));
         // Normal case
@@ -87,7 +87,7 @@ public class TestXMLPropertiesConfiguration {
     }
 
     @Test
-    public void testDOMSave() throws Exception {
+    void testDOMSave() throws Exception {
         // load the configuration
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 
@@ -123,7 +123,7 @@ public class TestXMLPropertiesConfiguration {
     }
 
     @Test
-    public void testLoad() throws Exception {
+    void testLoad() throws Exception {
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
         assertEquals("Description of the property list", conf.getHeader());
 
@@ -134,7 +134,7 @@ public class TestXMLPropertiesConfiguration {
     }
 
     @Test
-    public void testSave() throws Exception {
+    void testSave() throws Exception {
         // load the configuration
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 

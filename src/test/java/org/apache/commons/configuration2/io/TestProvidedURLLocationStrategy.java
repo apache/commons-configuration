@@ -42,7 +42,7 @@ public class TestProvidedURLLocationStrategy {
      * Tests a failed locate() operation.
      */
     @Test
-    public void testLocateFail() {
+    void testLocateFail() {
         final FileSystem fs = mock(FileSystem.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
         assertNull(strategy.locate(fs, locator));
@@ -52,7 +52,7 @@ public class TestProvidedURLLocationStrategy {
      * Tests a successful locate() operation.
      */
     @Test
-    public void testLocateSuccess() {
+    void testLocateSuccess() {
         final FileSystem fs = mock(FileSystem.class);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();
