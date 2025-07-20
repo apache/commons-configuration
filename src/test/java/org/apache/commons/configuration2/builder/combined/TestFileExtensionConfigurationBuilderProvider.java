@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLPropertiesConfiguration;
@@ -30,6 +29,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -92,7 +92,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
     @Test
     void testDetermineConfigurationClassMatchCase() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
-        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT.toUpperCase(Locale.ROOT));
+        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + StringUtils.toRootUpperCase(EXT));
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
