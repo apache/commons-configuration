@@ -149,7 +149,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      */
     private FileBased fetchFileBased() throws ConfigurationException {
         if (!(config instanceof FileBased)) {
-            throw new ConfigurationException("Wrapped configuration does not implement FileBased!" + " No I/O operations are supported.");
+            throw new ConfigurationException("Wrapped configuration does not implement FileBased! No I/O operations are supported.");
         }
         return (FileBased) config;
     }

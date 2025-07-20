@@ -134,7 +134,7 @@ final class XMLListReference {
         try {
             return String.valueOf(delimiterHandler.escapeList(values, ListDelimiterHandler.NOOP_TRANSFORMER));
         } catch (final UnsupportedOperationException e) {
-            throw new ConfigurationRuntimeException("List handling not supported by " + "the current ListDelimiterHandler! Make sure that the same delimiter "
+            throw new ConfigurationRuntimeException("List handling not supported by the current ListDelimiterHandler! Make sure that the same delimiter "
                     + "handler is used for loading and saving the configuration.", e);
         }
     }

@@ -1380,7 +1380,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     private void loadIncludeFile(final String fileName, final boolean optional, final Deque<URL> seenStack) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Load operation not properly " + "initialized! Do not call read(InputStream) directly," + " but use a FileHandler to load a configuration.");
+                "Load operation not properly initialized! Do not call read(InputStream) directly, but use a FileHandler to load a configuration.");
         }
 
         URL url = locateIncludeFile(locator.getBasePath(), fileName);

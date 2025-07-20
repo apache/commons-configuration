@@ -1200,7 +1200,7 @@ public class TestPropertiesConfiguration {
 
     @Test
     void testMultilines() {
-        final String property = "This is a value spread out across several adjacent " + "natural lines by escaping the line terminator with "
+        final String property = "This is a value spread out across several adjacent natural lines by escaping the line terminator with "
             + "a backslash character.";
 
         assertEquals(property, conf.getString("test.multilines"));

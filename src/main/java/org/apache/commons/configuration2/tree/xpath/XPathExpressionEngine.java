@@ -304,7 +304,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
             final String token = tok.nextToken();
             if (PATH_DELIMITER.equals(token)) {
                 if (attr) {
-                    invalidPath(path, " contains an attribute" + " delimiter at a disallowed position.");
+                    invalidPath(path, " contains an attribute delimiter at a disallowed position.");
                 }
                 if (lastComponent == null) {
                     invalidPath(path, " contains a '/' at a disallowed position.");

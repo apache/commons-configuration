@@ -118,7 +118,7 @@ public final class QueryResult<T> {
      */
     public Object getAttributeValue(final NodeHandler<T> handler) {
         if (!isAttributeResult()) {
-            throw new IllegalStateException("This is not an attribute result! " + "Attribute value cannot be fetched.");
+            throw new IllegalStateException("This is not an attribute result! Attribute value cannot be fetched.");
         }
         return handler.getAttributeValue(getNode(), getAttributeName());
     }

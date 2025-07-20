@@ -1064,7 +1064,7 @@ public class TestINIConfiguration {
      */
     @Test
     void testValueWithSemicolon() throws ConfigurationException {
-        final String path = "C:\\Program Files\\jar\\manage.jar;" + "C:\\Program Files\\jar\\guiLauncher.jar";
+        final String path = "C:\\Program Files\\jar\\manage.jar;C:\\Program Files\\jar\\guiLauncher.jar";
         final String content = "[Environment]" + LINE_SEPARATOR + "Application Type=any" + LINE_SEPARATOR + "Class Path=" + path + "  ;comment" + LINE_SEPARATOR
             + "Path=" + path + "\t; another comment";
         final INIConfiguration config = setUpConfig(content);

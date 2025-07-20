@@ -695,7 +695,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     public void write(final Writer out) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Save operation not properly " + "initialized! Do not call write(Writer) directly," + " but use a FileHandler to save a configuration.");
+                "Save operation not properly initialized! Do not call write(Writer) directly, but use a FileHandler to save a configuration.");
         }
         final PrintWriter writer = new PrintWriter(out);
 

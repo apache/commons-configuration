@@ -209,7 +209,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
         if (keyIt.hasNext()) {
             if (!keyIt.isPropertyKey()) {
                 // Attribute keys can only appear as last elements of the path
-                throw new IllegalArgumentException("Invalid path for add operation: " + "Attribute key in the middle!");
+                throw new IllegalArgumentException("Invalid path for add operation: Attribute key in the middle!");
             }
             final int idx = keyIt.hasIndex() ? keyIt.getIndex() : handler.getMatchingChildrenCount(node, nameMatcher, keyPart) - 1;
             if (idx < 0 || idx >= handler.getMatchingChildrenCount(node, nameMatcher, keyPart)) {

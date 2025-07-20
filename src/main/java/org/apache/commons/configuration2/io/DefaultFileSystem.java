@@ -210,7 +210,7 @@ public class DefaultFileSystem extends FileSystem {
                 } catch (final Exception e) {
                     // simply ignore it and return null
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug(String.format("Could not determine URL for " + "basePath = %s, fileName = %s: %s", basePath, fileName, e));
+                        getLogger().debug(String.format("Could not determine URL for basePath = %s, fileName = %s: %s", basePath, fileName, e));
                     }
                 }
             }

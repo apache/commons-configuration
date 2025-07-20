@@ -185,7 +185,7 @@ public final class PropertyConverter {
             return toDuration(value);
         }
 
-        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")" + " can't be converted to a " + cls.getName() + " object");
+        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ") can't be converted to a " + cls.getName() + " object");
     }
 
     /**

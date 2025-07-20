@@ -39,8 +39,8 @@ import org.junit.jupiter.api.Test;
  */
 public class TestXMLListHandling {
     /** XML to be loaded by the configuration. */
-    private static final String SOURCE = "<config>" + "<values>a,b,c</values>" + "<split><value>1</value><value>2</value></split>"
-        + "<mixed><values>foo,blah</values><values>bar,baz</values></mixed>" + "</config>";
+    private static final String SOURCE = "<config>" + "<values>a,b,c</values><split><value>1</value><value>2</value></split>"
+        + "<mixed><values>foo,blah</values><values>bar,baz</values></mixed></config>";
 
     /** Key for the string property with multiple values. */
     private static final String KEY_VALUES = "values";

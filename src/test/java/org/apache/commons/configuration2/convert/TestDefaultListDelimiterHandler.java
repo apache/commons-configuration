@@ -69,7 +69,7 @@ public class TestDefaultListDelimiterHandler {
     void testEscapeList() {
         final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
         final List<String> data = Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
-        assertEquals("simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
+        assertEquals("simple_trans,Hello\\,world!_trans,\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
     }
 
     /**

@@ -110,7 +110,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private static void checkDefaultValueArray(final Class<?> cls, final Object defaultValue) {
         if (defaultValue != null && (!defaultValue.getClass().isArray() || !cls.isAssignableFrom(defaultValue.getClass().getComponentType()))) {
             throw new IllegalArgumentException(
-                "The type of the default value (" + defaultValue.getClass() + ")" + " is not an array of the specified class (" + cls + ")");
+                "The type of the default value (" + defaultValue.getClass() + ") is not an array of the specified class (" + cls + ")");
         }
     }
 
