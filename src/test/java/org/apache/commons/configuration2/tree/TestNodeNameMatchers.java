@@ -19,8 +19,7 @@ package org.apache.commons.configuration2.tree;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Locale;
-
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -67,8 +66,8 @@ public class TestNodeNameMatchers {
     void testEqualsIgnoreCaseMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ROOT)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, StringUtils.toRootLowerCase(NODE_NAME)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, StringUtils.toRootUpperCase(NODE_NAME)));
     }
 
     /**
@@ -104,7 +103,7 @@ public class TestNodeNameMatchers {
     void testEqualsNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
-        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
+        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, StringUtils.toRootLowerCase(NODE_NAME)));
     }
 
     /**
