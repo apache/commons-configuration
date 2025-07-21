@@ -67,10 +67,15 @@ public class TestXPathExpressionEngineInConfig {
      */
     @Test
     void testPropertiesWithNamespace() throws ConfigurationException {
-        final String xml = "<Config>\n" + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
+        // @formatter:off
+        final String xml = "<Config>\n"
+            + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
             + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/1999/REC-xpath-19991116\">\n"
-            + "    <dsig:XPath xmlns:ietf=\"http://www.ietf.org\" xmlns:pl=\"http://test.test\">self::pl:policy1</dsig:XPath>\n" + "  </dsig:Transform>\n"
-            + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n" + "</dsig:Transforms>" + "</Config>";
+            + "    <dsig:XPath xmlns:ietf=\"http://www.ietf.org\" xmlns:pl=\"http://test.test\">self::pl:policy1</dsig:XPath>\n"
+            + "  </dsig:Transform>\n"
+            + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n"
+            + "</dsig:Transforms></Config>";
+        // @formatter:on
         final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(xml));
 

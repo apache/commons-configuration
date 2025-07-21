@@ -798,7 +798,11 @@ public class TestINIConfiguration {
      */
     @Test
     void testMergeDuplicateSection() throws ConfigurationException, IOException {
-        final String data = "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
+        // @formatter:off
+        final String data =
+                  "[section]\nvar1 = sec1\n\n"
+                + "[section]\nvar2 = sec2\n";
+        // @formatter:on
         final INIConfiguration config = setUpConfig(data);
         assertEquals("sec1", config.getString("section.var1"));
         assertEquals("sec2", config.getString("section.var2"));

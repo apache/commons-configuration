@@ -101,7 +101,11 @@ public class TestConfigurationPropertiesFactoryBean {
     void testMergeConfigurations() throws Exception {
         final Configuration one = new BaseConfiguration();
         one.setProperty("foo", "bar");
-        final String properties = "## some header \n" + "foo = bar1\n" + "bar = foo\n";
+        // @formatter:off
+        final String properties = "## some header \n"
+                + "foo = bar1\n"
+                + "bar = foo\n";
+        // @formatter:on
 
         final PropertiesConfiguration two = new PropertiesConfiguration();
         final PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
