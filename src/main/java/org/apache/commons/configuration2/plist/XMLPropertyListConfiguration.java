@@ -617,21 +617,14 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         } else if (value instanceof ImmutableConfiguration) {
             // display a flat Configuration as a dictionary
             out.println(padding + "<dict>");
-
             final ImmutableConfiguration config = (ImmutableConfiguration) value;
-            final Iterator<String> it = config.getKeys();
-            while (it.hasNext()) {
+            config.forEach((k, v) -> {
                 // create a node for each property
-                final String key = it.next();
-                final ImmutableNode node = new ImmutableNode.Builder().name(key).value(config.getProperty(key)).create();
-
+                final ImmutableNode node = new ImmutableNode.Builder().name(k).value(v).create();
                 // print the node
                 printNode(out, indentLevel + 1, node);
-
-                if (it.hasNext()) {
-                    out.println();
-                }
-            }
+                out.println();
+            });
             out.println(padding + "</dict>");
         } else if (value instanceof Map) {
             // display a Map as a dictionary

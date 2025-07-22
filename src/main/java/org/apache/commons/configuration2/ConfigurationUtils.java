@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
-import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.Event;
@@ -112,7 +112,7 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void append(final ImmutableConfiguration source, final Configuration target) {
-        source.getKeys().forEachRemaining(key -> target.addProperty(key, source.getProperty(key)));
+        source.forEach(target::addProperty);
     }
 
     /**
@@ -319,7 +319,7 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void copy(final ImmutableConfiguration source, final Configuration target) {
-        source.getKeys().forEachRemaining(key -> target.setProperty(key, source.getProperty(key)));
+        source.forEach(target::setProperty);
     }
 
     /**
@@ -376,16 +376,15 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void dump(final ImmutableConfiguration configuration, final PrintWriter out) {
-        for (final Iterator<String> keys = configuration.getKeys(); keys.hasNext();) {
-            final String key = keys.next();
-            final Object value = configuration.getProperty(key);
-            out.print(key);
+        AtomicInteger last = new AtomicInteger(configuration.size());
+        configuration.forEach((k, v) -> {
+            out.print(k);
             out.print("=");
-            out.print(value);
-            if (keys.hasNext()) {
+            out.print(v);
+            if (last.decrementAndGet() > 0) {
                 out.println();
             }
-        }
+        });
         out.flush();
     }
 

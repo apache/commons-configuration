@@ -23,13 +23,15 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.12.1" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+    <release version="2.13.0" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "throwExceptionOnMissing" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.AbstractConfiguration] At AbstractConfiguration.java:[line 1493] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "forceSingleLine" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.PropertiesConfigurationLayout] At PropertiesConfigurationLayout.java:[line 821] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
       <action type="fix" dev="ggregory" due-to="Willy van Diepen, Gary Gregory, Rob Tompkins" issue="CONFIGURATION-849">Fix undoubling of strings #569.</action>
       <action type="fix" dev="ggregory" due-to="Robbie Gemmell, Justin Bertram, Gary Gregory" issue="CONFIGURATION-852">Mark the package jakarta.servlet.* import as optional in OSGi #574.</action>
       <!-- ADD -->
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.ImmutableConfiguration.entrySet().</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.ImmutableConfiguration.forEach(BiConsumer&lt;String, Object&gt;).</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 81 to 85.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.19.1 #565.</action>

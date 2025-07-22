@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,12 +35,14 @@ import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 /**
- * A test class for the synchronization capabilities of {@code AbstractConfiguration}. This class mainly checks the
- * collaboration between a configuration object and its {@code Synchronizer}.
+ * A test class for the synchronization capabilities of {@code AbstractConfiguration}. This class mainly checks the collaboration between a configuration object
+ * and its {@code Synchronizer}.
  */
 public class TestAbstractConfigurationSynchronization {
+
     /** Constant for the test property accessed by all tests. */
     private static final String PROP = "configuration.loaded";
 
@@ -50,9 +53,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     private static Configuration prepareConfigurationMockForCopy() {
         final Configuration config2 = mock(Configuration.class);
-
         when(config2.getKeys()).thenReturn(Collections.<String>emptySet().iterator());
-
         return config2;
     }
 
@@ -63,13 +64,12 @@ public class TestAbstractConfigurationSynchronization {
      */
     private static void verifyConfigurationMockAfterCopy(final Configuration mock) {
         verify(mock).lock(LockMode.READ);
-        verify(mock).getKeys();
+        verify(mock).forEach(ArgumentMatchers.any());
         verify(mock).unlock(LockMode.READ);
     }
 
     /** The synchronizer used for testing. */
     private SynchronizerTestImpl sync;
-
     /** A test configuration. */
     private AbstractConfiguration config;
 
@@ -99,7 +99,6 @@ public class TestAbstractConfigurationSynchronization {
     void testAppendSynchronized() {
         final Configuration config2 = prepareConfigurationMockForCopy();
         config.append(config2);
-
         verifyConfigurationMockAfterCopy(config2);
         verifyNoMoreInteractions(config2);
     }
@@ -139,7 +138,6 @@ public class TestAbstractConfigurationSynchronization {
     void testCopySynchronized() {
         final Configuration config2 = prepareConfigurationMockForCopy();
         config.copy(config2);
-
         verifyConfigurationMockAfterCopy(config2);
         verifyNoMoreInteractions(config2);
     }

@@ -449,7 +449,6 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      */
     private void printValue(final PrintWriter out, final int indentLevel, final Object value) {
         final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
-
         if (value instanceof List) {
             out.print("( ");
             final Iterator<?> it = ((List<?>) value).iterator();
@@ -467,16 +466,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
             // display a flat Configuration as a dictionary
             out.println();
             out.println(padding + "{");
-
             final ImmutableConfiguration config = (ImmutableConfiguration) value;
-            final Iterator<String> it = config.getKeys();
-            while (it.hasNext()) {
-                final String key = it.next();
-                final ImmutableNode node = new ImmutableNode.Builder().name(key).value(config.getProperty(key)).create();
+            config.forEach((k, v) -> {
+                final ImmutableNode node = new ImmutableNode.Builder().name(k).value(v).create();
                 final InMemoryNodeModel tempModel = new InMemoryNodeModel(node);
                 printNode(out, indentLevel + 1, node, tempModel.getNodeHandler());
                 out.println(";");
-            }
+            });
             out.println(padding + "}");
         } else if (value instanceof Map) {
             // display a Map as a dictionary

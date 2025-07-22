@@ -271,7 +271,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (configuration != null) {
             configuration.lock(LockMode.READ);
             try {
-                configuration.getKeys().forEachRemaining(key -> addProperty(key, encodeForCopy(configuration.getProperty(key))));
+                configuration.forEach((k, v) -> addProperty(k, encodeForCopy(v)));
             } finally {
                 configuration.unlock(LockMode.READ);
             }
@@ -525,7 +525,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (configuration != null) {
             configuration.lock(LockMode.READ);
             try {
-                configuration.getKeys().forEachRemaining(key -> setProperty(key, encodeForCopy(configuration.getProperty(key))));
+                configuration.forEach((k, v) -> setProperty(k, encodeForCopy(v)));
             } finally {
                 configuration.unlock(LockMode.READ);
             }
@@ -1219,13 +1219,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public Configuration interpolatedConfiguration() {
         // first clone this configuration
-        final AbstractConfiguration c = (AbstractConfiguration) ConfigurationUtils.cloneConfiguration(this);
-
+        final AbstractConfiguration config = (AbstractConfiguration) ConfigurationUtils.cloneConfiguration(this);
         // now perform interpolation
-        c.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        getKeys().forEachRemaining(key -> c.setProperty(key, getList(key)));
-        c.setListDelimiterHandler(getListDelimiterHandler());
-        return c;
+        config.setListDelimiterHandler(new DisabledListDelimiterHandler());
+        getKeys().forEachRemaining(key -> config.setProperty(key, getList(key)));
+        config.setListDelimiterHandler(getListDelimiterHandler());
+        return config;
     }
 
     /**
