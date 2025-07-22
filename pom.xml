@@ -449,7 +449,6 @@
         <configuration>
           <!-- Uncomment to enable profiling unit tests -->
           <!-- <argLine>-agentpath:"${yourkit.home}/bin/mac/libyjpagent.jnilib"</argLine> -->
-          <forkMode>once</forkMode>
           <excludes>
             <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
           </excludes>
