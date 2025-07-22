@@ -37,6 +37,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.24.3 to 2.25.1 #579.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.17.0 to 3.18.0 #582.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.19.0 to 2.20.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.18.0 to 1.19.0.</action>
     </release>
     <release version="2.12.0" date="2025-04-22" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
