@@ -109,10 +109,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      */
     private void cloneStore(final BaseConfiguration copy) throws CloneNotSupportedException {
         // This is safe because the type of the map is known
-        @SuppressWarnings("unchecked")
-        final Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
-        copy.store = clonedStore;
-
+        copy.store = ConfigurationUtils.clone(store);
         // Handle collections in the map; they have to be cloned, too
         store.forEach((k, v) -> {
             if (v instanceof Collection) {

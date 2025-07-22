@@ -155,10 +155,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     public Object clone() {
         try {
             final MapConfiguration copy = (MapConfiguration) super.clone();
-            // Safe because ConfigurationUtils returns a map of the same types.
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> clonedMap = (Map<String, Object>) ConfigurationUtils.clone(map);
-            copy.map = clonedMap;
+            copy.map = ConfigurationUtils.clone(map);
             copy.cloneInterpolator(this);
             return copy;
         } catch (final CloneNotSupportedException cex) {

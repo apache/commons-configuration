@@ -21,7 +21,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Iterator;
 
@@ -147,11 +146,11 @@ public final class ConfigurationUtils {
      * @return the cloned object
      * @throws CloneNotSupportedException if the object cannot be cloned
      */
-    static Object clone(final Object obj) throws CloneNotSupportedException {
+    @SuppressWarnings("unchecked")
+    static <T> T clone(final T obj) throws CloneNotSupportedException {
         if (obj instanceof Cloneable) {
             try {
-                final Method m = obj.getClass().getMethod(METHOD_CLONE);
-                return m.invoke(obj);
+                return (T) obj.getClass().getMethod(METHOD_CLONE).invoke(obj);
             } catch (final NoSuchMethodException nmex) {
                 throw new CloneNotSupportedException("No clone() method found for class" + obj.getClass().getName());
             } catch (final IllegalAccessException | InvocationTargetException itex) {
@@ -175,7 +174,7 @@ public final class ConfigurationUtils {
             return null;
         }
         try {
-            return (Configuration) clone(config);
+            return clone(config);
         } catch (final CloneNotSupportedException cnex) {
             throw new ConfigurationRuntimeException(cnex);
         }
@@ -230,7 +229,7 @@ public final class ConfigurationUtils {
         }
 
         try {
-            return (Synchronizer) clone(sync);
+            return clone(sync);
         } catch (final CloneNotSupportedException cnex) {
             throw new ConfigurationRuntimeException("Cannot clone Synchronizer " + sync);
         }
