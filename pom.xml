@@ -26,12 +26,10 @@
   <artifactId>commons-configuration2</artifactId>
   <version>2.13.0-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
-
   <inceptionYear>2001</inceptionYear>
   <description>
     Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
   </description>
-
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
@@ -79,32 +77,26 @@
     <commons.jacoco.lineRatio>0.88</commons.jacoco.lineRatio>
     <commons.jacoco.complexityRatio>0.83</commons.jacoco.complexityRatio>
   </properties>
-
   <url>https://commons.apache.org/proper/commons-configuration/</url>
-
   <issueManagement>
     <system>jira</system>
     <url>https://issues.apache.org/jira/browse/CONFIGURATION</url>
   </issueManagement>
-
   <ciManagement>
     <system>github</system>
     <url>https://github.com/apache/commons-configuration/actions</url>
   </ciManagement>
-
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-configuration.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-configuration.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-configuration.git</url>
   </scm>
-
   <distributionManagement>
     <site>
       <id>apache.website</id>
       <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration/</url>
     </site>
   </distributionManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -116,7 +108,6 @@
       <artifactId>commons-text</artifactId>
       <version>1.13.1</version>
     </dependency>
-
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -132,28 +123,24 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.11.0</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.18.0</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jexl</artifactId>
       <version>2.1.1</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-vfs2</artifactId>
@@ -174,7 +161,6 @@
       <version>2.20.0</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
@@ -191,14 +177,12 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
       <groupId>xml-resolver</groupId>
       <artifactId>xml-resolver</artifactId>
       <version>1.2</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
@@ -211,14 +195,12 @@
 		  </exclusion>
 	  </exclusions>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <version>${spring.version}</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -226,7 +208,6 @@
       <optional>true</optional>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
@@ -234,7 +215,6 @@
       <optional>true</optional>
       <scope>test</scope>
     </dependency>
-
     <dependency>
 	  <!-- For org.apache.commons.configuration2.web -->
       <groupId>javax.servlet</groupId>
@@ -243,7 +223,6 @@
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <!-- For org.apache.commons.configuration2.web -->
       <groupId>jakarta.servlet</groupId>
@@ -252,37 +231,31 @@
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>2.4</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.19.1</version>
       <optional>true</optional>
     </dependency>
-
-    <!-- Needed for testing -->
-
+    <!-- Testing -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
       <version>2.13.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
       <version>2.12.1</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
@@ -290,27 +263,23 @@
       <version>2.5.2</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.dbunit</groupId>
       <artifactId>dbunit</artifactId>
       <version>3.0.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>${commons.mockito.version}</version>
       <scope>test</scope>
     </dependency>
-
     <!-- javax.mail only contains the API, no impl. -->
     <dependency>
       <groupId>com.sun.mail</groupId>
@@ -318,7 +287,6 @@
       <version>2.0.1</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-1.2-api</artifactId>
@@ -331,37 +299,31 @@
       <version>${log4j.version}</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-ext</artifactId>
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
   <build>
    <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check pmd:check pmd:cpd-check javadoc:javadoc</defaultGoal>
     <testResources>
@@ -653,7 +615,6 @@
       </plugin>
     </plugins>
   </reporting>
-
   <developers>
     <developer>
       <name>Daniel Rall</name>
@@ -664,7 +625,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Jason van Zyl</name>
       <id>jvanzyl</id>
@@ -674,7 +634,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Martin Poeschl</name>
       <id>mpoeschl</id>
@@ -684,7 +643,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>dIon Gillard</name>
       <id>dion</id>
@@ -694,7 +652,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Henning P. Schmiedehausen</name>
       <id>henning</id>
@@ -705,7 +662,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Eric Pugh</name>
       <id>epugh</id>
@@ -715,7 +671,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Brian E. Dunbar</name>
       <id>bdunbar</id>
@@ -725,7 +680,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Emmanuel Bourg</name>
       <id>ebourg</id>
@@ -736,7 +690,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Oliver Heger</name>
       <id>oheger</id>
@@ -747,7 +700,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>J&#xF6;rg Schaible</name>
       <id>joehni</id>
@@ -757,7 +709,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Ralph Goers</name>
       <id>rgoers</id>
@@ -768,7 +719,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <id>ggregory</id>
       <name>Gary Gregory</name>
@@ -784,7 +734,6 @@
         <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
       </properties>
     </developer>
-
     <developer>
       <name>Claude Warren</name>
       <id>claudenw</id>
@@ -794,7 +743,6 @@
         <role>Java Developer</role>
       </roles>
     </developer>
-
     <developer>
       <name>Rob Tompkins</name>
       <id>chtompki</id>
@@ -805,65 +753,54 @@
       </roles>
     </developer>
   </developers>
-
   <contributors>
     <contributor>
       <name>Konstantin Shaposhnikov</name>
       <email>ksh@scand.com</email>
       <organization>scand.com</organization>
     </contributor>
-
     <contributor>
       <name>Jamie M. Guillemette</name>
       <email>JMGuillemette@gmail.com</email>
       <organization>TD Bank</organization>
     </contributor>
-
     <contributor>
       <name>Jorge Ferrer</name>
       <email>jorge.ferrer@gmail.com</email>
       <organization></organization>
     </contributor>
-
     <contributor>
       <name>Gabriele Garuglieri</name>
       <email>gabriele.garuglieri@infoblu.it</email>
       <organization>Infoblu S.p.A</organization>
     </contributor>
-
     <contributor>
       <name>Nicolas De Loof</name>
       <email>nicolas.deloof@gmail.com</email>
       <organization>Cap Gemini</organization>
     </contributor>
-
     <contributor>
       <name>Oliver Kopp</name>
       <email>koppdev@gmail.com</email>
     </contributor>
-
     <contributor>
       <name>Dennis Kieselhorst</name>
       <email>deki@apache.org</email>
       <organization>IRIAN Deutschland</organization>
     </contributor>
-
     <contributor>
       <name>Raviteja Lokineni</name>
       <email>raviteja.lokineni@gmail.com</email>
     </contributor>
-
     <contributor>
       <name>Vincent Maurin</name>
       <email>vincent.maurin.fr@gmail.com</email>
       <organization>glispa GmbH</organization>
     </contributor>
-
     <contributor>
       <name>The Alchemist</name>
       <email>kap4020@gmail.com</email>
     </contributor>
-
     <contributor>
       <name>Pascal Essiembre</name>
       <email>pascal.essiembre@norconex.com</email>
@@ -874,11 +811,9 @@
       </roles>
       <timezone>-4</timezone>
     </contributor>
-
     <contributor>
       <name>Patrick Schmidt</name>
       <email>patrick.schmidt@codecamp.de</email>
     </contributor>
   </contributors>
-
 </project>
