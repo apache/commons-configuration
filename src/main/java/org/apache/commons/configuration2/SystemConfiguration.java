@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -40,15 +41,12 @@ public class SystemConfiguration extends MapConfiguration {
      * @since 1.6
      */
     public static void setSystemProperties(final Configuration systemConfig) {
-        final Iterator<String> iter = systemConfig.getKeys();
-        while (iter.hasNext()) {
-            final String key = iter.next();
-            final String value = (String) systemConfig.getProperty(key);
+        systemConfig.forEach((k, v) -> {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting system property " + key + " to " + value);
+                LOG.debug("Setting system property " + k + " to " + v);
             }
-            System.setProperty(key, value);
-        }
+            System.setProperty(k, Objects.toString(v, null));
+        });
     }
 
     /**
@@ -74,7 +72,6 @@ public class SystemConfiguration extends MapConfiguration {
      */
     public static void setSystemProperties(final String basePath, final String fileName) throws ConfigurationException {
         final FileBasedConfiguration config = fileName.endsWith(".xml") ? new XMLPropertiesConfiguration() : new PropertiesConfiguration();
-
         final FileHandler handler = new FileHandler(config);
         handler.setBasePath(basePath);
         handler.setFileName(fileName);

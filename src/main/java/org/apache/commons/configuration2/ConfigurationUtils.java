@@ -21,9 +21,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.Event;
@@ -43,7 +42,10 @@ import org.apache.commons.logging.LogFactory;
  * @see ConfigurationConverter Utility methods to convert configurations.
  */
 public final class ConfigurationUtils {
-    /** Constant for the name of the clone() method. */
+
+    /**
+     * Constant for the name of the clone() method.
+     */
     private static final String METHOD_CLONE = "clone";
 
     /**
@@ -86,8 +88,8 @@ public final class ConfigurationUtils {
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
-     * @param source the source configuration
-     * @param target the target configuration
+     * @param source the source configuration.
+     * @param target the target configuration.
      * @since 1.1
      */
     public static void append(final Configuration source, final Configuration target) {
@@ -105,12 +107,12 @@ public final class ConfigurationUtils {
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
-     * @param source the source configuration
-     * @param target the target configuration
+     * @param source the source configuration.
+     * @param target the target configuration.
      * @since 2.2
      */
     public static void append(final ImmutableConfiguration source, final Configuration target) {
-        source.getKeys().forEachRemaining(key -> target.addProperty(key, source.getProperty(key)));
+        source.forEach(target::addProperty);
     }
 
     /**
@@ -119,18 +121,17 @@ public final class ConfigurationUtils {
      * {@code ConfigurationRuntimeException} is thrown; if set to <strong>true</strong>, a dummy {@code EventSource} is returned; on
      * this object all methods can be called, but they do not have any effect.
      *
-     * @param obj the object to be cast as {@code EventSource}
-     * @param mockIfUnsupported a flag whether a mock object should be returned if necessary
-     * @return an {@code EventSource}
+     * @param obj the object to be cast as {@code EventSource}.
+     * @param mockIfUnsupported a flag whether a mock object should be returned if necessary.
+     * @return an {@code EventSource}.
      * @throws ConfigurationRuntimeException if the object cannot be cast to {@code EventSource} and the mock flag is
-     *         <strong>false</strong>
+     *         <strong>false</strong>.
      * @since 2.0
      */
     public static EventSource asEventSource(final Object obj, final boolean mockIfUnsupported) {
         if (obj instanceof EventSource) {
             return (EventSource) obj;
         }
-
         if (!mockIfUnsupported) {
             throw new ConfigurationRuntimeException("Cannot cast to EventSource: " + obj);
         }
@@ -143,15 +144,18 @@ public final class ConfigurationUtils {
      * implements the {@code Cloneable} interface. If this is the case, the {@code clone()} method is invoked by reflection.
      * Errors that occur during the cloning process are re-thrown as runtime exceptions.
      *
-     * @param obj the object to be cloned
-     * @return the cloned object
-     * @throws CloneNotSupportedException if the object cannot be cloned
+     * @param obj the object to be cloned or null.
+     * @return the cloned object or null.
+     * @throws CloneNotSupportedException if the object cannot be cloned.
      */
-    static Object clone(final Object obj) throws CloneNotSupportedException {
+    @SuppressWarnings("unchecked")
+    static <T> T clone(final T obj) throws CloneNotSupportedException {
+        if (obj == null) {
+            return null;
+        }
         if (obj instanceof Cloneable) {
             try {
-                final Method m = obj.getClass().getMethod(METHOD_CLONE);
-                return m.invoke(obj);
+                return (T) obj.getClass().getMethod(METHOD_CLONE).invoke(obj);
             } catch (final NoSuchMethodException nmex) {
                 throw new CloneNotSupportedException("No clone() method found for class" + obj.getClass().getName());
             } catch (final IllegalAccessException | InvocationTargetException itex) {
@@ -165,17 +169,14 @@ public final class ConfigurationUtils {
      * Clones the given configuration object if this is possible. If the passed in configuration object implements the
      * {@code Cloneable} interface, its {@code clone()} method will be invoked. Otherwise an exception will be thrown.
      *
-     * @param config the configuration object to be cloned (can be <strong>null</strong>)
-     * @return the cloned configuration (<strong>null</strong> if the argument was <strong>null</strong>, too)
-     * @throws ConfigurationRuntimeException if cloning is not supported for this object
+     * @param config the configuration object to be cloned (can be <strong>null</strong>).
+     * @return the cloned configuration (<strong>null</strong> if the argument was <strong>null</strong>, too).
+     * @throws ConfigurationRuntimeException if cloning is not supported for this object.
      * @since 1.3
      */
     public static Configuration cloneConfiguration(final Configuration config) throws ConfigurationRuntimeException {
-        if (config == null) {
-            return null;
-        }
         try {
-            return (Configuration) clone(config);
+            return clone(config);
         } catch (final CloneNotSupportedException cnex) {
             throw new ConfigurationRuntimeException(cnex);
         }
@@ -187,8 +188,8 @@ public final class ConfigurationUtils {
      * method is invoked. Otherwise, the object is directly returned. Errors that might occur during reflection calls are
      * caught and also cause this method to return the original object.
      *
-     * @param obj the object to be cloned
-     * @return the result of the cloning attempt
+     * @param obj the object to be cloned.
+     * @return the result of the cloning attempt.
      * @since 2.0
      */
     public static Object cloneIfPossible(final Object obj) {
@@ -210,10 +211,10 @@ public final class ConfigurationUtils {
      * </ul>
      * If all attempts fail, a {@code ConfigurationRuntimeException} is thrown.
      *
-     * @param sync the {@code Synchronizer} object to be cloned
-     * @return the clone of this {@code Synchronizer}
-     * @throws ConfigurationRuntimeException if no clone can be created
-     * @throws IllegalArgumentException if <strong>null</strong> is passed in
+     * @param sync the {@code Synchronizer} object to be cloned.
+     * @return the clone of this {@code Synchronizer}.
+     * @throws ConfigurationRuntimeException if no clone can be created.
+     * @throws IllegalArgumentException if <strong>null</strong> is passed in.
      */
     public static Synchronizer cloneSynchronizer(final Synchronizer sync) {
         if (sync == null) {
@@ -222,17 +223,14 @@ public final class ConfigurationUtils {
         if (NoOpSynchronizer.INSTANCE == sync) {
             return sync;
         }
-
         try {
             return sync.getClass().getConstructor().newInstance();
-        } catch (final Exception ex) {
-            LOG.info("Cannot create new instance of " + sync.getClass());
-        }
-
-        try {
-            return (Synchronizer) clone(sync);
-        } catch (final CloneNotSupportedException cnex) {
-            throw new ConfigurationRuntimeException("Cannot clone Synchronizer " + sync);
+        } catch (final Exception ignore) {
+            try {
+                return clone(sync);
+            } catch (final CloneNotSupportedException e) {
+                throw new ConfigurationRuntimeException("Cannot clone Synchronizer " + sync);
+            }
         }
     }
 
@@ -240,9 +238,9 @@ public final class ConfigurationUtils {
      * Converts the passed in configuration to a hierarchical one. If the configuration is already hierarchical, it is
      * directly returned. Otherwise all properties are copied into a new hierarchical configuration.
      *
-     * @param conf the configuration to convert
+     * @param conf the configuration to convert.
      * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
-     *         <strong>null</strong>)
+     *         <strong>null</strong>).
      * @since 1.3
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(final Configuration conf) {
@@ -259,30 +257,27 @@ public final class ConfigurationUtils {
      * passed in configuration is already hierarchical, it is directly returned. (However, the {@code ExpressionEngine} is
      * set if it is not <strong>null</strong>.) Otherwise all properties are copied into a new hierarchical configuration.
      *
-     * @param conf the configuration to convert
-     * @param engine the {@code ExpressionEngine} for the hierarchical configuration or <strong>null</strong> for the default
+     * @param conf the configuration to convert.
+     * @param engine the {@code ExpressionEngine} for the hierarchical configuration or <strong>null</strong> for the default.
      * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
-     *         <strong>null</strong>)
+     *         <strong>null</strong>).
      * @since 1.6
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(final Configuration conf, final ExpressionEngine engine) {
         if (conf == null) {
             return null;
         }
-
         if (conf instanceof HierarchicalConfiguration) {
             final HierarchicalConfiguration<?> hc = (HierarchicalConfiguration<?>) conf;
             if (engine != null) {
                 hc.setExpressionEngine(engine);
             }
-
             return hc;
         }
         final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         if (engine != null) {
             hc.setExpressionEngine(engine);
         }
-
         // Per default, a DisabledListDelimiterHandler is set.
         // So list delimiters in property values are not an issue.
         hc.copy(conf);
@@ -300,8 +295,8 @@ public final class ConfigurationUtils {
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
-     * @param source the source configuration
-     * @param target the target configuration
+     * @param source the source configuration.
+     * @param target the target configuration.
      * @since 1.1
      */
     public static void copy(final Configuration source, final Configuration target) {
@@ -319,22 +314,22 @@ public final class ConfigurationUtils {
      * method of {@code AbstractConfiguration} should be used. In a future release this method might become deprecated.
      * </p>
      *
-     * @param source the source configuration
-     * @param target the target configuration
+     * @param source the source configuration.
+     * @param target the target configuration.
      * @since 2.2
      */
     public static void copy(final ImmutableConfiguration source, final Configuration target) {
-        source.getKeys().forEachRemaining(key -> target.setProperty(key, source.getProperty(key)));
+        source.forEach(target::setProperty);
     }
 
     /**
      * Helper method for creating a proxy for an unmodifiable configuration. The interfaces the proxy should implement are
      * passed as argument.
      *
-     * @param ifcs an array with the interface classes the proxy must implement
-     * @param c the configuration object to be wrapped
-     * @return a proxy object for an immutable configuration
-     * @throws NullPointerException if the configuration is <strong>null</strong>
+     * @param ifcs an array with the interface classes the proxy must implement.
+     * @param c the configuration object to be wrapped.
+     * @return a proxy object for an immutable configuration.
+     * @throws NullPointerException if the configuration is <strong>null</strong>.
      */
     private static ImmutableConfiguration createUnmodifiableConfiguration(final Class<?>[] ifcs, final Configuration c) {
         return (ImmutableConfiguration) Proxy.newProxyInstance(ConfigurationUtils.class.getClassLoader(), ifcs, new ImmutableConfigurationInvocationHandler(c));
@@ -344,8 +339,8 @@ public final class ConfigurationUtils {
      * Dump the configuration key/value mappings to some ouput stream. This version of the method exists only for backwards
      * compatibility reason.
      *
-     * @param configuration the configuration
-     * @param out the output stream to dump the configuration to
+     * @param configuration the configuration.
+     * @param out the output stream to dump the configuration to.
      */
     public static void dump(final Configuration configuration, final PrintStream out) {
         dump((ImmutableConfiguration) configuration, out);
@@ -355,8 +350,8 @@ public final class ConfigurationUtils {
      * Dump the configuration key/value mappings to some writer. This version of the method exists only for backwards
      * compatibility reason.
      *
-     * @param configuration the configuration
-     * @param out the writer to dump the configuration to
+     * @param configuration the configuration.
+     * @param out the writer to dump the configuration to.
      */
     public static void dump(final Configuration configuration, final PrintWriter out) {
         dump((ImmutableConfiguration) configuration, out);
@@ -365,8 +360,8 @@ public final class ConfigurationUtils {
     /**
      * Dump the configuration key/value mappings to some ouput stream.
      *
-     * @param configuration the configuration
-     * @param out the output stream to dump the configuration to
+     * @param configuration the configuration.
+     * @param out the output stream to dump the configuration to.
      * @since 2.2
      */
     public static void dump(final ImmutableConfiguration configuration, final PrintStream out) {
@@ -376,23 +371,20 @@ public final class ConfigurationUtils {
     /**
      * Dump the configuration key/value mappings to some writer.
      *
-     * @param configuration the configuration
-     * @param out the writer to dump the configuration to
+     * @param configuration the configuration.
+     * @param out the writer to dump the configuration to.
      * @since 2.2
      */
     public static void dump(final ImmutableConfiguration configuration, final PrintWriter out) {
-        for (final Iterator<String> keys = configuration.getKeys(); keys.hasNext();) {
-            final String key = keys.next();
-            final Object value = configuration.getProperty(key);
-            out.print(key);
+        AtomicInteger last = new AtomicInteger(configuration.size());
+        configuration.forEach((k, v) -> {
+            out.print(k);
             out.print("=");
-            out.print(value);
-
-            if (keys.hasNext()) {
+            out.print(v);
+            if (last.decrementAndGet() > 0) {
                 out.println();
             }
-        }
-
+        });
         out.flush();
     }
 
@@ -404,7 +396,7 @@ public final class ConfigurationUtils {
      * {@code ConfigurationRuntimeException}) on each received error event.
      *
      * @param src the configuration, for which runtime exceptions are to be enabled; this configuration must implement
-     *        {@link EventSource}
+     *        {@link EventSource}.
      */
     public static void enableRuntimeExceptions(final Configuration src) {
         if (!(src instanceof EventSource)) {
@@ -420,16 +412,15 @@ public final class ConfigurationUtils {
      * Loads the class with the given name. This method is used whenever a class has to be loaded dynamically. It first
      * tries the current thread's context class loader. If this fails, the class loader of this class is tried.
      *
-     * @param clsName the name of the class to be loaded
-     * @return the loaded class
-     * @throws ClassNotFoundException if the class cannot be resolved
+     * @param clsName the name of the class to be loaded.
+     * @return the loaded class.
+     * @throws ClassNotFoundException if the class cannot be resolved.
      * @since 2.0
      */
     public static Class<?> loadClass(final String clsName) throws ClassNotFoundException {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Loading class " + clsName);
         }
-
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
             if (cl != null) {
@@ -438,7 +429,6 @@ public final class ConfigurationUtils {
         } catch (final ClassNotFoundException cnfex) {
             LOG.info("Could not load class " + clsName + " using CCL. Falling back to default CL.", cnfex);
         }
-
         return ConfigurationUtils.class.getClassLoader().loadClass(clsName);
     }
 
@@ -447,9 +437,9 @@ public final class ConfigurationUtils {
      * This method works like {@link #loadClass(String)}. However, checked exceptions are caught and re-thrown as
      * {@code ConfigurationRuntimeException}.
      *
-     * @param clsName the name of the class to be loaded
-     * @return the loaded class
-     * @throws ConfigurationRuntimeException if the class cannot be resolved
+     * @param clsName the name of the class to be loaded.
+     * @return the loaded class.
+     * @throws ConfigurationRuntimeException if the class cannot be resolved.
      * @since 2.0
      */
     public static Class<?> loadClassNoEx(final String clsName) {
@@ -464,8 +454,8 @@ public final class ConfigurationUtils {
      * Gets a string representation of the key/value mappings of a configuration. This version of the method exists only for
      * backwards compatibility reason.
      *
-     * @param configuration the configuration
-     * @return a string representation of the configuration
+     * @param configuration the configuration.
+     * @return a string representation of the configuration.
      */
     public static String toString(final Configuration configuration) {
         return toString((ImmutableConfiguration) configuration);
@@ -474,8 +464,8 @@ public final class ConfigurationUtils {
     /**
      * Gets a string representation of the key/value mappings of a configuration.
      *
-     * @param configuration the configuration
-     * @return a string representation of the configuration
+     * @param configuration the configuration.
+     * @return a string representation of the configuration.
      * @since 2.2
      */
     public static String toString(final ImmutableConfiguration configuration) {
@@ -490,9 +480,9 @@ public final class ConfigurationUtils {
      * interface. Through this interface the configuration cannot be manipulated. It is also not possible to cast the
      * returned object back to a {@code Configuration} instance to circumvent this protection.
      *
-     * @param c the {@code Configuration} to be wrapped (must not be <strong>null</strong>)
-     * @return an {@code ImmutableConfiguration} view on the specified {@code Configuration} object
-     * @throws NullPointerException if the passed in {@code Configuration} is <strong>null</strong>
+     * @param c the {@code Configuration} to be wrapped (must not be <strong>null</strong>).
+     * @return an {@code ImmutableConfiguration} view on the specified {@code Configuration} object.
+     * @throws NullPointerException if the passed in {@code Configuration} is <strong>null</strong>.
      * @since 2.0
      */
     public static ImmutableConfiguration unmodifiableConfiguration(final Configuration c) {
@@ -503,9 +493,9 @@ public final class ConfigurationUtils {
      * Creates an {@code ImmutableHierarchicalConfiguration} from the given {@code HierarchicalConfiguration} object. This
      * method works exactly like the method with the same name, but it operates on hierarchical configurations.
      *
-     * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be <strong>null</strong>)
-     * @return an {@code ImmutableHierarchicalConfiguration} view on the specified {@code HierarchicalConfiguration} object
-     * @throws NullPointerException if the passed in {@code HierarchicalConfiguration} is <strong>null</strong>
+     * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be <strong>null</strong>).
+     * @return an {@code ImmutableHierarchicalConfiguration} view on the specified {@code HierarchicalConfiguration} object.
+     * @throws NullPointerException if the passed in {@code HierarchicalConfiguration} is <strong>null</strong>.
      * @since 2.0
      */
     public static ImmutableHierarchicalConfiguration unmodifiableConfiguration(final HierarchicalConfiguration<?> c) {
@@ -516,6 +506,6 @@ public final class ConfigurationUtils {
      * Private constructor. Prevents instances from being created.
      */
     private ConfigurationUtils() {
-        // to prevent instantiation...
+        // Prevents instantiation.
     }
 }

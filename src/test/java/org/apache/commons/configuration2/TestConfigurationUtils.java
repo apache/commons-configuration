@@ -337,7 +337,6 @@ public class TestConfigurationUtils {
             conf.addProperty("test" + i, "value" + i);
             conf.addProperty("test.list", "item" + i);
         }
-
         final BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) ConfigurationUtils.convertToHierarchical(conf);
         for (final Iterator<String> it = conf.getKeys(); it.hasNext();) {
             final String key = it.next();
@@ -411,15 +410,12 @@ public class TestConfigurationUtils {
         final Configuration conf1 = new BaseConfiguration();
         conf1.addProperty("key1", "value1");
         conf1.addProperty("key2", "value2");
-
         // create the target configuration
         final Configuration conf2 = new BaseConfiguration();
         conf2.addProperty("key1", "value3");
         conf2.addProperty("key2", "value4");
-
         // copy the source configuration into the target configuration
         ConfigurationUtils.copy(conf1, conf2);
-
         assertEquals("value1", conf2.getProperty("key1"));
         assertEquals("value2", conf2.getProperty("key2"));
     }

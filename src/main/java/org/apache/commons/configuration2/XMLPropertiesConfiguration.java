@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -241,8 +240,8 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Writes the configuration as child to the given DOM node
      *
-     * @param document The DOM document to add the configuration to
-     * @param parent The DOM parent node
+     * @param document The DOM document to add the configuration to.
+     * @param parent The DOM parent node.
      * @since 2.0
      */
     public void save(final Document document, final Node parent) {
@@ -253,18 +252,13 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
             properties.appendChild(comment);
             comment.setTextContent(StringEscapeUtils.escapeXml10(getHeader()));
         }
-
-        final Iterator<String> keys = getKeys();
-        while (keys.hasNext()) {
-            final String key = keys.next();
-            final Object value = getProperty(key);
-
-            if (value instanceof List) {
-                writeProperty(document, properties, key, (List<?>) value);
+        forEach((k, v) -> {
+            if (v instanceof List) {
+                writeProperty(document, properties, k, (List<?>) v);
             } else {
-                writeProperty(document, properties, key, value);
+                writeProperty(document, properties, k, v);
             }
-        }
+        });
     }
 
     /**
@@ -279,7 +273,6 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     @Override
     public void write(final Writer out) throws ConfigurationException {
         final PrintWriter writer = new PrintWriter(out);
-
         String encoding = locator != null ? locator.getEncoding() : null;
         if (encoding == null) {
             encoding = DEFAULT_ENCODING;
@@ -287,23 +280,16 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
         writer.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
         writer.println("<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">");
         writer.println("<properties>");
-
         if (getHeader() != null) {
             writer.println("  <comment>" + StringEscapeUtils.escapeXml10(getHeader()) + "</comment>");
         }
-
-        final Iterator<String> keys = getKeys();
-        while (keys.hasNext()) {
-            final String key = keys.next();
-            final Object value = getProperty(key);
-
-            if (value instanceof List) {
-                writeProperty(writer, key, (List<?>) value);
+        forEach((k, v) -> {
+            if (v instanceof List) {
+                writeProperty(writer, k, (List<?>) v);
             } else {
-                writeProperty(writer, key, value);
+                writeProperty(writer, k, v);
             }
-        }
-
+        });
         writer.println("</properties>");
         writer.flush();
     }
