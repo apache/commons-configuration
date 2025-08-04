@@ -25,7 +25,6 @@
      xsi:schemaLocation="http://cyclonedx.org/schema/bom/1.6 https://cyclonedx.org/schema/bom-1.6.xsd"
      serialNumber="urn:uuid:5181c7a1-21fd-48b1-8d7b-285c2204c809"
      version="1">
-
   <metadata>
     <timestamp>2025-08-04T11:45:36Z</timestamp>
     <component type="library" bom-ref="main_component">
@@ -47,7 +46,6 @@
       </contact>
     </manufacturer>
   </metadata>
-
   <vulnerabilities>
     <vulnerability>
       <id>CVE-2025-48924</id>
@@ -104,7 +102,6 @@ Projects that process untrusted configuration input should:
       </affects>
     </vulnerability>
   </vulnerabilities>
-
   <annotations>
     <annotation>
       <annotator>
@@ -128,7 +125,7 @@ Projects that process untrusted configuration input should:
 
         * This VEX document is **experimental** and provided **as-is**.
           The semantics of this document may change in the future.
-        * The **absence** of a vulnerability entry does **not** indicate that Text is unaffected.
+        * The **absence** of a vulnerability entry does **not** indicate that this component is unaffected.
         * If a version of Text is not listed under the `affects` section of a vulnerability, that version may still be affected or not.
         * Only the **latest major version** of Text is currently assessed for vulnerabilities.
         * The `analysis` field in the VEX file uses **Markdown** formatting.
