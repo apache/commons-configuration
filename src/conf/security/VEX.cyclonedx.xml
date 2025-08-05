@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to you under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!--
+  To update this document:
+    1. Increment the `version` attribute in the <bom> element.
+    2. Update the `timestamp` in the <metadata> section.
+-->
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://cyclonedx.org/schema/bom/1.6 https://cyclonedx.org/schema/bom-1.6.xsd"
+     serialNumber="urn:uuid:5181c7a1-21fd-48b1-8d7b-285c2204c809"
+     version="1">
+  <metadata>
+    <timestamp>2025-08-04T11:45:36Z</timestamp>
+    <component type="library" bom-ref="main_component">
+      <group>org.apache.commons</group>
+      <name>commons-configuration2</name>
+      <cpe>cpe:2.3:a:apache:commons_configuration:*:*:*:*:*:*:*:*</cpe>
+      <purl>pkg:maven/org.apache.commons/commons-configuration2?type=jar</purl>
+    </component>
+    <manufacturer>
+      <name>The Apache Software Foundation</name>
+      <url>https://commons.apache.org</url>
+      <contact>
+        <name>Apache Commons PMC</name>
+        <email>dev@commons.apache.org</email>
+      </contact>
+      <contact>
+        <name>Apache Commons Security Team</name>
+        <email>security@commons.apache.org</email>
+      </contact>
+    </manufacturer>
+  </metadata>
+  <vulnerabilities>
+    <vulnerability>
+      <id>CVE-2025-48924</id>
+      <references>
+        <reference>
+          <id>GHSA-j288-q9x7-2f5v</id>
+          <source>
+            <url>https://github.com/advisories/GHSA-j288-q9x7-2f5v</url>
+          </source>
+        </reference>
+      </references>
+      <analysis>
+        <state>exploitable</state>
+        <responses>
+          <response>update</response>
+        </responses>
+        <detail>
+CVE-2025-48924 **affects** Apache Commons Configuration versions 2.4 and later, but only when **all** of the following conditions are met:
+
+* The application includes a **vulnerable version** of Commons Lang on the classpath.
+* The library is used to parse configuration files from **untrusted sources**.
+
+When these conditions are present, an attacker can trigger an **infinite loop** by submitting a configuration containing a `${const:...}` expression.
+
+### Root Cause
+
+This issue stems from the use of a default `ConfigurationInterpolator`, which delegates string resolution to Commons Text’s `InterpolatorStringLookup`.
+This lookup is exploitable under certain conditions, as detailed in the [Commons Text VEX document](https://raw.githubusercontent.com/apache/commons-text/refs/heads/master/src/conf/security/VEX.cyclonedx.xml).
+
+### Recommended Mitigations
+
+Projects that process untrusted configuration input should:
+
+* **Upgrade Commons Lang** to version 3.18.0 or later.
+* **Restrict `Lookup` classes** used by the `ConfigurationInterpolator` to safe implementations by explicitly configuring them via `Configuration.installInterpolator`.
+
+### References
+
+* [Commons Text VEX document](https://raw.githubusercontent.com/apache/commons-text/refs/heads/master/src/conf/security/VEX.cyclonedx.xml)
+        </detail>
+        <firstIssued>2025-08-04T11:45:36Z</firstIssued>
+        <lastUpdated>2025-08-04T11:45:36Z</lastUpdated>
+      </analysis>
+      <affects>
+        <target>
+          <ref>main_component</ref>
+          <versions>
+            <version>
+              <range><![CDATA[vers:maven/>=2.4|<3]]></range>
+              <status>affected</status>
+            </version>
+          </versions>
+        </target>
+      </affects>
+    </vulnerability>
+  </vulnerabilities>
+  <annotations>
+    <annotation>
+      <annotator>
+        <individual>
+          <name>Apache Commons PMC</name>
+          <email>dev@commons.apache.org</email>
+        </individual>
+      </annotator>
+      <timestamp>2025-08-04T11:45:36Z</timestamp>
+      <text>
+        This document provides information about the **exploitability of known vulnerabilities** in the **dependencies** of Apache Commons Text.
+
+        # When is a dependency vulnerability exploitable?
+
+        Because Apache Commons libraries do **not** bundle their dependencies, a vulnerability in a dependency is only exploitable if **both** of the following conditions are true:
+
+        1. The vulnerable dependency is included in the consuming project.
+        2. Apache Commons Text is explicitly listed as affected by the vulnerability.
+
+        # Notes and Limitations
+
+        * This VEX document is **experimental** and provided **as-is**.
+          The semantics of this document may change in the future.
+        * The **absence** of a vulnerability entry does **not** indicate that this component is unaffected.
+        * If a version of Text is not listed under the `affects` section of a vulnerability, that version may still be affected or not.
+        * Only the **latest major version** of Text is currently assessed for vulnerabilities.
+        * The `analysis` field in the VEX file uses **Markdown** formatting.
+      </text>
+    </annotation>
+  </annotations>
+</bom>
