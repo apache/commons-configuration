@@ -78,7 +78,7 @@ import org.apache.commons.text.StringSubstitutor;
  * {@link org.apache.commons.configuration2.convert.DefaultConversionHandler DefaultConversionHandler}, when a variable
  * value is a container type (such as a collection or array), then only the first element of the container is converted
  * to a string instead of the container itself. For example, if the variable {@code x} resolves to the integer array
- * {@code [1, 2, 3]}, then the string <code>"my value = ${x}"</code> will by default be interpolated to
+ * {@code [1, 2, 3]}, then the string {@code "my value = ${x}"} will by default be interpolated to
  * {@code "my value = 1"}.
  * </p>
  * <p>
@@ -601,7 +601,7 @@ public class ConfigurationInterpolator {
 
     /**
      * Checks whether a value to be interpolated consists of single, simple variable reference, for example,
-     * <code>${myvar}</code>. In this case, the variable is resolved directly without using the
+     * {@code ${myvar}}. In this case, the variable is resolved directly without using the
      * {@code StringSubstitutor}.
      *
      * @param strValue the value to be interpolated
