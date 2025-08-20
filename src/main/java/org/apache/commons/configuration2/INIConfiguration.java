@@ -228,7 +228,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
          * Sets whether in-line comments on the section line are allowed.
          *
          * @param sectionInLineCommentsAllowed Whether in-line comments on the section line are allowed.
-         * @return this instance.
+         * @return {@code this} instance.
          */
         public Builder setSectionInLineCommentsAllowed(final boolean sectionInLineCommentsAllowed) {
             this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
