@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,28 +29,38 @@ import org.springframework.core.env.EnumerablePropertySource;
  */
 public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration> {
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param name the associated name.
+     */
     protected ConfigurationPropertySource(final String name) {
         super(name);
     }
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param name   the associated name.
+     * @param source the source object.
+     */
     public ConfigurationPropertySource(final String name, final Configuration source) {
         super(name, source);
     }
 
     @Override
     public Object getProperty(final String name) {
-        if (source.getProperty(name) != null) {
-            final String[] propValue = source.getStringArray(name);
-            if (propValue == null || propValue.length == 0) {
-                return "";
-            } else if (propValue.length == 1) {
-                return propValue[0];
-            } else {
-                return propValue;
-            }
-        } else {
+        if (source.getProperty(name) == null) {
             return null;
         }
+        final String[] propValue = source.getStringArray(name);
+        if (propValue == null || propValue.length == 0) {
+            return "";
+        }
+        if (propValue.length == 1) {
+            return propValue[0];
+        }
+        return propValue;
     }
 
     @Override

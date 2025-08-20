@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -204,7 +204,7 @@ public class TestBeanHelper {
      * Tests whether properties from one bean to another can be copied.
      */
     @Test
-    public void testCopyProperties() throws Exception {
+    void testCopyProperties() throws Exception {
         final PropertiesConfiguration src = new PropertiesConfiguration();
         src.setHeader("TestHeader");
         src.setFooter("TestFooter");
@@ -218,7 +218,7 @@ public class TestBeanHelper {
      * Tests creating a bean. All necessary information is stored in the bean declaration.
      */
     @Test
-    public void testCreateBean() {
+    void testCreateBean() {
         final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
@@ -233,7 +233,7 @@ public class TestBeanHelper {
      * Tests creating a bean. The bean's class is specified as the default class argument.
      */
     @Test
-    public void testCreateBeanWithDefaultClass() {
+    void testCreateBeanWithDefaultClass() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
@@ -244,7 +244,7 @@ public class TestBeanHelper {
      * Tests creating a bean using the default bean factory.
      */
     @Test
-    public void testCreateBeanWithDefaultFactory() {
+    void testCreateBeanWithDefaultFactory() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
@@ -256,7 +256,7 @@ public class TestBeanHelper {
      * Tests creating a bean when the factory throws an exception.
      */
     @Test
-    public void testCreateBeanWithException() {
+    void testCreateBeanWithException() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
@@ -268,7 +268,7 @@ public class TestBeanHelper {
      * Tests creating a bean when the bean's class is specified as the default class of the bean factory.
      */
     @Test
-    public void testCreateBeanWithFactoryDefaultClass() {
+    void testCreateBeanWithFactoryDefaultClass() {
         final TestBeanFactory factory = new TestBeanFactory();
         factory.supportsDefaultClass = true;
         helper.registerBeanFactory(TEST_FACTORY, factory);
@@ -282,7 +282,7 @@ public class TestBeanHelper {
      * Tries to create a bean with a non existing class. This should cause an exception.
      */
     @Test
-    public void testCreateBeanWithInvalidClass() {
+    void testCreateBeanWithInvalidClass() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
@@ -294,7 +294,7 @@ public class TestBeanHelper {
      * Tests whether a bean with a property of type collection can be created.
      */
     @Test
-    public void testCreateBeanWithListChildBean() {
+    void testCreateBeanWithListChildBean() {
         final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         final BeanDeclarationTestImpl data = setUpBeanDeclarationWithListChild();
@@ -309,7 +309,7 @@ public class TestBeanHelper {
      * Tries to create a bean if no class is provided. This should cause an exception.
      */
     @Test
-    public void testCreateBeanWithNoClass() {
+    void testCreateBeanWithNoClass() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
@@ -320,7 +320,7 @@ public class TestBeanHelper {
      * Tests creating a bean when no bean declaration is provided. This should cause an exception.
      */
     @Test
-    public void testCreateBeanWithNullDeclaration() {
+    void testCreateBeanWithNullDeclaration() {
         assertThrows(IllegalArgumentException.class, () -> helper.createBean(null));
     }
 
@@ -328,7 +328,7 @@ public class TestBeanHelper {
      * Tests if a parameter is correctly passed to the bean factory.
      */
     @Test
-    public void testCreateBeanWithParameter() {
+    void testCreateBeanWithParameter() {
         final Object param = 42;
         final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
@@ -343,7 +343,7 @@ public class TestBeanHelper {
      * Tests creating a bean using a non registered factory.
      */
     @Test
-    public void testCreateBeanWithUnknownFactory() {
+    void testCreateBeanWithUnknownFactory() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
@@ -354,7 +354,7 @@ public class TestBeanHelper {
      * Tests whether a wrapper DynaBean for a Java bean can be created.
      */
     @Test
-    public void testCreateWrapDynaBean() {
+    void testCreateWrapDynaBean() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final DynaBean bean = BeanHelper.createWrapDynaBean(config);
         final String value = "TestFooter";
@@ -366,7 +366,7 @@ public class TestBeanHelper {
      * Tries to create a wrapper DynaBean for a null bean.
      */
     @Test
-    public void testCreateWrapDynaBeanNull() {
+    void testCreateWrapDynaBeanNull() {
         assertThrows(IllegalArgumentException.class, () -> BeanHelper.createWrapDynaBean(null));
     }
 
@@ -374,7 +374,7 @@ public class TestBeanHelper {
      * Tests whether the correct default bean factory is set.
      */
     @Test
-    public void testDefaultBeanFactory() {
+    void testDefaultBeanFactory() {
         helper = new BeanHelper();
         assertSame(DefaultBeanFactory.INSTANCE, helper.getDefaultBeanFactory());
     }
@@ -383,7 +383,7 @@ public class TestBeanHelper {
      * Tests the default instance of BeanHelper.
      */
     @Test
-    public void testDefaultInstance() {
+    void testDefaultInstance() {
         assertSame(DefaultBeanFactory.INSTANCE, BeanHelper.INSTANCE.getDefaultBeanFactory());
     }
 
@@ -391,7 +391,7 @@ public class TestBeanHelper {
      * Tests to deregister a bean factory.
      */
     @Test
-    public void testDeregisterBeanFactory() {
+    void testDeregisterBeanFactory() {
         final BeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         assertSame(factory, helper.deregisterBeanFactory(TEST_FACTORY));
@@ -402,7 +402,7 @@ public class TestBeanHelper {
      * Tests deregisterBeanFactory() for a non-existing factory name.
      */
     @Test
-    public void testDeregisterBeanFactoryNonExisting() {
+    void testDeregisterBeanFactoryNonExisting() {
         assertNull(helper.deregisterBeanFactory(TEST_FACTORY));
     }
 
@@ -410,7 +410,7 @@ public class TestBeanHelper {
      * Tests deregisterBeanFactory() for a null factory name.
      */
     @Test
-    public void testDeregisterBeanFactoryNull() {
+    void testDeregisterBeanFactoryNull() {
         assertNull(helper.deregisterBeanFactory(null));
     }
 
@@ -418,7 +418,7 @@ public class TestBeanHelper {
      * Tests initializing a bean.
      */
     @Test
-    public void testInitBean() {
+    void testInitBean() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
@@ -430,7 +430,7 @@ public class TestBeanHelper {
      * exception.
      */
     @Test
-    public void testInitBeanWithInvalidProperty() {
+    void testInitBeanWithInvalidProperty() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.getBeanProperties().put("nonExistingProperty", Boolean.TRUE);
         final BeanCreationTestBean bean = new BeanCreationTestBean();
@@ -441,7 +441,7 @@ public class TestBeanHelper {
      * Tests initializing a bean when the bean declaration does not contain any data.
      */
     @Test
-    public void testInitBeanWithNoData() {
+    void testInitBeanWithNoData() {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
         final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
@@ -454,7 +454,7 @@ public class TestBeanHelper {
      * Tests whether a specific default bean factory can be set when constructing an instance.
      */
     @Test
-    public void testInitWithBeanFactory() {
+    void testInitWithBeanFactory() {
         final BeanFactory factory = mock(BeanFactory.class);
         helper = new BeanHelper(factory);
         assertSame(factory, helper.getDefaultBeanFactory());
@@ -464,7 +464,7 @@ public class TestBeanHelper {
      * Tests registering a new bean factory.
      */
     @Test
-    public void testRegisterBeanFactory() {
+    void testRegisterBeanFactory() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         assertEquals(Collections.singleton(TEST_FACTORY), helper.registeredFactoryNames());
     }
@@ -473,7 +473,7 @@ public class TestBeanHelper {
      * Tries to register a null factory. This should cause an exception.
      */
     @Test
-    public void testRegisterBeanFactoryNull() {
+    void testRegisterBeanFactoryNull() {
         assertThrows(IllegalArgumentException.class, () -> helper.registerBeanFactory(TEST_FACTORY, null));
     }
 
@@ -481,7 +481,7 @@ public class TestBeanHelper {
      * Tries to register a bean factory with a null name. This should cause an exception.
      */
     @Test
-    public void testRegisterBeanFactoryNullName() {
+    void testRegisterBeanFactoryNullName() {
         final BeanFactory beanFactory = new TestBeanFactory();
         assertThrows(IllegalArgumentException.class, () -> helper.registerBeanFactory(null, beanFactory));
     }
@@ -490,7 +490,7 @@ public class TestBeanHelper {
      * Tests that a newly created instance does not have any bean factories registered.
      */
     @Test
-    public void testRegisteredFactoriesEmptyForNewInstance() {
+    void testRegisteredFactoriesEmptyForNewInstance() {
         assertEquals(Collections.emptySet(), helper.registeredFactoryNames());
     }
 }

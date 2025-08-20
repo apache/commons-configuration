@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -197,7 +197,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /** Stores a map with the named configurations. */
     private final Map<String, Configuration> namedConfigurations = new HashMap<>();
 
-    /** The key pattern for the CombinedConfiguration map */
+    /** The key pattern for the CombinedConfiguration map. */
     private String keyPattern;
 
     /** Stores the combiner. */
@@ -582,6 +582,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return getCurrentConfig().getInteger(key, defaultValue);
     }
 
+    /**
+     * Gets the key pattern for the CombinedConfiguration map.
+     *
+     * @return the key pattern for the CombinedConfiguration map.
+     */
     public String getKeyPattern() {
         return this.keyPattern;
     }
@@ -767,6 +772,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         getCurrentConfig().invalidate();
     }
 
+    /**
+     * Invalidates all CombinedConfigurations.
+     */
     public void invalidateAll() {
         configs.values().forEach(CombinedConfiguration::invalidate);
     }
@@ -852,6 +860,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         return super.removeEventListener(eventType, listener);
     }
 
+    /**
+     * Sets the key pattern for the CombinedConfiguration map.
+     *
+     * @param pattern the key pattern for the CombinedConfiguration map.
+     */
     public void setKeyPattern(final String pattern) {
         this.keyPattern = pattern;
     }

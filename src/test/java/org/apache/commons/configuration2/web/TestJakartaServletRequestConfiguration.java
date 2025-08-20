@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -105,7 +105,7 @@ public class TestJakartaServletRequestConfiguration extends TestAbstractConfigur
      * Tests a list with elements that contain an escaped list delimiter.
      */
     @Test
-    public void testListWithEscapedElements() {
+    void testListWithEscapedElements() {
         final String[] values = {"test1", "test2\\,test3", "test4\\,test5"};
         final String listKey = "test.list";
 

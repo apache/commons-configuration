@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -87,7 +87,7 @@ public class TestEqualBehavior {
      * If we add a to an existing key, does it work?
      */
     @Test
-    public void testAddingSet() throws Exception {
+    void testAddingSet() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -111,7 +111,7 @@ public class TestEqualBehavior {
      * If we add a key, does it work?
      */
     @Test
-    public void testAddingUnset() throws Exception {
+    void testAddingUnset() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -132,7 +132,7 @@ public class TestEqualBehavior {
      * If we delete a key, does it vanish? Does it leave all the other keys unchanged? How about an unset key?
      */
     @Test
-    public void testDeletingExisting() throws Exception {
+    void testDeletingExisting() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -151,7 +151,7 @@ public class TestEqualBehavior {
     }
 
     @Test
-    public void testDeletingNonExisting() throws Exception {
+    void testDeletingNonExisting() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -173,7 +173,7 @@ public class TestEqualBehavior {
      * Are both configurations equal after loading?
      */
     @Test
-    public void testLoading() throws Exception {
+    void testLoading() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -181,7 +181,7 @@ public class TestEqualBehavior {
     }
 
     @Test
-    public void testSettingExisting() throws Exception {
+    void testSettingExisting() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -207,7 +207,7 @@ public class TestEqualBehavior {
      * If we set a key, does it work? How about an existing key? Can we change it?
      */
     @Test
-    public void testSettingNonExisting() throws Exception {
+    void testSettingNonExisting() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 

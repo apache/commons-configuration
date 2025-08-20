@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
      * Tests combination of attributes.
      */
     @Test
-    public void testAttributes() throws ConfigurationException {
+    void testAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"));
         assertEquals(1, config.getInt("database.tables.table(0)[@id](0)"));
@@ -51,7 +51,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
      * Tests combination of lists.
      */
     @Test
-    public void testLists() throws ConfigurationException {
+    void testLists() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals(2, config.getMaxIndex("net.service.url"));
         assertEquals("http://service1.org", config.getString("net.service.url(0)"));
@@ -64,7 +64,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
      * Tests combination of simple values (no lists).
      */
     @Test
-    public void testSimpleValues() throws ConfigurationException {
+    void testSimpleValues() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals(1, config.getMaxIndex("gui.bgcolor"));
         assertEquals("green", config.getString("gui.bgcolor(0)"));
@@ -77,7 +77,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
      * Tests combinations of elements with attributes.
      */
     @Test
-    public void testSimpleValuesWithAttributes() throws ConfigurationException {
+    void testSimpleValuesWithAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals(1, config.getMaxIndex("gui.level"));
         assertEquals(1, config.getInt("gui.level(0)"));
@@ -92,7 +92,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
      * elements, the resulting tree should contain two table nodes.
      */
     @Test
-    public void testTableList() throws ConfigurationException {
+    void testTableList() throws ConfigurationException {
         combiner.addListNode("table");
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("documents", config.getString("database.tables.table(0).name"));

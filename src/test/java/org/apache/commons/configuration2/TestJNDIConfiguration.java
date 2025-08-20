@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -149,22 +149,22 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testBoolean() throws Exception {
+    void testBoolean() throws Exception {
         nonStringTestHolder.testBoolean();
     }
 
     @Test
-    public void testBooleanDefaultValue() throws Exception {
+    void testBooleanDefaultValue() throws Exception {
         nonStringTestHolder.testBooleanDefaultValue();
     }
 
     @Test
-    public void testByte() throws Exception {
+    void testByte() throws Exception {
         nonStringTestHolder.testByte();
     }
 
     @Test
-    public void testChangePrefix() {
+    void testChangePrefix() {
         assertEquals("true", conf.getString("test.boolean"));
         assertNull(conf.getString("boolean"));
 
@@ -175,7 +175,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testConstructor() throws Exception {
+    void testConstructor() throws Exception {
         // test the constructor accepting a context
         JNDIConfiguration c = new JNDIConfiguration(new InitialContext());
 
@@ -188,7 +188,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testContainsKey() {
+    void testContainsKey() {
         final String key = "test.boolean";
         assertTrue(conf.containsKey(key));
 
@@ -200,28 +200,28 @@ public class TestJNDIConfiguration {
      * Tests handling of errors in the containsKey() method.
      */
     @Test
-    public void testContainsKeyError() {
+    void testContainsKeyError() {
         assertFalse(setUpErrorConfig().containsKey("key"));
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
     @Test
-    public void testDouble() throws Exception {
+    void testDouble() throws Exception {
         nonStringTestHolder.testDouble();
     }
 
     @Test
-    public void testDoubleDefaultValue() throws Exception {
+    void testDoubleDefaultValue() throws Exception {
         nonStringTestHolder.testDoubleDefaultValue();
     }
 
     @Test
-    public void testFloat() throws Exception {
+    void testFloat() throws Exception {
         nonStringTestHolder.testFloat();
     }
 
     @Test
-    public void testFloatDefaultValue() throws Exception {
+    void testFloatDefaultValue() throws Exception {
         nonStringTestHolder.testFloatDefaultValue();
     }
 
@@ -229,7 +229,7 @@ public class TestJNDIConfiguration {
      * Tests handling of errors in getKeys().
      */
     @Test
-    public void testGetKeysError() {
+    void testGetKeysError() {
         assertFalse(setUpErrorConfig().getKeys().hasNext());
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
@@ -238,7 +238,7 @@ public class TestJNDIConfiguration {
      * Tests getKeys() if no data is found. This should not cause a problem and not notify the error listeners.
      */
     @Test
-    public void testGetKeysNoData() {
+    void testGetKeysNoData() {
         conf.installException(new NameNotFoundException("Test exception"));
         assertFalse(conf.getKeys().hasNext());
         listener.done();
@@ -248,7 +248,7 @@ public class TestJNDIConfiguration {
      * Tests the getKeys() method when there are cycles in the tree.
      */
     @Test
-    public void testGetKeysWithCycles() throws NamingException {
+    void testGetKeysWithCycles() throws NamingException {
         final Hashtable<Object, Object> env = new Hashtable<>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         final InitialContext initCtx = new InitialContext(env);
@@ -260,18 +260,18 @@ public class TestJNDIConfiguration {
      * Tests handling of errors in getProperty().
      */
     @Test
-    public void testGetPropertyError() {
+    void testGetPropertyError() {
         assertNull(setUpErrorConfig().getProperty("key"));
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
     @Test
-    public void testInteger() throws Exception {
+    void testInteger() throws Exception {
         nonStringTestHolder.testInteger();
     }
 
     @Test
-    public void testIntegerDefaultValue() throws Exception {
+    void testIntegerDefaultValue() throws Exception {
         nonStringTestHolder.testIntegerDefaultValue();
     }
 
@@ -279,13 +279,13 @@ public class TestJNDIConfiguration {
      * Tests handling of errors in isEmpty().
      */
     @Test
-    public void testIsEmptyError() throws Exception {
+    void testIsEmptyError() throws Exception {
         assertTrue(setUpErrorConfig().isEmpty());
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
 
     @Test
-    public void testListMissing() throws Exception {
+    void testListMissing() throws Exception {
         nonStringTestHolder.testListMissing();
     }
 
@@ -293,30 +293,30 @@ public class TestJNDIConfiguration {
      * Tests whether a JNDI configuration registers an error log listener.
      */
     @Test
-    public void testLogListener() throws NamingException {
+    void testLogListener() throws NamingException {
         final JNDIConfiguration c = new JNDIConfiguration();
         assertEquals(1, c.getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
 
     @Test
-    public void testLong() throws Exception {
+    void testLong() throws Exception {
         nonStringTestHolder.testLong();
     }
 
     @Test
-    public void testLongDefaultValue() throws Exception {
+    void testLongDefaultValue() throws Exception {
         nonStringTestHolder.testLongDefaultValue();
     }
 
     @Test
-    public void testProperties() throws Exception {
+    void testProperties() throws Exception {
         final Object o = conf.getProperty("test.boolean");
         assertNotNull(o);
         assertEquals("true", o.toString());
     }
 
     @Test
-    public void testResetRemovedProperties() throws Exception {
+    void testResetRemovedProperties() throws Exception {
         assertEquals("true", conf.getString("test.boolean"));
 
         // remove the property
@@ -331,17 +331,17 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testShort() throws Exception {
+    void testShort() throws Exception {
         nonStringTestHolder.testShort();
     }
 
     @Test
-    public void testShortDefaultValue() throws Exception {
+    void testShortDefaultValue() throws Exception {
         nonStringTestHolder.testShortDefaultValue();
     }
 
     @Test
-    public void testSubset() throws Exception {
+    void testSubset() throws Exception {
         nonStringTestHolder.testSubset();
     }
 }

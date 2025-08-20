@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -63,7 +63,7 @@ public class TestConfigurationSet {
      * Class under test for Iterator iterator()
      */
     @Test
-    public void testIterator() {
+    void testIterator() {
         final Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
             final Map.Entry<Object, Object> entry = iterator.next();
@@ -81,7 +81,7 @@ public class TestConfigurationSet {
     }
 
     @Test
-    public void testSize() {
+    void testSize() {
         assertEquals(properties.length, set.size());
     }
 }

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,7 @@ public class TestSystemConfiguration {
      * is related to CONFIGURATION-570.
      */
     @Test
-    public void testAppendWhileConcurrentAccess() throws InterruptedException {
+    void testAppendWhileConcurrentAccess() throws InterruptedException {
         final AtomicBoolean stop = new AtomicBoolean();
         final String property = SystemConfiguration.class.getName() + ".testProperty";
         final Thread t = new Thread(() -> {
@@ -83,7 +83,7 @@ public class TestSystemConfiguration {
      * Tests whether the configuration can be used to change system properties.
      */
     @Test
-    public void testChangeSystemProperties() {
+    void testChangeSystemProperties() {
         final String testProperty = "someTest";
         final SystemConfiguration config = new SystemConfiguration();
         config.setProperty(testProperty, "true");
@@ -91,7 +91,7 @@ public class TestSystemConfiguration {
     }
 
     @Test
-    public void testSetSystemProperties() {
+    void testSetSystemProperties() {
         final PropertiesConfiguration props = new PropertiesConfiguration();
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
@@ -102,7 +102,7 @@ public class TestSystemConfiguration {
      * Tests whether system properties can be set from a configuration file.
      */
     @Test
-    public void testSetSystemPropertiesFromPropertiesFile() throws ConfigurationException, IOException {
+    void testSetSystemPropertiesFromPropertiesFile() throws ConfigurationException, IOException {
         final File file = newFile("sys.properties", tempFolder);
         final PropertiesConfiguration pconfig = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pconfig);
@@ -115,7 +115,7 @@ public class TestSystemConfiguration {
     }
 
     @Test
-    public void testSystemConfiguration() {
+    void testSystemConfiguration() {
         final Properties props = System.getProperties();
         props.put("test.number", "123");
 

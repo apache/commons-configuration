@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -210,7 +210,7 @@ public class DefaultFileSystem extends FileSystem {
                 } catch (final Exception e) {
                     // simply ignore it and return null
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug(String.format("Could not determine URL for " + "basePath = %s, fileName = %s: %s", basePath, fileName, e));
+                        getLogger().debug(String.format("Could not determine URL for basePath = %s, fileName = %s: %s", basePath, fileName, e));
                     }
                 }
             }

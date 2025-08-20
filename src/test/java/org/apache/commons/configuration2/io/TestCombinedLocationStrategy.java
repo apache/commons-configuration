@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -106,7 +106,7 @@ public class TestCombinedLocationStrategy {
      * Tests that the collection with sub strategies cannot be modified.
      */
     @Test
-    public void testGetSubStrategiesModify() {
+    void testGetSubStrategiesModify() {
         final CombinedLocationStrategy strategy = createCombinedStrategy();
         final Collection<FileLocationStrategy> strategies = strategy.getSubStrategies();
         assertThrows(UnsupportedOperationException.class, strategies::clear);
@@ -116,7 +116,7 @@ public class TestCombinedLocationStrategy {
      * Tries to create an instance containing a null element.
      */
     @Test
-    public void testInitCollectionWithNullEntries() {
+    void testInitCollectionWithNullEntries() {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         col.add(null);
         assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(col));
@@ -126,7 +126,7 @@ public class TestCombinedLocationStrategy {
      * Tests whether a defensive copy of the collection with sub strategies is made.
      */
     @Test
-    public void testInitDefensiveCopy() {
+    void testInitDefensiveCopy() {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         final CombinedLocationStrategy strategy = new CombinedLocationStrategy(col);
         col.add(mock(FileLocationStrategy.class));
@@ -137,7 +137,7 @@ public class TestCombinedLocationStrategy {
      * Tries to create an instance with a null collection.
      */
     @Test
-    public void testInitNullCollection() {
+    void testInitNullCollection() {
         assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(null));
     }
 
@@ -145,7 +145,7 @@ public class TestCombinedLocationStrategy {
      * Tests a failed locate() operation.
      */
     @Test
-    public void testLocateFailed() {
+    void testLocateFailed() {
         when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(null);
         when(getSubStrategies()[1].locate(getFileSystem(), locator)).thenReturn(null);
 
@@ -161,7 +161,7 @@ public class TestCombinedLocationStrategy {
      * Tests a successful locate() operation if the first sub strategy can locate the file.
      */
     @Test
-    public void testLocateSuccessFirstSubStrategy() {
+    void testLocateSuccessFirstSubStrategy() {
         when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(locateURL);
 
         final CombinedLocationStrategy strategy = createCombinedStrategy();
@@ -175,7 +175,7 @@ public class TestCombinedLocationStrategy {
      * Tests a successful locate() operation if the 2nd sub strategy can locate the file.
      */
     @Test
-    public void testLocateSuccessSecondSubStrategy() {
+    void testLocateSuccessSecondSubStrategy() {
         when(getSubStrategies()[0].locate(getFileSystem(), locator)).thenReturn(null);
         when(getSubStrategies()[1].locate(getFileSystem(), locator)).thenReturn(locateURL);
 

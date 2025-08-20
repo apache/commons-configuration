@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,32 +23,63 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.12.0" date="YYYY-MM-DD" description="This is a feature and maintenance release. Java 8 or later is required.">
+    <release version="2.13.0" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+      <!-- FIX -->
+      <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "throwExceptionOnMissing" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.AbstractConfiguration] At AbstractConfiguration.java:[line 1493] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory, SpotBugs">Shared primitive variable "forceSingleLine" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.PropertiesConfigurationLayout] At PropertiesConfigurationLayout.java:[line 821] AT_STALE_THREAD_WRITE_OF_PRIMITIVE.</action>
+      <action type="fix" dev="ggregory" due-to="Willy van Diepen, Gary Gregory, Rob Tompkins" issue="CONFIGURATION-849">Fix undoubling of strings #569.</action>
+      <action type="fix" dev="ggregory" due-to="Robbie Gemmell, Justin Bertram, Gary Gregory" issue="CONFIGURATION-852">Mark the package jakarta.servlet.* import as optional in OSGi #574.</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix build [WARNING] Parameter 'forkMode' is unknown for plugin 'maven-surefire-plugin:3.5.3:test (default-test)'.</action>
+      <!-- ADD -->
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.ImmutableConfiguration.entrySet().</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.ImmutableConfiguration.forEach(BiConsumer&lt;String, Object&gt;).</action>
+      <action type="add" dev="ggregory" due-to="Piotr P. Karwasz, Gary Gregory">Add VEX entry for CVE-2025-48924 #587.</action> 
+      <!-- UPDATE -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 81 to 85.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.19.2 #565.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.10.1 to 1.11.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.24.3 to 2.25.1 #579.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.17.0 to 3.18.0 #582.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.19.0 to 2.20.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.18.0 to 1.19.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-text from 1.13.1 to 1.14.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.sun.mail:mailapi from 2.0.1 to 2.0.2 (#586) #1627.</action>
+    </release>
+    <release version="2.12.0" date="2025-04-22" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">PropertyConverter.to(Class, Object, DefaultConversionHandler) doesn't convert custom java.lang.Number subclasses.</action> 
       <action type="fix" dev="ggregory" due-to="Gary Gregory">DefaultConversionHandler.convertValue(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses.</action> 
       <action type="fix" dev="ggregory" due-to="Gary Gregory">DefaultConversionHandler.to(Object, Class, ConfigurationInterpolator) doesn't convert custom java.lang.Number subclasses.</action> 
       <action type="fix" issue="CONFIGURATION-848" dev="ggregory" due-to="Laszlo Hujber, Gary Gregory">SubsetConfiguration does not account for delimiters as it did in 2.9.0.</action> 
       <action type="fix" issue="CONFIGURATION-848" dev="ggregory" due-to="Laszlo Hujber, Gary Gregory">CompositeConfiguration does not account for delimiters as it did in 2.9.0.</action>
+      <action type="fix" dev="ggregory" due-to="Arnout Engelen, Gary Gregory">Describe the security model #540.</action>
+      <action type="fix" dev="ggregory" due-to="Arnout Engelen, Gary Gregory">De-emphasize the 1.x version line on the website #539.</action>
+      <action type="fix" issue="CONFIGURATION-851" dev="ggregory" due-to="Scott Babcock, Gary Gregory">HomeDirectoryLocationStrategy no longer resolves the user HOME directory correctly.</action>
       <!-- ADD -->
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add PrefixedKeysIterator.toString() to package-private PrefixedKeysIterator.</action> 
       <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">New web configurations using the jakarta.servlet namespace are now available</action>
+      <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">Add org.apache.commons.configuration2.web.JakartaServletConfiguration.</action>
+      <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">Add org.apache.commons.configuration2.web.JakartaServletContextConfiguration.</action>
+      <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">Add org.apache.commons.configuration2.web.JakartaServletFilterConfiguration.</action>
+      <action type="add" issue="CONFIGURATION-836" dev="ebourg" due-to="Emmanuel Bourg">Add org.apache.commons.configuration2.web.JakartaServletRequestConfiguration.</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.getKeysInternal(String, String).</action> 
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 70 to 79 #434, #453, #466, #470, #479, #486, #491, #499.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-logging:commons-logging from 1.3.2 to 1.3.4 #442, #467.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.18.2 #447, #483, #518.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 70 to 81 #434, #453, #466, #470, #479, #486, #491, #499, #537.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-logging:commons-logging from 1.3.2 to 1.3.5 #442, #467.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.17.1 to 2.18.3 #447, #483, #518.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-codec:commons-codec from 1.17.0 to 1.18.0 #449, #533.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #450, #458, #471.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump slf4j.version from 2.0.13 to 2.0.16 #457, #462, #464.</action> 
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump slf4j.version from 2.0.13 to 2.0.17 #457, #462, #464, #549.</action> 
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump spring.version from 5.3.35 to 5.3.39.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.2 to 2.3 #473.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.2 to 2.4 #473.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.23.1 to 2.24.3 #475, #486, #514, #519.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-io:commons-io from 2.16.1 to 2.18.0 #480, #513.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-io:commons-io from 2.16.1 to 2.19.0 #480, #513.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-dbcp2 from 2.12.0 to 2.13.0 #515.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-text from 1.12.0 to 1.13.0 #521.</action> 
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-text from 1.12.0 to 1.13.1 #521.</action> 
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.9.4 to 1.10.1.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-pool2 from 2.12.0 to 2.12.1 #532.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.dbunit:dbunit from 2.8.0 to 3.0.0 #534.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-vfs2 from 2.9.0 to 2.10.0.</action>
     </release>
     <release version="2.11.0" date="2024-06-07" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- ADD -->
@@ -2399,7 +2430,7 @@
         extends this class.
       </action>
       <action dev="oheger" type="update" due-to="Kay Doebl" issue="CONFIGURATION-41">
-        XMLConfiguration now prints the used encoding in the xml declaration of
+        XMLConfiguration now prints the used encoding in the XML declaration of
         generated files. In earlier versions always the default encoding was
         written. PropertiesConfiguration now always uses the platform specific
         line separator when saving files.

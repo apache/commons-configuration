@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,7 @@ import org.apache.commons.text.lookup.StringLookup;
  * String str = lookup.lookup("'$[element] ' + String.trimToEmpty('$[space.description]')");
  * </pre>
  *
- * In the example above TEST_FILE contains xml that looks like:
+ * In the example above TEST_FILE contains XML that looks like:
  *
  * <pre>
  * &lt;configuration&gt;
@@ -67,32 +67,62 @@ public class ExprLookup implements Lookup {
      * The key and corresponding object that will be made available to the JexlContext for use in expressions.
      */
     public static class Variable {
-        /** The name to be used in expressions */
+        /** The name to be used in expressions. */
         private String key;
 
-        /** The object to be accessed in expressions */
+        /** The object to be accessed in expressions. */
         private Object value;
 
+        /**
+         * Constructs a new instance.
+         */
         public Variable() {
         }
 
+        /**
+         * Constructs a new instance.
+         *
+         * @param name The name to be used in expressions.
+         * @param value The object to be accessed in expressions.
+         */
         public Variable(final String name, final Object value) {
             setName(name);
             setValue(value);
         }
 
+        /**
+         * Gets the name to be used in expressions.
+         *
+         * @return the name to be used in expressions.
+         */
         public String getName() {
             return key;
         }
 
+        /**
+         * Sets the value to be used in expressions.
+         *
+         * @return the value to be used in expressions.
+         */
         public Object getValue() {
             return value;
         }
 
+        /**
+         * Sets the name to be used in expressions.
+         *
+         * @param name the name to be used in expressions.
+         */
         public void setName(final String name) {
             this.key = name;
         }
 
+        /**
+         * Sets the value to be used in expressions.
+         *
+         * @param value The object to be accessed in expressions.
+         * @throws ConfigurationRuntimeException Wraps an exception creating the value.
+         */
         public void setValue(final Object value) throws ConfigurationRuntimeException {
             try {
                 if (!(value instanceof String)) {
@@ -138,6 +168,11 @@ public class ExprLookup implements Lookup {
             super(vars);
         }
 
+        /**
+         * Gets the variable or null if empty.
+         *
+         * @return the variable or null if empty.
+         */
         public Variable getVariable() {
             return !isEmpty() ? get(size() - 1) : null;
         }
@@ -175,7 +210,7 @@ public class ExprLookup implements Lookup {
     private String suffixMatcher = DEFAULT_SUFFIX;
 
     /**
-     * The default constructor. Will get used when the Lookup is constructed via configuration.
+     * Constructs a new instance. Will get used when the Lookup is constructed via configuration.
      */
     public ExprLookup() {
     }

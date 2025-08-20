@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -110,7 +110,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private static void checkDefaultValueArray(final Class<?> cls, final Object defaultValue) {
         if (defaultValue != null && (!defaultValue.getClass().isArray() || !cls.isAssignableFrom(defaultValue.getClass().getComponentType()))) {
             throw new IllegalArgumentException(
-                "The type of the default value (" + defaultValue.getClass() + ")" + " is not an array of the specified class (" + cls + ")");
+                "The type of the default value (" + defaultValue.getClass() + ") is not an array of the specified class (" + cls + ")");
         }
     }
 
@@ -190,7 +190,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Whether the configuration should throw NoSuchElementExceptions or simply return null when a property does not exist.
      * Defaults to return null.
      */
-    private boolean throwExceptionOnMissing;
+    private volatile boolean throwExceptionOnMissing;
 
     /** Stores a reference to the object that handles variable interpolation. */
     private AtomicReference<ConfigurationInterpolator> interpolator;
@@ -271,7 +271,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (configuration != null) {
             configuration.lock(LockMode.READ);
             try {
-                configuration.getKeys().forEachRemaining(key -> addProperty(key, encodeForCopy(configuration.getProperty(key))));
+                configuration.forEach((k, v) -> addProperty(k, encodeForCopy(v)));
             } finally {
                 configuration.unlock(LockMode.READ);
             }
@@ -525,7 +525,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         if (configuration != null) {
             configuration.lock(LockMode.READ);
             try {
-                configuration.getKeys().forEachRemaining(key -> setProperty(key, encodeForCopy(configuration.getProperty(key))));
+                configuration.forEach((k, v) -> setProperty(k, encodeForCopy(v)));
             } finally {
                 configuration.unlock(LockMode.READ);
             }
@@ -1200,7 +1200,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate
-     * @return returns the key name with the ${key} substituted
+     * @return the key name with the ${key} substituted
      */
     protected String interpolate(final String base) {
         return Objects.toString(interpolate((Object) base), null);
@@ -1219,13 +1219,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public Configuration interpolatedConfiguration() {
         // first clone this configuration
-        final AbstractConfiguration c = (AbstractConfiguration) ConfigurationUtils.cloneConfiguration(this);
-
+        final AbstractConfiguration config = (AbstractConfiguration) ConfigurationUtils.cloneConfiguration(this);
         // now perform interpolation
-        c.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        getKeys().forEachRemaining(key -> c.setProperty(key, getList(key)));
-        c.setListDelimiterHandler(getListDelimiterHandler());
-        return c;
+        config.setListDelimiterHandler(new DisabledListDelimiterHandler());
+        getKeys().forEachRemaining(key -> config.setProperty(key, getList(key)));
+        config.setListDelimiterHandler(getListDelimiterHandler());
+        return config;
     }
 
     /**
@@ -1273,8 +1272,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code LockMode} argument. Subclasses can override these protected methods to perform additional steps when a
      * configuration is locked.
      *
-     * @since 2.0
      * @throws NullPointerException if the argument is <strong>null</strong>
+     * @since 2.0
      */
     @Override
     public final void lock(final LockMode mode) {
@@ -1521,19 +1520,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return new SubsetConfiguration(this, prefix, DELIMITER);
     }
 
-    void syncRead(final Runnable runnable, final boolean optimize) {
+    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
         beginRead(optimize);
         try {
-            runnable.run();
+            return supplier.get();
         } finally {
             endRead();
         }
     }
 
-    <T, E extends Throwable> T syncRead(final FailableSupplier<T, E> supplier, final boolean optimize) throws E {
+    void syncRead(final Runnable runnable, final boolean optimize) {
         beginRead(optimize);
         try {
-            return supplier.get();
+            runnable.run();
         } finally {
             endRead();
         }

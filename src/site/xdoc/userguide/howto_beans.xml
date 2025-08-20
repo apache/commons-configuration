@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Declaring Beans Howto</title>
  </properties>
@@ -70,6 +71,7 @@
       </p>
       <p>
         On the Java side three entities are involved in the creation of a bean:
+      </p>
         <ul>
           <li>A <em>bean factory</em>: This is an object that implements the
           <code><a href="../apidocs/org/apache/commons/configuration2/beanutils/BeanFactory.html">BeanFactory</a></code>
@@ -89,6 +91,7 @@
           one of the <code>createBean()</code> methods of <code>BeanHelper</code>.
           That's it!</li>
         </ul>
+      <p>
         For all of the interfaces mentioned above default implementations are
         provided, which in many cases can be used out of the box.
       </p>
@@ -157,6 +160,7 @@ public class DefaultWindowManager implements WindowManager
         This XML document contains a valid bean declaration starting with the
         <code>windowManager</code> element and including its sub elements. Note
         the following points:
+      </p>
         <ul>
           <li>The (fully-qualified) class of the bean is specified using the
           <code>config-class</code> attribute. (Attributes starting with the
@@ -171,6 +175,7 @@ public class DefaultWindowManager implements WindowManager
           element; indeed it could even have further sub elements defining
           bean properties of the <code>WindowStyleDefinition</code> class.</li>
         </ul>
+      <p>
         The basic structure of a bean declaration should have become clear by
         this example.
       </p>
@@ -206,6 +211,7 @@ WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
         declaration are evaluated and set on the newly created bean. The
         <code>BeanFactory</code> to be used is determined based on the
         bean helper's configuration:
+      </p>
         <ul>
           <li>A <code>BeanHelper</code> can be configured with a number of
           <code>BeanFactory</code> objects that are registered under a specific
@@ -217,6 +223,7 @@ WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
           <code>BeanFactory</code> is set. This one is used if no specific
           factory is referenced by the bean declaration.</li>
         </ul>
+      <p>
         If an application does not need special bean factories, it can use the
         default <code>BeanHelper</code> instance which is available via the
         static <code>INSTANCE</code> member field (as shown in the example
@@ -381,11 +388,11 @@ public class MyBean
         As was pointed out in the introduction of this chapter, support for creating
         beans is focused on the basics. But there are some possibilities of hooking
         in and add custom extensions. This can be done in the following ways:
+      </p>
         <ul>
           <li>By defining a custom <code>BeanDeclaration</code> implementation</li>
           <li>By providing a custom <code>BeanFactory</code> implementation</li>
         </ul>
-      </p>
       <p>
         A specialized bean declaration is needed when you have to deal with
         configuration files that contain bean declarations in a different format
@@ -394,6 +401,7 @@ public class MyBean
         data and extract the required information to create the bean. Basically
         your <code><a href="../apidocs/org/apache/commons/configuration2/beanutils/BeanDeclaration.html">BeanDeclaration</a></code>
         implementation must be able to provide the following data:
+      </p>
         <ul>
           <li>The name of the class for which an instance is to be created.</li>
           <li>The name of the bean factory that is used to create the bean. Here
@@ -413,7 +421,6 @@ public class MyBean
           processed bean (the names of these properties are again obtained from
           the keys of the map).</li>
         </ul>
-      </p>
       <p>
         While creating a custom <code>BeanDeclaration</code> implementation
         allows you to adapt the format of bean declarations in configuration files,
@@ -421,6 +428,7 @@ public class MyBean
         specialized implementation of the
         <code><a href="../apidocs/org/apache/commons/configuration2/beanutils/BeanFactory.html">BeanFactory</a></code>
         interface. For this purpose the following steps are necessary:
+      </p>
         <ol>
           <li>Create a class implementing the <code>BeanFactory</code> interface.
           This interface is quite simple. It defines one method for creating an
@@ -432,7 +440,6 @@ public class MyBean
           factory that should be used for creating the bean (unless this factory
           is used as the <code>BeanHelper</code>'s default bean factory).</li>
         </ol>
-      </p>
       <p>
         We will provide an example that covers all these steps. This example
         deals with a <em>singleton</em> factory, i.e. an implementation of

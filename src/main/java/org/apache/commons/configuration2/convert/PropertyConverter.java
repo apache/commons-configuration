@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -139,39 +139,53 @@ public final class PropertyConverter {
                 return toBigDecimal(value);
             }
             return toNumber(value, cls);
-        } else if (Date.class.equals(cls)) {
+        }
+        if (Date.class.equals(cls)) {
             return toDate(value, convHandler.getDateFormat());
-        } else if (Calendar.class.equals(cls)) {
+        }
+        if (Calendar.class.equals(cls)) {
             return toCalendar(value, convHandler.getDateFormat());
-        } else if (File.class.equals(cls)) {
+        }
+        if (File.class.equals(cls)) {
             return toFile(value);
-        } else if (Path.class.equals(cls)) {
+        }
+        if (Path.class.equals(cls)) {
             return toPath(value);
-        } else if (URI.class.equals(cls)) {
+        }
+        if (URI.class.equals(cls)) {
             return toURI(value);
-        } else if (URL.class.equals(cls)) {
+        }
+        if (URL.class.equals(cls)) {
             return toURL(value);
-        } else if (Pattern.class.equals(cls)) {
+        }
+        if (Pattern.class.equals(cls)) {
             return toPattern(value);
-        } else if (Locale.class.equals(cls)) {
+        }
+        if (Locale.class.equals(cls)) {
             return toLocale(value);
-        } else if (cls.isEnum()) {
+        }
+        if (cls.isEnum()) {
             return convertToEnum(cls, value);
-        } else if (Color.class.equals(cls)) {
+        }
+        if (Color.class.equals(cls)) {
             return toColor(value);
-        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
+        }
+        if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
             // javamail-1.* With javax.mail.* namespace.
             return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAVAX);
-        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
+        }
+        if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
             // javamail-2.0+, with jakarta.mail.* namespace.
             return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAKARTA);
-        } else if (InetAddress.class.isAssignableFrom(cls)) {
+        }
+        if (InetAddress.class.isAssignableFrom(cls)) {
             return toInetAddress(value);
-        } else if (Duration.class.equals(cls)) {
+        }
+        if (Duration.class.equals(cls)) {
             return toDuration(value);
         }
 
-        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")" + " can't be converted to a " + cls.getName() + " object");
+        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ") can't be converted to a " + cls.getName() + " object");
     }
 
     /**

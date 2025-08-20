@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Configurations and Concurrent Access</title>
  </properties>
@@ -76,6 +77,7 @@
       <code>ReentrantReadWriteLock</code> class from the JDK. It implements
       the typical behavior desired when accessing a configuration in a
       multi-threaded environment:
+    </p>
       <ul>
         <li>An arbitrary number of threads can read the configuration
         simultaneously.</li>
@@ -83,7 +85,6 @@
         so if a thread changes configuration data, all other threads (readers
         and writers) are blocked until the update operation is complete.</li>
       </ul>
-    </p>
     <p>
       The synchronizer associated with a Configuration can be changed at any
       time by calling the <code>setSynchronizer()</code> method. The following
@@ -229,7 +230,6 @@ finally
       corner cases which may occur when some of the more advanced configuration
       classes are involved.
     </p>
-    <p>
       <ul>
         <li>All hierarchical configurations derived from
         <code><a href="../apidocs/org/apache/commons/configuration2/BaseHierarchicalConfiguration.html">
@@ -285,7 +285,6 @@ finally
         actually only a single <code>Synchronizer</code> controlling the
         access to all involved configurations.</li>
       </ul>
-    </p>
     </subsection>
 
     <subsection name="Read-only configurations">

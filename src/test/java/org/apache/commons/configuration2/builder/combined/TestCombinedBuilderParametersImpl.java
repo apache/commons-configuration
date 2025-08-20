@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,7 +62,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether cloning works as expected.
      */
     @Test
-    public void testClone() {
+    void testClone() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setBasePath("some base path");
         final XMLBuilderParametersImpl defParams = new XMLBuilderParametersImpl();
@@ -79,7 +79,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a new instance can be created if none is found in the parameters map.
      */
     @Test
-    public void testFromParametersCreate() {
+    void testFromParametersCreate() {
         final CombinedBuilderParametersImpl params = CombinedBuilderParametersImpl.fromParameters(new HashMap<>(), true);
         assertNotNull(params);
         assertNull(params.getDefinitionBuilder());
@@ -89,7 +89,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether an instance can be obtained from a parameters map.
      */
     @Test
-    public void testFromParametersExisting() {
+    void testFromParametersExisting() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final Map<String, Object> map = params.getParameters();
         assertSame(params, CombinedBuilderParametersImpl.fromParameters(map));
@@ -99,7 +99,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests fromParameters() if the map does not contain an instance.
      */
     @Test
-    public void testFromParametersNotFound() {
+    void testFromParametersNotFound() {
         assertNull(CombinedBuilderParametersImpl.fromParameters(new HashMap<>()));
     }
 
@@ -107,7 +107,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a default parameters manager can be set and queried.
      */
     @Test
-    public void testGetChildDefaultParametersManagerSpecific() {
+    void testGetChildDefaultParametersManagerSpecific() {
         final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertSame(params, params.setChildDefaultParametersManager(manager));
@@ -118,7 +118,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a default parameters manager is dynamically created if it has not been set.
      */
     @Test
-    public void testGetChildDefaultParametersManagerUndefined() {
+    void testGetChildDefaultParametersManagerUndefined() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertNotNull(params.getChildDefaultParametersManager());
     }
@@ -127,7 +127,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests that inherited properties are also stored in the parameters map.
      */
     @Test
-    public void testGetParametersInherited() {
+    void testGetParametersInherited() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> map = params.getParameters();
@@ -138,7 +138,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether the map with providers is initially empty.
      */
     @Test
-    public void testGetProvidersInitial() {
+    void testGetProvidersInitial() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertEquals(Collections.emptyMap(), params.getProviders());
     }
@@ -147,7 +147,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests that the map with providers cannot be modified.
      */
     @Test
-    public void testGetProvidersModify() {
+    void testGetProvidersModify() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final Map<String, ConfigurationBuilderProvider> providers = params.getProviders();
         final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
@@ -158,7 +158,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether properties can be inherited.
      */
     @Test
-    public void testInheritFrom() {
+    void testInheritFrom() {
         final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl().setInheritSettings(false).setChildDefaultParametersManager(manager);
         params.setThrowExceptionOnMissing(true);
@@ -175,7 +175,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests that inheritFrom() can handle a map which does not contain a parameters object.
      */
     @Test
-    public void testInheritFromNoParametersInMap() {
+    void testInheritFromNoParametersInMap() {
         final BasicBuilderParameters params = new BasicBuilderParameters().setThrowExceptionOnMissing(true);
         final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
 
@@ -188,7 +188,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests the result for an unknown provider.
      */
     @Test
-    public void testProviderForUnknown() {
+    void testProviderForUnknown() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertNull(params.providerForTag("someTag"));
     }
@@ -197,7 +197,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a defaults handler for a child source can be registered.
      */
     @Test
-    public void testRegisterChildDefaultsHandler() {
+    void testRegisterChildDefaultsHandler() {
         final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
@@ -211,7 +211,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a defaults handler for a child source with a class restriction can be registered.
      */
     @Test
-    public void testRegisterChildDefaultsHandlerWithStartClass() {
+    void testRegisterChildDefaultsHandlerWithStartClass() {
         final DefaultParametersManager manager = mock(DefaultParametersManager.class);
         final DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
@@ -225,7 +225,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether missing providers can be registered.
      */
     @Test
-    public void testRegisterMissingProviders() {
+    void testRegisterMissingProviders() {
         final ConfigurationBuilderProvider provider1 = mock(ConfigurationBuilderProvider.class);
         final ConfigurationBuilderProvider provider2 = mock(ConfigurationBuilderProvider.class);
         final ConfigurationBuilderProvider provider3 = mock(ConfigurationBuilderProvider.class);
@@ -245,7 +245,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tries to register a map with missing providers containing a null entry.
      */
     @Test
-    public void testRegisterMissingProvidersNullEntry() {
+    void testRegisterMissingProvidersNullEntry() {
         final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
         map.put("tag", null);
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
@@ -256,7 +256,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tries to register a null map with missing providers.
      */
     @Test
-    public void testRegisterMissingProvidersNullMap() {
+    void testRegisterMissingProvidersNullMap() {
         final Map<String, ConfigurationBuilderProvider> map = null;
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
         assertThrows(IllegalArgumentException.class, () -> builderParameters.registerMissingProviders(map));
@@ -266,7 +266,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether missing providers can be copied from a parameters object.
      */
     @Test
-    public void testRegisterMissingProvidersParams() {
+    void testRegisterMissingProvidersParams() {
         final ConfigurationBuilderProvider provider1 = mock(ConfigurationBuilderProvider.class);
         final ConfigurationBuilderProvider provider2 = mock(ConfigurationBuilderProvider.class);
         final ConfigurationBuilderProvider provider3 = mock(ConfigurationBuilderProvider.class);
@@ -286,7 +286,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tries to copy providers from a null parameters object.
      */
     @Test
-    public void testRegisterMissingProvidersParamsNull() {
+    void testRegisterMissingProvidersParamsNull() {
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
         assertThrows(IllegalArgumentException.class, () -> builderParameters.registerMissingProviders((CombinedBuilderParametersImpl) null));
     }
@@ -295,7 +295,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a new builder provider can be registered.
      */
     @Test
-    public void testRegisterProvider() {
+    void testRegisterProvider() {
         final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
         final String tagName = "testTag";
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
@@ -310,7 +310,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tries to register a null provider.
      */
     @Test
-    public void testRegisterProviderNoProvider() {
+    void testRegisterProviderNoProvider() {
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
         assertThrows(IllegalArgumentException.class, () -> builderParameters.registerProvider("aTag", null));
     }
@@ -319,7 +319,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tries to register a provider without a tag name.
      */
     @Test
-    public void testRegisterProviderNoTag() {
+    void testRegisterProviderNoTag() {
         final CombinedBuilderParametersImpl builderParameters = new CombinedBuilderParametersImpl();
         final ConfigurationBuilderProvider provider = mock(ConfigurationBuilderProvider.class);
         assertThrows(IllegalArgumentException.class, () -> builderParameters.registerProvider(null, provider));
@@ -329,7 +329,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether the base path can be set.
      */
     @Test
-    public void testSetBasePath() {
+    void testSetBasePath() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
         assertSame(params, params.setBasePath(basePath));
@@ -340,7 +340,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether properties can be set using BeanUtils.
      */
     @Test
-    public void testSetBeanProperties() throws Exception {
+    void testSetBeanProperties() throws Exception {
         final BuilderParameters defparams = mock(BuilderParameters.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         BeanHelper.setProperty(params, "basePath", "testPath");
@@ -355,7 +355,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether the definition builder can be set.
      */
     @Test
-    public void testSetDefinitionBuilder() {
+    void testSetDefinitionBuilder() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertNull(params.getDefinitionBuilder());
         final ConfigurationBuilder<XMLConfiguration> builder = new BasicConfigurationBuilder<>(XMLConfiguration.class);
@@ -367,7 +367,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether a parameters object for the definition builder can be set.
      */
     @Test
-    public void testSetDefinitionBuilderParameters() {
+    void testSetDefinitionBuilderParameters() {
         final BuilderParameters defparams = mock(BuilderParameters.class);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertSame(params, params.setDefinitionBuilderParameters(defparams));
@@ -378,7 +378,7 @@ public class TestCombinedBuilderParametersImpl {
      * Tests whether the flag that controls settings inheritance can be set.
      */
     @Test
-    public void testSetInheritSettings() {
+    void testSetInheritSettings() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertTrue(params.isInheritSettings());
         assertSame(params, params.setInheritSettings(false));

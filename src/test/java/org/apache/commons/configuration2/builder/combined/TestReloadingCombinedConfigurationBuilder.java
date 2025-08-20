@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,7 @@ public class TestReloadingCombinedConfigurationBuilder {
      * Tests whether the failOnInit flag is passed to the super constructor.
      */
     @Test
-    public void testInitWithFailOnInitFlag() {
+    void testInitWithFailOnInitFlag() {
         builder = new ReloadingCombinedConfigurationBuilder(null, true);
         assertTrue(builder.isAllowFailOnInit());
     }
@@ -60,7 +60,7 @@ public class TestReloadingCombinedConfigurationBuilder {
      * Tests whether initialization parameters are correctly processed.
      */
     @Test
-    public void testInitWithParameters() throws ConfigurationException {
+    void testInitWithParameters() throws ConfigurationException {
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         params.setFile(ConfigurationAssert.getTestFile("testDigesterConfiguration.xml"));
         builder = new ReloadingCombinedConfigurationBuilder(params.getParameters());
@@ -72,7 +72,7 @@ public class TestReloadingCombinedConfigurationBuilder {
      * Tests whether a nested combined configuration definition can be loaded with reloading support.
      */
     @Test
-    public void testNestedReloadableSources() throws ConfigurationException {
+    void testNestedReloadableSources() throws ConfigurationException {
         final File testFile = ConfigurationAssert.getTestFile("testCCReloadingNested.xml");
         builder.configure(new FileBasedBuilderParametersImpl().setFile(testFile));
         builder.getConfiguration();
@@ -89,7 +89,7 @@ public class TestReloadingCombinedConfigurationBuilder {
      * Tests a definition configuration which does not contain sources with reloading support.
      */
     @Test
-    public void testNoReloadableSources() throws ConfigurationException {
+    void testNoReloadableSources() throws ConfigurationException {
         final File testFile = ConfigurationAssert.getTestFile("testDigesterConfiguration.xml");
         builder.configure(new CombinedBuilderParametersImpl().setDefinitionBuilder(new FileBasedConfigurationBuilder<>(XMLConfiguration.class))
             .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl().setFile(testFile)));
@@ -102,7 +102,7 @@ public class TestReloadingCombinedConfigurationBuilder {
      * Tests whether the definition builder created by default supports reloading.
      */
     @Test
-    public void testReloadableDefinitionBuilder() throws ConfigurationException {
+    void testReloadableDefinitionBuilder() throws ConfigurationException {
         final File testFile = ConfigurationAssert.getTestFile("testDigesterConfiguration.xml");
         final ReloadingCombinedConfigurationBuilder confBuilder = builder.configure(new FileBasedBuilderParametersImpl().setFile(testFile));
         assertSame(builder, confBuilder);

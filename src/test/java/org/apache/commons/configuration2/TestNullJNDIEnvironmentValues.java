@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,20 +40,20 @@ public class TestNullJNDIEnvironmentValues {
     }
 
     @Test
-    public void testClearProperty() {
+    void testClearProperty() {
         assertNotNull(conf.getShort("test.short", null));
         conf.clearProperty("test.short");
         assertNull(conf.getShort("test.short", null));
     }
 
     @Test
-    public void testContainsKey() throws Exception {
+    void testContainsKey() throws Exception {
         assertTrue(conf.containsKey("test.key"));
         assertFalse(conf.containsKey("test.imaginarykey"));
     }
 
     @Test
-    public void testGetKeys() throws Exception {
+    void testGetKeys() throws Exception {
         boolean found = false;
         final Iterator<String> it = conf.getKeys();
 
@@ -67,7 +67,7 @@ public class TestNullJNDIEnvironmentValues {
     }
 
     @Test
-    public void testGetKeysWithExistingPrefix() {
+    void testGetKeysWithExistingPrefix() {
         // test for an existing prefix
         final Iterator<String> it = conf.getKeys("test");
         boolean found = false;
@@ -79,7 +79,7 @@ public class TestNullJNDIEnvironmentValues {
     }
 
     @Test
-    public void testGetKeysWithKeyAsPrefix() {
+    void testGetKeysWithKeyAsPrefix() {
         // test for a prefix matching exactly the key of a property
         final Iterator<String> it = conf.getKeys("test.boolean");
         boolean found = false;
@@ -91,30 +91,30 @@ public class TestNullJNDIEnvironmentValues {
     }
 
     @Test
-    public void testGetKeysWithUnknownPrefix() {
+    void testGetKeysWithUnknownPrefix() {
         // test for a unknown prefix
         final Iterator<String> it = conf.getKeys("foo.bar");
         assertFalse(it.hasNext());
     }
 
     @Test
-    public void testGetMissingKey() throws Exception {
+    void testGetMissingKey() throws Exception {
         assertNull(conf.getString("test.imaginarykey"));
     }
 
     @Test
-    public void testGetMissingKeyWithDefault() throws Exception {
+    void testGetMissingKeyWithDefault() throws Exception {
         final String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertFalse(conf.isEmpty());
     }
 
     @Test
-    public void testMoreGets() throws Exception {
+    void testMoreGets() throws Exception {
         final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
@@ -122,13 +122,13 @@ public class TestNullJNDIEnvironmentValues {
     }
 
     @Test
-    public void testSimpleGet() throws Exception {
+    void testSimpleGet() throws Exception {
         final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
     @Test
-    public void testThrowExceptionOnMissing() {
+    void testThrowExceptionOnMissing() {
         assertFalse(conf.isThrowExceptionOnMissing());
     }
 }

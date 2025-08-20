@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,14 +20,20 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
 import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.configuration2.ex.ConversionException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 /**
  * <p>
@@ -78,6 +84,53 @@ public interface ImmutableConfiguration {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns a {@link Set} view of the mappings contained in this configuration.
+     *
+     * @return a set view of the mappings contained in this configuration.
+     * @since 2.13.0
+     */
+    default Set<Map.Entry<String, Object>> entrySet() {
+        final LinkedHashSet<Map.Entry<String, Object>> set = new LinkedHashSet<>(size());
+        getKeys().forEachRemaining(k -> set.add(ImmutablePair.of(k, getProperty(k))));
+        return set;
+    }
+
+    /**
+     * Performs the given action for each entry in this configuration until all entries have been processed or the action throws an exception. Unless otherwise
+     * specified by the implementing class, actions are performed in the order of entry set iteration (if an iteration order is specified.) Exceptions thrown by
+     * the action are relayed to the caller.
+     *
+     * <pre> {@code
+     * for (Map.Entry<K, V> entry : map.entrySet())
+     *     action.accept(entry.getKey(), entry.getValue());
+     * }</pre>
+     * <p>
+     * The default implementation makes no guarantees about synchronization or atomicity properties of this method. Any implementation providing atomicity
+     * guarantees must override this method and document its concurrency properties.
+     * </p>
+     *
+     * @param action The action to be performed for each entry.
+     * @throws NullPointerException            if the specified action is null.
+     * @throws ConcurrentModificationException if an entry is found to be removed during iteration.
+     * @since 2.13.0
+     */
+    default void forEach(final BiConsumer<String, Object> action) {
+        Objects.requireNonNull(action);
+        for (final Map.Entry<String, Object> entry : entrySet()) {
+            String k;
+            Object v;
+            try {
+                k = entry.getKey();
+                v = entry.getValue();
+            } catch (final IllegalStateException e) {
+                // this usually means the entry is no longer in the map.
+                throw new ConcurrentModificationException(e);
+            }
+            action.accept(k, v);
+        }
     }
 
     /**

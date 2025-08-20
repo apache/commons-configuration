@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,10 +40,10 @@ import java.util.Set;
 public abstract class AbstractListDelimiterHandler implements ListDelimiterHandler {
 
     static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
-        dejaVu.add(value);
         if (value instanceof String) {
             return handler.split((String) value, true);
         }
+        dejaVu.add(value);
         final Collection<Object> result = new LinkedList<>();
         if (value instanceof Path) {
             // Don't handle as an Iterable.

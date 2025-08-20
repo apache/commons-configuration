@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ public class TestHierarchicalBuilderParametersImpl {
      * Tests whether properties can be set via BeanUtils.
      */
     @Test
-    public void testBeanPropertiesAccess() throws Exception {
+    void testBeanPropertiesAccess() throws Exception {
         final ExpressionEngine engine = mock(ExpressionEngine.class);
         BeanHelper.setProperty(params, "expressionEngine", engine);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
@@ -56,7 +56,7 @@ public class TestHierarchicalBuilderParametersImpl {
      * Tests whether inheritFrom() copies additional properties.
      */
     @Test
-    public void testInheritFrom() {
+    void testInheritFrom() {
         final ExpressionEngine engine = mock(ExpressionEngine.class);
         final HierarchicalBuilderParametersImpl params = new HierarchicalBuilderParametersImpl();
         params.setExpressionEngine(engine);
@@ -73,7 +73,7 @@ public class TestHierarchicalBuilderParametersImpl {
      * Tests whether the expression engine can be set.
      */
     @Test
-    public void testSetExpressionEngine() {
+    void testSetExpressionEngine() {
         final ExpressionEngine engine = mock(ExpressionEngine.class);
         assertSame(params, params.setExpressionEngine(engine));
         assertSame(engine, params.getParameters().get("expressionEngine"));

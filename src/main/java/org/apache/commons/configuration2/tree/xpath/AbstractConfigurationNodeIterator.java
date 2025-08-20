@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +31,8 @@ import org.apache.commons.lang3.StringUtils;
  * implement specific behavior based on the concrete node type (child node or attribute node).
  * </p>
  *
- * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
+ * @since 1.3
  */
 abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /** Constant for the prefix separator. */
@@ -56,11 +56,11 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Returns the qualified name from the given {@code QName}. If the name has no namespace, result is the simple name.
      * Otherwise, the namespace prefix is added.
      *
-     * @param name the {@code QName}
+     * @param qName the {@code QName}
      * @return the qualified name
      */
-    protected static String qualifiedName(final QName name) {
-        return name.getPrefix() == null ? name.getName() : prefixName(name.getPrefix(), name.getName());
+    protected static String qualifiedName(final QName qName) {
+        return qName.getPrefix() == null ? qName.getName() : prefixName(qName.getPrefix(), qName.getName());
     }
 
     /** Stores the parent node pointer. */

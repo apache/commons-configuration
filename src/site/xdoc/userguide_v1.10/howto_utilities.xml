@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Utility classes and Tips and Tricks Howto</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -41,6 +42,7 @@
       AbstractConfiguration</a></code> class (which serves as the base class for
       most of the configuration implementations shipped with this library)
       provides two methods implementing a basic copy operation:
+    </p>
       <ul>
         <li><code>append()</code> takes the configuration to be copied
         as argument and adds all of its properties to the current configuration.</li>
@@ -49,7 +51,6 @@
         configuration are replaced by the properties of the source configuration.
         </li>
       </ul>
-    </p>
     <p>
       These methods work fine if the target configuration is not a hierarchical
       configuration. If a hierarchical configuration is to be copied into
@@ -58,6 +59,7 @@
       properties of the source configuration, but the specific parent-child
       relations will probably be lost. If a hierarchical configuration needs to
       be copied, there are the following options:
+    </p>
       <ul>
         <li>The <code>clone()</code> method can be used to create a copy of a
         hierarchical configuration. This also works for non-hierarchical
@@ -74,7 +76,6 @@
         copies the content of the specified configuration into the newly created
         object.</li>
       </ul>
-    </p>
     </subsection>
 
     <subsection name="Converting a flat configuration into a hierarchical one">

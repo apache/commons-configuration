@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,8 +52,8 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * configuration, but occur for each of the managed configuration.
  * </p>
  *
- * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @since 2.0
  */
 public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends MultiFileConfigurationBuilder<T>
     implements ReloadingControllerSupport {

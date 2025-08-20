@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ public class TestReloadingBuilderSupportListener {
      * Tests that the builder is reset when a reloading event notification occurs.
      */
     @Test
-    public void testResetBuilderOnReloadingEvent() {
+    void testResetBuilderOnReloadingEvent() {
         final ReloadingDetector detector = mock(ReloadingDetector.class);
 
         when(detector.isReloadingRequired()).thenReturn(true);
@@ -61,7 +61,7 @@ public class TestReloadingBuilderSupportListener {
      * Tests that the controller's reloading state is reset when a new result object is created.
      */
     @Test
-    public void testResetReloadingStateOnResultCreation() throws ConfigurationException {
+    void testResetReloadingStateOnResultCreation() throws ConfigurationException {
         final ReloadingController controller = mock(ReloadingController.class);
 
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);

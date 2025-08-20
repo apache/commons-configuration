@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Combining Configuration Sources</title>
  </properties>
@@ -43,6 +44,7 @@
       <code>CombinedConfigurationBuilder</code> is the option of choice for
       applications that have to deal with multiple configuration sources. It
       provides the following features:
+    </p>
       <ul>
         <li>Various configuration sources can be combined to a single
         <a href="howto_combinedconfiguration.html">
@@ -57,7 +59,6 @@
         <li><code>CombinedConfigurationBuilder</code> is extensible. Custom
         configuration sources can be added.</li>
       </ul>
-    </p>
     <p>
       This document starts with some explanations of
       <code>CombinedConfigurationBuilder</code> basics. Then the <em>configuration
@@ -585,7 +586,6 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       file to be loaded or further flags). Below is a list of all
       tags which can be used out of the box:
     </p>
-    <p>
       <dl>
         <dt>properties</dt>
         <dd>With this element properties files can be included. The name of
@@ -668,7 +668,6 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
         </ul>
         </dd>
       </dl>
-    </p>
     <p>
       In the declaration of a configuration source it is possible to set
       properties on the corresponding configuration objects. Configuration
@@ -714,7 +713,6 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       <code>CombinedConfigurationBuilder</code> when it creates the objects.
       These attributes are listed in the following table:
     </p>
-    <p>
     <table border="1">
     <tr>
       <th>Attribute</th>
@@ -769,7 +767,6 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       have any effect).</td>
     </tr>
     </table>
-    </p>
     <p>
       <em>Note:</em> In older versions of Commons Configuration the attributes
       <code>config-at</code> and <code>config-optional</code> were named
@@ -867,6 +864,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
     <p>
       There are some more tags for specific use cases which can occur in the
       header section of a configuration declaration:
+    </p>
       <dl>
         <dt>providers</dt>
         <dd>This tag can be used to define new tags for including custom
@@ -916,7 +914,6 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
         variable name is passed to the lookup object, and the custom implementation
         can compute a suitable value.</dd>
       </dl>
-    </p>
     <p>
       <em>Note:</em> From time to time the question is raised whether there is a
       document type definition or a schema defining exactly the structure of a
@@ -1150,6 +1147,7 @@ trigger.start();
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/BaseConfigurationBuilderProvider.html">
       BaseConfigurationBuilderProvider</a></code> class. When creating an
       instance the following information has to be passed:
+    </p>
       <ul>
         <li>The fully-qualified name of the configuration builder class to be
         used for the associated configuration source.</li>
@@ -1164,9 +1162,11 @@ trigger.start();
         <li>A collection with parameter object classes supported by this
         builder.</li>
       </ul>
+    <p>
       With this information, <code>BaseConfigurationBuilderProvider</code> can
       create and configure a correct configuration builder object for a specific
       configuration source. In detail, it performs the following steps:
+    </p>
       <ul>
         <li>It determines the builder class to be used based on the presence and
         value of the <code>config-reload</code> attribute; this means that either
@@ -1178,7 +1178,6 @@ trigger.start();
         <li>The initialized parameter objects are passed to the configuration
         builder's <code>configure()</code> method.</li>
       </ul>
-    </p>
     <p>
       For most cases, the functionality provided by
       <code>BaseConfigurationBuilderProvider</code> should be sufficient. So
@@ -1302,6 +1301,7 @@ CombinedConfiguration config = builder.getConfiguration();
       defined by the
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/CombinedBuilderProperties.html">
       CombinedBuilderProperties</a></code> interface. This includes
+    </p>
       <ul>
         <li>the configuration builder for obtaining the definition configuration</li>
         <li>the parameters object for the configuration builder for obtaining the
@@ -1323,7 +1323,6 @@ CombinedConfiguration config = builder.getConfiguration();
         <li>controlling the inheritance of builder parameters to child
         configuration builders (see below).</li>
       </ul>
-    </p>
     <p>
       Specifying default settings for the configuration sources to be included
       is a convenient feature. Often the configuration files to be included

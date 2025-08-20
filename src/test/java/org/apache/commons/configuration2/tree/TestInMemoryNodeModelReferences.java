@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,7 +91,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether the name of the root node can be changed during a merge operation.
      */
     @Test
-    public void testMergeRootOverrideName() {
+    void testMergeRootOverrideName() {
         final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
         final String newName = "newRootNode";
 
@@ -104,7 +104,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether mergeRoot() handles an explicit reference object for the root node correctly.
      */
     @Test
-    public void testMergeRootReference() {
+    void testMergeRootReference() {
         final Object rootRef = 20140404210508L;
         final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
 
@@ -119,7 +119,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether attributes are taken into account by a merge operation.
      */
     @Test
-    public void testMergeRootWithAttributes() {
+    void testMergeRootWithAttributes() {
         final ImmutableNode node = new ImmutableNode.Builder().addAttribute("key", "value").create();
         model.mergeRoot(node, null, null, null, resolver);
         final ImmutableNode root = model.getNodeHandler().getRootNode();
@@ -130,7 +130,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether a value is taken into account when the root node is merged.
      */
     @Test
-    public void testMergeRootWithValue() {
+    void testMergeRootWithValue() {
         final ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
         model.mergeRoot(node, null, null, null, resolver);
         final ImmutableNode root = model.getNodeHandler().getRootNode();
@@ -142,7 +142,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether the stored references can be queried.
      */
     @Test
-    public void testQueryReferences() {
+    void testQueryReferences() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final Collection<ImmutableNode> nodes = collectNodes(handler.getRootNode());
         for (final ImmutableNode node : nodes) {
@@ -154,7 +154,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether references can be queried after an update operation.
      */
     @Test
-    public void testQueryReferencesAfterUpdate() {
+    void testQueryReferencesAfterUpdate() {
         model.addProperty("Simmons.Hyperion", Collections.singleton("Lamia"), resolver);
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertEquals("Hyperion", handler.getReference(NodeStructureHelper.nodeForKey(model, "Simmons/Hyperion")));
@@ -165,7 +165,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests the reference returned for an unknown node.
      */
     @Test
-    public void testQueryReferenceUnknown() {
+    void testQueryReferenceUnknown() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertNull(handler.getReference(new ImmutableNode.Builder().create()));
     }
@@ -174,7 +174,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether removed references can be queried.
      */
     @Test
-    public void testQueryRemovedReferencesAfterRemove() {
+    void testQueryRemovedReferencesAfterRemove() {
         model.clearTree("Simmons", resolver);
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final List<Object> removedRefs = handler.removedReferences();
@@ -191,7 +191,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether the removed references can be queried if there are none.
      */
     @Test
-    public void testQueryRemovedReferencesEmpty() {
+    void testQueryRemovedReferencesEmpty() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertTrue(handler.removedReferences().isEmpty());
     }
@@ -200,7 +200,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests that the list with removed references cannot be modified.
      */
     @Test
-    public void testRemovedReferencesModify() {
+    void testRemovedReferencesModify() {
         model.clearTree("Simmons", resolver);
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final List<Object> removedRefs = handler.removedReferences();
@@ -211,7 +211,7 @@ public class TestInMemoryNodeModelReferences {
      * Tests whether the root node of the model can be replaced.
      */
     @Test
-    public void testReplaceRoot() {
+    void testReplaceRoot() {
         final NodeSelector selector = new NodeSelector("Simmons.Hyperion");
         model.trackNode(selector, resolver);
         final ImmutableNode trackedNode = model.getTrackedNode(selector);
@@ -228,7 +228,7 @@ public class TestInMemoryNodeModelReferences {
      * Tries to call replaceRoot() with a null node.
      */
     @Test
-    public void testReplaceRootNull() {
+    void testReplaceRootNull() {
         assertThrows(IllegalArgumentException.class, () -> model.replaceRoot(null, resolver));
     }
 }

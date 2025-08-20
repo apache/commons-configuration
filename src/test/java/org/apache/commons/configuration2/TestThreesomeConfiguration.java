@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,21 +43,21 @@ public class TestThreesomeConfiguration {
     }
 
     @Test
-    public void testList1() throws Exception {
+    void testList1() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.one");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList2() throws Exception {
+    void testList2() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.two");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList3() throws Exception {
+    void testList3() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,7 +61,7 @@ public class TestConfigurationMap {
      * Attempts to create a ConfigurationMap with null configuration. This should cause an exception.
      */
     @Test
-    public void testNullConfig() {
+    void testNullConfig() {
         assertThrows(NullPointerException.class, () -> new ConfigurationMap(null));
     }
 
@@ -69,7 +69,7 @@ public class TestConfigurationMap {
      * Class under test for Object put(Object, Object)
      */
     @Test
-    public void testPut() {
+    void testPut() {
         for (int i = 0; i < properties.length; i++) {
             Object object = map.put(properties[i], values[i]);
             assertNotNull(object);

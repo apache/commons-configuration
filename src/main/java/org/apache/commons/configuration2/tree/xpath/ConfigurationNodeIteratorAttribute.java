@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,12 +44,12 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
      * Creates a new instance of {@code ConfigurationNodeIteratorAttribute}.
      *
      * @param parent the parent node pointer
-     * @param name the name of the selected attribute
+     * @param qName the name of the selected attribute
      */
-    public ConfigurationNodeIteratorAttribute(final ConfigurationNodePointer<T> parent, final QName name) {
+    public ConfigurationNodeIteratorAttribute(final ConfigurationNodePointer<T> parent, final QName qName) {
         super(parent, false);
         parentPointer = parent;
-        attributeNames = createAttributeDataList(parent, name);
+        attributeNames = createAttributeDataList(parent, qName);
     }
 
     /**
@@ -69,16 +69,16 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
      * Determines which attributes are selected based on the passed in node name.
      *
      * @param parent the parent node pointer
-     * @param name the name of the selected attribute
+     * @param qName the name of the selected attribute
      * @return a list with the selected attributes
      */
-    private List<String> createAttributeDataList(final ConfigurationNodePointer<T> parent, final QName name) {
+    private List<String> createAttributeDataList(final ConfigurationNodePointer<T> parent, final QName qName) {
         final List<String> result = new ArrayList<>();
-        if (!WILDCARD.equals(name.getName())) {
-            addAttributeData(parent, result, qualifiedName(name));
+        if (!WILDCARD.equals(qName.getName())) {
+            addAttributeData(parent, result, qualifiedName(qName));
         } else {
             final Set<String> names = new LinkedHashSet<>(parent.getNodeHandler().getAttributes(parent.getConfigurationNode()));
-            final String prefix = name.getPrefix() != null ? prefixName(name.getPrefix(), null) : null;
+            final String prefix = qName.getPrefix() != null ? prefixName(qName.getPrefix(), null) : null;
             names.forEach(n -> {
                 if (prefix == null || StringUtils.startsWith(n, prefix)) {
                     addAttributeData(parent, result, n);

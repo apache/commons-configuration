@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -102,7 +102,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * returned.
      *
      * @param parent the parent node
-     * @param name the name
+     * @param qName the name
      * @param bean the bean
      * @return a pointer for a configuration node if the bean is such a node
      */
@@ -112,7 +112,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Type casts are safe here, see above. Also, the hierarchy of node pointers is consistent, so a parent is compatible to
      * a child.
      */
-    public NodePointer createNodePointer(final NodePointer parent, final QName name, final Object bean) {
+    public NodePointer createNodePointer(final NodePointer parent, final QName qName, final Object bean) {
         if (bean instanceof NodeWrapper) {
             final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
             return new ConfigurationNodePointer<>((ConfigurationNodePointer<Object>) parent, wrapper.getNode(), wrapper.getNodeHandler());
@@ -124,7 +124,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Creates a node pointer for the specified bean. If the bean is a configuration node (indicated by a wrapper object), a
      * corresponding pointer is returned.
      *
-     * @param name the name of the node
+     * @param qName the name of the node
      * @param bean the bean
      * @param locale the locale
      * @return a pointer for a configuration node if the bean is such a node
@@ -135,7 +135,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Type casts are safe here; because of the way the NodeWrapper was constructed the node handler must be compatible with
      * the node.
      */
-    public NodePointer createNodePointer(final QName name, final Object bean, final Locale locale) {
+    public NodePointer createNodePointer(final QName qName, final Object bean, final Locale locale) {
         if (bean instanceof NodeWrapper) {
             final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
             return new ConfigurationNodePointer<>(wrapper.getNode(), locale, wrapper.getNodeHandler());

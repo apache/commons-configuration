@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -148,8 +148,8 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * undesired effects. For concrete subclasses dealing with specific node structures, this situation may be different.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the nodes managed by this hierarchical configuration
+ * @since 2.0
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T> {
@@ -513,6 +513,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param prefix the prefix of the keys to start with
      * @param delimiter TODO
      * @return an iterator with the found keys
+     * @since 2.12.0
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -904,7 +904,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     public synchronized ConfigurationBuilder<? extends Configuration> getNamedBuilder(final String name) throws ConfigurationException {
         if (sourceData == null) {
-            throw new ConfigurationException("Information about child builders" + " has not been setup yet! Call getConfiguration() first.");
+            throw new ConfigurationException("Information about child builders has not been setup yet! Call getConfiguration() first.");
         }
         final ConfigurationBuilder<? extends Configuration> builder = sourceData.getNamedBuilder(name);
         if (builder == null) {

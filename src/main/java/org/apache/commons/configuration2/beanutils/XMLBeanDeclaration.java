@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -566,7 +566,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Tests if the specified child node name is reserved and thus should be ignored. This method is called when processing
      * child nodes of this bean declaration. It is then possible to ignore some nodes with a specific meaning. This
-     * implementation delegates to {@link #isReservedName(String)} .
+     * implementation delegates to {@link #isReservedName(String)}.
      *
      * @param name the name of the child node to be checked
      * @return a flag whether this name is reserved

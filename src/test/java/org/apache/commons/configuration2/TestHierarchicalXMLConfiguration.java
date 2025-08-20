@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -95,7 +95,7 @@ public class TestHierarchicalXMLConfiguration {
     }
 
     @Test
-    public void testGetProperty() throws Exception {
+    void testGetProperty() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setFileName(TEST_FILE);
         handler.load();
@@ -104,7 +104,7 @@ public class TestHierarchicalXMLConfiguration {
     }
 
     @Test
-    public void testLoadBasePath1() throws Exception {
+    void testLoadBasePath1() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setBasePath(TEST_DIR);
         handler.setFileName(TEST_FILENAME);
@@ -113,7 +113,7 @@ public class TestHierarchicalXMLConfiguration {
     }
 
     @Test
-    public void testLoadBasePath2() throws Exception {
+    void testLoadBasePath2() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setBasePath(new File(TEST_FILE).getAbsoluteFile().toURI().toURL().toString());
         handler.setFileName(TEST_FILENAME);
@@ -122,7 +122,7 @@ public class TestHierarchicalXMLConfiguration {
     }
 
     @Test
-    public void testLoadURL() throws Exception {
+    void testLoadURL() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.load(new File(TEST_FILE).getAbsoluteFile().toURI().toURL());
         configTest(config);
@@ -132,14 +132,14 @@ public class TestHierarchicalXMLConfiguration {
      * Tests manipulation of the root element's name.
      */
     @Test
-    public void testRootElement() throws Exception {
+    void testRootElement() throws Exception {
         assertEquals("configuration", config.getRootElementName());
         config.setRootElementName("newRootName");
         assertEquals("newRootName", config.getRootElementName());
     }
 
     @Test
-    public void testSave() throws Exception {
+    void testSave() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setFileName(TEST_FILE3);
         handler.load();
@@ -161,7 +161,7 @@ public class TestHierarchicalXMLConfiguration {
      * Tests to save a modified configuration.
      */
     @Test
-    public void testSaveModified() throws Exception {
+    void testSaveModified() throws Exception {
         FileHandler handler = new FileHandler(config);
         handler.setFile(new File(TEST_FILE3));
         handler.load();
@@ -201,7 +201,7 @@ public class TestHierarchicalXMLConfiguration {
      * Tests to save a newly created configuration.
      */
     @Test
-    public void testSaveNew() throws Exception {
+    void testSaveNew() throws Exception {
         config.addProperty("connection.url", "jdbc://mydb:1234");
         config.addProperty("connection.user", "scott");
         config.addProperty("connection.passwd", "tiger");
@@ -239,7 +239,7 @@ public class TestHierarchicalXMLConfiguration {
      * Tests that it is not allowed to change the root element name when the configuration was loaded from a file.
      */
     @Test
-    public void testSetRootElementNameWhenLoadedFromFile() throws Exception {
+    void testSetRootElementNameWhenLoadedFromFile() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setFile(new File(TEST_FILE3));
         handler.load();
@@ -251,7 +251,7 @@ public class TestHierarchicalXMLConfiguration {
      * Ensure various node types are correctly processed in config.
      */
     @Test
-    public void testXmlNodeTypes() throws Exception {
+    void testXmlNodeTypes() throws Exception {
         // Number of keys expected from test configuration file
         final int keyCount = 5;
 

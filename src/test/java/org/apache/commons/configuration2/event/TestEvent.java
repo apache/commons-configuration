@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ public class TestEvent {
      * Tries to create an instance without a source.
      */
     @Test
-    public void testInitNoSource() {
+    void testInitNoSource() {
         assertThrows(IllegalArgumentException.class, () -> new Event(null, Event.ANY));
     }
 
@@ -37,7 +37,7 @@ public class TestEvent {
      * Tries to create an instance without a type.
      */
     @Test
-    public void testInitNoType() {
+    void testInitNoType() {
         assertThrows(IllegalArgumentException.class, () -> new Event(this, null));
     }
 
@@ -45,7 +45,7 @@ public class TestEvent {
      * Tests the string representation.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final Event event = new Event(this, Event.ANY);
         final String s = event.toString();
         assertEquals("Event [ source=" + this + " eventType=" + Event.ANY + " ]", s);

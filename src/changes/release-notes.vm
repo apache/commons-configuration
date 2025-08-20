@@ -6,7 +6,7 @@
 ## "License"); you may not use this file except in compliance
 ## with the License.  You may obtain a copy of the License at
 ##
-##  http://www.apache.org/licenses/LICENSE-2.0
+##  https://www.apache.org/licenses/LICENSE-2.0
 ##
 ## Unless required by applicable law or agreed to in writing,
 ## software distributed under the License is distributed on an
@@ -15,9 +15,10 @@
 ## specific language governing permissions and limitations
 ## under the License.
 ##
-Apache Commons Configuration
-Version ${version}
-Release Notes
+${project.name} ${version} Release Notes
+------------------------------------------------
+
+The ${developmentTeam} is pleased to announce the release of ${project.name} ${version}.
 
 Introducing Apache Commons Configuration
 ----------------------------------------
@@ -33,7 +34,7 @@ of sources.
 $introduction.replaceAll("(?<!\015)\012", "
 ").replaceAll("(?m)^ +","")
 
-## N.B. the available variables are described here:
+## The available variables are described here:
 ## http://maven.apache.org/plugins/maven-changes-plugin/examples/using-a-custom-announcement-template.html
 ##
 ## Hack to improve layout: replace all pairs of spaces with a single new-line

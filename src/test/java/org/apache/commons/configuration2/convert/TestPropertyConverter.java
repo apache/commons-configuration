@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ public class TestPropertyConverter {
      * See CONFIGURATION-766.
      */
     @Test
-    public void testToBigDecimalDoubleConstructor() {
+    void testToBigDecimalDoubleConstructor() {
         // If the conversion uses new BigDecimal(0.1) the result is not exact due to round off.
         // The result is 0.1000000000000000055511151231257827021181583404541015625.
         // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
@@ -57,7 +57,7 @@ public class TestPropertyConverter {
      */
     @Test
     @Disabled
-    public void testToBigDecimalStringConstructor() {
+    void testToBigDecimalStringConstructor() {
         // If the conversion uses new BigDecimal(0.1) the result is not exact due to round off.
         // The result is 0.1000000000000000055511151231257827021181583404541015625.
         // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
@@ -69,7 +69,7 @@ public class TestPropertyConverter {
      * Tests a failed conversion to character.
      */
     @Test
-    public void testToCharFailed() {
+    void testToCharFailed() {
         final DefaultConversionHandler conversionHandler = new DefaultConversionHandler();
         assertThrows(ConversionException.class, () -> PropertyConverter.to(Character.TYPE, "FF", conversionHandler));
     }
@@ -78,7 +78,7 @@ public class TestPropertyConverter {
      * Tests whether a conversion to character is possible.
      */
     @Test
-    public void testToCharSuccess() {
+    void testToCharSuccess() {
         assertEquals(Character.valueOf('t'), PropertyConverter.to(Character.class, "t", new DefaultConversionHandler()));
     }
 
@@ -86,7 +86,7 @@ public class TestPropertyConverter {
      * Tests whether other objects implementing a toString() method can be converted to character.
      */
     @Test
-    public void testToCharViaToString() {
+    void testToCharViaToString() {
         final Object value = new Object() {
             @Override
             public String toString() {
@@ -97,34 +97,34 @@ public class TestPropertyConverter {
     }
 
     @Test
-    public void testToCustomNumber() {
+    void testToCustomNumber() {
         assertEquals(new MyNumber(1), PropertyConverter.to(MyNumber.class, "1", null));
         assertEquals(new MyNumber(2), PropertyConverter.to(MyNumber.class, new MyNumber(2), null));
         assertEquals(new MyNumber(0), PropertyConverter.to(MyNumber.class, null, null));
     }
 
     @Test
-    public void testToEnumFromEnum() {
+    void testToEnumFromEnum() {
         assertEquals(ElementType.METHOD, PropertyConverter.toEnum(ElementType.METHOD, ENUM_CLASS));
     }
 
     @Test
-    public void testToEnumFromInvalidNumber() {
+    void testToEnumFromInvalidNumber() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toEnum(-1, ENUM_CLASS));
     }
 
     @Test
-    public void testToEnumFromInvalidString() {
+    void testToEnumFromInvalidString() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toEnum("FOO", ENUM_CLASS));
     }
 
     @Test
-    public void testToEnumFromNumber() {
+    void testToEnumFromNumber() {
         assertEquals(PropertyConverter.toEnum(Integer.valueOf(ElementType.METHOD.ordinal()), ENUM_CLASS), ElementType.METHOD);
     }
 
     @Test
-    public void testToEnumFromString() {
+    void testToEnumFromString() {
         assertEquals(ElementType.METHOD, PropertyConverter.toEnum("METHOD", ENUM_CLASS));
     }
 
@@ -132,7 +132,7 @@ public class TestPropertyConverter {
      * Tests conversion to files when the passed in objects are already files.
      */
     @Test
-    public void testToFileDirect() {
+    void testToFileDirect() {
         final File f = new File("dir", "file");
         assertSame(f, PropertyConverter.toFile(f));
     }
@@ -141,7 +141,7 @@ public class TestPropertyConverter {
      * Tests conversion to file when the passed in objects are paths.
      */
     @Test
-    public void testToFileFromPath() {
+    void testToFileFromPath() {
         final Path p = Paths.get("dir", "file");
         assertEquals(new File("dir", "file"), PropertyConverter.toFile(p));
     }
@@ -150,7 +150,7 @@ public class TestPropertyConverter {
      * Tests conversion to file when the passed in objects have a compatible string representation.
      */
     @Test
-    public void testToFileFromString() {
+    void testToFileFromString() {
         assertEquals(new File("dir", "file"), PropertyConverter.toFile("dir/file"));
     }
 
@@ -158,7 +158,7 @@ public class TestPropertyConverter {
      * Tests a trivial conversion: the value has already the desired type.
      */
     @Test
-    public void testToNoConversionNeeded() {
+    void testToNoConversionNeeded() {
         final String value = "testValue";
         assertEquals(value, PropertyConverter.to(String.class, value, new DefaultConversionHandler()));
     }
@@ -167,7 +167,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when the passed in objects are already numbers.
      */
     @Test
-    public void testToNumberDirect() {
+    void testToNumberDirect() {
         final Integer i = Integer.valueOf(42);
         assertSame(i, PropertyConverter.toNumber(i, Integer.class));
         final BigDecimal d = new BigDecimal("3.1415");
@@ -178,7 +178,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when the passed in objects are strings with prefixes for special radices.
      */
     @Test
-    public void testToNumberFromBinaryString() {
+    void testToNumberFromBinaryString() {
         final Number n = PropertyConverter.toNumber("0b1111", Integer.class);
         assertEquals(15, n.intValue());
     }
@@ -187,7 +187,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when the passed in objects are strings with prefixes for special radices.
      */
     @Test
-    public void testToNumberFromHexString() {
+    void testToNumberFromHexString() {
         final Number n = PropertyConverter.toNumber("0x10", Integer.class);
         assertEquals(16, n.intValue());
     }
@@ -196,7 +196,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when an invalid binary value is passed in. This should cause an exception.
      */
     @Test
-    public void testToNumberFromInvalidBinaryString() {
+    void testToNumberFromInvalidBinaryString() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("0bNotABinValue", Integer.class));
     }
 
@@ -204,7 +204,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when an invalid Hex value is passed in. This should cause an exception.
      */
     @Test
-    public void testToNumberFromInvalidHexString() {
+    void testToNumberFromInvalidHexString() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("0xNotAHexValue", Integer.class));
     }
 
@@ -213,7 +213,7 @@ public class TestPropertyConverter {
      * exception.
      */
     @Test
-    public void testToNumberFromInvalidString() {
+    void testToNumberFromInvalidString() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("Not a number", Byte.class));
     }
 
@@ -221,7 +221,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when the passed in objects have a compatible string representation.
      */
     @Test
-    public void testToNumberFromString() {
+    void testToNumberFromString() {
         assertEquals(Integer.valueOf(42), PropertyConverter.toNumber("42", Integer.class));
         assertEquals(Short.valueOf((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
     }
@@ -230,7 +230,7 @@ public class TestPropertyConverter {
      * Tests conversion to numbers when the passed in target class is invalid. This should cause an exception.
      */
     @Test
-    public void testToNumberWithInvalidClass() {
+    void testToNumberWithInvalidClass() {
         assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("42", Object.class));
     }
 
@@ -238,7 +238,7 @@ public class TestPropertyConverter {
      * Tests conversion to paths when the passed in objects are already paths.
      */
     @Test
-    public void testToPathDirect() {
+    void testToPathDirect() {
         final Path p = Paths.get("dir", "file");
         assertSame(p, PropertyConverter.toPath(p));
     }
@@ -247,7 +247,7 @@ public class TestPropertyConverter {
      * Tests conversion to path when the passed in objects are files.
      */
     @Test
-    public void testToPathFromFile() {
+    void testToPathFromFile() {
         final File f = new File("dir", "file");
         assertEquals(Paths.get("dir", "file"), PropertyConverter.toPath(f));
     }
@@ -256,7 +256,7 @@ public class TestPropertyConverter {
      * Tests conversion to file when the passed in objects have a compatible string representation.
      */
     @Test
-    public void testToPathFromString() {
+    void testToPathFromString() {
         assertEquals(Paths.get("dir", "file"), PropertyConverter.toPath("dir/file"));
     }
 
@@ -264,7 +264,7 @@ public class TestPropertyConverter {
      * Tests conversion to patterns when the passed in objects are already patterns.
      */
     @Test
-    public void testToPatternDirect() {
+    void testToPatternDirect() {
         final Pattern p = Pattern.compile(".+");
         assertSame(p, PropertyConverter.toPattern(p));
     }
@@ -273,7 +273,7 @@ public class TestPropertyConverter {
      * Tests conversion to patterns when the passed in objects have a compatible string representation.
      */
     @Test
-    public void testToPatternFromString() {
+    void testToPatternFromString() {
         final Pattern p = Pattern.compile(".+");
         assertEquals(p.pattern(), PropertyConverter.toPattern(".+").pattern());
     }
@@ -282,7 +282,7 @@ public class TestPropertyConverter {
      * Tests a conversion to a string.
      */
     @Test
-    public void testToStringConversion() {
+    void testToStringConversion() {
         final Integer src = 42;
         final Object result = PropertyConverter.to(String.class, src, new DefaultConversionHandler());
         assertEquals("42", result);

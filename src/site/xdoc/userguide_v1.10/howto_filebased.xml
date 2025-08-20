@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>File-based Configurations</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -51,6 +52,7 @@
             The <code>FileConfiguration</code> interface contains several
             methods for specifying the file to be loaded. The following variants
             are supported:
+          </p>
             <ul>
               <li>With the <code>setFile()</code> method the data file can be
               specified as a <code>java.io.File</code> object.</li>
@@ -60,7 +62,6 @@
               allows to specify the path of the data file. The base path is
               important if relative paths are to be resolved based on this file.</li>
             </ul>
-          </p>
           <p>
             While a <code>File</code> or a URL uniquely identify a file, the
             situation is a bit ambiguous when only a base path and a file name are
@@ -68,6 +69,7 @@
             meaning must be detected when the file is loaded. For this purpose
             file-based configurations perform the following checks (in this
             order):
+          </p>
             <ul>
               <li>If the combination from base path and file name is a full URL
               that points to an existing file, this URL will be used to load
@@ -81,6 +83,7 @@
               <li>Otherwise the file name is interpreted as a resource name, and
               it is checked whether the data file can be loaded from the classpath.</li>
             </ul>
+          <p>
             If all these checks fail, a <code>ConfigurationException</code> will
             be thrown.
           </p>
@@ -102,6 +105,7 @@
             (containing either an absolute or relative path), input stream, or
             reader. When using these variants of the <code>load()</code> method
             be aware of two things:
+          </p>
             <ol>
               <li>They do not change the configuration's file name. To do this
               you have to explicitly call one of the setter methods.</li>
@@ -113,7 +117,6 @@
               <code>clear()</code> method first to ensure that old properties are
               wiped out.</li>
             </ol>
-          </p>
           <p>
             File-based configurations typically define a set of constructors that
             correspond to the various setter methods for defining the data file.

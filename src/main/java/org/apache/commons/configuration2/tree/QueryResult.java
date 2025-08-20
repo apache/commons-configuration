@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,8 +34,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Implementation note: Instances are immutable. They are created using the static factory methods.
  * </p>
  *
- * @since 2.0
  * @param <T> the type of the result nodes
+ * @since 2.0
  */
 public final class QueryResult<T> {
     /**
@@ -118,7 +118,7 @@ public final class QueryResult<T> {
      */
     public Object getAttributeValue(final NodeHandler<T> handler) {
         if (!isAttributeResult()) {
-            throw new IllegalStateException("This is not an attribute result! " + "Attribute value cannot be fetched.");
+            throw new IllegalStateException("This is not an attribute result! Attribute value cannot be fetched.");
         }
         return handler.getAttributeValue(getNode(), getAttributeName());
     }

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -918,7 +918,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     private void load(final InputSource source) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Load operation not properly " + "initialized! Do not call read(InputStream) directly," + " but use a FileHandler to load a configuration.");
+                "Load operation not properly initialized! Do not call read(InputStream) directly, but use a FileHandler to load a configuration.");
         }
 
         try {
@@ -1012,7 +1012,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         beginRead(true);
         try {
             if (getDocument() != null) {
-                throw new UnsupportedOperationException("The name of the root element " + "cannot be changed when loaded from an XML document!");
+                throw new UnsupportedOperationException("The name of the root element cannot be changed when loaded from an XML document!");
             }
             rootElementName = name;
         } finally {

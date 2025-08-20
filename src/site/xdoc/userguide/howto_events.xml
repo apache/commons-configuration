@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Configuration Events Howto</title>
   <author email="oheger@apache.org">Oliver Heger</author>
@@ -54,6 +55,7 @@
       Users who are familiar with JavaFX will recognize some similarities to
       the event mechanism used in this UI library. In the generation of
       notifications the following components are involved:
+    </p>
       <ul>
         <li>An <em>event</em> object which contains all information about a
         specific change which has happened.</li>
@@ -64,7 +66,6 @@
         <li>An event listener which is invoked with an event object when
         something happens for which it has been registered.</li>
       </ul>
-    </p>
     <p>
       The type parameters in the methods of the <code>EventSource</code>
       interface ensure a type-safe registration of event listeners. As we will
@@ -83,6 +84,7 @@
     <p>
       <em>Commons Configuration</em> provides the following implementations of
       the <code>Event Source</code> interface:
+    </p>
       <dl>
         <dt>Configuration objects</dt>
         <dd>Each configuration allows registering event listeners and generates
@@ -95,7 +97,6 @@
         <dd>Here events are generated when a change in a monitored configuration
         source was detected.</dd>
       </dl>
-    </p>
     <p>
       In the following sections these event sources are discussed in more
       detail. But first we have to elaborate a bit more on the hierarchical
@@ -129,18 +130,20 @@
       As an example, below is an excerpt of the hierarchy of event types for
       events related to configuration updates (the full hierarchy is described
       in a later section):
-      <ul>
-        <li>Event.ANY</li>
-        <ul>
-          <li>ConfigurationEvent.ANY</li>
-          <ul>
-            <li>ConfigurationEvent.ADD_PROPERTY</li>
-            <li>ConfigurationEvent.SET_PROPERTY</li>
-            <li>...</li>
-          </ul>
-        </ul>
-      </ul>
     </p>
+    <ul>
+      <li>Event.ANY
+        <ul>
+          <li>ConfigurationEvent.ANY
+            <ul>
+              <li>ConfigurationEvent.ADD_PROPERTY</li>
+              <li>ConfigurationEvent.SET_PROPERTY</li>
+              <li>...</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
     <p>
       An <code>EventListener&lt;ConfigurationEvent&gt;</code> can be
       registered for the generic event type <code>ConfigurationEvent.ANY</code>
@@ -185,6 +188,7 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
       the properties inherited from the <code>Event</code> base class, a
       configuration event contains all information available about the
       modification:
+    </p>
       <ul>
         <li>If available, the name of the property whose modification caused the
         event.</li>
@@ -195,6 +199,7 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
         is performed. This allows event listeners to react at the correct point
         of time.</li>
       </ul>
+    <p>
       Depending on the concrete event type not all of this data may be available.
     </p>
     <p>
@@ -204,14 +209,13 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
       hierarchy of these event types is listed below, together with a
       description of the specific types and their available properties:
     </p>
-    <p>
-      <ul>
-        <li><strong>Event.ANY</strong></li>
+    <ul>
+      <li><strong>Event.ANY</strong>
         <ul>
           <li><strong>ConfigurationEvent.ANY</strong> is a placeholder for all types
           of configuration update events. A listener registered for this
           event type is actually invoked for each manipulation of the source
-          configuration.</li>
+          configuration.
           <ul>
             <li><strong>ADD_PROPERTY</strong> A property was added to the
             configuration. The event object contains the name of the affected
@@ -228,7 +232,7 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
             <li><strong>ANY_HIERARCHICAL</strong> This is a common super type
             for all events specific to hierarchical configurations. The event
             types derived from this type correspond to the special update
-            methods supported by hierarchical configurations.</li>
+            methods supported by hierarchical configurations.
             <ul>
               <li><strong>ADD_NODES</strong> A collection of nodes was added to
               a hierarchical configuration. The event contains the key passed
@@ -243,10 +247,12 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
               contains the original event object as it was sent by the subnode
               configuration.</li>
             </ul>
+            </li>
           </ul>
+          </li>
         </ul>
-      </ul>
-    </p>
+      </li>    
+    </ul>
     <p>
       After all the theory about the different event types, let's come to a
       concrete example. Implementing an event listener for configuration
@@ -341,10 +347,11 @@ config.clearProperty("removedProperty"); // but this one will
       exception causing this event.
     </p>
     <p>
-      <code>ConfigurationErrorEvent</code> defines some new event type constants.
+    <code>ConfigurationErrorEvent</code> defines some new event type constants.
       They build up the following hierarchy:
-      <ul>
-        <li><strong>Event.ANY</strong></li>
+    </p>
+    <ul>
+      <li><strong>Event.ANY</strong>
         <ul>
           <li><strong>ConfigurationErrorEvent.ANY</strong> The common super type
           of all error events. An event listener registered for this type can
@@ -359,8 +366,8 @@ config.clearProperty("removedProperty"); // but this one will
           update method (e.g. <em>ConfigurationEvent.ADD_PROPERTY</em> if a
           property could not be added).</li>
         </ul>
-      </ul>
-    </p>
+      </li>
+    </ul>
     <p>
       We could now continue the example from the previous section and make our
       sample logging event listener also capable of tracing error events.
@@ -396,6 +403,7 @@ config.clearProperty("removedProperty"); // but this one will
       <a href="howto_builders.html">Configuration builders</a> also offer
       support for the event mechanism in <em>Commons Configuration</em>. There
       are the following aspects:
+    </p>
       <ul>
         <li>Configuration builders can generate events themselves; for instance,
         events are fired when a managed configuration is created or reset.</li>
@@ -411,7 +419,6 @@ config.clearProperty("removedProperty"); // but this one will
         ensures that all listeners are automatically added to a newly created
         configuration instance and removed from an obsolete instance.</li>
       </ul>
-    </p>
     <p>
       For the events generated by a configuration builder a new event class is
       introduced: <code><a href="../apidocs/org/apache/commons/configuration2/builder/ConfigurationBuilderEvent.html">
@@ -434,8 +441,9 @@ config.clearProperty("removedProperty"); // but this one will
       The full hierarchy of event types related to configuration builders is
       shown below. As usual, <code>EventType</code> constants are defined in
       the event classes:
+    </p>
       <ul>
-        <li>Event.ANY</li>
+        <li>Event.ANY
         <ul>
           <li><strong>ConfigurationBuilderEvent.ANY</strong> A common super type
           for all events produced by a configuration builder. An event listener
@@ -462,8 +470,8 @@ config.clearProperty("removedProperty"); // but this one will
           obtained from the event so that specific initializations can be
           performed.</li>
         </ul>
+        </li>
       </ul>
-    </p>
     <p>
       As an example of how to use event listeners for builders we are going to
       make use of the <em>RESULT_CREATED</em> event type: every time a managed

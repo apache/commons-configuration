@@ -5,7 +5,7 @@
 # (the "License"); you may not use this file except in compliance with
 # the License. You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#      https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,12 +39,12 @@ jobs:
     steps:
 
       - name: "Checkout code"
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46    # 2.4.0
+        uses: ossf/scorecard-action@05b42c624433fc40578a4040d5cf5e36ddca8cde    # 2.4.2
         with:
           results_file: results.sarif
           results_format: sarif
@@ -56,13 +56,13 @@ jobs:
           publish_results: true
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08    # v4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02    # v4.6.2
         with:
           name: SARIF file
           path: results.sarif
           retention-days: 5
 
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a    # 3.28.8
+        uses: github/codeql-action/upload-sarif@df559355d593797519d70b90fc8edd5db049e7a2    # 3.29.5
         with:
           sarif_file: results.sarif

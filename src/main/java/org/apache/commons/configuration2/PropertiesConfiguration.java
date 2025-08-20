@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -887,7 +887,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a comment.
+         * Writes a comment.
          *
          * @param comment the comment to write
          * @throws IOException if an I/O error occurs.
@@ -911,7 +911,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key The key of the property
          * @param values The array of values of the property
@@ -924,7 +924,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         /**
-         * Write a property.
+         * Writes a property.
          *
          * @param key the key of the property
          * @param value the value of the property
@@ -1380,7 +1380,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     private void loadIncludeFile(final String fileName, final boolean optional, final Deque<URL> seenStack) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Load operation not properly " + "initialized! Do not call read(InputStream) directly," + " but use a FileHandler to load a configuration.");
+                "Load operation not properly initialized! Do not call read(InputStream) directly, but use a FileHandler to load a configuration.");
         }
 
         URL url = locateIncludeFile(locator.getBasePath(), fileName);

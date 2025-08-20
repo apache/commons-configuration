@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ public class TestNodeAddData {
      * Tests whether a defensive copy of the collection with path nodes is created.
      */
     @Test
-    public void testInitPathNodesDefensiveCopy() {
+    void testInitPathNodesDefensiveCopy() {
         final List<String> pathNodes = new ArrayList<>();
         pathNodes.add(PATH_NODE_NAME);
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, pathNodes);
@@ -62,7 +62,7 @@ public class TestNodeAddData {
      * Tests that the collection with path nodes cannot be modified if data is available.
      */
     @Test
-    public void testPathNodesDefinedModify() {
+    void testPathNodesDefinedModify() {
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, Collections.singleton(PATH_NODE_NAME));
         final List<String> pathNodes = data.getPathNodes();
         assertThrows(UnsupportedOperationException.class, () -> pathNodes.add("anotherNode"));
@@ -72,7 +72,7 @@ public class TestNodeAddData {
      * Tests whether the constructor can handle a null collection of path nodes.
      */
     @Test
-    public void testPathNodesNull() {
+    void testPathNodesNull() {
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
         assertTrue(data.getPathNodes().isEmpty());
     }
@@ -81,7 +81,7 @@ public class TestNodeAddData {
      * Tests whether the collection with path nodes cannot be modified if no data is available.
      */
     @Test
-    public void testPathNodesNullModify() {
+    void testPathNodesNullModify() {
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
         final List<String> pathNodes = data.getPathNodes();
         assertThrows(UnsupportedOperationException.class, () -> pathNodes.add("test"));

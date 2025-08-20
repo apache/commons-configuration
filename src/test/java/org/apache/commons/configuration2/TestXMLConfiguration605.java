@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,31 +76,31 @@ public class TestXMLConfiguration605 {
     }
 
     @Test
-    public void testWithCommaSeparatedList() throws Exception {
+    void testWithCommaSeparatedList() throws Exception {
         final String source = "<configuration><key0></key0><key1>a,b</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
-    public void testWithNoComma() throws Exception {
+    void testWithNoComma() throws Exception {
         final String source = "<configuration><key0></key0><key1></key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
-    public void testWithOnlyComma() throws Exception {
+    void testWithOnlyComma() throws Exception {
         final String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
-    public void testWithOnlyCommaWithoutDelimiterParsing() throws Exception {
+    void testWithOnlyCommaWithoutDelimiterParsing() throws Exception {
         final String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source, DisabledListDelimiterHandler.INSTANCE));
     }
 
     @Test
-    public void testWithOnlyCommaWithStringBuilder() throws Exception {
+    void testWithOnlyCommaWithStringBuilder() throws Exception {
         final StringBuilder sourceBuilder = new StringBuilder("<configuration>");
         sourceBuilder.append("<key0></key0>");
         sourceBuilder.append("<key1>,</key1>");
@@ -111,7 +111,7 @@ public class TestXMLConfiguration605 {
     }
 
     @Test
-    public void testWithOnlyCommaWithStringBuilderWithoutDelimiterParsing() throws Exception {
+    void testWithOnlyCommaWithStringBuilderWithoutDelimiterParsing() throws Exception {
         final StringBuilder sourceBuilder = new StringBuilder("<configuration>");
         sourceBuilder.append("<key0></key0>");
         sourceBuilder.append("<key1>,</key1>");
@@ -122,13 +122,13 @@ public class TestXMLConfiguration605 {
     }
 
     @Test
-    public void testWithSeparatingNonWhitespace() throws Exception {
+    void testWithSeparatingNonWhitespace() throws Exception {
         final String source = "<configuration><key0></key0><key1>,</key1>A<key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
-    public void testWithSeparatingWhitespace() throws Exception {
+    void testWithSeparatingWhitespace() throws Exception {
         final String source = "<configuration><key0></key0><key1>,</key1> <key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,7 +52,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests accessing the following sibling axis.
      */
     @Test
-    public void testFollowingSiblingAxis() {
+    void testFollowingSiblingAxis() {
         final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[2]/following-sibling::*");
         assertEquals(1, nodes.size());
         final ImmutableNode node = (ImmutableNode) nodes.get(0);
@@ -64,7 +64,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests using indices to specify elements.
      */
     @Test
-    public void testIndices() {
+    void testIndices() {
         assertEquals("1.2.3", context.getValue("/" + CHILD_NAME2 + "[1]/" + CHILD_NAME1 + "[1]/" + CHILD_NAME2 + "[2]"));
         assertEquals(String.valueOf(CHILD_COUNT), context.getValue(CHILD_NAME2 + "[last()]"));
 
@@ -81,7 +81,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests accessing the parent axis.
      */
     @Test
-    public void testParentAxis() {
+    void testParentAxis() {
         final List<?> nodes = context.selectNodes("/" + CHILD_NAME2 + "/parent::*");
         assertEquals(1, nodes.size());
     }
@@ -90,7 +90,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests accessing the preceding sibling axis.
      */
     @Test
-    public void testPrecedingSiblingAxis() {
+    void testPrecedingSiblingAxis() {
         final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[2]/preceding-sibling::*");
         assertEquals(3, nodes.size());
         for (int index = 0, value = 3; index < nodes.size(); index++, value--) {
@@ -102,7 +102,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests whether the attribute of a node can be queried.
      */
     @Test
-    public void testQueryAttribute() {
+    void testQueryAttribute() {
         assertEquals("1", context.getValue("/" + CHILD_NAME2 + "[1]/@" + ATTR_NAME));
     }
 
@@ -110,7 +110,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests whether an attribute of the root node can be queried.
      */
     @Test
-    public void testQueryRootAttribute() {
+    void testQueryRootAttribute() {
         assertEquals("true", context.getValue("@" + ATTR_ROOT));
     }
 
@@ -118,7 +118,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests simple XPath expressions.
      */
     @Test
-    public void testSimpleXPath() {
+    void testSimpleXPath() {
         List<?> results = context.selectNodes(CHILD_NAME1);
         assertEquals(2, results.size());
         for (final Object result : results) {
@@ -137,7 +137,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest {
      * Tests accessing a node's text.
      */
     @Test
-    public void testText() {
+    void testText() {
         final List<?> nodes = context.selectNodes("//" + CHILD_NAME2 + "[text()='1.1.1']");
         assertEquals(1, nodes.size());
     }

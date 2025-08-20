@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -805,6 +805,15 @@ public class DataConfiguration extends AbstractConfiguration {
         return getDateArray(key, EMPTY_DATE_ARRAY, format);
     }
 
+    /**
+     * Gets a list of Dates associated with the given configuration key. If the property is a list of Strings, they will be
+     * parsed with the format defined by the user in the {@link #DATE_FORMAT_KEY} property, or if it's not defined with the
+     * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object, a new list is returned.
+     *
+     * @param key The configuration key.
+     * @return The associated Date list if the key is found. If the key doesn't map to an existing object, a new list is returned.
+     * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
+     */
     public List<Date> getDateList(final String key) {
         return getDateList(key, new ArrayList<>());
     }

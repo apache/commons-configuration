@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -195,7 +195,7 @@ public class TestReadWriteSynchronizer {
      * Tests whether a lock passed to the constructor is used.
      */
     @Test
-    public void testInitLock() {
+    void testInitLock() {
         final ReadWriteLock lock = mock(ReadWriteLock.class);
         final Lock readLock = mock(Lock.class);
 
@@ -213,7 +213,7 @@ public class TestReadWriteSynchronizer {
      * Tests whether the synchronizer is reentrant. This is important for some combined operations on a configuration.
      */
     @Test
-    public void testReentrance() {
+    void testReentrance() {
         final Synchronizer sync = new ReadWriteSynchronizer();
         sync.beginWrite();
         sync.beginRead();
@@ -230,7 +230,7 @@ public class TestReadWriteSynchronizer {
      * accounts. If everything goes well, the total amount of money stays constant over time.
      */
     @Test
-    public void testSynchronizerInAction() throws InterruptedException {
+    void testSynchronizerInAction() throws InterruptedException {
         final int numberOfUpdates = 10000;
         final int numberOfReads = numberOfUpdates / 2;
         final int readThreadCount = 3;

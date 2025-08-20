@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,7 +67,7 @@ public class TestCombinedReloadingController {
      * Tests a check for a reloading operation which results in false.
      */
     @Test
-    public void testCheckForReloadingFalse() {
+    void testCheckForReloadingFalse() {
         final CombinedReloadingController ctrl = setUpController();
 
         for (final ReloadingController rc : subControllers) {
@@ -86,7 +86,7 @@ public class TestCombinedReloadingController {
      * Tests a check for a reloading operation which results in true.
      */
     @Test
-    public void testCheckForReloadingTrue() {
+    void testCheckForReloadingTrue() {
         final CombinedReloadingController ctrl = setUpController();
 
         when(subControllers[0].checkForReloading(null)).thenReturn(Boolean.FALSE);
@@ -105,7 +105,7 @@ public class TestCombinedReloadingController {
      * Tests whether the sub controllers can be accessed.
      */
     @Test
-    public void testGetSubControllers() {
+    void testGetSubControllers() {
         final CombinedReloadingController ctrl = setUpController();
         final Collection<ReloadingController> subs = ctrl.getSubControllers();
         assertIterableEquals(Arrays.asList(subControllers), subs);
@@ -115,7 +115,7 @@ public class TestCombinedReloadingController {
      * Tests that the list of sub controllers cannot be manipulated.
      */
     @Test
-    public void testGetSubControllersModify() {
+    void testGetSubControllersModify() {
         final Collection<ReloadingController> subs = setUpController().getSubControllers();
         assertThrows(UnsupportedOperationException.class, subs::clear);
     }
@@ -124,7 +124,7 @@ public class TestCombinedReloadingController {
      * Tries to create an instance without a collection.
      */
     @Test
-    public void testInitNull() {
+    void testInitNull() {
         assertThrows(IllegalArgumentException.class, () -> new CombinedReloadingController(null));
     }
 
@@ -132,7 +132,7 @@ public class TestCombinedReloadingController {
      * Tries to create an instance with a collection containing a null entry.
      */
     @Test
-    public void testInitNullEntries() {
+    void testInitNullEntries() {
         initSubControllers();
         final Collection<ReloadingController> ctrls = new ArrayList<>(Arrays.asList(subControllers));
         ctrls.add(null);
@@ -143,7 +143,7 @@ public class TestCombinedReloadingController {
      * Tests whether the sub controller's reloading state can be reset unconditionally.
      */
     @Test
-    public void testResetInitialReloadingState() {
+    void testResetInitialReloadingState() {
         final CombinedReloadingController ctrl = setUpController();
         ctrl.resetInitialReloadingState();
 
@@ -157,7 +157,7 @@ public class TestCombinedReloadingController {
      * Tests whether the reloading state can be reset.
      */
     @Test
-    public void testResetReloadingState() {
+    void testResetReloadingState() {
         final CombinedReloadingController ctrl = setUpController();
 
         when(subControllers[0].checkForReloading(null)).thenReturn(Boolean.TRUE);

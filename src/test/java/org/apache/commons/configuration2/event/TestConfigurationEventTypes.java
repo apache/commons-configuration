@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,7 +62,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for an add nodes operation.
      */
     @Test
-    public void testAddNodesEventType() {
+    void testAddNodesEventType() {
         checkHierarchicalEvent(ConfigurationEvent.ADD_NODES);
     }
 
@@ -70,7 +70,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for adding a property.
      */
     @Test
-    public void testAddPropertyEventType() {
+    void testAddPropertyEventType() {
         checkUpdateEvent(ConfigurationEvent.ADD_PROPERTY);
     }
 
@@ -78,7 +78,7 @@ public class TestConfigurationEventTypes {
      * Tests the common base event type for error events.
      */
     @Test
-    public void testBaseErrorEventType() {
+    void testBaseErrorEventType() {
         assertEquals(Event.ANY, ConfigurationErrorEvent.ANY.getSuperType());
     }
 
@@ -86,7 +86,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for clearing a whole configuration.
      */
     @Test
-    public void testClearEventType() {
+    void testClearEventType() {
         checkUpdateEvent(ConfigurationEvent.CLEAR);
     }
 
@@ -94,7 +94,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for clearing a property.
      */
     @Test
-    public void testClearPropertyEventType() {
+    void testClearPropertyEventType() {
         checkUpdateEvent(ConfigurationEvent.CLEAR_PROPERTY);
     }
 
@@ -102,7 +102,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for a clear tree operation.
      */
     @Test
-    public void testClearTreeEventType() {
+    void testClearTreeEventType() {
         checkHierarchicalEvent(ConfigurationEvent.CLEAR_TREE);
     }
 
@@ -110,7 +110,7 @@ public class TestConfigurationEventTypes {
      * Tests the base event type for configuration events.
      */
     @Test
-    public void testConfigurationEventType() {
+    void testConfigurationEventType() {
         assertSame(Event.ANY, ConfigurationEvent.ANY.getSuperType());
     }
 
@@ -118,7 +118,7 @@ public class TestConfigurationEventTypes {
      * Tests whether the set of super event types for the base type can be obtained.
      */
     @Test
-    public void testFetchSuperEventTypesForBaseType() {
+    void testFetchSuperEventTypesForBaseType() {
         final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(Event.ANY);
         assertEquals(Collections.singleton(Event.ANY), superTypes);
     }
@@ -127,7 +127,7 @@ public class TestConfigurationEventTypes {
      * Tests whether the set of super event types for null input can be obtained.
      */
     @Test
-    public void testFetchSuperEventTypesNull() {
+    void testFetchSuperEventTypesNull() {
         final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
         assertTrue(superTypes.isEmpty());
     }
@@ -136,7 +136,7 @@ public class TestConfigurationEventTypes {
      * Tests whether the super event types of a specific type can be retrieved.
      */
     @Test
-    public void testFetchSuperEventTypesOfType() {
+    void testFetchSuperEventTypesOfType() {
         final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(ConfigurationEvent.ADD_NODES);
         final Set<EventType<? extends Event>> expected = new HashSet<>();
         expected.add(ConfigurationEvent.ADD_NODES);
@@ -150,7 +150,7 @@ public class TestConfigurationEventTypes {
      * Tests the common base event type for hierarchical update events.
      */
     @Test
-    public void testHierarchicalEventType() {
+    void testHierarchicalEventType() {
         checkUpdateEvent(ConfigurationEvent.ANY_HIERARCHICAL);
     }
 
@@ -158,7 +158,7 @@ public class TestConfigurationEventTypes {
      * Tests isInstanceOf() if the base type is null.
      */
     @Test
-    public void testIsInstanceOfBaseNull() {
+    void testIsInstanceOfBaseNull() {
         assertFalse(EventType.isInstanceOf(ConfigurationEvent.ANY, null));
     }
 
@@ -166,7 +166,7 @@ public class TestConfigurationEventTypes {
      * Tests isInstanceOf() if the derived type is null.
      */
     @Test
-    public void testIsInstanceOfDerivedNull() {
+    void testIsInstanceOfDerivedNull() {
         assertFalse(EventType.isInstanceOf(null, Event.ANY));
     }
 
@@ -174,7 +174,7 @@ public class TestConfigurationEventTypes {
      * Tests isInstanceOf() if there is no instanceof relationship.
      */
     @Test
-    public void testIsInstanceOfFalse() {
+    void testIsInstanceOfFalse() {
         assertFalse(EventType.isInstanceOf(ConfigurationErrorEvent.READ, ConfigurationEvent.ANY));
     }
 
@@ -182,7 +182,7 @@ public class TestConfigurationEventTypes {
      * Tests isInstanceOf() if the expected result is true.
      */
     @Test
-    public void testIsInstanceOfTrue() {
+    void testIsInstanceOfTrue() {
         assertTrue(EventType.isInstanceOf(ConfigurationEvent.ADD_NODES, ConfigurationEvent.ANY_HIERARCHICAL));
         assertTrue(EventType.isInstanceOf(ConfigurationEvent.ADD_NODES, ConfigurationEvent.ANY));
         assertTrue(EventType.isInstanceOf(ConfigurationEvent.ADD_NODES, Event.ANY));
@@ -193,7 +193,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type indicating a read error.
      */
     @Test
-    public void testReadErrorEventType() {
+    void testReadErrorEventType() {
         checkErrorEvent(ConfigurationErrorEvent.READ);
     }
 
@@ -201,7 +201,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type for setting a property.
      */
     @Test
-    public void testSetPropertyEventType() {
+    void testSetPropertyEventType() {
         checkUpdateEvent(ConfigurationEvent.SET_PROPERTY);
     }
 
@@ -209,7 +209,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type indicating a change on a sub configuration.
      */
     @Test
-    public void testSubnodeChangedEventType() {
+    void testSubnodeChangedEventType() {
         checkHierarchicalEvent(ConfigurationEvent.SUBNODE_CHANGED);
     }
 
@@ -217,7 +217,7 @@ public class TestConfigurationEventTypes {
      * Tests the event type indicating a write error.
      */
     @Test
-    public void testWriteErrorEventType() {
+    void testWriteErrorEventType() {
         checkErrorEvent(ConfigurationErrorEvent.WRITE);
     }
 }

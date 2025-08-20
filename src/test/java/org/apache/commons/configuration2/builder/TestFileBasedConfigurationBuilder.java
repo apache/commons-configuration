@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -105,7 +105,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether auto save mode works.
      */
     @Test
-    public void testAutoSave() throws ConfigurationException {
+    void testAutoSave() throws ConfigurationException {
         final File file = createTestFile(0);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -126,7 +126,7 @@ public class TestFileBasedConfigurationBuilder {
      * This is related to CONFIGURATION-646.
      */
     @Test
-    public void testAutoSaveWithPropertiesConfiguration() throws ConfigurationException, IOException {
+    void testAutoSaveWithPropertiesConfiguration() throws ConfigurationException, IOException {
         final File file = newFile(tempFolder);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -144,7 +144,7 @@ public class TestFileBasedConfigurationBuilder {
      * configuration.
      */
     @Test
-    public void testAutoSaveWithReset() throws ConfigurationException {
+    void testAutoSaveWithReset() throws ConfigurationException {
         final File file = createTestFile(0);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -166,7 +166,7 @@ public class TestFileBasedConfigurationBuilder {
      * created.
      */
     @Test
-    public void testChangeLocationAfterCreation() throws ConfigurationException {
+    void testChangeLocationAfterCreation() throws ConfigurationException {
         final File file1 = createTestFile(1);
         final File file2 = createTestFile(2);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
@@ -186,7 +186,7 @@ public class TestFileBasedConfigurationBuilder {
      * reset of parameters.
      */
     @Test
-    public void testChangeLocationAfterReset() throws ConfigurationException {
+    void testChangeLocationAfterReset() throws ConfigurationException {
         final File file1 = createTestFile(1);
         final File file2 = createTestFile(2);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
@@ -211,7 +211,7 @@ public class TestFileBasedConfigurationBuilder {
      * not yet exist. Later the configuration is saved to this file.
      */
     @Test
-    public void testCreateConfigurationNonExistingFileAndThenSave() throws ConfigurationException {
+    void testCreateConfigurationNonExistingFileAndThenSave() throws ConfigurationException {
         final File outFile = ConfigurationAssert.getOutFile("save.properties");
         final Parameters parameters = new Parameters();
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
@@ -228,7 +228,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether auto save mode can be disabled again.
      */
     @Test
-    public void testDisableAutoSave() throws ConfigurationException {
+    void testDisableAutoSave() throws ConfigurationException {
         final File file = createTestFile(0);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -254,7 +254,7 @@ public class TestFileBasedConfigurationBuilder {
      * @throws ConfigurationException   Shouldn't happen
      */
     @Test
-    public void testFileBasedConfigurationBuilderWithHomeDirectoryLocationStrategy() throws IOException, ConfigurationException {
+    void testFileBasedConfigurationBuilderWithHomeDirectoryLocationStrategy() throws IOException, ConfigurationException {
         final String folderName = "test";
         final String fileName = "sample.properties";
         newFolder(folderName, tempFolder);
@@ -280,7 +280,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether a configuration is loaded from file if a location is provided.
      */
     @Test
-    public void testGetConfigurationLoadFromFile() throws ConfigurationException {
+    void testGetConfigurationLoadFromFile() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new FileBasedBuilderParametersImpl().setFile(file));
@@ -294,7 +294,7 @@ public class TestFileBasedConfigurationBuilder {
      * handle when reading config from JAR file URL.
      */
     @Test
-    public void testGetConfigurationLoadFromJarFile() throws ConfigurationException, IOException {
+    void testGetConfigurationLoadFromJarFile() throws ConfigurationException, IOException {
         final URL jarResourceUrl = getClass().getClassLoader().getResource("org/apache/commons/configuration2/test.jar");
         assertNotNull(jarResourceUrl);
         final Path testJar = Paths.get(tempFolder.getAbsolutePath(), "test.jar");
@@ -346,7 +346,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether a configuration can be created if no location is set.
      */
     @Test
-    public void testGetConfigurationNoLocation() throws ConfigurationException {
+    void testGetConfigurationNoLocation() throws ConfigurationException {
         final Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class, params);
@@ -360,7 +360,7 @@ public class TestFileBasedConfigurationBuilder {
      * an interface.
      */
     @Test
-    public void testGetDefaultEncodingInterface() {
+    void testGetDefaultEncodingInterface() {
         final String encoding = "testEncoding";
         FileBasedConfigurationBuilder.setDefaultEncoding(Configuration.class, encoding);
         assertEquals(encoding, FileBasedConfigurationBuilder.getDefaultEncoding(XMLConfiguration.class));
@@ -373,7 +373,7 @@ public class TestFileBasedConfigurationBuilder {
      * defined.
      */
     @Test
-    public void testGetDefaultEncodingProperties() {
+    void testGetDefaultEncodingProperties() {
         assertEquals(PropertiesConfiguration.DEFAULT_ENCODING, FileBasedConfigurationBuilder.getDefaultEncoding(PropertiesConfiguration.class));
     }
 
@@ -381,7 +381,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether a default encoding is find even if a sub class is queried.
      */
     @Test
-    public void testGetDefaultEncodingSubClass() {
+    void testGetDefaultEncodingSubClass() {
         final PropertiesConfiguration conf = new PropertiesConfiguration() {
             // empty
         };
@@ -393,7 +393,7 @@ public class TestFileBasedConfigurationBuilder {
      * defined.
      */
     @Test
-    public void testGetDefaultEncodingXmlProperties() {
+    void testGetDefaultEncodingXmlProperties() {
         assertEquals(XMLPropertiesConfiguration.DEFAULT_ENCODING, FileBasedConfigurationBuilder.getDefaultEncoding(XMLPropertiesConfiguration.class));
     }
 
@@ -401,7 +401,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether the allowFailOnInit flag is correctly initialized.
      */
     @Test
-    public void testInitAllowFailOnInitFlag() {
+    void testInitAllowFailOnInitFlag() {
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class, null, true);
@@ -413,7 +413,7 @@ public class TestFileBasedConfigurationBuilder {
      * the file handler.
      */
     @Test
-    public void testInitFileHandlerOverrideDefaultEncoding() throws ConfigurationException {
+    void testInitFileHandlerOverrideDefaultEncoding() throws ConfigurationException {
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
@@ -429,7 +429,7 @@ public class TestFileBasedConfigurationBuilder {
      * specified.
      */
     @Test
-    public void testInitFileHandlerSetDefaultEncoding() throws ConfigurationException {
+    void testInitFileHandlerSetDefaultEncoding() throws ConfigurationException {
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
@@ -443,7 +443,7 @@ public class TestFileBasedConfigurationBuilder {
      * ensures that saving writes to the expected file.
      */
     @Test
-    public void testLocationIsFullyDefined() throws ConfigurationException {
+    void testLocationIsFullyDefined() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -460,7 +460,7 @@ public class TestFileBasedConfigurationBuilder {
      * builder's result is reset.
      */
     @Test
-    public void testLocationSurvivesResetResult() throws ConfigurationException {
+    void testLocationSurvivesResetResult() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -479,7 +479,7 @@ public class TestFileBasedConfigurationBuilder {
      * resets the file location.
      */
     @Test
-    public void testResetLocation() throws ConfigurationException {
+    void testResetLocation() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -497,7 +497,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether the managed configuration can be saved.
      */
     @Test
-    public void testSave() throws ConfigurationException {
+    void testSave() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
@@ -514,7 +514,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tests whether a new configuration can be saved to a file.
      */
     @Test
-    public void testSaveNewFile() throws ConfigurationException, IOException {
+    void testSaveNewFile() throws ConfigurationException, IOException {
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
@@ -530,7 +530,7 @@ public class TestFileBasedConfigurationBuilder {
      * Tries to set a default encoding for a null class.
      */
     @Test
-    public void testSetDefaultEncodingNull() {
+    void testSetDefaultEncodingNull() {
         assertThrows(IllegalArgumentException.class, () -> FileBasedConfigurationBuilder.setDefaultEncoding(null, StandardCharsets.UTF_8.name()));
     }
 
@@ -539,7 +539,7 @@ public class TestFileBasedConfigurationBuilder {
      * file-based parameters are part of the initialization parameters.
      */
     @Test
-    public void testSetLocationNoFileHandler() throws ConfigurationException {
+    void testSetLocationNoFileHandler() throws ConfigurationException {
         final File file = createTestFile(1);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(

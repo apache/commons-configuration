@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,9 @@
    limitations under the License.
 -->
 
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
     <title>Properties files</title>
     <author email="smanux@lfjr.net">Emmanuel Bourg</author>
@@ -331,6 +333,7 @@ config.dirs = \\\\share2
         control over the output of properties files is needed. The following
         list describes these methods (note that corresponding get methods are
         of course also provided):
+      </p>
         <ul>
         <li><code>setComment()</code><br/>
         With this method a comment can be set for a specified property. When
@@ -378,6 +381,7 @@ config.dirs = \\\\share2
         platform-specific line separator is used (e.g. <code>\n</code> on Unix).
         </li>
         </ul>
+      <p>
         The default settings of <code>PropertiesConfigurationLayout</code> are
         chosen in a way that most of the original layout of a properties file
         is retained. With the methods listed above specific layout restrictions
@@ -532,6 +536,7 @@ Configuration config = builder.getConfiguration();
         settings specific to properties files which are defined by the
         <code><a href="../apidocs/org/apache/commons/configuration2/builder/PropertiesBuilderProperties.html">
         PropertiesBuilderProperties</a></code> interface. These include
+      </p>
         <ul>
           <li>A flag whether <a href="#Includes">include files</a> are supported.
           This is <strong>true</strong> by default, but can be switched off if
@@ -540,7 +545,6 @@ Configuration config = builder.getConfiguration();
           <li>A custom <a href="#Custom_properties_readers_and_writers">I/O
           factory</a>.</li>
         </ul>
-      </p>
       <p>
         A parameters object for a properties configuration can be obtained using
         the <code>properties()</code> method of a

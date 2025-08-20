@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -617,21 +617,14 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         } else if (value instanceof ImmutableConfiguration) {
             // display a flat Configuration as a dictionary
             out.println(padding + "<dict>");
-
             final ImmutableConfiguration config = (ImmutableConfiguration) value;
-            final Iterator<String> it = config.getKeys();
-            while (it.hasNext()) {
+            config.forEach((k, v) -> {
                 // create a node for each property
-                final String key = it.next();
-                final ImmutableNode node = new ImmutableNode.Builder().name(key).value(config.getProperty(key)).create();
-
+                final ImmutableNode node = new ImmutableNode.Builder().name(k).value(v).create();
                 // print the node
                 printNode(out, indentLevel + 1, node);
-
-                if (it.hasNext()) {
-                    out.println();
-                }
-            }
+                out.println();
+            });
             out.println(padding + "</dict>");
         } else if (value instanceof Map) {
             // display a Map as a dictionary
@@ -695,7 +688,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     public void write(final Writer out) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Save operation not properly " + "initialized! Do not call write(Writer) directly," + " but use a FileHandler to save a configuration.");
+                "Save operation not properly initialized! Do not call write(Writer) directly, but use a FileHandler to save a configuration.");
         }
         final PrintWriter writer = new PrintWriter(out);
 

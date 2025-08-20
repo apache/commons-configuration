@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,7 @@ public class TestXPathExpressionEngineInConfig {
      * Tests whether addProperty() can be used to create more complex hierarchical structures.
      */
     @Test
-    public void testAddPropertyComplexStructures() {
+    void testAddPropertyComplexStructures() {
         config.addProperty("tables/table/name", "tasks");
         config.addProperty("tables/table[last()]/@type", "system");
         config.addProperty("tables/table[last()]/fields/field/name", "taskid");
@@ -66,11 +66,16 @@ public class TestXPathExpressionEngineInConfig {
      * Tests whether configuration properties with a namespace can be handled.
      */
     @Test
-    public void testPropertiesWithNamespace() throws ConfigurationException {
-        final String xml = "<Config>\n" + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
+    void testPropertiesWithNamespace() throws ConfigurationException {
+        // @formatter:off
+        final String xml = "<Config>\n"
+            + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
             + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/1999/REC-xpath-19991116\">\n"
-            + "    <dsig:XPath xmlns:ietf=\"http://www.ietf.org\" xmlns:pl=\"http://test.test\">self::pl:policy1</dsig:XPath>\n" + "  </dsig:Transform>\n"
-            + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n" + "</dsig:Transforms>" + "</Config>";
+            + "    <dsig:XPath xmlns:ietf=\"http://www.ietf.org\" xmlns:pl=\"http://test.test\">self::pl:policy1</dsig:XPath>\n"
+            + "  </dsig:Transform>\n"
+            + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n"
+            + "</dsig:Transforms></Config>";
+        // @formatter:on
         final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(xml));
 
@@ -84,7 +89,7 @@ public class TestXPathExpressionEngineInConfig {
      * Tests whether an already existing property can be changed using setProperty().
      */
     @Test
-    public void testSetPropertyExisting() {
+    void testSetPropertyExisting() {
         config.addProperty(" " + KEY, "failure");
         config.setProperty(KEY, VALUE);
         assertEquals(VALUE, config.getString(KEY));
@@ -94,7 +99,7 @@ public class TestXPathExpressionEngineInConfig {
      * Tests whether setProperty() can be used to add a new attribute.
      */
     @Test
-    public void testSetPropertyNewAttribute() {
+    void testSetPropertyNewAttribute() {
         final String keyAttr = KEY + "/@attr";
         config.addProperty(" " + KEY, "test");
         config.setProperty(keyAttr, VALUE);
@@ -105,7 +110,7 @@ public class TestXPathExpressionEngineInConfig {
      * Tests whether setProperty() can be used to create a completely new key.
      */
     @Test
-    public void testSetPropertyNewKey() {
+    void testSetPropertyNewKey() {
         config.setProperty(KEY, VALUE);
         assertEquals(VALUE, config.getString(KEY));
     }
@@ -114,7 +119,7 @@ public class TestXPathExpressionEngineInConfig {
      * Tests setProperty() if the specified path partly exists.
      */
     @Test
-    public void testSetPropertyPartlyExisting() {
+    void testSetPropertyPartlyExisting() {
         final String testKey = KEY + "/sub";
         config.addProperty(" " + KEY, "test");
         config.setProperty(testKey, VALUE);

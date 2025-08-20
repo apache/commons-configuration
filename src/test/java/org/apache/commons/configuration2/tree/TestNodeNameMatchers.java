@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,7 @@ package org.apache.commons.configuration2.tree;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Locale;
-
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,18 +63,18 @@ public class TestNodeNameMatchers {
      * Tests the equalsIgnoreCase mather if the expected result is true.
      */
     @Test
-    public void testEqualsIgnoreCaseMatch() {
+    void testEqualsIgnoreCaseMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ROOT)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, StringUtils.toRootLowerCase(NODE_NAME)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, StringUtils.toRootUpperCase(NODE_NAME)));
     }
 
     /**
      * Tests the equalsIgnoreCase matcher if the expected result is false.
      */
     @Test
-    public void testEqualsIgnoreCaseNoMatch() {
+    void testEqualsIgnoreCaseNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME + "_other"));
     }
@@ -84,7 +83,7 @@ public class TestNodeNameMatchers {
      * Tests whether the equalsIgnoreCase matcher is null-safe.
      */
     @Test
-    public void testEqualsIgnoreCaseNullCriterion() {
+    void testEqualsIgnoreCaseNullCriterion() {
         checkMatcherWithNullInput(NodeNameMatchers.EQUALS_IGNORE_CASE);
     }
 
@@ -92,7 +91,7 @@ public class TestNodeNameMatchers {
      * Tests the equals matcher if the expected result is true.
      */
     @Test
-    public void testEqualsMatch() {
+    void testEqualsMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertTrue(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
     }
@@ -101,17 +100,17 @@ public class TestNodeNameMatchers {
      * Tests the equals matcher for a non matching name.
      */
     @Test
-    public void testEqualsNoMatch() {
+    void testEqualsNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
-        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ROOT)));
+        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, StringUtils.toRootLowerCase(NODE_NAME)));
     }
 
     /**
      * Tests whether the equals matcher can handle a null criterion.
      */
     @Test
-    public void testEqualsNullCriterion() {
+    void testEqualsNullCriterion() {
         checkMatcherWithNullInput(NodeNameMatchers.EQUALS);
     }
 }

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ public class TestDefaultFileSystem {
      * Tests the default logger.
      */
     @Test
-    public void testDefaultLogger() {
+    void testDefaultLogger() {
         assertNotNull(fileSystem.getLogger());
     }
 
@@ -51,7 +51,7 @@ public class TestDefaultFileSystem {
      * Tests that an invalid output path causes an exception to be thrown when creating an ouput stream.
      */
     @Test
-    public void testGetOutputStreamInvalidPath() {
+    void testGetOutputStreamInvalidPath() {
         final File file = new File("");
         assertThrows(ConfigurationException.class, () -> fileSystem.getOutputStream(file));
     }
@@ -60,7 +60,7 @@ public class TestDefaultFileSystem {
      * Tests whether the logger can be changed.
      */
     @Test
-    public void testSetLogger() {
+    void testSetLogger() {
         final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
         assertSame(log, fileSystem.getLogger());

@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Combined Configurations</title>
   <author email="oheger@apache.com">Oliver Heger</author>
@@ -33,7 +34,6 @@
       <a href="howto_compositeconfiguration.html#Composite Configuration Details">last
       section</a>. There are the following differences however:
     </p>
-    <p>
       <ul>
         <li>A <code>CombinedConfiguration</code> is a truly
         <a href="howto_xml.html#Hierarchical properties">hierarchical
@@ -55,8 +55,6 @@
         <li>There is no concept of an <em>in memory configuration</em>. Changes
         to a combined configuration are handled in a different way.</li>
       </ul>
-   	</p>
-
     <subsection name="How it works">
     <p>
       A <code>CombinedConfiguration</code> provides a logic view on the
@@ -435,6 +433,7 @@
 ]]></source></td><td width="60%">
       <p>
         The features that are significant in this file are:
+      </p>
         <ul>
           <li>In the gui section each of the child elements only appears once. The level element
           merges the attributes from the two files and uses the element value of the first file.</li>
@@ -448,7 +447,6 @@
           was not merged in this case.</li>
           <li>Again, only Channel 3 from the first file was included.</li>
         </ul>
-      </p>
       <p>
         How the Channel elements ended up may not at first be obvious. The <code>OverrideCombiner</code>
         simply noticed that the Channels element had three child elements named Channel and
@@ -662,6 +660,7 @@
 ]]></source></td><td width="60%">
       <p>
         The features that are significant in this file are:
+      </p>
         <ul>
           <li>In the gui section the elements were merged.</li>
           <li>In the net section the elements were merged, with the exception of the urls.</li>
@@ -672,7 +671,6 @@
           <li>Channel 1 and Channel 2 were merged</li>
           <li>Both Channel 3 elements appear as they were determined to not be the same.</li>
         </ul>
-      </p>
       <p>
         When merging elements attributes play a critical role. If an element has an attribute that
         appears in both sources, the value of that attribute must be the same for the elements to be

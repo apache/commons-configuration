@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,7 +59,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests whether the refresh delay is correctly passed to the base class.
      */
     @Test
-    public void testGetRefreshDelay() throws Exception {
+    void testGetRefreshDelay() throws Exception {
         final long delay = 20130325L;
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(null, delay);
         assertNotNull(strategy.getFileHandler());
@@ -70,7 +70,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests whether the last modification date of an existing file can be obtained.
      */
     @Test
-    public void testLastModificationDateExisting() throws IOException {
+    void testLastModificationDateExisting() throws IOException {
         final File file = newFile(tempFolder);
         writeTestFile(file, "value1");
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
@@ -87,7 +87,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests whether a file system exception is handled when accessing the file object.
      */
     @Test
-    public void testLastModificationDateFileSystemEx() throws FileSystemException {
+    void testLastModificationDateFileSystemEx() throws FileSystemException {
         final FileObject fo = mock(FileObject.class);
         final FileName name = mock(FileName.class);
 
@@ -115,7 +115,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests whether a non existing file is handled correctly.
      */
     @Test
-    public void testLastModificationDateNonExisting() {
+    void testLastModificationDateNonExisting() {
         final File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
         final FileHandler handler = new FileHandler();
         handler.setFileSystem(new VFSFileSystem());
@@ -128,7 +128,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests whether an undefined file handler is handler correctly.
      */
     @Test
-    public void testLastModificationDateUndefinedHandler() {
+    void testLastModificationDateUndefinedHandler() {
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
         assertEquals(0, strategy.getLastModificationDate());
     }
@@ -137,7 +137,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * Tests a URI which cannot be resolved.
      */
     @Test
-    public void testLastModificationDateUnresolvableURI() {
+    void testLastModificationDateUnresolvableURI() {
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector() {
             @Override
             protected String resolveFileURI() {

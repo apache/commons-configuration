@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 public class TestSubsetConfiguration848 {
 
     @Test
-    public void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
+    void testSubsetConfigurationWithIndexAndDelimiter() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
         try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);
@@ -66,7 +66,7 @@ public class TestSubsetConfiguration848 {
     }
 
     @Test
-    public void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
+    void testSubsetWithJSONConfiguration() throws ConfigurationException, IOException {
         final JSONConfiguration jsonConfiguration = new JSONConfiguration();
         try (FileReader in = new FileReader(ConfigurationAssert.getTestFile("test-configuration-848.json").getAbsolutePath())) {
             jsonConfiguration.read(in);

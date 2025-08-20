@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -154,7 +154,7 @@ public class TestSubnodeConfiguration {
      * Tests adding of properties.
      */
     @Test
-    public void testAddProperty() {
+    void testAddProperty() {
         setUpSubnodeConfig();
         config.addProperty("[@table-type]", "test");
         assertEquals("test", parent.getString("tables.table(0)[@table-type]"));
@@ -169,7 +169,7 @@ public class TestSubnodeConfiguration {
      * Tests whether a clone of a sub configuration can be created.
      */
     @Test
-    public void testClone() {
+    void testClone() {
         setUpSubnodeConfig();
         final SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
         assertNotSame(config.getModel(), copy.getModel());
@@ -188,7 +188,7 @@ public class TestSubnodeConfiguration {
      * Tests whether the configuration can be closed.
      */
     @Test
-    public void testClose() {
+    void testClose() {
         final TrackedNodeModel model = mock(TrackedNodeModel.class);
 
         when(model.getSelector()).thenReturn(SELECTOR);
@@ -205,7 +205,7 @@ public class TestSubnodeConfiguration {
      * Tests the configurationAt() method if updates are not supported.
      */
     @Test
-    public void testConfiguarationAtNoUpdates() {
+    void testConfiguarationAtNoUpdates() {
         setUpSubnodeConfig();
         final HierarchicalConfiguration<ImmutableNode> sub2 = config.configurationAt("fields.field(1)");
         assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"));
@@ -217,7 +217,7 @@ public class TestSubnodeConfiguration {
      * Tests configurationAt() if updates are supported.
      */
     @Test
-    public void testConfigurationAtWithUpdateSupport() {
+    void testConfigurationAtWithUpdateSupport() {
         setUpSubnodeConfig();
         final SubnodeConfiguration sub2 = (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
         assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"));
@@ -228,7 +228,7 @@ public class TestSubnodeConfiguration {
      * Tests listing the defined keys.
      */
     @Test
-    public void testGetKeys() {
+    void testGetKeys() {
         setUpSubnodeConfig();
         final Set<String> keys = new HashSet<>(ConfigurationAssert.keysToList(config));
         assertEquals(new HashSet<>(Arrays.asList("name", "fields.field.name")), keys);
@@ -238,7 +238,7 @@ public class TestSubnodeConfiguration {
      * Tests whether a correct node model is returned for the sub configuration. This test is related to CONFIGURATION-670.
      */
     @Test
-    public void testGetNodeModel() {
+    void testGetNodeModel() {
         setUpSubnodeConfig();
         final InMemoryNodeModel nodeModel = config.getNodeModel();
 
@@ -249,7 +249,7 @@ public class TestSubnodeConfiguration {
      * Tests if properties of the sub node can be accessed.
      */
     @Test
-    public void testGetProperties() {
+    void testGetProperties() {
         setUpSubnodeConfig();
         checkSubConfigContent();
     }
@@ -258,7 +258,7 @@ public class TestSubnodeConfiguration {
      * Tests creation of a subnode config.
      */
     @Test
-    public void testInitSubNodeConfig() {
+    void testInitSubNodeConfig() {
         setUpSubnodeConfig();
         assertSame(NodeStructureHelper.nodeForKey(parent.getModel().getNodeHandler().getRootNode(), "tables/table(0)"),
                 config.getModel().getNodeHandler().getRootNode());
@@ -269,7 +269,7 @@ public class TestSubnodeConfiguration {
      * Tests constructing a subnode configuration with a null node model. This should cause an exception.
      */
     @Test
-    public void testInitSubNodeConfigWithNullNode() {
+    void testInitSubNodeConfigWithNullNode() {
         assertThrows(IllegalArgumentException.class, () -> new SubnodeConfiguration(parent, null));
     }
 
@@ -277,7 +277,7 @@ public class TestSubnodeConfiguration {
      * Tests constructing a subnode configuration with a null parent. This should cause an exception.
      */
     @Test
-    public void testInitSubNodeConfigWithNullParent() {
+    void testInitSubNodeConfigWithNullParent() {
         final TrackedNodeModel model = setUpTrackedModel(SELECTOR);
         assertThrows(IllegalArgumentException.class, () -> new SubnodeConfiguration(null, model));
     }
@@ -286,7 +286,7 @@ public class TestSubnodeConfiguration {
      * Tests interpolation features. The subnode config should use its parent for interpolation.
      */
     @Test
-    public void testInterpolation() {
+    void testInterpolation() {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).tablespace", "${tablespaces.tablespace(0).name}");
@@ -301,7 +301,7 @@ public class TestSubnodeConfiguration {
      * supported.
      */
     @Test
-    public void testInterpolationFromConfigurationAtNoUpdateSupport() {
+    void testInterpolationFromConfigurationAtNoUpdateSupport() {
         checkInterpolationFromConfigurationAt(false);
     }
 
@@ -309,7 +309,7 @@ public class TestSubnodeConfiguration {
      * Tests whether interpolation works for a sub configuration obtained via configurationAt() if updates are supported.
      */
     @Test
-    public void testInterpolationFromConfigurationAtWithUpdateSupport() {
+    void testInterpolationFromConfigurationAtWithUpdateSupport() {
         checkInterpolationFromConfigurationAt(true);
     }
 
@@ -317,7 +317,7 @@ public class TestSubnodeConfiguration {
      * Tests manipulating the interpolator.
      */
     @Test
-    public void testInterpolator() {
+    void testInterpolator() {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
 
@@ -329,7 +329,7 @@ public class TestSubnodeConfiguration {
      * An additional test for interpolation when the configurationAt() method is involved for a local interpolation.
      */
     @Test
-    public void testLocalInterpolationFromConfigurationAt() {
+    void testLocalInterpolationFromConfigurationAt() {
         parent.addProperty("base.dir", "/home/foo");
         parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         parent.addProperty("test.absolute.dir.dir2", "${dir1}");
@@ -340,7 +340,7 @@ public class TestSubnodeConfiguration {
     }
 
     @Test
-    public void testLocalLookupsInInterpolatorAreInherited() {
+    void testLocalLookupsInInterpolatorAreInherited() {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).var", "${brackets:x}");
@@ -356,7 +356,7 @@ public class TestSubnodeConfiguration {
      * case the sub config should be detached and keep its old values.
      */
     @Test
-    public void testParentChangeDetach() {
+    void testParentChangeDetach() {
         setUpSubnodeConfig();
         parent.clear();
         checkSubConfigContent();
@@ -367,7 +367,7 @@ public class TestSubnodeConfiguration {
      * expression engine is changed for the parent.
      */
     @Test
-    public void testParentChangeDetatchException() {
+    void testParentChangeDetatchException() {
         setUpSubnodeConfig();
         parent.setExpressionEngine(new XPathExpressionEngine());
         parent.addProperty("newProp", "value");
@@ -378,7 +378,7 @@ public class TestSubnodeConfiguration {
      * Tests changing the expression engine.
      */
     @Test
-    public void testSetExpressionEngine() {
+    void testSetExpressionEngine() {
         parent.setExpressionEngine(new XPathExpressionEngine());
         setUpSubnodeConfig("tables/table[1]");
         assertEquals(NodeStructureHelper.field(0, 1), config.getString("fields/field[2]/name"));
@@ -392,7 +392,7 @@ public class TestSubnodeConfiguration {
      * Tests manipulating the list delimiter handler. This object is derived from the parent.
      */
     @Test
-    public void testSetListDelimiterHandler() {
+    void testSetListDelimiterHandler() {
         final ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
         final ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
         parent.setListDelimiterHandler(handler1);
@@ -410,7 +410,7 @@ public class TestSubnodeConfiguration {
      * each other.
      */
     @Test
-    public void testSetProperty() {
+    void testSetProperty() {
         setUpSubnodeConfig();
         config.setProperty(null, "testTable");
         config.setProperty("name", NodeStructureHelper.table(0) + "_tested");
@@ -425,7 +425,7 @@ public class TestSubnodeConfiguration {
      * Tests setting the exception on missing flag. The subnode config obtains this flag from its parent.
      */
     @Test
-    public void testSetThrowExceptionOnMissing() {
+    void testSetThrowExceptionOnMissing() {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
         assertTrue(config.isThrowExceptionOnMissing());
@@ -436,7 +436,7 @@ public class TestSubnodeConfiguration {
      * Tests whether the exception flag can be set independently from the parent.
      */
     @Test
-    public void testSetThrowExceptionOnMissingAffectsParent() {
+    void testSetThrowExceptionOnMissingAffectsParent() {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
         config.setThrowExceptionOnMissing(false);

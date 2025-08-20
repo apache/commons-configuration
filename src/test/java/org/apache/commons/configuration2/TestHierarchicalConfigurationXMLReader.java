@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ public class TestHierarchicalConfigurationXMLReader {
     }
 
     @Test
-    public void testParse() throws Exception {
+    void testParse() throws Exception {
         final SAXSource source = new SAXSource(parser, new InputSource());
         final DOMResult result = new DOMResult();
         final Transformer trans = TransformerFactory.newInstance().newTransformer();

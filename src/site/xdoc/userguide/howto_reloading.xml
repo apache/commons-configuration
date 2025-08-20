@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,9 @@
    limitations under the License.
 -->
 
-<document>
-
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
  <properties>
   <title>Reloading</title>
  </properties>
@@ -58,6 +59,7 @@
       a configuration source actively for changes; it only has to be able to
       detect a change when it is triggered. This is reflected in the methods
       defined by the <code>ReloadingDetector</code> interface:
+    </p>
       <ul>
         <li>The <code>isReloadingRequired()</code> method is called to trigger
         a check. The detector has to determine whether something has changed on
@@ -67,7 +69,6 @@
         opportunity to reset itself so that new changes on the associated
         configuration source can be detected.</li>
       </ul>
-    </p>
     <p>
       The next component taking part in reloading is an instance of the
       <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingController.html">
@@ -249,6 +250,7 @@ trigger.start();
       parameters for file-based configurations and defined by the
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedBuilderProperties.html">
       FileBasedBuilderProperties</a></code> interface:
+    </p>
       <ul>
         <li>The <code><a href="../apidocs/org/apache/commons/configuration2/builder/ReloadingDetectorFactory.html">
         ReloadingDetectorFactory</a></code> to be used when the reloading
@@ -263,7 +265,6 @@ trigger.start();
         value can be used to improve performance if there are many accesses to
         a configuration builder in short intervals.</li>
       </ul>
-    </p>
     </subsection>
 
     <subsection name="Generic Reloading Support">
@@ -294,6 +295,7 @@ trigger.start();
     </p>
     <p>
       So the recipe to activate reloading for a builder instance is as follows:
+    </p>
       <ul>
       <li>Create and initialize the builder instance as usual.</li>
       <li>Create a <code>ReloadingDetector</code> which is able to monitor
@@ -311,7 +313,6 @@ trigger.start();
       of time (e.g. initiate a corresponding trigger as described earlier in
       this chapter.</li>
       </ul>
-    </p>
     </subsection>
 
     <subsection name="Reloading Checks on Builder Access">

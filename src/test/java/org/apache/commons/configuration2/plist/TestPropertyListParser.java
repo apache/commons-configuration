@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ public class TestPropertyListParser {
     private final PropertyListParser parser = new PropertyListParser((Reader) null);
 
     @Test
-    public void testFilterData() throws Exception {
+    void testFilterData() throws Exception {
         final byte[] expected = {0x20, 0x20};
         assertArrayEquals(null, parser.filterData(null));
         assertArrayEquals(expected, parser.filterData("<2020>"));
@@ -43,7 +43,7 @@ public class TestPropertyListParser {
     }
 
     @Test
-    public void testParseDate() throws Exception {
+    void testParseDate() throws Exception {
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2002);
         calendar.set(Calendar.MONTH, Calendar.MARCH);
@@ -58,7 +58,7 @@ public class TestPropertyListParser {
     }
 
     @Test
-    public void testRemoveQuotes() {
+    void testRemoveQuotes() {
         assertEquals("abc", parser.removeQuotes("abc"));
         assertEquals("abc", parser.removeQuotes("\"abc\""));
         assertEquals("", parser.removeQuotes("\"\""));
@@ -67,7 +67,7 @@ public class TestPropertyListParser {
     }
 
     @Test
-    public void testUnescapeQuotes() {
+    void testUnescapeQuotes() {
         assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\"bbb\"ccc"));
         assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\\\"bbb\\\"ccc"));
     }

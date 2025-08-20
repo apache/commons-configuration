@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,7 +91,7 @@ public class TestTrackedNodeModel {
      * Tests whether nodes can be added.
      */
     @Test
-    public void testAddNodes() {
+    void testAddNodes() {
         final List<ImmutableNode> nodes = Arrays.asList(NodeStructureHelper.createNode("n1", 1), NodeStructureHelper.createNode("n2", 2));
 
         setUpModel().addNodes(KEY, nodes, resolver);
@@ -104,7 +104,7 @@ public class TestTrackedNodeModel {
      * Tests whether properties can be added.
      */
     @Test
-    public void testAddProperty() {
+    void testAddProperty() {
         final Iterable<?> values = mock(Iterable.class);
 
         setUpModel().addProperty(KEY, values, resolver);
@@ -117,7 +117,7 @@ public class TestTrackedNodeModel {
      * Tests whether the whole model can be cleared.
      */
     @Test
-    public void testClear() {
+    void testClear() {
         when(parentModel.clearTree(null, selector, resolver)).thenReturn(null);
 
         setUpModel().clear(resolver);
@@ -130,7 +130,7 @@ public class TestTrackedNodeModel {
      * Tests whether a property can be cleared.
      */
     @Test
-    public void testClearProperty() {
+    void testClearProperty() {
         setUpModel().clearProperty(KEY, resolver);
 
         verify(parentModel).clearProperty(KEY, selector, resolver);
@@ -141,7 +141,7 @@ public class TestTrackedNodeModel {
      * Tests whether a sub tree can be cleared.
      */
     @Test
-    public void testClearTree() {
+    void testClearTree() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(NodeStructureHelper.createNode("test", null));
         final List<QueryResult<ImmutableNode>> removed = Collections.singletonList(result);
 
@@ -157,7 +157,7 @@ public class TestTrackedNodeModel {
      * Tests whether the model can be closed.
      */
     @Test
-    public void testClose() {
+    void testClose() {
         setUpModel().close();
 
         verify(parentModel).untrackNode(selector);
@@ -168,7 +168,7 @@ public class TestTrackedNodeModel {
      * Tests whether close can be called multiple times.
      */
     @Test
-    public void testCloseMultipleTimes() {
+    void testCloseMultipleTimes() {
         final TrackedNodeModel model = setUpModel();
         model.close();
         model.close();
@@ -181,7 +181,7 @@ public class TestTrackedNodeModel {
      * Tests whether the correct in-memory representation can be queried.
      */
     @Test
-    public void testGetInMemoryRepresentation() {
+    void testGetInMemoryRepresentation() {
         final NodeHandler<ImmutableNode> handler = prepareGetNodeHandler();
         final ImmutableNode root = NodeStructureHelper.createNode("Root", null);
 
@@ -195,7 +195,7 @@ public class TestTrackedNodeModel {
      * Tests whether a node handler can be queried.
      */
     @Test
-    public void testGetNodeHandler() {
+    void testGetNodeHandler() {
         final NodeHandler<ImmutableNode> handler = prepareGetNodeHandler();
 
         assertSame(handler, setUpModel().getNodeHandler());
@@ -208,7 +208,7 @@ public class TestTrackedNodeModel {
      * Tries to create an instance without a parent model.
      */
     @Test
-    public void testInitNoParentModel() {
+    void testInitNoParentModel() {
         assertThrows(IllegalArgumentException.class, () -> new TrackedNodeModel(null, selector, true));
     }
 
@@ -216,7 +216,7 @@ public class TestTrackedNodeModel {
      * Tries to create an instance without a selector.
      */
     @Test
-    public void testInitNoSelector() {
+    void testInitNoSelector() {
         assertThrows(IllegalArgumentException.class, () -> new TrackedNodeModel(modelSupport, null, true));
     }
 
@@ -224,7 +224,7 @@ public class TestTrackedNodeModel {
      * Tests whether a property can be set.
      */
     @Test
-    public void testSetProperty() {
+    void testSetProperty() {
         final Object value = 42;
 
         setUpModel().setProperty(KEY, value, resolver);
@@ -237,7 +237,7 @@ public class TestTrackedNodeModel {
      * Tests whether the root node can be changed.
      */
     @Test
-    public void testSetRootNode() {
+    void testSetRootNode() {
         final ImmutableNode root = NodeStructureHelper.createNode("root", null);
 
         final TrackedNodeModel model = setUpModel();

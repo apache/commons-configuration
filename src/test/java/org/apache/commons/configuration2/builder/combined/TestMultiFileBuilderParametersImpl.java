@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,7 +48,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether bean property access is possible.
      */
     @Test
-    public void testBeanProperties() throws Exception {
+    void testBeanProperties() throws Exception {
         final BuilderParameters bp = mock(BuilderParameters.class);
         final String pattern = "testPattern";
         BeanHelper.setProperty(params, "filePattern", pattern);
@@ -65,7 +65,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests extended cloning functionality.
      */
     @Test
-    public void testClone() {
+    void testClone() {
         final FileBasedBuilderParametersImpl managedParams = new FileBasedBuilderParametersImpl();
         managedParams.setFileName("test.xml");
         params.setManagedBuilderParameters(managedParams);
@@ -81,7 +81,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether an instance can be obtained from a parameters map.
      */
     @Test
-    public void testFromParametersFound() {
+    void testFromParametersFound() {
         final Map<String, Object> map = params.getParameters();
         assertSame(params, MultiFileBuilderParametersImpl.fromParameters(map, true));
     }
@@ -90,7 +90,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether a new instance is created if the parameters map does not contain one.
      */
     @Test
-    public void testFromParametersNewInstance() {
+    void testFromParametersNewInstance() {
         params = MultiFileBuilderParametersImpl.fromParameters(new HashMap<>(), true);
         assertNotNull(params);
     }
@@ -99,7 +99,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether an instance can be obtained from a map if it cannot be found.
      */
     @Test
-    public void testFromParatersNotFound() {
+    void testFromParatersNotFound() {
         assertNull(MultiFileBuilderParametersImpl.fromParameters(new HashMap<>()));
     }
 
@@ -107,7 +107,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether a file pattern can be set.
      */
     @Test
-    public void testSetFilePattern() {
+    void testSetFilePattern() {
         final String pattern = "somePattern";
         assertSame(params, params.setFilePattern(pattern));
         assertEquals(pattern, params.getFilePattern());
@@ -117,7 +117,7 @@ public class TestMultiFileBuilderParametersImpl {
      * Tests whether parameters for managed configurations can be set.
      */
     @Test
-    public void testSetManagedBuilderParameters() {
+    void testSetManagedBuilderParameters() {
         final BuilderParameters bp = mock(BuilderParameters.class);
         assertSame(params, params.setManagedBuilderParameters(bp));
         assertSame(bp, params.getManagedBuilderParameters());

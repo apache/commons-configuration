@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -123,7 +123,7 @@ public class TestDefaultBeanFactory {
      * Tests creating a bean.
      */
     @Test
-    public void testCreateBean() throws Exception {
+    void testCreateBean() throws Exception {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Map<String, Object> props = new HashMap<>();
         props.put("throwExceptionOnMissing", Boolean.TRUE);
@@ -139,7 +139,7 @@ public class TestDefaultBeanFactory {
      * Tests whether a bean can be created by calling its constructor.
      */
     @Test
-    public void testCreateBeanConstructor() throws Exception {
+    void testCreateBeanConstructor() throws Exception {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue("test"));
@@ -154,7 +154,7 @@ public class TestDefaultBeanFactory {
      * Tests whether nested bean declarations in constructor arguments are taken into account.
      */
     @Test
-    public void testCreateBeanConstructorNestedBean() throws Exception {
+    void testCreateBeanConstructorNestedBean() throws Exception {
         final BeanDeclarationTestImpl declNested = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue("test", String.class.getName()));
@@ -171,7 +171,7 @@ public class TestDefaultBeanFactory {
      * Tests whether a correct default conversion handler is set.
      */
     @Test
-    public void testDefaultConversionHandler() {
+    void testDefaultConversionHandler() {
         assertSame(DefaultConversionHandler.INSTANCE, factory.getConversionHandler());
     }
 
@@ -179,7 +179,7 @@ public class TestDefaultBeanFactory {
      * Tests whether ambiguous constructor arguments are detected.
      */
     @Test
-    public void testFindMatchingConstructorAmbiguous() {
+    void testFindMatchingConstructorAmbiguous() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING));
@@ -191,7 +191,7 @@ public class TestDefaultBeanFactory {
      * Tests whether a matching constructor is found if the number of arguments is unique.
      */
     @Test
-    public void testFindMatchingConstructorArgCount() {
+    void testFindMatchingConstructorArgCount() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING));
@@ -206,7 +206,7 @@ public class TestDefaultBeanFactory {
      * Tests whether explicit type declarations are used to resolve ambiguous parameter types.
      */
     @Test
-    public void testFindMatchingConstructorExplicitType() {
+    void testFindMatchingConstructorExplicitType() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forBeanDeclaration(setUpBeanDeclaration(), BeanCreationTestBean.class.getName()));
@@ -220,7 +220,7 @@ public class TestDefaultBeanFactory {
      * Tests whether the standard constructor can be found.
      */
     @Test
-    public void testFindMatchingConstructorNoArgs() {
+    void testFindMatchingConstructorNoArgs() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Constructor<BeanCreationTestBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestBean.class, decl);
         assertEquals(0, ctor.getParameterTypes().length);
@@ -230,7 +230,7 @@ public class TestDefaultBeanFactory {
      * Tests the case that no matching constructor is found.
      */
     @Test
-    public void testFindMatchingConstructorNoMatch() {
+    void testFindMatchingConstructorNoMatch() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING, getClass().getName()));
@@ -247,7 +247,7 @@ public class TestDefaultBeanFactory {
      * Tests obtaining the default class. This should be null.
      */
     @Test
-    public void testGetDefaultBeanClass() {
+    void testGetDefaultBeanClass() {
         assertNull(factory.getDefaultBeanClass());
     }
 
@@ -255,7 +255,7 @@ public class TestDefaultBeanFactory {
      * Tests whether a custom conversion handler can be passed to the constructor.
      */
     @Test
-    public void testInitWithConversionHandler() {
+    void testInitWithConversionHandler() {
         final ConversionHandler handler = mock(ConversionHandler.class);
         factory = new DefaultBeanFactory(handler);
         assertSame(handler, factory.getConversionHandler());

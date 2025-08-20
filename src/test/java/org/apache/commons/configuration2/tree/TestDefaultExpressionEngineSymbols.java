@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,7 +64,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests the instance with default symbols.
      */
     @Test
-    public void testDefaultSymbols() {
+    void testDefaultSymbols() {
         assertEquals(".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
         assertEquals("..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
         assertEquals("(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
@@ -77,7 +77,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests equals() if the expected result is false.
      */
     @Test
-    public void testEqualsFalse() {
+    void testEqualsFalse() {
         final DefaultExpressionEngineSymbols s1 = DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS;
         DefaultExpressionEngineSymbols s2 = builder().setPropertyDelimiter("/").create();
         expNE(s1, s2);
@@ -97,7 +97,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests equals for null input.
      */
     @Test
-    public void testEqualsNull() {
+    void testEqualsNull() {
         expNE(builder().create(), null);
     }
 
@@ -105,7 +105,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests equals with an object of another class.
      */
     @Test
-    public void testEqualsOtherClass() {
+    void testEqualsOtherClass() {
         expNE(builder().create(), this);
     }
 
@@ -113,7 +113,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests equals() if the expected result is true.
      */
     @Test
-    public void testEqualsTrue() {
+    void testEqualsTrue() {
         expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         final DefaultExpressionEngineSymbols s2 = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).create();
         expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, s2);
@@ -123,7 +123,7 @@ public class TestDefaultExpressionEngineSymbols {
      * Tests the string representation.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final DefaultExpressionEngineSymbols symbols = builder().create();
         final String s = symbols.toString();
         assertTrue(s.contains("propertyDelimiter=" + symbols.getPropertyDelimiter()));

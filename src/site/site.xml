@@ -7,7 +7,7 @@
  (the "License"); you may not use this file except in compliance with
  the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,40 +15,37 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project name="Commons Configuration"
-  xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 https://maven.apache.org/xsd/decoration-1.8.0.xsd">
-
-  <bannerRight>
-    <name>Commons Configuration</name>
-    <src>/images/logo.png</src>
-    <href>/index.html</href>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd" name="Apache Commons Configuration">
+  <bannerRight name="Commons Configuration" href="/index.html">
+    <image src="/images/logo.png" />
   </bannerRight>
-
   <body>
     <menu name="Commons Configuration">
-      <item name="Overview"                             href="/index.html"/>
-      <item name="Download"                             href="https://commons.apache.org/configuration/download_configuration.cgi"/>
-      <item name="Issue Tracking"                       href="/issue-tracking.html"/>
-      <item name="Security"                             href="/security.html"/>
-    </menu>
-
-    <menu name="Documentation">
-      <item name="Building"                             href="/building.html"/>
-      <item name="Release History"                      href="/changes.html"/>
-      <item name="${project.version}" collapse="true"   href="/index.html">
-        <item name="User's Guide"                       href="/userguide/user_guide.html"/>
-        <item name="Upgrade Guide: 1.x to 2.0"          href="/userguide/upgradeto2_0.html"/>
-        <item name="Upgrade Guide: 2.x"                 href="/userguide/upgradeto2_x.html"/>
-        <item name="Javadoc"                            href="/apidocs/index.html"/>
-        <item name="Runtime Dependencies"               href="/dependencies.html"/>
+      <!-- Start: For all components. -->
+      <item name="About" href="/index.html" />
+      <item name="Asking Questions" href="/mail-lists.html" />
+      <item name="Release History" href="/changes.html" />
+      <item name="Issue Tracking" href="/issue-management.html" />
+      <item name="Dependency Management" href="/dependency-info.html" />
+      <item name="Sources" href="/scm.html" />
+      <item name="Security" href="/security.html" />
+      <item name="License" href="https://www.apache.org/licenses/LICENSE-2.0" />
+      <item name="Code of Conduct" href="https://www.apache.org/foundation/policies/conduct.html" />
+      <item name="Download" href="/download_configuration.cgi" />
+      <item name="Javadoc">
+        <item name="Javadoc Current" href="/apidocs/index.html" />
+        <item name="Javadoc Archive 2.x" href="https://javadoc.io/doc/org.apache.commons/commons-configuration2/" />
+        <item name="Javadoc Archive 1.x" href="https://javadoc.io/doc/commons-configuration/commons-configuration/" />
       </item>
-      <item name="1.10" collapse="true"                 href="/index.html">
-        <item name="User's Guide"                       href="/userguide_v1.10/user_guide.html"/>
-        <item name="Javadoc"                            href="https://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
-        <item name="Runtime Dependencies"               href="/dependencies_1_10.html"/>
-      </item>
+      <!-- End: For all components. -->
+      <!-- Specific to this component: -->
+      <item name="Building" href="/building.html" />
+      <item name="User's Guide" href="/userguide/user_guide.html" />
+      <item name="Upgrade Guide: 1.x to 2.0" href="/userguide/upgradeto2_0.html" />
+      <item name="Upgrade Guide: 2.x" href="/userguide/upgradeto2_x.html" />
+      <item name="Javadoc" href="/apidocs/index.html" />
+      <item name="Runtime Dependencies" href="/dependencies.html" />
     </menu>
   </body>
-
-</project>
+</site>

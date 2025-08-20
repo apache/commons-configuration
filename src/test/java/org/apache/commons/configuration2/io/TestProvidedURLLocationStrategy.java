@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,7 +42,7 @@ public class TestProvidedURLLocationStrategy {
      * Tests a failed locate() operation.
      */
     @Test
-    public void testLocateFail() {
+    void testLocateFail() {
         final FileSystem fs = mock(FileSystem.class);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
         assertNull(strategy.locate(fs, locator));
@@ -52,7 +52,7 @@ public class TestProvidedURLLocationStrategy {
      * Tests a successful locate() operation.
      */
     @Test
-    public void testLocateSuccess() {
+    void testLocateSuccess() {
         final FileSystem fs = mock(FileSystem.class);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();

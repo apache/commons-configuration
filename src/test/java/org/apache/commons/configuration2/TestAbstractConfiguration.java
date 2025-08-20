@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -100,14 +100,14 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testContains() {
+    void testContains() {
         final AbstractConfiguration config = getConfiguration();
         assertTrue(config.contains(config.getKeys(), "value1"));
         assertFalse(config.contains(config.getKeys(), "value99999"));
     }
 
     @Test
-    public void testContainsKey() {
+    void testContainsKey() {
         final Configuration config = getConfiguration();
         assertTrue(config.containsKey("key1"));
         assertFalse(config.containsKey("key3"));
@@ -126,7 +126,7 @@ public abstract class TestAbstractConfiguration {
      * Tests the exception message triggered by the conversion to BigInteger. This test is related to CONFIGURATION-357.
      */
     @Test
-    public void testGetBigIntegerConversion() {
+    void testGetBigIntegerConversion() {
         final Configuration config = getConfiguration();
         final ConversionException cex = assertThrows(ConversionException.class, () -> config.getBigInteger("key1"));
         assertTrue(cex.getMessage().contains("'key1'"));
@@ -135,7 +135,7 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testGetKeys() {
+    void testGetKeys() {
         final Configuration config = getConfiguration();
         final Iterator<String> keys = config.getKeys();
         final Set<String> expectedKeys = new HashSet<>(Arrays.asList("key1", "key2", "list", "listesc"));
@@ -149,7 +149,7 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testGetProperty() {
+    void testGetProperty() {
         final Configuration config = getConfiguration();
         assertEquals("value1", config.getProperty("key1"));
         assertEquals("value2", config.getProperty("key2"));
@@ -157,14 +157,14 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         final Configuration config = getConfiguration();
         assertFalse(config.isEmpty());
         assertTrue(getEmptyConfiguration().isEmpty());
     }
 
     @Test
-    public void testList() {
+    void testList() {
         final Configuration config = getConfiguration();
 
         final List<?> list = config.getList("list");
@@ -176,7 +176,7 @@ public abstract class TestAbstractConfiguration {
      * Tests whether the escape character for list delimiters is recocknized and removed.
      */
     @Test
-    public void testListEscaped() {
+    void testListEscaped() {
         assertEquals("value1,value2", getConfiguration().getString("listesc"));
     }
 
@@ -184,7 +184,7 @@ public abstract class TestAbstractConfiguration {
      * Tests accessing the configuration's logger.
      */
     @Test
-    public void testSetLogger() {
+    void testSetLogger() {
         final AbstractConfiguration config = getEmptyConfiguration();
         assertNotNull(config.getLogger());
         final ConfigurationLogger log = new ConfigurationLogger(config.getClass());
@@ -193,12 +193,12 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testSize() {
+    void testSize() {
         assertEquals(4, getConfiguration().size());
     }
 
     @Test
-    public void testSizeEmpty() {
+    void testSizeEmpty() {
         assertEquals(0, getEmptyConfiguration().size());
     }
 }

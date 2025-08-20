@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,7 +54,7 @@ public class TestJSONConfiguration {
     }
 
     @Test
-    public void testCopyConstructor() {
+    void testCopyConstructor() {
         final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
         c.addProperty("foo", "bar");
 
@@ -65,53 +65,53 @@ public class TestJSONConfiguration {
     /**
      * Tests CONFIGURATION-793.
      */
-    public void testGetListNestedWithList() {
+    void testGetListNestedWithList() {
         assertEquals(Arrays.asList("col1", "col2"), jsonConfiguration.getList(String.class, "key4.key5"));
     }
 
     @Test
-    public void testGetPropertyDictionary() {
+    void testGetPropertyDictionary() {
         assertEquals("Martin D'vloper", jsonConfiguration.getProperty("martin.name"));
         assertEquals("Developer", jsonConfiguration.getProperty("martin.job"));
         assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
     }
 
     @Test
-    public void testGetPropertyDictionaryInList() {
+    void testGetPropertyDictionaryInList() {
         assertEquals("UK", jsonConfiguration.getString("capitals(1).country"));
         assertEquals("Washington", jsonConfiguration.getString("capitals(0).capital"));
     }
 
     @Test
-    public void testGetPropertyInteger() {
+    void testGetPropertyInteger() {
         final Object property = jsonConfiguration.getProperty("int1");
         assertInstanceOf(Integer.class, property);
         assertEquals(37, property);
     }
 
     @Test
-    public void testGetPropertyNested() {
+    void testGetPropertyNested() {
         assertEquals("value23", jsonConfiguration.getProperty("key2.key3"));
     }
 
     @Test
-    public void testGetPropertyNestedWithList() {
+    void testGetPropertyNestedWithList() {
         assertEquals(Arrays.asList("col1", "col2"), jsonConfiguration.getProperty("key4.key5"));
     }
 
     @Test
-    public void testGetPropertySimple() {
+    void testGetPropertySimple() {
         assertEquals("value1", jsonConfiguration.getProperty("key1"));
     }
 
     @Test
-    public void testGetPropertySubset() {
+    void testGetPropertySubset() {
         final Configuration subset = jsonConfiguration.subset("key4");
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
     @Test
-    public void testGetPropertyVeryNestedProperties() {
+    void testGetPropertyVeryNestedProperties() {
         final Object property = jsonConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }
@@ -121,7 +121,7 @@ public class TestJSONConfiguration {
      */
     @Disabled
     @Test
-    public void testListOfObjects() {
+    void testListOfObjects() {
         final Configuration subset = jsonConfiguration.subset("capitals");
         assertNotNull(subset);
         assertEquals(2, subset.size());
@@ -137,7 +137,7 @@ public class TestJSONConfiguration {
     }
 
     @Test
-    public void testSave() throws IOException, ConfigurationException {
+    void testSave() throws IOException, ConfigurationException {
         // save the Configuration as a String...
         final StringWriter sw = new StringWriter();
         jsonConfiguration.write(sw);

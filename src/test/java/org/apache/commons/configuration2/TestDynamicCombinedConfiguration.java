@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -224,7 +224,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether adding a configuration is synchronized.
      */
     @Test
-    public void testAddConfigurationSynchronized() {
+    void testAddConfigurationSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.addConfiguration(new PropertiesConfiguration());
@@ -232,7 +232,7 @@ public class TestDynamicCombinedConfiguration {
     }
 
     @Test
-    public void testConcurrentGetAndReload() throws Exception {
+    void testConcurrentGetAndReload() throws Exception {
         System.getProperties().remove("Id");
         final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
@@ -256,7 +256,7 @@ public class TestDynamicCombinedConfiguration {
     }
 
     @Test
-    public void testConcurrentGetAndReload2() throws Exception {
+    void testConcurrentGetAndReload2() throws Exception {
         System.getProperties().remove("Id");
         final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
@@ -283,7 +283,7 @@ public class TestDynamicCombinedConfiguration {
     }
 
     @Test
-    public void testConcurrentGetAndReloadFile() throws Exception {
+    void testConcurrentGetAndReloadFile() throws Exception {
         final int threadCount = 25;
         System.getProperties().remove("Id");
         System.setProperty("TemporaryFolder", tempFolder.getAbsolutePath());
@@ -333,7 +333,7 @@ public class TestDynamicCombinedConfiguration {
     }
 
     @Test
-    public void testConcurrentGetAndReloadMultipleClients() throws Exception {
+    void testConcurrentGetAndReloadMultipleClients() throws Exception {
         System.getProperties().remove("Id");
         final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
@@ -366,7 +366,7 @@ public class TestDynamicCombinedConfiguration {
     }
 
     @Test
-    public void testConfiguration() throws Exception {
+    void testConfiguration() throws Exception {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final DefaultListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         config.setListDelimiterHandler(listHandler);
@@ -404,7 +404,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether querying a configuration by index is synchronized.
      */
     @Test
-    public void testGetConfigurationByIdxSynchronized() {
+    void testGetConfigurationByIdxSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final Configuration child = new PropertiesConfiguration();
         config.addConfiguration(child);
@@ -417,7 +417,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether querying a configuration by name is synchronized.
      */
     @Test
-    public void testGetConfigurationByNameSynchronized() {
+    void testGetConfigurationByNameSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         assertNull(config.getConfiguration("unknown config"));
@@ -428,7 +428,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether querying the set of configuration names is synchronized.
      */
     @Test
-    public void testGetConfigurationNamesSynchronized() {
+    void testGetConfigurationNamesSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.getConfigurationNames();
@@ -439,7 +439,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether querying the number of configurations is synchronized.
      */
     @Test
-    public void testGetNumberOfConfigurationsSynchronized() {
+    void testGetNumberOfConfigurationsSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.getNumberOfConfigurations();
@@ -450,7 +450,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether removing a child configuration is synchronized.
      */
     @Test
-    public void testRemoveConfigurationSynchronized() {
+    void testRemoveConfigurationSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final String configName = "testConfig";
         config.addConfiguration(new PropertiesConfiguration(), configName);
@@ -463,7 +463,7 @@ public class TestDynamicCombinedConfiguration {
      * Tests whether a configuration can be updated.
      */
     @Test
-    public void testUpdateConfiguration() throws ConfigurationException {
+    void testUpdateConfiguration() throws ConfigurationException {
         System.getProperties().remove("Id");
         final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));

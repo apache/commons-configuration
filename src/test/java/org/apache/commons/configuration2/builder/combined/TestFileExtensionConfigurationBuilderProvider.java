@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLPropertiesConfiguration;
@@ -30,6 +29,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -68,7 +68,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the correct configuration class is selected if the file extension matches.
      */
     @Test
-    public void testDetermineConfigurationClassExtensionMatch() throws ConfigurationException {
+    void testDetermineConfigurationClassExtensionMatch() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT);
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
@@ -79,7 +79,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the correct configuration class is selected if the file extension does not match.
      */
     @Test
-    public void testDetermineConfigurationClassExtensionNoMatch() throws ConfigurationException {
+    void testDetermineConfigurationClassExtensionNoMatch() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration.properties");
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
@@ -90,9 +90,9 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests that matches of file extensions are case insensitive.
      */
     @Test
-    public void testDetermineConfigurationClassMatchCase() throws ConfigurationException {
+    void testDetermineConfigurationClassMatchCase() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
-        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT.toUpperCase(Locale.ROOT));
+        final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + StringUtils.toRootUpperCase(EXT));
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
@@ -101,7 +101,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the correct configuration class is selected if the file name does not have an extension.
      */
     @Test
-    public void testDetermineConfigurationClassNoExtension() throws ConfigurationException {
+    void testDetermineConfigurationClassNoExtension() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration");
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
@@ -112,7 +112,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the correct configuration class is selected if no file-based parameters are provided.
      */
     @Test
-    public void testDetermineConfigurationClassNoParams() throws ConfigurationException {
+    void testDetermineConfigurationClassNoParams() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, new ArrayList<>()));
@@ -122,7 +122,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the correct configuration class is selected if no file name is set.
      */
     @Test
-    public void testDeterminieConfigurationClassNoFileName() throws ConfigurationException {
+    void testDeterminieConfigurationClassNoFileName() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl();
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
@@ -133,7 +133,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tries to create an instance without the default configuration class.
      */
     @Test
-    public void testInitNoDefaultConfigClass() {
+    void testInitNoDefaultConfigClass() {
         final String builderClass = BasicConfigurationBuilder.class.getName();
         assertThrows(IllegalArgumentException.class,
                 () -> new FileExtensionConfigurationBuilderProvider(builderClass, null, MATCH_CLASS, null, EXT, null));
@@ -143,7 +143,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tries to create an instance without a file extension.
      */
     @Test
-    public void testInitNoExt() {
+    void testInitNoExt() {
         final String builderClass = BasicConfigurationBuilder.class.getName();
         assertThrows(IllegalArgumentException.class,
                 () -> new FileExtensionConfigurationBuilderProvider(builderClass, null, MATCH_CLASS, DEF_CLASS, null, null));
@@ -153,7 +153,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tries to create an instance without the matching configuration class.
      */
     @Test
-    public void testInitNoMatchingConfigClass() {
+    void testInitNoMatchingConfigClass() {
         final String builderClass = BasicConfigurationBuilder.class.getName();
         assertThrows(IllegalArgumentException.class,
                 () -> new FileExtensionConfigurationBuilderProvider(builderClass, null, null, DEF_CLASS, EXT, null));
@@ -163,7 +163,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
      * Tests whether the super class is correctly initialized.
      */
     @Test
-    public void testInitSuper() {
+    void testInitSuper() {
         final FileExtensionConfigurationBuilderProvider provider = new FileExtensionConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(),
             ReloadingFileBasedConfigurationBuilder.class.getName(), MATCH_CLASS, DEF_CLASS, EXT, null);
         assertEquals(BasicConfigurationBuilder.class.getName(), provider.getBuilderClass());

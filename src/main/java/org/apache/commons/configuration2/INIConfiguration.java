@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -211,14 +211,25 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     public static class Builder {
 
         /**
-         * The flag for decision, whether inline comments on the section line are allowed.
+         * Whether in-line comments on the section line are allowed.
          */
         private boolean sectionInLineCommentsAllowed;
 
+        /**
+         * Builds a new INIConfiguration.
+         *
+         * @return a new INIConfiguration.
+         */
         public INIConfiguration build() {
             return new INIConfiguration(sectionInLineCommentsAllowed);
         }
 
+        /**
+         * Sets whether in-line comments on the section line are allowed.
+         *
+         * @param sectionInLineCommentsAllowed Whether in-line comments on the section line are allowed.
+         * @return {@code this} instance.
+         */
         public Builder setSectionInLineCommentsAllowed(final boolean sectionInLineCommentsAllowed) {
             this.sectionInLineCommentsAllowed = sectionInLineCommentsAllowed;
             return this;

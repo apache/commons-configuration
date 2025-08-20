@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,7 +42,7 @@ public class TestDefaultReloadingDetectorFactory {
      * Tests whether a reloading detector is created correctly.
      */
     @Test
-    public void testCreateReloadingDetector() throws ConfigurationException {
+    void testCreateReloadingDetector() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final Long refreshDelay = 10000L;
@@ -56,7 +56,7 @@ public class TestDefaultReloadingDetectorFactory {
      * Tests whether an undefined refresh delay is handled correctly.
      */
     @Test
-    public void testCreateReloadingDetectorDefaultRefreshDelay() throws ConfigurationException {
+    void testCreateReloadingDetectorDefaultRefreshDelay() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -128,6 +129,16 @@ public final class ConfigurationAssert {
      */
     public static File getTestFile(final String name) {
         return new File(TEST_DIR, name);
+    }
+
+    /**
+     * Returns a {@code File} object for the specified test file.
+     *
+     * @param name the name of the test file
+     * @return a {@code File} object pointing to that test file
+     */
+    public static Path getTestPath(final String name) {
+        return TEST_DIR.toPath().resolve(name);
     }
 
     /**

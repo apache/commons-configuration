@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,10 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * value strings instead of overwriting them.
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable {
-    /** Stores the configuration key-value pairs */
+
+    /**
+     * Stores the configuration key-value pairs.
+     */
     private Map<String, Object> store = new LinkedHashMap<>();
 
     /**
@@ -46,7 +49,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     @Override
     protected void addPropertyDirect(final String key, final Object value) {
         final Object previousValue = getPropertyInternal(key);
-
         if (previousValue == null) {
             store.put(key, value);
         } else if (previousValue instanceof List) {
@@ -60,7 +62,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
             final List<Object> list = new ArrayList<>();
             list.add(previousValue);
             list.add(value);
-
             store.put(key, list);
         }
     }
@@ -93,7 +94,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
             final BaseConfiguration copy = (BaseConfiguration) super.clone();
             cloneStore(copy);
             copy.cloneInterpolator(this);
-
             return copy;
         } catch (final CloneNotSupportedException cex) {
             // should not happen
@@ -109,10 +109,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      */
     private void cloneStore(final BaseConfiguration copy) throws CloneNotSupportedException {
         // This is safe because the type of the map is known
-        @SuppressWarnings("unchecked")
-        final Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
-        copy.store = clonedStore;
-
+        copy.store = ConfigurationUtils.clone(store);
         // Handle collections in the map; they have to be cloned, too
         store.forEach((k, v) -> {
             if (v instanceof Collection) {
@@ -156,7 +153,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     /**
-     * Read property from underlying map.
+     * Reads property from underlying map.
      *
      * @param key key to use for mapping
      * @return object associated with the given configuration key.

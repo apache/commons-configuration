@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -141,7 +141,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether addNodes() is correctly synchronized.
      */
     @Test
-    public void testAddNodesSynchronized() {
+    void testAddNodesSynchronized() {
         final ImmutableNode node = NodeStructureHelper.createNode("newNode", "true");
         config.addNodes("test.addNodes", Collections.singleton(node));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
@@ -151,7 +151,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether childConfigurationsAt() is correctly synchronized.
      */
     @Test
-    public void testChildConfigurationsAtSynchronized() {
+    void testChildConfigurationsAtSynchronized() {
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.childConfigurationsAt("clear");
         assertFalse(subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -161,7 +161,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether clearTree() is correctly synchronized.
      */
     @Test
-    public void testClearTreeSynchronized() {
+    void testClearTreeSynchronized() {
         config.clearTree("clear");
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -170,7 +170,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether a clone() operation also copies the data used to manage SubnodeConfiguration objects.
      */
     @Test
-    public void testCloneCopySubnodeData() {
+    void testCloneCopySubnodeData() {
         final BaseHierarchicalConfiguration conf2 = new BaseHierarchicalConfiguration(config);
 
         final HierarchicalConfiguration<ImmutableNode> sub = conf2.configurationAt("element2.subelement", true);
@@ -187,7 +187,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether clone() is correctly synchronized.
      */
     @Test
-    public void testCloneSynchronized() {
+    void testCloneSynchronized() {
         final BaseHierarchicalConfiguration clone = (BaseHierarchicalConfiguration) config.clone();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertNotSame(config.getSynchronizer(), clone.getSynchronizer());
@@ -197,7 +197,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether synchronization is performed when constructing a SubnodeConfiguration.
      */
     @Test
-    public void testConfigurationAtSynchronized() {
+    void testConfigurationAtSynchronized() {
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2");
         assertEquals("I'm complex!", sub.getString("subelement.subsubelement"));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
@@ -207,7 +207,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether synchronization is performed when constructing multiple SubnodeConfiguration objects.
      */
     @Test
-    public void testConfigurationsAtSynchronized() {
+    void testConfigurationsAtSynchronized() {
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.configurationsAt("list.item");
         assertFalse(subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -217,7 +217,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether synchronization is performed when copying a configuration.
      */
     @Test
-    public void testCopyConstructorSynchronized() {
+    void testCopyConstructorSynchronized() {
         final BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(config);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertNotSame(sync, copy.getSynchronizer());
@@ -227,7 +227,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether getMaxIndex() is correctly synchronized.
      */
     @Test
-    public void testGetMaxIndexSynchronized() {
+    void testGetMaxIndexSynchronized() {
         assertTrue(config.getMaxIndex("list.item") > 0);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -236,7 +236,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether getRootElementName() is correctly synchronized.
      */
     @Test
-    public void testGetRootElementNameSynchronized() {
+    void testGetRootElementNameSynchronized() {
         assertEquals("testconfig", config.getRootElementName());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -245,7 +245,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests that access to an initialized configuration's sub configurations is possible without a special synchronizer.
      */
     @Test
-    public void testReadOnlyAccessToSubConfigurations() throws ConfigurationException {
+    void testReadOnlyAccessToSubConfigurations() throws ConfigurationException {
         final FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class);
         builder.configure(new Parameters().fileBased().setFile(testFile));
         config = builder.getConfiguration();
@@ -273,7 +273,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether updates on nodes are communicated to all SubnodeConfigurations of a configuration.
      */
     @Test
-    public void testSubnodeUpdate() {
+    void testSubnodeUpdate() {
         config.addProperty("element2.test", Boolean.TRUE);
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2", true);
         final HierarchicalConfiguration<ImmutableNode> subsub = sub.configurationAt("subelement", true);
@@ -286,7 +286,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether updates caused by a SubnodeConfiguration are communicated to all other SubnodeConfigurations.
      */
     @Test
-    public void testSubnodeUpdateBySubnode() {
+    void testSubnodeUpdateBySubnode() {
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2", true);
         final HierarchicalConfiguration<ImmutableNode> subsub = sub.configurationAt("subelement", true);
         final HierarchicalConfiguration<ImmutableNode> sub2 = config.configurationAt("element2.subelement", true);
@@ -299,7 +299,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether subset() is correctly synchronized.
      */
     @Test
-    public void testSubsetSynchronized() {
+    void testSubsetSynchronized() {
         final Configuration subset = config.subset("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertSame(sync, subset.getSynchronizer());

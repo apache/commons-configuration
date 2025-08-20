@@ -7,7 +7,7 @@
    (the "License"); you may not use this file except in compliance with
    the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,9 @@
    limitations under the License.
 -->
 
-<document>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
   <properties>
     <title>Configuration Overview</title>
     <author email="epugh@upstate.com">Eric Pugh</author>
@@ -45,6 +47,7 @@
         by just using a Configuration object versus a specific type like XMLConfiguration or
         JNDIConfiguration, you are sheltered from the mechanics of actually retrieving the
         configuration values. These various sources include:
+      </p>
         <ul>
           <li>
               <strong>EnvironmentConfiguration</strong>
@@ -90,8 +93,6 @@
               and converts it to a Configuration object.
           </li>
        </ul>
-
-      </p>
       </subsection>
 
       <subsection name="The Configuration interface">
@@ -124,6 +125,7 @@
         overloaded variants of all methods that allow to specify a default value,
         which will be returned if the property cannot be found. The following
         data types are supported out of the box:
+      </p>
         <ul>
           <li>BigDecimal</li>
           <li>BigInteger</li>
@@ -136,6 +138,7 @@
           <li>short</li>
           <li>String</li>
         </ul>
+      <p>
         The names of these methods start with <code>get</code> followed by their
         data type. The <code>getString()</code> method for instance will return
         String values, <code>getInt()</code> will operate on integers.
@@ -164,6 +167,7 @@
       <p>
         For manipulating properties or their values the following methods can
         be used:
+      </p>
         <dl>
           <dt><code>addProperty()</code></dt>
           <dd>Adds a new property to the configuration. If this property already
@@ -178,7 +182,6 @@
           <dt><code>clear()</code></dt>
           <dd>Wipes out the whole configuration</dd>
         </dl>
-      </p>
       </subsection>
 
       <subsection name="Immutable Configurations">

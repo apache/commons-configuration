@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -113,7 +113,7 @@ public class TestMultiWrapDynaBean {
      * Tests the contains() implementation. This operation is not available.
      */
     @Test
-    public void testContains() {
+    void testContains() {
         final MultiWrapDynaBean bean = createBean(false);
         assertThrows(UnsupportedOperationException.class, () -> bean.contains(MAPPED_PROPERTY, "someKey"));
     }
@@ -122,7 +122,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether the class of bean can be queried.
      */
     @Test
-    public void testGetDynaClass() {
+    void testGetDynaClass() {
         final DynaClass cls = createBean(false).getDynaClass();
         assertNotNull(cls.getDynaProperty("throwExceptionOnMissing"));
         assertNotNull(cls.getDynaProperty("text"));
@@ -132,7 +132,7 @@ public class TestMultiWrapDynaBean {
      * Checks the name of the DynaClass.
      */
     @Test
-    public void testGetDynaClassName() {
+    void testGetDynaClassName() {
         assertNull(createBean(false).getDynaClass().getName());
     }
 
@@ -140,7 +140,7 @@ public class TestMultiWrapDynaBean {
      * Tries to create a new instance of the DynaClass. This is not possible.
      */
     @Test
-    public void testGetDynaClassNewInstance() {
+    void testGetDynaClassNewInstance() {
         final DynaClass dynaClass = createBean(false).getDynaClass();
         assertThrows(UnsupportedOperationException.class, dynaClass::newInstance);
     }
@@ -149,7 +149,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether an indexed property can be read.
      */
     @Test
-    public void testGetIndexedProperty() throws Exception {
+    void testGetIndexedProperty() throws Exception {
         final MultiWrapDynaBean bean = createBean(false);
         wrapBean.setIndexedProperty(3, 20121117);
         assertEquals(20121117, PropertyUtils.getIndexedProperty(bean, "indexedProperty", 3));
@@ -159,7 +159,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether a map property can be read.
      */
     @Test
-    public void testGetMappedProperty() throws Exception {
+    void testGetMappedProperty() throws Exception {
         final MultiWrapDynaBean bean = createBean(true);
         final String key = "testKey";
         final String value = "Hello World";
@@ -171,7 +171,7 @@ public class TestMultiWrapDynaBean {
      * Tries to access an unknown property.
      */
     @Test
-    public void testGetPropertyUnknown() {
+    void testGetPropertyUnknown() {
         final MultiWrapDynaBean bean = createBean(false);
         assertThrows(IllegalArgumentException.class, () -> bean.get("unknown property"));
     }
@@ -180,7 +180,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether a simple property can be read.
      */
     @Test
-    public void testGetSimpleProperty() throws Exception {
+    void testGetSimpleProperty() throws Exception {
         final MultiWrapDynaBean bean = createBean(false);
         final String text = "testText";
         wrapBean.setText(text);
@@ -191,7 +191,7 @@ public class TestMultiWrapDynaBean {
      * Tests that the order of properties is relevant when adding beans to a MultiWrapDynaBean.
      */
     @Test
-    public void testOrderOfProperties() throws Exception {
+    void testOrderOfProperties() throws Exception {
         final Collection<Object> beans = new ArrayList<>();
         params = new BasicBuilderParameters();
         beans.add(params);
@@ -212,7 +212,7 @@ public class TestMultiWrapDynaBean {
      * Tests the remove() implementation. This operation is not available.
      */
     @Test
-    public void testRemove() {
+    void testRemove() {
         final MultiWrapDynaBean bean = createBean(false);
         assertThrows(UnsupportedOperationException.class, () -> bean.remove(MAPPED_PROPERTY, "someKey"));
     }
@@ -221,7 +221,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether an indexed property can be set.
      */
     @Test
-    public void testSetIndexedProperty() throws Exception {
+    void testSetIndexedProperty() throws Exception {
         PropertyUtils.setIndexedProperty(createBean(false), "indexedProperty", 1, 42);
         assertEquals(42, wrapBean.getIndexedProperty(1));
     }
@@ -230,7 +230,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether a map property can be set.
      */
     @Test
-    public void testSetMappedProperty() throws Exception {
+    void testSetMappedProperty() throws Exception {
         final MultiWrapDynaBean bean = createBean(true);
         final String key = "testKey";
         final String text = "Hello World";
@@ -242,7 +242,7 @@ public class TestMultiWrapDynaBean {
      * Tests whether a simple property can be set.
      */
     @Test
-    public void testSetSimpleProperty() throws Exception {
+    void testSetSimpleProperty() throws Exception {
         PropertyUtils.setProperty(createBean(false), "throwExceptionOnMissing", Boolean.TRUE);
         assertEquals(Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
     }
