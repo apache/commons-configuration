@@ -762,7 +762,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param key the property key
      * @param number the number of blank lines to add before this property definition
-     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}.
+     * @deprecated Use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}.
      */
     @Deprecated
     public void setBlancLinesBefore(final String key, final int number) {
