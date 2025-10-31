@@ -35,7 +35,7 @@
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add org.apache.commons.configuration2.ImmutableConfiguration.forEach(BiConsumer&lt;String, Object&gt;).</action>
       <action type="add" dev="ggregory" due-to="Piotr P. Karwasz, Gary Gregory">Add VEX entry for CVE-2025-48924 #587.</action> 
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabbot">Bump org.apache.commons:commons-parent from 81 to 90 #604.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabbot">Bump org.apache.commons:commons-parent from 81 to 91 #604.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.20.1 #565, #599, #618.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-beanutils:commons-beanutils from 1.10.1 to 1.11.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.24.3 to 2.25.2 #579, #608.</action>
