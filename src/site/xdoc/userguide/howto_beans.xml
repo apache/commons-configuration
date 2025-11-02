@@ -48,7 +48,7 @@
     <p>
       <em>Note: The concept of defining service objects in configuration files
       and let them be created by a special container has grown popular these
-      days. Especially IoC containers like <a href="http://www.springframework.org/">Spring</a> offer wide
+      days. Especially IoC containers like <a href="https://www.springframework.org/">Spring</a> offer wide
       functionality related to this topic. Commons Configuration is not and has
       no ambitions to become an IoC container. The provided functionality for
       declaring and creating beans is very basic and limited compared to the

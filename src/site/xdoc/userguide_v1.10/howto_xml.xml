@@ -1090,7 +1090,7 @@ config.load();
             cannot support XML documents using an XML Schema.
         </p>
         <p>
-            <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
+            <a href="https://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
             Entity and URI Resolvers</a> describes using a set of catalog files to
             resolve entities. Commons Configuration provides support for
             this Catalog Resolver through its own CatalogResolver class.
@@ -1115,7 +1115,7 @@ config.load();
             schemas. When processing the document the parser will pass the hint,
             in this case https://commons.apache.org/sample.xsd, to the entity resolver
             as the system id. More information on using schema locations can be found
-            at <a href="http://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
+            at <a href="https://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
         </p>
         <p>
             The example that follows shows how to use the CatalogResolver when

@@ -95,7 +95,7 @@
       this task.
     </p>
     <p>
-      For the same reason the <a href="http://maven.apache.org">Maven</a>
+      For the same reason the <a href="https://maven.apache.org">Maven</a>
       coordinates have been changed. Use the following dependency declaration
       in your pom:
     </p>

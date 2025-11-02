@@ -83,7 +83,7 @@ Integer integer = config.getInteger("number");
       The most recent Commons Configuration 2.x release can be downloaded from the
       <a href="https://commons.apache.org/configuration/download_configuration.cgi">Apache download area</a>.
       The artifacts have also been deployed to
-      <a href="http://repo1.maven.org/maven2/">Maven central</a>. Commons Configuration 1.x
+      <a href="https://repo1.maven.org/maven2/">Maven central</a>. Commons Configuration 1.x
       artifacts are also available under their original Maven coordinates.
     </p>
     </section>
@@ -91,8 +91,8 @@ Integer integer = config.getInteger("number");
     <section name="History">
       <p>
         Commons Configuration started as code in Apache JServ.  The JServ code was subsequently
-        added to <a href="http://jakarta.apache.org/turbine">Jakarta Turbine</a>. After Jakarta
-        Turbine, this configuration interface moved to <a href="http://jakarta.apache.org/velocity">Jakarta Velocity</a>
+        added to <a href="https://jakarta.apache.org/turbine">Jakarta Turbine</a>. After Jakarta
+        Turbine, this configuration interface moved to <a href="https://jakarta.apache.org/velocity">Jakarta Velocity</a>
         and underwent various improvements.  After Velocity, this code was introduced to the
         <a href="https://commons.apache.org">Apache Commons</a> as <code>ExtendedProperties</code>.
         Configuration began life in the Commons as a Sandbox component and was promoted to the

@@ -136,7 +136,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * Per default the spaces in the {@code indent} element will be trimmed resulting in an empty element. To tell
  * {@code XMLConfiguration} that spaces are relevant the {@code xml:space} attribute can be used, which is defined in
- * the <a href="http://www.w3.org/TR/REC-xml/#sec-white-space">XML specification</a>. This will look as follows:
+ * the <a href="https://www.w3.org/TR/REC-xml/#sec-white-space">XML specification</a>. This will look as follows:
  * </p>
  *
  * <pre>
@@ -492,7 +492,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Checks whether the content of the current XML element should be trimmed. This method checks whether a
      * {@code xml:space} attribute is present and evaluates its value. See
-     * <a href="http://www.w3.org/TR/REC-xml/#sec-white-space"> http://www.w3.org/TR/REC-xml/#sec-white-space</a> for more
+     * <a href="https://www.w3.org/TR/REC-xml/#sec-white-space"> http://www.w3.org/TR/REC-xml/#sec-white-space</a> for more
      * details.
      *
      * @param element the current XML element
