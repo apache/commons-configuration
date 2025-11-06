@@ -41,7 +41,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump log4j.version from 2.24.3 to 2.25.2 #579, #608.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-lang3 from 3.17.0 to 3.19.0 #582.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.19.0 to 2.20.0.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.18.0 to 1.19.0.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.18.0 to 1.20.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-text from 1.13.1 to 1.14.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.sun.mail:mailapi from 2.0.1 to 2.0.2 (#586) #1627.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.yaml:snakeyaml from 2.4 to 2.5 #601.</action>
