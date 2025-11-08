@@ -79,7 +79,6 @@
   </properties>
   <url>https://commons.apache.org/proper/commons-configuration/</url>
   <issueManagement>
-    <system>jira</system>
     <url>https://issues.apache.org/jira/browse/CONFIGURATION</url>
   </issueManagement>
   <ciManagement>
