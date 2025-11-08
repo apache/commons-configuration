@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.File;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +53,7 @@ public class TestDefaultFileSystem {
      */
     @Test
     void testGetOutputStreamInvalidPath() {
-        final File file = new File("");
+        final File file = FileUtils.current();
         assertThrows(ConfigurationException.class, () -> fileSystem.getOutputStream(file));
     }
 
