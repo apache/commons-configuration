@@ -28,6 +28,14 @@ package org.apache.commons.configuration2.tree;
  * @param <T> the type of the nodes processed by this visitor
  */
 public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisitor<T> {
+
+    /**
+     * Constructs a new instance.
+     */
+    public ConfigurationNodeVisitorAdapter() {
+        // empty
+    }
+
     /**
      * {@inheritDoc} This implementation returns always <strong>false</strong>; this means that all nodes in the current hierarchy are
      * traversed.

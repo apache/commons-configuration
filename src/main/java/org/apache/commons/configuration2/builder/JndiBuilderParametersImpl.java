@@ -42,6 +42,13 @@ public class JndiBuilderParametersImpl extends BasicBuilderParameters implements
     /** Constant for the name of the prefix property. */
     private static final String PROP_PREFIX = "prefix";
 
+    /**
+     * Constructs a new instance.
+     */
+    public JndiBuilderParametersImpl() {
+        // empty
+    }
+
     @Override
     public JndiBuilderParametersImpl setContext(final Context ctx) {
         storeProperty(PROP_CONTEXT, ctx);

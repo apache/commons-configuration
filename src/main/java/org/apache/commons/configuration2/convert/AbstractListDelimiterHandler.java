@@ -86,6 +86,13 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public AbstractListDelimiterHandler() {
+        // empty
+    }
+
+    /**
      * {@inheritDoc} This implementation checks whether the object to be escaped is a string. If yes, it delegates to
      * {@link #escapeString(String)}, otherwise no escaping is performed. Eventually, the passed in transformer is invoked
      * so that additional encoding can be performed.

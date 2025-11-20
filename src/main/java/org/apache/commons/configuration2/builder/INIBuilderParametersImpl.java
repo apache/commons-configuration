@@ -42,6 +42,13 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl 
     /** The key for the commentLeadingCharsUsedInInput property. */
     private static final String PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT = "commentLeadingCharsUsedInInput";
 
+    /**
+     * Constructs a new instance.
+     */
+    public INIBuilderParametersImpl() {
+        // empty
+    }
+
     @Override
     public void inheritFrom(final Map<String, ?> source) {
         super.inheritFrom(source);

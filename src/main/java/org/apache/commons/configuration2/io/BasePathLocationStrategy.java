@@ -35,6 +35,14 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2.0
  */
 public class BasePathLocationStrategy implements FileLocationStrategy {
+
+    /**
+     * Constructs a new instance.
+     */
+    public BasePathLocationStrategy() {
+        // empty
+    }
+
     /**
      * {@inheritDoc} This implementation uses utility methods from {@code FileLocatorUtils} to generate a {@code File} from
      * the locator's base path and file name. If this {@code File} exists, its URL is returned.

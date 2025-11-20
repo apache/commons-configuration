@@ -104,6 +104,13 @@ public class NodeTreeWalker {
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public NodeTreeWalker() {
+        // empty
+    }
+
+    /**
      * Visits all nodes in the hierarchy represented by the given root node in <em>breadth first search</em> manner. This
      * means that the nodes are visited in an order corresponding to the distance from the root node: first the root node is
      * visited, then all direct children of the root node, then all direct children of the first child of the root node,

@@ -38,6 +38,14 @@ package org.apache.commons.configuration2.interpol;
  */
 @Deprecated
 public class EnvironmentLookup implements Lookup {
+
+    /**
+     * Constructs a new instance.
+     */
+    public EnvironmentLookup() {
+        // empty
+    }
+
     /**
      * Performs a lookup for the specified variable. This implementation directly delegates to a {@code System.getenv()}.
      *

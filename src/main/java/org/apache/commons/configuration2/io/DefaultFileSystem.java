@@ -92,6 +92,13 @@ public class DefaultFileSystem extends FileSystem {
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public DefaultFileSystem() {
+        // empty
+    }
+
+    /**
      * Create the path to the specified file.
      *
      * @param file the target file

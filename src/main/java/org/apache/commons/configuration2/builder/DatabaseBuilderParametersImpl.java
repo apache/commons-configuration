@@ -54,6 +54,13 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implem
     /** Constant for the auto commit property. */
     private static final String PROP_AUTO_COMMIT = "autoCommit";
 
+    /**
+     * Constructs a new instance.
+     */
+    public DatabaseBuilderParametersImpl() {
+        // empty
+    }
+
     @Override
     public DatabaseBuilderParametersImpl setAutoCommit(final boolean f) {
         storeProperty(PROP_AUTO_COMMIT, Boolean.valueOf(f));

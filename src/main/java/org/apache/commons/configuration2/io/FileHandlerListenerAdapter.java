@@ -17,9 +17,7 @@
 package org.apache.commons.configuration2.io;
 
 /**
- * <p>
  * An adapter class simplifying the implementation of custom {@code FileHandlerListener} classes.
- * </p>
  * <p>
  * This class provides empty dummy implementations for all methods defined by the {@code FileHandlerListener} interface.
  * Custom listener implementations can extend this adapter class and override only the methods they actually need.
@@ -28,6 +26,14 @@ package org.apache.commons.configuration2.io;
  * @since 2.0
  */
 public class FileHandlerListenerAdapter implements FileHandlerListener {
+
+    /**
+     * Constructs a new instance.
+     */
+    public FileHandlerListenerAdapter() {
+        // empty
+    }
+
     @Override
     public void loaded(final FileHandler handler) {
         // empty

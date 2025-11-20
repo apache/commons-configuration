@@ -34,6 +34,14 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2.0
  */
 public class AbsoluteNameLocationStrategy implements FileLocationStrategy {
+
+    /**
+     * Constructs a new instance.
+     */
+    public AbsoluteNameLocationStrategy() {
+        // empty
+    }
+
     /**
      * {@inheritDoc} This implementation constructs a {@code File} object from the locator's file name (if defined). If this
      * results in an absolute file name pointing to an existing file, the corresponding URL is returned.

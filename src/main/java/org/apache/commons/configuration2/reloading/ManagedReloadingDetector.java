@@ -31,6 +31,13 @@ public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloa
     private volatile boolean reloadingRequired;
 
     /**
+     * Constructs a new instance.
+     */
+    public ManagedReloadingDetector() {
+        // empty
+    }
+
+    /**
      * Checks whether reloading is required. This implementation checks whether the {@code refresh()} method has been
      * invoked.
      *

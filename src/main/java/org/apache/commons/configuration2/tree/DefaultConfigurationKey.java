@@ -67,6 +67,13 @@ public class DefaultConfigurationKey {
         private boolean attribute;
 
         /**
+         * Constructs a new instance.
+         */
+        public KeyIterator() {
+            // empty
+        }
+
+        /**
          * Helper method for checking if the passed key is an attribute. If this is the case, the internal fields will be set.
          *
          * @param key the key to be checked

@@ -98,6 +98,13 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public ConfigurationNodePointerFactory() {
+        // empty
+    }
+
+    /**
      * Creates a node pointer for the specified bean. If the bean is a configuration node, a corresponding pointer is
      * returned.
      *

@@ -37,6 +37,13 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
     private final Map<String, URL> registeredEntities = new HashMap<>();
 
     /**
+     * Constructs a new instance.
+     */
+    public DefaultEntityResolver() {
+        // empty
+    }
+
+    /**
      * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs

@@ -41,6 +41,13 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     private Map<String, Object> store = new LinkedHashMap<>();
 
     /**
+     * Constructs a new instance.
+     */
+    public BaseConfiguration() {
+        // empty
+    }
+
+    /**
      * Adds a key/value pair to the map. This routine does no magic morphing. It ensures the keylist is maintained
      *
      * @param key key to use for mapping

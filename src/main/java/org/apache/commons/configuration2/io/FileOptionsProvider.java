@@ -62,6 +62,7 @@ public interface FileOptionsProvider {
     String MAX_TOTAL_CONNECTIONS = "maxTotalConnections";
 
     /**
+     * Gets the options to be used for this file.
      *
      * @return Options to be used for this file.
      */

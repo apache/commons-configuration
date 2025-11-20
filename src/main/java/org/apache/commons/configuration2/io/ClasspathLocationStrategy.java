@@ -32,6 +32,14 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2.0
  */
 public class ClasspathLocationStrategy implements FileLocationStrategy {
+
+    /**
+     * Constructs a new instance.
+     */
+    public ClasspathLocationStrategy() {
+        // empty
+    }
+
     /**
      * {@inheritDoc} This implementation looks up the locator's file name as a resource on the class path.
      */

@@ -88,6 +88,13 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     private String filePattern;
 
     /**
+     * Constructs a new instance.
+     */
+    public MultiFileBuilderParametersImpl() {
+        // empty
+    }
+
+    /**
      * {@inheritDoc} This implementation also tries to clone the parameters object for managed builders if possible.
      */
     @Override

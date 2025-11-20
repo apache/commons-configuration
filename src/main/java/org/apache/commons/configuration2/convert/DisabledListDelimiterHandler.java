@@ -45,6 +45,13 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler {
     public static final ListDelimiterHandler INSTANCE = new DisabledListDelimiterHandler();
 
     /**
+     * Constructs a new instance.
+     */
+    public DisabledListDelimiterHandler() {
+        // empty
+    }
+
+    /**
      * {@inheritDoc} This implementation always throws an {@code UnsupportedOperationException} exception.
      */
     @Override

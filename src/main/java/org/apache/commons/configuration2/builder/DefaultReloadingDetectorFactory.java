@@ -33,6 +33,14 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * @since 2.0
  */
 public class DefaultReloadingDetectorFactory implements ReloadingDetectorFactory {
+
+    /**
+     * Constructs a new instance.
+     */
+    public DefaultReloadingDetectorFactory() {
+        // empty
+    }
+
     @Override
     public ReloadingDetector createReloadingDetector(final FileHandler handler, final FileBasedBuilderParametersImpl params) throws ConfigurationException {
         final Long refreshDelay = params.getReloadingRefreshDelay();

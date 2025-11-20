@@ -53,6 +53,13 @@ public class PropertiesBuilderParametersImpl extends FileBasedBuilderParametersI
     private static final String PROP_IO_FACTORY = "IOFactory";
 
     /**
+     * Constructs a new instance.
+     */
+    public PropertiesBuilderParametersImpl() {
+        // empty
+    }
+
+    /**
      * {@inheritDoc} This implementation takes some more properties into account that are defined in this class.
      */
     @Override

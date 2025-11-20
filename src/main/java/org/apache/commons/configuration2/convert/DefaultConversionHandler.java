@@ -86,6 +86,13 @@ public class DefaultConversionHandler implements ConversionHandler {
     private volatile ListDelimiterHandler listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
 
     /**
+     * Constructs a new instance.
+     */
+    public DefaultConversionHandler() {
+        // empty
+    }
+
+    /**
      * Performs the conversion from the passed in source object to the specified target class. This method is called for
      * each conversion to be done. The source object has already been passed to the {@link ConfigurationInterpolator}, so
      * interpolation does not have to be done again. (The passed in {@code ConfigurationInterpolator} may still be necessary

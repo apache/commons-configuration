@@ -216,6 +216,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         private boolean sectionInLineCommentsAllowed;
 
         /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
+
+        /**
          * Builds a new INIConfiguration.
          *
          * @return a new INIConfiguration.

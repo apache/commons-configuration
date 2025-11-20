@@ -40,6 +40,13 @@ public abstract class FileSystem {
     private volatile FileOptionsProvider optionsProvider;
 
     /**
+     * Constructs a new instance.
+     */
+    public FileSystem() {
+        // empty
+    }
+
+    /**
      * Gets the base path of the given path, for example a directory for a file.
      *
      * @param path the source path.

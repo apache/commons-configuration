@@ -61,6 +61,14 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * classes. This method can perform all steps to integrate the new node into the original structure.
      */
     protected abstract static class BuilderVisitor extends ConfigurationNodeVisitorAdapter<ImmutableNode> {
+
+        /**
+         * Constructs a new instance.
+         */
+        public BuilderVisitor() {
+            // empty
+        }
+
         /**
          * Inserts a new node into the structure constructed by this builder. This method is called for each node that has been
          * added to the configuration tree after the configuration has been loaded from its source. These new nodes have to be

@@ -52,6 +52,13 @@ public class CatalogResolver implements EntityResolver {
         private final FileNameMap fileNameMap = URLConnection.getFileNameMap();
 
         /**
+         * Constructs a new instance.
+         */
+        public Catalog() {
+            // empty
+        }
+
+        /**
          * Load the catalogs.
          *
          * @throws IOException if an error occurs.
@@ -180,6 +187,13 @@ public class CatalogResolver implements EntityResolver {
 
         /** The object for handling interpolation. */
         private ConfigurationInterpolator interpolator;
+
+        /**
+         * Constructs a new instance.
+         */
+        public CatalogManager() {
+            // empty
+        }
 
         /**
          * Gets the base directory.

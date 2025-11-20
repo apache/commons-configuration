@@ -197,6 +197,13 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          */
         static final DefaultIOFactory INSTANCE = new DefaultIOFactory();
 
+        /**
+         * Constructs a new instance.
+         */
+        public DefaultIOFactory() {
+            // empty
+        }
+
         @Override
         public PropertiesReader createPropertiesReader(final Reader in) {
             return new PropertiesReader(in);

@@ -32,6 +32,14 @@ import java.net.URL;
  * @since 2.0
  */
 public class FileSystemLocationStrategy implements FileLocationStrategy {
+
+    /**
+     * Constructs a new instance.
+     */
+    public FileSystemLocationStrategy() {
+        // empty
+    }
+
     /**
      * {@inheritDoc} This implementation delegates to the {@code FileSystem}.
      */

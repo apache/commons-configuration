@@ -40,6 +40,14 @@ package org.apache.commons.configuration2.tree;
  * @since 1.3
  */
 public class OverrideCombiner extends NodeCombiner {
+
+    /**
+     * Constructs a new instance.
+     */
+    public OverrideCombiner() {
+        // empty
+    }
+
     /**
      * Handles the attributes during a combination process. First all attributes of the first node are added to the result.
      * Then all attributes of the second node, which are not contained in the first node, are also added.

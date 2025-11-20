@@ -59,6 +59,13 @@ public class ConstantLookup implements Lookup {
     private final Log log = LogFactory.getLog(getClass());
 
     /**
+     * Constructs a new instance.
+     */
+    public ConstantLookup() {
+        // empty
+    }
+
+    /**
      * Loads the class with the specified name. If an application has special needs regarding the class loaders to be used,
      * it can hook in here. This implementation delegates to the {@code getClass()} method of Commons Lang's
      * <a href="https://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">

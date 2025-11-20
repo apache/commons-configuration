@@ -33,6 +33,14 @@ import java.util.Set;
  * @since 2.0
  */
 public abstract class NodeHandlerDecorator<T> implements NodeHandler<T> {
+
+    /**
+     * Constructs a new instance.
+     */
+    public NodeHandlerDecorator() {
+        // empty
+    }
+
     @Override
     public Set<String> getAttributes(final T node) {
         return getDecoratedNodeHandler().getAttributes(node);

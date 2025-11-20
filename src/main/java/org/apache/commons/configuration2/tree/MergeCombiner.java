@@ -59,6 +59,13 @@ public class MergeCombiner extends NodeCombiner {
     }
 
     /**
+     * Constructs a new instance.
+     */
+    public MergeCombiner() {
+        // empty
+    }
+
+    /**
      * Handles the attributes during a combination process. First all attributes of the first node will be added to the
      * result. Then all attributes of the second node, which are not contained in the first node, will also be added.
      *
