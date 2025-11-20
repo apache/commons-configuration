@@ -1,3 +1,69 @@
+Apache Commons Configuration 2.13.0 Release Notes
+-------------------------------------------------
+
+The Apache Commons Configuration team is pleased to announce the release of Apache Commons Configuration 2.13.0.
+
+Introducing Apache Commons Configuration
+----------------------------------------
+
+The Apache Commons Team is pleased to announce Commons Configuration 2.13.0.
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+
+Minor release with new features and updated dependencies; requires Java 8 or above.
+
+Changes in this version include:
+
+New features
+------------
+
+*                     Add org.apache.commons.configuration2.ImmutableConfiguration.entrySet(). Thanks to Gary Gregory.
+*                     Add org.apache.commons.configuration2.ImmutableConfiguration.forEach(BiConsumer<String, Object>). Thanks to Gary Gregory.
+*                     Add VEX entry for CVE-2025-48924 #587. Thanks to Piotr P. Karwasz, Gary Gregory.
+
+Fixed Bugs
+----------
+
+*                     Shared primitive variable "throwExceptionOnMissing" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.AbstractConfiguration] At AbstractConfiguration.java:[line 1493] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory, SpotBugs.
+*                     Shared primitive variable "forceSingleLine" in one thread may not yield the value of the most recent write from another thread [org.apache.commons.configuration2.PropertiesConfigurationLayout] At PropertiesConfigurationLayout.java:[line 821] AT_STALE_THREAD_WRITE_OF_PRIMITIVE. Thanks to Gary Gregory, SpotBugs.
+* CONFIGURATION-849:  Fix undoubling of strings #569. Thanks to Willy van Diepen, Gary Gregory, Rob Tompkins.
+* CONFIGURATION-852:  Mark the package jakarta.servlet.* import as optional in OSGi #574. Thanks to Robbie Gemmell, Justin Bertram, Gary Gregory.
+*                     Fix build [WARNING] Parameter 'forkMode' is unknown for plugin 'maven-surefire-plugin:3.5.3:test (default-test)'. Thanks to Gary Gregory.
+
+Changes
+-------
+
+*                     Bump org.apache.commons:commons-parent from 81 to 92 #604, #623. Thanks to Gary Gregory, Dependabbot.
+*                     Bump com.fasterxml.jackson.core:jackson-databind from 2.18.3 to 2.20.1 #565, #599, #618. Thanks to Gary Gregory, Dependabot.
+*                     Bump commons-beanutils:commons-beanutils from 1.10.1 to 1.11.0. Thanks to Gary Gregory.
+*                     Bump log4j.version from 2.24.3 to 2.25.2 #579, #608. Thanks to Gary Gregory, Dependabot.
+*                     Bump org.apache.commons:commons-lang3 from 3.17.0 to 3.20.0 #582. Thanks to Gary Gregory, Dependabot.
+*                     Bump commons-io:commons-io from 2.19.0 to 2.21.0. Thanks to Gary Gregory.
+*                     Bump commons-codec:commons-codec from 1.18.0 to 1.20.0. Thanks to Gary Gregory.
+*                     Bump org.apache.commons:commons-text from 1.13.1 to 1.14.0. Thanks to Gary Gregory.
+*                     Bump com.sun.mail:mailapi from 2.0.1 to 2.0.2 (#586) #1627. Thanks to Gary Gregory, Dependabot.
+*                     Bump org.yaml:snakeyaml from 2.4 to 2.5 #601. Thanks to Gary Gregory, Dependabot.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_configuration.cgi
+
+Enjoy!
+Apache Commons Team
+
+-----------------------------------------------------------------------------
 Apache Commons Configuration
 Version 2.12.0
 Release Notes
