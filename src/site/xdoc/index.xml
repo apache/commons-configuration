@@ -29,17 +29,15 @@
   </properties>
 
   <body>
-    <section name="Intro">
+    <section name="Introducing Apache Commons Configuration">
       <p>
       	The Commons Configuration software library provides a generic configuration interface which enables
         a Java application to read configuration data from a variety of sources. Commons Configuration
       	provides typed access to single, and multi-valued configuration parameters as demonstrated
         by the following code:
 
-<source><![CDATA[
-Double double = config.getDouble("number");
-Integer integer = config.getInteger("number");
-]]></source>
+<source><![CDATA[Double double = config.getDouble("number");
+Integer integer = config.getInteger("number");]]></source>
 
       </p>
       <p>
@@ -97,13 +95,6 @@ Integer integer = config.getInteger("number");
         <a href="https://commons.apache.org">Apache Commons</a> as <code>ExtendedProperties</code>.
         Configuration began life in the Commons as a Sandbox component and was promoted to the
         Commons Proper in late 2003.
-      </p>
-    </section>
-
-    <section name="Bugs">
-      <p>
-        Bugs may be reported via the <a href="https://issues.apache.org/jira/browse/CONFIGURATION">ASF JIRA</a>
-        system. Detailed information can be found on the <a href="issue-tracking.html">issue tracking page</a>.
       </p>
     </section>
 
