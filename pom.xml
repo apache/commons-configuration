@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>92</version>
+    <version>93</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
@@ -474,13 +474,13 @@
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>src/java/org/apache/commons/configuration2/plist/*.java</exclude>
-            <exclude>velocity.log</exclude>
-            <exclude>src/test/resources/test.json</exclude>
-            <exclude>src/test/resources/test.yaml</exclude>
-            <exclude>src/conf/cpd-exclusions.txt</exclude>
-          </excludes>
+          <inputExcludes>
+            <inputExclude>src/java/org/apache/commons/configuration2/plist/*.java</inputExclude>
+            <inputExclude>velocity.log</inputExclude>
+            <inputExclude>src/test/resources/test.json</inputExclude>
+            <inputExclude>src/test/resources/test.yaml</inputExclude>
+            <inputExclude>src/conf/cpd-exclusions.txt</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
       <plugin>
@@ -558,13 +558,13 @@
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>src/java/org/apache/commons/configuration2/plist/*.java</exclude>
-            <exclude>velocity.log</exclude>
-            <exclude>src/test/resources/test.json</exclude>
-            <exclude>src/test/resources/test.yaml</exclude>
-            <exclude>src/conf/cpd-exclusions.txt</exclude>
-          </excludes>
+          <inputExcludes>
+            <inputExclude>src/java/org/apache/commons/configuration2/plist/*.java</inputExclude>
+            <inputExclude>velocity.log</inputExclude>
+            <inputExclude>src/test/resources/test.json</inputExclude>
+            <inputExclude>src/test/resources/test.yaml</inputExclude>
+            <inputExclude>src/conf/cpd-exclusions.txt</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
       <plugin>
