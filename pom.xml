@@ -28,7 +28,8 @@
   <name>Apache Commons Configuration</name>
   <inceptionYear>2001</inceptionYear>
   <description>
-    Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+    The Commons Configuration software library provides a generic configuration interface that enables an application to read configuration data from
+    various sources and requires Java 8.
   </description>
   <properties>
     <commons.componentid>configuration</commons.componentid>

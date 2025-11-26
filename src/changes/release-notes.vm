@@ -25,12 +25,6 @@ Introducing Apache Commons Configuration
 
 The Apache Commons Team is pleased to announce Commons Configuration ${version}.
 
-This document contains the release notes for this version of the Commons
-Configuration component. It describes the changes since the previous version.
-The Commons Configuration software library provides a generic configuration
-interface which enables an application to read configuration data from a variety
-of sources.
-
 $introduction.replaceAll("(?<!\015)\012", "
 ").replaceAll("(?m)^ +","")
 
