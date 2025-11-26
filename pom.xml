@@ -33,8 +33,8 @@
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.13.0</commons.release.version>
-    <commons.release.next>2.13.1</commons.release.next>
+    <commons.release.version>2.13.1</commons.release.version>
+    <commons.release.next>2.13.2</commons.release.next>
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
@@ -62,7 +62,7 @@
     <spring.version>5.3.39</spring.version>
     <japicmp.skip>false</japicmp.skip>
     <!-- Commons Release Plugin -->
-    <commons.bc.version>2.12.0</commons.bc.version>
+    <commons.bc.version>2.13.0</commons.bc.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
