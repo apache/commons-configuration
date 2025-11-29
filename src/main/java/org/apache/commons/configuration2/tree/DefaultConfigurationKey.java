@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * <p>
@@ -264,7 +265,7 @@ public class DefaultConfigurationKey {
          * @return a flag if attributes and normal property keys are treated the same way
          */
         private boolean isAttributeEmulatingMode() {
-            return getSymbols().getAttributeEnd() == null && StringUtils.equals(getSymbols().getPropertyDelimiter(), getSymbols().getAttributeStart());
+            return getSymbols().getAttributeEnd() == null && Strings.CS.equals(getSymbols().getPropertyDelimiter(), getSymbols().getAttributeStart());
         }
 
         /**
@@ -610,7 +611,7 @@ public class DefaultConfigurationKey {
      */
     private String escapeDelimiters(final String key) {
         return getSymbols().getEscapedDelimiter() == null || !key.contains(getSymbols().getPropertyDelimiter()) ? key
-            : StringUtils.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
+            : Strings.CS.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
     }
 
     /**
@@ -779,6 +780,6 @@ public class DefaultConfigurationKey {
      */
     private String unescapeDelimiters(final String key) {
         return getSymbols().getEscapedDelimiter() == null ? key
-            : StringUtils.replace(key, getSymbols().getEscapedDelimiter(), getSymbols().getPropertyDelimiter());
+            : Strings.CS.replace(key, getSymbols().getEscapedDelimiter(), getSymbols().getPropertyDelimiter());
     }
 }

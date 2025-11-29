@@ -34,6 +34,7 @@ import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * <p>
@@ -357,7 +358,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     private static void writeComment(final PropertiesConfiguration.PropertiesWriter writer, final String comment) throws IOException {
         if (comment != null) {
-            writer.writeln(StringUtils.replace(comment, CR, writer.getLineSeparator()));
+            writer.writeln(Strings.CS.replace(comment, CR, writer.getLineSeparator()));
         }
     }
 

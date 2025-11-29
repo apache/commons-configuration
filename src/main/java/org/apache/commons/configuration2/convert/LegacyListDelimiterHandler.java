@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * <p>
@@ -105,7 +105,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
         String strValue = String.valueOf(value);
 
         if (inList && strValue.contains(DOUBLE_ESC)) {
-            strValue = StringUtils.replace(strValue, DOUBLE_ESC, QUAD_ESC);
+            strValue = Strings.CS.replace(strValue, DOUBLE_ESC, QUAD_ESC);
         }
 
         return strValue;
@@ -158,7 +158,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     protected String escapeValue(final Object value, final boolean inList, final ValueTransformer transformer) {
         String escapedValue = String.valueOf(transformer.transformValue(escapeBackslashs(value, inList)));
         if (getDelimiter() != 0) {
-            escapedValue = StringUtils.replace(escapedValue, String.valueOf(getDelimiter()), ESCAPE + getDelimiter());
+            escapedValue = Strings.CS.replace(escapedValue, String.valueOf(getDelimiter()), ESCAPE + getDelimiter());
         }
         return escapedValue;
     }
