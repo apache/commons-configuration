@@ -26,7 +26,7 @@ import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.StringLookup;
 
@@ -130,7 +130,7 @@ public class ExprLookup implements Lookup {
                     return;
                 }
                 final String val = (String) value;
-                final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
+                final String name = Strings.CI.removeStart(val, CLASS);
                 final Class<?> clazz = ClassUtils.getClass(name);
                 if (name.length() == val.length()) {
                     this.value = clazz.getConstructor().newInstance();

@@ -45,6 +45,7 @@ import java.util.regex.PatternSyntaxException;
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A utility class to convert the configuration properties into any type.
@@ -606,7 +607,7 @@ public final class PropertyConverter {
             return (Number) value;
         }
         final String str = Objects.toString(value, null);
-        if (StringUtils.startsWithAny(str, HEX_PREFIX)) {
+        if (Strings.CS.startsWithAny(str, HEX_PREFIX)) {
             try {
                 return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
             } catch (final NumberFormatException nex) {
@@ -614,7 +615,7 @@ public final class PropertyConverter {
             }
         }
 
-        if (StringUtils.startsWithAny(str, BIN_PREFIX)) {
+        if (Strings.CS.startsWithAny(str, BIN_PREFIX)) {
             try {
                 return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
             } catch (final NumberFormatException nex) {

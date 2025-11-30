@@ -24,7 +24,7 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.w3c.dom.Element;
 
 /**
@@ -147,7 +147,7 @@ final class XMLListReference {
      * @return a flag whether these nodes have equal names
      */
     private static boolean nameEquals(final ImmutableNode n1, final ImmutableNode n2) {
-        return StringUtils.equals(n2.getNodeName(), n1.getNodeName());
+        return Strings.CS.equals(n2.getNodeName(), n1.getNodeName());
     }
 
     /** The wrapped XML element. */

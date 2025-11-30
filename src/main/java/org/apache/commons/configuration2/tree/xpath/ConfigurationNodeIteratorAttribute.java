@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
@@ -80,7 +80,7 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
             final Set<String> names = new LinkedHashSet<>(parent.getNodeHandler().getAttributes(parent.getConfigurationNode()));
             final String prefix = qName.getPrefix() != null ? prefixName(qName.getPrefix(), null) : null;
             names.forEach(n -> {
-                if (prefix == null || StringUtils.startsWith(n, prefix)) {
+                if (prefix == null || Strings.CS.startsWith(n, prefix)) {
                     addAttributeData(parent, result, n);
                 }
             });

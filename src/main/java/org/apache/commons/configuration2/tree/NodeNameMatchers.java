@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * <p>
@@ -38,7 +38,7 @@ public enum NodeNameMatchers implements NodeMatcher<String> {
     EQUALS {
         @Override
         public <T> boolean matches(final T node, final NodeHandler<T> handler, final String criterion) {
-            return StringUtils.equals(criterion, handler.nodeName(node));
+            return Strings.CS.equals(criterion, handler.nodeName(node));
         }
     },
 
@@ -49,7 +49,7 @@ public enum NodeNameMatchers implements NodeMatcher<String> {
     EQUALS_IGNORE_CASE {
         @Override
         public <T> boolean matches(final T node, final NodeHandler<T> handler, final String criterion) {
-            return StringUtils.equalsIgnoreCase(criterion, handler.nodeName(node));
+            return Strings.CI.equals(criterion, handler.nodeName(node));
         }
     }
 }

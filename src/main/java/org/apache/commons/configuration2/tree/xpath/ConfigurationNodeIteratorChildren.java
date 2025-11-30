@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
 import org.apache.commons.jxpath.ri.compiler.NodeTest;
 import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.model.NodePointer;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * A specialized iterator implementation for the child nodes of a configuration node.
@@ -109,7 +109,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
         final String compareName = qualifiedName(qName);
         final List<T> result = new ArrayList<>();
         getNodeHandler().getChildren(node).forEach(child -> {
-            if (StringUtils.equals(compareName, getNodeHandler().nodeName(child))) {
+            if (Strings.CS.equals(compareName, getNodeHandler().nodeName(child))) {
                 result.add(child);
             }
         });
@@ -131,7 +131,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
         final List<T> prefixChildren = new ArrayList<>(children.size());
         final String prefix = prefixName(qName.getPrefix(), null);
         children.forEach(child -> {
-            if (StringUtils.startsWith(getNodeHandler().nodeName(child), prefix)) {
+            if (Strings.CS.startsWith(getNodeHandler().nodeName(child), prefix)) {
                 prefixChildren.add(child);
             }
         });
