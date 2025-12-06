@@ -18,3 +18,7 @@ site-content
 .project
 .externalToolBuilders
 .checkstyle
+
+# NetBeans files
+nb-configuration.xml
+nbactions.xml
