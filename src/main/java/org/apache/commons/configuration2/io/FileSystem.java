@@ -83,10 +83,11 @@ public abstract class FileSystem {
     /**
      * Not abstract for binary compatibility.
      *
-     * @param url TODO
-     * @param urlConnectionOptions Ignored.
-     * @return TODO
-     * @throws ConfigurationException TODO
+     * @param url the URL of the file
+     * @param urlConnectionOptions the URLConnection options
+     * @return the input stream for the specified URL
+     * @throws ConfigurationException if an error occurs while opening the file
+     *
      * @since 2.8.0
      */
     public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException {

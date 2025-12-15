@@ -511,7 +511,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * added to the result set.
      *
      * @param prefix the prefix of the keys to start with
-     * @param delimiter TODO
+     * @param delimiter the prefix delimiter (unused)
      * @return an iterator with the found keys
      * @since 2.12.0
      */
