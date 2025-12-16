@@ -63,7 +63,7 @@ limitations under the License.
                 </p>
                     <ul>
                         <li>
-                            If you rely on software that uses a version of commons-configuration before 2.8.0, you are likely
+                            If you rely on software that uses a version of Commons Configuration before 2.8.0, you are likely
                             still not vulnerable: only if this software loads configuration
                             files from untrusted sources, which is likely rare.
                         </li>

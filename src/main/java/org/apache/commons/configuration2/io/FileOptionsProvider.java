@@ -19,7 +19,7 @@ package org.apache.commons.configuration2.io;
 import java.util.Map;
 
 /**
- * Some FileSystems allow options to be passed on File operations. Users of commons configuration can implement this
+ * Some FileSystems allow options to be passed on File operations. Users of Commons Configuration can implement this
  * interface and register it with the FileSystem.
  *
  * @since 1.7

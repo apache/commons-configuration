@@ -172,9 +172,9 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     }
 
     /**
-     * Sets the commons configurations objects which will be used as properties.
+     * Sets the Commons Configuration objects which will be used as properties.
      *
-     * @param configurations commons configurations objects which will be used as properties.
+     * @param configurations Commons Configuration objects which will be used as properties.
      */
     public void setConfigurations(final Configuration... configurations) {
         this.configurations = clone(configurations);

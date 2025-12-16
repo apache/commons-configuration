@@ -35,22 +35,22 @@ public final class URLConnectionOptions {
     public static final URLConnectionOptions DEFAULT = new URLConnectionOptions();
 
     /**
-     * TODO
+     * Tells if user interaction, sicj as displaying an authentication dialog, is allowed.
      */
     private boolean allowUserInteraction;
 
     /**
-     * TODO
+     * The connect timeout in milliseconds.
      */
     private int connectTimeoutMillis;
 
     /**
-     * TODO
+     * The read timeout in milliseconds.
      */
     private int readTimeoutMillis;
 
     /**
-     * TODO
+     * Tells if the connection should use caches.
      */
     private boolean useCaches = true;
 
