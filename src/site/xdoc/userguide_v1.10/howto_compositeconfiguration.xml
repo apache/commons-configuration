@@ -90,7 +90,7 @@ DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurat
 for (Iterator<String> i = changes.getKeys(); i.hasNext()){
 	String key = i.next();
 	Object value = changes.get(key);
-	config.setProperty(key,value);
+	config.setProperty(key, value);
 }
 ]]></source>
 			</p>
