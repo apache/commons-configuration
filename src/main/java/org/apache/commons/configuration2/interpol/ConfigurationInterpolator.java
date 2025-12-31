@@ -101,6 +101,7 @@ public class ConfigurationInterpolator {
 
         /**
          * Add the prefix and lookup from {@code lookup} to {@code map}.
+         *
          * @param lookup lookup to add
          * @param map map to add to
          */
@@ -110,6 +111,7 @@ public class ConfigurationInterpolator {
 
         /**
          * Create the lookup map used when the user has requested no customization.
+         *
          * @return default lookup map
          */
         private static Map<String, Lookup> createDefaultLookups() {
@@ -136,6 +138,7 @@ public class ConfigurationInterpolator {
         /**
          * Constructs a lookup map by parsing the given string. The string is expected to contain
          * comma or space-separated names of values from the {@link DefaultLookups} enum.
+         *
          * @param str string to parse; not null
          * @return lookup map parsed from the given string
          * @throws IllegalArgumentException if the string does not contain a valid default lookup
@@ -162,6 +165,7 @@ public class ConfigurationInterpolator {
 
         /**
          * Constructs a new instance initialized with the given properties.
+         *
          * @param props initialization properties
          */
         DefaultPrefixLookupsHolder(final Properties props) {
@@ -174,6 +178,7 @@ public class ConfigurationInterpolator {
 
         /**
          * Gets the default prefix lookups map.
+         *
          * @return default prefix lookups map
          */
         Map<String, Lookup> getDefaultPrefixLookups() {
@@ -198,6 +203,7 @@ public class ConfigurationInterpolator {
         /** Attempt to extract a simple value from {@code obj} for use in string conversion.
          * If the input represents a collection of some sort (for example, an iterable or array),
          * the first item from the collection is returned.
+         *
          * @param obj input object
          * @return extracted simple object
          */
@@ -735,6 +741,7 @@ public class ConfigurationInterpolator {
 
     /** Sets the function used to convert interpolated values to strings. Pass
      * {@code null} to use the default conversion function.
+     *
      * @param stringConverter function used to convert interpolated values to strings
      *      or {@code null} to use the default conversion function
      */

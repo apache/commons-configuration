@@ -441,6 +441,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * {@inheritDoc} This implementation handles synchronization and delegates to {@code containsKeyInternal()}.
+     *
      * @since 2.11.0
      */
     @Override

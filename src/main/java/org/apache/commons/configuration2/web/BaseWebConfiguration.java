@@ -71,6 +71,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     /**
      * Tests whether this configuration contains one or more matches to this value. This operation stops at first match
      * but may be more expensive than the containsKey method
+     *
      * @since 2.11.0
      */
     @Override
