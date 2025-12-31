@@ -57,7 +57,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     private final boolean init;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param config The Configuration to be wrapped.
      * @param path The base path pattern.
