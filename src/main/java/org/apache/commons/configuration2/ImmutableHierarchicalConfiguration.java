@@ -37,6 +37,7 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * @since 2.0
  */
 public interface ImmutableHierarchicalConfiguration extends ImmutableConfiguration {
+
     /**
      * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.

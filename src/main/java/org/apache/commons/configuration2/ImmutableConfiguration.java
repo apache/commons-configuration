@@ -60,6 +60,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
  * @since 2.0
  */
 public interface ImmutableConfiguration {
+
     /**
      * Checks if the configuration contains the specified key.
      *

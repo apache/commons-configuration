@@ -32,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
  * method that can be used for test cases.
  */
 public abstract class AbstractXPathTest {
+
     /** Constant for the name of the counter attribute. */
     protected static final String ATTR_NAME = "counter";
 

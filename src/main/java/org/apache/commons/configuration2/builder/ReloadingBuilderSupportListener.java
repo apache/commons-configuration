@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.reloading.ReloadingEvent;
  * @since 2.0
  */
 final class ReloadingBuilderSupportListener implements EventListener<Event> {
+
     /**
      * Creates a new instance of {@code ReloadingBuilderSupportListener} which connects the specified
      * {@code ConfigurationBuilder} with the given {@code ReloadingController}. Listeners are registered to react on

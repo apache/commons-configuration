@@ -57,6 +57,7 @@ public final class ConfigurationUtils {
      * An array with interfaces to be implemented by a proxy for an immutable hierarchical configuration.
      */
     private static final Class<?>[] IMMUTABLE_HIERARCHICAL_CONFIG_IFCS = {ImmutableHierarchicalConfiguration.class};
+
     /**
      * A dummy event source that is returned by {@code asEventSource()} if a mock object has to be returned. It provides
      * empty dummy implementations for all interface methods.

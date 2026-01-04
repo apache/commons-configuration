@@ -52,6 +52,7 @@ import org.junit.jupiter.api.Test;
  * A test class for some of the basic functionality implemented by AbstractConfiguration.
  */
 public class TestAbstractConfigurationBasicFeatures {
+
     /**
      * An event listener implementation that simply collects all received configuration events.
      */
@@ -71,6 +72,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * need to be implemented delegate to this wrapped configuration.
      */
     static class TestConfigurationImpl extends AbstractConfiguration {
+
         /** Stores the underlying configuration. */
         private final AbstractConfiguration config;
 

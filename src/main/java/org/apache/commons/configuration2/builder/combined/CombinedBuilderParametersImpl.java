@@ -48,6 +48,7 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * @since 2.0
  */
 public class CombinedBuilderParametersImpl extends BasicBuilderParameters implements CombinedBuilderProperties<CombinedBuilderParametersImpl> {
+
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX + CombinedBuilderParametersImpl.class.getName();
 

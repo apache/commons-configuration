@@ -51,6 +51,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2.0
  */
 public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {
+
     /** A map for storing default encodings for specific configuration classes. */
     private static final Map<Class<?>, String> DEFAULT_ENCODINGS = initializeDefaultEncodings();
 

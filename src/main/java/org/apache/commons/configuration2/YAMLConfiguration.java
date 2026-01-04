@@ -40,6 +40,7 @@ import org.yaml.snakeyaml.representer.Representer;
  * @since 2.2
  */
 public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements FileBasedConfiguration, InputStreamSupport {
+
     /**
      * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
      *

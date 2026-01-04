@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code Configurations}.
  */
 public class TestConfigurations {
+
     /** Constant for the name of the test properties file. */
     private static final String TEST_PROPERTIES = "test.properties";
 

@@ -89,6 +89,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * @since 2.0
  */
 public class BasicConfigurationBuilder<T extends ImmutableConfiguration> implements ConfigurationBuilder<T> {
+
     /**
      * Registers an event listener at an event source object.
      *

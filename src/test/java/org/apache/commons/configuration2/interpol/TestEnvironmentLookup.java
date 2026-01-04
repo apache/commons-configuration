@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
  * Test class for EnvironmentLookup.
  */
 public class TestEnvironmentLookup {
+
     /** The lookup to be tested. */
     private Lookup lookup;
 

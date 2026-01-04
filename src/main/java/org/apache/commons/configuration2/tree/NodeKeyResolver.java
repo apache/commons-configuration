@@ -33,6 +33,7 @@ import java.util.Map;
  * @since 2.0
  */
 public interface NodeKeyResolver<T> {
+
     /**
      * Generates a unique key for the specified node. This method is used if keys have to be generated for nodes received as
      * query results. An implementation must generate a canonical key which is compatible with the current expression

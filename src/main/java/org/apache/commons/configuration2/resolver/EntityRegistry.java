@@ -25,6 +25,7 @@ import java.util.Map;
  * @since 1.7
  */
 public interface EntityRegistry {
+
     /**
      * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *

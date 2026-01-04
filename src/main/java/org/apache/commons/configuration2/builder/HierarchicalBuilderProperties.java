@@ -34,6 +34,7 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * @since 2.0
  */
 public interface HierarchicalBuilderProperties<T> {
+
     /**
      * Sets the {@code ExpressionEngine} to be used when querying the configuration.
      *

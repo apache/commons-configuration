@@ -192,6 +192,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 1.7
      */
     public static class DefaultIOFactory implements IOFactory {
+
         /**
          * The singleton instance.
          */
@@ -231,6 +232,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @since 1.7
      */
     public interface IOFactory {
+
         /**
          * Creates a {@code PropertiesReader} for reading a properties file. This method is called whenever the
          * {@code PropertiesConfiguration} is loaded. The reader returned by this method is then used for parsing the properties

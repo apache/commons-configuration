@@ -49,6 +49,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2.0
  */
 public class EventListenerList {
+
     /**
      * A special {@code Iterator} implementation used by the {@code getEventListenerIterator()} method. This iterator
      * returns only listeners compatible with a specified event type. It has a convenience method for invoking the current
@@ -57,6 +58,7 @@ public class EventListenerList {
      * @param <T> the event type
      */
     public static final class EventListenerIterator<T extends Event> implements Iterator<EventListener<? super T>> {
+
         /** The underlying iterator. */
         private final Iterator<EventListenerRegistrationData<?>> underlyingIterator;
 

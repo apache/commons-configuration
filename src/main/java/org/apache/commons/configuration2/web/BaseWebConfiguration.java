@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  * @since 1.2
  */
 abstract class BaseWebConfiguration extends AbstractConfiguration {
+
     /**
      * Adds a property to this configuration. <strong>This operation is not supported and will throw an
      * UnsupportedOperationException.</strong>

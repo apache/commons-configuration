@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
+
     /** Constant for the prefix separator. */
     private static final String PREFIX_SEPARATOR = ":";
 

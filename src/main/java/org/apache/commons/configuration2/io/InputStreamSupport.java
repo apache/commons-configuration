@@ -37,6 +37,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public interface InputStreamSupport {
+
     /**
      * Reads the content of this object from the specified {@code InputStream}.
      *

@@ -47,6 +47,7 @@ import org.apache.commons.configuration2.io.FileLocatorUtils;
  * @since 2.0
  */
 public class FileHandlerReloadingDetector implements ReloadingDetector {
+
     /** Constant for the jar URL protocol. */
     private static final String JAR_PROTOCOL = "jar";
 

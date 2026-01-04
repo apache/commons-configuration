@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code HierarchicalBuilderParametersImpl}.
  */
 public class TestHierarchicalBuilderParametersImpl {
+
     /** The parameters object to be tested. */
     private HierarchicalBuilderParametersImpl params;
 

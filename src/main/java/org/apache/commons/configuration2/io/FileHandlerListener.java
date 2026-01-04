@@ -29,6 +29,7 @@ package org.apache.commons.configuration2.io;
  * @since 2.0
  */
 public interface FileHandlerListener {
+
     /**
      * Notification that the associated file has been loaded. This method is called directly after the load operation.
      *

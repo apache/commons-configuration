@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * actual access to configuration files in other test classes.
  */
 public class TestDefaultFileSystem {
+
     /** The file system to be tested. */
     private DefaultFileSystem fileSystem;
 

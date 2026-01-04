@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code CombinedBeanDeclaration}.
  */
 public class TestCombinedBeanDeclaration {
+
     /** An array with the mocks for the child bean declarations. */
     private BeanDeclaration[] declarations;
 

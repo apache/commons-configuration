@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ProvidedURLLocationStrategy}.
  */
 public class TestProvidedURLLocationStrategy {
+
     /** The strategy to be tested. */
     private ProvidedURLLocationStrategy strategy;
 

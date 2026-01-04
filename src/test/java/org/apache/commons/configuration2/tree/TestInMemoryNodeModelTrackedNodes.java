@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
  * A special test class for {@code InMemoryNodeModel} which tests the facilities for tracking nodes.
  */
 public class TestInMemoryNodeModelTrackedNodes {
+
     /** Constant for the name of a new table field. */
     private static final String NEW_FIELD = "newTableField";
 

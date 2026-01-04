@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code DefaultParametersManager}.
  */
 public class TestDefaultParametersManager {
+
     /**
      * A test defaults handler implementation for testing the initialization of parameters objects with default values. This
      * class sets some hard-coded default values.

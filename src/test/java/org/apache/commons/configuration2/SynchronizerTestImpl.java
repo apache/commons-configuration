@@ -25,6 +25,7 @@ import org.apache.commons.configuration2.sync.Synchronizer;
  * A test implementation of Synchronizer which allows keeping track about the methods called by the configuration.
  */
 public class SynchronizerTestImpl implements Synchronizer {
+
     /**
      * An enumeration with the methods of the Synchronizer which can be called.
      */

@@ -70,6 +70,7 @@ import org.apache.commons.lang3.concurrent.ConcurrentUtils;
  * @since 2.0
  */
 public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {
+
     /**
      * Constant for the name of the key referencing the {@code ConfigurationInterpolator} in this builder's parameters.
      */

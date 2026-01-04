@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * A strategy to reload configuration based on management requests. Designed for JMX management.
  */
 public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloadingDetectorMBean {
+
     /** The logger. */
     private final Log log = LogFactory.getLog(ManagedReloadingDetector.class);
 

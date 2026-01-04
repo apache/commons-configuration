@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
  * Test class for EnvironmentConfiguration.
  */
 public class TestEnvironmentConfiguration {
+
     /** Stores the configuration to be tested. */
     private EnvironmentConfiguration config;
 

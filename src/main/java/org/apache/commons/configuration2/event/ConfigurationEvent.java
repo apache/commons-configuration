@@ -61,6 +61,7 @@ package org.apache.commons.configuration2.event;
  * @since 1.3
  */
 public class ConfigurationEvent extends Event {
+
     /**
      * Constant for the common super type of all configuration update events.
      *

@@ -32,6 +32,7 @@ package org.apache.commons.configuration2.builder;
  * @since 2.0
  */
 public interface DefaultParametersHandler<T> {
+
     /**
      * Initializes the specified parameters object with default values. This method is called after the parameters object
      * was created and before it is passed to the calling code. A concrete implementation can perform arbitrary

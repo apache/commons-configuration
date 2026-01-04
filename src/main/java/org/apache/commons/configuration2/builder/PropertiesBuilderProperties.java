@@ -38,6 +38,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public interface PropertiesBuilderProperties<T> {
+
     /**
      * Sets the current include listener, may be null.
      *

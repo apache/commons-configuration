@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
  * corresponding test methods check whether the enclosing events (not the detail events) are of the expected type.
  */
 public abstract class AbstractTestConfigurationEvents {
+
     /** Constant for a test property name. */
     static final String TEST_PROPNAME = "event.test";
 

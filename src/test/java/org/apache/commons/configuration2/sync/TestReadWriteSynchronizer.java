@@ -32,10 +32,12 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ReadWriteSynchronizer}.
  */
 public class TestReadWriteSynchronizer {
+
     /**
      * A class representing an account.
      */
     private static final class Account {
+
         /** The amount stored in this account. */
         private long amount;
 
@@ -63,6 +65,7 @@ public class TestReadWriteSynchronizer {
      * consistent.
      */
     private static final class ReaderThread extends Thread {
+
         /** The acounts to monitor. */
         private final Account[] accounts;
 
@@ -119,6 +122,7 @@ public class TestReadWriteSynchronizer {
      * account to the other one.
      */
     private static final class UpdateThread extends Thread {
+
         /** The synchronizer. */
         private final Synchronizer sync;
 

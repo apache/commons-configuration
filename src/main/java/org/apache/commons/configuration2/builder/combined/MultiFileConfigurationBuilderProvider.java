@@ -49,12 +49,14 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * @since 2.0
  */
 public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuilderProvider {
+
     /**
      * A wrapper builder implementation which also provides a {@code ReloadingController}. This class assumes that the
      * wrapped builder implements {@code ReloadingControllerSupport}. So the reloading controller can be obtained from this
      * object.
      */
     private static final class ReloadableWrapperBuilder extends WrapperBuilder implements ReloadingControllerSupport {
+
         /** The object for obtaining the reloading controller. */
         private final ReloadingControllerSupport ctrlSupport;
 
@@ -80,6 +82,7 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      * delegates to another builder for event listener management.
      */
     private static class WrapperBuilder implements ConfigurationBuilder<Configuration> {
+
         /** The configuration managed by this builder. */
         private final Configuration configuration;
 

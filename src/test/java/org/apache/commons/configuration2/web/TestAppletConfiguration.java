@@ -50,6 +50,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
 
         if (supportsApplet) {
             final Applet applet = new Applet() {
+
                 /**
                  * Serial version UID.
                  */

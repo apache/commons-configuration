@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code PropertiesBuilderParametersImpl}.
  */
 public class TestPropertiesBuilderParametersImpl {
+
     /** The parameters object to be tested. */
     private PropertiesBuilderParametersImpl params;
 

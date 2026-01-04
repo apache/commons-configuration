@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * @since 2.0
  */
 public interface MultiFileBuilderProperties<T> {
+
     /**
      * Sets the pattern string. Based on this pattern the configuration file to be loaded is determined.
      *

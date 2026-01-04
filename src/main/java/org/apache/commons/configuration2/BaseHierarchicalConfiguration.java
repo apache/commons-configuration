@@ -167,6 +167,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * their interpolated values.
      */
     private final class InterpolatedVisitor extends ConfigurationNodeVisitorAdapter<ImmutableNode> {
+
         /** A stack for managing node builder instances. */
         private final List<ImmutableNode.Builder> builderStack;
 

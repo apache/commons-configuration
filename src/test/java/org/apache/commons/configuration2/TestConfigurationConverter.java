@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  * Tests the ConfigurationConverter class.
  */
 public class TestConfigurationConverter {
+
     /**
      * Creates a configuration object with some test values.
      *

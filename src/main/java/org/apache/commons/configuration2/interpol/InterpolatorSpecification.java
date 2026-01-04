@@ -52,6 +52,7 @@ import java.util.function.Function;
  * @since 2.0
  */
 public final class InterpolatorSpecification {
+
     /**
      * <p>
      * A <em>builder</em> class for creating instances of {@code InterpolatorSpecification}.
@@ -62,6 +63,7 @@ public final class InterpolatorSpecification {
      * </p>
      */
     public static class Builder {
+
         /**
          * Helper method for checking a lookup. Throws an exception if the lookup is <strong>null</strong>.
          *

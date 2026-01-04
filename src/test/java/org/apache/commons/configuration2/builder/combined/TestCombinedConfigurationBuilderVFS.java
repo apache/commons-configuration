@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * file-based configurations.
  */
 public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurationBuilder {
+
     /**
      * {@inheritDoc} This implementation initializes the parameters object with the VFS file system.
      */

@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * @since 2.0
  */
 public interface ReloadingDetectorFactory {
+
     /**
      * Creates a new {@code ReloadingDetector} object based on the passed in parameters. The {@code FileHandler} points to
      * the file to be monitored. (It may be different from the {@code FileHandler} managed by the parameters object.) The

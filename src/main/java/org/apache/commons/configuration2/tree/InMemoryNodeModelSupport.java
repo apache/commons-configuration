@@ -28,6 +28,7 @@ package org.apache.commons.configuration2.tree;
  * @since 2.0
  */
 public interface InMemoryNodeModelSupport extends NodeModelSupport<ImmutableNode> {
+
     /**
      * {@inheritDoc} This variant specializes the return type to {@code InMemoryNodeModel}.
      */

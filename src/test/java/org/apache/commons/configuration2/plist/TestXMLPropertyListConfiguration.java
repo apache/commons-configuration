@@ -52,6 +52,7 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  */
 public class TestXMLPropertyListConfiguration {
+
     /**
      * Loads a test configuration.
      *

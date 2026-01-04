@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
  * A test class which tests functionality related to immutable configurations.
  */
 public class TestImmutableConfiguration {
+
     /** Constant for the name of a test properties file. */
     private static final String TEST_FILE = "test.properties";
 

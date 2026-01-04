@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * </p>
  */
 public interface FileBased {
+
     /**
      * Reads the content of this object from the given reader. <strong>Client code should not call this method directly, but
      * use a {@code FileHandler} for reading data.</strong>

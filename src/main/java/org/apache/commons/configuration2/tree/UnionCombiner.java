@@ -104,6 +104,7 @@ import java.util.List;
  * @since 1.3
  */
 public class UnionCombiner extends NodeCombiner {
+
     /**
      * Combines the given nodes to a new union node.
      *

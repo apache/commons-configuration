@@ -36,6 +36,7 @@ package org.apache.commons.configuration2.io;
  * @since 2.0
  */
 public interface FileLocatorAware {
+
     /**
      * Passes the current {@code FileLocator} to this object. Note that this {@code FileLocator} object is only temporarily
      * valid for the following invocation of {@code read()} or {@code write(}. Depending on the state of the

@@ -34,10 +34,12 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code FileHandlerReloadingDetector}.
  */
 public class TestFileHandlerReloadingDetector {
+
     /**
      * A test implementation which allows mocking the monitored file.
      */
     private static final class FileHandlerReloadingDetectorTestImpl extends FileHandlerReloadingDetector {
+
         /** The mock file. */
         private final File mockFile;
 
@@ -97,6 +99,7 @@ public class TestFileHandlerReloadingDetector {
     }
 
     /** The detector to be tested. */
+
     /**
      * Tests whether an instance can be created with a file handler.
      */

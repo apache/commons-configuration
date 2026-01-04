@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code FileSystemLocationStrategy}.
  */
 public class TestFileSystemLocationStrategy {
+
     /** The strategy to be tested. */
     private FileSystemLocationStrategy strategy;
 

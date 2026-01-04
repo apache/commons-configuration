@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code BaseHierarchicalConfiguration}.
  */
 public class TestHierarchicalConfiguration {
+
     /** Constant for a changed name. */
     private static final String NEW_NAME = "alteredName";
 

@@ -50,6 +50,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration {
         final ServletConfig config = mockServletConfig(parameters);
 
         final Servlet servlet = new HttpServlet() {
+
             /**
              * Serial version UID.
              */

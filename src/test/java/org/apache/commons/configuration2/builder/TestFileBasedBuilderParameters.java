@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code FileBasedBuilderParametersImpl}.
  */
 public class TestFileBasedBuilderParameters {
+
     /**
      * Tests whether reflection-based property access through BeanUtils is possible.
      */

@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code MultiFileBuilderParametersImpl}.
  */
 public class TestMultiFileBuilderParametersImpl {
+
     /** The parameters object to be tested. */
     private MultiFileBuilderParametersImpl params;
 

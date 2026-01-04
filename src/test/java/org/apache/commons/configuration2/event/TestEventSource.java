@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for BaseEventSource.
  */
 public class TestEventSource {
+
     /**
      * A specialized event source implementation that counts the number of created event objects. It is used to test whether
      * the {@code fireEvent()} methods only creates event objects if necessary. It also allows testing the clone()

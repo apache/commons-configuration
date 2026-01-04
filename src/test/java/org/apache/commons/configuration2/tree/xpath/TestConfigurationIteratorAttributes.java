@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ConfigurationNodeIteratorAttributes}.
  */
 public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
+
     /** Constant for the name of another test attribute. */
     private static final String TEST_ATTR = "test";
 

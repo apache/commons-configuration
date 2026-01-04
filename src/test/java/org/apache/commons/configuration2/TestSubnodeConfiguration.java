@@ -52,6 +52,7 @@ import org.junit.jupiter.api.Test;
  * Test case for SubnodeConfiguration.
  */
 public class TestSubnodeConfiguration {
+
     /** The key used for the SubnodeConfiguration. */
     private static final String SUB_KEY = "tables.table(0)";
 

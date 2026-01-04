@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  * A test class for {@code BasicConfigurationBuilder} with tests related to events fired by the builder.
  */
 public class TestBasicConfigurationBuilderEvents {
+
     /**
      * Tests whether the base type for builder events is correctly configured.
      */

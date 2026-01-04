@@ -43,6 +43,7 @@ import org.apache.commons.vfs2.VFS;
  * @since 1.7
  */
 public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector {
+
     /** Stores the logger. */
     private final Log log = LogFactory.getLog(getClass());
 

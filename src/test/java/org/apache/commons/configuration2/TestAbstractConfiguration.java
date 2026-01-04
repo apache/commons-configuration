@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  */
 public abstract class TestAbstractConfiguration {
+
     /**
      * Gets an abstract configuration with the following data:<br>
      *

@@ -21,6 +21,7 @@ package org.apache.commons.configuration2.reloading;
  * classes.
  */
 public class AlwaysReloadingDetector implements ReloadingDetector {
+
     /**
      * {@inheritDoc} This implementation always returns <strong>true</strong>.
      */

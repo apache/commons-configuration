@@ -57,6 +57,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
 
         // create a servlet
         final Servlet servlet = new HttpServlet() {
+
             /**
              * Serial version UID.
              */

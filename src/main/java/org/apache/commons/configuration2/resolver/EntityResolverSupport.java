@@ -24,6 +24,7 @@ import org.xml.sax.EntityResolver;
  * @since 1.7
  */
 public interface EntityResolverSupport {
+
     /**
      * Gets the EntityResolver associated with the class.
      *

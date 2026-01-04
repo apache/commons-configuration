@@ -129,11 +129,13 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 1.2
  */
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware {
+
     /**
      * Container for array elements. <strong>Do not use this class !</strong> It is used internally by XMLPropertyConfiguration to
      * parse the configuration file, it may be removed at any moment in the future.
      */
     private static final class ArrayNodeBuilder extends PListNodeBuilder {
+
         /** The list of values in the array. */
         private final List<Object> list = new ArrayList<>();
 
@@ -163,6 +165,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
      * creating the nodes of the configuration.
      */
     private static class PListNodeBuilder {
+
         /**
          * The MacOS FORMAT of dates in plist files. Note: Because {@code SimpleDateFormat} is not thread-safe, each access has
          * to be synchronized.
@@ -328,6 +331,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
     private final class XMLPropertyListHandler extends DefaultHandler {
+
         /** The buffer containing the text node being read */
         private final StringBuilder buffer = new StringBuilder();
 

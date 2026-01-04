@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.event.EventType;
  * collects the events received by the listener and provides some methods for querying them.
  */
 public class BuilderEventListenerImpl implements EventListener<ConfigurationBuilderEvent> {
+
     /** A list with the received events. */
     private final List<ConfigurationBuilderEvent> events = new LinkedList<>();
 

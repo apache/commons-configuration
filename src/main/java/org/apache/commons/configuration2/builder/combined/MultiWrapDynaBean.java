@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
  * @since 2.0
  */
 final class MultiWrapDynaBean implements DynaBean {
+
     /**
      * Creates a {@code DynaBean} object for the given bean.
      *

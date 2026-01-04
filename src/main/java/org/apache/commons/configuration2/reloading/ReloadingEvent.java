@@ -31,6 +31,7 @@ import org.apache.commons.configuration2.event.EventType;
  * @since 2.0
  */
 public class ReloadingEvent extends Event {
+
     /** The common event super type for all reloading events. */
     public static final EventType<ReloadingEvent> ANY = new EventType<>(Event.ANY, "RELOAD");
 

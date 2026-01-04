@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code NodeNameMatchers}.
  */
 public class TestNodeNameMatchers {
+
     /** Constant for a test node name. */
     private static final String NODE_NAME = "TestNodeName";
 

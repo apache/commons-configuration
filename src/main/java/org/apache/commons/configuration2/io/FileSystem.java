@@ -30,6 +30,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 1.7
  */
 public abstract class FileSystem {
+
     /** Constant for the default logger. */
     private static final ConfigurationLogger DEFAULT_LOG = ConfigurationLogger.newDummyLogger();
 

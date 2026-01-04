@@ -60,6 +60,7 @@ final class ModelTransaction {
      * A specialized operation class for adding an attribute to a target node.
      */
     private static final class AddAttributeOperation extends Operation {
+
         /** The attribute name. */
         private final String attributeName;
 
@@ -87,6 +88,7 @@ final class ModelTransaction {
      * A specialized operation class for adding multiple attributes to a target node.
      */
     private static final class AddAttributesOperation extends Operation {
+
         /** The map with attributes. */
         private final Map<String, Object> attributes;
 
@@ -109,6 +111,7 @@ final class ModelTransaction {
      * A specialized operation class which changes the name of a node.
      */
     private static final class ChangeNodeNameOperation extends Operation {
+
         /** The new node name. */
         private final String newName;
 
@@ -131,6 +134,7 @@ final class ModelTransaction {
      * A specialized operation class which changes the value of a node.
      */
     private static final class ChangeNodeValueOperation extends Operation {
+
         /** The new value for the affected node. */
         private final Object newValue;
 
@@ -156,6 +160,7 @@ final class ModelTransaction {
      * Therefore, it is treated in a special way and allows adding further sub operations dynamically.
      */
     private final class ChildrenUpdateOperation extends Operation {
+
         /** A collection with new nodes to be added. */
         private Collection<ImmutableNode> newNodes;
 
@@ -266,6 +271,7 @@ final class ModelTransaction {
      * update operations.
      */
     private abstract static class Operation {
+
         /**
          * Executes this operation on the provided target node returning the result.
          *
@@ -280,6 +286,7 @@ final class ModelTransaction {
      * A helper class which collects multiple update operations to be executed on a single node.
      */
     private final class Operations {
+
         /** An operation for manipulating child nodes. */
         private ChildrenUpdateOperation childrenOperation;
 
@@ -392,6 +399,7 @@ final class ModelTransaction {
      * A specialized operation class for removing an attribute from a target node.
      */
     private static final class RemoveAttributeOperation extends Operation {
+
         /** The attribute name. */
         private final String attributeName;
 

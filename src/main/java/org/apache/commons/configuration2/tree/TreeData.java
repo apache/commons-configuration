@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  * @since 2.0
  */
 final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHandler {
+
     /**
      * Checks whether the passed in node is subject of a replacement by another one. If so, the other node is returned. This
      * is done until a node is found which had not been replaced. Updating the parent mapping may be expensive for large

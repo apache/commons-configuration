@@ -70,6 +70,7 @@ public class TestAbstractConfigurationSynchronization {
 
     /** The synchronizer used for testing. */
     private SynchronizerTestImpl sync;
+
     /** A test configuration. */
     private AbstractConfiguration config;
 

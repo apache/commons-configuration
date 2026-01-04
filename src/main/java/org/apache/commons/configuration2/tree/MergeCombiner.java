@@ -41,6 +41,7 @@ import java.util.Objects;
  * @since 1.7
  */
 public class MergeCombiner extends NodeCombiner {
+
     /**
      * Checks whether the attributes of the passed in node are compatible.
      *

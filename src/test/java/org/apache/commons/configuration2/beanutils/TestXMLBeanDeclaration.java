@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * Test class for XMLBeanDeclaration.
  */
 public class TestXMLBeanDeclaration {
+
     /**
      * A helper class used for testing the createBeanDeclaration() factory method.
      */

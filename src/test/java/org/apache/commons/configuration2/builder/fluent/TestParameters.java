@@ -53,6 +53,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code Parameters}.
  */
 public class TestParameters {
+
     /** A default encoding. */
     private static final String DEF_ENCODING = StandardCharsets.UTF_8.name();
 

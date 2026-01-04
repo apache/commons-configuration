@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code EventType}.
  */
 public class TestEventType {
+
     /** The event type to be tested. */
     private EventType<Event> eventType;
 

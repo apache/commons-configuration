@@ -33,6 +33,7 @@ import javax.sql.DataSource;
  * @since 2.0
  */
 public class DatabaseBuilderParametersImpl extends BasicBuilderParameters implements DatabaseBuilderProperties<DatabaseBuilderParametersImpl> {
+
     /** Constant for the data source property. */
     private static final String PROP_DATA_SOURCE = "dataSource";
 

@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public class PropertiesBuilderParametersImpl extends FileBasedBuilderParametersImpl implements PropertiesBuilderProperties<PropertiesBuilderParametersImpl> {
+
     /** The key for the include listener property. */
     private static final String PROP_INCLUDE_LISTENER = "includeListener";
 

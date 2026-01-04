@@ -30,6 +30,7 @@ package org.apache.commons.configuration2.sync;
  * @since 2.0
  */
 public enum LockMode {
+
     /**
      * Lock mode <em>READ</em>. The object is accessed in a read-only manner. Typically, this means that other read locks
      * can be granted while concurrent writes are not permitted.

@@ -42,6 +42,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * @since 2.2
  */
 public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguration {
+
     /**
      * Adds a key value pair to a map, taking list structures into account. If a key is added which is already present in
      * the map, this method ensures that a list is created.

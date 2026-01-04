@@ -25,6 +25,7 @@ import java.util.Iterator;
  * @since 1.0
  */
 public class StrictConfigurationComparator implements ConfigurationComparator {
+
     /**
      * Create a new strict comparator.
      */

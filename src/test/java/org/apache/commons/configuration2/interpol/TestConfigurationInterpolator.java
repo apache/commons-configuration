@@ -53,6 +53,7 @@ import org.junit.jupiter.api.Test;
  * Test class for ConfigurationInterpolator.
  */
 public class TestConfigurationInterpolator {
+
     /** Constant for a test variable name. */
     private static final String TEST_NAME = "varname";
 

@@ -40,6 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  */
 public abstract class ConfigurationXMLReader implements XMLReader {
+
     /** Constant for the namespace URI. */
     protected static final String NS_URI = "";
 

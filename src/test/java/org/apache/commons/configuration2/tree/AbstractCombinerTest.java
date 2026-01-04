@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  * configurations, which are to be combined. Concrete sub classes only need to create the correct combiner object.
  */
 public abstract class AbstractCombinerTest {
+
     /** Constant for the first test configuration. */
     private static final File CONF1 = ConfigurationAssert.getTestFile("testcombine1.xml");
 

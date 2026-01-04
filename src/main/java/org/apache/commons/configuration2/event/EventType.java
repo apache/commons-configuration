@@ -40,6 +40,7 @@ import java.util.Set;
  * @since 2.0
  */
 public class EventType<T extends Event> implements Serializable {
+
     /** Serial version UID. */
     private static final long serialVersionUID = 20150416L;
 

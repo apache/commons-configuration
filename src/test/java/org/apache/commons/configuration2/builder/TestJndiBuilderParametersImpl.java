@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code JndiBuilderParametersImpl}.
  */
 public class TestJndiBuilderParametersImpl {
+
     /** The parameters object to be tested. */
     private JndiBuilderParametersImpl params;
 

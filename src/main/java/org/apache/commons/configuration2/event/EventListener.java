@@ -31,6 +31,7 @@ package org.apache.commons.configuration2.event;
  * @since 2.0
  */
 public interface EventListener<T extends Event> {
+
     /**
      * Notifies this event listener about the arrival of a new event. Typically, event listeners are registered at an event
      * source providing an {@link EventType}. This event type acts as a filter; all events matched by the filter are passed

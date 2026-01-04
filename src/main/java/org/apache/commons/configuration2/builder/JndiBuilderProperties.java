@@ -34,6 +34,7 @@ import javax.naming.Context;
  * @since 2.0
  */
 public interface JndiBuilderProperties<T> {
+
     /**
      * Sets the JNDI context to be used by the JNDI configuration.
      *

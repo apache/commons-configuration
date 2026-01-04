@@ -53,6 +53,7 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * @since 2.0
  */
 public class ReloadingCombinedConfigurationBuilder extends CombinedConfigurationBuilder implements ReloadingControllerSupport {
+
     /**
      * Checks whether the passed in builder object supports reloading. If yes, its reloading controller is obtained and
      * added to the given list.

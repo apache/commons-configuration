@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code DefaultReloadingDetectorFactory}.
  */
 public class TestDefaultReloadingDetectorFactory {
+
     /** The factory to be tested. */
     private DefaultReloadingDetectorFactory factory;
 

@@ -55,6 +55,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2.0
  */
 public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
+
     /** Constant for the escape character. */
     private static final char ESCAPE = '\\';
 

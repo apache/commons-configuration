@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code DefaultExpressionEngineSymbols}.
  */
 public class TestDefaultExpressionEngineSymbols {
+
     /**
      * Helper method for creating a builder object which is initialized with the default symbols.
      *

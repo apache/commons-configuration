@@ -38,6 +38,7 @@ import java.util.List;
  * @since 2.0
  */
 public class NodeTreeWalker {
+
     /** The default instance of this class. */
     public static final NodeTreeWalker INSTANCE = new NodeTreeWalker();
 

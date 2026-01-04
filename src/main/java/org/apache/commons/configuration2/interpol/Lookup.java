@@ -39,6 +39,7 @@ package org.apache.commons.configuration2.interpol;
  * @since 2.0
  */
 public interface Lookup {
+
     /**
      * Looks up the value of the specified variable. This method is called by {@link ConfigurationInterpolator} with the
      * variable name extracted from the expression to interpolate (i.e. the prefix name has already been removed). A

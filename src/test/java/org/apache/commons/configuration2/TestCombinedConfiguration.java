@@ -62,6 +62,7 @@ import org.junit.jupiter.api.Test;
  * Test class for CombinedConfiguration.
  */
 public class TestCombinedConfiguration {
+
     /**
      * Test event listener class for checking if the expected invalidate events are fired.
      */
@@ -168,6 +169,7 @@ public class TestCombinedConfiguration {
      * between 1 and 2 values.
      */
     private static final class WriteThread extends Thread {
+
         /** The list with the child configurations. */
         private final List<Configuration> testConfigs;
 

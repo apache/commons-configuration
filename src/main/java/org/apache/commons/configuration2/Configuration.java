@@ -52,6 +52,7 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  * </p>
  */
 public interface Configuration extends ImmutableConfiguration, SynchronizerSupport {
+
     /**
      * Add a property to the configuration. If it already exists then the value stated here will be added to the
      * configuration entry. For example, if the property:

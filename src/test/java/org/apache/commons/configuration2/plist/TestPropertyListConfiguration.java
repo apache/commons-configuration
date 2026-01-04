@@ -52,6 +52,7 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  */
 public class TestPropertyListConfiguration {
+
     /**
      * Returns a list with the children of the given configuration's root note with the specified name.
      *

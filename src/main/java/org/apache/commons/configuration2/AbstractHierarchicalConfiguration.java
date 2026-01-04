@@ -536,6 +536,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
 
         return visitor.getKeyList().iterator();
     }
+
     /**
      * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method. If the passed in

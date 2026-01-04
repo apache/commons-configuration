@@ -39,6 +39,7 @@ import org.w3c.dom.Element;
  * </p>
  */
 final class XMLListReference {
+
     /**
      * Assigns an instance of this class as reference to the specified configuration node. This reference acts as a marker
      * indicating that this node is subject to extended list handling.

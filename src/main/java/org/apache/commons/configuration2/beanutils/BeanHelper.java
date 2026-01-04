@@ -70,6 +70,7 @@ public final class BeanHelper {
      * (which is the instance that created this object).
      */
     private static final class BeanCreationContextImpl implements BeanCreationContext {
+
         /** The association BeanHelper instance. */
         private final BeanHelper beanHelper;
 

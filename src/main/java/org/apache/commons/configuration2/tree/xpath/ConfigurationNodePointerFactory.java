@@ -39,12 +39,14 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
  * @since 1.3
  */
 public class ConfigurationNodePointerFactory implements NodePointerFactory {
+
     /**
      * An internally used wrapper class that holds all information for processing a query for a specific node.
      *
      * @param <T> the type of the nodes this class deals with
      */
     static class NodeWrapper<T> {
+
         /** Stores the node. */
         private final T node;
 

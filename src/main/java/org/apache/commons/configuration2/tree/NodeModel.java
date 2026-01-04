@@ -39,6 +39,7 @@ import java.util.Collection;
  * @since 2.0
  */
 public interface NodeModel<T> {
+
     /**
      * Adds a collection of new nodes to this model. This operation corresponds to the {@code addNodes()} method of the
      * {@code HierarchicalConfiguration} interface. The new nodes are either added to an existing node (if the passed in key

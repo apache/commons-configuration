@@ -41,10 +41,12 @@ import org.xml.sax.SAXException;
  * @since 1.7
  */
 public class CatalogResolver implements EntityResolver {
+
     /**
      * Overrides the Catalog implementation to use the underlying FileSystem.
      */
     public static class Catalog extends org.apache.xml.resolver.Catalog {
+
         /** The FileSystem */
         private FileSystem fs;
 
@@ -176,6 +178,7 @@ public class CatalogResolver implements EntityResolver {
      * Extends the CatalogManager to make the FileSystem and base directory accessible.
      */
     public static class CatalogManager extends org.apache.xml.resolver.CatalogManager {
+
         /** The static catalog used by this manager. */
         private static org.apache.xml.resolver.Catalog staticCatalog;
 

@@ -94,10 +94,12 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code CombinedConfigurationBuilder}.
  */
 public class TestCombinedConfigurationBuilder {
+
     /**
      * A test builder provider implementation for testing whether providers can be defined in the definition file.
      */
     public static class BuilderProviderTestImpl implements ConfigurationBuilderProvider {
+
         /** The test property key of the configuration to be created. */
         private String propertyKey;
 
@@ -145,6 +147,7 @@ public class TestCombinedConfigurationBuilder {
      * A specialized entity resolver implementation for testing whether properties of a catalog resolver are correctly set.
      */
     public static class EntityResolverWithPropertiesTestImpl extends CatalogResolver {
+
         /** The base directory. */
         private String baseDirectory;
 
@@ -196,6 +199,7 @@ public class TestCombinedConfigurationBuilder {
      * A thread class for testing concurrent read access to a newly created configuration.
      */
     private static final class ReadThread extends Thread {
+
         /** The configuration to access. */
         private final CombinedConfiguration config;
 

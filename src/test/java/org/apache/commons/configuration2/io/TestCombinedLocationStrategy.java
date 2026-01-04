@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code CombinedLocationStrategy}.
  */
 public class TestCombinedLocationStrategy {
+
     /** A test locator. */
     private static FileLocator locator;
 

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code Event}.
  */
 public class TestEvent {
+
     /**
      * Tries to create an instance without a source.
      */

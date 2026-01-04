@@ -46,6 +46,7 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
  * @see HierarchicalConfiguration
  */
 abstract class HierarchicalConfigurationConverter {
+
     /**
      * Fires all necessary element end events for the specified keys. This method is called for each key obtained from the
      * configuration to be converted. It calculates the common part of the actual and the last processed key and thus

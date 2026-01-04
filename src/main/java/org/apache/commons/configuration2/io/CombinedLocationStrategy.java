@@ -43,6 +43,7 @@ import java.util.Collections;
  * @since 2.0
  */
 public class CombinedLocationStrategy implements FileLocationStrategy {
+
     /** A collection with all sub strategies managed by this object. */
     private final Collection<FileLocationStrategy> subStrategies;
 

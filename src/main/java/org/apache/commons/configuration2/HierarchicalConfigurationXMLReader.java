@@ -41,10 +41,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * @param <T> the type of the nodes supported by this reader
  */
 public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReader {
+
     /**
      * A specialized visitor class for generating SAX events for a hierarchical node structure.
      */
     private final class SAXVisitor extends ConfigurationNodeVisitorAdapter<T> {
+
         /** Constant for the attribute type. */
         private static final String ATTR_TYPE = "CDATA";
 

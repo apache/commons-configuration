@@ -46,6 +46,7 @@ import java.util.List;
  * @since 1.3
  */
 public class NodeAddData<T> {
+
     /**
      * Creates the list with path nodes. Handles null input.
      *

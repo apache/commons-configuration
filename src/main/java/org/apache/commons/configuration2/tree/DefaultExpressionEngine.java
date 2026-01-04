@@ -100,6 +100,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class DefaultExpressionEngine implements ExpressionEngine {
+
     /**
      * A default instance of this class that is used as expression engine for hierarchical configurations per default.
      */

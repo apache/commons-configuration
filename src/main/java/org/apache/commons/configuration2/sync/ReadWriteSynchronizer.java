@@ -36,6 +36,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @since 2.0
  */
 public class ReadWriteSynchronizer implements Synchronizer {
+
     /**
      * Returns a new default lock object which is used if no lock is passed to the constructor.
      *

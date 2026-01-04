@@ -32,6 +32,7 @@ package org.apache.commons.configuration2.interpol;
  * @since 2.0
  */
 public enum DummyLookup implements Lookup {
+
     /** The single instance of this class. */
     INSTANCE;
 

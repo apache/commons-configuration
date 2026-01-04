@@ -38,6 +38,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @since 2.0
  */
 public final class QueryResult<T> {
+
     /**
      * Creates a {@code QueryResult} instance representing an attribute result. An attribute result consists of the node the
      * attribute belongs to and the attribute name. (The value can be obtained based on this information.)

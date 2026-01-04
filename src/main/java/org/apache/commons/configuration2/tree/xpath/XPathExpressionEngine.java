@@ -119,6 +119,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class XPathExpressionEngine implements ExpressionEngine {
+
     /** Constant for the path delimiter. */
     static final String PATH_DELIMITER = "/";
 

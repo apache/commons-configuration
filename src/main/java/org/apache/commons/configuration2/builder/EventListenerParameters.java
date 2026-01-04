@@ -53,6 +53,7 @@ import org.apache.commons.configuration2.event.EventType;
  * @since 2.0
  */
 public class EventListenerParameters implements BuilderParameters, EventListenerProvider {
+
     /** Stores the event listener registrations added to this object. */
     private final EventListenerList eventListeners;
 

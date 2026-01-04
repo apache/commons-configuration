@@ -37,6 +37,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * @since 2.0
  */
 public class CombinedConfigurationBuilderProvider extends BaseConfigurationBuilderProvider {
+
     /** Constant for the name of the supported builder class. */
     private static final String BUILDER_CLASS = "org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder";
 

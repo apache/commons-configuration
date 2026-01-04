@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for MergeCombiner.
  */
 public class TestMergeCombiner extends AbstractCombinerTest {
+
     /**
      * Helper method for checking the combined table structure.
      *

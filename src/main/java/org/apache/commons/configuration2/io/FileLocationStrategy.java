@@ -40,6 +40,7 @@ import java.net.URL;
  * @since 2.0
  */
 public interface FileLocationStrategy {
+
     /**
      * Tries to locate the specified file. The method also expects the {@code FileSystem} to be used. Note that the
      * {@code FileLocator} object may also contain a {@code FileSystem}, but this is optional. The passed in

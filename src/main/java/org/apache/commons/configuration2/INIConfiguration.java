@@ -250,6 +250,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * filter on the children of the root node so that only nodes are visible that are no sub sections.
      */
     private static final class GlobalSectionNodeModel extends TrackedNodeModel {
+
         /**
          * Creates a new instance of {@code GlobalSectionNodeModel} and initializes it with the given underlying model.
          *
@@ -263,6 +264,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         @Override
         public NodeHandler<ImmutableNode> getNodeHandler() {
             return new NodeHandlerDecorator<ImmutableNode>() {
+
                 /**
                  * Filters the child nodes of the global section. This method checks whether the passed in node is the root node of the
                  * configuration. If so, from the list of children all nodes are filtered which are section nodes.

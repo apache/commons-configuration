@@ -36,10 +36,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @since 2.0
  */
 public final class DefaultExpressionEngineSymbols {
+
     /**
      * A builder class for creating instances of {@code DefaultExpressionEngineSymbols}.
      */
     public static class Builder {
+
         /** Stores the property delimiter. */
         private String propertyDelimiter;
 

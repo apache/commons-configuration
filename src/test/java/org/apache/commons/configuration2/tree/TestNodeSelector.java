@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code NodeSelector}.
  */
 public class TestNodeSelector {
+
     /** Constant for a test key. */
     private static final String KEY = "tables.testKey";
 

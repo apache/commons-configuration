@@ -45,6 +45,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Test case for the VFSFileHandlerReloadingDetector class.
  */
 public class TestVFSFileHandlerReloadingDetector {
+
     /** Constant for the name of the test property. */
     private static final String PROPERTY = "string";
 

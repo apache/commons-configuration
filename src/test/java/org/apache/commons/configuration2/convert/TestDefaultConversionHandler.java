@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code DefaultConversionHandler}.
  */
 public class TestDefaultConversionHandler {
+
     /** Constant for a variable. */
     private static final String VAR = "${test}";
 

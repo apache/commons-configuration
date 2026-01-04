@@ -34,6 +34,7 @@ package org.apache.commons.configuration2.tree;
  * @since 1.3
  */
 public interface ConfigurationNodeVisitor<T> {
+
     /**
      * Returns a flag whether the current visit process should be aborted. This method allows a visitor implementation to
      * state that it does not need any further data. It may be used for example by visitors that search for a certain node in the

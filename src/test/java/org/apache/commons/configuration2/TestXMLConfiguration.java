@@ -68,6 +68,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * test for loading and saving XML properties files
  */
 public class TestXMLConfiguration {
+
     /**
      * A thread used for testing concurrent access to a builder.
      */
@@ -109,6 +110,7 @@ public class TestXMLConfiguration {
 
     /** Constant for the number of test threads. */
     private static final int THREAD_COUNT = 5;
+
     /** Constant for the number of loops in tests with multiple threads. */
     private static final int LOOP_COUNT = 100;
 

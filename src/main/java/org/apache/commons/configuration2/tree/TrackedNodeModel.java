@@ -53,6 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 2.0
  */
 public class TrackedNodeModel implements NodeModel<ImmutableNode> {
+
     /** Stores the underlying parent model. */
     private final InMemoryNodeModelSupport parentModelSupport;
 

@@ -72,6 +72,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
      * @since 1.2
      */
     private final class XMLPropertiesHandler extends DefaultHandler {
+
         /** The key of the current entry being parsed. */
         private String key;
 
@@ -86,6 +87,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
 
         @Override
         public void characters(final char[] chars, final int start, final int length) {
+
             /**
              * We're currently processing an element. All character data from now until the next endElement() call will be the data
              * for this element.

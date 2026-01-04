@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  */
 public class TestPatternSubtreeConfigurationWrapper {
+
     /**
      * Tests a read operation if the wrapped configuration does not implement FileBased.
      */

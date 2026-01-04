@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * A test event listener implementation for error events.
  */
 public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationErrorEvent> {
+
     /**
      * Creates a new instance of {@code ErrorListenerTestImpl} and sets the expected event source.
      *

@@ -45,6 +45,7 @@ import java.util.Objects;
  * @since 2.0
  */
 public final class FileLocator {
+
     /**
      * A typical <em>builder</em> implementation for creating {@code FileLocator} objects. An instance of this class is
      * returned by the {@code fileLocator()} method of {link FileLocatorUtils}. It can be used to define the various
@@ -52,6 +53,7 @@ public final class FileLocator {
      * instance is created.
      */
     public static final class FileLocatorBuilder {
+
         /** The base path. */
         private String basePath;
 

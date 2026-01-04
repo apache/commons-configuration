@@ -33,6 +33,7 @@ import java.util.Map;
  * @since 2.2
  */
 public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl implements INIBuilderProperties<INIBuilderParametersImpl> {
+
     /** The key for the separatorUsedInINIOutput property. */
     private static final String PROP_SEPARATOR_USED_IN_INI_OUTPUT = "separatorUsedInOutput";
 

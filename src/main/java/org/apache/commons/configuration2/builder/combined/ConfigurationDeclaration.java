@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
  * @since 2.0
  */
 public class ConfigurationDeclaration extends XMLBeanDeclaration {
+
     /** Stores a reference to the associated configuration builder. */
     private final CombinedConfigurationBuilder configurationBuilder;
 

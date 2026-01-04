@@ -49,6 +49,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  * @see ReloadingController
  */
 public class PeriodicReloadingTrigger {
+
     /**
      * Creates a default executor service. This method is called if no executor has been passed to the constructor.
      *

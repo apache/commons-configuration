@@ -58,6 +58,7 @@ import org.xml.sax.SAXParseException;
  * Test class for {@code MultiFileConfigurationBuilder}.
  */
 public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest {
+
     /**
      * Creates a test builder instance which allows access to the managed builders created by it. The returned builder
      * instance overrides the method for creating managed builders. It stores newly created builders in the passed in

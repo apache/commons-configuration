@@ -45,6 +45,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * @since 2.0
  */
 public class ConfigurationLogger {
+
     /**
      * Creates an internal logger for the given class. Throws an exception if the class is undefined.
      *

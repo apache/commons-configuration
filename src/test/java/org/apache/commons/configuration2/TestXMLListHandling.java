@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * Test class to test the handling of list structures in XMLConfiguration.
  */
 public class TestXMLListHandling {
+
     /** XML to be loaded by the configuration. */
     private static final String SOURCE = "<config><values>a,b,c</values><split><value>1</value><value>2</value></split>"
             + "<mixed><values>foo,blah</values><values>bar,baz</values></mixed></config>";

@@ -58,6 +58,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public class BaseConfigurationBuilderProvider implements ConfigurationBuilderProvider {
+
     /** The types of the constructor parameters for a basic builder. */
     private static final Class<?>[] CTOR_PARAM_TYPES = {Class.class, Map.class, Boolean.TYPE};
 

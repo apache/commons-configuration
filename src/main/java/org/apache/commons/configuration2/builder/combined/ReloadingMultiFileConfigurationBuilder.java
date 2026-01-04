@@ -57,6 +57,7 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  */
 public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends MultiFileConfigurationBuilder<T>
     implements ReloadingControllerSupport {
+
     /** The reloading controller used by this builder. */
     private final ReloadingController reloadingController = createReloadingController();
 

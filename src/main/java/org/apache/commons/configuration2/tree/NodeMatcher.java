@@ -37,6 +37,7 @@ package org.apache.commons.configuration2.tree;
  * @since 2.0
  */
 public interface NodeMatcher<C> {
+
     /**
      * Tests whether the passed in node matches the given criterion.
      *

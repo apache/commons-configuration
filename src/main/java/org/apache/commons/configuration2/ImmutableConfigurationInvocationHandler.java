@@ -42,11 +42,13 @@ import java.util.Objects;
  * @since 2.0
  */
 final class ImmutableConfigurationInvocationHandler implements InvocationHandler {
+
     /**
      * A specialized {@code Iterator} implementation which delegates to an underlying iterator, but does not support the
      * {@code remove()} method.
      */
     private static final class ImmutableIterator implements Iterator<Object> {
+
         /** The underlying iterator. */
         private final Iterator<?> wrappedIterator;
 

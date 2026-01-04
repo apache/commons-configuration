@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
  * Test class for PropertyConverter.
  */
 public class TestPropertyConverter {
+
     /** Constant for an enumeration class used by some tests. */
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
 

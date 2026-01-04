@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ImmutableNode}
  */
 public class TestImmutableNode {
+
     /** Constant for a test node name. */
     private static final String NAME = "testNode";
 

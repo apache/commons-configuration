@@ -109,6 +109,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * when calling a conversion method.
      */
     private final class DataConversionHandler extends DefaultConversionHandler {
+
         /**
          * {@inheritDoc} This implementation checks for a defined data format in the following order:
          * <ul>

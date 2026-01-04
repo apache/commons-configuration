@@ -36,6 +36,7 @@ import org.xml.sax.EntityResolver;
  * @since 2.0
  */
 public interface XMLBuilderProperties<T> {
+
     /**
      * Allows setting the {@code DocumentBuilder} for parsing an XML document. This is the most flexible way of customizing
      * XML processing.

@@ -102,6 +102,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 2.0
  */
 public class FileHandler {
+
     /**
      * An internal class that performs all update operations of the handler's {@code FileLocator} in a safe way even if
      * there is concurrent access. This class implements anon-blocking algorithm for replacing the immutable
@@ -109,6 +110,7 @@ public class FileHandler {
      * this could be done without a class in a more elegant way.)
      */
     private abstract class AbstractUpdater {
+
         /**
          * Performs an update of the enclosing file handler's {@code FileLocator} object.
          */

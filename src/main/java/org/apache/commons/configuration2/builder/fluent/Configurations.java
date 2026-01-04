@@ -71,6 +71,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  */
 //@formatter:off
 public class Configurations {
+
     /** The parameters object associated with this instance. */
     private final Parameters parameters;
 

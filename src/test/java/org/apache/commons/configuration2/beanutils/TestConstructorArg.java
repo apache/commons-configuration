@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ConstructorArg}.
  */
 public class TestConstructorArg {
+
     /**
      * Tries to create an instance for a null bean declaration.
      */

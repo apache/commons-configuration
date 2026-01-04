@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ConfigurationDeclaration}.
  */
 public class TestConfigurationDeclaration {
+
     /**
      * Creates a default test instance.
      *

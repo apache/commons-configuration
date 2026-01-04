@@ -46,11 +46,13 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ReloadingMultiFileConfigurationBuilder}.
  */
 public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest {
+
     /**
      * A test implementation of the class under test which allows access to reloading controllers of managed configuration
      * builders.
      */
     private static final class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
+
         /**
          * A list with mocks for reloading controllers created by this instance.
          */

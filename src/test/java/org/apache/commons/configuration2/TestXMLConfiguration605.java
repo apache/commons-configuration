@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
  * following one whose value contains a comma
  */
 public class TestXMLConfiguration605 {
+
     /**
      * Checks whether the specified configuration contains all expected keys.
      *

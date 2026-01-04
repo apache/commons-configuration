@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ConfigurationAttributePointer}.
  */
 public class TestConfigurationAttributePointer {
+
     /** Constant for the name of the test attribute. */
     private static final String ATTR_NAME = "myAttr";
 

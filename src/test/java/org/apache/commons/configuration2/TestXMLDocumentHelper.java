@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
  * Test class for {@code XMLDocumentHelper}.
  */
 public class TestXMLDocumentHelper {
+
     /** Constant for the name of an element. */
     private static final String ELEMENT = "testElementName";
 

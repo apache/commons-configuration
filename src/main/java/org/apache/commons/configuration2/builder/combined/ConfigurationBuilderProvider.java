@@ -34,6 +34,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public interface ConfigurationBuilderProvider {
+
     /**
      * Gets the builder for the configuration source managed by this provider. This method is called during processing of
      * the combined configuration definition file.

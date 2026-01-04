@@ -53,6 +53,7 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  */
 public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends FileBasedConfigurationBuilder<T>
     implements ReloadingControllerSupport {
+
     /** The default factory for creating reloading detector objects. */
     private static final ReloadingDetectorFactory DEFAULT_DETECTOR_FACTORY = new DefaultReloadingDetectorFactory();
 

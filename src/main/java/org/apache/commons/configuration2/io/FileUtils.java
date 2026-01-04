@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
  * See CONFIGURATION-521 for a discussion.
  */
 final class FileUtils {
+
     /**
      * The UTF-8 character set, used to decode octets in URLs.
      */

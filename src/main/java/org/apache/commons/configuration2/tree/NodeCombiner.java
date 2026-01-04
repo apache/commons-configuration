@@ -42,6 +42,7 @@ import java.util.Set;
  * @since 1.3
  */
 public abstract class NodeCombiner {
+
     /**
      * A default handler object for immutable nodes. This object can be used by derived classes for dealing with nodes.
      * However, it provides only limited functionality; it supports only operations on child nodes, but no references to

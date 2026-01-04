@@ -48,6 +48,7 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
  * @since 2.0
  */
 public interface ConversionHandler {
+
     /**
      * Converts a single object to the specified target type. A concrete implementation has to attempt a conversion. If this
      * is not possible, a {@link ConversionException} is thrown. It is up to a concrete implementation how <strong>null</strong>

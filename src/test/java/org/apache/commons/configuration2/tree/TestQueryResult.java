@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code QueryResult}.
  */
 public class TestQueryResult {
+
     /** Constant for an attribute name. */
     private static final String ATTR = "testAttribute";
 

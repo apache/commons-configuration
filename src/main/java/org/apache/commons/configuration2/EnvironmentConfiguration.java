@@ -44,6 +44,7 @@ import java.util.HashMap;
  * @since 1.5
  */
 public class EnvironmentConfiguration extends MapConfiguration {
+
     /**
      * Create a Configuration based on the environment variables.
      *

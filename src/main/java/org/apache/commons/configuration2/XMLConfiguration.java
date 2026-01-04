@@ -169,10 +169,12 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 1.0
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware, InputStreamSupport {
+
     /**
      * A concrete {@code BuilderVisitor} that can construct XML documents.
      */
     static class XMLBuilderVisitor extends BuilderVisitor {
+
         /**
          * Removes all attributes of the given element.
          *

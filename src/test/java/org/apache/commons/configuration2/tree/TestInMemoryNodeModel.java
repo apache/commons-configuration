@@ -53,6 +53,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code InMemoryNodeModel}.
  */
 public class TestInMemoryNodeModel {
+
     /** Constant for a test key. */
     private static final String KEY = "aTestKey";
 

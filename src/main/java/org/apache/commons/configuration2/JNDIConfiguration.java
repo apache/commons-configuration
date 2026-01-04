@@ -42,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
  * data source is not changed.
  */
 public class JNDIConfiguration extends AbstractConfiguration {
+
     /** The prefix of the context. */
     private String prefix;
 

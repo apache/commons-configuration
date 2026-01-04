@@ -84,12 +84,14 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.2
  */
 public class PropertyListConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
+
     /**
      * A helper class for parsing and formatting date literals. Usually we would use {@code SimpleDateFormat} for this
      * purpose, but in Java 1.3 the functionality of this class is limited. So we have a hierarchy of parser classes instead
      * that deal with the different components of a date literal.
      */
     private abstract static class DateComponentParser {
+
         /**
          * Checks whether the given string has at least {@code length} characters starting from the given parsing position. If
          * this is not the case, an exception will be thrown.
@@ -143,6 +145,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * extract fields from a string literal and to format a literal from a calendar.
      */
     private static final class DateFieldParser extends DateComponentParser {
+
         /** Stores the calendar field to be processed. */
         private final int calendarField;
 
@@ -196,6 +199,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * A specialized date component parser implementation that deals with separator characters.
      */
     private static final class DateSeparatorParser extends DateComponentParser {
+
         /** Stores the separator. */
         private final String separator;
 

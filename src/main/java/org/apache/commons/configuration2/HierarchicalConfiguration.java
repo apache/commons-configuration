@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.tree.NodeModelSupport;
  * @since 2.0
  */
 public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHierarchicalConfiguration, NodeModelSupport<T> {
+
     /**
      * Adds a collection of nodes at the specified position of the configuration tree. This method works similar to
      * {@code addProperty()}, but instead of a single property a whole collection of nodes can be added - and thus complete

@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * @since 2.0
  */
 public class CopyObjectDefaultHandler implements DefaultParametersHandler<Object> {
+
     /** The source object with the properties to be initialized. */
     private final BuilderParameters source;
 

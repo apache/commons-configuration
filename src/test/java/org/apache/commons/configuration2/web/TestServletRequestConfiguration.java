@@ -42,6 +42,7 @@ import org.mockito.ArgumentMatchers;
  * Test case for the {@link ServletRequestConfiguration} class.
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration {
+
     /**
      * Returns a new servlet request configuration that is backed by the passed in configuration.
      *

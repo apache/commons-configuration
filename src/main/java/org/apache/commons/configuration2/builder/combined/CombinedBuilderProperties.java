@@ -39,6 +39,7 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * @since 2.0
  */
 public interface CombinedBuilderProperties<T> {
+
     /**
      * Registers a {@code DefaultParametersHandler} for child configuration sources. With this method an arbitrary number of
      * handler objects can be set. When creating builders for child configuration sources their parameters are initialized

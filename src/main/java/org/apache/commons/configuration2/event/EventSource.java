@@ -29,6 +29,7 @@ package org.apache.commons.configuration2.event;
  * @since 2.0
  */
 public interface EventSource {
+
     /**
      * Adds an event listener for the specified event type. This listener is notified about events of this type and all its
      * sub types.

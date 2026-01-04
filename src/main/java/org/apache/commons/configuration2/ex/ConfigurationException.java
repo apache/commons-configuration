@@ -21,6 +21,7 @@ package org.apache.commons.configuration2.ex;
  * Any exception that occurs while initializing a Configuration object.
  */
 public class ConfigurationException extends Exception {
+
     /**
      * The serial version ID.
      */

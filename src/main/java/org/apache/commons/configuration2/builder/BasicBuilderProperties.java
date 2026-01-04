@@ -46,6 +46,7 @@ import org.apache.commons.configuration2.sync.Synchronizer;
  * @since 2.0
  */
 public interface BasicBuilderProperties<T> {
+
     /**
      * Sets a {@code BeanHelper} object to be used by the configuration builder. The {@code BeanHelper} is used to create
      * the managed configuration instance dynamically. It is not a property of the configuration as most other properties

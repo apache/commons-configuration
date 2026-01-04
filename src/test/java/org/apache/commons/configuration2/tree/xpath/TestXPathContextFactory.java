@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code XPathContextFactory}.
  */
 public class TestXPathContextFactory {
+
     /** The factory to be tested. */
     private XPathContextFactory factory;
 

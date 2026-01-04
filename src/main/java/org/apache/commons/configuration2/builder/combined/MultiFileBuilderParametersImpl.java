@@ -47,6 +47,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * @since 2.0
  */
 public class MultiFileBuilderParametersImpl extends BasicBuilderParameters implements MultiFileBuilderProperties<MultiFileBuilderParametersImpl> {
+
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX + MultiFileBuilderParametersImpl.class.getName();
 

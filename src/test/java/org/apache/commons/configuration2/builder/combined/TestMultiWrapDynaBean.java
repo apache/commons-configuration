@@ -39,10 +39,12 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code MultiWrapDynaBean} and {@code MultiWrapDynaClass}.
  */
 public class TestMultiWrapDynaBean {
+
     /**
      * A simple test bean class used as wrapped bean.
      */
     public static class WrappedBeanTestImpl {
+
         /** Stores mapped properties. */
         private final Map<String, String> mapProperties = new HashMap<>();
 

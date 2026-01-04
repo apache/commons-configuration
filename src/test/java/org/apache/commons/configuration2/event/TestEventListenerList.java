@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code EventListenerList.}
  */
 public class TestEventListenerList {
+
     /**
      * Test event class. For testing purposes, a small hierarchy of test event class is created. This way it can be checked
      * whether event types are correctly evaluated and take the event hierarchy into account.
@@ -85,6 +86,7 @@ public class TestEventListenerList {
      * is stored for further evaluation.
      */
     private static final class ListenerTestImpl implements EventListener<EventBase> {
+
         /** The event received by this object. */
         private EventBase receivedEvent;
 

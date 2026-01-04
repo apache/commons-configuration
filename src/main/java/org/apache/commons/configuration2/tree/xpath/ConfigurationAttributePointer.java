@@ -33,6 +33,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * @since 2.0
  */
 final class ConfigurationAttributePointer<T> extends NodePointer {
+
     /**
      * The serial version UID.
      */

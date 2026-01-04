@@ -116,6 +116,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 public class DatabaseConfiguration extends AbstractConfiguration {
+
     /**
      * An internally used helper class for simplifying database access through plain JDBC. This class provides a simple
      * framework for creating and executing a JDBC statement. It especially takes care of proper handling of JDBC resources
@@ -124,6 +125,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * @param <T> the type of the results produced by a JDBC operation
      */
     private abstract class AbstractJdbcOperation<T> {
+
         /** Stores the connection. */
         private Connection connection;
 

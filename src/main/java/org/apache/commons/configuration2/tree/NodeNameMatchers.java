@@ -31,6 +31,7 @@ import org.apache.commons.lang3.Strings;
  * @since 2.0
  */
 public enum NodeNameMatchers implements NodeMatcher<String> {
+
     /**
      * A matcher for exact node name matches. This matcher returns <strong>true</strong> if and only if the name of the passed in node
      * equals exactly the given criterion string.

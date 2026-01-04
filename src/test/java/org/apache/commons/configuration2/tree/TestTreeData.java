@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.tree;
  * Test class for {@code TreeData}
  */
 public class TestTreeData extends AbstractImmutableNodeHandlerTest {
+
     /**
      * {@inheritDoc} This implementation creates a TreeData object initialized with the given root node.
      */

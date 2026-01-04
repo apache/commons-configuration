@@ -31,6 +31,7 @@ import org.apache.commons.lang3.Strings;
  * @param <T> the type of the nodes this iterator deals with
  */
 final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationNodeIterator<T> {
+
     /** Constant for the wildcard node name. */
     private static final String WILDCARD = "*";
 

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
  * related to the special handling of byte arrays.
  */
 public abstract class AbstractTestPListEvents extends AbstractTestConfigurationEvents {
+
     /** Constant for the name of the byte array property. */
     private static final String TEST_PROPBYTE = "byteData";
 

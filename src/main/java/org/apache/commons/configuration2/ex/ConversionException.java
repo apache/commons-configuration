@@ -23,6 +23,7 @@ package org.apache.commons.configuration2.ex;
  * @since 1.0
  */
 public class ConversionException extends ConfigurationRuntimeException {
+
     /**
      * The serial version UID.
      */

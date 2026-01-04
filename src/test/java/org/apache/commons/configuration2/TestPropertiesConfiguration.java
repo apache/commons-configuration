@@ -91,10 +91,12 @@ import org.junit.jupiter.params.provider.ValueSource;
  * Test for loading and saving properties files.
  */
 public class TestPropertiesConfiguration {
+
     /**
      * A dummy layout implementation for checking whether certain methods are correctly called by the configuration.
      */
     static class DummyLayout extends PropertiesConfigurationLayout {
+
         /** Stores the number how often load() was called. */
         private int loadCalls;
 
@@ -108,6 +110,7 @@ public class TestPropertiesConfiguration {
      * A mock implementation of a HttpURLConnection used for testing saving to a HTTP server.
      */
     static class MockHttpURLConnection extends HttpURLConnection {
+
         /** The response code to return. */
         private final int returnCode;
 
@@ -148,6 +151,7 @@ public class TestPropertiesConfiguration {
      * A mock stream handler for working with the mock HttpURLConnection.
      */
     static class MockHttpURLStreamHandler extends URLStreamHandler {
+
         /** Stores the response code. */
         private final int responseCode;
 
@@ -178,6 +182,7 @@ public class TestPropertiesConfiguration {
      * configurable number of synthetic test properties.
      */
     private static final class PropertiesReaderTestImpl extends PropertiesConfiguration.PropertiesReader {
+
         /** The number of test properties to be created. */
         private final int maxProperties;
 

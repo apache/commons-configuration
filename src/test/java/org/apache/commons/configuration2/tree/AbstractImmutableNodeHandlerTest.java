@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
  * a method which creates a new handler object for a given nodes structure.
  */
 public abstract class AbstractImmutableNodeHandlerTest {
+
     /**
      * A dummy NodeMatcher implementation that will simply accept all passed in nodes.
      */

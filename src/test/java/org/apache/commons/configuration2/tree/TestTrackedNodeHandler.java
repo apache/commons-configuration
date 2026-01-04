@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code TrackedNodeHandler}.
  */
 public class TestTrackedNodeHandler {
+
     /** A test root node. */
     private static ImmutableNode root;
 

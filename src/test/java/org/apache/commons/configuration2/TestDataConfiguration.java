@@ -57,6 +57,7 @@ import org.junit.jupiter.api.Test;
 /**
  */
 public class TestDataConfiguration {
+
     /** Constant for the date pattern used by tests. */
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 

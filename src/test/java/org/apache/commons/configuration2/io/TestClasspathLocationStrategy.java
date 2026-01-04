@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ClasspathLocationStrategy}.
  */
 public class TestClasspathLocationStrategy {
+
     /** Constant for a test file name. */
     private static final String FILE_NAME = "test.xml";
 

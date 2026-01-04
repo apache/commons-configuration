@@ -29,10 +29,12 @@ package org.apache.commons.configuration2;
  * </p>
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
+
     /**
      * An internally used helper class to iterate over all configuration keys ant to generate corresponding SAX events.
      */
     final class SAXConverter extends HierarchicalConfigurationConverter {
+
         /**
          * Callback for the end of an element.
          *

@@ -44,6 +44,7 @@ import org.apache.commons.configuration2.io.URLConnectionOptions;
  * @since 2.0
  */
 public class FileBasedBuilderParametersImpl extends BasicBuilderParameters implements FileBasedBuilderProperties<FileBasedBuilderParametersImpl> {
+
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX + "fileBased";
 

@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.interpol.Lookup;
  * @since 2.0
  */
 public class ConfigurationLookup implements Lookup {
+
     /** The configuration to which lookups are delegated. */
     private final ImmutableConfiguration configuration;
 

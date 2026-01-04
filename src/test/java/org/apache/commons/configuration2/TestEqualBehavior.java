@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
  * Compare the behavior of various methods between CompositeConfiguration and normal (Properties) Configuration
  */
 public class TestEqualBehavior {
+
     /**
      * Checks whether two configurations have the same size, the same key sequence and contain the same key -> value
      * mappings

@@ -23,6 +23,7 @@ package org.apache.commons.configuration2;
  * @since 1.0
  */
 public interface ConfigurationComparator {
+
     /**
      * Compare two configuration objects.
      *

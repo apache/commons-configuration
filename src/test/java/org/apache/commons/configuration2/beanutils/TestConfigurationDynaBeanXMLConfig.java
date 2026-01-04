@@ -25,6 +25,7 @@ import org.apache.commons.configuration2.XMLConfiguration;
  * class, but uses a XMLConfiguration as underlying configuration object.
  */
 public class TestConfigurationDynaBeanXMLConfig extends TestConfigurationDynaBean {
+
     /**
      * Creates the underlying configuration object. This implementation will create a XMLConfiguration.
      *

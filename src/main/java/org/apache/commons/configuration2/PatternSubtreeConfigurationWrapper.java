@@ -44,6 +44,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * @since 1.6
  */
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration implements FileBasedConfiguration {
+
     /** The wrapped configuration */
     private final HierarchicalConfiguration<ImmutableNode> config;
 

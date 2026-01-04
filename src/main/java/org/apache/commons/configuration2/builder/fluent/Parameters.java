@@ -74,6 +74,7 @@ import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParame
  */
 //@formatter:off
 public final class Parameters {
+
     /**
      * A specialized {@code InvocationHandler} implementation which maps the methods of a parameters interface to an
      * implementation of the corresponding property interfaces. The parameters interface is a union of multiple property
@@ -82,6 +83,7 @@ public final class Parameters {
      * because here no fluent return value is used.
      */
     private static final class ParametersIfcInvocationHandler implements InvocationHandler {
+
         /**
          * Checks whether the specified method belongs to an interface which requires fluent result values.
          *

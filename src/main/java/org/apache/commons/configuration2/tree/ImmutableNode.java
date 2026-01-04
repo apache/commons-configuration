@@ -44,6 +44,7 @@ import java.util.stream.StreamSupport;
  * @since 2.0
  */
 public final class ImmutableNode implements Iterable<ImmutableNode> {
+
     /**
      * <p>
      * A <em>builder</em> class for creating instances of {@code ImmutableNode}.
@@ -57,6 +58,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * </p>
      */
     public static final class Builder {
+
         /**
          * Filters null entries from the passed in collection with child nodes.
          *

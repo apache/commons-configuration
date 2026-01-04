@@ -29,11 +29,13 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code NodeTreeWalker}.
  */
 public class TestNodeTreeWalker {
+
     /**
      * A visitor implementation used for testing purposes. The visitor produces a list with the names of the nodes visited
      * in the order it was called. With this it can be tested whether the nodes were visited in the correct order.
      */
     private static final class TestVisitor implements ConfigurationNodeVisitor<ImmutableNode> {
+
         /** A list with the names of the visited nodes. */
         private final List<String> visitedNodes = new LinkedList<>();
 

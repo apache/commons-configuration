@@ -38,6 +38,7 @@ import java.util.List;
  * @since 2.0
  */
 public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler {
+
     /**
      * A default instance of this class. Because it is safe to share {@code DisabledListDelimiterHandler} objects this
      * instance can be used whenever such an object is needed.

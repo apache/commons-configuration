@@ -37,6 +37,7 @@ package org.apache.commons.configuration2.convert;
  * @since 2.0
  */
 public interface ValueTransformer {
+
     /**
      * Performs an arbitrary encoding of the passed in value object. This method is called by a {@link ListDelimiterHandler}
      * implementation before or after list delimiters have been escaped.

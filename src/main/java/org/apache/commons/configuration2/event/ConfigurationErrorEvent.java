@@ -42,6 +42,7 @@ package org.apache.commons.configuration2.event;
  * @see ConfigurationEvent
  */
 public class ConfigurationErrorEvent extends Event {
+
     /**
      * Constant for the common event type for all error events. Specific types for error events use this type as super type.
      *

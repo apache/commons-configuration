@@ -50,6 +50,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code FileLocatorUtils}.
  */
 public class TestFileLocatorUtils {
+
     /** Constant for a file name. */
     private static final String FILE_NAME = "test.xml";
 

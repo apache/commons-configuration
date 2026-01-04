@@ -75,6 +75,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration implements Cloneable {
+
     /**
      * Helper method for converting the type of the {@code Properties} object to a supported map type. As stated by the
      * comment of the constructor, we expect the {@code Properties} object to contain only String key; therefore, it is safe

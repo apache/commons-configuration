@@ -55,6 +55,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Test class for {@code ReloadingCombinedConfigurationBuilder} which actually accesses files to be reloaded.
  */
 public class TestReloadingCombinedConfigurationBuilderFileBased {
+
     /**
      * A test builder class which always returns the same configuration.
      */
@@ -76,6 +77,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * A thread class for testing concurrent reload operations.
      */
     private static final class ReloadThread extends Thread {
+
         /** The builder to be queried. */
         private final ReloadingCombinedConfigurationBuilder builder;
 

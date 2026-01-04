@@ -42,6 +42,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @since 2.0
  */
 public class NodeSelector {
+
     /** Stores the wrapped keys. */
     private final List<String> nodeKeys;
 

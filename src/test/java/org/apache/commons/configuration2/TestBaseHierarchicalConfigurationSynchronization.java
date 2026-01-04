@@ -47,10 +47,12 @@ import org.junit.jupiter.api.Test;
  * the methods specific for hierarchical configurations.
  */
 public class TestBaseHierarchicalConfigurationSynchronization {
+
     /**
      * A thread class for testing concurrent access to SubNode configurations.
      */
     private static final class SubNodeAccessThread extends Thread {
+
         /** The test configuration. */
         private final HierarchicalConfiguration<ImmutableNode> config;
 

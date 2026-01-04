@@ -58,10 +58,12 @@ import org.apache.commons.configuration2.tree.NodeCombiner;
  * @since 1.6
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration {
+
     /**
      * Internal class that identifies each Configuration.
      */
     static class ConfigData {
+
         /** Stores a reference to the configuration. */
         private final Configuration configuration;
 
@@ -117,6 +119,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * A simple data class holding information about the current configuration while an operation for a thread is processed.
      */
     private static final class CurrentConfigHolder {
+
         /** Stores the current configuration of the current thread. */
         private CombinedConfiguration currentConfiguration;
 

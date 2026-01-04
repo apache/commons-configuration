@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code CombinedReloadingController}.
  */
 public class TestCombinedReloadingController {
+
     /** An array with mock objects for the sub controllers. */
     private ReloadingController[] subControllers;
 

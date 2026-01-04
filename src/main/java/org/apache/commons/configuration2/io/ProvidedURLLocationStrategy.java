@@ -32,6 +32,7 @@ import java.net.URL;
  * @since 2.0
  */
 public class ProvidedURLLocationStrategy implements FileLocationStrategy {
+
     /**
      * {@inheritDoc} This implementation just returns the URL stored in the given {@code FileLocator}.
      */

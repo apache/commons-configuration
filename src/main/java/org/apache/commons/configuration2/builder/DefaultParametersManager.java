@@ -41,12 +41,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2.0
  */
 public class DefaultParametersManager {
+
     /**
      * A data class storing information about {@code DefaultParametersHandler} objects added to a {@code Parameters} object.
      * Using this class it is possible to find out which default handlers apply for a given parameters object and to invoke
      * them.
      */
     private static final class DefaultHandlerData {
+
         /** The handler object. */
         private final DefaultParametersHandler<?> handler;
 

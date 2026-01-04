@@ -21,6 +21,7 @@ package org.apache.commons.configuration2.tree;
  * that all methods defined by the {@code NodeHandler} interface are correctly delegated to the wrapped handler.
  */
 public class TestNodeHandlerDecorator extends AbstractImmutableNodeHandlerTest {
+
     /**
      * {@inheritDoc} This implementation returns a {@code NodeHandlerDecorator} which wraps a {@code TreeData} object acting
      * as the actual node handler.

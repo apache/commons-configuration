@@ -207,10 +207,12 @@ import org.xml.sax.EntityResolver;
  * @since 1.3
  */
 public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<CombinedConfiguration> {
+
     /**
      * A data class for storing information about all configuration sources defined for a combined builder.
      */
     private final class ConfigurationSourceData {
+
         /** A list with data for all builders for override configurations. */
         private final List<ConfigurationDeclaration> overrideDeclarations;
 

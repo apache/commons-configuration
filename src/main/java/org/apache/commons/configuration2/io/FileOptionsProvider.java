@@ -25,6 +25,7 @@ import java.util.Map;
  * @since 1.7
  */
 public interface FileOptionsProvider {
+
     /**
      * Key used to identify the user to be associated with the current file operations. The value associated with this key
      * is a String identifying the current user.

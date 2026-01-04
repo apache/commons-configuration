@@ -59,6 +59,7 @@ import org.w3c.dom.NodeList;
  * @since 2.0
  */
 final class XMLDocumentHelper {
+
     /**
      * Creates a copy of the specified document.
      *

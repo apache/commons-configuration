@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code CopyObjectDefaultHandler}.
  */
 public class TestCopyObjectDefaultHandler {
+
     /**
      * Tests whether a base type can be initialized with default values. Unknown properties should silently be ignored.
      */

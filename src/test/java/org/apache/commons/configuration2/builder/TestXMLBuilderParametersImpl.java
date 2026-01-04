@@ -33,6 +33,7 @@ import org.xml.sax.EntityResolver;
  * Test class for {@code XMLBuilderParametersImpl}.
  */
 public class TestXMLBuilderParametersImpl {
+
     /** The parameters object to be tested. */
     private XMLBuilderParametersImpl params;
 

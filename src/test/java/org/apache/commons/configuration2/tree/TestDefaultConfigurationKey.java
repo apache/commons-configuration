@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for DefaultConfigurationKey.
  */
 public class TestDefaultConfigurationKey {
+
     /** Constant for a test key. */
     private static final String TESTPROPS = "tables.table(0).fields.field(1)";
 

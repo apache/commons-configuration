@@ -36,6 +36,7 @@ import javax.naming.Context;
  * @since 2.0
  */
 public class JndiBuilderParametersImpl extends BasicBuilderParameters implements JndiBuilderProperties<JndiBuilderParametersImpl> {
+
     /** Constant for the name of the context property. */
     private static final String PROP_CONTEXT = "context";
 

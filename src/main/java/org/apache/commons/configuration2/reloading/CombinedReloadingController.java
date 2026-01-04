@@ -48,12 +48,14 @@ import java.util.Objects;
  * @since 2.0
  */
 public class CombinedReloadingController extends ReloadingController {
+
     /**
      * A specialized implementation of the {@code ReloadingDetector} interface which operates on a collection of
      * {@code ReloadingController} objects. The methods defined by the {@code ReloadingDetector} interface are delegated to
      * the managed controllers.
      */
     private static final class MultiReloadingControllerDetector implements ReloadingDetector {
+
         /** A reference to the owning combined reloading controller. */
         private final CombinedReloadingController owner;
 

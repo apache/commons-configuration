@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ConfigurationLogger}.
  */
 public class TestConfigurationLogger {
+
     /** Constant for a message to be logged. */
     private static final String MSG = "Interesting log output";
 

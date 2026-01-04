@@ -46,12 +46,14 @@ import org.apache.commons.lang3.mutable.MutableObject;
  * @since 2.0
  */
 public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
+
     /**
      * An interface used internally for handling concurrent updates. An implementation has to populate the passed in
      * {@code ModelTransaction}. The transaction is then executed, and an atomic update of the model's {@code TreeData} is
      * attempted. If this fails - because another update came across -, the whole operation has to be tried anew.
      */
     private interface TransactionInitializer {
+
         /**
          * Initializes the specified transaction for an update operation. The return value indicates whether the transaction
          * should be executed. A result of <strong>false</strong> means that the update is to be aborted (maybe another update method was

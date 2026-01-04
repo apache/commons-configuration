@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * node name. It can then be checked whether updates of the hierarchy do not affect the references.
  */
 public class TestInMemoryNodeModelReferences {
+
     /** A mock resolver. */
     private NodeKeyResolver<ImmutableNode> resolver;
 

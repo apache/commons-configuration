@@ -67,11 +67,13 @@ import org.junit.jupiter.api.io.TempDir;
  * Test class for {@code FileHandler}.
  */
 public class TestFileHandler {
+
     /**
      * A FileBased implementation which also implements FileLocatorAware. This class adds information about the current file
      * locator to the content read and written.
      */
     private static final class FileBasedFileLocatorAwareTestImpl extends FileBasedTestImpl implements FileLocatorAware {
+
         /** Stores the passed in file locator. */
         private FileLocator locator;
 
@@ -124,6 +126,7 @@ public class TestFileHandler {
      * An implementation of the FileBased interface used for test purposes.
      */
     private static class FileBasedTestImpl implements FileBased {
+
         /** The content read from a reader. */
         private String content = CONTENT;
 
@@ -161,6 +164,7 @@ public class TestFileHandler {
      * A test listener implementation.
      */
     private static final class FileHandlerListenerTestImpl extends FileHandlerListenerAdapter {
+
         /** The expected file handler. */
         private final FileHandler expHandler;
 

@@ -28,6 +28,7 @@ package org.apache.commons.configuration2.tree;
  * @since 2.0
  */
 public interface NodeModelSupport<T> {
+
     /**
      * Gets the {@code NodeModel} supported by this object.
      *

@@ -102,10 +102,12 @@ import org.apache.commons.lang3.Strings;
  * @since 1.3
  */
 public class PropertiesConfigurationLayout implements EventListener<ConfigurationEvent> {
+
     /**
      * A helper class for storing all layout related information for a configuration property.
      */
     static class PropertyLayoutData implements Cloneable {
+
         /** Stores the comment for the property. */
         private StringBuffer comment;
 

@@ -47,6 +47,7 @@ import org.apache.commons.lang3.Strings;
  * @since 2.0
  */
 public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
+
     /** Constant for the escaping character. */
     private static final String ESCAPE = "\\";
 

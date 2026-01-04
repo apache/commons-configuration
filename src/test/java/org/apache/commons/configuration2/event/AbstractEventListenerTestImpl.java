@@ -31,6 +31,7 @@ import java.util.List;
  * @param <T> the type of events supported by this listener
  */
 public abstract class AbstractEventListenerTestImpl<T extends Event> implements EventListener<T> {
+
     /** The expected event source. */
     private final Object expectedSource;
 

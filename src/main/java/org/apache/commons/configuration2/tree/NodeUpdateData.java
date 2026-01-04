@@ -40,6 +40,7 @@ import java.util.Map;
  * @since 2.0
  */
 public class NodeUpdateData<T> {
+
     /**
      * Creates an unmodifiable defensive copy of the passed in collection with may be null.
      *

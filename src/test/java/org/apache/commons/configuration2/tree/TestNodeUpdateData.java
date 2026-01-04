@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code NodeUpdateData}.
  */
 public class TestNodeUpdateData {
+
     /**
      * Convenience method for creating a query result object.
      *

@@ -89,6 +89,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * @since 1.3
  */
 public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
+
     /** Stores the parent configuration. */
     private final BaseHierarchicalConfiguration parent;
 

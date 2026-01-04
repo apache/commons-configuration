@@ -40,6 +40,7 @@ import org.mockito.stubbing.OngoingStubbing;
  * Test class for {@code PeriodicReloadingTrigger}.
  */
 public class TestPeriodicReloadingTrigger {
+
     /** Constant for a parameter to be passed to the controller. */
     private static final Object CTRL_PARAM = "Test controller parameter";
 

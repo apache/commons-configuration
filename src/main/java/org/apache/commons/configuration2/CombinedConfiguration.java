@@ -155,10 +155,12 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class CombinedConfiguration extends BaseHierarchicalConfiguration implements EventListener<ConfigurationEvent> {
+
     /**
      * An internal helper class for storing information about contained configurations.
      */
     private final class ConfigData {
+
         /** Stores a reference to the configuration. */
         private final Configuration configuration;
 

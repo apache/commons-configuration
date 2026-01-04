@@ -39,6 +39,7 @@ package org.apache.commons.configuration2.reloading;
  * @since 2.0
  */
 public interface ReloadingDetector {
+
     /**
      * Checks whether all criteria for a reload operation are fulfilled. This method is called by external components to
      * find out when reloading should take place.

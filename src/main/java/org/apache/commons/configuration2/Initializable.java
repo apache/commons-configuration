@@ -37,6 +37,7 @@ package org.apache.commons.configuration2;
  * @since 2.0
  */
 public interface Initializable {
+
     /**
      * Initializes this object. A concrete implementation can use this method to perform arbitrary initialization.
      * Typically, this method is invoked by a <em>configuration builder</em>. In this case, the builder's lock is held, so

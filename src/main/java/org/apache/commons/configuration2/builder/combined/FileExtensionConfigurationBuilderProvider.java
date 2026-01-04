@@ -43,6 +43,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public class FileExtensionConfigurationBuilderProvider extends BaseConfigurationBuilderProvider {
+
     /** Constant for the file extension separator. */
     private static final char EXT_SEPARATOR = '.';
 

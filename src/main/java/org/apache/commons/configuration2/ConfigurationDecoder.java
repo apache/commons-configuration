@@ -34,6 +34,7 @@ package org.apache.commons.configuration2;
  * @since 2.0
  */
 public interface ConfigurationDecoder {
+
     /**
      * Decodes the specified string. This method is called with a string in encoded form read from a configuration file. An
      * implementation has to be perform an appropriate decoding and return the result. This result is passed to the calling

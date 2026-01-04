@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code ReloadingBuilderSupportListener}.
  */
 public class TestReloadingBuilderSupportListener {
+
     /**
      * Tests that the builder is reset when a reloading event notification occurs.
      */

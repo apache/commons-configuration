@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
  * @since 2.0
  */
 abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode> {
+
     /**
      * Checks if the passed in node is defined. Result is <strong>true</strong> if the node contains any data.
      *

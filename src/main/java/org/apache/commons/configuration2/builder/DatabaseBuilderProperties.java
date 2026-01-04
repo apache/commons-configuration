@@ -36,6 +36,7 @@ import javax.sql.DataSource;
  * @since 2.0
  */
 public interface DatabaseBuilderProperties<T> {
+
     /**
      * Enables or disable auto commit mode. If enabled, the database configuration instance performs a commit after each
      * database update.

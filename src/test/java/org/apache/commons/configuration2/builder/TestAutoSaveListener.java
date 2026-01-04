@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code AutoSaveListener}.
  */
 public class TestAutoSaveListener {
+
     /** A mock for the associated builder. */
     private FileBasedConfigurationBuilder<?> builder;
 

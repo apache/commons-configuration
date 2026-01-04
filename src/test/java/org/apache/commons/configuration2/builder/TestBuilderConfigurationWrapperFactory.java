@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code BuilderConfigurationWrapperFactory}.
  */
 public class TestBuilderConfigurationWrapperFactory {
+
     /**
      * Returns a mock builder which always returns the specified configuration.
      *

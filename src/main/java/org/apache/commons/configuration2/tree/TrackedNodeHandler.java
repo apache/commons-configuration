@@ -36,6 +36,7 @@ package org.apache.commons.configuration2.tree;
  * @since 2.0
  */
 final class TrackedNodeHandler extends AbstractImmutableNodeHandler {
+
     /** The root node. */
     private final ImmutableNode rootNode;
 

@@ -32,6 +32,7 @@ import java.util.Set;
  * @param <T> the type of the nodes this handler deals with
  */
 public interface NodeHandler<T> {
+
     /**
      * Gets an unmodifiable set with the names of all attributes of the specified node.
      *

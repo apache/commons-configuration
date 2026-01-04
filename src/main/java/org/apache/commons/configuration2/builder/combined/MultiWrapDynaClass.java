@@ -34,6 +34,7 @@ import org.apache.commons.beanutils.DynaProperty;
  * @since 2.0
  */
 final class MultiWrapDynaClass implements DynaClass {
+
     /** An empty array for converting the properties collection to an array. */
     private static final DynaProperty[] EMPTY_PROPS = {};
 

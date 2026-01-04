@@ -73,6 +73,7 @@ public class TestPropertiesConfigurationLayout {
      * A helper class used for constructing test properties files.
      */
     static class PropertiesBuilder {
+
         /** A buffer for storing the data. */
         private final StringBuilder buf = new StringBuilder();
 

@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code EventListenerParameters}.
  */
 public class TestEventListenerParameters {
+
     /**
      * Tests whether an event listener with its type can be added.
      */

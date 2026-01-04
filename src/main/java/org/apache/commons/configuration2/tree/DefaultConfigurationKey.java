@@ -44,11 +44,13 @@ import org.apache.commons.lang3.Strings;
  * @since 1.3
  */
 public class DefaultConfigurationKey {
+
     /**
      * A specialized iterator class for tokenizing a configuration key. This class implements the normal iterator interface.
      * In addition it provides some specific methods for configuration keys.
      */
     public class KeyIterator implements Iterator<Object>, Cloneable {
+
         /** Stores the current key name. */
         private String current;
 

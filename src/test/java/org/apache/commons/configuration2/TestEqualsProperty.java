@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
  * test if properties that contain a "=" will be loaded correctly.
  */
 public class TestEqualsProperty {
+
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 

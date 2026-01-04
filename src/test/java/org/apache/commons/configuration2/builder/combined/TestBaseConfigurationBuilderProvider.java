@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code BaseConfigurationBuilderProvider}.
  */
 public class TestBaseConfigurationBuilderProvider {
+
     /**
      * Helper method for testing whether the builder's allowFailOnInit flag is set correctly.
      *

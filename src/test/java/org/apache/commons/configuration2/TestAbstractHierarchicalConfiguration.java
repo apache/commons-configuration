@@ -57,6 +57,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code AbstractHierarchicalConfiguration}.
  */
 public class TestAbstractHierarchicalConfiguration {
+
     /**
      * A concrete test implementation of {@code AbstractHierarchicalConfiguration}.
      */

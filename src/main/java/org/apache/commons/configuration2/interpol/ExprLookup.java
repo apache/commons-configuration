@@ -63,10 +63,12 @@ import org.apache.commons.text.lookup.StringLookup;
  * @since 1.7
  */
 public class ExprLookup implements Lookup {
+
     /**
      * The key and corresponding object that will be made available to the JexlContext for use in expressions.
      */
     public static class Variable {
+
         /** The name to be used in expressions. */
         private String key;
 
@@ -148,6 +150,7 @@ public class ExprLookup implements Lookup {
      * List wrapper used to allow the Variables list to be created as beans in DefaultConfigurationBuilder.
      */
     public static class Variables extends ArrayList<Variable> {
+
         /**
          * The serial version UID.
          */

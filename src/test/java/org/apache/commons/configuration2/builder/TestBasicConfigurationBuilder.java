@@ -66,10 +66,12 @@ import org.junit.jupiter.api.Test;
  * Test class for {@code BasicConfigurationBuilder}.
  */
 public class TestBasicConfigurationBuilder {
+
     /**
      * A test thread class for testing whether the builder's result object can be requested concurrently.
      */
     private static final class AccessBuilderThread extends Thread {
+
         /** A latch for controlling the start of the thread. */
         private final CountDownLatch startLatch;
 
@@ -129,6 +131,7 @@ public class TestBasicConfigurationBuilder {
      * A test configuration implementation which also implements Initializable.
      */
     public static class InitializableConfiguration extends BaseConfiguration implements Initializable {
+
         /** A property which is initialized if the builder works as expected. */
         private String initProperty;
 

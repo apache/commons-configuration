@@ -37,14 +37,17 @@ import java.util.Set;
  * @since 1.0
  */
 public class ConfigurationMap extends AbstractMap<Object, Object> {
+
     /**
      * Sets of entries in the map.
      */
     static class ConfigurationSet extends AbstractSet<Map.Entry<Object, Object>> {
+
         /**
          * Iterator over the entries in the ConfigurationMap.
          */
         private final class ConfigurationSetIterator implements Iterator<Map.Entry<Object, Object>> {
+
             /** An iterator over the keys in the configuration. */
             private final Iterator<String> keys;
 
@@ -72,6 +75,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
          * A Map entry in the ConfigurationMap.
          */
         private final class Entry implements Map.Entry<Object, Object> {
+
             /** The key of the map entry. */
             private final Object key;
 

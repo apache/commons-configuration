@@ -46,6 +46,7 @@ import java.util.Map;
  * </p>
  */
 final class ReferenceTracker {
+
     /** A map with reference data. */
     private final Map<ImmutableNode, Object> references;
 

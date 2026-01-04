@@ -55,6 +55,7 @@ import org.apache.commons.configuration2.event.EventType;
  * @since 2.0
  */
 public class ReloadingController implements EventSource {
+
     /** Stores a reference to the reloading detector. */
     private final ReloadingDetector detector;
 

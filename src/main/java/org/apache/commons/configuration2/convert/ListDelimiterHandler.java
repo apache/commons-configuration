@@ -51,6 +51,7 @@ import java.util.List;
  * @since 2.0
  */
 public interface ListDelimiterHandler {
+
     /**
      * A specialized {@code ValueTransformer} implementation which does no transformation. The {@code transformValue()}
      * method just returns the passed in object without changes. This instance can be used by configurations which do not

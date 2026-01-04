@@ -52,6 +52,7 @@ public class TestJNDIConfiguration {
      * context. Used for testing the exception handling.
      */
     public static class PotentialErrorJNDIConfiguration extends JNDIConfiguration {
+
         /** An exception to be thrown by getBaseContext(). */
         private NamingException exception;
 

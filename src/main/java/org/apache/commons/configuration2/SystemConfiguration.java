@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.1
  */
 public class SystemConfiguration extends MapConfiguration {
+
     /** The logger. */
     private static final Log LOG = LogFactory.getLog(SystemConfiguration.class);
 

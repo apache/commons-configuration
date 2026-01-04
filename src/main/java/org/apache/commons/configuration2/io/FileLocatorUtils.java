@@ -43,6 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 2.0
  */
 public final class FileLocatorUtils {
+
     /**
      * Constant for the default {@code FileSystem}. This file system is used by operations of this class if no specific file
      * system is provided. An instance of {@link DefaultFileSystem} is used.
