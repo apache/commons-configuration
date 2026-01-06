@@ -30,7 +30,7 @@
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 92 to 94.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-text from 1.14.0 to 1.15.0.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump org.apache.commons:commons-pool2 from 2.12.1 to 2.13.0 #474.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump org.apache.commons:commons-pool2 from 2.12.1 to 2.13.1 #474.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump org.apache.commons:commons-dbcp2 from 2.13.0 to 2.14.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.logging.log4j:log4j-core from 2.25.2 to 2.25.3 #626.</action>
     </release>
