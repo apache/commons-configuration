@@ -35,7 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for {@code EventListenerList.}
+ * Test class for {@code EventListenerList}.
  */
 public class TestEventListenerList {
 
