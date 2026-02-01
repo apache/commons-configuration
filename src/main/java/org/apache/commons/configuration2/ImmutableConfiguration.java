@@ -555,14 +555,24 @@ public interface ImmutableConfiguration {
     Iterator<String> getKeys();
 
     /**
-     * Gets the list of the keys contained in the configuration that match the specified prefix. For instance, if the
-     * configuration contains the following keys:<br>
-     * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
-     * an invocation of {@code getKeys("db");}<br>
-     * will return the keys below:<br>
-     * {@code db.user, db.pwd, db.url}.<br>
-     * Note that the prefix itself is included in the result set if there is a matching key. The exact behavior - how the
-     * prefix is actually interpreted - depends on a concrete implementation.
+     * Gets the list of the keys contained in the configuration that match the specified prefix.
+     * <p>
+     * For instance, if the configuration contains the following keys:
+     * </p>
+     * <pre>
+     * db.user, db.pwd, db.url, window.xpos, window.ypos
+     * </pre>
+     * <p>
+     * The expression {@code getKeys("db")} will return:
+     * </p>
+     *
+     * <pre>
+     * db.user, db.pwd, db.url
+     * </pre>
+     * <p>
+     * Note that the prefix itself is included in the result set if there is a matching key. The exact behavior - how the prefix is actually interpreted -
+     * depends on a concrete implementation.
+     * </p>
      *
      * @param prefix The prefix to test against.
      * @return An Iterator of keys that match the prefix.
@@ -571,16 +581,27 @@ public interface ImmutableConfiguration {
     Iterator<String> getKeys(String prefix);
 
     /**
-     * Gets the list of the keys contained in the configuration that match the specified prefix. For instance, if the
-     * configuration contains the following keys:<br>
-     * {@code db@user, db@pwd, db@url, window.xpos, window.ypos},<br>
-     * an invocation of {@code getKeys("db","@");}<br>
-     * will return the keys below:<br>
-     * {@code db@user, db@pwd, db@url}.<br>
-     * Note that the prefix itself is included in the result set if there is a matching key. The exact behavior - how the
-     * prefix is actually interpreted - depends on a concrete implementation.
+     * Gets the list of the keys contained in the configuration that match the specified prefix.
+     * <p>
+     * For instance, if the configuration contains the following keys:
+     * </p>
      *
-     * @param prefix The prefix to test against.
+     * <pre>
+     * db@user, db@pwd, db@url, window.xpos, window.ypos
+     * </pre>
+     * <p>
+     * The expression {@code getKeys("db","@")} will return:
+     * </p>
+     *
+     * <pre>
+     * db@user, db@pwd, db@url
+     * </pre>
+     * <p>
+     * Note that the prefix itself is included in the result set if there is a matching key. The exact behavior - how the prefix is actually interpreted -
+     * depends on a concrete implementation.
+     * </p>
+     *
+     * @param prefix    The prefix to test against.
      * @param delimiter The prefix delimiter.
      * @return An Iterator of keys that match the prefix.
      * @see #getKeys()

@@ -51,27 +51,29 @@ import org.apache.commons.lang3.StringUtils;
  * <li>{@code jakarta.mail.internet.InternetAddress} (requires Javamail 2.+ in the classpath)</li>
  * <li>{@link Enum}</li>
  * </ul>
- *
- * Lists and arrays are available for all types.<br>
+ * <p>
+ * Lists and arrays are available for all types.
+ * </p>
+ * <p>
  * Note that this class is only a thin wrapper over functionality already provided by {@link AbstractConfiguration}.
  * Basically, the generic {@code get()}, and {@code getCollection()} methods are used to actually perform data
  * conversions.
- *
+ * </p>
  * <p>
  * <strong>Example</strong>
  * </p>
- *
+ * <p>
  * Configuration file {@code config.properties}:
- *
+ * </p>
  * <pre>
  * title.color = #0000FF
  * remote.host = 192.168.0.53
  * default.locales = fr,en,de
  * email.contact = dev@test.org, tester@test.org
  * </pre>
- *
+ * <p>
  * Usage:
- *
+ * </p>
  * <pre>
  * DataConfiguration config = new DataConfiguration(new PropertiesConfiguration("config.properties"));
  *
@@ -87,12 +89,12 @@ import org.apache.commons.lang3.StringUtils;
  * <p>
  * <strong>Dates</strong>
  * </p>
- *
+ * <p>
  * Date objects are expected to be formatted with the pattern {@code yyyy-MM-dd HH:mm:ss}. This default format can be
  * changed by specifying another format in the getters, or by putting a date format in the configuration under the key
  * {@code org.apache.commons.configuration.format.date}. Alternatively, the date format can also be specified via the
  * {@code ConversionHandler} used by a configuration instance:
- *
+ * </p>
  * <pre>
  * DefaultConversionHandler handler = new DefaultConversionHandler();
  * handler.setDateFormat("mm/dd/yyyy");
