@@ -34,6 +34,11 @@ import java.net.URL;
 public class ProvidedURLLocationStrategy implements FileLocationStrategy {
 
     /**
+     * A singleton instance of this strategy.
+     */
+    static final ProvidedURLLocationStrategy INSTANCE = new ProvidedURLLocationStrategy();
+
+    /**
      * {@inheritDoc} This implementation just returns the URL stored in the given {@code FileLocator}.
      */
     @Override

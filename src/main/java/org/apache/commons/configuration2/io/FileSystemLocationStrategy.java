@@ -34,6 +34,11 @@ import java.net.URL;
 public class FileSystemLocationStrategy implements FileLocationStrategy {
 
     /**
+     * A singleton instance of this strategy.
+     */
+    static final FileSystemLocationStrategy INSTANCE = new FileSystemLocationStrategy();
+
+    /**
      * Constructs a new instance.
      */
     public FileSystemLocationStrategy() {

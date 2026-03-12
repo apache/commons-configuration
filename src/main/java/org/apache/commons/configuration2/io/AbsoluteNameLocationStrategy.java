@@ -36,6 +36,11 @@ import org.apache.commons.lang3.StringUtils;
 public class AbsoluteNameLocationStrategy implements FileLocationStrategy {
 
     /**
+     * A singleton instance of this strategy.
+     */
+    static final AbsoluteNameLocationStrategy INSTANCE = new AbsoluteNameLocationStrategy();
+
+    /**
      * Constructs a new instance.
      */
     public AbsoluteNameLocationStrategy() {

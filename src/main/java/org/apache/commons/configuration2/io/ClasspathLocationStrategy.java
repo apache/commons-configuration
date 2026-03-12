@@ -34,6 +34,11 @@ import org.apache.commons.lang3.StringUtils;
 public class ClasspathLocationStrategy implements FileLocationStrategy {
 
     /**
+     * A singleton instance of this strategy.
+     */
+    static final ClasspathLocationStrategy INSTANCE = new ClasspathLocationStrategy();
+
+    /**
      * Constructs a new instance.
      */
     public ClasspathLocationStrategy() {

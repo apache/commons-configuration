@@ -37,6 +37,11 @@ import org.apache.commons.lang3.StringUtils;
 public class BasePathLocationStrategy implements FileLocationStrategy {
 
     /**
+     * A singleton instance of this strategy.
+     */
+    static final BasePathLocationStrategy INSTANCE = new BasePathLocationStrategy();
+
+    /**
      * Constructs a new instance.
      */
     public BasePathLocationStrategy() {
