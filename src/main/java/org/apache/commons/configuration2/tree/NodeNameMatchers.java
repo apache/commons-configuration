@@ -19,9 +19,7 @@ package org.apache.commons.configuration2.tree;
 import org.apache.commons.lang3.Strings;
 
 /**
- * <p>
- * An enumeration class with several pre-defined {@link NodeMatcher} implementations based on node names.
- * </p>
+ * Enumerates {@link NodeMatcher} implementations based on node names.
  * <p>
  * Filtering nodes by their name is a typical use case. Therefore, some default implementations for typical filter
  * algorithms are already provided. They are available as constants of this class. Because the algorithms are state-less

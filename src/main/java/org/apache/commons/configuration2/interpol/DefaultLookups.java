@@ -19,10 +19,8 @@ package org.apache.commons.configuration2.interpol;
 import org.apache.commons.text.lookup.StringLookupFactory;
 
 /**
- * <p>
- * An enumeration class defining constants for built-in {@code Lookup} objects available for
+ * Enumerates built-in {@code Lookup} objects available for
  * {@code Configuration} instances.
- * </p>
  * <p>
  * When a new configuration object derived from {@code AbstractConfiguration} is created, it installs a
  * {@link ConfigurationInterpolator} containing a default set of {@link Lookup} objects. These lookups are

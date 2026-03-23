@@ -17,9 +17,7 @@
 package org.apache.commons.configuration2.sync;
 
 /**
- * <p>
- * An enumeration used by {@link SynchronizerSupport} to specify how an object is locked.
- * </p>
+ * Enumerates how an object is locked for {@link SynchronizerSupport}.
  * <p>
  * The {@code SynchronizerSupport} interface allows locking an object. This can be done in different ways controlling
  * the level of concurrency still possible with the object. One of the constants defined here can be passed in when

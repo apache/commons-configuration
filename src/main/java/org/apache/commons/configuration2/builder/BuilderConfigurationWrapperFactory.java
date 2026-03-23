@@ -117,10 +117,8 @@ public class BuilderConfigurationWrapperFactory {
     }
 
     /**
-     * <p>
-     * An enumeration class with different options for supporting the {@code EventSource} interface in generated
+     * Enumerates options for supporting the {@code EventSource} interface in generated
      * {@code ImmutableConfiguration} proxies.
-     * </p>
      * <p>
      * Using literals of this class it is possible to specify that a {@code ImmutableConfiguration} object returned by
      * {@code BuilderConfigurationWrapperFactory} also implements the {@code EventSource} interface and how this

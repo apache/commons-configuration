@@ -27,7 +27,7 @@ import org.apache.commons.configuration2.sync.Synchronizer;
 public class SynchronizerTestImpl implements Synchronizer {
 
     /**
-     * An enumeration with the methods of the Synchronizer which can be called.
+     * Enumerates the methods of the Synchronizer which can be called.
      */
     public enum Methods {
         BEGIN_READ, END_READ, BEGIN_WRITE, END_WRITE
