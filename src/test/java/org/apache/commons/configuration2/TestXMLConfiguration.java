@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,8 +42,14 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
@@ -51,6 +58,7 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
@@ -60,6 +68,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -139,6 +148,16 @@ public class TestXMLConfiguration {
         final FileHandler handler = new FileHandler(config);
         handler.setFileName(fileName);
         handler.load();
+    }
+
+    private static byte[] nodeToByteArray(final Node node) throws TransformerException {
+        final Source source = new DOMSource(node);
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final Result result = new StreamResult(bos);
+        final TransformerFactory factory = TransformerFactory.newInstance();
+        factory.newTransformer().transform(source, result);
+        // 4. Return the resulting byte array
+        return bos.toByteArray();
     }
 
     /** A folder for temporary files. */
@@ -1055,6 +1074,21 @@ public class TestXMLConfiguration {
         final ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
         final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(bis));
         assertTrue(e.getMessage().contains("FileHandler"));
+    }
+
+    /**
+     * Tests how to read from a DOM Node.
+     */
+    @Test
+    void testReadDomNode() throws Exception {
+         conf = new XMLConfiguration();
+         final String content = "<configuration><test attr=\"x\">1</test></configuration>";
+         final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
+         final Node node = document.getFirstChild().getFirstChild(); // <test>
+         conf.initFileLocator(FileLocatorUtils.fileLocator().create());
+         // Read from a DOM Node
+         conf.read(new ByteArrayInputStream(nodeToByteArray(node)));
+         assertEquals("x", conf.getString("[@attr]"));
     }
 
     @Test
