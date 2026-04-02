@@ -186,7 +186,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     protected String determineBuilderClass(final ConfigurationDeclaration decl) throws ConfigurationException {
         if (decl.isReload()) {
             if (getReloadingBuilderClass() == null) {
-                throw new ConfigurationException("No support for reloading for builder class " + getBuilderClass());
+                throw new ConfigurationException("No support for reloading for builder class %s", getBuilderClass());
             }
             return getReloadingBuilderClass();
         }

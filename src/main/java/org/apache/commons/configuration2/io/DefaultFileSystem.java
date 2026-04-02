@@ -110,7 +110,7 @@ public class DefaultFileSystem extends FileSystem {
         if (file != null && !file.exists()) {
             final File parent = file.getParentFile();
             if (parent != null && !parent.exists() && !parent.mkdirs()) {
-                throw new ConfigurationException("Cannot create path: " + parent);
+                throw new ConfigurationException("Cannot create path: %s", parent);
             }
         }
     }

@@ -335,7 +335,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         private ConfigurationBuilder<? extends Configuration> createConfigurationBuilder(final ConfigurationDeclaration decl) throws ConfigurationException {
             final ConfigurationBuilderProvider provider = providerForTag(decl.getConfiguration().getRootElementName());
             if (provider == null) {
-                throw new ConfigurationException("Unsupported configuration source: " + decl.getConfiguration().getRootElementName());
+                throw new ConfigurationException("Unsupported configuration source: %s", decl.getConfiguration().getRootElementName());
             }
 
             final ConfigurationBuilder<? extends Configuration> builder = provider.getConfigurationBuilder(decl);
@@ -910,7 +910,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
         final ConfigurationBuilder<? extends Configuration> builder = sourceData.getNamedBuilder(name);
         if (builder == null) {
-            throw new ConfigurationException("Builder cannot be resolved: " + name);
+            throw new ConfigurationException("Builder cannot be resolved: %s", name);
         }
         return builder;
     }

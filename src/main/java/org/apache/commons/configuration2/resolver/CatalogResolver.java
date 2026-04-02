@@ -420,7 +420,7 @@ public class CatalogResolver implements EntityResolver {
             try {
                 final URL url = locate(fs, null, resolved);
                 if (url == null) {
-                    throw new ConfigurationException("Could not locate " + resolved);
+                    throw new ConfigurationException("Could not locate %s", resolved);
                 }
                 final InputStream inputStream = fs.getInputStream(url);
                 final InputSource inputSource = new InputSource(resolved);

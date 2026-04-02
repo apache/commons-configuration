@@ -43,6 +43,17 @@ public class ConfigurationException extends Exception {
     }
 
     /**
+     * Constructs a new {@code ConfigurationException} with specified detail message.
+     *
+     * @param format the error message for for {@link String#format(String, Object...)}.
+     * @param params the error parameters for for {@link String#format(String, Object...)}.
+     * @since 2.14.0
+     */
+    public ConfigurationException(final String format, Object... params) {
+        super(String.format(format, params));
+    }
+
+    /**
      * Constructs a new {@code ConfigurationException} with specified detail message and nested {@code Throwable}.
      *
      * @param message the error message

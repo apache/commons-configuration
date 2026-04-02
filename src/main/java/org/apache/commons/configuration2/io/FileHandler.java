@@ -585,7 +585,7 @@ public class FileHandler {
         try {
             url = FileLocatorUtils.toURL(file);
         } catch (final MalformedURLException e1) {
-            throw new ConfigurationException("Cannot create URL from file " + file);
+            throw new ConfigurationException("Cannot create URL from file %s", file);
         }
 
         load(url);
@@ -964,7 +964,7 @@ public class FileHandler {
         }
 
         if (url == null) {
-            throw new ConfigurationException("Cannot locate configuration source " + fileName);
+            throw new ConfigurationException("Cannot locate configuration source %s", fileName);
         }
         save(url, locator);
     }

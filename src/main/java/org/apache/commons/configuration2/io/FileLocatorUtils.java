@@ -508,7 +508,7 @@ public final class FileLocatorUtils {
     public static URL locateOrThrow(final FileLocator locator) throws ConfigurationException {
         final URL url = locate(locator);
         if (url == null) {
-            throw new ConfigurationException("Could not locate: " + locator);
+            throw new ConfigurationException("Could not locate: %s", locator);
         }
         return url;
     }
