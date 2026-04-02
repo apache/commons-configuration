@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
@@ -60,6 +59,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -653,10 +653,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         try {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setValidating(true);
-            final SAXParser parser = factory.newSAXParser();
-            parser.getXMLReader().setEntityResolver(resolver);
-            parser.getXMLReader().setContentHandler(handler);
-            parser.getXMLReader().parse(new InputSource(in));
+            final XMLReader xmlReader = factory.newSAXParser().getXMLReader();
+            xmlReader.setEntityResolver(resolver);
+            xmlReader.setContentHandler(handler);
+            xmlReader.parse(new InputSource(in));
             getNodeModel().mergeRoot(handler.getResultBuilder().createNode(), null, null, null, this);
         } catch (final Exception e) {
             throw new ConfigurationException("Unable to parse the configuration file", e);
@@ -689,21 +689,17 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     public void write(final Writer out) throws ConfigurationException {
         if (locator == null) {
             throw new ConfigurationException(
-                "Save operation not properly initialized! Do not call write(Writer) directly, but use a FileHandler to save a configuration.");
+                    "Save operation not properly initialized! Do not call write(Writer) directly, but use a FileHandler to save a configuration.");
         }
         final PrintWriter writer = new PrintWriter(out);
-
         if (locator.getEncoding() != null) {
             writer.println("<?xml version=\"1.0\" encoding=\"" + locator.getEncoding() + "\"?>");
         } else {
             writer.println("<?xml version=\"1.0\"?>");
         }
-
         writer.println("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">");
         writer.println("<plist version=\"1.0\">");
-
         printNode(writer, 1, getNodeModel().getNodeHandler().getRootNode());
-
         writer.println("</plist>");
         writer.flush();
     }
