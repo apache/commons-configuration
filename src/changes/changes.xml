@@ -27,7 +27,9 @@
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
       <!-- ADD -->
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Add XMLConfiguration.read(Element).</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Add ConfigurationException.ConfigurationException(String, Object...).</action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Add ConfigurationException.ConfigurationException(Throwable, String, Object...).</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 92 to 97.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-text from 1.14.0 to 1.15.0.</action>

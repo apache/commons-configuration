@@ -699,7 +699,7 @@ public class FileHandler {
         } catch (final ConfigurationException e) {
             throw e;
         } catch (final Exception e) {
-            throw new ConfigurationException("Unable to load the configuration from the URL " + url, e);
+            throw new ConfigurationException(e, "Unable to load the configuration from the URL ", url);
         } finally {
             closeSilent(in);
         }
@@ -771,19 +771,16 @@ public class FileHandler {
      */
     private void loadFromTransformedStream(final InputStream in, final String encoding) throws ConfigurationException {
         Reader reader = null;
-
         if (encoding != null) {
             try {
                 reader = new InputStreamReader(in, encoding);
             } catch (final UnsupportedEncodingException e) {
-                throw new ConfigurationException("The requested encoding is not supported, try the default encoding.", e);
+                throw new ConfigurationException(e, "The requested encoding %s is not supported, try the default encoding.", encoding);
             }
         }
-
         if (reader == null) {
             reader = new InputStreamReader(in);
         }
-
         loadFromReader(reader);
     }
 
@@ -1031,19 +1028,16 @@ public class FileHandler {
         try {
             injectFileLocator(url);
             Writer writer = null;
-
             if (encoding != null) {
                 try {
                     writer = new OutputStreamWriter(out, encoding);
                 } catch (final UnsupportedEncodingException e) {
-                    throw new ConfigurationException("The requested encoding is not supported, try the default encoding.", e);
+                    throw new ConfigurationException(e, "The requested encoding %s is not supported, try the default encoding.", encoding);
                 }
             }
-
             if (writer == null) {
                 writer = new OutputStreamWriter(out);
             }
-
             saveToWriter(writer);
         } finally {
             syncSupport.unlock(LockMode.WRITE);

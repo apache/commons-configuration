@@ -153,7 +153,7 @@ public class DefaultFileSystem extends FileSystem {
         try {
             return urlConnectionOptions == null ? url.openStream() : urlConnectionOptions.openConnection(url).getInputStream();
         } catch (final Exception e) {
-            throw new ConfigurationException("Unable to load the configuration from the URL " + url, e);
+            throw new ConfigurationException(e, "Unable to load the configuration from the URL %s", url);
         }
     }
 
@@ -164,7 +164,7 @@ public class DefaultFileSystem extends FileSystem {
             createPath(file);
             return new FileOutputStream(file);
         } catch (final FileNotFoundException e) {
-            throw new ConfigurationException("Unable to save to file " + file, e);
+            throw new ConfigurationException(e, "Unable to save to file %s", file);
         }
     }
 
@@ -196,7 +196,7 @@ public class DefaultFileSystem extends FileSystem {
             }
             return out;
         } catch (final IOException e) {
-            throw new ConfigurationException("Could not save to URL " + url, e);
+            throw new ConfigurationException(e, "Could not save to URL %s", url);
         }
     }
 

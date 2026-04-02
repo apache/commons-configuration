@@ -1143,8 +1143,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         if (fileName != null) {
             try {
                 SystemConfiguration.setSystemProperties(basePath, fileName);
-            } catch (final Exception ex) {
-                throw new ConfigurationException("Error setting system properties from " + fileName, ex);
+            } catch (final Exception e) {
+                throw new ConfigurationException(e, "Error setting system properties from %s (basePath = %s)", fileName, basePath);
             }
         }
     }

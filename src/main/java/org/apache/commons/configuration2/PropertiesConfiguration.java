@@ -1405,7 +1405,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         }
 
         if (url == null) {
-            getIncludeListener().accept(new ConfigurationException("Cannot resolve include file " + fileName, new FileNotFoundException(fileName)));
+            getIncludeListener().accept(new ConfigurationException(new FileNotFoundException(fileName), "Cannot resolve include file %s", fileName));
         } else {
             final FileHandler fh = new FileHandler(this);
             fh.setFileLocator(locator);

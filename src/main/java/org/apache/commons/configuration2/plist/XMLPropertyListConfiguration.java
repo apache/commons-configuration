@@ -648,18 +648,15 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     public void read(final Reader in) throws ConfigurationException {
         // set up the DTD validation
         final EntityResolver resolver = (publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("PropertyList-1.0.dtd"));
-
         // parse the file
         final XMLPropertyListHandler handler = new XMLPropertyListHandler();
         try {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setValidating(true);
-
             final SAXParser parser = factory.newSAXParser();
             parser.getXMLReader().setEntityResolver(resolver);
             parser.getXMLReader().setContentHandler(handler);
             parser.getXMLReader().parse(new InputSource(in));
-
             getNodeModel().mergeRoot(handler.getResultBuilder().createNode(), null, null, null, this);
         } catch (final Exception e) {
             throw new ConfigurationException("Unable to parse the configuration file", e);

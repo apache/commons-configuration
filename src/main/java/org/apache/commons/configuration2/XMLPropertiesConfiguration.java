@@ -224,10 +224,8 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
         final SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(false);
         factory.setValidating(true);
-
         try {
             final SAXParser parser = factory.newSAXParser();
-
             final XMLReader xmlReader = parser.getXMLReader();
             xmlReader.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
             xmlReader.setContentHandler(new XMLPropertiesHandler());
@@ -235,7 +233,6 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
         } catch (final Exception e) {
             throw new ConfigurationException("Unable to parse the configuration file", e);
         }
-
         // todo: support included properties ?
     }
 

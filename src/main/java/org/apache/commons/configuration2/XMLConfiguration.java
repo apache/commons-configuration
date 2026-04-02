@@ -476,10 +476,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @param element the current XML element
      * @return a map with all attribute values extracted for the current node
      */
-    private static Map<String, String> processAttributes(final Element element) {
+    private static Map<String, String> processAttributes(final Node element) {
         final NamedNodeMap attributes = element.getAttributes();
         final Map<String, String> attrmap = new HashMap<>();
-
         for (int i = 0; i < attributes.getLength(); ++i) {
             final Node w3cNode = attributes.item(i);
             if (w3cNode instanceof Attr) {
@@ -487,7 +486,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
                 attrmap.put(attr.getName(), attr.getValue());
             }
         }
-
         return attrmap;
     }
 
@@ -503,7 +501,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      */
     private static boolean shouldTrim(final Element element, final boolean currentTrim) {
         final Attr attr = element.getAttributeNode(ATTR_SPACE);
-
         if (attr == null) {
             return currentTrim;
         }
@@ -850,21 +847,23 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Initializes this configuration from an XML document.
      *
-     * @param docHelper the helper object with the document to be parsed
-     * @param elemRefs a flag whether references to the XML elements should be set
+     * @param docHelper the helper object with the document to be parsed.
+     * @param elemRefs a flag whether references to the XML elements should be set.
      */
     private void initProperties(final XMLDocumentHelper docHelper, final boolean elemRefs) {
-        final Document document = docHelper.getDocument();
         setPublicID(docHelper.getSourcePublicID());
         setSystemID(docHelper.getSourceSystemID());
+        initProperties(docHelper, elemRefs, docHelper.getDocument().getDocumentElement());
+    }
 
+    private void initProperties(final XMLDocumentHelper docHelper, final boolean elemRefs, final Element element) {
         final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         final MutableObject<String> rootValue = new MutableObject<>();
         final Map<ImmutableNode, Object> elemRefMap = elemRefs ? new HashMap<>() : null;
-        final Map<String, String> attributes = constructHierarchy(rootBuilder, rootValue, document.getDocumentElement(), elemRefMap, true, 0);
+        final Map<String, String> attributes = constructHierarchy(rootBuilder, rootValue, element, elemRefMap, true, 0);
         attributes.remove(ATTR_SPACE_INTERNAL);
         final ImmutableNode top = rootBuilder.value(rootValue.getValue()).addAttributes(attributes).create();
-        getSubConfigurationParentModel().mergeRoot(top, document.getDocumentElement().getTagName(), elemRefMap, elemRefs ? docHelper : null, this);
+        getSubConfigurationParentModel().mergeRoot(top, element.getTagName(), elemRefMap, elemRefs ? docHelper : null, this);
     }
 
     /**
@@ -934,10 +933,30 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
             final Document oldDocument = getDocument();
             initProperties(XMLDocumentHelper.forSourceDocument(newDocument), oldDocument == null);
         } catch (final SAXParseException spe) {
-            throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
+            throw new ConfigurationException(spe, "Error parsing system ID %s", source.getSystemId());
         } catch (final Exception e) {
             getLogger().debug("Unable to load the configuration: " + e);
             throw new ConfigurationException("Unable to load the configuration", e);
+        }
+    }
+
+    /**
+     * Loads the configuration from the given XML DOM Element.
+     * <p>
+     * This method can be used to initialize the configuration from an XML element in a document that has already been parsed. This is especially useful if the
+     * configuration is only a part of a larger XML document.
+     * </p>
+     *
+     * @param element the input element.
+     * @throws ConfigurationException if an error occurs.
+     * @since 2.14.0
+     */
+    public void read(final Element element) throws ConfigurationException {
+        try {
+            initProperties(getDocumentHelper(), getDocument() == null, element);
+        } catch (final Exception e) {
+            getLogger().debug("Unable to load the configuration: " + e);
+            throw new ConfigurationException(e, "Unable to load the configuration %s", element);
         }
     }
 

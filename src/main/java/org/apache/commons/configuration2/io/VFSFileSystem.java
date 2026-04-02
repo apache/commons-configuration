@@ -110,8 +110,8 @@ public class VFSFileSystem extends DefaultFileSystem {
                 throw new ConfigurationException("Cannot access content of %s", file.getName().getFriendlyURI());
             }
             return content.getInputStream();
-        } catch (final FileSystemException fse) {
-            throw new ConfigurationException("Unable to access " + url.toString(), fse);
+        } catch (final FileSystemException e) {
+            throw new ConfigurationException(e, "Unable to access %s", url);
         }
     }
 
@@ -173,8 +173,8 @@ public class VFSFileSystem extends DefaultFileSystem {
                 throw new ConfigurationException("Cannot access content of %s", url);
             }
             return content.getOutputStream();
-        } catch (final FileSystemException fse) {
-            throw new ConfigurationException("Unable to access " + url, fse);
+        } catch (final FileSystemException e) {
+            throw new ConfigurationException(e, "Unable to access ", url);
         }
     }
 

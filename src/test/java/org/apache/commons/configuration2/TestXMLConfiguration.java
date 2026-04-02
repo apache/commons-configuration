@@ -68,6 +68,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -176,6 +177,18 @@ public class TestXMLConfiguration {
     private final String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
 
     private XMLConfiguration conf;
+
+    private Element buildDomElementFixture() throws SAXException, IOException, ParserConfigurationException {
+        return (Element) buildDomNodeFixture();
+    }
+
+    private Node buildDomNodeFixture() throws SAXException, IOException, ParserConfigurationException {
+        final String content = "<configuration><test attr=\"x\">1</test></configuration>";
+        final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
+        final Node node = document.getFirstChild().getFirstChild(); // <test>
+        assertEquals("test", node.getNodeName()); // sanity check
+        return node;
+    }
 
     /**
      * Helper method for testing whether a configuration was correctly saved to the default output file.
@@ -1080,14 +1093,24 @@ public class TestXMLConfiguration {
      * Tests how to read from a DOM Node.
      */
     @Test
-    void testReadDomNode() throws Exception {
+    void testReadDomElementManually() throws Exception {
          conf = new XMLConfiguration();
-         final String content = "<configuration><test attr=\"x\">1</test></configuration>";
-         final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
-         final Node node = document.getFirstChild().getFirstChild(); // <test>
+         final Element domElement = buildDomElementFixture();
          conf.initFileLocator(FileLocatorUtils.fileLocator().create());
-         // Read from a DOM Node
-         conf.read(new ByteArrayInputStream(nodeToByteArray(node)));
+         // Read from a DOM Element
+         conf.read(new ByteArrayInputStream(nodeToByteArray(domElement)));
+         assertEquals("x", conf.getString("[@attr]"));
+    }
+
+    /**
+     * Tests how to read from a DOM Node.
+     */
+    @Test
+    void testReadDomElement() throws Exception {
+         conf = new XMLConfiguration();
+         final Element domElement = buildDomElementFixture();
+         // Read from a DOM Element
+         conf.read(domElement);
          assertEquals("x", conf.getString("[@attr]"));
     }
 
