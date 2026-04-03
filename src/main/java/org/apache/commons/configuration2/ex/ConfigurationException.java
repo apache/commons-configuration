@@ -49,7 +49,7 @@ public class ConfigurationException extends Exception {
      * @param params the error parameters for for {@link String#format(String, Object...)}.
      * @since 2.14.0
      */
-    public ConfigurationException(final String format, Object... params) {
+    public ConfigurationException(final String format, final Object... params) {
         super(String.format(format, params));
     }
 
@@ -82,7 +82,7 @@ public class ConfigurationException extends Exception {
      *               the cause is nonexistent or unknown.)
      * @since 2.14.0
      */
-    public ConfigurationException(final Throwable cause, final String format, Object... params) {
+    public ConfigurationException(final Throwable cause, final String format, final Object... params) {
         super(String.format(format, params), cause);
     }
 }
