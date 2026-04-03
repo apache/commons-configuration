@@ -1385,7 +1385,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Allows setting the logger to be used by this configuration object. This method makes it possible for clients to
+     * Sets the logger to be used by this configuration object. This method makes it possible for clients to
      * exactly control logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that
      * want to enable logging should call this method during their initialization with the logger to be used. It is legal to
      * pass a <strong>null</strong> logger; in this case, logging will be disabled.

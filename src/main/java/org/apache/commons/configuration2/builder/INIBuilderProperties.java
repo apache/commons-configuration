@@ -34,7 +34,7 @@ package org.apache.commons.configuration2.builder;
 public interface INIBuilderProperties<T> {
 
     /**
-     * Allows setting the leading comment separator which is used in reading an INI file.
+     * Sets the leading comment separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
@@ -46,7 +46,7 @@ public interface INIBuilderProperties<T> {
     }
 
     /**
-     * Allows setting the key and value separator which is used in reading an INI file.
+     * Sets the key and value separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
@@ -58,7 +58,7 @@ public interface INIBuilderProperties<T> {
     }
 
     /**
-     * Allows setting the separator between key and value to be used when writing an INI file.
+     * Sets the separator between key and value to be used when writing an INI file.
      *
      * @param separator the new separator for INI output
      * @return a reference to this object for method chaining

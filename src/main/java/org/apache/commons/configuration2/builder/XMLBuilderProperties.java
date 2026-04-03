@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
 public interface XMLBuilderProperties<T> {
 
     /**
-     * Allows setting the {@code DocumentBuilder} for parsing an XML document. This is the most flexible way of customizing
+     * Sets the {@code DocumentBuilder} for parsing an XML document. This is the most flexible way of customizing
      * XML processing.
      *
      * @param docBuilder the {@code DocumentBuilder} to use
@@ -47,7 +47,7 @@ public interface XMLBuilderProperties<T> {
     T setDocumentBuilder(DocumentBuilder docBuilder);
 
     /**
-     * Allows setting the {@code EntityResolver} which maps entity references during XML parsing.
+     * Sets the {@code EntityResolver} which maps entity references during XML parsing.
      *
      * @param resolver the {@code EntityResolver} to use
      * @return a reference to this object for method chaining

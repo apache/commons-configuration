@@ -145,7 +145,7 @@ public class TestFileHandler {
         }
 
         /**
-         * Allows setting the content.
+         * Sets the content.
          *
          * @param content the content
          */

@@ -599,7 +599,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Tries to find the index of the separator character in the given string. This method checks for the presence of
+     * Finds the index of the separator character in the given string. This method checks for the presence of
      * separator characters in the given string. If multiple characters are found, the first one is assumed to be the
      * correct separator. If there are quoting characters, they are taken into account, too.
      *
@@ -729,7 +729,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Determine if the given line is a comment line.
+     * Tests if the given line is a comment line.
      *
      * @param line The line to check.
      * @return true if the line is empty or starts with one of the comment characters
@@ -743,7 +743,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Determine if the given line is a section.
+     * Tests if the given line is a section.
      *
      * @param line The line to check.
      * @return true if the line contains a section
@@ -781,7 +781,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Parse the value to remove the quotes and ignoring the comment. Example:
+     * Parses the value to remove the quotes and ignoring the comment. Example:
      *
      * <pre>
      * &quot;value&quot; ; comment -&gt; value
@@ -868,7 +868,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Load the configuration from the given reader. Note that the {@code clear()} method is not called so the configuration
+     * Reads the configuration from the given reader. Note that the {@code clear()} method is not called so the configuration
      * read in will be merged with the current configuration.
      *
      * @param in the reader to read the configuration from.
@@ -887,7 +887,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Allows setting the leading comment separator which is used in reading an INI file
+     * Sets the leading comment separator which is used in reading an INI file
      *
      * @param separator String of the new separator for INI reading
      * @since 2.5
@@ -902,7 +902,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Allows setting the key and value separator which is used in reading an INI file
+     * Sets the key and value separator which is used in reading an INI file
      *
      * @param separator String of the new separator for INI reading
      * @since 2.5
@@ -917,7 +917,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Allows setting the key and value separator which is used for the creation of the resulting INI output
+     * Sets the key and value separator which is used for the creation of the resulting INI output
      *
      * @param separator String of the new separator for INI output
      * @since 2.2
@@ -927,7 +927,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Save the configuration to the specified writer.
+     * Writes the configuration to the specified writer.
      *
      * @param writer   The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the configuration
