@@ -1414,7 +1414,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                 try {
                     // Check for cycles
                     if (seenStack.contains(url)) {
-                        throw new ConfigurationException(String.format("Cycle detected loading %s, seen stack: %s", url, seenStack));
+                        throw new ConfigurationException("Cycle detected loading %s, seen stack: %s", url, seenStack);
                     }
                     seenStack.add(url);
                     try {
