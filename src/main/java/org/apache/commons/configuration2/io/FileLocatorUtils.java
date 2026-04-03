@@ -412,7 +412,7 @@ public final class FileLocatorUtils {
      * @return the {@code FileSystem} to be used for this {@code FileLocator}
      */
     static FileSystem getFileSystem(final FileLocator locator) {
-        return locator != null ? ObjectUtils.defaultIfNull(locator.getFileSystem(), DEFAULT_FILE_SYSTEM) : DEFAULT_FILE_SYSTEM;
+        return locator != null ? ObjectUtils.getIfNull(locator.getFileSystem(), DEFAULT_FILE_SYSTEM) : DEFAULT_FILE_SYSTEM;
     }
 
     /**
@@ -424,7 +424,7 @@ public final class FileLocatorUtils {
      * @return the {@code FileLocationStrategy} for this {@code FileLocator}
      */
     static FileLocationStrategy getLocationStrategy(final FileLocator locator) {
-        return locator != null ? ObjectUtils.defaultIfNull(locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY) : DEFAULT_LOCATION_STRATEGY;
+        return locator != null ? ObjectUtils.getIfNull(locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY) : DEFAULT_LOCATION_STRATEGY;
     }
 
     /**

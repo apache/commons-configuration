@@ -844,7 +844,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
             }
             done = structure.compareAndSet(current, createSelectorsForTrackedNodes(refSelectors, nodes, current, resolver));
         } while (!done);
-        return refSelectors.getValue();
+        return refSelectors.get();
     }
 
     /**
@@ -914,7 +914,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
                 done = true;
             }
         } while (!done);
-        return refSelectors.getValue();
+        return refSelectors.get();
     }
 
     /**
@@ -945,7 +945,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
             done = structure.compareAndSet(current, newData);
         } while (!done);
 
-        return refSelector.getValue();
+        return refSelector.get();
     }
 
     /**

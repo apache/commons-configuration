@@ -508,7 +508,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     private Object convertToArray(final Class<?> cls, final String key, final Object defaultValue) {
         checkDefaultValueArray(cls, defaultValue);
-        return ObjectUtils.defaultIfNull(getConversionHandler().toArray(getProperty(key), cls, getInterpolator()), defaultValue);
+        return ObjectUtils.getIfNull(getConversionHandler().toArray(getProperty(key), cls, getInterpolator()), defaultValue);
     }
 
     /**
@@ -621,7 +621,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private <T> T getAndConvertProperty(final Class<T> cls, final String key, final T defaultValue) {
         final Object value = getProperty(key);
         try {
-            return ObjectUtils.defaultIfNull(getConversionHandler().to(value, cls, getInterpolator()), defaultValue);
+            return ObjectUtils.getIfNull(getConversionHandler().to(value, cls, getInterpolator()), defaultValue);
         } catch (final ConversionException cex) {
             // improve error message
             throw new ConversionException(String.format("Key '%s' cannot be converted to class %s. Value is: '%s'.", key, cls.getName(), String.valueOf(value)),

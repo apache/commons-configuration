@@ -38,7 +38,7 @@ final class StringLookupAdapter implements Lookup {
 
     @Override
     public Object lookup(final String key) {
-        return stringLookup.lookup(key);
+        return stringLookup.apply(key);
     }
 
 }

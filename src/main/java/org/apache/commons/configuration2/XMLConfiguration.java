@@ -583,7 +583,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
                 final Map<String, String> attrmap = constructHierarchy(childNode, refChildValue, child, elemRefs, trimFlag, level + 1);
                 final boolean childTrim = Boolean.parseBoolean(attrmap.remove(ATTR_SPACE_INTERNAL));
                 childNode.addAttributes(attrmap);
-                final ImmutableNode newChild = createChildNodeWithValue(node, childNode, child, refChildValue.getValue(), childTrim, attrmap, elemRefs);
+                final ImmutableNode newChild = createChildNodeWithValue(node, childNode, child, refChildValue.get(), childTrim, attrmap, elemRefs);
                 if (elemRefs != null && !elemRefs.containsKey(newChild)) {
                     elemRefs.put(newChild, child);
                 }
@@ -859,7 +859,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         final Map<ImmutableNode, Object> elemRefMap = elemRefs ? new HashMap<>() : null;
         final Map<String, String> attributes = constructHierarchy(rootBuilder, rootValue, element, elemRefMap, true, 0);
         attributes.remove(ATTR_SPACE_INTERNAL);
-        final ImmutableNode top = rootBuilder.value(rootValue.getValue()).addAttributes(attributes).create();
+        final ImmutableNode top = rootBuilder.value(rootValue.get()).addAttributes(attributes).create();
         getSubConfigurationParentModel().mergeRoot(top, element.getTagName(), elemRefMap, elemRefs ? docHelper : null, this);
     }
 

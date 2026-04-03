@@ -56,7 +56,7 @@ public class PeriodicReloadingTrigger {
      * @return the default executor service
      */
     private static ScheduledExecutorService createDefaultExecutorService() {
-        final ThreadFactory factory = new BasicThreadFactory.Builder().namingPattern("ReloadingTrigger-%s").daemon(true).build();
+        final ThreadFactory factory = BasicThreadFactory.builder().namingPattern("ReloadingTrigger-%s").daemon(true).build();
         return Executors.newScheduledThreadPool(1, factory);
     }
 
