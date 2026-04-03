@@ -624,8 +624,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             return ObjectUtils.getIfNull(getConversionHandler().to(value, cls, getInterpolator()), defaultValue);
         } catch (final ConversionException cex) {
             // improve error message
-            throw new ConversionException(String.format("Key '%s' cannot be converted to class %s. Value is: '%s'.", key, cls.getName(), String.valueOf(value)),
-                cex.getCause());
+            throw new ConversionException(cex.getCause(), "Key '%s' cannot be converted to class %s. Value is: '%s'.", key, cls.getName(),
+                    String.valueOf(value));
         }
     }
 
@@ -982,7 +982,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         } else if (isScalarValue(value)) {
             return Collections.singletonList((Object) value.toString());
         } else {
-            throw new ConversionException('\'' + key + "' doesn't map to a List object: " + value + ", a " + value.getClass().getName());
+            throw new ConversionException("'%s' doesn't map to a List object: %s, a %s", key, value, value.getClass().getName());
         }
         return list;
     }
