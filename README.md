@@ -45,11 +45,12 @@ Apache Commons Configuration
 
 [![Java CI](https://github.com/apache/commons-configuration/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/org.apache.commons/commons-configuration2?label=Maven%20Central)](https://search.maven.org/artifact/org.apache.commons/commons-configuration2)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.13.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.13.0)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.14.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.14.0)
 [![CodeQL](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-configuration/actions/workflows/codeql-analysis.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-configuration)
 
-Tools to assist in the reading of configuration/preferences files in various formats; requires Java 8.
+The Commons Configuration software library provides a generic configuration interface that enables an application to read configuration data from
+    various sources and requires Java 8.
 
 Documentation
 -------------
@@ -68,7 +69,7 @@ Alternatively, you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.13.0</version>
+  <version>2.14.0</version>
 </dependency>
 ```
 
@@ -111,7 +112,6 @@ Additional Resources
 + [Apache Commons Homepage](https://commons.apache.org/)
 + [Apache Issue Tracker (JIRA)](https://issues.apache.org/jira/browse/CONFIGURATION)
 + [Apache Commons Slack Channel](https://the-asf.slack.com/archives/C60NVB8AD)
-+ [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 
 Apache Commons Components
 -------------------------

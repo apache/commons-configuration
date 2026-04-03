@@ -23,7 +23,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.14.0" date="YYYY-MM-DD" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
+    <release version="2.14.0" date="2026-04-03" description="Minor release with new features and updated dependencies; requires Java 8 or above.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">FMigrate from deprecated APIs.</action>

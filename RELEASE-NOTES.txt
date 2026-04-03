@@ -1,3 +1,64 @@
+Apache Commons Configuration 2.14.0 Release Notes
+-------------------------------------------------
+
+The Apache Commons Configuration team is pleased to announce the release of Apache Commons Configuration 2.14.0.
+
+Introducing Apache Commons Configuration
+----------------------------------------
+
+The Apache Commons Team is pleased to announce Commons Configuration 2.14.0.
+
+The Commons Configuration software library provides a generic configuration interface that enables an application to read configuration data from
+various sources and requires Java 8.
+
+Minor release with new features and updated dependencies; requires Java 8 or above.
+
+Changes in this version include:
+
+New features
+------------
+
+*                     Add XMLConfiguration.read(Element). Thanks to Gary Gregory.
+*                     Add ConfigurationException.ConfigurationException(String, Object...). Thanks to Gary Gregory.
+*                     Add ConfigurationException.ConfigurationException(Throwable, String, Object...). Thanks to Gary Gregory.
+*                     Add ConversionException.ConversionException(String, Object...). Thanks to Gary Gregory.
+*                     Add ConversionException.ConversionException(Throwable, String, Object...). Thanks to Gary Gregory.
+*                     Add ConfigurationRuntimeException.ConfigurationRuntimeException(Throwable, String, Object...). Thanks to Gary Gregory.
+
+Fixed Bugs
+----------
+
+*                     Fix Apache RAT plugin console warnings. Thanks to Gary Gregory.
+*                     FMigrate from deprecated APIs. Thanks to Gary Gregory.
+
+Changes
+-------
+
+*                     Bump org.apache.commons:commons-parent from 92 to 97. Thanks to Gary Gregory.
+*                     Bump org.apache.commons:commons-text from 1.14.0 to 1.15.0. Thanks to Gary Gregory.
+*                     [test] Bump org.apache.commons:commons-pool2 from 2.12.1 to 2.13.1 #474. Thanks to Gary Gregory.
+*                     [test] Bump org.apache.commons:commons-dbcp2 from 2.13.0 to 2.14.0. Thanks to Gary Gregory.
+*                     Bump org.apache.logging.log4j:log4j-core from 2.25.2 to 2.25.4 #626. Thanks to Gary Gregory.
+*                     Bump commons-codec:commons-codec from 1.20.0 to 1.21.0. Thanks to Gary Gregory.
+*                     Bump com.fasterxml.jackson.core:jackson-databind from 2.20.1 to 2.21.2 #632. Thanks to Gary Gregory.
+*                     Bump commons-logging:commons-logging from 1.3.5 to 1.3.6. Thanks to Gary Gregory.
+*                     Bump org.yaml:snakeyaml from 2.5 to 2.6 #631. Thanks to Gary Gregory, Dependabot.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_configuration.cgi
+
+Enjoy!
+Apache Commons Team
+
+-----------------------------------------------------------------------------
+
 Apache Commons Configuration 2.13.0 Release Notes
 -------------------------------------------------
 
