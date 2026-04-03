@@ -171,14 +171,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements FileBasedConfiguration, FileLocatorAware, InputStreamSupport {
 
     /**
-     * A concrete {@code BuilderVisitor} that can construct XML documents.
+     * A concrete {@code BuilderVisitor} that constructs XML documents.
      */
     static class XMLBuilderVisitor extends BuilderVisitor {
 
         /**
          * Removes all attributes of the given element.
          *
-         * @param elem the element
+         * @param elem the element.
          */
         private static void clearAttributes(final Element elem) {
             final NamedNodeMap attributes = elem.getAttributes();
@@ -192,8 +192,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          * text nodes except for the first are removed. A reference to the first is returned or <strong>null</strong> if there is no text
          * node at all.
          *
-         * @param elem the element
-         * @return the first and only text node
+         * @param elem the element.
+         * @return the first and only text node.
          */
         private static Text findTextNodeForUpdate(final Element elem) {
             Text result = null;
@@ -225,8 +225,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Helper method for updating the values of all attributes of the specified node.
          *
-         * @param node the affected node
-         * @param elem the element that is associated with this node
+         * @param node the affected node.
+         * @param elem the element that is associated with this node.
          */
         private static void updateAttributes(final ImmutableNode node, final Element elem) {
             if (node != null && elem != null) {
@@ -267,9 +267,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Helper method for accessing the element of the specified node.
          *
-         * @param node the node
-         * @param refHandler the {@code ReferenceNodeHandler}
-         * @return the element of this node
+         * @param node the node.
+         * @param refHandler the {@code ReferenceNodeHandler}.
+         * @return the element of this node.
          */
         private Element getElement(final ImmutableNode node, final ReferenceNodeHandler refHandler) {
             final Element elementNew = newElements.get(node);
@@ -294,7 +294,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          * Updates the current XML document regarding removed nodes. The elements associated with removed nodes are removed from
          * the document.
          *
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param refHandler the {@code ReferenceNodeHandler}.
          */
         public void handleRemovedNodes(final ReferenceNodeHandler refHandler) {
             refHandler.removedReferences().stream().filter(Node.class::isInstance).forEach(ref -> removeReference(elementMapping.get(ref)));
@@ -330,7 +330,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Processes the specified document, updates element values, and adds new nodes to the hierarchy.
          *
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param refHandler the {@code ReferenceNodeHandler}.
          */
         public void processDocument(final ReferenceNodeHandler refHandler) {
             updateAttributes(refHandler.getRootNode(), document.getDocumentElement());
@@ -340,7 +340,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Updates the associated XML elements when a node is removed.
          *
-         * @param element the element to be removed
+         * @param element the element to be removed.
          */
         private void removeReference(final Node element) {
             final Node parentElem = element.getParentNode();
@@ -369,8 +369,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Updates the node's value if it represents an element node.
          *
-         * @param element the element
-         * @param value the new value
+         * @param element the element.
+         * @param value the new value.
          */
         private void updateElement(final Element element, final Object value) {
             Text txtNode = findTextNodeForUpdate(element);
@@ -428,9 +428,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Determines the number of child elements of this given node with the specified node name.
      *
-     * @param parent the parent node
-     * @param name the name in question
-     * @return the number of child elements with this name
+     * @param parent the parent node.
+     * @param name the name in question.
+     * @return the number of child elements with this name.
      */
     private static int countChildElements(final Node parent, final String name) {
         final NodeList childNodes = parent.getChildNodes();
@@ -449,10 +449,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * not. This is normally defined by the trim flag. However, if the node has children and its content is only whitespace,
      * then it makes no sense to store any value; this would only scramble layout when the configuration is saved again.
      *
-     * @param content the text content of this node
-     * @param hasChildren a flag whether the node has children
-     * @param trimFlag the trim flag
-     * @return the value to be stored for this node
+     * @param content the text content of this node.
+     * @param hasChildren a flag whether the node has children.
+     * @param trimFlag the trim flag.
+     * @return the value to be stored for this node.
      */
     private static String determineValue(final String content, final boolean hasChildren, final boolean trimFlag) {
         final boolean shouldTrim = trimFlag || StringUtils.isBlank(content) && hasChildren;
@@ -462,8 +462,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Checks whether an element defines a complete list. If this is the case, extended list handling can be applied.
      *
-     * @param element the element to be checked
-     * @return a flag whether this is the only element defining the list
+     * @param element the element to be checked.
+     * @return a flag whether this is the only element defining the list.
      */
     private static boolean isSingleElementList(final Element element) {
         final Node parentNode = element.getParentNode();
@@ -522,10 +522,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /** Stores a flag whether DTD or Schema validation should be performed. */
     private boolean validating;
 
-    /** Stores a flag whether DTD or Schema validation is used */
+    /** Stores a flag whether DTD or Schema validation is used. */
     private boolean schemaValidation;
 
-    /** The EntityResolver to use */
+    /** The EntityResolver to use. */
     private EntityResolver entityResolver = new DefaultEntityResolver();
 
     /** The current file locator. */
@@ -543,7 +543,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * object. Note that only the data of the passed in configuration will be copied. If, for instance, the other
      * configuration is a {@code XMLConfiguration}, too, things like comments or processing instructions will be lost.
      *
-     * @param c the configuration to copy
+     * @param c the configuration to copy.
      * @since 1.4
      */
     public XMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
@@ -555,15 +555,14 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Helper method for building the internal storage hierarchy. The XML elements are transformed into node objects.
      *
-     * @param node a builder for the current node
-     * @param refValue stores the text value of the element
-     * @param element the current XML element
-     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are
-     *        irrelevant
-     * @param trim a flag whether the text content of elements should be trimmed; this controls the whitespace handling
-     * @param level the current level in the hierarchy
-     * @return a map with all attribute values extracted for the current node; this map also contains the value of the trim
-     *         flag for this node under the key {@value #ATTR_SPACE}
+     * @param node     a builder for the current node.
+     * @param refValue stores the text value of the element.
+     * @param element  the current XML element.
+     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are irrelevant.
+     * @param trim     a flag whether the text content of elements should be trimmed; this controls the whitespace handling.
+     * @param level    the current level in the hierarchy.
+     * @return a map with all attribute values extracted for the current node; this map also contains the value of the trim flag for this node under the key
+     *         {@value #ATTR_SPACE}.
      */
     private Map<String, String> constructHierarchy(final ImmutableNode.Builder node, final MutableObject<String> refValue, final Element element,
         final Map<ImmutableNode, Object> elemRefs, final boolean trim, final int level) {
@@ -607,19 +606,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     }
 
     /**
-     * Creates a new child node, assigns its value, and adds it to its parent. This method also deals with elements whose
-     * value is a list. In this case multiple child elements must be added. The return value is the first child node which
-     * was added.
+     * Creates a new child node, assigns its value, and adds it to its parent. This method also deals with elements whose value is a list. In this case multiple
+     * child elements must be added. The return value is the first child node which was added.
      *
-     * @param parent the builder for the parent element
-     * @param child the builder for the child element
-     * @param elem the associated XML element
-     * @param value the value of the child element
-     * @param trim flag whether texts of elements should be trimmed
-     * @param attrmap a map with the attributes of the current node
-     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are
-     *        irrelevant
-     * @return the first child node added to the parent
+     * @param parent   the builder for the parent element.
+     * @param child    the builder for the child element.
+     * @param elem     the associated XML element.
+     * @param value    the value of the child element.
+     * @param trim     flag whether texts of elements should be trimmed.
+     * @param attrmap  a map with the attributes of the current node.
+     * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are irrelevant.
+     * @return the first child node added to the parent.
      */
     private ImmutableNode createChildNodeWithValue(final ImmutableNode.Builder parent, final ImmutableNode.Builder child, final Element elem,
         final String value, final boolean trim, final Map<String, String> attrmap, final Map<ImmutableNode, Object> elemRefs) {
@@ -667,8 +664,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Creates a DOM document from the internal tree of configuration nodes.
      *
-     * @return the new document
-     * @throws ConfigurationException if an error occurs
+     * @return the new document.
+     * @throws ConfigurationException if an error occurs.
      */
     private Document createDocument() throws ConfigurationException {
         final ReferenceNodeHandler handler = getReferenceHandler();
@@ -688,8 +685,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Depending on the value of the validating flag this builder will be a validating or a non validating
      * {@code DocumentBuilder}.
      *
-     * @return the {@code DocumentBuilder} for loading configuration files
-     * @throws ParserConfigurationException if an error occurs
+     * @return the {@code DocumentBuilder} for loading configuration files.
+     * @throws ParserConfigurationException if an error occurs.
      * @since 1.2
      */
     protected DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
@@ -725,8 +722,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * default settings like indentation mode and the DOCTYPE. Derived classes may overload this method if they have
      * specific needs.
      *
-     * @return the transformer to use for a save operation
-     * @throws ConfigurationException if an error occurs
+     * @return the transformer to use for a save operation.
+     * @throws ConfigurationException if an error occurs.
      * @since 1.3
      */
     protected Transformer createTransformer() throws ConfigurationException {
@@ -751,7 +748,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets the XML document this configuration was loaded from. The return value is <strong>null</strong> if this configuration
      * was not loaded from a XML document.
      *
-     * @return the XML document this configuration was loaded from
+     * @return the XML document this configuration was loaded from.
      */
     public Document getDocument() {
         final XMLDocumentHelper docHelper = getDocumentHelper();
@@ -762,7 +759,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets the {@code DocumentBuilder} object that is used for loading documents. If no specific builder has been set,
      * this method returns <strong>null</strong>.
      *
-     * @return the {@code DocumentBuilder} for loading new documents
+     * @return the {@code DocumentBuilder} for loading new documents.
      * @since 1.2
      */
     public DocumentBuilder getDocumentBuilder() {
@@ -772,7 +769,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Gets the helper object for managing the underlying document.
      *
-     * @return the {@code XMLDocumentHelper}
+     * @return the {@code XMLDocumentHelper}.
      */
     private XMLDocumentHelper getDocumentHelper() {
         final ReferenceNodeHandler handler = getReferenceHandler();
@@ -793,7 +790,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets the public ID of the DOCTYPE declaration from the loaded XML document. This is <strong>null</strong> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a public ID.
      *
-     * @return the public ID
+     * @return the public ID.
      * @since 1.3
      */
     public String getPublicID() {
@@ -803,7 +800,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Gets the extended node handler with support for references.
      *
-     * @return the {@code ReferenceNodeHandler}
+     * @return the {@code ReferenceNodeHandler}.
      */
     private ReferenceNodeHandler getReferenceHandler() {
         return getSubConfigurationParentModel().getReferenceNodeHandler();
@@ -814,7 +811,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * document's root element is returned. Otherwise it is possible to set a name for the root element that will be used
      * when this configuration is stored.
      *
-     * @return the name of the root element
+     * @return the name of the root element.
      */
     @Override
     protected String getRootElementNameInternal() {
@@ -829,7 +826,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets the system ID of the DOCTYPE declaration from the loaded XML document. This is <strong>null</strong> if no document has
      * been loaded yet or if the document does not contain a DOCTYPE declaration with a system ID.
      *
-     * @return the system ID
+     * @return the system ID.
      * @since 1.3
      */
     public String getSystemID() {
@@ -869,8 +866,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Sets the text of the root element of a newly created XML Document.
      *
-     * @param doc the document
-     * @param value the new text to be set
+     * @param doc the document.
+     * @param value the new text to be set.
      */
     private void initRootElementText(final Document doc, final Object value) {
         final Element elem = doc.getDocumentElement();
@@ -893,7 +890,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Returns the value of the schemaValidation flag.
      *
-     * @return the schemaValidation flag
+     * @return the schemaValidation flag.
      * @since 1.7
      */
     public boolean isSchemaValidation() {
@@ -903,7 +900,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Returns the value of the validating flag.
      *
-     * @return the validating flag
+     * @return the validating flag.
      * @since 1.2
      */
     public boolean isValidating() {
@@ -913,8 +910,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Loads a configuration file from the specified input source.
      *
-     * @param source the input source
-     * @throws ConfigurationException if an error occurs
+     * @param source the input source.
+     * @throws ConfigurationException if an error occurs.
      */
     private void load(final InputSource source) throws ConfigurationException {
         if (locator == null) {
@@ -965,9 +962,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * from a stream. Note that this method will be called most time when reading an XML configuration source. By reading
      * XML documents directly from an input stream, the file's encoding can be correctly dealt with.
      *
-     * @param in the input stream
-     * @throws ConfigurationException if an error occurs
-     * @throws IOException if an IO error occurs
+     * @param in the input stream.
+     * @throws ConfigurationException if an error occurs.
+     * @throws IOException if an IO error occurs.
      */
     @Override
     public void read(final InputStream in) throws ConfigurationException, IOException {
@@ -978,9 +975,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Loads the configuration from the given reader. Note that the {@code clear()} method is not called, so the properties
      * contained in the loaded file will be added to the current set of properties.
      *
-     * @param in the reader
-     * @throws ConfigurationException if an error occurs
-     * @throws IOException if an IO error occurs
+     * @param in the reader.
+     * @throws ConfigurationException if an error occurs.
+     * @throws IOException if an IO error occurs.
      */
     @Override
     public void read(final Reader in) throws ConfigurationException, IOException {
@@ -992,7 +989,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * the exact document builder. So an application can create a builder, configure it for its special needs, and then pass
      * it to this method.
      *
-     * @param documentBuilder the document builder to be used; if undefined, a default builder will be used
+     * @param documentBuilder the document builder to be used; if undefined, a default builder will be used.
      * @since 1.2
      */
     public void setDocumentBuilder(final DocumentBuilder documentBuilder) {
@@ -1013,7 +1010,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Sets the public ID of the DOCTYPE declaration. When this configuration is saved, a DOCTYPE declaration will be
      * constructed that contains this public ID.
      *
-     * @param publicID the public ID
+     * @param publicID the public ID.
      * @since 1.3
      */
     public void setPublicID(final String publicID) {
@@ -1027,7 +1024,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * exception is thrown. Whether this configuration has been loaded from an XML document or not can be found out using
      * the {@code getDocument()} method.
      *
-     * @param name the name of the root element
+     * @param name the name of the root element.
      */
     public void setRootElementName(final String name) {
         beginRead(true);
@@ -1046,7 +1043,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * This flag is evaluated only if no custom {@code DocumentBuilder} was set. If set to true the XML document must
      * contain a schemaLocation definition that provides resolvable hints to the required schemas.
      *
-     * @param schemaValidation the validating flag
+     * @param schemaValidation the validating flag.
      * @since 1.7
      */
     public void setSchemaValidation(final boolean schemaValidation) {
@@ -1060,7 +1057,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Sets the system ID of the DOCTYPE declaration. When this configuration is saved, a DOCTYPE declaration will be
      * constructed that contains this system ID.
      *
-     * @param systemID the system ID
+     * @param systemID the system ID.
      * @since 1.3
      */
     public void setSystemID(final String systemID) {
@@ -1071,7 +1068,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Sets the value of the validating flag. This flag determines whether DTD/Schema validation should be performed when
      * loading XML documents. This flag is evaluated only if no custom {@code DocumentBuilder} was set.
      *
-     * @param validating the validating flag
+     * @param validating the validating flag.
      * @since 1.2
      */
     public void setValidating(final boolean validating) {
@@ -1102,9 +1099,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Saves the configuration to the specified writer.
      *
-     * @param writer the writer used to save the configuration
-     * @throws ConfigurationException if an error occurs
-     * @throws IOException if an IO error occurs
+     * @param writer the writer used to save the configuration.
+     * @throws ConfigurationException if an error occurs.
+     * @throws IOException if an IO error occurs.
      */
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException {
