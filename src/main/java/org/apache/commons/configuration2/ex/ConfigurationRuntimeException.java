@@ -45,11 +45,10 @@ public class ConfigurationRuntimeException extends RuntimeException {
     }
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} with specified detail message using
-     * {@link String#format(String,Object...)}.
+     * Constructs a new {@code ConfigurationRuntimeException} with specified detail message using {@link String#format(String,Object...)}.
      *
      * @param message the error message
-     * @param args arguments to the error message
+     * @param args    arguments to the error message
      * @see String#format(String,Object...)
      */
     public ConfigurationRuntimeException(final String message, final Object... args) {
@@ -60,7 +59,7 @@ public class ConfigurationRuntimeException extends RuntimeException {
      * Constructs a new {@code ConfigurationRuntimeException} with specified detail message and nested {@code Throwable}.
      *
      * @param message the error message
-     * @param cause the exception or error that caused this exception to be thrown
+     * @param cause   the exception or error that caused this exception to be thrown
      */
     public ConfigurationRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
@@ -73,5 +72,18 @@ public class ConfigurationRuntimeException extends RuntimeException {
      */
     public ConfigurationRuntimeException(final Throwable cause) {
         super(cause);
+    }
+
+    /**
+     * Constructs a new {@code ConfigurationRuntimeException} with specified detail message.
+     *
+     * @param format the error message for for {@link String#format(String, Object...)}.
+     * @param params the error parameters for for {@link String#format(String, Object...)}.
+     * @param cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value is permitted, and indicates that
+     *               the cause is nonexistent or unknown.)
+     * @since 2.14.0
+     */
+    public ConfigurationRuntimeException(final Throwable cause, final String format, final Object... params) {
+        super(String.format(format, params), cause);
     }
 }

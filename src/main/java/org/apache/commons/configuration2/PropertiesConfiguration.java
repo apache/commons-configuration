@@ -1181,8 +1181,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                         unicode.setLength(0);
                         inUnicode = false;
                         hadSlash = false;
-                    } catch (final NumberFormatException nfe) {
-                        throw new ConfigurationRuntimeException("Unable to parse unicode value: " + unicode, nfe);
+                    } catch (final NumberFormatException e) {
+                        throw new ConfigurationRuntimeException(e, "Unable to parse unicode value: %s", unicode);
                     }
                 }
                 continue;

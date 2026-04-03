@@ -106,8 +106,8 @@ public class DatabaseConfigurationTestHelper {
         if (dataSource == null) {
             try {
                 dataSource = setUpDataSource();
-            } catch (final Exception ex) {
-                throw new ConfigurationRuntimeException("Could not create data source", ex);
+            } catch (final Exception e) {
+                throw new ConfigurationRuntimeException("Could not create data source", e);
             }
         }
         return dataSource;

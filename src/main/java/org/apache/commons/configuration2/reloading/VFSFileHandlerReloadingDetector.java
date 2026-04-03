@@ -93,10 +93,10 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
                 throw new ConfigurationRuntimeException("Unable to determine file to monitor");
             }
             return fsManager.resolveFile(uri);
-        } catch (final FileSystemException fse) {
+        } catch (final FileSystemException e) {
             final String msg = "Unable to monitor " + getFileHandler().getURL().toString();
             log.error(msg);
-            throw new ConfigurationRuntimeException(msg, fse);
+            throw new ConfigurationRuntimeException(msg, e);
         }
     }
 

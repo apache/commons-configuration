@@ -140,7 +140,7 @@ public class ExprLookup implements Lookup {
                     this.value = clazz;
                 }
             } catch (final Exception e) {
-                throw new ConfigurationRuntimeException("Unable to create " + value, e);
+                throw new ConfigurationRuntimeException(e, "Unable to create %s", value);
             }
 
         }

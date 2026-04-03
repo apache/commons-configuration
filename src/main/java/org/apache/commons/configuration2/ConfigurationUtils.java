@@ -446,8 +446,8 @@ public final class ConfigurationUtils {
     public static Class<?> loadClassNoEx(final String clsName) {
         try {
             return loadClass(clsName);
-        } catch (final ClassNotFoundException cnfex) {
-            throw new ConfigurationRuntimeException("Cannot load class " + clsName, cnfex);
+        } catch (final ClassNotFoundException e) {
+            throw new ConfigurationRuntimeException(e, "Cannot load class %s", clsName);
         }
     }
 

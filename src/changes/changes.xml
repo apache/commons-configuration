@@ -33,6 +33,7 @@
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add ConfigurationException.ConfigurationException(Throwable, String, Object...).</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add ConversionException.ConversionException(String, Object...).</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">Add ConversionException.ConversionException(Throwable, String, Object...).</action>
+      <action type="add" dev="ggregory" due-to="Gary Gregory">Add ConfigurationRuntimeException.ConfigurationRuntimeException(Throwable, String, Object...).</action>
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 92 to 97.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-text from 1.14.0 to 1.15.0.</action>

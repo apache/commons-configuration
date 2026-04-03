@@ -84,6 +84,6 @@ public class ConversionException extends ConfigurationRuntimeException {
      * @since 2.14.0
      */
     public ConversionException(final Throwable cause, final String format, final Object... params) {
-        super(String.format(format, params), cause);
+        super(cause, format, params);
     }
 }

@@ -222,8 +222,8 @@ public class VFSFileSystem extends DefaultFileSystem {
 
             final URLStreamHandler handler = new VFSURLStreamHandler();
             return new URL(null, path.getURI(), handler);
-        } catch (final FileSystemException fse) {
-            throw new ConfigurationRuntimeException("Could not parse basePath: " + basePath + " and fileName: " + file, fse);
+        } catch (final FileSystemException e) {
+            throw new ConfigurationRuntimeException(e, "Could not parse basePath: %s and fileName: %s", basePath, file);
         }
     }
 
