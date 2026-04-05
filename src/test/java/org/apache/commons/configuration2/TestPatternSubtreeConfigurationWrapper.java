@@ -30,8 +30,6 @@ public class TestPatternSubtreeConfigurationWrapper {
      */
     @Test
     void testReadNotFileBased() {
-        assertThrows(NullPointerException.class, () -> {
-            new PatternSubtreeConfigurationWrapper(null, "");
-        });
+        assertThrows(NullPointerException.class, () -> new PatternSubtreeConfigurationWrapper(null, ""));
     }
 }

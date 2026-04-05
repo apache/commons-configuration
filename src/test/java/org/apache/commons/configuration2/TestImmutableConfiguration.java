@@ -109,10 +109,7 @@ public class TestImmutableConfiguration {
     @Test
     void testUnmodifiableConfigurationCast() throws ConfigurationException {
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(createTestConfig());
-        assertThrows(ClassCastException.class, () -> {
-            final Configuration mutableConf = (Configuration) conf;
-            mutableConf.clear();
-        });
+        assertThrows(ClassCastException.class, () -> ((Configuration) conf).clear());
     }
 
     /**
