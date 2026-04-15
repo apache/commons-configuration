@@ -55,7 +55,7 @@ public class ConfigurationLogger {
      */
     private static Log createLoggerForClass(final Class<?> cls) {
         if (cls == null) {
-            throw new IllegalArgumentException("Logger class must not be null!");
+            throw new IllegalArgumentException("Logger class must not be null.");
         }
         return LogFactory.getLog(cls);
     }
@@ -69,7 +69,7 @@ public class ConfigurationLogger {
      */
     private static Log createLoggerForName(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException("Logger name must not be null!");
+            throw new IllegalArgumentException("Logger name must not be null.");
         }
         return LogFactory.getLog(name);
     }

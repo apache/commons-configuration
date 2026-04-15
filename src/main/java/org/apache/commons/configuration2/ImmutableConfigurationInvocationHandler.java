@@ -82,7 +82,7 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
          */
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("remove() operation not supported!");
+            throw new UnsupportedOperationException("remove() operation not supported.");
         }
     }
 

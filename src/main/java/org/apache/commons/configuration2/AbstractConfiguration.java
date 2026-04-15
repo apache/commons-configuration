@@ -177,7 +177,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param key the key (to be part of the error message)
      */
     private static void throwMissingPropertyException(final String key) {
-        throw new NoSuchElementException(String.format("Key '%s' does not map to an existing object!", key));
+        throw new NoSuchElementException(String.format("Key '%s' does not map to an existing object.", key));
     }
 
     /** The list delimiter handler. */
@@ -795,7 +795,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public String getEncodedString(final String key) {
         final ConfigurationDecoder decoder = getConfigurationDecoder();
         if (decoder == null) {
-            throw new IllegalStateException("No default ConfigurationDecoder defined!");
+            throw new IllegalStateException("No default ConfigurationDecoder defined.");
         }
         return getEncodedString(key, decoder);
     }
@@ -808,7 +808,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public String getEncodedString(final String key, final ConfigurationDecoder decoder) {
         if (decoder == null) {
-            throw new IllegalArgumentException("ConfigurationDecoder must not be null!");
+            throw new IllegalArgumentException("ConfigurationDecoder must not be null.");
         }
 
         final String value = getString(key);
@@ -1313,7 +1313,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public void setConversionHandler(final ConversionHandler conversionHandler) {
         if (conversionHandler == null) {
-            throw new IllegalArgumentException("ConversionHandler must not be null!");
+            throw new IllegalArgumentException("ConversionHandler must not be null.");
         }
         this.conversionHandler = conversionHandler;
     }
@@ -1379,7 +1379,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public void setListDelimiterHandler(final ListDelimiterHandler listDelimiterHandler) {
         if (listDelimiterHandler == null) {
-            throw new IllegalArgumentException("List delimiter handler must not be null!");
+            throw new IllegalArgumentException("List delimiter handler must not be null.");
         }
         this.listDelimiterHandler = listDelimiterHandler;
     }

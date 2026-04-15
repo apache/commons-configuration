@@ -109,7 +109,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      */
     public static void setDefaultEncoding(final Class<?> configClass, final String encoding) {
         if (configClass == null) {
-            throw new IllegalArgumentException("Configuration class must not be null!");
+            throw new IllegalArgumentException("Configuration class must not be null.");
         }
 
         if (encoding == null) {

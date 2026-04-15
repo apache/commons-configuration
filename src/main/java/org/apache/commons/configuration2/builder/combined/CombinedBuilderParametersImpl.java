@@ -262,7 +262,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final CombinedBuilderParametersImpl params) {
         if (params == null) {
-            throw new IllegalArgumentException("Source parameters must not be null!");
+            throw new IllegalArgumentException("Source parameters must not be null.");
         }
         return registerMissingProviders(params.getProviders());
     }
@@ -280,7 +280,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final Map<String, ConfigurationBuilderProvider> providers) {
         if (providers == null) {
-            throw new IllegalArgumentException("Map with providers must not be null!");
+            throw new IllegalArgumentException("Map with providers must not be null.");
         }
         providers.forEach((k, v) -> {
             if (!this.providers.containsKey(k)) {
@@ -302,10 +302,10 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     @Override
     public CombinedBuilderParametersImpl registerProvider(final String tagName, final ConfigurationBuilderProvider provider) {
         if (tagName == null) {
-            throw new IllegalArgumentException("Tag name must not be null!");
+            throw new IllegalArgumentException("Tag name must not be null.");
         }
         if (provider == null) {
-            throw new IllegalArgumentException("Provider must not be null!");
+            throw new IllegalArgumentException("Provider must not be null.");
         }
 
         providers.put(tagName, provider);

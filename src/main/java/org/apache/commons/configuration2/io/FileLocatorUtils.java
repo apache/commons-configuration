@@ -523,7 +523,7 @@ public final class FileLocatorUtils {
      */
     public static void put(final FileLocator locator, final Map<String, Object> map) {
         if (map == null) {
-            throw new IllegalArgumentException("Map must not be null!");
+            throw new IllegalArgumentException("Map must not be null.");
         }
 
         if (locator != null) {

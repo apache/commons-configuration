@@ -106,10 +106,10 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     public SubnodeConfiguration(final BaseHierarchicalConfiguration parent, final TrackedNodeModel model) {
         super(model);
         if (parent == null) {
-            throw new IllegalArgumentException("Parent configuration must not be null!");
+            throw new IllegalArgumentException("Parent configuration must not be null.");
         }
         if (model == null) {
-            throw new IllegalArgumentException("Node model must not be null!");
+            throw new IllegalArgumentException("Node model must not be null.");
         }
 
         this.parent = parent;

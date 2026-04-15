@@ -1030,7 +1030,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         beginRead(true);
         try {
             if (getDocument() != null) {
-                throw new UnsupportedOperationException("The name of the root element cannot be changed when loaded from an XML document!");
+                throw new UnsupportedOperationException("The name of the root element cannot be changed when loaded from an XML document.");
             }
             rootElementName = name;
         } finally {

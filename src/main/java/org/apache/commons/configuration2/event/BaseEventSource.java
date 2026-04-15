@@ -131,7 +131,7 @@ public class BaseEventSource implements EventSource {
      */
     public void copyEventListeners(final BaseEventSource source) {
         if (source == null) {
-            throw new IllegalArgumentException("Target event source must not be null!");
+            throw new IllegalArgumentException("Target event source must not be null.");
         }
         source.eventListeners.addAll(eventListeners);
     }

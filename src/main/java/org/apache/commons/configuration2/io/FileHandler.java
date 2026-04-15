@@ -175,7 +175,7 @@ public class FileHandler {
      */
     private static FileHandler checkSourceHandler(final FileHandler c) {
         if (c == null) {
-            throw new IllegalArgumentException("FileHandler to assign must not be null!");
+            throw new IllegalArgumentException("FileHandler to assign must not be null.");
         }
         return c;
     }
@@ -299,7 +299,7 @@ public class FileHandler {
      */
     public void addFileHandlerListener(final FileHandlerListener l) {
         if (l == null) {
-            throw new IllegalArgumentException("Listener must not be null!");
+            throw new IllegalArgumentException("Listener must not be null.");
         }
         listeners.add(l);
     }
@@ -313,7 +313,7 @@ public class FileHandler {
      */
     FileHandler checkContent() throws ConfigurationException {
         if (getContent() == null) {
-            throw new ConfigurationException("No content available!");
+            throw new ConfigurationException("No content available.");
         }
         return this;
     }
@@ -887,7 +887,7 @@ public class FileHandler {
      */
     private void save(final FileLocator locator) throws ConfigurationException {
         if (!FileLocatorUtils.isLocationDefined(locator)) {
-            throw new ConfigurationException("No file location has been set!");
+            throw new ConfigurationException("No file location has been set.");
         }
 
         if (locator.getSourceURL() != null) {
@@ -1117,7 +1117,7 @@ public class FileHandler {
      */
     public void setFileLocator(final FileLocator locator) {
         if (locator == null) {
-            throw new IllegalArgumentException("FileLocator must not be null!");
+            throw new IllegalArgumentException("FileLocator must not be null.");
         }
 
         fileLocator.set(locator);

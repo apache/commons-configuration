@@ -706,7 +706,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     @Override
     public Configuration getSource(final String key) {
         if (key == null) {
-            throw new IllegalArgumentException("Key must not be null!");
+            throw new IllegalArgumentException("Key must not be null.");
         }
         return getCurrentConfig().getSource(key);
     }
@@ -892,7 +892,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     @Override
     public void setNodeCombiner(final NodeCombiner nodeCombiner) {
         if (nodeCombiner == null) {
-            throw new IllegalArgumentException("Node combiner must not be null!");
+            throw new IllegalArgumentException("Node combiner must not be null.");
         }
         this.nodeCombiner = nodeCombiner;
         invalidateAll();

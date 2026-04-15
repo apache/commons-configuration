@@ -337,7 +337,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
         final Map<String, Object> params = getParameters();
         final MultiFileBuilderParametersImpl multiParams = MultiFileBuilderParametersImpl.fromParameters(params, true);
         if (multiParams.getFilePattern() == null) {
-            throw new ConfigurationException("No file name pattern is set!");
+            throw new ConfigurationException("No file name pattern is set.");
         }
         final String fileName = fetchFileName(multiParams);
 

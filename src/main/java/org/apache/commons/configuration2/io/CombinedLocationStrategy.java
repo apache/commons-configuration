@@ -56,11 +56,11 @@ public class CombinedLocationStrategy implements FileLocationStrategy {
      */
     public CombinedLocationStrategy(final Collection<? extends FileLocationStrategy> subs) {
         if (subs == null) {
-            throw new IllegalArgumentException("Collection with sub strategies must not be null!");
+            throw new IllegalArgumentException("Collection with sub strategies must not be null.");
         }
         subStrategies = Collections.unmodifiableCollection(new ArrayList<>(subs));
         if (subStrategies.contains(null)) {
-            throw new IllegalArgumentException("Collection with sub strategies contains null entry!");
+            throw new IllegalArgumentException("Collection with sub strategies contains null entry.");
         }
     }
 

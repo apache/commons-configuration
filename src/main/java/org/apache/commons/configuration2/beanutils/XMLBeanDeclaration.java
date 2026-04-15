@@ -342,7 +342,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      */
     public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key, final boolean optional, final String defBeanClsName) {
         if (config == null) {
-            throw new IllegalArgumentException("Configuration must not be null!");
+            throw new IllegalArgumentException("Configuration must not be null.");
         }
 
         HierarchicalConfiguration<?> tmpconfiguration;

@@ -228,7 +228,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
                     }
                 }
             } catch (final ParseException e) {
-                throw new IllegalArgumentException(String.format("'%s' cannot be parsed to a date!", value), e);
+                throw new IllegalArgumentException(String.format("'%s' cannot be parsed to a date.", value), e);
             }
         }
 
@@ -445,7 +445,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         private PListNodeBuilder peekNE() {
             final PListNodeBuilder result = peek();
             if (result == null) {
-                throw new ConfigurationRuntimeException("Access to empty stack!");
+                throw new ConfigurationRuntimeException("Access to empty stack.");
             }
             return result;
         }

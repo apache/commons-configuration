@@ -99,11 +99,11 @@ public class CombinedReloadingController extends ReloadingController {
      */
     private static Collection<ReloadingController> checkManagedControllers(final Collection<? extends ReloadingController> subCtrls) {
         if (subCtrls == null) {
-            throw new IllegalArgumentException("Collection with sub controllers must not be null!");
+            throw new IllegalArgumentException("Collection with sub controllers must not be null.");
         }
         final Collection<ReloadingController> ctrls = new ArrayList<>(subCtrls);
         if (ctrls.stream().anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("Collection with sub controllers contains a null entry!");
+            throw new IllegalArgumentException("Collection with sub controllers contains a null entry.");
         }
 
         return Collections.unmodifiableCollection(ctrls);

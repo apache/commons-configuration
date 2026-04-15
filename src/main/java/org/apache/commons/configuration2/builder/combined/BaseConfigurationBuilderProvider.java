@@ -110,10 +110,10 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      */
     public BaseConfigurationBuilderProvider(final String bldrCls, final String reloadBldrCls, final String configCls, final Collection<String> paramCls) {
         if (bldrCls == null) {
-            throw new IllegalArgumentException("Builder class must not be null!");
+            throw new IllegalArgumentException("Builder class must not be null.");
         }
         if (configCls == null) {
-            throw new IllegalArgumentException("Configuration class must not be null!");
+            throw new IllegalArgumentException("Configuration class must not be null.");
         }
 
         builderClass = bldrCls;

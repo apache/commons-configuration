@@ -99,7 +99,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      */
     public static FileBasedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
         if (params == null) {
-            throw new IllegalArgumentException("Parameters map must not be null!");
+            throw new IllegalArgumentException("Parameters map must not be null.");
         }
 
         FileBasedBuilderParametersImpl instance = (FileBasedBuilderParametersImpl) params.get(PARAM_KEY);

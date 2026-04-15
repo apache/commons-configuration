@@ -168,10 +168,10 @@ public class BuilderConfigurationWrapperFactory {
     public static <T extends ImmutableConfiguration> T createBuilderConfigurationWrapper(final Class<T> ifcClass,
         final ConfigurationBuilder<? extends T> builder, final EventSourceSupport evSrcSupport) {
         if (ifcClass == null) {
-            throw new IllegalArgumentException("Interface class must not be null!");
+            throw new IllegalArgumentException("Interface class must not be null.");
         }
         if (builder == null) {
-            throw new IllegalArgumentException("Builder must not be null!");
+            throw new IllegalArgumentException("Builder must not be null.");
         }
 
         return ifcClass.cast(Proxy.newProxyInstance(BuilderConfigurationWrapperFactory.class.getClassLoader(), getSupportedInterfaces(ifcClass, evSrcSupport),

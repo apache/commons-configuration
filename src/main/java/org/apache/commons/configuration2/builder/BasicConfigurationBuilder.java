@@ -166,7 +166,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         if (resCls == null) {
-            throw new IllegalArgumentException("Result class must not be null!");
+            throw new IllegalArgumentException("Result class must not be null.");
         }
 
         resultClass = resCls;
@@ -247,7 +247,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     public final void connectToReloadingController(final ReloadingController controller) {
         if (controller == null) {
-            throw new IllegalArgumentException("ReloadingController must not be null!");
+            throw new IllegalArgumentException("ReloadingController must not be null.");
         }
         ReloadingBuilderSupportListener.connect(this, controller);
     }

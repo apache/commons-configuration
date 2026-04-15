@@ -82,10 +82,10 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      */
     public TrackedNodeModel(final InMemoryNodeModelSupport modelSupport, final NodeSelector sel, final boolean untrackOnFinalize) {
         if (modelSupport == null) {
-            throw new IllegalArgumentException("Underlying model support must not be null!");
+            throw new IllegalArgumentException("Underlying model support must not be null.");
         }
         if (sel == null) {
-            throw new IllegalArgumentException("Selector must not be null!");
+            throw new IllegalArgumentException("Selector must not be null.");
         }
 
         parentModelSupport = modelSupport;

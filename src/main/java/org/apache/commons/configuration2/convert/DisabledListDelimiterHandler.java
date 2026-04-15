@@ -57,7 +57,7 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler {
      */
     @Override
     public Object escapeList(final List<?> values, final ValueTransformer transformer) {
-        throw new UnsupportedOperationException("Escaping lists is not supported!");
+        throw new UnsupportedOperationException("Escaping lists is not supported.");
     }
 
     /**

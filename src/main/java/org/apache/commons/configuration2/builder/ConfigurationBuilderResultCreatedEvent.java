@@ -67,7 +67,7 @@ public class ConfigurationBuilderResultCreatedEvent extends ConfigurationBuilder
         final EventType<? extends ConfigurationBuilderResultCreatedEvent> evType, final ImmutableConfiguration createdConfiguration) {
         super(source, evType);
         if (createdConfiguration == null) {
-            throw new IllegalArgumentException("Configuration must not be null!");
+            throw new IllegalArgumentException("Configuration must not be null.");
         }
         configuration = createdConfiguration;
     }

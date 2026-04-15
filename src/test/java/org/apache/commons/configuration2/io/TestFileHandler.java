@@ -617,7 +617,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         final File file = createTestFile();
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(file));
-        assertEquals("No content available!", cex.getMessage());
+        assertEquals("No content available.", cex.getMessage());
     }
 
     /**
@@ -1180,7 +1180,7 @@ public class TestFileHandler {
     void testSaveToWriterIOException() throws ConfigurationException, IOException {
         final FileBased content = mock(FileBased.class);
         final StringWriter out = new StringWriter();
-        final IOException ioex = new IOException("Test exception!");
+        final IOException ioex = new IOException("Test exception.");
 
         doThrow(ioex).when(content).write(out);
 

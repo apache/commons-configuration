@@ -175,7 +175,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
      */
     @Override
     public void setValue(final Object value) {
-        throw new UnsupportedOperationException("Updating the value is not supported!");
+        throw new UnsupportedOperationException("Updating the value is not supported.");
     }
 
     /**

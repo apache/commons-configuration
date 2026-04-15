@@ -72,7 +72,7 @@ public final class InterpolatorSpecification {
          */
         private static void checkLookup(final Lookup lookup) {
             if (lookup == null) {
-                throw new IllegalArgumentException("Lookup must not be null!");
+                throw new IllegalArgumentException("Lookup must not be null.");
             }
         }
 
@@ -185,7 +185,7 @@ public final class InterpolatorSpecification {
          */
         public Builder withPrefixLookup(final String prefix, final Lookup lookup) {
             if (prefix == null) {
-                throw new IllegalArgumentException("Prefix must not be null!");
+                throw new IllegalArgumentException("Prefix must not be null.");
             }
             checkLookup(lookup);
             prefixLookups.put(prefix, lookup);

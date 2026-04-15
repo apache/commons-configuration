@@ -68,12 +68,12 @@ public class TestAbstractHierarchicalConfiguration {
 
         @Override
         public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
@@ -83,42 +83,42 @@ public class TestAbstractHierarchicalConfiguration {
 
         @Override
         public SubnodeConfiguration configurationAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public SubnodeConfiguration configurationAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
 
         @Override
         public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
+            throw new UnsupportedOperationException("Unexpected method call.");
         }
     }
 

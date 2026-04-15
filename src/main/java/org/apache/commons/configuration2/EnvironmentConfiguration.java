@@ -63,7 +63,7 @@ public class EnvironmentConfiguration extends MapConfiguration {
      */
     @Override
     protected void addPropertyDirect(final String key, final Object value) {
-        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
+        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only.");
     }
 
     /**
@@ -72,7 +72,7 @@ public class EnvironmentConfiguration extends MapConfiguration {
      */
     @Override
     protected void clearInternal() {
-        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
+        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only.");
     }
 
     /**
@@ -83,6 +83,6 @@ public class EnvironmentConfiguration extends MapConfiguration {
      */
     @Override
     protected void clearPropertyDirect(final String key) {
-        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
+        throw new UnsupportedOperationException("EnvironmentConfiguration is read-only.");
     }
 }

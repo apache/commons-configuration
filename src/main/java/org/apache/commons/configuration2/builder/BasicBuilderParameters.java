@@ -90,7 +90,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      */
     private static void checkParameters(final Map<String, Object> params) {
         if (params == null) {
-            throw new IllegalArgumentException("Parameters map must not be null!");
+            throw new IllegalArgumentException("Parameters map must not be null.");
         }
     }
 
@@ -213,7 +213,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
             return null;
         }
         if (!expClass.isInstance(value)) {
-            throw new IllegalArgumentException(String.format("Parameter %s is not of type %s!", key, expClass.getSimpleName()));
+            throw new IllegalArgumentException(String.format("Parameter %s is not of type %s.", key, expClass.getSimpleName()));
         }
         return expClass.cast(value);
     }
@@ -326,7 +326,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      */
     public void inheritFrom(final Map<String, ?> source) {
         if (source == null) {
-            throw new IllegalArgumentException("Source properties must not be null!");
+            throw new IllegalArgumentException("Source properties must not be null.");
         }
         copyPropertiesFrom(source, PROP_BEAN_HELPER, PROP_CONFIGURATION_DECODER, PROP_CONVERSION_HANDLER, PROP_LIST_DELIMITER_HANDLER, PROP_LOGGER,
             PROP_SYNCHRONIZER, PROP_THROW_EXCEPTION_ON_MISSING);
@@ -342,7 +342,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      */
     public void merge(final BuilderParameters p) {
         if (p == null) {
-            throw new IllegalArgumentException("Parameters to merge must not be null!");
+            throw new IllegalArgumentException("Parameters to merge must not be null.");
         }
         p.getParameters().forEach((k, v) -> {
             if (!properties.containsKey(k) && !k.startsWith(RESERVED_PARAMETER_PREFIX)) {

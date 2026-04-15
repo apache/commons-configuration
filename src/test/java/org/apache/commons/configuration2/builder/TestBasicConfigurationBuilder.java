@@ -123,7 +123,7 @@ public class TestBasicConfigurationBuilder {
          */
         @Override
         protected void initResultInstance(final PropertiesConfiguration obj) throws ConfigurationException {
-            throw new ConfigurationException("Initialization test exception!");
+            throw new ConfigurationException("Initialization test exception.");
         }
     }
 

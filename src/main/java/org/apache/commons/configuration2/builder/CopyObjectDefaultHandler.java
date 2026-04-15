@@ -53,7 +53,7 @@ public class CopyObjectDefaultHandler implements DefaultParametersHandler<Object
      */
     public CopyObjectDefaultHandler(final BuilderParameters src) {
         if (src == null) {
-            throw new IllegalArgumentException("Source object must not be null!");
+            throw new IllegalArgumentException("Source object must not be null.");
         }
         source = src;
     }

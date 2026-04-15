@@ -104,10 +104,10 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
         final String defConfigClass, final String ext, final Collection<String> paramCls) {
         super(bldrCls, reloadBldrCls, defConfigClass, paramCls);
         if (matchingConfigCls == null) {
-            throw new IllegalArgumentException("Matching configuration class must not be null!");
+            throw new IllegalArgumentException("Matching configuration class must not be null.");
         }
         if (ext == null) {
-            throw new IllegalArgumentException("File extension must not be null!");
+            throw new IllegalArgumentException("File extension must not be null.");
         }
 
         matchingConfigurationClass = matchingConfigCls;

@@ -1265,7 +1265,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             return createXMLDefinitionBuilder(fileParams);
         }
 
-        throw new ConfigurationException("No builder for configuration definition specified!");
+        throw new ConfigurationException("No builder for configuration definition specified.");
     }
 
     /**

@@ -53,10 +53,10 @@ public final class EventListenerRegistrationData<T extends Event> {
      */
     public EventListenerRegistrationData(final EventType<T> type, final EventListener<? super T> lstnr) {
         if (type == null) {
-            throw new IllegalArgumentException("Event type must not be null!");
+            throw new IllegalArgumentException("Event type must not be null.");
         }
         if (lstnr == null) {
-            throw new IllegalArgumentException("Listener to be registered must not be null!");
+            throw new IllegalArgumentException("Listener to be registered must not be null.");
         }
 
         eventType = type;

@@ -219,7 +219,7 @@ public final class ConfigurationUtils {
      */
     public static Synchronizer cloneSynchronizer(final Synchronizer sync) {
         if (sync == null) {
-            throw new IllegalArgumentException("Synchronizer must not be null!");
+            throw new IllegalArgumentException("Synchronizer must not be null.");
         }
         if (NoOpSynchronizer.INSTANCE == sync) {
             return sync;
@@ -401,7 +401,7 @@ public final class ConfigurationUtils {
      */
     public static void enableRuntimeExceptions(final Configuration src) {
         if (!(src instanceof EventSource)) {
-            throw new IllegalArgumentException("Configuration must implement EventSource!");
+            throw new IllegalArgumentException("Configuration must implement EventSource.");
         }
         ((EventSource) src).addEventListener(ConfigurationErrorEvent.ANY, event -> {
             // Throw a runtime exception

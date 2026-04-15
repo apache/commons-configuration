@@ -404,7 +404,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
     @Override
     public <T> NodeAddData<T> prepareAdd(final T root, final String key, final NodeHandler<T> handler) {
         if (key == null) {
-            throw new IllegalArgumentException("prepareAdd: key must not be null!");
+            throw new IllegalArgumentException("prepareAdd: key must not be null.");
         }
 
         String addKey = key;
@@ -418,7 +418,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
 
         final List<QueryResult<T>> nodes = query(root, addKey.substring(0, index).trim(), handler);
         if (nodes.size() != 1) {
-            throw new IllegalArgumentException("prepareAdd: key '" + key + "' must select exactly one target node!");
+            throw new IllegalArgumentException("prepareAdd: key '" + key + "' must select exactly one target node.");
         }
 
         return createNodeAddData(addKey.substring(index).trim(), nodes.get(0));

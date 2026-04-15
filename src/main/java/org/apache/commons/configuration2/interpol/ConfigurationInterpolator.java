@@ -298,7 +298,7 @@ public class ConfigurationInterpolator {
      */
     public static ConfigurationInterpolator fromSpecification(final InterpolatorSpecification spec) {
         if (spec == null) {
-            throw new IllegalArgumentException("InterpolatorSpecification must not be null!");
+            throw new IllegalArgumentException("InterpolatorSpecification must not be null.");
         }
         return spec.getInterpolator() != null ? spec.getInterpolator() : createInterpolator(spec);
     }
@@ -638,10 +638,10 @@ public class ConfigurationInterpolator {
      */
     public void registerLookup(final String prefix, final Lookup lookup) {
         if (prefix == null) {
-            throw new IllegalArgumentException("Prefix for lookup object must not be null!");
+            throw new IllegalArgumentException("Prefix for lookup object must not be null.");
         }
         if (lookup == null) {
-            throw new IllegalArgumentException("Lookup object must not be null!");
+            throw new IllegalArgumentException("Lookup object must not be null.");
         }
         prefixLookups.put(prefix, lookup);
     }

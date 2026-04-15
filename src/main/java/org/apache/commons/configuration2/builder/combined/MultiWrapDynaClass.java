@@ -91,6 +91,6 @@ final class MultiWrapDynaClass implements DynaClass {
      */
     @Override
     public DynaBean newInstance() throws IllegalAccessException, InstantiationException {
-        throw new UnsupportedOperationException("Cannot create an instance of MultiWrapDynaBean!");
+        throw new UnsupportedOperationException("Cannot create an instance of MultiWrapDynaBean.");
     }
 }

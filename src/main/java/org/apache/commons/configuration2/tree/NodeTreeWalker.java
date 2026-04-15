@@ -78,10 +78,10 @@ public class NodeTreeWalker {
      */
     private static <T> boolean checkParameters(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         if (visitor == null) {
-            throw new IllegalArgumentException("Visitor must not be null!");
+            throw new IllegalArgumentException("Visitor must not be null.");
         }
         if (handler == null) {
-            throw new IllegalArgumentException("NodeHandler must not be null!");
+            throw new IllegalArgumentException("NodeHandler must not be null.");
         }
         return root != null;
     }

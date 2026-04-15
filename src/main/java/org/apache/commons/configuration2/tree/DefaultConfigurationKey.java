@@ -339,7 +339,7 @@ public class DefaultConfigurationKey {
          */
         public String nextKey(final boolean decorated) {
             if (!hasNext()) {
-                throw new NoSuchElementException("No more key parts!");
+                throw new NoSuchElementException("No more key parts.");
             }
 
             hasIndex = false;
@@ -379,7 +379,7 @@ public class DefaultConfigurationKey {
          */
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("Remove not supported!");
+            throw new UnsupportedOperationException("Remove not supported.");
         }
     }
 
@@ -423,7 +423,7 @@ public class DefaultConfigurationKey {
      */
     public DefaultConfigurationKey(final DefaultExpressionEngine engine, final String key) {
         if (engine == null) {
-            throw new IllegalArgumentException("Expression engine must not be null!");
+            throw new IllegalArgumentException("Expression engine must not be null.");
         }
         expressionEngine = engine;
         if (key != null) {
@@ -513,7 +513,7 @@ public class DefaultConfigurationKey {
      */
     public DefaultConfigurationKey commonKey(final DefaultConfigurationKey other) {
         if (other == null) {
-            throw new IllegalArgumentException("Other key must no be null!");
+            throw new IllegalArgumentException("Other key must no be null.");
         }
 
         final DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());

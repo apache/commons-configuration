@@ -90,7 +90,7 @@ final class MultiWrapDynaBean implements DynaBean {
      */
     @Override
     public boolean contains(final String name, final String key) {
-        throw new UnsupportedOperationException("contains() operation not supported!");
+        throw new UnsupportedOperationException("contains() operation not supported.");
     }
 
     /**
@@ -137,7 +137,7 @@ final class MultiWrapDynaBean implements DynaBean {
      */
     @Override
     public void remove(final String name, final String key) {
-        throw new UnsupportedOperationException("remove() operation not supported!");
+        throw new UnsupportedOperationException("remove() operation not supported.");
     }
 
     @Override

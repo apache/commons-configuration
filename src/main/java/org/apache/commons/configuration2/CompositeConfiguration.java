@@ -409,14 +409,14 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      */
     public Configuration getSource(final String key) {
         if (key == null) {
-            throw new IllegalArgumentException("Key must not be null!");
+            throw new IllegalArgumentException("Key must not be null.");
         }
 
         Configuration source = null;
         for (final Configuration conf : configList) {
             if (conf.containsKey(key)) {
                 if (source != null) {
-                    throw new IllegalArgumentException("The key " + key + " is defined by multiple sources!");
+                    throw new IllegalArgumentException("The key " + key + " is defined by multiple sources.");
                 }
                 source = conf;
             }

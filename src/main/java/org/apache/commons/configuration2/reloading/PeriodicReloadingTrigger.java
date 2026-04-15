@@ -104,7 +104,7 @@ public class PeriodicReloadingTrigger {
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit,
         final ScheduledExecutorService exec) {
         if (ctrl == null) {
-            throw new IllegalArgumentException("ReloadingController must not be null!");
+            throw new IllegalArgumentException("ReloadingController must not be null.");
         }
 
         controller = ctrl;

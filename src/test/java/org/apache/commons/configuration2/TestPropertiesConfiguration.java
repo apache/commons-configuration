@@ -1499,7 +1499,7 @@ public class TestPropertiesConfiguration {
 
             @Override
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(final Writer out, final ListDelimiterHandler handler) {
-                throw new UnsupportedOperationException("Unexpected call!");
+                throw new UnsupportedOperationException("Unexpected call.");
             }
         });
         load(conf, TEST_PROPERTIES);
@@ -1517,7 +1517,7 @@ public class TestPropertiesConfiguration {
         conf.setIOFactory(new PropertiesConfiguration.IOFactory() {
             @Override
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(final Reader in) {
-                throw new UnsupportedOperationException("Unexpected call!");
+                throw new UnsupportedOperationException("Unexpected call.");
             }
 
             @Override

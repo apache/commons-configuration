@@ -84,7 +84,7 @@ public class ConfigurationDynaClass implements DynaClass {
         }
 
         if (name == null) {
-            throw new IllegalArgumentException("Property name must not be null!");
+            throw new IllegalArgumentException("Property name must not be null.");
         }
 
         final Object value = configuration.getProperty(name);

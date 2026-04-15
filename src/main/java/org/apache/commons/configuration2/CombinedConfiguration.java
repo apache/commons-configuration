@@ -399,13 +399,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void addConfiguration(final Configuration config, final String name, final String at) {
         if (config == null) {
-            throw new IllegalArgumentException("Added configuration must not be null!");
+            throw new IllegalArgumentException("Added configuration must not be null.");
         }
 
         beginWrite(true);
         try {
             if (name != null && namedConfigurations.containsKey(name)) {
-                throw new ConfigurationRuntimeException("A configuration with the name '" + name + "' already exists in this combined configuration!");
+                throw new ConfigurationRuntimeException("A configuration with the name '" + name + "' already exists in this combined configuration.");
             }
 
             final ConfigData cd = new ConfigData(config, name, at);
@@ -706,7 +706,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Configuration getSource(final String key) {
         if (key == null) {
-            throw new IllegalArgumentException("Key must not be null!");
+            throw new IllegalArgumentException("Key must not be null.");
         }
 
         final Set<Configuration> sources = getSources(key);
@@ -716,7 +716,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         final Iterator<Configuration> iterator = sources.iterator();
         final Configuration source = iterator.next();
         if (iterator.hasNext()) {
-            throw new IllegalArgumentException("The key " + key + " is defined by multiple sources!");
+            throw new IllegalArgumentException("The key " + key + " is defined by multiple sources.");
         }
         return source;
     }
@@ -900,7 +900,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void setNodeCombiner(final NodeCombiner nodeCombiner) {
         if (nodeCombiner == null) {
-            throw new IllegalArgumentException("Node combiner must not be null!");
+            throw new IllegalArgumentException("Node combiner must not be null.");
         }
 
         beginWrite(true);

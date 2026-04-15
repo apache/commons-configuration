@@ -793,7 +793,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      */
     public void replaceRoot(final ImmutableNode newRoot, final NodeKeyResolver<ImmutableNode> resolver) {
         if (newRoot == null) {
-            throw new IllegalArgumentException("Replaced root node must not be null!");
+            throw new IllegalArgumentException("Replaced root node must not be null.");
         }
 
         final TreeData current = structure.get();
@@ -814,7 +814,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      */
     public void replaceTrackedNode(final NodeSelector selector, final ImmutableNode newNode) {
         if (newNode == null) {
-            throw new IllegalArgumentException("Replacement node must not be null!");
+            throw new IllegalArgumentException("Replacement node must not be null.");
         }
 
         boolean done;

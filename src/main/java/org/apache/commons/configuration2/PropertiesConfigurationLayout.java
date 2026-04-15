@@ -489,7 +489,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     private PropertyLayoutData fetchLayoutData(final String key) {
         if (key == null) {
-            throw new IllegalArgumentException("Property key must not be null!");
+            throw new IllegalArgumentException("Property key must not be null.");
         }
 
         // PropertyLayoutData defaults to singleLine = true

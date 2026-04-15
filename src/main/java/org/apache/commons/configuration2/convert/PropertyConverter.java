@@ -299,7 +299,7 @@ public final class PropertyConverter {
         if (strValue.length() == 1) {
             return Character.valueOf(strValue.charAt(0));
         }
-        throw new ConversionException("The value '%s' cannot be converted to a Character object!", strValue);
+        throw new ConversionException("The value '%s' cannot be converted to a Character object.", strValue);
     }
 
     /**

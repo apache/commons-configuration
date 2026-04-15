@@ -170,10 +170,10 @@ public class DefaultParametersManager {
      */
     public <T> void registerDefaultsHandler(final Class<T> paramsClass, final DefaultParametersHandler<? super T> handler, final Class<?> startClass) {
         if (paramsClass == null) {
-            throw new IllegalArgumentException("Parameters class must not be null!");
+            throw new IllegalArgumentException("Parameters class must not be null.");
         }
         if (handler == null) {
-            throw new IllegalArgumentException("DefaultParametersHandler must not be null!");
+            throw new IllegalArgumentException("DefaultParametersHandler must not be null.");
         }
         defaultHandlers.add(new DefaultHandlerData(handler, paramsClass, startClass));
     }

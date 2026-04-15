@@ -431,7 +431,7 @@ public class TestConfigurationUtils {
             @Override
             protected void addPropertyDirect(final String key, final Object value) {
                 // always simulate an exception
-                fireError(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, key, value, new RuntimeException("A faked exception!"));
+                fireError(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, key, value, new RuntimeException("A faked exception."));
             }
         };
         config.clearErrorListeners();
@@ -502,7 +502,7 @@ public class TestConfigurationUtils {
      */
     @Test
     void testLoadClassNoExNotFound() {
-        assertThrows(ConfigurationRuntimeException.class, () -> ConfigurationUtils.loadClassNoEx("a non existing class!"));
+        assertThrows(ConfigurationRuntimeException.class, () -> ConfigurationUtils.loadClassNoEx("a non existing class."));
     }
 
     /**
@@ -510,7 +510,7 @@ public class TestConfigurationUtils {
      */
     @Test
     void testLoadClassNotFound() {
-        assertThrows(ClassNotFoundException.class, () -> ConfigurationUtils.loadClass("a non existing class!"));
+        assertThrows(ClassNotFoundException.class, () -> ConfigurationUtils.loadClass("a non existing class."));
     }
 
     @Test

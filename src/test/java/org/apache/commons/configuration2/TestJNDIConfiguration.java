@@ -75,7 +75,7 @@ public class TestJNDIConfiguration {
          * Prepares this object to throw a standard exception when the JNDI context is queried.
          */
         public void installException() {
-            installException(new NamingException("Simulated JNDI exception!"));
+            installException(new NamingException("Simulated JNDI exception."));
         }
 
         /**

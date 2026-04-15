@@ -309,7 +309,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      */
     private static void checkChildNode(final ImmutableNode child) {
         if (child == null) {
-            throw new IllegalArgumentException("Child node must not be null!");
+            throw new IllegalArgumentException("Child node must not be null.");
         }
     }
 

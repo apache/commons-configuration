@@ -64,7 +64,7 @@ public class Event extends EventObject {
     public Event(final Object source, final EventType<? extends Event> evType) {
         super(source);
         if (evType == null) {
-            throw new IllegalArgumentException("Event type must not be null!");
+            throw new IllegalArgumentException("Event type must not be null.");
         }
         eventType = evType;
     }

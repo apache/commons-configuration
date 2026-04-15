@@ -75,7 +75,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
     @Override
     public void registerEntityId(final String publicId, final URL entityURL) {
         if (publicId == null) {
-            throw new IllegalArgumentException("Public ID must not be null!");
+            throw new IllegalArgumentException("Public ID must not be null.");
         }
         getRegisteredEntities().put(publicId, entityURL);
     }

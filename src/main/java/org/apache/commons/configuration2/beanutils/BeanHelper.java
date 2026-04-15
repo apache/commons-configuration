@@ -178,7 +178,7 @@ public final class BeanHelper {
      */
     public static DynaBean createWrapDynaBean(final Object bean) {
         if (bean == null) {
-            throw new IllegalArgumentException("Bean must not be null!");
+            throw new IllegalArgumentException("Bean must not be null.");
         }
         final WrapDynaClass dynaClass = WrapDynaClass.createDynaClass(bean.getClass(), BEAN_UTILS_BEAN.getPropertyUtils());
         return new WrapDynaBean(bean, dynaClass);
@@ -211,7 +211,7 @@ public final class BeanHelper {
 
         final Class<?> clazz = factory.getDefaultBeanClass();
         if (clazz == null) {
-            throw new ConfigurationRuntimeException("Bean class is not specified!");
+            throw new ConfigurationRuntimeException("Bean class is not specified.");
         }
         return clazz;
     }
@@ -385,7 +385,7 @@ public final class BeanHelper {
      */
     public Object createBean(final BeanDeclaration data, final Class<?> defaultClass, final Object param) {
         if (data == null) {
-            throw new IllegalArgumentException("Bean declaration must not be null!");
+            throw new IllegalArgumentException("Bean declaration must not be null.");
         }
 
         final BeanFactory factory = fetchBeanFactory(data);
@@ -509,10 +509,10 @@ public final class BeanHelper {
      */
     public void registerBeanFactory(final String name, final BeanFactory factory) {
         if (name == null) {
-            throw new IllegalArgumentException("Name for bean factory must not be null!");
+            throw new IllegalArgumentException("Name for bean factory must not be null.");
         }
         if (factory == null) {
-            throw new IllegalArgumentException("Bean factory must not be null!");
+            throw new IllegalArgumentException("Bean factory must not be null.");
         }
 
         beanFactories.put(name, factory);

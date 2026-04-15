@@ -134,7 +134,7 @@ public class EventListenerList {
         @Override
         public EventListener<? super T> next() {
             if (nextElement == null) {
-                throw new NoSuchElementException("No more event listeners!");
+                throw new NoSuchElementException("No more event listeners.");
             }
 
             final EventListener<? super T> result = nextElement;
@@ -147,7 +147,7 @@ public class EventListenerList {
          */
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("Removing elements is not supported!");
+            throw new UnsupportedOperationException("Removing elements is not supported.");
         }
 
         /**
@@ -197,7 +197,7 @@ public class EventListenerList {
      */
     public void addAll(final EventListenerList c) {
         if (c == null) {
-            throw new IllegalArgumentException("List to be copied must not be null!");
+            throw new IllegalArgumentException("List to be copied must not be null.");
         }
         c.getRegistrations().forEach(this::addEventListener);
     }
@@ -212,7 +212,7 @@ public class EventListenerList {
      */
     public <T extends Event> void addEventListener(final EventListenerRegistrationData<T> regData) {
         if (regData == null) {
-            throw new IllegalArgumentException("EventListenerRegistrationData must not be null!");
+            throw new IllegalArgumentException("EventListenerRegistrationData must not be null.");
         }
         listeners.add(regData);
     }
@@ -245,7 +245,7 @@ public class EventListenerList {
      */
     public void fire(final Event event) {
         if (event == null) {
-            throw new IllegalArgumentException("Event to be fired must not be null!");
+            throw new IllegalArgumentException("Event to be fired must not be null.");
         }
 
         for (final EventListenerIterator<? extends Event> iterator = getEventListenerIterator(event.getEventType()); iterator.hasNext();) {

@@ -295,7 +295,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     @Override
     public <T> void toCollection(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci, final Collection<T> dest) {
         if (dest == null) {
-            throw new IllegalArgumentException("Target collection must not be null!");
+            throw new IllegalArgumentException("Target collection must not be null.");
         }
 
         if (src != null && !isEmptyElement(src)) {

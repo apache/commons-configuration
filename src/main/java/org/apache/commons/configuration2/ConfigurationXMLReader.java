@@ -234,7 +234,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      */
     protected void parseConfiguration() throws IOException, SAXException {
         if (getParsedConfiguration() == null) {
-            throw new IOException("No configuration specified!");
+            throw new IOException("No configuration specified.");
         }
 
         if (getContentHandler() != null) {

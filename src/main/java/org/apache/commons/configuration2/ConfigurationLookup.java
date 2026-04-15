@@ -44,7 +44,7 @@ public class ConfigurationLookup implements Lookup {
      */
     public ConfigurationLookup(final ImmutableConfiguration config) {
         if (config == null) {
-            throw new IllegalArgumentException("Configuration must not be null!");
+            throw new IllegalArgumentException("Configuration must not be null.");
         }
         configuration = config;
     }

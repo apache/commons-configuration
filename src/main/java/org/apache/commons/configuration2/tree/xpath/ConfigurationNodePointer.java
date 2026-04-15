@@ -242,7 +242,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      */
     @Override
     public void setValue(final Object value) {
-        throw new UnsupportedOperationException("Node value cannot be set!");
+        throw new UnsupportedOperationException("Node value cannot be set.");
     }
 
     /**

@@ -74,7 +74,7 @@ public class ReloadingController implements EventSource {
      */
     public ReloadingController(final ReloadingDetector detect) {
         if (detect == null) {
-            throw new IllegalArgumentException("ReloadingDetector must not be null!");
+            throw new IllegalArgumentException("ReloadingDetector must not be null.");
         }
 
         detector = detect;
