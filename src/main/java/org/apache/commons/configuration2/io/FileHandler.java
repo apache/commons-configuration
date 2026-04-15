@@ -549,12 +549,15 @@ public class FileHandler {
      * the case, a {@code FileLocator} instance is injected which returns only <strong>null</strong> values. This method is called if
      * no file location is available (for example if data is to be loaded from a stream). The encoding of the injected locator is
      * derived from this object.
+     *
+     * @return {@code this} instance.
      */
-    private void injectNullFileLocator() {
+    private FileHandler injectNullFileLocator() {
         if (getContent() instanceof FileLocatorAware) {
             final FileLocator locator = prepareNullLocatorBuilder().create();
             ((FileLocatorAware) getContent()).initFileLocator(locator);
         }
+        return this;
     }
 
     /**
@@ -642,8 +645,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(final Reader in) throws ConfigurationException {
-        checkContent().injectNullFileLocator();
-        loadFromReader(in);
+        checkContent().injectNullFileLocator().loadFromReader(in);
     }
 
     /**
@@ -1007,8 +1009,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final Writer out) throws ConfigurationException {
-        checkContent().injectNullFileLocator();
-        saveToWriter(out);
+        checkContent().injectNullFileLocator().saveToWriter(out);
     }
 
     /**
