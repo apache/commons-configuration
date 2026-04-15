@@ -22,10 +22,8 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * <p>
  * A specialized implementation of {@code FileLocationStrategy} which checks whether the provided file name is already
  * an absolute file name.
- * </p>
  * <p>
  * This strategy ignores the URL and the base path stored in the passed in {@link FileLocator}. It is only triggered by
  * absolute names in the locator's {@code fileName} component.
@@ -33,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @since 2.0
  */
-public class AbsoluteNameLocationStrategy implements FileLocationStrategy {
+public class AbsoluteNameLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * A singleton instance of this strategy.
@@ -59,7 +57,6 @@ public class AbsoluteNameLocationStrategy implements FileLocationStrategy {
                 return FileLocatorUtils.convertFileToURL(file);
             }
         }
-
         return null;
     }
 }

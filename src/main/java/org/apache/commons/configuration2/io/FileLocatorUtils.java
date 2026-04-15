@@ -110,12 +110,10 @@ public final class FileLocatorUtils {
     static String appendPath(final String path, final String ext) {
         final StringBuilder fName = new StringBuilder();
         fName.append(path);
-
         // My best friend. Paranoia.
         if (!path.endsWith(File.separator)) {
             fName.append(File.separator);
         }
-
         //
         // We have a relative path, and we have
         // two possible forms here. If we have the
@@ -140,14 +138,12 @@ public final class FileLocatorUtils {
      */
     static File constructFile(final String basePath, final String fileName) {
         final File file;
-
         final File absolute = new File(fileName);
         if (StringUtils.isEmpty(basePath) || absolute.isAbsolute()) {
             file = absolute;
         } else {
             file = new File(appendPath(basePath, fileName));
         }
-
         return file;
     }
 
@@ -281,7 +277,6 @@ public final class FileLocatorUtils {
             // already fully initialized
             return locator;
         }
-
         final URL url = locate(locator);
         return url != null ? createFullyInitializedLocatorFromURL(locator, url) : null;
     }
@@ -296,12 +291,11 @@ public final class FileLocatorUtils {
         if (url == null) {
             return null;
         }
-
         String s = url.toString();
-        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://")) {
-            s = "file://" + s.substring(FILE_SCHEME.length());
+        final String schemeHierPrefix = FILE_SCHEME + "//";
+        if (s.startsWith(FILE_SCHEME) && !s.startsWith(schemeHierPrefix)) {
+            s = schemeHierPrefix + s.substring(FILE_SCHEME.length());
         }
-
         if (s.endsWith("/") || StringUtils.isEmpty(url.getPath())) {
             return s;
         }
@@ -325,7 +319,6 @@ public final class FileLocatorUtils {
                 LOG.debug("Loading configuration from the context classpath (" + resourceName + ")");
             }
         }
-
         // attempt to load from the system classpath
         if (url == null) {
             url = ClassLoader.getSystemResource(resourceName);
@@ -364,7 +357,6 @@ public final class FileLocatorUtils {
         if (f.isAbsolute()) {
             return f;
         }
-
         // Check if URLs are involved
         URL url;
         try {
@@ -376,11 +368,9 @@ public final class FileLocatorUtils {
                 url = null;
             }
         }
-
         if (url != null) {
             return fileFromURL(url);
         }
-
         return constructFile(basePath, fileName);
     }
 
@@ -394,9 +384,7 @@ public final class FileLocatorUtils {
         if (url == null) {
             return null;
         }
-
         final String path = url.getPath();
-
         if (path.endsWith("/") || StringUtils.isEmpty(path)) {
             return null;
         }
@@ -525,7 +513,6 @@ public final class FileLocatorUtils {
         if (map == null) {
             throw new IllegalArgumentException("Map must not be null.");
         }
-
         if (locator != null) {
             map.put(PROP_BASE_PATH, locator.getBasePath());
             map.put(PROP_ENCODING, locator.getEncoding());

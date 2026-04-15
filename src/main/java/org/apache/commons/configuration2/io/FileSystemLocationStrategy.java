@@ -19,10 +19,8 @@ package org.apache.commons.configuration2.io;
 import java.net.URL;
 
 /**
- * <p>
  * A specialized implementation of {@code FileLocationStrategy} which uses the passed in {@link FileSystem} to locate a
  * file.
- * </p>
  * <p>
  * This strategy implementation ignores the URL of the passed in {@link FileLocator} and operates on its base path and
  * file name. These properties are passed to the {@code locateFromURL()} method of {@code FileSystem}. So the burden of
@@ -31,7 +29,7 @@ import java.net.URL;
  *
  * @since 2.0
  */
-public class FileSystemLocationStrategy implements FileLocationStrategy {
+public class FileSystemLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * A singleton instance of this strategy.

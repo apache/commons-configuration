@@ -23,10 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemProperties;
 
 /**
- * <p>
  * A specialized implementation of {@code FileLocationStrategy} which searches for files in the user's home directory or
  * another special configurable directory.
- * </p>
  * <p>
  * This strategy implementation ignores the URL stored in the passed in {@link FileLocator}. It constructs a file path
  * from the configured home directory (which is the user's home directory per default, but can be changed to another
@@ -40,7 +38,7 @@ import org.apache.commons.lang3.SystemProperties;
  * always ignored, and only the file name is evaluated.
  * </p>
  */
-public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
+public class HomeDirectoryLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * Obtains the home directory to be used by a new instance. If a directory name is provided, it is used. Otherwise, the
@@ -49,7 +47,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @param homeDir the passed in home directory
      * @return the directory to be used
      */
-    private static String fetchHomeDirectory(final String homeDir) {
+    private static String getHomeDirectory(final String homeDir) {
         return homeDir != null ? homeDir : SystemProperties.getUserHome();
     }
 
@@ -84,7 +82,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @param withBasePath a flag whether the base path should be evaluated
      */
     public HomeDirectoryLocationStrategy(final String homeDir, final boolean withBasePath) {
-        homeDirectory = fetchHomeDirectory(homeDir);
+        homeDirectory = getHomeDirectory(homeDir);
         evaluateBasePath = withBasePath;
     }
 
@@ -94,7 +92,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
      * @param locator the {@code FileLocator}
      * @return the base path to be used
      */
-    private String fetchBasePath(final FileLocator locator) {
+    private String getBasePath(final FileLocator locator) {
         if (isEvaluateBasePath() && StringUtils.isNotEmpty(locator.getBasePath())) {
             return FileLocatorUtils.appendPath(getHomeDirectory(), locator.getBasePath());
         }
@@ -127,13 +125,12 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy {
     @Override
     public URL locate(final FileSystem fileSystem, final FileLocator locator) {
         if (StringUtils.isNotEmpty(locator.getFileName())) {
-            final String basePath = fetchBasePath(locator);
+            final String basePath = getBasePath(locator);
             final File file = FileLocatorUtils.constructFile(basePath, locator.getFileName());
             if (file.isFile()) {
                 return FileLocatorUtils.convertFileToURL(file);
             }
         }
-
         return null;
     }
 }

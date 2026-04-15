@@ -22,10 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * <p>
  * A specialized implementation of a {@code FileLocationStrategy} which encapsulates an arbitrary number of
  * {@code FileLocationStrategy} objects.
- * </p>
  * <p>
  * A collection with the wrapped {@code FileLocationStrategy} objects is passed at construction time. During a
  * [{@code locate()} operation the wrapped strategies are called one after the other until one returns a non <strong>null</strong>
@@ -42,7 +40,7 @@ import java.util.Collections;
  *
  * @since 2.0
  */
-public class CombinedLocationStrategy implements FileLocationStrategy {
+public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
 
     /** A collection with all sub strategies managed by this object. */
     private final Collection<FileLocationStrategy> subStrategies;
@@ -84,7 +82,6 @@ public class CombinedLocationStrategy implements FileLocationStrategy {
                 return url;
             }
         }
-
         return null;
     }
 }

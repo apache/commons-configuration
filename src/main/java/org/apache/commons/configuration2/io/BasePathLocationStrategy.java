@@ -22,10 +22,8 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * <p>
  * A specialized implementation of {@code FileLocationStrategy} which tries to construct a file path from the locator's
  * base path and file name.
- * </p>
  * <p>
  * This strategies ignores the URL stored in the passed in {@link FileLocator}. It generates a path by concatenating the
  * base path (if present) and the file name. If the resulting path points to a valid file, the corresponding URL is
@@ -34,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @since 2.0
  */
-public class BasePathLocationStrategy implements FileLocationStrategy {
+public class BasePathLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * A singleton instance of this strategy.
@@ -60,7 +58,6 @@ public class BasePathLocationStrategy implements FileLocationStrategy {
                 return FileLocatorUtils.convertFileToURL(file);
             }
         }
-
         return null;
     }
 }

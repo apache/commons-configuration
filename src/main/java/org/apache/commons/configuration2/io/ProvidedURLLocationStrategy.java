@@ -19,10 +19,8 @@ package org.apache.commons.configuration2.io;
 import java.net.URL;
 
 /**
- * <p>
  * A specialized implementation of {@code FileLocationStrategy} which checks whether a passed in {@link FileLocator}
  * already has a defined URL.
- * </p>
  * <p>
  * {@code FileLocator} objects that have a URL already reference a file in an unambiguous way. Therefore, this strategy
  * just returns the URL of the passed in {@code FileLocator}. It can be used as a first step of the file resolving
@@ -31,7 +29,7 @@ import java.net.URL;
  *
  * @since 2.0
  */
-public class ProvidedURLLocationStrategy implements FileLocationStrategy {
+public class ProvidedURLLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * A singleton instance of this strategy.

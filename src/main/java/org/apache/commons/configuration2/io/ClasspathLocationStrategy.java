@@ -21,9 +21,7 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * <p>
  * A specialized {@code FileLocationStrategy} implementation which searches for files on the class path.
- * </p>
  * <p>
  * This strategy implementation ignores the URL and the base path components of the passed in {@link FileLocator}. It
  * tries to look up the file name on both the class path and the system class path.
@@ -31,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @since 2.0
  */
-public class ClasspathLocationStrategy implements FileLocationStrategy {
+public class ClasspathLocationStrategy extends AbstractFileLocationStrategy {
 
     /**
      * A singleton instance of this strategy.
