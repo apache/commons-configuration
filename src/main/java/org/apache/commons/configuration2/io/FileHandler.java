@@ -39,6 +39,7 @@ import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.configuration2.sync.SynchronizerSupport;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -182,16 +183,10 @@ public class FileHandler {
     /**
      * A helper method for closing a stream. Occurring exceptions will be ignored.
      *
-     * @param cl the stream to be closed (may be <strong>null</strong>)
+     * @param closeable the stream to be closed, may be {@code null}.
      */
-    private static void closeSilent(final Closeable cl) {
-        try {
-            if (cl != null) {
-                cl.close();
-            }
-        } catch (final IOException e) {
-            LogFactory.getLog(FileHandler.class).warn("Exception when closing " + cl, e);
-        }
+    private static void closeSilent(final Closeable closeable) {
+        IOUtils.closeQuietly(closeable, e -> LogFactory.getLog(FileHandler.class).warn("Exception when closing " + closeable, e));
     }
 
     /**
