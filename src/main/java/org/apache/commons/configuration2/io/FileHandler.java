@@ -314,11 +314,13 @@ public class FileHandler {
      * content object is accessed.
      *
      * @throws ConfigurationException if not content object is defined
+     * @return {@code this} instance.
      */
-    private void checkContent() throws ConfigurationException {
+    FileHandler checkContent() throws ConfigurationException {
         if (getContent() == null) {
             throw new ConfigurationException("No content available!");
         }
+        return this;
     }
 
     /**
@@ -329,8 +331,7 @@ public class FileHandler {
      * @throws ConfigurationException if not content object is defined
      */
     private FileLocator checkContentAndGetLocator() throws ConfigurationException {
-        checkContent();
-        return getFileLocator();
+        return checkContent().getFileLocator();
     }
 
     /**
@@ -641,8 +642,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(final Reader in) throws ConfigurationException {
-        checkContent();
-        injectNullFileLocator();
+        checkContent().injectNullFileLocator();
         loadFromReader(in);
     }
 
@@ -731,8 +731,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs
      */
     private void loadFromStream(final InputStream in, final String encoding, final URL url) throws ConfigurationException {
-        checkContent();
-        final SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        final SynchronizerSupport syncSupport = checkContent().fetchSynchronizerSupport();
         syncSupport.lock(LockMode.WRITE);
         try {
             injectFileLocator(url);
@@ -1008,8 +1007,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final Writer out) throws ConfigurationException {
-        checkContent();
-        injectNullFileLocator();
+        checkContent().injectNullFileLocator();
         saveToWriter(out);
     }
 
@@ -1022,8 +1020,7 @@ public class FileHandler {
      * @throws ConfigurationException if an error occurs
      */
     private void saveToStream(final OutputStream out, final String encoding, final URL url) throws ConfigurationException {
-        checkContent();
-        final SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        final SynchronizerSupport syncSupport = checkContent().fetchSynchronizerSupport();
         syncSupport.lock(LockMode.WRITE);
         try {
             injectFileLocator(url);
