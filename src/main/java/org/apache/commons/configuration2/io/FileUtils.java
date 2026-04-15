@@ -22,6 +22,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.lang3.Strings;
+
 /**
  * This class is a subset of org.apache.commons.io.FileUtils, git-svn-id:
  * https://svn.apache.org/repos/asf/commons/proper/io/trunk@1423916 13f79535-47bb-0310-9956-ffa450edef68. The subset is
@@ -86,12 +88,13 @@ final class FileUtils {
      * decoded to {@code /my docs/file.txt}. Starting with version 1.5, this method uses UTF-8 to decode percent-encoded
      * octets to characters. Additionally, malformed percent-encoded octets are handled leniently by passing them through
      * literally.
+     * </p>
      *
      * @param url the file URL to convert, {@code null} returns {@code null}
      * @return the equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
      */
     public static File toFile(final URL url) {
-        if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
+        if (url == null || !Strings.CI.equals("file", url.getProtocol())) {
             return null;
         }
         String fileName = url.getFile().replace('/', File.separatorChar);
