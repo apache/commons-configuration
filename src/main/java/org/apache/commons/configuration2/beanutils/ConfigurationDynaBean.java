@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaClass;
+import org.apache.commons.beanutils2.DynaBean;
+import org.apache.commons.beanutils2.DynaClass;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationMap;
 import org.apache.commons.configuration2.SubsetConfiguration;
