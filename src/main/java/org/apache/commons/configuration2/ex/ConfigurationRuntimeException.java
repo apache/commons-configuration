@@ -47,8 +47,8 @@ public class ConfigurationRuntimeException extends RuntimeException {
     /**
      * Constructs a new {@code ConfigurationRuntimeException} with specified detail message using {@link String#format(String,Object...)}.
      *
-     * @param message the error message
-     * @param args    arguments to the error message
+     * @param message the error message.
+     * @param args    arguments to the error message.
      * @see String#format(String,Object...)
      */
     public ConfigurationRuntimeException(final String message, final Object... args) {
@@ -58,8 +58,8 @@ public class ConfigurationRuntimeException extends RuntimeException {
     /**
      * Constructs a new {@code ConfigurationRuntimeException} with specified detail message and nested {@code Throwable}.
      *
-     * @param message the error message
-     * @param cause   the exception or error that caused this exception to be thrown
+     * @param message the error message.
+     * @param cause   the exception or error that caused this exception to be thrown.
      */
     public ConfigurationRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
@@ -68,7 +68,7 @@ public class ConfigurationRuntimeException extends RuntimeException {
     /**
      * Constructs a new {@code ConfigurationRuntimeException} with specified nested {@code Throwable}.
      *
-     * @param cause the exception or error that caused this exception to be thrown
+     * @param cause the exception or error that caused this exception to be thrown.
      */
     public ConfigurationRuntimeException(final Throwable cause) {
         super(cause);

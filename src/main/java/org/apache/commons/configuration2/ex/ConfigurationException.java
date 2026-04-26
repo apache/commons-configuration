@@ -56,7 +56,7 @@ public class ConfigurationException extends Exception {
     /**
      * Constructs a new {@code ConfigurationException} with specified detail message and nested {@code Throwable}.
      *
-     * @param message the error message
+     * @param message the error message.
      * @param cause   the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value is permitted, and indicates that
      *                the cause is nonexistent or unknown.)
      */
@@ -67,7 +67,7 @@ public class ConfigurationException extends Exception {
     /**
      * Constructs a new {@code ConfigurationException} with specified nested {@code Throwable}.
      *
-     * @param cause the exception or error that caused this exception to be thrown
+     * @param cause the exception or error that caused this exception to be thrown.
      */
     public ConfigurationException(final Throwable cause) {
         super(cause);

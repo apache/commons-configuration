@@ -58,8 +58,8 @@ public class ConversionException extends ConfigurationRuntimeException {
     /**
      * Constructs a new {@code ConversionException} with specified detail message and nested {@code Throwable}.
      *
-     * @param message the error message
-     * @param cause   the exception or error that caused this exception to be thrown
+     * @param message the error message.
+     * @param cause   the exception or error that caused this exception to be thrown.
      */
     public ConversionException(final String message, final Throwable cause) {
         super(message, cause);
@@ -68,7 +68,7 @@ public class ConversionException extends ConfigurationRuntimeException {
     /**
      * Constructs a new {@code ConversionException} with specified nested {@code Throwable}.
      *
-     * @param cause the exception or error that caused this exception to be thrown
+     * @param cause the exception or error that caused this exception to be thrown.
      */
     public ConversionException(final Throwable cause) {
         super(cause);
