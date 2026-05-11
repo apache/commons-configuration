@@ -586,7 +586,6 @@ public class FileHandler {
         } catch (final MalformedURLException e1) {
             throw new ConfigurationException("Cannot create URL from file %s", file);
         }
-
         load(url);
     }
 
@@ -687,7 +686,6 @@ public class FileHandler {
      */
     private void load(final URL url, final FileLocator locator) throws ConfigurationException {
         InputStream in = null;
-
         try {
             final FileSystem fileSystem = FileLocatorUtils.getFileSystem(locator);
             final URLConnectionOptions urlConnectionOptions = locator.getURLConnectionOptions();
@@ -732,7 +730,6 @@ public class FileHandler {
         syncSupport.lock(LockMode.WRITE);
         try {
             injectFileLocator(url);
-
             if (getContent() instanceof InputStreamSupport) {
                 loadFromStreamDirectly(in);
             } else {

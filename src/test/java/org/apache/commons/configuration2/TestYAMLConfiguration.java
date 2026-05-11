@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -69,8 +70,21 @@ public class TestYAMLConfiguration {
     }
 
     @Test
+    void testCycle() throws ConfigurationException {
+        final YAMLConfiguration configuration = new YAMLConfiguration();
+        final FileHandler handler = new FileHandler(configuration);
+        handler.load(new File("src/test/resources/org/apache/commons/configuration2/yaml/cycle.yaml"));
+    }
+
+    @Test
     void testDoubleStringValues() {
-        final Object property = yamlConfiguration.getProperty("key5.example");
+        final Object property = yamlConfiguration.getProperty("key5.example2");
+        assertEquals(Arrays.asList("a", "a", "value"), property);
+    }
+
+    @Test
+    void testDoubleStringEmptyValues() {
+        final Object property = yamlConfiguration.getProperty("key5.example1");
         assertEquals(Arrays.asList("", "", "value"), property);
     }
 

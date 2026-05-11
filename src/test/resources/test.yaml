@@ -26,4 +26,5 @@ martin:
     skill: Elite
 
 key5:
-  example: [ '', '', value]
+  example1: [ '', '', value]
+  example2: [ 'a', 'a', value]  
