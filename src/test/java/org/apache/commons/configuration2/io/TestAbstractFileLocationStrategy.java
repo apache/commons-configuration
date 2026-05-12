@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -43,11 +44,11 @@ public class TestAbstractFileLocationStrategy {
 
     // Bypasses the validation of the single-arg constructor
     private static URL jarUrl(final String spec) throws Exception {
-        return new URL("jar", null,  spec);
+        return new URL("jar", null, spec);
     }
 
     private static Set<String> schemes(final String... values) {
-        return new LinkedHashSet<>(java.util.Arrays.asList(values));
+        return new LinkedHashSet<>(Arrays.asList(values));
     }
 
     private static Set<Pattern> hosts(final String... regexes) {
