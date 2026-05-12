@@ -205,7 +205,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
      */
     private static final String KEY_SCHEMES = "org.apache.commons.configuration2.io.FileLocationStrategy.schemes";
 
-    private static void checkHost(String value, final Set<Pattern> validSet) {
+    private static void checkHost(final String value, final Set<Pattern> validSet) {
         final String lowerCase = StringUtils.toRootLowerCase(value);
         if (!validSet.isEmpty() && StringUtils.isNotEmpty(lowerCase) && validSet.stream().noneMatch(p -> p.matcher(lowerCase).matches())) {
             throw new ConfigurationDeniedException("URL host is not enabled: %s; must be one of %s", value, validSet);
@@ -216,7 +216,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
      * Checks if the scheme is allowed.
      *
      * @param value A URL scheme, never empty or {@code null}.
-     * @param validSet the scheme allow-set.
+     * @param validSet the scheme valid-set.
      */
     private static void checkScheme(final String value, final Set<String> validSet) {
         if (!validSet.isEmpty() && !validSet.contains(StringUtils.toRootLowerCase(value))) {
@@ -229,8 +229,8 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
      * Validates {@code url} against the scheme and host allow-lists.
      *
      * @param url           the URL to check.
-     * @param validSchemes  the scheme allow-set.
-     * @param validHosts    the host allow-set.
+     * @param validSchemes  the scheme valid-set.
+     * @param validHosts    the host valid-set.
      * @throws ConfigurationDeniedException if the URL or any embedded URL fails the check, or a {@code jar:} URL is malformed.
      */
     static void checkUrl(final URL url, final Set<String> validSchemes, final Set<Pattern> validHosts) {
@@ -247,7 +247,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
                 final URL inner = new URL(spec.substring(0, sep));
                 checkUrl(inner, validSchemes, validHosts);
             } catch (final MalformedURLException e) {
-                throw new ConfigurationDeniedException(e, "Malformed jar: URL: %s", url);
+                throw new ConfigurationDeniedException(e, "Malformed 'jar:' URL: %s", url);
             }
         } else {
             checkHost(url.getHost(), validHosts);
