@@ -17,10 +17,15 @@
 
 package org.apache.commons.configuration2;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -30,10 +35,12 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,8 +79,11 @@ public class TestYAMLConfiguration {
     @Test
     void testCycle() throws ConfigurationException {
         final YAMLConfiguration configuration = new YAMLConfiguration();
+        final ConfigurationLogger logger = mock(ConfigurationLogger.class);
+        configuration.setLogger(logger);
         final FileHandler handler = new FileHandler(configuration);
         handler.load(new File("src/test/resources/org/apache/commons/configuration2/yaml/cycle.yaml"));
+        verify(logger, atLeastOnce()).warn(contains("Cycle detected"));
     }
 
     @Test
