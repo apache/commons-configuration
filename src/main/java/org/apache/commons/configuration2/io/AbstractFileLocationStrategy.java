@@ -208,7 +208,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     private static void checkHost(String value, final Set<Pattern> validSet) {
         final String lowerCase = StringUtils.toRootLowerCase(value);
         if (!validSet.isEmpty() && StringUtils.isNotEmpty(lowerCase) && validSet.stream().anyMatch(p -> p.matcher(lowerCase).matches())) {
-            throw new ConfigurationDeniedException(String.format("URL host is not enabled: %s; must be one of %s", value, validSet));
+            throw new ConfigurationDeniedException("URL host is not enabled: %s; must be one of %s", value, validSet);
         }
     }
 
