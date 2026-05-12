@@ -36,4 +36,16 @@ public class ConfigurationDeniedException extends ConfigurationRuntimeException 
     public ConfigurationDeniedException(final String message, final Object... args) {
         super(message, args);
     }
+
+    /**
+     * Constructs a new {@code ConfigurationDeniedException} with specified detail message using {@link String#format(String,Object...)} and cause.
+     *
+     * @param cause the cause.
+     * @param message the error message.
+     * @param args    arguments to the error message.
+     * @see String#format(String,Object...)
+     */
+    public ConfigurationDeniedException(final Throwable cause, final String message, final Object... args) {
+        super(cause, message, args);
+    }
 }

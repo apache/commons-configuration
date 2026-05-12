@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2.io;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -204,6 +205,55 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
      */
     private static final String KEY_SCHEMES = "org.apache.commons.configuration2.io.FileLocationStrategy.schemes";
 
+    private static void checkHost(final String value, final Set<Pattern> validSet) {
+        if (!validSet.isEmpty() && StringUtils.isNotEmpty(value)) {
+            validSet.stream().filter(p -> p.matcher(StringUtils.toRootLowerCase(value)).matches()).findFirst()
+                    .orElseThrow(() -> new ConfigurationDeniedException(String.format("URL host is not enabled: %s; must be one of %s", value, validSet)));
+        }
+    }
+
+    /**
+     * Checks if the scheme is allowed.
+     *
+     * @param value A URL scheme, never empty or {@code null}.
+     * @param validSet the scheme allow-set.
+     */
+    private static void checkScheme(final String value, final Set<String> validSet) {
+        if (!validSet.isEmpty() && !validSet.contains(StringUtils.toRootLowerCase(value))) {
+            throw new ConfigurationDeniedException("URL scheme \"%s\" is not enabled, must be one of %s, override defaults with the system property \"%s\", "
+                    + "complete set: \"file,http,https,jar\"", value, validSet, KEY_SCHEMES);
+        }
+    }
+
+    /**
+     * Validates {@code url} against the scheme and host allow-lists.
+     *
+     * @param url           the URL to check.
+     * @param validSchemes  the scheme allow-set.
+     * @param validHosts    the host allow-set.
+     * @throws ConfigurationDeniedException if the URL or any embedded URL fails the check, or a {@code jar:} URL is malformed.
+     */
+    static void checkUrl(final URL url, final Set<String> validSchemes, final Set<Pattern> validHosts) {
+        String scheme = url.getProtocol();
+        checkScheme(scheme, validSchemes);
+        if ("jar".equalsIgnoreCase(scheme)) {
+            try {
+                // Follows the logic of JarURLConnection#parseSpecs without the cost of opening a connection.
+                final String spec = url.getFile();
+                final int sep = spec.lastIndexOf("!/");
+                if (sep < 0) {
+                    throw new MalformedURLException("no !/ found in url spec:" + spec);
+                }
+                final URL inner = new URL(spec.substring(0, sep));
+                checkUrl(inner, validSchemes, validHosts);
+            } catch (final MalformedURLException e) {
+                throw new ConfigurationDeniedException(e, "Malformed jar: URL: %s", url);
+            }
+        } else {
+            checkHost(url.getHost(), validHosts);
+        }
+    }
+
     private static Set<String> getSchemesProperty() {
         final Set<String> set = new LinkedHashSet<>();
         final String[] split = System.getProperty(KEY_SCHEMES, DEFAULT_SCHEMES).split(",");
@@ -247,25 +297,9 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
 
     URL check(final URL url) {
         if (url != null) {
-            checkScheme("scheme", url, url.getProtocol(), schemes);
-            checkHost("host", url, url.getHost(), hosts);
+            checkUrl(url, schemes, hosts);
         }
         return url;
-    }
-
-    void checkHost(final String type, final URL url, final String value, final Set<Pattern> validSet) {
-        if (!validSet.isEmpty() && StringUtils.isNotEmpty(value)) {
-            hosts.stream().filter(p -> p.matcher(StringUtils.toRootLowerCase(value)).matches()).findFirst()
-                    .orElseThrow(() -> new ConfigurationDeniedException(String.format("URL %s is not enabled: %s; must be one of %s", type, value, validSet)));
-        }
-    }
-
-    void checkScheme(final String type, final URL url, final String value, final Set<String> validSet) {
-        if (!validSet.isEmpty() && value != null && !validSet.contains(StringUtils.toRootLowerCase(value))) {
-            throw new ConfigurationDeniedException(String.format(
-                    "URL %s \"%s\" is not enabled, must be one of %s, override defaults with the system property \"%s\", complete set: \"file,http,https,jar\"",
-                    type, value, validSet, KEY_SCHEMES));
-        }
     }
 
     /**
