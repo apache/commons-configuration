@@ -102,13 +102,13 @@ public class TestAbstractFileLocationStrategy {
         assertThrows(NullPointerException.class, () -> new AbstractFileLocationStrategy.StrategyBuilder<>(null));
     }
 
-    @ParameterizedTest(name = "[{index}] {0}")
+    @ParameterizedTest
     @MethodSource
     void testCheckUrlAccepts(final URL url, final Set<String> validSchemes, final Set<Pattern> validHosts) {
         assertDoesNotThrow(() -> AbstractFileLocationStrategy.checkUrl(url, validSchemes, validHosts));
     }
 
-    @ParameterizedTest(name = "[{index}] {0}")
+    @ParameterizedTest
     @MethodSource
     void testCheckUrlRejects(final URL url, final Set<String> validSchemes, final Set<Pattern> validHosts) {
         assertThrows(ConfigurationDeniedException.class, () -> AbstractFileLocationStrategy.checkUrl(url, validSchemes, validHosts));
