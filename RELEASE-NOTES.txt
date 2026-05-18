@@ -1,3 +1,45 @@
+Apache Commons Configuration 2.15.1 Release Notes
+-------------------------------------------------
+
+The Apache Commons Configuration team is pleased to announce the release of Apache Commons Configuration 2.15.1.
+
+Introducing Apache Commons Configuration
+----------------------------------------
+
+The Apache Commons Team is pleased to announce Commons Configuration 2.15.1.
+
+The Commons Configuration software library provides a generic configuration interface that enables an application to read configuration data from
+various sources and requires Java 8.
+
+This is a feature and maintenance release. Java 8 or later is required.
+
+Changes in this version include:
+
+
+Fixed Bugs
+----------
+
+* CONFIGURATION-856:  The artifact commons-io:commons-io is a normal dependency. Thanks to Piotr Zygielo, Gary Gregory.
+
+Changes
+-------
+
+*                     Bump org.apache.commons:commons-parent from 99 to 100 Thanks to Gary Gregory.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_configuration.cgi
+
+Enjoy!
+Apache Commons Team
+
+-----------------------------------------------------------------------------
 Apache Commons Configuration 2.15.0 Release Notes
 -------------------------------------------------
 
