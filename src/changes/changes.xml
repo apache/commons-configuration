@@ -28,6 +28,7 @@
       <action type="fix" dev="ggregory" issue="CONFIGURATION-856" due-to="Piotr Zygielo, Gary Gregory">The artifact commons-io:commons-io is a normal dependency.</action>
       <!-- ADD -->
       <!-- UPDATE -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 99 to 100</action>
     </release>
     <release version="2.15.0" date="2026-05-11" description="Minor release with new features and updated dependencies; requires Java 8 or above; fixes CVE-2026-45205.">
       <!-- FIX -->
