@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -119,10 +120,11 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
         if (builder.subStrategies == null) {
             throw new IllegalArgumentException("Collection with sub strategies must not be null.");
         }
-        if (builder.subStrategies.contains(null)) {
+        List<FileLocationStrategy> subStrategiesCopy = new ArrayList<>(builder.subStrategies);
+        if (subStrategiesCopy.contains(null)) {
             throw new IllegalArgumentException("Collection with sub strategies contains null entry.");
         }
-        subStrategies = Collections.unmodifiableCollection(new ArrayList<>(builder.subStrategies));
+        subStrategies = Collections.unmodifiableCollection(subStrategiesCopy);
     }
 
     /**
