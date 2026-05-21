@@ -26,9 +26,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -121,6 +123,25 @@ public class TestCombinedLocationStrategy {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         col.add(null);
         assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(col));
+    }
+
+    /**
+     * Tests that the constructor handles collections that throw NPE on contains(null) (like ImmutableList).
+     */
+    @Test
+    void testInitCollectionThrowsNPEOnContainsNull() {
+        // Create a collection that throws NPE on contains(null) like List.of() instance does
+        final Collection<FileLocationStrategy> collectionThatThrowsNPE = new ArrayList<FileLocationStrategy>(Arrays.asList(getSubStrategies())) {
+            @Override
+            public boolean contains(final Object o) {
+                Objects.requireNonNull(o);
+                return super.contains(o);
+            }
+        };
+
+        // This should not throw NPE - the constructor should handle it gracefully
+        final CombinedLocationStrategy strategy = new CombinedLocationStrategy(collectionThatThrowsNPE);
+        checkSubStrategies(strategy);
     }
 
     /**
