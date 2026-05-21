@@ -26,7 +26,7 @@
     <release version="2.15.1" date="2026-05-18" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
       <action type="fix" dev="ggregory" issue="CONFIGURATION-856" due-to="Piotr Zygielo, Gary Gregory">The artifact commons-io:commons-io is a normal dependency.</action>
-      <action type="fix" dev="ggregory" issue="CONFIGURATION-856" due-to="Wei Huang, Gary Gregory">Avoid NPE when combined location strategy sub strategies is immutable list (#639).</action>
+      <action type="fix" dev="ggregory" due-to="Wei Huang, Gary Gregory">Avoid NPE when combined location strategy sub strategies is immutable list (#639).</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 99 to 100</action>
