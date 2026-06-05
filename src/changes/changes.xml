@@ -28,6 +28,7 @@
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.3 to 2.21.4.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 100 to 101.</action>
     </release>
     <release version="2.15.1" date="2026-05-21" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
@@ -35,7 +36,7 @@
       <action type="fix" dev="ggregory" due-to="Wei Huang, Gary Gregory">Avoid NPE when combined location strategy sub strategies is immutable list (#639).</action>
       <!-- ADD -->
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 99 to 100</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 99 to 100.</action>
     </release>
     <release version="2.15.0" date="2026-05-11" description="Minor release with new features and updated dependencies; requires Java 8 or above; fixes CVE-2026-45205.">
       <!-- FIX -->
