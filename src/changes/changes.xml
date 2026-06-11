@@ -27,8 +27,8 @@
       <!-- FIX -->
       <!-- ADD -->
       <!-- UPDATE -->
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 100 to 102.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.3 to 2.21.4.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 100 to 101.</action>
     </release>
     <release version="2.15.1" date="2026-05-21" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
