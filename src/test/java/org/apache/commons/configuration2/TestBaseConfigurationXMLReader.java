@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
@@ -39,6 +38,8 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import eu.copernik.xml.factory.XmlFactories;
 
 /**
  * Test class for BaseConfigurationXMLReader.
@@ -80,7 +81,7 @@ public class TestBaseConfigurationXMLReader {
     private void checkDocument(final BaseConfigurationXMLReader creader, final String rootName) throws Exception {
         final SAXSource source = new SAXSource(creader, new InputSource());
         final DOMResult result = new DOMResult();
-        final Transformer trans = TransformerFactory.newInstance().newTransformer();
+        final Transformer trans = XmlFactories.newTransformerFactory().newTransformer();
         trans.transform(source, result);
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);

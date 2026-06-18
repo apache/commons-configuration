@@ -40,6 +40,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * Test class for {@code XMLPropertiesConfiguration}.
  */
@@ -72,7 +74,7 @@ public class TestXMLPropertiesConfiguration {
         assertThrows(NullPointerException.class, () -> new XMLPropertiesConfiguration(null));
         // Normal case
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory dbFactory = XmlFactories.newDocumentBuilderFactory();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
         final File file = new File(location.toURI());
@@ -101,11 +103,11 @@ public class TestXMLPropertiesConfiguration {
         final File saveFile = newFile("test2.properties.xml", tempFolder);
 
         // save as DOM into saveFile
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory dbFactory = XmlFactories.newDocumentBuilderFactory();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         final Document document = dBuilder.newDocument();
         conf.save(document, document);
-        final TransformerFactory tFactory = TransformerFactory.newInstance();
+        final TransformerFactory tFactory = XmlFactories.newTransformerFactory();
         final Transformer transformer = tFactory.newTransformer();
         final DOMSource source = new DOMSource(document);
         final Result result = new StreamResult(saveFile);

@@ -53,6 +53,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * Test class for {@code XMLDocumentHelper}.
  */
@@ -134,7 +136,7 @@ public class TestXMLDocumentHelper {
      * @return the parsed document
      */
     private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
-        final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        final DocumentBuilder builder = XmlFactories.newDocumentBuilderFactory().newDocumentBuilder();
         return builder.parse(ConfigurationAssert.getTestFile(name));
     }
 
