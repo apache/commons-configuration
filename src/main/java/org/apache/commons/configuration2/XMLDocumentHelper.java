@@ -38,6 +38,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * <p>
  * An internally used helper class for dealing with XML documents.
@@ -90,15 +92,6 @@ final class XMLDocumentHelper {
         } catch (final ParserConfigurationException pcex) {
             throw new ConfigurationException(pcex);
         }
-    }
-
-    /**
-     * Creates a new {@code DocumentBuilderFactory} instance.
-     *
-     * @return the new factory object
-     */
-    private static DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
     }
 
     /**
@@ -163,7 +156,7 @@ final class XMLDocumentHelper {
      * @return the {@code TransformerFactory}
      */
     static TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
+        return XmlFactories.newTransformerFactory();
     }
 
     /**
@@ -184,7 +177,7 @@ final class XMLDocumentHelper {
      * @throws ConfigurationException if an error occurs when creating the document
      */
     public static XMLDocumentHelper forNewDocument(final String rootElementName) throws ConfigurationException {
-        final Document doc = createDocumentBuilder(createDocumentBuilderFactory()).newDocument();
+        final Document doc = createDocumentBuilder(XmlFactories.newDocumentBuilderFactory()).newDocument();
         final Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
         return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);
@@ -230,7 +223,7 @@ final class XMLDocumentHelper {
      */
     public static void transform(final Transformer transformer, final Source source, final Result result) throws ConfigurationException {
         try {
-            transformer.transform(source, result);
+            transformer.transform(XmlFactories.harden(source), result);
         } catch (final TransformerException tex) {
             throw new ConfigurationException(tex);
         }

@@ -67,6 +67,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * <p>
  * A specialized hierarchical configuration class that is able to parse XML documents.
@@ -526,7 +528,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
     private boolean schemaValidation;
 
     /** The EntityResolver to use. */
-    private EntityResolver entityResolver = new DefaultEntityResolver();
+    private EntityResolver entityResolver = new DefaultEntityResolver() {
+        @Override
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
+            InputSource inputSource = super.resolveEntity(publicId, systemId);
+            if (inputSource != null) {
+                return inputSource;
+            }
+            throw new SAXException(String.format(
+                    "Refused to resolve external entity with public ID [%s] and system ID [%s]: no local resource is registered for it.", publicId, systemId));
+        }
+    };
 
     /** The current file locator. */
     private FileLocator locator;
@@ -693,7 +705,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         if (getDocumentBuilder() != null) {
             return getDocumentBuilder();
         }
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = XmlFactories.newDocumentBuilderFactory();
         if (isValidating()) {
             factory.setValidating(true);
             if (isSchemaValidation()) {
