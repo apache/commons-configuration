@@ -128,6 +128,26 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     public void addConfiguration(final Configuration config) {
         addConfiguration(config, false);
     }
+    
+    /**
+     * Add a configuration with a prefix.
+     *
+     * @param config the configuration to add
+     */
+    public void addConfigurationWithPrefix(final Configuration config, final String prefix)
+    {
+        addConfigurationWithPrefix(config, prefix, ".");
+    }
+    
+    /**
+     * Add a configuration with a prefix and delimiter.
+     *
+     * @param config the configuration to add
+     */
+    public void addConfigurationWithPrefix(final Configuration config, final String prefix, final String delimiter)
+    {
+        addConfiguration(new PrefixConfiguration(config, prefix, delimiter), false);
+    }
 
     /**
      * Adds a child configuration and optionally makes it the <em>in-memory configuration</em>. This means that all future
@@ -174,6 +194,26 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      */
     public void addConfigurationFirst(final Configuration config) {
         addConfigurationFirst(config, false);
+    }
+    
+    /**
+     * Add a configuration with a prefix.
+     *
+     * @param config the configuration to add
+     */
+    public void addConfigurationFirstWithPrefix(final Configuration config, final String prefix)
+    {
+        addConfigurationWithPrefix(config, prefix, ".");
+    }
+    
+    /**
+     * Add a configuration with a prefix and delimiter.
+     *
+     * @param config the configuration to add
+     */
+    public void addConfigurationFirstWithPrefix(final Configuration config, final String prefix, final String delimiter)
+    {
+        addConfigurationFirst(new PrefixConfiguration(config, prefix, delimiter), false);
     }
 
     /**
