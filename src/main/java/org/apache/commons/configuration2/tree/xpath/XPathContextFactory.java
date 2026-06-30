@@ -34,7 +34,7 @@ class XPathContextFactory {
      *
      * @param root the root node
      * @param handler the node handler
-     * @param <T> the type of the nodes to be handled
+     * @param <T> The type of the nodes to be handled
      * @return the newly created context
      */
     <T> JXPathContext createContext(final T root, final NodeHandler<T> handler) {

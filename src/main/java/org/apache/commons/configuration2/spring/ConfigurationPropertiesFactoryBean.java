@@ -50,7 +50,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * Creates a defensive copy of the specified array. Handles null values correctly.
      *
      * @param src the source array
-     * @param <T> the type of the array
+     * @param <T> The type of the array
      * @return the defensive copy of the array
      */
     private static <T> T[] clone(final T[] src) {

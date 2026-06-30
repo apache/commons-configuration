@@ -155,7 +155,7 @@ public class BuilderConfigurationWrapperFactory {
      * builder. This is a convenience method which allows creating wrapper configurations without having to instantiate this
      * class.
      *
-     * @param <T> the type of the configuration objects returned by this method
+     * @param <T> The type of the configuration objects returned by this method
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
@@ -216,7 +216,7 @@ public class BuilderConfigurationWrapperFactory {
      * implementation delegates to
      * {@link #createBuilderConfigurationWrapper(Class, ConfigurationBuilder, EventSourceSupport)}.
      *
-     * @param <T> the type of the configuration objects returned by this method
+     * @param <T> The type of the configuration objects returned by this method
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)

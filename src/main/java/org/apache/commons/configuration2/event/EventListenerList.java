@@ -55,7 +55,7 @@ public class EventListenerList {
      * returns only listeners compatible with a specified event type. It has a convenience method for invoking the current
      * listener in the iteration with an event.
      *
-     * @param <T> the event type
+     * @param <T> The event type
      */
     public static final class EventListenerIterator<T extends Event> implements Iterator<EventListener<? super T>> {
 
@@ -207,7 +207,7 @@ public class EventListenerList {
      * registration method; the event type and the listener are passed as a single data object.
      *
      * @param regData the registration data object (must not be <strong>null</strong>)
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @throws IllegalArgumentException if the registration data object is <strong>null</strong>
      */
     public <T extends Event> void addEventListener(final EventListenerRegistrationData<T> regData) {
@@ -223,7 +223,7 @@ public class EventListenerList {
      *
      * @param type the event type (must not be <strong>null</strong>)
      * @param listener the listener to be registered (must not be <strong>null</strong>)
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T extends Event> void addEventListener(final EventType<T> type, final EventListener<? super T> listener) {
@@ -258,7 +258,7 @@ public class EventListenerList {
      * specified event type.
      *
      * @param eventType the event type object
-     * @param <T> the event type
+     * @param <T> The event type
      * @return an {@code Iterator} with the selected event listeners
      */
     public <T extends Event> EventListenerIterator<T> getEventListenerIterator(final EventType<T> eventType) {
@@ -270,7 +270,7 @@ public class EventListenerList {
      * specified event type.
      *
      * @param eventType the event type object
-     * @param <T> the event type
+     * @param <T> The event type
      * @return an {@code Iterable} with the selected event listeners
      */
     public <T extends Event> Iterable<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
@@ -294,7 +294,7 @@ public class EventListenerList {
      * for listeners that extend a given super type.
      *
      * @param eventType the event type object
-     * @param <T> the event type
+     * @param <T> The event type
      * @return a list with the matching event listener registration objects
      */
     public <T extends Event> List<EventListenerRegistrationData<? extends T>> getRegistrationsForSuperType(final EventType<T> eventType) {
@@ -320,7 +320,7 @@ public class EventListenerList {
      * removing a listener which expects the event type and the listener in a single data object.
      *
      * @param regData the registration data object
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @return a flag whether a listener registration was removed
      * @see #removeEventListener(EventType, EventListener)
      */
@@ -336,7 +336,7 @@ public class EventListenerList {
      *
      * @param eventType the event type
      * @param listener the event listener to be removed
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @return a flag whether a listener registration was removed
      */
     public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {

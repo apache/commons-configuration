@@ -28,7 +28,7 @@ import java.util.List;
  * A base class for different types of event listeners which can be used in unit tests. This class provides
  * functionality for testing the received events.
  *
- * @param <T> the type of events supported by this listener
+ * @param <T> The type of events supported by this listener
  */
 public abstract class AbstractEventListenerTestImpl<T extends Event> implements EventListener<T> {
 

@@ -31,7 +31,7 @@ import org.apache.commons.configuration2.io.URLConnectionOptions;
  * This interface defines a set of properties which can be used to specify the location of a configuration source.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  */
 public interface FileBasedBuilderProperties<T> {
 

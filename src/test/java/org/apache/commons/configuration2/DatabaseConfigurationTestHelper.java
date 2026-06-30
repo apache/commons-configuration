@@ -86,7 +86,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates a configuration instance of the specified class with the given parameters.
      *
-     * @param <T> the type of the result configuration
+     * @param <T> The type of the result configuration
      * @param configCls the configuration class
      * @param params the parameters object
      * @return the newly created configuration instance
@@ -155,7 +155,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates a database configuration with default settings of the specified class.
      *
-     * @param <T> the type of the result configuration
+     * @param <T> The type of the result configuration
      * @param configCls the configuration class
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
@@ -218,7 +218,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates a configuration with support for multiple configuration instances in a single table of the specified class.
      *
-     * @param <T> the type of the result configuration
+     * @param <T> The type of the result configuration
      * @param configCls the configuration class
      * @param configName the name of the configuration instance or <strong>null</strong> for the default name
      * @return the newly created configuration instance

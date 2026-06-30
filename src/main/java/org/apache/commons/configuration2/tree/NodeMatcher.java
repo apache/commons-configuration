@@ -33,7 +33,7 @@ package org.apache.commons.configuration2.tree;
  * between multiple components.
  * </p>
  *
- * @param <C> the type of the criterion evaluated by this matcher
+ * @param <C> The type of the criterion evaluated by this matcher
  * @since 2.0
  */
 public interface NodeMatcher<C> {
@@ -44,7 +44,7 @@ public interface NodeMatcher<C> {
      * @param node the node to be tested
      * @param handler the corresponding {@code NodeHandler}
      * @param criterion the criterion to match against
-     * @param <T> the type of the node
+     * @param <T> The type of the node
      * @return <strong>true</strong> if this node matches the criterion, <strong>false</strong> otherwise
      */
     <T> boolean matches(T node, NodeHandler<T> handler, C criterion);

@@ -173,7 +173,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param parent the parent node
      * @param nodeName the name of the current node
      * @param handler the node handler
-     * @param <T> the type of the nodes to be dealt with
+     * @param <T> The type of the nodes to be dealt with
      * @return the index of this node
      */
     private <T> int determineIndex(final T node, final T parent, final String nodeName, final NodeHandler<T> handler) {
@@ -187,7 +187,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param handler the {@code NodeHandler}
      * @param parent the parent node
      * @param nodeName the name of the current node
-     * @param <T> the type of the nodes to be dealt with
+     * @param <T> The type of the nodes to be dealt with
      * @return a list with all matching child nodes
      */
     private <T> List<T> findChildNodesByName(final NodeHandler<T> handler, final T parent, final String nodeName) {
@@ -198,7 +198,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * Finds the last existing node for an add operation. This method traverses the node tree along the specified key. The
      * last existing node on this path is returned.
      *
-     * @param <T> the type of the nodes to be dealt with
+     * @param <T> The type of the nodes to be dealt with
      * @param keyIt the key iterator
      * @param node the current node
      * @param handler the node handler
@@ -225,7 +225,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * Recursive helper method for evaluating a key. This method processes all facets of a configuration key, traverses the
      * tree of properties and fetches the results of all matching properties.
      *
-     * @param <T> the type of nodes to be dealt with
+     * @param <T> The type of nodes to be dealt with
      * @param keyPart the configuration key iterator
      * @param node the current node
      * @param results here the found results are stored
@@ -337,7 +337,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * relevant; the branch is new so there cannot be any ambiguities.)
      * </p>
      *
-     * @param <T> the type of the nodes to be dealt with
+     * @param <T> The type of the nodes to be dealt with
      * @param root the root node of the nodes hierarchy
      * @param key the key of the new property
      * @param handler the node handler
@@ -368,7 +368,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * Called by {@code findNodesForKey()} to process the sub nodes of the current node depending on the type of the current
      * key part (children, attributes, or both).
      *
-     * @param <T> the type of the nodes to be dealt with
+     * @param <T> The type of the nodes to be dealt with
      * @param keyPart the key part
      * @param subNodes a list with the sub nodes to process
      * @param nodes the target collection

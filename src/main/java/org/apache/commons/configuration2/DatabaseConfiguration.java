@@ -122,7 +122,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * framework for creating and executing a JDBC statement. It especially takes care of proper handling of JDBC resources
      * even in case of an error.
      *
-     * @param <T> the type of the results produced by a JDBC operation
+     * @param <T> The type of the results produced by a JDBC operation
      */
     private abstract class AbstractJdbcOperation<T> {
 

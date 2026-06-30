@@ -102,7 +102,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * value. Eventually, {@link #convertValue(Object, Class, ConfigurationInterpolator)} is called with the single value to
      * be converted.
      *
-     * @param <T> the desired target type of the conversion
+     * @param <T> The desired target type of the conversion
      * @param src the source object to be converted
      * @param targetCls the desired target class
      * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
@@ -117,7 +117,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Helper method for converting all values of a source object and storing them in a collection.
      *
-     * @param <T> the target type of the conversion
+     * @param <T> The target type of the conversion
      * @param src the source object
      * @param elemClass the target class of the conversion
      * @param ci the {@code ConfigurationInterpolator}
@@ -133,7 +133,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * be a single value, but it can be <strong>null</strong>. Derived classes that want to extend the available conversions, but are
      * happy with the handling of complex objects, just need to override this method.
      *
-     * @param <T> the desired target type of the conversion
+     * @param <T> The desired target type of the conversion
      * @param src the source object (a single value)
      * @param targetCls the target class of the conversion
      * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)

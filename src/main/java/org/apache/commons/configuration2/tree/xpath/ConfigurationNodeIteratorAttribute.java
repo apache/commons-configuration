@@ -28,7 +28,7 @@ import org.apache.commons.lang3.Strings;
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
  *
- * @param <T> the type of the nodes this iterator deals with
+ * @param <T> The type of the nodes this iterator deals with
  */
 final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationNodeIterator<T> {
 

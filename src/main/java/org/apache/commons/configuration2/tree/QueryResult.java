@@ -34,7 +34,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Implementation note: Instances are immutable. They are created using the static factory methods.
  * </p>
  *
- * @param <T> the type of the result nodes
+ * @param <T> The type of the result nodes
  * @since 2.0
  */
 public final class QueryResult<T> {
@@ -45,7 +45,7 @@ public final class QueryResult<T> {
      *
      * @param parentNode the node which owns the attribute
      * @param attrName the attribute name
-     * @param <T> the type of the parent node
+     * @param <T> The type of the parent node
      * @return the newly created instance
      */
     public static <T> QueryResult<T> createAttributeResult(final T parentNode, final String attrName) {
@@ -55,7 +55,7 @@ public final class QueryResult<T> {
     /**
      * Creates a {@code QueryResult} instance representing the specified result node.
      *
-     * @param <T> the type of the result node
+     * @param <T> The type of the result node
      * @param resultNode the result node
      * @return the newly created instance
      */

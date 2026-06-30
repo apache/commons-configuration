@@ -60,7 +60,7 @@ public interface ExpressionEngine {
      * implementations, this means that an index is added to the node name to ensure that there are no ambiguities with
      * child nodes having the same names.
      *
-     * @param <T> the type of the node to be processed
+     * @param <T> The type of the node to be processed
      * @param node the node, for which the key must be constructed
      * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
      * @param handler the {@code NodeHandler} for accessing the node
@@ -73,7 +73,7 @@ public interface ExpressionEngine {
      * called whenever a property key for a node has to be constructed, for example by the
      * {@link org.apache.commons.configuration2.Configuration#getKeys() getKeys()} method.
      *
-     * @param <T> the type of the node to be processed
+     * @param <T> The type of the node to be processed
      * @param node the node, for which the key must be constructed
      * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
      * @param handler the {@code NodeHandler} for accessing the node
@@ -86,7 +86,7 @@ public interface ExpressionEngine {
      * configuration. An implementation has to interpret the specified key, find the parent node for the new elements, and
      * provide all information about new nodes to be added.
      *
-     * @param <T> the type of the node to be processed
+     * @param <T> The type of the node to be processed
      * @param root the root node
      * @param key the key for the new property
      * @param handler the {@code NodeHandler} for accessing the node
@@ -101,7 +101,7 @@ public interface ExpressionEngine {
      * throw a (runtime) exception indicating this error condition. The passed in {@code NodeHandler} can be used to gather
      * the required information from the node object.
      *
-     * @param <T> the type of the node to be processed
+     * @param <T> The type of the node to be processed
      * @param root the root node of a hierarchy of nodes
      * @param key the key to be evaluated
      * @param handler the {@code NodeHandler} for accessing the node

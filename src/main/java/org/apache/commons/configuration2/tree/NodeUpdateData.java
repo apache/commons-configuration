@@ -36,7 +36,7 @@ import java.util.Map;
  * update based on a passed in instance.
  * </p>
  *
- * @param <T> the type of nodes involved in this update operation
+ * @param <T> The type of nodes involved in this update operation
  * @since 2.0
  */
 public class NodeUpdateData<T> {
@@ -45,7 +45,7 @@ public class NodeUpdateData<T> {
      * Creates an unmodifiable defensive copy of the passed in collection with may be null.
      *
      * @param col the collection to be copied
-     * @param <T> the element type of the collection
+     * @param <T> The element type of the collection
      * @return the unmodifiable copy
      */
     private static <T> Collection<T> copyCollection(final Collection<? extends T> col) {
@@ -59,8 +59,8 @@ public class NodeUpdateData<T> {
      * Creates an unmodifiable defensive copy of the passed in map which may be null.
      *
      * @param map the map to be copied
-     * @param <K> the type of the keys involved
-     * @param <V> the type of the values involved
+     * @param <K> The type of the keys involved
+     * @param <V> The type of the values involved
      * @return the unmodifiable copy
      */
     private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map) {

@@ -148,7 +148,7 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * undesired effects. For concrete subclasses dealing with specific node structures, this situation may be different.
  * </p>
  *
- * @param <T> the type of the nodes managed by this hierarchical configuration
+ * @param <T> The type of the nodes managed by this hierarchical configuration
  * @since 2.0
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
@@ -230,7 +230,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * A specialized visitor that checks if a node is defined. &quot;Defined&quot; in this terms means that the node or at
      * least one of its sub nodes is associated with a value.
      *
-     * @param <T> the type of the nodes managed by this hierarchical configuration
+     * @param <T> The type of the nodes managed by this hierarchical configuration
      */
     private static final class DefinedVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
 

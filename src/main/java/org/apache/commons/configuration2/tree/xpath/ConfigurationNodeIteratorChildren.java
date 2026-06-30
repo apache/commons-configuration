@@ -31,7 +31,7 @@ import org.apache.commons.lang3.Strings;
 /**
  * A specialized iterator implementation for the child nodes of a configuration node.
  *
- * @param <T> the type of the nodes this iterator deals with
+ * @param <T> The type of the nodes this iterator deals with
  * @since 1.3
  */
 final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNodeIterator<T> {

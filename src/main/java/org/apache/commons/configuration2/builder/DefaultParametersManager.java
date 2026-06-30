@@ -130,7 +130,7 @@ public class DefaultParametersManager {
      * there are multiple handlers registered supporting a specific parameters class, they are invoked in the order in which
      * they were registered. So handlers registered later may override the values set by handlers registered earlier.
      *
-     * @param <T> the type of the parameters supported by this handler
+     * @param <T> The type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
      * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
@@ -161,7 +161,7 @@ public class DefaultParametersManager {
      * then the parameter class supported by the handler is used (which is the default behavior of the
      * {@link #registerDefaultsHandler(Class, DefaultParametersHandler)} method).
      *
-     * @param <T> the type of the parameters supported by this handler
+     * @param <T> The type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
      * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be

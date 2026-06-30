@@ -139,7 +139,7 @@ public interface ImmutableConfiguration {
      * existing object, the method returns null unless {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
      * {@code true}.
      *
-     * @param <T> the target type of the value
+     * @param <T> The target type of the value
      * @param cls the target class of the value
      * @param key the key of the value
      * @return the value of the requested type for the key
@@ -155,7 +155,7 @@ public interface ImmutableConfiguration {
      * Gets an object of the specified type associated with the given configuration key using a default value. If the key
      * doesn't map to an existing object, the default value is returned.
      *
-     * @param <T> the target type of the value
+     * @param <T> The target type of the value
      * @param cls the target class of the value
      * @param key the key of the value
      * @param defaultValue the default value
@@ -306,7 +306,7 @@ public interface ImmutableConfiguration {
      * Gets a collection of typed objects associated with the given configuration key. This method works like
      * {@link #getCollection(Class, String, Collection, Collection)} passing in <strong>null</strong> as default value.
      *
-     * @param <T> the element type of the result list
+     * @param <T> The element type of the result list
      * @param cls the element class of the result list
      * @param key the configuration key
      * @param target the target collection (may be <strong>null</strong>)
@@ -331,7 +331,7 @@ public interface ImmutableConfiguration {
      * the default collection), return value is the target collection created by this method.</li>
      * </ul>
      *
-     * @param <T> the element type of the result list
+     * @param <T> The element type of the result list
      * @param cls the element class of the result list
      * @param key the configuration key
      * @param target the target collection (may be <strong>null</strong>)
@@ -615,7 +615,7 @@ public interface ImmutableConfiguration {
      * Gets a list of typed objects associated with the given configuration key returning a null if the key doesn't map to
      * an existing object.
      *
-     * @param <T> the type expected for the elements of the list
+     * @param <T> The type expected for the elements of the list
      * @param cls the class expected for the elements of the list
      * @param key The configuration key.
      * @return The associated list if the key is found.
@@ -633,7 +633,7 @@ public interface ImmutableConfiguration {
      * concrete subclasses), all values are extracted and added to the resulting list - performing a type conversion if
      * necessary.
      *
-     * @param <T> the type expected for the elements of the list
+     * @param <T> The type expected for the elements of the list
      * @param cls the class expected for the elements of the list
      * @param key the configuration key.
      * @param defaultValue the default value.

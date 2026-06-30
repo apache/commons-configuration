@@ -92,7 +92,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param beanClass the class of the bean to be created
      * @param data the current {@code BeanDeclaration}
-     * @param <T> the type of the bean to be created
+     * @param <T> The type of the bean to be created
      * @return the single matching constructor
      * @throws ConfigurationRuntimeException if no single matching constructor can be found
      * @throws NullPointerException if the bean class or bean declaration are <strong>null</strong>

@@ -434,7 +434,7 @@ final class ModelTransaction {
      *
      * @param col the collection
      * @param node the element to be added
-     * @param <E> the type of elements involved
+     * @param <E> The type of elements involved
      * @return the resulting collection
      */
     private static <E> Collection<E> append(final Collection<E> col, final E node) {
@@ -449,8 +449,8 @@ final class ModelTransaction {
      * @param map the map
      * @param key the key
      * @param value the value
-     * @param <K> the type of the key
-     * @param <V> the type of the value
+     * @param <K> The type of the key
+     * @param <V> The type of the value
      * @return the resulting map
      */
     private static <K, V> Map<K, V> append(final Map<K, V> map, final K key, final V value) {
@@ -464,7 +464,7 @@ final class ModelTransaction {
      *
      * @param col the set
      * @param elem the element to be added
-     * @param <E> the type of the elements involved
+     * @param <E> The type of the elements involved
      * @return the resulting set
      */
     private static <E> Set<E> append(final Set<E> col, final E elem) {
@@ -478,7 +478,7 @@ final class ModelTransaction {
      *
      * @param col1 the first collection
      * @param col2 the second collection
-     * @param <E> the type of the elements involved
+     * @param <E> The type of the elements involved
      * @return the resulting collection
      */
     private static <E> Collection<E> concatenate(final Collection<E> col1, final Collection<? extends E> col2) {
@@ -496,8 +496,8 @@ final class ModelTransaction {
      *
      * @param map1 the first map
      * @param map2 the second map
-     * @param <K> the type of the keys
-     * @param <V> the type of the values
+     * @param <K> The type of the keys
+     * @param <V> The type of the values
      * @return the resulting map
      */
     private static <K, V> Map<K, V> concatenate(final Map<K, V> map1, final Map<? extends K, ? extends V> map2) {
@@ -515,7 +515,7 @@ final class ModelTransaction {
      *
      * @param set1 the first set
      * @param set2 the second set
-     * @param <E> the type of the elements involved
+     * @param <E> The type of the elements involved
      * @return the resulting set
      */
     private static <E> Set<E> concatenate(final Set<E> set1, final Set<? extends E> set2) {

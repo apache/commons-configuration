@@ -29,7 +29,7 @@ import java.util.Set;
  * internal state of a node in a read-only way.
  * </p>
  *
- * @param <T> the type of the nodes this handler deals with
+ * @param <T> The type of the nodes this handler deals with
  */
 public interface NodeHandler<T> {
 
@@ -97,7 +97,7 @@ public interface NodeHandler<T> {
      * @param node the node
      * @param matcher the {@code NodeMatcher} defining filter criteria
      * @param criterion the criterion to be matched against; this object is passed to the {@code NodeMatcher}
-     * @param <C> the type of the criterion
+     * @param <C> The type of the criterion
      * @return a list with all children matched by the matcher
      */
     <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher, C criterion);
@@ -110,7 +110,7 @@ public interface NodeHandler<T> {
      * @param node the node
      * @param matcher the {@code NodeMatcher}
      * @param criterion the criterion to be passed to the {@code NodeMatcher}
-     * @param <C> the type of the criterion
+     * @param <C> The type of the criterion
      * @return the number of matched children
      */
     <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher, C criterion);

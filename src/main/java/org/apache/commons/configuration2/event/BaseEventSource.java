@@ -160,7 +160,7 @@ public class BaseEventSource implements EventSource {
      * @param propName the name of the affected property (can be <strong>null</strong>)
      * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param before the before update flag
-     * @param <T> the type of the event to be created
+     * @param <T> The type of the event to be created
      * @return the newly created event object
      */
     protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(final EventType<T> type, final String propName, final Object propValue,
@@ -176,7 +176,7 @@ public class BaseEventSource implements EventSource {
      * @param propertyName the name of the affected property (can be <strong>null</strong>)
      * @param propertyValue the value of the affected property (can be <strong>null</strong>)
      * @param cause the {@code Throwable} object that caused this error event
-     * @param <T> the event type
+     * @param <T> The event type
      */
     public <T extends ConfigurationErrorEvent> void fireError(final EventType<T> eventType, final EventType<?> operationType, final String propertyName,
         final Object propertyValue, final Throwable cause) {
@@ -197,7 +197,7 @@ public class BaseEventSource implements EventSource {
      * @param propName the name of the affected property (can be <strong>null</strong>)
      * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param before the before update flag
-     * @param <T> the type of the event to be fired
+     * @param <T> The type of the event to be fired
      */
     protected <T extends ConfigurationEvent> void fireEvent(final EventType<T> type, final String propName, final Object propValue, final boolean before) {
         if (checkDetailEvents(-1)) {
@@ -226,7 +226,7 @@ public class BaseEventSource implements EventSource {
      * object.
      *
      * @param eventType the event type object
-     * @param <T> the event type
+     * @param <T> The event type
      * @return a collection with the event listeners of the specified event type (this collection is a snapshot of the
      *         currently registered listeners; it cannot be manipulated)
      */

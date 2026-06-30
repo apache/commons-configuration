@@ -27,7 +27,7 @@ package org.apache.commons.configuration2.event;
  * Java 8 ({@code EventListener} is a functional interface and thus can be represented by a Lambda expression).
  * </p>
  *
- * @param <T> the type of events this listener can process
+ * @param <T> The type of events this listener can process
  * @since 2.0
  */
 public interface EventListener<T extends Event> {

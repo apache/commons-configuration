@@ -35,7 +35,7 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the return type of all methods for allowing method chaining
+ * @param <T> The return type of all methods for allowing method chaining
  * @since 2.0
  */
 public interface CombinedBuilderProperties<T> {
@@ -46,7 +46,7 @@ public interface CombinedBuilderProperties<T> {
      * by invoking all matching {@code DefaultParametersHandler}s on them. So, basically the same mechanism is used for the
      * initialization of parameters for child configuration sources as for normal parameter objects.
      *
-     * @param <D> the type of the handler to be registered
+     * @param <D> The type of the handler to be registered
      * @param paramClass the parameter class supported by the handler
      * @param handler the {@code DefaultParametersHandler} to be registered
      * @return a reference to this object for method chaining
@@ -59,7 +59,7 @@ public interface CombinedBuilderProperties<T> {
      * method works like the overloaded variant, but limits the application of the defaults handler to specific child
      * configuration sources.
      *
-     * @param <D> the type of the handler to be registered
+     * @param <D> The type of the handler to be registered
      * @param paramClass the parameter class supported by the handler
      * @param handler the {@code DefaultParametersHandler} to be registered
      * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be

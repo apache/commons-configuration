@@ -85,7 +85,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * {@code ImmutableConfiguration} instance is returned until the builder is reset.
  * </p>
  *
- * @param <T> the concrete type of {@code ImmutableConfiguration} objects created by this builder
+ * @param <T> The concrete type of {@code ImmutableConfiguration} objects created by this builder
  * @since 2.0
  */
 public class BasicConfigurationBuilder<T extends ImmutableConfiguration> implements ConfigurationBuilder<T> {
@@ -95,7 +95,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param evSrc the event source
      * @param regData the registration data object
-     * @param <E> the type of the event listener
+     * @param <E> The type of the event listener
      */
     private static <E extends Event> void registerListener(final EventSource evSrc, final EventListenerRegistrationData<E> regData) {
         evSrc.addEventListener(regData.getEventType(), regData.getListener());
@@ -106,7 +106,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param evSrc the event source
      * @param regData the registration data object
-     * @param <E> the type of the event listener
+     * @param <E> The type of the event listener
      */
     private static <E extends Event> void removeListener(final EventSource evSrc, final EventListenerRegistrationData<E> regData) {
         evSrc.removeEventListener(regData.getEventType(), regData.getListener());
@@ -520,7 +520,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param eventType the event type object
      * @param listener the listener to be registered
-     * @param <E> the event type
+     * @param <E> The event type
      */
     protected final <E extends Event> void installEventListener(final EventType<E> eventType, final EventListener<? super E> listener) {
         fetchEventSource().addEventListener(eventType, listener);

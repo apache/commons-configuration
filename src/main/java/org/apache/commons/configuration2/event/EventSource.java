@@ -36,7 +36,7 @@ public interface EventSource {
      *
      * @param eventType the event type (must not be <strong>null</strong>)
      * @param listener the listener to be registered (must not be <strong>null</strong>)
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     <T extends Event> void addEventListener(EventType<T> eventType, EventListener<? super T> listener);
@@ -49,7 +49,7 @@ public interface EventSource {
      *
      * @param eventType the event type
      * @param listener the event listener to be removed
-     * @param <T> the type of events processed by this listener
+     * @param <T> The type of events processed by this listener
      * @return a flag whether a listener registration was removed
      */
     <T extends Event> boolean removeEventListener(EventType<T> eventType, EventListener<? super T> listener);

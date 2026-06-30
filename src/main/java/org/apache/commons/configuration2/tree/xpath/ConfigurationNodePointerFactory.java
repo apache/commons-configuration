@@ -43,7 +43,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
     /**
      * An internally used wrapper class that holds all information for processing a query for a specific node.
      *
-     * @param <T> the type of the nodes this class deals with
+     * @param <T> The type of the nodes this class deals with
      */
     static class NodeWrapper<T> {
 
@@ -90,7 +90,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Creates a node wrapper for the specified node and its handler. This wrapper has to be passed to the JXPath context
      * instead of the original node.
      *
-     * @param <T> the type of the node
+     * @param <T> The type of the node
      * @param node the node
      * @param handler the corresponding node handler
      * @return a wrapper for this node

@@ -30,7 +30,7 @@ import javax.naming.Context;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  * @since 2.0
  */
 public interface JndiBuilderProperties<T> {

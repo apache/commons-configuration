@@ -25,7 +25,7 @@ package org.apache.commons.configuration2.tree;
  * Derived classes only need to override the methods they really need.
  * </p>
  *
- * @param <T> the type of the nodes processed by this visitor
+ * @param <T> The type of the nodes processed by this visitor
  */
 public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisitor<T> {
 

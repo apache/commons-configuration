@@ -203,7 +203,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * @param params the map with parameters
      * @param key the key of the parameter
      * @param expClass the expected class of the parameter value
-     * @param <T> the parameter type
+     * @param <T> The parameter type
      * @return the value of the parameter in the correct data type
      * @throws IllegalArgumentException if the parameter is not of the expected type
      */

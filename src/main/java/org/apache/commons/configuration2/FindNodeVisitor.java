@@ -24,7 +24,7 @@ import org.apache.commons.configuration2.tree.NodeHandler;
  * A specialized {@code NodeVisitor} implementation which searches for a specific node in a hierarchy.
  * </p>
  *
- * @param <T> the type of the nodes to be visited
+ * @param <T> The type of the nodes to be visited
  */
 final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
 

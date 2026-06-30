@@ -104,7 +104,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * An internal helper class which wraps the node with the bean declaration and the corresponding node handler.
      *
-     * @param <T> the type of the node
+     * @param <T> The type of the node
      */
     static class NodeData<T> {
 
@@ -241,7 +241,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Creates a {@code NodeData} object from the root node of the given configuration.
      *
      * @param config the configuration
-     * @param <T> the type of the nodes
+     * @param <T> The type of the nodes
      * @return the {@code NodeData} object
      */
     private static <T> NodeData<T> createNodeDataFromConfiguration(final HierarchicalConfiguration<T> config) {
@@ -287,7 +287,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * configuration's root node must contain the bean declaration.
      *
      * @param config the configuration with the bean declaration
-     * @param <T> the node type of the configuration
+     * @param <T> The node type of the configuration
      */
     public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config) {
         this(config, (String) null);
@@ -300,7 +300,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * @param config the configuration (must not be <strong>null</strong>)
      * @param key the key to the bean declaration (this key must point to exactly one bean declaration or a
      *        {@code IllegalArgumentException} exception will be thrown)
-     * @param <T> the node type of the configuration
+     * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
      */
     public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key) {
@@ -315,7 +315,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * @param key the key to the bean declaration
      * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
-     * @param <T> the node type of the configuration
+     * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
      */
     public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key, final boolean optional) {
@@ -336,7 +336,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
      * @param defBeanClsName a default bean class name
-     * @param <T> the node type of the configuration
+     * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
      * @since 2.0
      */

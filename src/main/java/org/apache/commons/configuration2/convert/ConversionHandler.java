@@ -54,7 +54,7 @@ public interface ConversionHandler {
      * is not possible, a {@link ConversionException} is thrown. It is up to a concrete implementation how <strong>null</strong>
      * values are handled; a default strategy would be to return <strong>null</strong> if the source object is <strong>null</strong>.
      *
-     * @param <T> the type of the desired result
+     * @param <T> The type of the desired result
      * @param src the object to be converted
      * @param targetCls the target class of the conversion
      * @param ci an object for performing variable substitution
@@ -86,7 +86,7 @@ public interface ConversionHandler {
      * added to the destination collection. If the conversion of an element is not possible, a {@link ConversionException}
      * is thrown.
      *
-     * @param <T> the type of the elements of the destination collection
+     * @param <T> The type of the elements of the destination collection
      * @param src the object to be converted
      * @param elemClass the element class of the destination collection
      * @param ci an object for performing variable substitution

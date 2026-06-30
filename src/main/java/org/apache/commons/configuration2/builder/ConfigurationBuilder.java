@@ -36,7 +36,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * configurations can be created.
  * </p>
  *
- * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by this builder
+ * @param <T> The concrete type of the {@code ImmutableConfiguration} class produced by this builder
  * @since 2.0
  */
 public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource {

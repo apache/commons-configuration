@@ -50,7 +50,7 @@ public class NodeTreeWalker {
      * @param root the root node to be navigated
      * @param visitor the visitor
      * @param handler the handler
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      */
     private static <T> void bfs(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         final List<T> pendingNodes = new LinkedList<>();
@@ -72,7 +72,7 @@ public class NodeTreeWalker {
      * @param root the root node
      * @param visitor the visitor
      * @param handler the handler
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      * @return <strong>true</strong> if a walk operation can be performed, <strong>false</strong> otherwise
      * @throws IllegalArgumentException if a required parameter is missing
      */
@@ -92,7 +92,7 @@ public class NodeTreeWalker {
      * @param node the current node
      * @param visitor the visitor
      * @param handler the handler
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      */
     private static <T> void dfs(final T node, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
         if (!visitor.terminate()) {
@@ -121,7 +121,7 @@ public class NodeTreeWalker {
      * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
      * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
      * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T> void walkBFS(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
@@ -139,7 +139,7 @@ public class NodeTreeWalker {
      * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
      * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
      * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public <T> void walkDFS(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {

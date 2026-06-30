@@ -52,7 +52,7 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * configuration, but occur for each of the managed configuration.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends MultiFileConfigurationBuilder<T>

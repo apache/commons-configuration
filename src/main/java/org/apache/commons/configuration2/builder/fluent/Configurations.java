@@ -165,7 +165,7 @@ public class Configurations {
      * Creates a configured builder for a file-based configuration of the specified type.
      *
      * @param configClass the configuration class
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return the newly created builder
      * @since 2.6
      */
@@ -178,7 +178,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param params the parameters object for configuring the builder
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return the newly created builder
      */
     private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass,
@@ -193,7 +193,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param file the file to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return a {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -208,7 +208,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param path the path to the file to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return a {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -223,7 +223,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param url the URL to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return a {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -237,7 +237,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param file the file to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return the new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final File file) {
@@ -250,7 +250,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param path the path to the file to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return the new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final String path) {
@@ -263,7 +263,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param url the URL to be loaded
-     * @param <T> the type of the configuration to be constructed
+     * @param <T> The type of the configuration to be constructed
      * @return the new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final URL url) {

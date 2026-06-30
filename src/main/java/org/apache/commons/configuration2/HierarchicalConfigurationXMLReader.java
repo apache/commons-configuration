@@ -38,7 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * methods ignore their argument.
  * </p>
  *
- * @param <T> the type of the nodes supported by this reader
+ * @param <T> The type of the nodes supported by this reader
  */
 public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReader {
 

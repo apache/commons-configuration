@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  * location is reset, too.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {

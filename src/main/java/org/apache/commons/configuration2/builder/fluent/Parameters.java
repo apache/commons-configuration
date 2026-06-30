@@ -161,7 +161,7 @@ public final class Parameters {
      * Creates a proxy object for a given parameters interface based on the given implementation object. The newly created
      * object is initialized with default values if there are matching {@link DefaultParametersHandler} objects.
      *
-     * @param <T> the type of the parameters interface
+     * @param <T> The type of the parameters interface
      * @param target the implementing target object
      * @param ifcClass the interface class
      * @param superIfcs an array with additional interface classes to be implemented
@@ -253,7 +253,7 @@ public final class Parameters {
      * Registers the specified {@code DefaultParametersHandler} object for the given parameters class. This is a convenience
      * method which just delegates to the associated {@code DefaultParametersManager}.
      *
-     * @param <T> the type of the parameters supported by this handler
+     * @param <T> The type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
      * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
@@ -268,7 +268,7 @@ public final class Parameters {
      * inheritance hierarchy. This is a convenience method which just delegates to the associated
      * {@code DefaultParametersManager}.
      *
-     * @param <T> the type of the parameters supported by this handler
+     * @param <T> The type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
      * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be

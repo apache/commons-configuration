@@ -36,7 +36,7 @@ import java.util.Set;
  * listener interfaces and a natural selection of events to be processed.
  * </p>
  *
- * @param <T> the event associated with this type
+ * @param <T> The event associated with this type
  * @since 2.0
  */
 public class EventType<T extends Event> implements Serializable {

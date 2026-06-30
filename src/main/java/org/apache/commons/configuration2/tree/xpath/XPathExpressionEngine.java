@@ -152,7 +152,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * Converts the objects returned as query result from the JXPathContext to query result objects.
      *
      * @param results the list with results from the context
-     * @param <T> the type of results to be produced
+     * @param <T> The type of results to be produced
      * @return the result list
      */
     private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
@@ -170,7 +170,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * functionality.
      *
      * @param resObj the query result object
-     * @param <T> the type of the result to be produced
+     * @param <T> The type of the result to be produced
      * @return the {@code QueryResult}
      */
     @SuppressWarnings("unchecked")
@@ -187,7 +187,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * @param parent the parent node
      * @param child the child node
      * @param handler the node handler
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      * @return the index of this child node
      */
     private static <T> int determineIndex(final T parent, final T child, final NodeHandler<T> handler) {
@@ -289,7 +289,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      *
      * @param path the path of the new node
      * @param parentNodeResult the parent node
-     * @param <T> the type of the nodes involved
+     * @param <T> The type of the nodes involved
      */
     <T> NodeAddData<T> createNodeAddData(final String path, final QueryResult<T> parentNodeResult) {
         if (parentNodeResult.isAttributeResult()) {

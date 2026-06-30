@@ -118,7 +118,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Checks whether the specified value is <strong>null</strong> and throws an exception in this case. This method is used by
      * conversion methods returning primitive Java types. Here values to be returned must not be <strong>null</strong>.
      *
-     * @param <T> the type of the object to be checked.
+     * @param <T> The type of the object to be checked.
      * @param key the key which caused the problem.
      * @param value the value to be checked.
      * @return the passed in value for chaining this method call.
@@ -471,7 +471,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Helper method for obtaining a property value with a type conversion.
      *
-     * @param <T> the target type of the conversion.
+     * @param <T> The target type of the conversion.
      * @param cls the target class.
      * @param key the key of the desired property.
      * @param defValue a default value.
@@ -611,7 +611,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Obtains the property value for the specified key and converts it to the given target class.
      *
-     * @param <T> the target type of the conversion.
+     * @param <T> The target type of the conversion.
      * @param cls the target class.
      * @param key the key of the desired property.
      * @param defaultValue a default value.

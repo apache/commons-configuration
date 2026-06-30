@@ -29,7 +29,7 @@ import java.util.Map;
  * processing of complex update operations.
  * </p>
  *
- * @param <T> the type of the nodes supported by this resolver
+ * @param <T> The type of the nodes supported by this resolver
  * @since 2.0
  */
 public interface NodeKeyResolver<T> {

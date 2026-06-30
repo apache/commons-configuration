@@ -63,7 +63,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      * there are no more events or the next event is of a different event type.
      *
      * @param eventType the expected event type
-     * @param <T> the type of the received event
+     * @param <T> The type of the received event
      * @return the next received event
      */
     public <T extends ConfigurationBuilderEvent> T nextEvent(final EventType<T> eventType) {

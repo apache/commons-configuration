@@ -66,7 +66,7 @@ import org.apache.commons.lang3.concurrent.ConcurrentUtils;
  * builders for managed configurations.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {

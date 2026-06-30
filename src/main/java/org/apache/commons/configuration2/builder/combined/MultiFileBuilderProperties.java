@@ -31,7 +31,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the return type of all methods for allowing method chaining
+ * @param <T> The return type of all methods for allowing method chaining
  * @since 2.0
  */
 public interface MultiFileBuilderProperties<T> {
