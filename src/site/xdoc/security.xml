@@ -19,11 +19,11 @@ limitations under the License.
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Apache Commons Configuration Security Reports</title>
+        <title>Apache Commons Configuration Security</title>
         <author email="dev@commons.apache.org">Commons Team</author>
     </properties>
     <body>
-        <section name="Security Vulnerabilities">
+        <section name="Apache Commons Configuration Security">
             <p>
                 For information about reporting or asking questions about
                 security, please see the
