@@ -481,6 +481,7 @@ public class TestConfigurationInterpolator {
         assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${" + TEST_NAME + ":-123}}}"));
         assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-${" + TEST_NAME + ":-123}}}}"));
         assertEquals("123", confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-123}}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-http://localhost:8080/abc}}}"));
     }
 
     @Test
@@ -495,6 +496,9 @@ public class TestConfigurationInterpolator {
         assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:" + SP_KEY + ":-123}}}"));
         assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-${sys:" + SP_KEY + ":-123}}}}"));
         assertEquals("123", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-123}}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-http://localhost:8080/abc}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-http://localhost:8080/abc}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-http://localhost:8080/abc}}}"));
     }
 
     /**
