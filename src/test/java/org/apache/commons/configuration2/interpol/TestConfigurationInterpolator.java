@@ -48,6 +48,7 @@ import java.util.function.Function;
 import org.apache.commons.text.lookup.StringLookupFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetSystemProperty;
 
 /**
  * Test class for ConfigurationInterpolator.
@@ -56,6 +57,8 @@ public class TestConfigurationInterpolator {
 
     /** Constant for a test variable name. */
     private static final String TEST_NAME = "varname";
+
+    private static final String SP_KEY = "TestConfigurationInterpolator.testSystemProperty";
 
     /** Constant for a test variable prefix. */
     private static final String TEST_PREFIX = "prefix";
@@ -478,6 +481,20 @@ public class TestConfigurationInterpolator {
         assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${" + TEST_NAME + ":-123}}}"));
         assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-${" + TEST_NAME + ":-123}}}}"));
         assertEquals("123", confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-123}}}"));
+    }
+
+    @Test
+    @SetSystemProperty(key = SP_KEY, value = "42")
+    void testInterpolationDefaultValueNestedDefaultPrefix() {
+        final Object value = 42;
+        final String valueStr = Objects.toString(value);
+        final ConfigurationInterpolator confInt = new ConfigurationInterpolator();
+        confInt.setEnableSubstitutionInVariables(true);
+        confInt.registerLookup("sys", DefaultLookups.SYSTEM_PROPERTIES.getLookup());
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:" + SP_KEY + ":-123}}"));
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:" + SP_KEY + ":-123}}}"));
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-${sys:" + SP_KEY + ":-123}}}}"));
+        assertEquals("123", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-123}}}"));
     }
 
     /**
