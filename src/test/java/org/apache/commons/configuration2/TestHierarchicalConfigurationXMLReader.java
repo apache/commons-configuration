@@ -20,7 +20,6 @@ package org.apache.commons.configuration2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
@@ -32,6 +31,8 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+
+import eu.copernik.xml.factory.XmlFactories;
 
 /**
  * Test class for HierarchicalConfigurationXMLReader.
@@ -53,7 +54,7 @@ public class TestHierarchicalConfigurationXMLReader {
     void testParse() throws Exception {
         final SAXSource source = new SAXSource(parser, new InputSource());
         final DOMResult result = new DOMResult();
-        final Transformer trans = TransformerFactory.newInstance().newTransformer();
+        final Transformer trans = XmlFactories.newTransformerFactory().newTransformer();
         trans.transform(source, result);
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);

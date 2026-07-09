@@ -74,6 +74,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * test for loading and saving XML properties files
  */
@@ -155,7 +157,7 @@ public class TestXMLConfiguration {
         final Source source = new DOMSource(node);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final Result result = new StreamResult(bos);
-        final TransformerFactory factory = TransformerFactory.newInstance();
+        final TransformerFactory factory = XmlFactories.newTransformerFactory();
         factory.newTransformer().transform(source, result);
         // 4. Return the resulting byte array
         return bos.toByteArray();
@@ -184,7 +186,7 @@ public class TestXMLConfiguration {
 
     private Node buildDomNodeFixture() throws SAXException, IOException, ParserConfigurationException {
         final String content = "<configuration><test attr=\"x\">1</test></configuration>";
-        final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
+        final Node document = XmlFactories.newDocumentBuilderFactory().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
         final Node node = document.getFirstChild().getFirstChild(); // <test>
         assertEquals("test", node.getNodeName()); // sanity check
         return node;
@@ -239,7 +241,7 @@ public class TestXMLConfiguration {
      * @throws ParserConfigurationException if an error occurs
      */
     private DocumentBuilder createValidatingDocBuilder() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = XmlFactories.newDocumentBuilderFactory();
         factory.setValidating(true);
         final DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setErrorHandler(new DefaultHandler() {
@@ -252,7 +254,7 @@ public class TestXMLConfiguration {
     }
 
     private Document parseXml(final String xml) throws SAXException, IOException, ParserConfigurationException {
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+        return XmlFactories.newDocumentBuilderFactory().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**

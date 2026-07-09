@@ -41,6 +41,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import eu.copernik.xml.factory.XmlFactories;
+
 /**
  * This configuration implements the XML properties format introduced in Java, see
  * https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html. An XML properties file looks like this:
@@ -221,7 +223,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
 
     @Override
     public void read(final Reader in) throws ConfigurationException {
-        final SAXParserFactory factory = SAXParserFactory.newInstance();
+        final SAXParserFactory factory = XmlFactories.newSAXParserFactory();
         factory.setNamespaceAware(false);
         factory.setValidating(true);
         try {
