@@ -279,7 +279,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${commons.mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- javax.mail only contains the API, no impl. -->
