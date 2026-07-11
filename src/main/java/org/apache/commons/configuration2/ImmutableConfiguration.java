@@ -142,7 +142,7 @@ public interface ImmutableConfiguration {
      * @param <T> The target type of the value
      * @param cls the target class of the value
      * @param key the key of the value
-     * @return the value of the requested type for the key
+     * @return The value of the requested type for the key
      * @throws java.util.NoSuchElementException if the key doesn't map to an existing object and
      *         {@code throwExceptionOnMissing=true}
      * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the requested
@@ -159,7 +159,7 @@ public interface ImmutableConfiguration {
      * @param cls the target class of the value
      * @param key the key of the value
      * @param defaultValue the default value
-     * @return the value of the requested type for the key
+     * @return The value of the requested type for the key
      * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the requested
      *         type
      *
@@ -310,7 +310,7 @@ public interface ImmutableConfiguration {
      * @param cls the element class of the result list
      * @param key the configuration key
      * @param target the target collection (may be <strong>null</strong>)
-     * @return the collection to which data was added
+     * @return The collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
@@ -336,7 +336,7 @@ public interface ImmutableConfiguration {
      * @param key the configuration key
      * @param target the target collection (may be <strong>null</strong>)
      * @param defaultValue the default value (may be <strong>null</strong>)
-     * @return the collection to which data was added
+     * @return The collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
@@ -414,7 +414,7 @@ public interface ImmutableConfiguration {
      * default decoder is obtained.
      *
      * @param key the configuration key
-     * @return the plain string value of the specified encoded property
+     * @return The plain string value of the specified encoded property
      */
     String getEncodedString(String key);
 
@@ -427,7 +427,7 @@ public interface ImmutableConfiguration {
      *
      * @param key the configuration key
      * @param decoder the {@code ConfigurationDecoder} (must not be <strong>null</strong>)
-     * @return the plain string value of the specified encoded property
+     * @return The plain string value of the specified encoded property
      * @throws IllegalArgumentException if a <strong>null</strong> decoder is passed
      */
     String getEncodedString(String key, ConfigurationDecoder decoder);
@@ -729,7 +729,7 @@ public interface ImmutableConfiguration {
      * will stay constant over time (i.e. further update operations on the configuration may change its internal state).
      *
      * @param key property to retrieve
-     * @return the value to which this configuration maps the specified key, or null if the configuration contains no
+     * @return The value to which this configuration maps the specified key, or null if the configuration contains no
      *         mapping for this key.
      */
     Object getProperty(String key);
@@ -839,7 +839,7 @@ public interface ImmutableConfiguration {
      * efficient; for some implementations it may be expensive to determine the size. Especially, if you just want to check
      * whether a configuration is empty, it is preferable to use the {@link #isEmpty()} method.
      *
-     * @return the number of keys stored in this configuration
+     * @return The number of keys stored in this configuration
      */
     int size();
 

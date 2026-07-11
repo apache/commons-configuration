@@ -168,7 +168,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          *
          * @param sql the statement to be executed
          * @param nameCol a flag whether the configurationName column should be taken into account
-         * @return the prepared statement object
+         * @return The prepared statement object
          * @throws SQLException if an SQL error occurs
          */
         protected PreparedStatement createStatement(final String sql, final boolean nameCol) throws SQLException {
@@ -190,7 +190,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Afterwards it performs the necessary clean up. Exceptions that are thrown during the JDBC operation are caught and
          * transformed into configuration error events.
          *
-         * @return the result of the operation
+         * @return The result of the operation
          */
         public T execute() {
             T result = null;
@@ -217,7 +217,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Gets the current connection. This method can be called while {@code execute()} is running. It returns <strong>null</strong>
          * otherwise.
          *
-         * @return the current connection
+         * @return The current connection
          */
         protected Connection getConnection() {
             return connection;
@@ -230,7 +230,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param sql the statement to be executed
          * @param nameCol a flag whether the configurationName column should be taken into account
          * @param params the parameters for the statement
-         * @return the initialized statement object
+         * @return The initialized statement object
          * @throws SQLException if an SQL error occurs
          */
         protected PreparedStatement initStatement(final String sql, final boolean nameCol, final Object... params) throws SQLException {
@@ -254,7 +254,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param sql the statement to be executed
          * @param nameCol a flag whether the configurationName column should be taken into account
          * @param params the parameters for the statement
-         * @return the {@code ResultSet} produced by the query
+         * @return The {@code ResultSet} produced by the query
          * @throws SQLException if an SQL error occurs
          */
         protected ResultSet openResultSet(final String sql, final boolean nameCol, final Object... params) throws SQLException {
@@ -265,7 +265,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Performs the JDBC operation. This method is called by {@code execute()} after this object has been fully initialized.
          * Here the actual JDBC logic has to be placed.
          *
-         * @return the result of the operation
+         * @return The result of the operation
          * @throws SQLException if an SQL error occurs
          */
         protected abstract T performOperation() throws SQLException;
@@ -290,7 +290,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * Converts a CLOB to a string.
      *
      * @param clob the CLOB to be converted
-     * @return the extracted string value
+     * @return The extracted string value
      * @throws SQLException if an error occurs
      */
     private static Object convertClob(final Clob clob) throws SQLException {
@@ -507,7 +507,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * {@code CLOB}, text is extracted as string.
      *
      * @param rs the current {@code ResultSet}
-     * @return the value of the property column
+     * @return The value of the property column
      * @throws SQLException if an error occurs
      */
     protected Object extractPropertyValue(final ResultSet rs) throws SQLException {
@@ -521,7 +521,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the name of this configuration instance.
      *
-     * @return the name of this configuration
+     * @return The name of this configuration
      */
     public String getConfigurationName() {
         return configurationName;
@@ -530,7 +530,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the name of the table column with the configuration name.
      *
-     * @return the name of the configuration name column
+     * @return The name of the configuration name column
      */
     public String getConfigurationNameColumn() {
         return configurationNameColumn;
@@ -539,7 +539,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the used {@code DataSource} object.
      *
-     * @return the data source
+     * @return The data source
      * @since 1.4
      * @deprecated Use {@link #getDataSource()}
      */
@@ -551,7 +551,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the {@code DataSource} for obtaining database connections.
      *
-     * @return the {@code DataSource}
+     * @return The {@code DataSource}
      */
     public DataSource getDataSource() {
         return dataSource;
@@ -560,7 +560,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the name of the column containing the configuration keys.
      *
-     * @return the name of the key column
+     * @return The name of the key column
      */
     public String getKeyColumn() {
         return keyColumn;
@@ -597,7 +597,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * the {@code propertyValue} is undefined.
      *
      * @param key the key of the desired property
-     * @return the value of this property
+     * @return The value of this property
      */
     @Override
     protected Object getPropertyInternal(final String key) {
@@ -624,7 +624,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the name of the table containing configuration data.
      *
-     * @return the name of the table to be queried
+     * @return The name of the table to be queried
      */
     public String getTable() {
         return table;
@@ -633,7 +633,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Gets the name of the column containing the configuration values.
      *
-     * @return the name of the value column
+     * @return The name of the value column
      */
     public String getValueColumn() {
         return valueColumn;

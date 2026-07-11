@@ -44,7 +44,7 @@ public class TestCombinedBeanDeclaration {
     /**
      * Creates a test instance with a number of mock child declarations.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private CombinedBeanDeclaration createCombinedDeclaration() {
         declarations = new BeanDeclaration[3];
@@ -58,7 +58,7 @@ public class TestCombinedBeanDeclaration {
      * Convenience method for accessing a mock declaration with the given index.
      *
      * @param idx the index
-     * @return the corresponding mock child bean declaration
+     * @return The corresponding mock child bean declaration
      */
     private BeanDeclaration decl(final int idx) {
         return declarations[idx];

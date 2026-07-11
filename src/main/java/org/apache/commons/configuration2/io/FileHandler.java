@@ -171,7 +171,7 @@ public class FileHandler {
      * Helper method for checking a file handler which is to be copied. Throws an exception if the handler is <strong>null</strong>.
      *
      * @param c the {@code FileHandler} from which to copy the location
-     * @return the same {@code FileHandler}
+     * @return The same {@code FileHandler}
      */
     private static FileHandler checkSourceHandler(final FileHandler c) {
         if (c == null) {
@@ -209,7 +209,7 @@ public class FileHandler {
     /**
      * Creates an uninitialized file locator.
      *
-     * @return the locator
+     * @return The locator
      */
     private static FileLocator emptyFileLocator() {
         return FileLocatorUtils.fileLocator().create();
@@ -220,7 +220,7 @@ public class FileHandler {
      * {@link FileLocator} from the map. A new {@code FileHandler} is created based on this {@code FileLocator}.
      *
      * @param map the map (may be <strong>null</strong>)
-     * @return the newly created {@code FileHandler}
+     * @return The newly created {@code FileHandler}
      * @see FileLocatorUtils#fromMap(Map)
      */
     public static FileHandler fromMap(final Map<String, ?> map) {
@@ -231,7 +231,7 @@ public class FileHandler {
      * Normalizes URLs to files. Ensures that file URLs start with the correct protocol.
      *
      * @param fileName the string to be normalized
-     * @return the normalized file URL
+     * @return The normalized file URL
      */
     private static String normalizeFileURL(String fileName) {
         if (fileName != null && fileName.startsWith(FILE_SCHEME) && !fileName.startsWith(FILE_SCHEME_SLASH)) {
@@ -322,7 +322,7 @@ public class FileHandler {
      * Checks whether a content object is available and returns the current {@code FileLocator}. If there is no content
      * object, an exception is thrown. This is a typical operation to be performed before a load() or save() operation.
      *
-     * @return the current {@code FileLocator} to be used for the calling operation
+     * @return The current {@code FileLocator} to be used for the calling operation
      * @throws ConfigurationException if not content object is defined
      */
     private FileLocator checkContentAndGetLocator() throws ConfigurationException {
@@ -347,7 +347,7 @@ public class FileHandler {
      *
      * @param fileName the file name
      * @param locator the {@code FileLocator} to copy
-     * @return the manipulated {@code FileLocator} with the file name
+     * @return The manipulated {@code FileLocator} with the file name
      */
     private FileLocator createLocatorWithFileName(final String fileName, final FileLocator locator) {
         return FileLocatorUtils.fileLocator(locator).sourceURL(null).fileName(fileName).create();
@@ -358,7 +358,7 @@ public class FileHandler {
      * returned. Otherwise, result is a dummy object. This method is called before load and save operations. The returned
      * object is used for synchronization.
      *
-     * @return the {@code SynchronizerSupport} for synchronization
+     * @return The {@code SynchronizerSupport} for synchronization
      */
     private SynchronizerSupport fetchSynchronizerSupport() {
         if (getContent() instanceof SynchronizerSupport) {
@@ -405,7 +405,7 @@ public class FileHandler {
     /**
      * Gets the base path. If no base path is defined, but a URL, the base path is derived from there.
      *
-     * @return the base path
+     * @return The base path
      */
     public String getBasePath() {
         final FileLocator locator = getFileLocator();
@@ -423,7 +423,7 @@ public class FileHandler {
     /**
      * Gets the {@code FileBased} object associated with this {@code FileHandler}.
      *
-     * @return the associated {@code FileBased} object
+     * @return The associated {@code FileBased} object
      */
     public final FileBased getContent() {
         return content;
@@ -432,7 +432,7 @@ public class FileHandler {
     /**
      * Gets the encoding of the associated file. Result can be <strong>null</strong> if no encoding has been set.
      *
-     * @return the encoding of the associated file
+     * @return The encoding of the associated file
      */
     public String getEncoding() {
         return getFileLocator().getEncoding();
@@ -443,7 +443,7 @@ public class FileHandler {
      * different than &quot;file&quot;, or the file is within a compressed archive, the return value will not point to a
      * valid file object.
      *
-     * @return the location as {@code File} object; this can be <strong>null</strong>
+     * @return The location as {@code File} object; this can be <strong>null</strong>
      */
     public File getFile() {
         return createFile(getFileLocator());
@@ -464,7 +464,7 @@ public class FileHandler {
     /**
      * Gets the name of the file. If only a URL is defined, the file name is derived from there.
      *
-     * @return the file name
+     * @return The file name
      */
     public String getFileName() {
         final FileLocator locator = getFileLocator();
@@ -483,7 +483,7 @@ public class FileHandler {
      * Gets the {@code FileSystem} to be used by this object when locating files. Result is never <strong>null</strong>; if no file
      * system has been set, the default file system is returned.
      *
-     * @return the used {@code FileSystem}
+     * @return The used {@code FileSystem}
      */
     public FileSystem getFileSystem() {
         return FileLocatorUtils.getFileSystem(getFileLocator());
@@ -494,7 +494,7 @@ public class FileHandler {
      * <strong>null</strong>. If a {@code FileLocationStrategy} has been set, it is returned. Otherwise, result is the default
      * {@code FileLocationStrategy}.
      *
-     * @return the {@code FileLocationStrategy} to be used
+     * @return The {@code FileLocationStrategy} to be used
      */
     public FileLocationStrategy getLocationStrategy() {
         return FileLocatorUtils.getLocationStrategy(getFileLocator());
@@ -505,7 +505,7 @@ public class FileHandler {
      * based on a file on the local disk. If the file was loaded from a packed archive, the returned value is the string
      * form of the URL from which the file was loaded.
      *
-     * @return the full path to the associated file
+     * @return The full path to the associated file
      */
     public String getPath() {
         final FileLocator locator = getFileLocator();
@@ -813,7 +813,7 @@ public class FileHandler {
      * Prepares a builder for a {@code FileLocator} which does not have a defined file location. Other properties (for example
      * encoding or file system) are initialized from the {@code FileLocator} associated with this object.
      *
-     * @return the initialized builder for a {@code FileLocator}
+     * @return The initialized builder for a {@code FileLocator}
      */
     private FileLocatorBuilder prepareNullLocatorBuilder() {
         return FileLocatorUtils.fileLocator(getFileLocator()).sourceURL(null).basePath(null).fileName(null);

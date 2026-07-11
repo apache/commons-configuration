@@ -133,7 +133,7 @@ public class TestDatabaseConfiguration {
     /**
      * Creates a database configuration with default values.
      *
-     * @return the configuration
+     * @return The configuration
      * @throws ConfigurationException if an error occurs
      */
     private PotentialErrorDatabaseConfiguration setUpConfig() throws ConfigurationException {
@@ -143,7 +143,7 @@ public class TestDatabaseConfiguration {
     /**
      * Prepares a test for a database error. Sets up a config and registers an error listener.
      *
-     * @return the initialized configuration
+     * @return The initialized configuration
      * @throws ConfigurationException if an error occurs
      */
     private PotentialErrorDatabaseConfiguration setUpErrorConfig() throws ConfigurationException {

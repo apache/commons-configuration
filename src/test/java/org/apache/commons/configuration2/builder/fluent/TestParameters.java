@@ -86,7 +86,7 @@ public class TestParameters {
     /**
      * Creates a mock for a defaults parameter handler.
      *
-     * @return the mock object
+     * @return The mock object
      */
     @SuppressWarnings("unchecked")
     private static DefaultParametersHandler<XMLBuilderParameters> createHandlerMock() {

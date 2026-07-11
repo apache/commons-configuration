@@ -61,7 +61,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
      * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
      *
      * @param line the string to investigate
-     * @return the number of trailing backslashes
+     * @return The number of trailing backslashes
      */
     private static int countTrailingBS(final String line) {
         int bsCount = 0;
@@ -100,7 +100,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
      *
      * @param value the value to be escaped
      * @param inList a flag whether the value is part of a list
-     * @return the value with escaped backslashes as string
+     * @return The value with escaped backslashes as string
      */
     protected String escapeBackslashs(final Object value, final boolean inList) {
         String strValue = String.valueOf(value);
@@ -154,7 +154,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
      * @param value the property value
      * @param inList a flag whether the value is part of a list
      * @param transformer the {@code ValueTransformer}
-     * @return the escaped property value
+     * @return The escaped property value
      */
     protected String escapeValue(final Object value, final boolean inList, final ValueTransformer transformer) {
         String escapedValue = String.valueOf(transformer.transformValue(escapeBackslashs(value, inList)));
@@ -167,7 +167,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     /**
      * Gets the list delimiter character.
      *
-     * @return the list delimiter character
+     * @return The list delimiter character
      */
     public char getDelimiter() {
         return delimiter;

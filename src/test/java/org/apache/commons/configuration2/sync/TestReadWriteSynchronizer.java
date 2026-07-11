@@ -53,7 +53,7 @@ public class TestReadWriteSynchronizer {
         /**
          * Returns the amount of money stored in this account.
          *
-         * @return the amount
+         * @return The amount
          */
         public long getAmount() {
             return amount;
@@ -94,7 +94,7 @@ public class TestReadWriteSynchronizer {
         /**
          * Returns the number of errors occurred during read operations.
          *
-         * @return the number of errors
+         * @return The number of errors
          */
         public int getErrors() {
             return errors;
@@ -185,7 +185,7 @@ public class TestReadWriteSynchronizer {
      * Helper method to calculate the sum over all accounts.
      *
      * @param accounts the accounts to check
-     * @return the sum of the money on these accounts
+     * @return The sum of the money on these accounts
      */
     private static long sumUpAccounts(final Account... accounts) {
         long sum = 0;

@@ -39,7 +39,7 @@ public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      * @param opType the event type for the failed operation
      * @param propName the expected property name
      * @param propValue the expected property value
-     * @return the exception stored in the next error event
+     * @return The exception stored in the next error event
      */
     public Throwable checkEvent(final EventType<?> type, final EventType<?> opType, final String propName, final Object propValue) {
         final ConfigurationErrorEvent e = nextEvent(type);

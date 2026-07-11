@@ -133,7 +133,7 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      *
      * @param multiBuilder the {@code MultiFileConfigurationBuilder}
      * @param wrapConfig the configuration to be returned
-     * @return the wrapper builder
+     * @return The wrapper builder
      */
     private static ConfigurationBuilder<? extends Configuration> createWrapperBuilder(final ConfigurationBuilder<? extends Configuration> multiBuilder,
         final Configuration wrapConfig) {
@@ -158,7 +158,7 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      * Creates a configuration which wraps the specified builder.
      *
      * @param builder the builder
-     * @return the wrapping configuration
+     * @return The wrapping configuration
      */
     // It is safe to disable any type checks because we manually determine
     // the interface class to be passed to BuilderConfigurationWrapperFactory

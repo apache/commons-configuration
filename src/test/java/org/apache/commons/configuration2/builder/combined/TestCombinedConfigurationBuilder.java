@@ -286,7 +286,7 @@ public class TestCombinedConfigurationBuilder {
      * configuration.
      *
      * @param defConfig the definition configuration
-     * @return the definition builder
+     * @return The definition builder
      */
     protected static BasicConfigurationBuilder<? extends BaseHierarchicalConfiguration> createDefinitionBuilder(final BaseHierarchicalConfiguration defConfig) {
         return new ConstantConfigurationBuilder(defConfig);
@@ -298,7 +298,7 @@ public class TestCombinedConfigurationBuilder {
      *
      * @param tag the name of the tag to create
      * @param attrs the attributes of this tag
-     * @return the definition configuration
+     * @return The definition configuration
      */
     protected static BaseHierarchicalConfiguration createDefinitionConfig(final String tag, final Map<String, Object> attrs) {
         final BaseHierarchicalConfiguration defConfig = new BaseHierarchicalConfiguration();
@@ -313,7 +313,7 @@ public class TestCombinedConfigurationBuilder {
      * Prepares a parameters object for a test for properties inheritance.
      *
      * @param params the {@code Parameters} object
-     * @return the builder parameters
+     * @return The builder parameters
      */
     private static XMLBuilderParameters prepareParamsForInheritanceTest(final Parameters params) {
         final DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
@@ -341,7 +341,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Tests if the configuration was correctly created by the builder.
      *
-     * @return the combined configuration obtained from the builder
+     * @return The combined configuration obtained from the builder
      */
     private CombinedConfiguration checkConfiguration() throws ConfigurationException {
         final CombinedConfiguration compositeConfiguration = builder.getConfiguration();
@@ -401,7 +401,7 @@ public class TestCombinedConfigurationBuilder {
      * Loads a test file which includes a MultiFileConfigurationBuilder declaration and returns the resulting configuration.
      *
      * @param fileName the name of the file to be loaded
-     * @return the resulting combined configuration
+     * @return The resulting combined configuration
      * @throws ConfigurationException if an error occurs
      */
     private CombinedConfiguration createMultiFileConfig(final String fileName) throws ConfigurationException {
@@ -415,7 +415,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Creates an object with parameters for defining the file to be loaded.
      *
-     * @return the parameters object
+     * @return The parameters object
      */
     protected FileBasedBuilderParameters createParameters() {
         return parameters.fileBased();
@@ -426,7 +426,7 @@ public class TestCombinedConfigurationBuilder {
      * attributes to the given map, creates the corresponding definition builder and configures the combined builder.
      *
      * @param attrs the map with attributes
-     * @return the definition builder
+     * @return The definition builder
      */
     private BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> prepareSubBuilderTest(final Map<String, Object> attrs) {
         attrs.put("fileName", TEST_SUB_XML);

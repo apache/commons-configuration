@@ -43,7 +43,7 @@ public interface ValueTransformer {
      * implementation before or after list delimiters have been escaped.
      *
      * @param value the property value to be transformed
-     * @return the transformed property value
+     * @return The transformed property value
      */
     Object transformValue(Object value);
 }

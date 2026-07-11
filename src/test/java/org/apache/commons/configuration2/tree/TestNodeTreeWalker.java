@@ -45,7 +45,7 @@ public class TestNodeTreeWalker {
         /**
          * Returns the maximum number of nodes visited by this visitor.
          *
-         * @return the maximum number of nodes
+         * @return The maximum number of nodes
          */
         public int getMaxNodeCount() {
             return maxNodeCount;
@@ -54,7 +54,7 @@ public class TestNodeTreeWalker {
         /**
          * Returns the list with the names of the visited nodes.
          *
-         * @return the visit list
+         * @return The visit list
          */
         public List<String> getVisitedNodes() {
             return visitedNodes;
@@ -88,7 +88,7 @@ public class TestNodeTreeWalker {
     /**
      * Creates a dummy node handler.
      *
-     * @return the node handler
+     * @return The node handler
      */
     private static NodeHandler<ImmutableNode> createHandler() {
         return new InMemoryNodeModel().getNodeHandler();
@@ -97,7 +97,7 @@ public class TestNodeTreeWalker {
     /**
      * Creates a mock for a node handler.
      *
-     * @return the handler mock
+     * @return The handler mock
      */
     @SuppressWarnings("unchecked")
     private static NodeHandler<ImmutableNode> handlerMock() {
@@ -108,7 +108,7 @@ public class TestNodeTreeWalker {
      * Generates a name which indicates that the corresponding node was visited after its children.
      *
      * @param name the node name to be decorated
-     * @return the name with the after indicator
+     * @return The name with the after indicator
      */
     private static String visitAfterName(final String name) {
         return "->" + name;
@@ -117,7 +117,7 @@ public class TestNodeTreeWalker {
     /**
      * Creates a mock for a visitor.
      *
-     * @return the visitor mock
+     * @return The visitor mock
      */
     @SuppressWarnings("unchecked")
     private static ConfigurationNodeVisitor<ImmutableNode> visitorMock() {
@@ -127,7 +127,7 @@ public class TestNodeTreeWalker {
     /**
      * Prepares a list with the names of nodes encountered during a BFS walk.
      *
-     * @return the expected node names in BFS mode
+     * @return The expected node names in BFS mode
      */
     private List<String> expectBFS() {
         final List<String> expected = new LinkedList<>();
@@ -151,7 +151,7 @@ public class TestNodeTreeWalker {
     /**
      * Prepares a list with the names of nodes encountered during a DFS walk.
      *
-     * @return the expected node names in DFS mode
+     * @return The expected node names in DFS mode
      */
     private List<String> expectDFS() {
         final List<String> expected = new LinkedList<>();

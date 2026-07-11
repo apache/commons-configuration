@@ -53,7 +53,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Gets the value of the {@code at} attribute.
      *
-     * @return the value of the {@code at} attribute (can be <strong>null</strong>)
+     * @return The value of the {@code at} attribute (can be <strong>null</strong>)
      */
     public String getAt() {
         final String result = getConfiguration().getString(CombinedConfigurationBuilder.ATTR_AT_RES);
@@ -63,7 +63,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Gets the bean's class name. This implementation will always return <strong>null</strong>.
      *
-     * @return the name of the bean's class
+     * @return The name of the bean's class
      */
     @Override
     public String getBeanClassName() {
@@ -74,7 +74,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * Gets the name of the bean factory. For configuration source declarations always a reserved factory is used. This
      * factory's name is returned by this implementation.
      *
-     * @return the name of the bean factory
+     * @return The name of the bean factory
      */
     @Override
     public String getBeanFactoryName() {
@@ -84,7 +84,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Gets the associated configuration builder.
      *
-     * @return the configuration builder
+     * @return The configuration builder
      */
     public CombinedConfigurationBuilder getConfigurationBuilder() {
         return configurationBuilder;
@@ -94,7 +94,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * Gets the name for the represented configuration source. The name is optional, so this method can return
      * <strong>null</strong>.
      *
-     * @return the name of the associated configuration source or <strong>null</strong>
+     * @return The name of the associated configuration source or <strong>null</strong>
      */
     public String getName() {
         return getConfiguration().getString(CombinedConfigurationBuilder.ATTR_NAME);
@@ -106,7 +106,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * configuration the {@code forceCreate} attribute is set and the corresponding configuration provider supports this
      * mode, an empty configuration will be created and added to the resulting combined configuration.
      *
-     * @return the value of the {@code forceCreate} attribute
+     * @return The value of the {@code forceCreate} attribute
      */
     public boolean isForceCreate() {
         return getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_FORCECREATE, false);

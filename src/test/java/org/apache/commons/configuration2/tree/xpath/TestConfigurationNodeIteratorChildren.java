@@ -69,7 +69,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
      * Helper method for creating a node pointer for a given node.
      *
      * @param node the node the pointer points to
-     * @return the node pointer
+     * @return The node pointer
      */
     private ConfigurationNodePointer<ImmutableNode> createPointer(final ImmutableNode node) {
         return new ConfigurationNodePointer<>(node, Locale.getDefault(), handler);
@@ -78,7 +78,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
     /**
      * Creates a node pointer to a node which also contains a child node with a namespace prefix.
      *
-     * @return the node pointer
+     * @return The node pointer
      */
     private ConfigurationNodePointer<ImmutableNode> createPointerWithNamespace() {
         final ImmutableNode node = new ImmutableNode.Builder(2).addChild(root).addChild(NodeStructureHelper.createNode(PREFIX + ':' + PREFIX_NODE, "test"))

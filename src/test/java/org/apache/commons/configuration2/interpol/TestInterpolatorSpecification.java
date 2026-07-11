@@ -72,7 +72,7 @@ public class TestInterpolatorSpecification {
     /**
      * Convenience method for creating a mock lookup.
      *
-     * @return the mock lookup
+     * @return The mock lookup
      */
     private static Lookup createLookup() {
         return mock(Lookup.class);

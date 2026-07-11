@@ -134,7 +134,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * The returned list contains the expected list values converted to integers.
      *
      * @param config the test configuration
-     * @return the list with expected values
+     * @return The list with expected values
      */
     private static List<Integer> prepareListTest(final PropertiesConfiguration config) {
         final List<Integer> expected = new ArrayList<>(PROP_COUNT);
@@ -230,7 +230,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * Creates the destination configuration for testing the copy() and append() methods. This configuration contains keys
      * with a running index and corresponding values starting with the prefix "value".
      *
-     * @return the destination configuration for copy operations
+     * @return The destination configuration for copy operations
      */
     private AbstractConfiguration setUpDestConfig() {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
@@ -245,7 +245,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * Creates the source configuration for testing the copy() and append() methods. This configuration contains keys with
      * an odd index and values starting with the prefix "src". There are also some list properties.
      *
-     * @return the source configuration for copy operations
+     * @return The source configuration for copy operations
      */
     private Configuration setUpSourceConfig() {
         final BaseConfiguration config = new BaseConfiguration();

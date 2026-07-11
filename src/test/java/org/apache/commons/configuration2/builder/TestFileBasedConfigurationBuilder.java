@@ -89,7 +89,7 @@ public class TestFileBasedConfigurationBuilder {
      * Creates a test properties file with the given property value
      *
      * @param value the value for the test property
-     * @return the File object pointing to the test file
+     * @return The File object pointing to the test file
      */
     private File createTestFile(final int value) {
         return assertDoesNotThrow(() -> {

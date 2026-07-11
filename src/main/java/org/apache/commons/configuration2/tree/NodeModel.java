@@ -99,14 +99,14 @@ public interface NodeModel<T> {
      * {@code ImmutableNode} is a generic representation of a hierarchical structure. Thus, it should be possible to
      * generate a corresponding structure from arbitrary model data.
      *
-     * @return the root node of an in-memory hierarchy representing the data stored in this model
+     * @return The root node of an in-memory hierarchy representing the data stored in this model
      */
     ImmutableNode getInMemoryRepresentation();
 
     /**
      * Gets a {@code NodeHandler} for dealing with the nodes managed by this model.
      *
-     * @return the {@code NodeHandler}
+     * @return The {@code NodeHandler}
      */
     NodeHandler<T> getNodeHandler();
 

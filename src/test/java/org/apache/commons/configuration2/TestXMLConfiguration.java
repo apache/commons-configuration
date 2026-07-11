@@ -128,7 +128,7 @@ public class TestXMLConfiguration {
      * Creates a new XMLConfiguration and loads the specified file.
      *
      * @param fileName the name of the file to be loaded
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private static XMLConfiguration createFromFile(final String fileName) throws ConfigurationException {
@@ -193,7 +193,7 @@ public class TestXMLConfiguration {
     /**
      * Helper method for testing whether a configuration was correctly saved to the default output file.
      *
-     * @return the newly loaded configuration
+     * @return The newly loaded configuration
      * @throws ConfigurationException if an error occurs
      */
     private XMLConfiguration checkSavedConfig() throws ConfigurationException {
@@ -204,7 +204,7 @@ public class TestXMLConfiguration {
      * Tests whether the saved configuration file matches the original data.
      *
      * @param saveFile the saved configuration file
-     * @return the newly loaded configuration
+     * @return The newly loaded configuration
      * @throws ConfigurationException if an error occurs
      */
     private XMLConfiguration checkSavedConfig(final File saveFile) throws ConfigurationException {
@@ -235,7 +235,7 @@ public class TestXMLConfiguration {
     /**
      * Creates a validating document builder.
      *
-     * @return the document builder
+     * @return The document builder
      * @throws ParserConfigurationException if an error occurs
      */
     private DocumentBuilder createValidatingDocBuilder() throws ParserConfigurationException {

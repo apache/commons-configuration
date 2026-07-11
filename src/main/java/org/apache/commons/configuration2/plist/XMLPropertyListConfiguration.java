@@ -152,7 +152,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Return the list of values in the array.
          *
-         * @return the {@link List} of values
+         * @return The {@link List} of values
          */
         @Override
         protected Object getNodeValue() {
@@ -299,7 +299,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Creates the configuration node defined by this builder.
          *
-         * @return the newly created configuration node
+         * @return The newly created configuration node
          */
         public ImmutableNode createNode() {
             final ImmutableNode.Builder nodeBuilder = new ImmutableNode.Builder(childBuilders.size());
@@ -311,7 +311,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * Gets the final value for the node to be created. This method is called when the represented configuration node is
          * actually created.
          *
-         * @return the value of the resulting configuration node
+         * @return The value of the resulting configuration node
          */
         protected Object getNodeValue() {
             return value;
@@ -420,7 +420,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Gets the builder for the result node.
          *
-         * @return the result node builder
+         * @return The result node builder
          */
         public PListNodeBuilder getResultBuilder() {
             return resultBuilder;
@@ -439,7 +439,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Returns the node on top of the non-empty stack. Throws an exception if the stack is empty.
          *
-         * @return the top node of the stack
+         * @return The top node of the stack
          * @throws ConfigurationRuntimeException if the stack is empty
          */
         private PListNodeBuilder peekNE() {
@@ -489,7 +489,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
      * are not of type String are dropped.
      *
      * @param src the map to be converted
-     * @return the resulting map
+     * @return The resulting map
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
         final Map<String, Object> dest = new HashMap<>();

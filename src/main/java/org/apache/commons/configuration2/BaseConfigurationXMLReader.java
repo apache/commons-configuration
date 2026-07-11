@@ -82,7 +82,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     /**
      * Gets the actual configuration to be processed.
      *
-     * @return the actual configuration
+     * @return The actual configuration
      */
     public Configuration getConfiguration() {
         return config;
@@ -91,7 +91,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     /**
      * Gets the configuration to be processed.
      *
-     * @return the actual configuration
+     * @return The actual configuration
      */
     @Override
     public Configuration getParsedConfiguration() {

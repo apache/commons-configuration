@@ -112,7 +112,7 @@ abstract class HierarchicalConfigurationConverter {
      * @param keyAct the actual key
      * @param config the configuration to process
      * @param keySet the set with the processed keys
-     * @return the name of the last element on the path
+     * @return The name of the last element on the path
      */
     protected String openElements(final DefaultConfigurationKey keyLast, final DefaultConfigurationKey keyAct, final Configuration config,
         final Set<String> keySet) {

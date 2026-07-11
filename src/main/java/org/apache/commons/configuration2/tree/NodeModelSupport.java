@@ -32,7 +32,7 @@ public interface NodeModelSupport<T> {
     /**
      * Gets the {@code NodeModel} supported by this object.
      *
-     * @return the {@code NodeModel}
+     * @return The {@code NodeModel}
      */
     NodeModel<T> getNodeModel();
 }

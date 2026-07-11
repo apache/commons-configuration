@@ -111,7 +111,7 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * been created and initialized. It is called from a synchronized block. This implementation creates a
      * {@link CombinedReloadingController}.
      *
-     * @return the {@code ReloadingController} for this builder
+     * @return The {@code ReloadingController} for this builder
      * @throws ConfigurationException if an error occurs
      */
     protected ReloadingController createReloadingController() throws ConfigurationException {

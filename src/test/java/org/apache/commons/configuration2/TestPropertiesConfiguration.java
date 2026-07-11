@@ -277,7 +277,7 @@ public class TestPropertiesConfiguration {
      *
      * @param pc the configuration to be loaded
      * @param fileName the file name
-     * @return the file handler associated with the configuration
+     * @return The file handler associated with the configuration
      * @throws ConfigurationException if an error occurs
      */
     private static FileHandler load(final PropertiesConfiguration pc, final String fileName) throws ConfigurationException {
@@ -337,7 +337,7 @@ public class TestPropertiesConfiguration {
      * Helper method for testing a saved configuration. Reads in the file using a new instance and compares this instance
      * with the original one.
      *
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private PropertiesConfiguration checkSavedConfig() throws ConfigurationException {
@@ -376,7 +376,7 @@ public class TestPropertiesConfiguration {
     /**
      * Creates a configuration that can be used for testing copy operations.
      *
-     * @return the configuration to be copied
+     * @return The configuration to be copied
      */
     private Configuration setUpCopyConfig() {
         final int count = 25;

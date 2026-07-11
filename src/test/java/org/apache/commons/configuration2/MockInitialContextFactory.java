@@ -132,7 +132,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Creates a mock for a Context with the specified prefix.
      *
      * @param prefix the prefix
-     * @return the mock for the context
+     * @return The mock for the context
      */
     private Context createCtxMock(final String prefix) throws NamingException {
         final Context mockCtx = mock(Context.class);
@@ -153,7 +153,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      *
      * @param names the names contained in the iteration
      * @param values the corresponding values
-     * @return the mock for the enumeration
+     * @return The mock for the enumeration
      */
     private List<NameClassPair> createNameClassPairs(final String[] names, final Object[] values) {
         final List<NameClassPair> pairs = new ArrayList<>();
@@ -169,7 +169,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      *
      * @param names the names contained in the iteration
      * @param values the corresponding values
-     * @return the mock for the enumeration
+     * @return The mock for the enumeration
      */
     private NamingEnumeration<NameClassPair> createNamingEnumeration(final String[] names, final Object[] values) {
         return new ListBasedNamingEnumeration(createNameClassPairs(names, values));
@@ -180,7 +180,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * certain test properties. It also supports listing the contained (sub) properties.
      *
      * @param env the environment
-     * @return the context mock
+     * @return The context mock
      */
     @Override
     public Context getInitialContext(@SuppressWarnings("rawtypes") final Hashtable env) throws NamingException {

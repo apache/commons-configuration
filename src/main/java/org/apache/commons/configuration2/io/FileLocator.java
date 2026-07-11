@@ -101,7 +101,7 @@ public final class FileLocator {
         /**
          * Creates a new immutable {@code FileLocatorImpl} object based on the properties set so far for this builder.
          *
-         * @return the newly created {@code FileLocator} object, never null.
+         * @return The newly created {@code FileLocator} object, never null.
          */
         public FileLocator create() {
             return new FileLocator(this);
@@ -250,7 +250,7 @@ public final class FileLocator {
     /**
      * Gets the base path stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the base path
+     * @return The base path
      */
     public String getBasePath() {
         return basePath;
@@ -259,7 +259,7 @@ public final class FileLocator {
     /**
      * Gets the encoding stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the encoding
+     * @return The encoding
      */
     public String getEncoding() {
         return encoding;
@@ -268,7 +268,7 @@ public final class FileLocator {
     /**
      * Gets the file name stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the file name
+     * @return The file name
      */
     public String getFileName() {
         return fileName;
@@ -278,7 +278,7 @@ public final class FileLocator {
      * Gets the {@code FileSystem} to be used for accessing the file referenced by this locator or <strong>null</strong> if it is
      * undefined.
      *
-     * @return the {@code FileSystem}
+     * @return The {@code FileSystem}
      */
     public FileSystem getFileSystem() {
         return fileSystem;
@@ -289,7 +289,7 @@ public final class FileLocator {
      * {@code FileLocationStrategy} has been set, result is <strong>null</strong>. This means that the default strategy should be
      * used.
      *
-     * @return the {@code FileLocationStrategy} to be used
+     * @return The {@code FileLocationStrategy} to be used
      */
     public FileLocationStrategy getLocationStrategy() {
         return locationStrategy;
@@ -298,7 +298,7 @@ public final class FileLocator {
     /**
      * Gets the URL pointing to the referenced source file or <strong>null</strong> if it is undefined.
      *
-     * @return the source URL
+     * @return The source URL
      */
     public URL getSourceURL() {
         return sourceURL;
@@ -307,7 +307,7 @@ public final class FileLocator {
     /**
      * Gets the URLConnectionOptions
      *
-     * @return the URLConnectionOptions
+     * @return The URLConnectionOptions
      */
     public URLConnectionOptions getURLConnectionOptions() {
         return urlConnectionOptions;

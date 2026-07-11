@@ -92,7 +92,7 @@ public class NodeAddData<T> {
     /**
      * Gets the name of the new node.
      *
-     * @return the new node's name
+     * @return The new node's name
      */
     public String getNewNodeName() {
         return newNodeName;
@@ -101,7 +101,7 @@ public class NodeAddData<T> {
     /**
      * Gets the parent node.
      *
-     * @return the parent node
+     * @return The parent node
      */
     public T getParent() {
         return parent;

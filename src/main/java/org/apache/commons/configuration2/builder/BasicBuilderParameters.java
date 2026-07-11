@@ -116,7 +116,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * like {@link #fetchAndCheckPrefixLookups(Map)}, but tests the default lookups collection.
      *
      * @param params the map with parameters
-     * @return the collection with default lookups (may be <strong>null</strong>)
+     * @return The collection with default lookups (may be <strong>null</strong>)
      * @throws IllegalArgumentException if invalid data is found
      */
     private static Collection<? extends Lookup> fetchAndCheckDefaultLookups(final Map<String, Object> params) {
@@ -137,7 +137,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * map that the key for the prefix lookups actually points to a map containing keys and values of expected data types.
      *
      * @param params the parameters map
-     * @return the obtained map with prefix lookups
+     * @return The obtained map with prefix lookups
      * @throws IllegalArgumentException if the map contains invalid data
      */
     private static Map<String, ? extends Lookup> fetchAndCheckPrefixLookups(final Map<String, Object> params) {
@@ -159,7 +159,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * found, result is <strong>null</strong>.
      *
      * @param params the map with parameters (must not be <strong>null</strong>)
-     * @return the {@code BeanHelper} stored in this map or <strong>null</strong>
+     * @return The {@code BeanHelper} stored in this map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static BeanHelper fetchBeanHelper(final Map<String, Object> params) {
@@ -171,7 +171,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains the collection with default lookups from the parameters map.
      *
      * @param params the map with parameters
-     * @return the collection with default lookups (may be <strong>null</strong>)
+     * @return The collection with default lookups (may be <strong>null</strong>)
      */
     private static Collection<? extends Lookup> fetchDefaultLookups(final Map<String, Object> params) {
         // This is safe to cast because we either have full control over the map
@@ -204,7 +204,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * @param key the key of the parameter
      * @param expClass the expected class of the parameter value
      * @param <T> The parameter type
-     * @return the value of the parameter in the correct data type
+     * @return The value of the parameter in the correct data type
      * @throws IllegalArgumentException if the parameter is not of the expected type
      */
     private static <T> T fetchParameter(final Map<String, Object> params, final String key, final Class<T> expClass) {
@@ -222,7 +222,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains the map with prefix lookups from the parameters map.
      *
      * @param params the map with parameters
-     * @return the map with prefix lookups (may be <strong>null</strong>)
+     * @return The map with prefix lookups (may be <strong>null</strong>)
      */
     private static Map<String, ? extends Lookup> fetchPrefixLookups(final Map<String, Object> params) {
         // This is safe to cast because we either have full control over the map
@@ -286,7 +286,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * specific property is to be accessed. If the given key is not found, result is <strong>null</strong>.
      *
      * @param key the key of the property in question
-     * @return the value of the property with this key or <strong>null</strong>
+     * @return The value of the property with this key or <strong>null</strong>
      */
     protected Object fetchProperty(final String key) {
         return properties.get(key);

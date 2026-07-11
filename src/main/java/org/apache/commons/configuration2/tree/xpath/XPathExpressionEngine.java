@@ -153,7 +153,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      *
      * @param results the list with results from the context
      * @param <T> The type of results to be produced
-     * @return the result list
+     * @return The result list
      */
     private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
         return results.stream().map(res -> (QueryResult<T>) createResult(res)).collect(Collectors.toList());
@@ -171,7 +171,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      *
      * @param resObj the query result object
      * @param <T> The type of the result to be produced
-     * @return the {@code QueryResult}
+     * @return The {@code QueryResult}
      */
     @SuppressWarnings("unchecked")
     private static <T> QueryResult<T> createResult(final Object resObj) {
@@ -188,7 +188,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * @param child the child node
      * @param handler the node handler
      * @param <T> The type of the nodes involved
-     * @return the index of this child node
+     * @return The index of this child node
      */
     private static <T> int determineIndex(final T parent, final T child, final NodeHandler<T> handler) {
         return handler.getChildren(parent, handler.nodeName(child)).indexOf(child) + 1;
@@ -198,7 +198,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * Determines the position of the separator in a key for adding new properties. If no delimiter is found, result is -1.
      *
      * @param key the key
-     * @return the position of the delimiter
+     * @return The position of the delimiter
      */
     private static int findKeySeparator(final String key) {
         int index = key.length() - 1;
@@ -277,7 +277,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      *
      * @param root the configuration root node
      * @param handler the node handler
-     * @return the new context
+     * @return The new context
      */
     private <T> JXPathContext createContext(final T root, final NodeHandler<T> handler) {
         return getContextFactory().createContext(root, handler);
@@ -345,7 +345,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * @param root the root node of the configuration
      * @param key the key in question
      * @param handler the node handler
-     * @return the key to be used for adding the property
+     * @return The key to be used for adding the property
      */
     private <T> String generateKeyForAdd(final T root, final String key, final NodeHandler<T> handler) {
         int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
@@ -367,7 +367,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Gets the {@code XPathContextFactory} used by this instance.
      *
-     * @return the {@code XPathContextFactory}
+     * @return The {@code XPathContextFactory}
      */
     XPathContextFactory getContextFactory() {
         return contextFactory;

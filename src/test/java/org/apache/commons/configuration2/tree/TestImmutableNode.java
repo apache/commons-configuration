@@ -105,7 +105,7 @@ public class TestImmutableNode {
     /**
      * Sets up a builder with default settings.
      *
-     * @return the default builder
+     * @return The default builder
      */
     private static ImmutableNode.Builder setUpBuilder() {
         final ImmutableNode.Builder builder = new ImmutableNode.Builder();
@@ -129,7 +129,7 @@ public class TestImmutableNode {
     /**
      * Creates a default child node with a unique name.
      *
-     * @return the new child node
+     * @return The new child node
      */
     private ImmutableNode createChild() {
         final int idx = childCounter++;
@@ -140,7 +140,7 @@ public class TestImmutableNode {
      * Creates a default node instance which can be used by tests for updating properties.
      *
      * @param value the value of the node
-     * @return the default node instance
+     * @return The default node instance
      */
     private ImmutableNode createDefaultNode(final Object value) {
         return createDefaultNode(NAME, value);
@@ -151,7 +151,7 @@ public class TestImmutableNode {
      *
      * @param name the name of the node
      * @param value the value of the node
-     * @return the default node instance
+     * @return The default node instance
      */
     private ImmutableNode createDefaultNode(final String name, final Object value) {
         final ImmutableNode.Builder builder = new ImmutableNode.Builder(1);

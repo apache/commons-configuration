@@ -73,7 +73,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * default one is returned.
      *
      * @param ci the {@code ConfigurationInterpolator} provided by the caller
-     * @return the {@code ConfigurationInterpolator} to be used
+     * @return The {@code ConfigurationInterpolator} to be used
      */
     private static ConfigurationInterpolator fetchInterpolator(final ConfigurationInterpolator ci) {
         return ci != null ? ci : NULL_INTERPOLATOR;
@@ -106,7 +106,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param src the source object to be converted
      * @param targetCls the desired target class
      * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the converted value
+     * @return The converted value
      * @throws ConversionException if conversion is not possible
      */
     protected <T> T convert(final Object src, final Class<T> targetCls, final ConfigurationInterpolator ci) {
@@ -137,7 +137,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param src the source object (a single value)
      * @param targetCls the target class of the conversion
      * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the converted value
+     * @return The converted value
      * @throws ConversionException if conversion is not possible
      */
     protected <T> T convertValue(final Object src, final Class<T> targetCls, final ConfigurationInterpolator ci) {
@@ -159,7 +159,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param container the complex object
      * @param targetCls the target class of the conversion
      * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the value to be converted (may be <strong>null</strong> if no values are found)
+     * @return The value to be converted (may be <strong>null</strong> if no values are found)
      */
     protected Object extractConversionValue(final Object container, final Class<?> targetCls, final ConfigurationInterpolator ci) {
         final Collection<?> values = extractValues(container, 1);
@@ -191,7 +191,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Gets the date format used by this conversion handler.
      *
-     * @return the date format
+     * @return The date format
      */
     public String getDateFormat() {
         final String fmt = dateFormat;
@@ -201,7 +201,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Gets the {@link ListDelimiterHandler} used for extracting values from complex objects.
      *
-     * @return the {@link ListDelimiterHandler} used for extracting values from complex objects, never null.
+     * @return The {@link ListDelimiterHandler} used for extracting values from complex objects, never null.
      * @since 2.9.0
      */
     public ListDelimiterHandler getListDelimiterHandler() {
@@ -309,7 +309,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param src the source object
      * @param elemClass the element class of the array
      * @param ci the {@code ConfigurationInterpolator}
-     * @return the result array
+     * @return The result array
      * @throws ConversionException if a conversion cannot be performed
      */
     private <T> T[] toObjectArray(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci) {
@@ -329,7 +329,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @param src the source object
      * @param elemClass the element class of the array
      * @param ci the {@code ConfigurationInterpolator}
-     * @return the result array
+     * @return The result array
      * @throws ConversionException if a conversion cannot be performed
      */
     private Object toPrimitiveArray(final Object src, final Class<?> elemClass, final ConfigurationInterpolator ci) {

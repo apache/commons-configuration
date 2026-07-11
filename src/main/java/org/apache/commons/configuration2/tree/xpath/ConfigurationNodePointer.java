@@ -80,7 +80,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      * Returns an iterator for the attributes that match the given name.
      *
      * @param qName the attribute name
-     * @return the iterator for the attributes
+     * @return The iterator for the attributes
      */
     @Override
     public NodeIterator attributeIterator(final QName qName) {
@@ -93,7 +93,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      * this cast is safe.
      *
      * @param p the {@code NodePointer} to cast
-     * @return the resulting {@code ConfigurationNodePointer}
+     * @return The resulting {@code ConfigurationNodePointer}
      */
     private ConfigurationNodePointer<T> castPointer(final NodePointer p) {
         @SuppressWarnings("unchecked") // see method comment
@@ -140,7 +140,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's base value. This is the associated configuration node.
      *
-     * @return the base value
+     * @return The base value
      */
     @Override
     public Object getBaseValue() {
@@ -150,7 +150,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the wrapped configuration node.
      *
-     * @return the wrapped node
+     * @return The wrapped node
      */
     public T getConfigurationNode() {
         return node;
@@ -159,7 +159,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the immediate node. This is the associated configuration node.
      *
-     * @return the immediate node
+     * @return The immediate node
      */
     @Override
     public Object getImmediateNode() {
@@ -169,7 +169,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's length. This is always 1.
      *
-     * @return the node's length
+     * @return The node's length
      */
     @Override
     public int getLength() {
@@ -179,7 +179,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's name.
      *
-     * @return the name
+     * @return The name
      */
     @Override
     public QName getName() {
@@ -189,7 +189,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the {@code NodeHandler} used by this instance.
      *
-     * @return the {@code NodeHandler}
+     * @return The {@code NodeHandler}
      */
     public NodeHandler<T> getNodeHandler() {
         return handler;
@@ -198,7 +198,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the value of this node.
      *
-     * @return the represented node's value
+     * @return The represented node's value
      */
     @Override
     public Object getValue() {
@@ -208,7 +208,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Checks whether this node pointer refers to an attribute node. This is not the case.
      *
-     * @return the attribute flag
+     * @return The attribute flag
      */
     @Override
     public boolean isAttribute() {
@@ -218,7 +218,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns a flag if this node is a collection. This is not the case.
      *
-     * @return the collection flag
+     * @return The collection flag
      */
     @Override
     public boolean isCollection() {

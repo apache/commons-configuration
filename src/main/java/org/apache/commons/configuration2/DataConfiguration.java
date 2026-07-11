@@ -679,7 +679,7 @@ public class DataConfiguration extends AbstractConfiguration {
     /**
      * Gets the configuration decorated by this DataConfiguration.
      *
-     * @return the wrapped configuration
+     * @return The wrapped configuration
      */
     public Configuration getConfiguration() {
         return configuration;
@@ -867,7 +867,7 @@ public class DataConfiguration extends AbstractConfiguration {
     /**
      * Gets the date format specified by the user in the DATE_FORMAT_KEY property, or the default format otherwise.
      *
-     * @return the default date format
+     * @return The default date format
      */
     private String getDefaultDateFormat() {
         return getString(DATE_FORMAT_KEY, DEFAULT_DATE_FORMAT);
@@ -1156,7 +1156,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * Gets the original conversion handler set for this configuration. If this is not a
      * {@code DefaultConversionHandler}, result is <strong>null</strong>.
      *
-     * @return the original conversion handler or <strong>null</strong>
+     * @return The original conversion handler or <strong>null</strong>
      */
     private DefaultConversionHandler getOriginalConversionHandler() {
         final ConversionHandler handler = super.getConversionHandler();

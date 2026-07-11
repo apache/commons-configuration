@@ -155,7 +155,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * Creates a mock for an event listener.
      *
-     * @return the event listener mock
+     * @return The event listener mock
      */
     @SuppressWarnings("unchecked")
     private static EventListener<ConfigurationEvent> createEventListener() {
@@ -165,7 +165,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * Creates a map with test initialization parameters.
      *
-     * @return the map with parameters
+     * @return The map with parameters
      */
     private static Map<String, Object> createTestParameters() {
         final Map<String, Object> params = new HashMap<>();

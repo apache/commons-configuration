@@ -51,7 +51,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
      * Extracts the extension from the given file name. The name can be <strong>null</strong>.
      *
      * @param fileName the file name
-     * @return the extension (<strong>null</strong> if there is none)
+     * @return The extension (<strong>null</strong> if there is none)
      */
     private static String extractExtension(final String fileName) {
         if (fileName == null) {
@@ -66,7 +66,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
      * Tries to obtain the current file name from the given list of parameter objects.
      *
      * @param params the parameter objects
-     * @return the file name or <strong>null</strong> if unspecified
+     * @return The file name or <strong>null</strong> if unspecified
      */
     private static String fetchCurrentFileName(final Collection<BuilderParameters> params) {
         for (final BuilderParameters p : params) {
@@ -129,7 +129,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /**
      * Gets the file extension of this provider.
      *
-     * @return the file extension to match
+     * @return The file extension to match
      */
     public String getExtension() {
         return extension;
@@ -139,7 +139,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
      * Gets the name of the matching configuration class. This class is used if the file extension matches the extension
      * of this provider.
      *
-     * @return the matching configuration class
+     * @return The matching configuration class
      */
     public String getMatchingConfigurationClass() {
         return matchingConfigurationClass;

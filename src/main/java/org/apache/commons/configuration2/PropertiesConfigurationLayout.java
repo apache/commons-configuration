@@ -146,7 +146,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Creates a copy of this object.
          *
-         * @return the copy
+         * @return The copy
          */
         @Override
         public PropertyLayoutData clone() {
@@ -166,7 +166,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Gets the number of blank lines before this property.
          *
-         * @return the number of blank lines before this property
+         * @return The number of blank lines before this property
          * @deprecated Use {#link {@link #getBlankLines()}}.
          */
         @Deprecated
@@ -177,7 +177,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Gets the number of blank lines before this property.
          *
-         * @return the number of blank lines before this property
+         * @return The number of blank lines before this property
          * @since 2.8.0
          */
         public int getBlankLines() {
@@ -187,7 +187,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Gets the comment for this property. The comment is returned as it is, without processing of comment characters.
          *
-         * @return the comment (can be <strong>null</strong>)
+         * @return The comment (can be <strong>null</strong>)
          */
         public String getComment() {
             return Objects.toString(comment, null);
@@ -196,7 +196,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Gets the separator that was used for this property.
          *
-         * @return the property separator
+         * @return The property separator
          */
         public String getSeparator() {
             return separator;
@@ -205,7 +205,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /**
          * Returns the single line flag.
          *
-         * @return the single line flag
+         * @return The single line flag
          */
         public boolean isSingleLine() {
             return singleLine;
@@ -276,7 +276,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param comment the comment string to be processed
      * @param commentChar determines the presence of comment characters
-     * @return the canonical comment string (can be <strong>null</strong>)
+     * @return The canonical comment string (can be <strong>null</strong>)
      */
     private static String constructCanonicalComment(final String comment, final boolean commentChar) {
         return comment == null ? null : trimComment(comment, commentChar);
@@ -298,7 +298,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param s the comment line
      * @param comment if <strong>true</strong>, a comment character will always be enforced; if <strong>false</strong>, it will be removed
-     * @return the line without comment character
+     * @return The line without comment character
      */
     static String stripCommentChar(final String s, final boolean comment) {
         if (StringUtils.isBlank(s) || isCommentLine(s) == comment) {
@@ -328,7 +328,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param s the string to be processed
      * @param comment if <strong>true</strong>, a comment character will always be enforced; if <strong>false</strong>, it will be removed
-     * @return the trimmed comment
+     * @return The trimmed comment
      */
     static String trimComment(final String s, final boolean comment) {
         final StringBuilder buf = new StringBuilder(s.length());
@@ -416,7 +416,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * line in the passed in list, which does not belong to the header comment.
      *
      * @param commentLines the comment lines
-     * @return the index of the next line after the header comment
+     * @return The index of the next line after the header comment
      */
     private int checkHeaderComment(final List<String> commentLines) {
         if (loadCounter.get() == 1 && layoutData.isEmpty()) {
@@ -466,7 +466,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param commentLines a list with comment lines
      * @param from the start index
      * @param to the end index (inclusive)
-     * @return the comment string (<strong>null</strong> if it is undefined)
+     * @return The comment string (<strong>null</strong> if it is undefined)
      */
     private String extractComment(final List<String> commentLines, final int from, final int to) {
         if (to < from) {
@@ -485,7 +485,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * with default values.
      *
      * @param key the key
-     * @return the corresponding layout data object
+     * @return The corresponding layout data object
      */
     private PropertyLayoutData fetchLayoutData(final String key) {
         if (key == null) {
@@ -500,7 +500,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the number of blank lines before this property key. If this key does not exist, 0 will be returned.
      *
      * @param key the property key
-     * @return the number of blank lines before the property definition for this key
+     * @return The number of blank lines before the property definition for this key
      * @deprecated Use {@link #getBlankLinesBefore(String)}.
      */
     @Deprecated
@@ -512,7 +512,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the number of blank lines before this property key. If this key does not exist, 0 will be returned.
      *
      * @param key the property key
-     * @return the number of blank lines before the property definition for this key
+     * @return The number of blank lines before the property definition for this key
      */
     public int getBlankLinesBefore(final String key) {
         return fetchLayoutData(key).getBlankLines();
@@ -527,7 +527,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param key the key of the property
      * @param commentChar determines whether all lines should start with comment characters or not
-     * @return the canonical comment for this key (can be <strong>null</strong>)
+     * @return The canonical comment for this key (can be <strong>null</strong>)
      */
     public String getCanonicalComment(final String key, final boolean commentChar) {
         return constructCanonicalComment(getComment(key), commentChar);
@@ -538,7 +538,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * {@code getCanonicalHeaderComment()}, but reads the footer comment.
      *
      * @param commentChar determines the presence of comment characters
-     * @return the footer comment (can be <strong>null</strong>)
+     * @return The footer comment (can be <strong>null</strong>)
      * @see #getCanonicalHeaderComment(boolean)
      * @since 2.0
      */
@@ -551,7 +551,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * parameter it can be specified whether comment characters should be stripped or be always present.
      *
      * @param commentChar determines the presence of comment characters
-     * @return the header comment (can be <strong>null</strong>)
+     * @return The header comment (can be <strong>null</strong>)
      */
     public String getCanonicalHeaderComment(final boolean commentChar) {
         return constructCanonicalComment(getHeaderComment(), commentChar);
@@ -562,7 +562,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * {@code setComment()} or when it was loaded from a properties file). No modifications are performed.
      *
      * @param key the key of the property
-     * @return the comment for this key (can be <strong>null</strong>)
+     * @return The comment for this key (can be <strong>null</strong>)
      */
     public String getComment(final String key) {
         return fetchLayoutData(key).getComment();
@@ -572,7 +572,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the footer comment of the represented properties file. This method returns the footer comment exactly as it
      * was set using {@code setFooterComment()} or extracted from the loaded properties file.
      *
-     * @return the footer comment (can be <strong>null</strong>)
+     * @return The footer comment (can be <strong>null</strong>)
      * @since 2.0
      */
     public String getFooterComment() {
@@ -582,7 +582,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     /**
      * Gets the global separator.
      *
-     * @return the global properties separator
+     * @return The global properties separator
      * @since 1.7
      */
     public String getGlobalSeparator() {
@@ -593,7 +593,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the header comment of the represented properties file. This method returns the header comment exactly as it
      * was set using {@code setHeaderComment()} or extracted from the loaded properties file.
      *
-     * @return the header comment (can be <strong>null</strong>)
+     * @return The header comment (can be <strong>null</strong>)
      */
     public String getHeaderComment() {
         return headerComment;
@@ -611,7 +611,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     /**
      * Gets the line separator.
      *
-     * @return the line separator
+     * @return The line separator
      * @since 1.7
      */
     public String getLineSeparator() {
@@ -622,7 +622,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Gets the separator for the property with the given key.
      *
      * @param key the property key
-     * @return the property separator for this property
+     * @return The property separator for this property
      * @since 1.7
      */
     public String getSeparator(final String key) {
@@ -632,7 +632,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     /**
      * Returns the &quot;force single line&quot; flag.
      *
-     * @return the force single line flag
+     * @return The force single line flag
      * @see #setForceSingleLine(boolean)
      */
     public boolean isForceSingleLine() {

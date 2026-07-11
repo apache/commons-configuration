@@ -76,7 +76,7 @@ public class TestBeanHelper {
         /**
          * Returns the number of beans created via this factory.
          *
-         * @return the number of created beans
+         * @return The number of created beans
          */
         public int getCreateBeanCount() {
             return createBeanCount;
@@ -157,7 +157,7 @@ public class TestBeanHelper {
     /**
      * Returns an initialized bean declaration.
      *
-     * @return the bean declaration
+     * @return The bean declaration
      */
     private BeanDeclarationTestImpl setUpBeanDeclaration() {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();

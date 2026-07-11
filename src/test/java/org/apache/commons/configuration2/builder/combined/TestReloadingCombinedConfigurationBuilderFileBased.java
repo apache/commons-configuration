@@ -138,7 +138,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Returns the name of a test property.
      *
      * @param idx the index of the property
-     * @return the test property with this index
+     * @return The test property with this index
      */
     private static String testProperty(final int idx) {
         return PROP_RELOAD + idx;
@@ -311,7 +311,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * @param f the file to be written or <strong>null</strong> for creating a new one
      * @param tagIdx the index of the tag
      * @param value the value of the reload test property
-     * @return the file that was written
+     * @return The file that was written
      * @throws IOException if an error occurs
      */
     private File writeReloadFile(final File f, final int tagIdx, final int value) throws IOException {
@@ -324,7 +324,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      *
      * @param f the file to be written or <strong>null</strong> for creating a new one
      * @param content the content of the file
-     * @return the {@code File} object for the test file
+     * @return The {@code File} object for the test file
      * @throws IOException if an error occurs
      */
     private File writeReloadFile(final File f, final String content) throws IOException {

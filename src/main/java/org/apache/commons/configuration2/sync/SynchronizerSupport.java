@@ -39,7 +39,7 @@ public interface SynchronizerSupport {
      * Gets the {@code Synchronizer} used by this object. An implementation must not return <strong>null</strong>. If no
      * {@code Synchronizer} has been set so far, a meaningful default {@code Synchronizer} has to be returned.
      *
-     * @return the {@code Synchronizer} used by this object
+     * @return The {@code Synchronizer} used by this object
      */
     Synchronizer getSynchronizer();
 

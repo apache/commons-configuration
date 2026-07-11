@@ -42,7 +42,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
-     * @return the current expression engine
+     * @return The current expression engine
      */
     ExpressionEngine getExpressionEngine();
 
@@ -51,7 +51,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * can then be addressed separately by specifying indices from 0 to the return value of this method.
      *
      * @param key the key to be checked
-     * @return the maximum defined index for this key
+     * @return The maximum defined index for this key
      */
     int getMaxIndex(String key);
 
@@ -61,7 +61,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * returned by this method is specific to a concrete implementation. For instance, an XML configuration might return the
      * name of the document element.
      *
-     * @return the name of the root element of this configuration
+     * @return The name of the root element of this configuration
      */
     String getRootElementName();
 

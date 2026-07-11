@@ -288,7 +288,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * the exception is ignored, and the newly created, uninitialized configuration is returned. Note that this method is
      * called in a synchronized block.
      *
-     * @return the newly created result object
+     * @return The newly created result object
      * @throws ConfigurationException if an error occurs
      */
     protected T createResult() throws ConfigurationException {
@@ -312,7 +312,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * exceptions will be thrown when the result object is created. Note: This method is invoked in a synchronized block.
      *
      * @param params a snapshot of the current initialization parameters
-     * @return the {@code BeanDeclaration} for creating result objects
+     * @return The {@code BeanDeclaration} for creating result objects
      * @throws ConfigurationException if an error occurs
      */
     protected BeanDeclaration createResultDeclaration(final Map<String, Object> params) throws ConfigurationException {
@@ -358,7 +358,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * {@link BeanDeclaration} returned by {@link #getResultDeclaration()}. Note: This method is invoked in a synchronized
      * block.
      *
-     * @return the newly created, yet uninitialized result object
+     * @return The newly created, yet uninitialized result object
      * @throws ConfigurationException if an exception occurs
      */
     protected T createResultInstance() throws ConfigurationException {
@@ -372,7 +372,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * builder was configured with a specific {@code BeanHelper} instance. If so, this instance is used. Otherwise, the
      * default {@code BeanHelper} is returned.
      *
-     * @return the {@code BeanHelper} to be used
+     * @return The {@code BeanHelper} to be used
      */
     protected final BeanHelper fetchBeanHelper() {
         final BeanHelper helper = BasicBuilderParameters.fetchBeanHelper(getParameters());
@@ -383,7 +383,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Returns an {@code EventSource} for the current result object. If there is no current result or if it does not extend
      * {@code EventSource}, a dummy event source is returned.
      *
-     * @return the {@code EventSource} for the current result object
+     * @return The {@code EventSource} for the current result object
      */
     private EventSource fetchEventSource() {
         return ConfigurationUtils.asEventSource(result, true);
@@ -429,7 +429,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Gets a map with initialization parameters where all parameters starting with the reserved prefix have been
      * filtered out.
      *
-     * @return the filtered parameters map
+     * @return The filtered parameters map
      */
     private Map<String, Object> getFilteredParameters() {
         final Map<String, Object> filteredMap = new HashMap<>(getParameters());
@@ -453,7 +453,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Gets the result class of this builder. The objects produced by this builder have the class returned here.
      *
-     * @return the result class of this builder
+     * @return The result class of this builder
      */
     public Class<? extends T> getResultClass() {
         return resultClass;
@@ -463,7 +463,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Gets the {@code BeanDeclaration} that is used to create and initialize result objects. The declaration is created
      * on first access (by invoking {@link #createResultDeclaration(Map)}) based on the current initialization parameters.
      *
-     * @return the {@code BeanDeclaration} for dynamically creating a result object
+     * @return The {@code BeanDeclaration} for dynamically creating a result object
      * @throws ConfigurationException if an error occurs
      */
     protected final synchronized BeanDeclaration getResultDeclaration() throws ConfigurationException {
@@ -530,7 +530,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Returns the <em>allowFailOnInit</em> flag. See the header comment for information about this flag.
      *
-     * @return the <em>allowFailOnInit</em> flag
+     * @return The <em>allowFailOnInit</em> flag
      */
     public boolean isAllowFailOnInit() {
         return allowFailOnInit;

@@ -50,7 +50,7 @@ public class TestDefaultConversionHandler {
      * Creates a special test ConfigurationInterpolator. This object only replaces the test variable by its replacement.
      * Other substitutions are not performed.
      *
-     * @return the test {@code ConfigurationInterpolator}
+     * @return The test {@code ConfigurationInterpolator}
      */
     private static ConfigurationInterpolator createInterpolator() {
         return new ConfigurationInterpolator() {

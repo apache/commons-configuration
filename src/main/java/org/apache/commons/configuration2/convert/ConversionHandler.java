@@ -58,7 +58,7 @@ public interface ConversionHandler {
      * @param src the object to be converted
      * @param targetCls the target class of the conversion
      * @param ci an object for performing variable substitution
-     * @return the converted object
+     * @return The converted object
      * @throws ConversionException if the requested conversion is not possible
      */
     <T> T to(Object src, Class<T> targetCls, ConfigurationInterpolator ci);
@@ -74,7 +74,7 @@ public interface ConversionHandler {
      * @param src the object to be converted
      * @param elemClass the element class of the resulting array
      * @param ci an object for performing variable substitution
-     * @return the array with the converted values
+     * @return The array with the converted values
      * @throws ConversionException if the conversion of an element is not possible
      */
     Object toArray(Object src, Class<?> elemClass, ConfigurationInterpolator ci);

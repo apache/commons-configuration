@@ -41,7 +41,7 @@ public interface ReloadingDetectorFactory {
      *
      * @param handler the handler of the file to be monitored
      * @param params parameters related to file-based configurations
-     * @return the newly created {@code ReloadingDetector}
+     * @return The newly created {@code ReloadingDetector}
      * @throws ConfigurationException if an error occurs
      */
     ReloadingDetector createReloadingDetector(FileHandler handler, FileBasedBuilderParametersImpl params) throws ConfigurationException;

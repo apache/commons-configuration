@@ -264,7 +264,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * file.
          *
          * @param in the underlying reader (of the properties file)
-         * @return the {@code PropertiesReader} for loading the configuration
+         * @return The {@code PropertiesReader} for loading the configuration
          */
         PropertiesReader createPropertiesReader(Reader in);
 
@@ -275,7 +275,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param out the underlying writer (to the properties file)
          * @param handler the list delimiter delimiter for list parsing
-         * @return the {@code PropertiesWriter} for saving the configuration
+         * @return The {@code PropertiesWriter} for saving the configuration
          */
         PropertiesWriter createPropertiesWriter(Writer out, ListDelimiterHandler handler);
     }
@@ -566,7 +566,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the comment lines that have been read for the last property.
          *
-         * @return the comment lines for the last property returned by {@code readProperty()}
+         * @return The comment lines for the last property returned by {@code readProperty()}
          * @since 1.3
          */
         public List<String> getCommentLines() {
@@ -577,7 +577,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the name of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <strong>true</strong>.
          *
-         * @return the name of the last read property
+         * @return The name of the last read property
          * @since 1.3
          */
         public String getPropertyName() {
@@ -588,7 +588,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the separator that was used for the last read property. The separator can be stored so that it can later be
          * restored when saving the configuration.
          *
-         * @return the separator for the last read property
+         * @return The separator for the last read property
          * @since 1.7
          */
         public String getPropertySeparator() {
@@ -599,7 +599,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the value of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <strong>true</strong>.
          *
-         * @return the value of the last read property
+         * @return The value of the last read property
          * @since 1.3
          */
         public String getPropertyValue() {
@@ -716,7 +716,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Performs unescaping on the given property name.
          *
          * @param name the property name
-         * @return the unescaped property name
+         * @return The unescaped property name
          * @since 2.4
          */
         protected String unescapePropertyName(final String name) {
@@ -727,7 +727,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Performs unescaping on the given property value.
          *
          * @param value the property value
-         * @return the unescaped property value
+         * @return The unescaped property value
          * @since 2.4
          */
         protected String unescapePropertyValue(final String value) {
@@ -811,7 +811,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * each property key. It ensures that separator characters contained in the key are escaped.
          *
          * @param key the key
-         * @return the escaped key
+         * @return The escaped key
          * @since 2.0
          */
         protected String escapeKey(final String key) {
@@ -839,7 +839,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key the property key
          * @param value the value
-         * @return the separator to be used
+         * @return The separator to be used
          * @since 1.7
          */
         protected String fetchSeparator(final String key, final Object value) {
@@ -849,7 +849,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the current property separator.
          *
-         * @return the current property separator
+         * @return The current property separator
          * @since 1.7
          */
         public String getCurrentSeparator() {
@@ -860,7 +860,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the delimiter handler for properties with multiple values. This object is used to escape property values so
          * that they can be read in correctly the next time they are loaded.
          *
-         * @return the delimiter handler for properties with multiple values
+         * @return The delimiter handler for properties with multiple values
          * @since 2.0
          */
         public ListDelimiterHandler getDelimiterHandler() {
@@ -870,7 +870,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the global property separator.
          *
-         * @return the global property separator
+         * @return The global property separator
          * @since 1.7
          */
         public String getGlobalSeparator() {
@@ -880,7 +880,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the line separator.
          *
-         * @return the line separator
+         * @return The line separator
          * @since 1.7
          */
         public String getLineSeparator() {
@@ -1073,7 +1073,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
      *
      * @param line the string to investigate
-     * @return the number of trailing backslashes
+     * @return The number of trailing backslashes
      */
     private static int countTrailingBS(final String line) {
         int bsCount = 0;
@@ -1161,7 +1161,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * drop escaped separators (i.e '\,').
      *
      * @param str the {@code String} to unescape, may be null
-     * @return the processed string
+     * @return The processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(final String str) {
@@ -1179,7 +1179,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @param str the {@code String} to unescape, may be null
      * @param jupCompatible whether unescaping is compatible with {@link java.util.Properties}; otherwise the classic
      *        behavior is used
-     * @return the processed string
+     * @return The processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(final String str, final boolean jupCompatible) {
@@ -1290,7 +1290,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Creates a copy of this object.
      *
-     * @return the copy
+     * @return The copy
      */
     @Override
     public Object clone() {
@@ -1304,7 +1304,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Creates a standard layout object. This configuration is initialized with such a standard layout.
      *
-     * @return the newly created layout object
+     * @return The newly created layout object
      */
     private PropertiesConfigurationLayout createLayout() {
         return new PropertiesConfigurationLayout();
@@ -1313,7 +1313,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the footer comment. This is a comment at the very end of the file.
      *
-     * @return the footer comment
+     * @return The footer comment
      * @since 2.0
      */
     public String getFooter() {
@@ -1323,7 +1323,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the comment header.
      *
-     * @return the comment header
+     * @return The comment header
      * @since 1.1
      */
     public String getHeader() {
@@ -1333,7 +1333,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the current include listener, never null.
      *
-     * @return the current include listener, never null.
+     * @return The current include listener, never null.
      * @since 2.6
      */
     public ConfigurationConsumer<ConfigurationException> getIncludeListener() {
@@ -1343,7 +1343,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the {@code IOFactory} to be used for creating readers and writers when loading or saving this configuration.
      *
-     * @return the {@code IOFactory}
+     * @return The {@code IOFactory}
      * @since 1.7
      */
     public IOFactory getIOFactory() {
@@ -1353,7 +1353,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the associated layout object.
      *
-     * @return the associated layout object
+     * @return The associated layout object
      * @since 1.3
      */
     public PropertiesConfigurationLayout getLayout() {
@@ -1363,7 +1363,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the file locator.
      *
-     * @return the file locator.
+     * @return The file locator.
      * @since 2.15.0
      */
     public FileLocator getLocator() {
@@ -1473,7 +1473,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      *
      * @param basePath the base path
      * @param fileName the file name
-     * @return the URL of the include file or <strong>null</strong> if it cannot be resolved
+     * @return The URL of the include file or <strong>null</strong> if it cannot be resolved
      */
     private URL locateIncludeFile(final String basePath, final String fileName) {
         final FileLocator includeLocator = FileLocatorUtils.fileLocator(locator).sourceURL(null).basePath(basePath).fileName(fileName).create();

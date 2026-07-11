@@ -69,7 +69,7 @@ public class TestBaseConfigurationBuilderProvider {
      * Helper method for setting up a builder and checking properties of the created configuration object.
      *
      * @param reload a flag whether reloading is supported
-     * @return the builder created by the provider
+     * @return The builder created by the provider
      * @throws ConfigurationException if an error occurs
      */
     private ConfigurationBuilder<? extends Configuration> checkBuilder(final boolean reload) throws ConfigurationException {
@@ -90,7 +90,7 @@ public class TestBaseConfigurationBuilderProvider {
      * Creates a configuration declaration based on the given configuration.
      *
      * @param declConfig the configuration for the declaration
-     * @return the declaration
+     * @return The declaration
      */
     private ConfigurationDeclaration createDeclaration(final HierarchicalConfiguration<?> declConfig) {
         final CombinedConfigurationBuilder parentBuilder = new CombinedConfigurationBuilder() {
@@ -114,7 +114,7 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Creates a default test instance.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private BaseConfigurationBuilderProvider createProvider() {
         return new BaseConfigurationBuilderProvider(FileBasedConfigurationBuilder.class.getName(), ReloadingFileBasedConfigurationBuilder.class.getName(),
@@ -125,7 +125,7 @@ public class TestBaseConfigurationBuilderProvider {
      * Creates a configuration object describing a configuration source.
      *
      * @param reload a flag whether reload operations are supported
-     * @return the configuration object
+     * @return The configuration object
      */
     private HierarchicalConfiguration<?> setUpConfig(final boolean reload) {
         final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();

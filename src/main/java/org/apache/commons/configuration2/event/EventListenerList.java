@@ -83,7 +83,7 @@ public class EventListenerList {
          * been checked before that the type is compatible.
          *
          * @param regData the data object
-         * @return the extracted listener
+         * @return The extracted listener
          */
         @SuppressWarnings("unchecked")
         private EventListener<? super T> castListener(final EventListenerRegistrationData<?> regData) {

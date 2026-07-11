@@ -250,7 +250,7 @@ final class ModelTransaction {
         /**
          * Returns a set with nodes to be removed. If no remove operations are pending, an empty set is returned.
          *
-         * @return the set with nodes to be removed
+         * @return The set with nodes to be removed
          */
         private Set<ImmutableNode> fetchRemovalSet() {
             return nodesToRemove != null ? nodesToRemove : Collections.<ImmutableNode>emptySet();
@@ -259,7 +259,7 @@ final class ModelTransaction {
         /**
          * Obtains the map with replacement nodes. If no replacements are defined, an empty map is returned.
          *
-         * @return the map with replacement nodes
+         * @return The map with replacement nodes
          */
         private Map<ImmutableNode, ImmutableNode> fetchReplacementMap() {
             return nodesToReplace != null ? nodesToReplace : Collections.<ImmutableNode, ImmutableNode>emptyMap();
@@ -277,7 +277,7 @@ final class ModelTransaction {
          *
          * @param target the target node for this operation
          * @param operations the current {@code Operations} instance
-         * @return the manipulated node
+         * @return The manipulated node
          */
         protected abstract ImmutableNode apply(ImmutableNode target, Operations operations);
     }
@@ -435,7 +435,7 @@ final class ModelTransaction {
      * @param col the collection
      * @param node the element to be added
      * @param <E> The type of elements involved
-     * @return the resulting collection
+     * @return The resulting collection
      */
     private static <E> Collection<E> append(final Collection<E> col, final E node) {
         final Collection<E> result = col != null ? col : new LinkedList<>();
@@ -451,7 +451,7 @@ final class ModelTransaction {
      * @param value the value
      * @param <K> The type of the key
      * @param <V> The type of the value
-     * @return the resulting map
+     * @return The resulting map
      */
     private static <K, V> Map<K, V> append(final Map<K, V> map, final K key, final V value) {
         final Map<K, V> result = map != null ? map : new HashMap<>();
@@ -465,7 +465,7 @@ final class ModelTransaction {
      * @param col the set
      * @param elem the element to be added
      * @param <E> The type of the elements involved
-     * @return the resulting set
+     * @return The resulting set
      */
     private static <E> Set<E> append(final Set<E> col, final E elem) {
         final Set<E> result = col != null ? col : new HashSet<>();
@@ -479,7 +479,7 @@ final class ModelTransaction {
      * @param col1 the first collection
      * @param col2 the second collection
      * @param <E> The type of the elements involved
-     * @return the resulting collection
+     * @return The resulting collection
      */
     private static <E> Collection<E> concatenate(final Collection<E> col1, final Collection<? extends E> col2) {
         if (col2 == null) {
@@ -498,7 +498,7 @@ final class ModelTransaction {
      * @param map2 the second map
      * @param <K> The type of the keys
      * @param <V> The type of the values
-     * @return the resulting map
+     * @return The resulting map
      */
     private static <K, V> Map<K, V> concatenate(final Map<K, V> map1, final Map<? extends K, ? extends V> map2) {
         if (map2 == null) {
@@ -516,7 +516,7 @@ final class ModelTransaction {
      * @param set1 the first set
      * @param set2 the second set
      * @param <E> The type of the elements involved
-     * @return the resulting set
+     * @return The resulting set
      */
     private static <E> Set<E> concatenate(final Set<E> set1, final Set<? extends E> set2) {
         if (set2 == null) {
@@ -715,7 +715,7 @@ final class ModelTransaction {
      * Executes this transaction resulting in a new {@code TreeData} object. The object returned by this method serves as
      * the definition of a new node structure for the calling model.
      *
-     * @return the updated {@code TreeData}
+     * @return The updated {@code TreeData}
      */
     public TreeData execute() {
         executeOperations();
@@ -740,7 +740,7 @@ final class ModelTransaction {
      *
      * @param target the target node
      * @param level the level of the target node (may be undefined)
-     * @return the {@code Operations} object for this node
+     * @return The {@code Operations} object for this node
      */
     Operations fetchOperations(final ImmutableNode target, final int level) {
         final Integer nodeLevel = Integer.valueOf(level == LEVEL_UNKNOWN ? level(target) : level);
@@ -751,7 +751,7 @@ final class ModelTransaction {
     /**
      * Returns the map with new reference objects. It is created if necessary.
      *
-     * @return the map with reference objects
+     * @return The map with reference objects
      */
     private Map<ImmutableNode, Object> fetchReferenceMap() {
         if (newReferences == null) {
@@ -763,7 +763,7 @@ final class ModelTransaction {
     /**
      * Gets the current {@code TreeData} object this transaction operates on.
      *
-     * @return the associated {@code TreeData} object
+     * @return The associated {@code TreeData} object
      */
     public TreeData getCurrentData() {
         return currentData;
@@ -773,7 +773,7 @@ final class ModelTransaction {
      * Gets the parent node of the given node.
      *
      * @param node the node in question
-     * @return the parent of this node
+     * @return The parent of this node
      */
     ImmutableNode getParent(final ImmutableNode node) {
         return getCurrentData().getParent(node);
@@ -783,7 +783,7 @@ final class ModelTransaction {
      * Gets the root node to be used within queries. This is not necessarily the current root node of the model. If the
      * operation is executed on a tracked node, this node has to be passed as root nodes to the expression engine.
      *
-     * @return the root node for queries and calls to the expression engine
+     * @return The root node for queries and calls to the expression engine
      */
     public ImmutableNode getQueryRoot() {
         return queryRoot;
@@ -792,7 +792,7 @@ final class ModelTransaction {
     /**
      * Gets the {@code NodeKeyResolver} used by this transaction.
      *
-     * @return the {@code NodeKeyResolver}
+     * @return The {@code NodeKeyResolver}
      */
     public NodeKeyResolver<ImmutableNode> getResolver() {
         return resolver;
@@ -804,7 +804,7 @@ final class ModelTransaction {
      *
      * @param treeData the current data of the model
      * @param selector an optional {@code NodeSelector} defining the target root
-     * @return the query root node for this transaction
+     * @return The query root node for this transaction
      */
     private ImmutableNode initQueryRoot(final TreeData treeData, final NodeSelector selector) {
         return selector == null ? treeData.getRootNode() : treeData.getNodeTracker().getTrackedNode(selector);
@@ -815,7 +815,7 @@ final class ModelTransaction {
      * the root have level 1 and so on.
      *
      * @param node the node in question
-     * @return the level of this node
+     * @return The level of this node
      */
     private int level(final ImmutableNode node) {
         ImmutableNode current = getCurrentData().getParent(node);
@@ -898,7 +898,7 @@ final class ModelTransaction {
      * Returns an updated {@code ReferenceTracker} instance. The changes performed during this transaction are applied to
      * the tracker.
      *
-     * @return the updated tracker instance
+     * @return The updated tracker instance
      */
     private ReferenceTracker updateReferenceTracker() {
         ReferenceTracker tracker = currentData.getReferenceTracker();

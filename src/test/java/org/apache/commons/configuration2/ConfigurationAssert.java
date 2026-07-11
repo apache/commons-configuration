@@ -115,7 +115,7 @@ public final class ConfigurationAssert {
      * Returns a URL pointing to the specified output file. If the URL cannot be constructed, a runtime exception is thrown.
      *
      * @param name the name of the output file
-     * @return the corresponding URL
+     * @return The corresponding URL
      */
     public static URL getOutURL(final String name) {
         return urlFromFile(getOutFile(name));
@@ -145,7 +145,7 @@ public final class ConfigurationAssert {
      * Returns a URL pointing to the specified test file. If the URL cannot be constructed, a runtime exception is thrown.
      *
      * @param name the name of the test file
-     * @return the corresponding URL
+     * @return The corresponding URL
      */
     public static URL getTestURL(final String name) {
         return urlFromFile(getTestFile(name));
@@ -179,7 +179,7 @@ public final class ConfigurationAssert {
      * Helper method for converting a file to a URL.
      *
      * @param file the file
-     * @return the corresponding URL
+     * @return The corresponding URL
      * @throws ConfigurationRuntimeException if the URL cannot be constructed
      */
     private static URL urlFromFile(final File file) {

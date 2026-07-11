@@ -68,7 +68,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * Returns the next received event and checks for the expected type.
      *
      * @param expectedType the expected type of the event
-     * @return the event object
+     * @return The event object
      */
     public T nextEvent(final EventType<?> expectedType) {
         assertFalse(events.isEmpty());

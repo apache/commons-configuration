@@ -45,7 +45,7 @@ public interface BeanDeclaration {
      * Gets the name of the bean class, from which an instance is to be created. This value must be defined unless a
      * default class is provided for the bean creation operation.
      *
-     * @return the name of the bean class
+     * @return The name of the bean class
      */
     String getBeanClassName();
 
@@ -53,7 +53,7 @@ public interface BeanDeclaration {
      * Gets the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
      * <strong>null</strong>, then a default factory will be used.
      *
-     * @return the name of the bean factory
+     * @return The name of the bean factory
      */
     String getBeanFactoryName();
 

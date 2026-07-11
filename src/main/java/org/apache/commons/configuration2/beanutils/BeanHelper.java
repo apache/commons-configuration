@@ -153,7 +153,7 @@ public final class BeanHelper {
      *
      * @param propName the name of the collection property
      * @param propertyClass the type of the property
-     * @return the newly created collection
+     * @return The newly created collection
      */
     private static Collection<Object> createPropertyCollection(final String propName, final Class<?> propertyClass) {
         final Collection<Object> beanCollection;
@@ -192,7 +192,7 @@ public final class BeanHelper {
      * @param data the bean declaration
      * @param defaultClass the default class
      * @param factory the bean factory to use
-     * @return the class of the bean to be created
+     * @return The class of the bean to be created
      * @throws ConfigurationRuntimeException if the class cannot be determined
      */
     private static Class<?> fetchBeanClass(final BeanDeclaration data, final Class<?> defaultClass, final BeanFactory factory) {
@@ -253,7 +253,7 @@ public final class BeanHelper {
      * Initializes the shared {@code BeanUtilsBean} instance. This method sets up custom bean introspection in a way that
      * fluent parameter interfaces are supported.
      *
-     * @return the {@code BeanUtilsBean} instance to be used for all property set operations
+     * @return The {@code BeanUtilsBean} instance to be used for all property set operations
      */
     private static BeanUtilsBean initBeanUtilsBean() {
         final PropertyUtilsBean propUtilsBean = new PropertyUtilsBean();
@@ -298,7 +298,7 @@ public final class BeanHelper {
      * necessary, they can be made at a single place.
      *
      * @param name the name of the class to be loaded
-     * @return the class object for the specified name
+     * @return The class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
     static Class<?> loadClass(final String name) throws ClassNotFoundException {
@@ -349,7 +349,7 @@ public final class BeanHelper {
      * {@code createBean(data, null);}.
      *
      * @param data the bean declaration
-     * @return the new bean
+     * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(final BeanDeclaration data) {
@@ -362,7 +362,7 @@ public final class BeanHelper {
      *
      * @param data the bean declaration
      * @param defaultClass the class to be used when in the declaration no class is specified
-     * @return the new bean
+     * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(final BeanDeclaration data, final Class<?> defaultClass) {
@@ -380,7 +380,7 @@ public final class BeanHelper {
      * @param defaultClass the default class to use
      * @param param an additional parameter that will be passed to the bean factory; some factories may support parameters
      *        and behave different depending on the value passed in here
-     * @return the new bean
+     * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(final BeanDeclaration data, final Class<?> defaultClass, final Object param) {
@@ -405,7 +405,7 @@ public final class BeanHelper {
      * @param param an additional parameter that will be passed to the bean factory; some factories may support parameters
      *        and behave different depending on the value passed in here
      * @param factory the current bean factory
-     * @return the {@code BeanCreationContext}
+     * @return The {@code BeanCreationContext}
      * @throws ConfigurationRuntimeException if the bean class cannot be determined
      */
     private BeanCreationContext createBeanCreationContext(final BeanDeclaration data, final Class<?> defaultClass, final Object param,
@@ -418,7 +418,7 @@ public final class BeanHelper {
      * Deregisters the bean factory with the given name. After that this factory cannot be used any longer.
      *
      * @param name the name of the factory to be deregistered
-     * @return the factory that was registered under this name; <strong>null</strong> if there was no such factory
+     * @return The factory that was registered under this name; <strong>null</strong> if there was no such factory
      */
     public BeanFactory deregisterBeanFactory(final String name) {
         return beanFactories.remove(name);
@@ -429,7 +429,7 @@ public final class BeanHelper {
      * specified in the bean declaration. If this is not the case, the default bean factory will be used.
      *
      * @param data the bean declaration
-     * @return the bean factory to use
+     * @return The bean factory to use
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
     private BeanFactory fetchBeanFactory(final BeanDeclaration data) {
@@ -447,7 +447,7 @@ public final class BeanHelper {
     /**
      * Gets the default bean factory.
      *
-     * @return the default bean factory
+     * @return The default bean factory
      */
     public BeanFactory getDefaultBeanFactory() {
         return defaultBeanFactory;

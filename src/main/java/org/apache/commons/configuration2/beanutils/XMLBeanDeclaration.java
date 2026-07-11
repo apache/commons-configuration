@@ -131,7 +131,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * characters affected have to be escaped accordingly.
          *
          * @param config the configuration
-         * @return the escaped node name
+         * @return The escaped node name
          */
         String escapedNodeName(final HierarchicalConfiguration<?> config) {
             return config.getExpressionEngine().nodeKey(node, StringUtils.EMPTY, nodeHandler);
@@ -141,7 +141,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * Gets the value of the attribute with the given name of the wrapped node.
          *
          * @param key the key of the attribute
-         * @return the value of this attribute
+         * @return The value of this attribute
          */
         Object getAttribute(final String key) {
             return nodeHandler.getAttributeValue(node, key);
@@ -150,7 +150,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Gets a set with the names of the attributes of the wrapped node.
          *
-         * @return the attribute names of this node
+         * @return The attribute names of this node
          */
         Set<String> getAttributes() {
             return nodeHandler.getAttributes(node);
@@ -189,7 +189,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Returns the name of the wrapped node.
          *
-         * @return the node name
+         * @return The node name
          */
         String nodeName() {
             return nodeHandler.nodeName(node);
@@ -199,7 +199,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * Wraps the passed in list of nodes in {@code NodeData} objects.
          *
          * @param nodes the list with nodes
-         * @return the wrapped nodes
+         * @return The wrapped nodes
          */
         List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
             return nodes.stream().map(n -> new NodeData<>(n, nodeHandler)).collect(Collectors.toList());
@@ -242,7 +242,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      *
      * @param config the configuration
      * @param <T> The type of the nodes
-     * @return the {@code NodeData} object
+     * @return The {@code NodeData} object
      */
     private static <T> NodeData<T> createNodeDataFromConfiguration(final HierarchicalConfiguration<T> config) {
         final NodeHandler<T> handler = config.getNodeModel().getNodeHandler();
@@ -368,7 +368,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * properly initialized from the passed in node.
      *
      * @param nodeData the child node, for which a {@code BeanDeclaration} is to be created
-     * @return the {@code BeanDeclaration} for this child node
+     * @return The {@code BeanDeclaration} for this child node
      */
     BeanDeclaration createBeanDeclaration(final NodeData<?> nodeData) {
         for (final HierarchicalConfiguration<?> config : getConfiguration().configurationsAt(nodeData.escapedNodeName(getConfiguration()))) {
@@ -383,7 +383,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Creates a {@code ConstructorArg} object for the specified configuration node.
      *
      * @param child the configuration node
-     * @return the corresponding {@code ConstructorArg} object
+     * @return The corresponding {@code ConstructorArg} object
      */
     private ConstructorArg createConstructorArg(final NodeData<?> child) {
         final String type = getAttribute(child, ATTR_CTOR_TYPE);
@@ -398,7 +398,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      *
      * @param nodeData the node
      * @param attribute the name of the attribute
-     * @return the string value of this attribute (can be <strong>null</strong>)
+     * @return The string value of this attribute (can be <strong>null</strong>)
      */
     private String getAttribute(final NodeData<?> nodeData, final String attribute) {
         final Object value = nodeData.getAttribute(attribute);
@@ -408,7 +408,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets a set with the names of the attributes of the configuration node holding the data of this bean declaration.
      *
-     * @return the attribute names of the underlying configuration node
+     * @return The attribute names of the underlying configuration node
      */
     protected Set<String> getAttributeNames() {
         return getNode().getAttributes();
@@ -418,7 +418,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Gets the name of the class of the bean to be created. This information is obtained from the {@code config-class}
      * attribute.
      *
-     * @return the name of the bean's class
+     * @return The name of the bean's class
      */
     @Override
     public String getBeanClassName() {
@@ -428,7 +428,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets the name of the bean factory. This information is fetched from the {@code config-factory} attribute.
      *
-     * @return the name of the bean factory
+     * @return The name of the bean factory
      */
     @Override
     public String getBeanFactoryName() {
@@ -438,7 +438,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets a parameter for the bean factory. This information is fetched from the {@code config-factoryParam} attribute.
      *
-     * @return the parameter for the bean factory
+     * @return The parameter for the bean factory
      */
     @Override
     public Object getBeanFactoryParameter() {
@@ -460,7 +460,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets the configuration object this bean declaration is based on.
      *
-     * @return the associated configuration
+     * @return The associated configuration
      */
     public HierarchicalConfiguration<?> getConfiguration() {
         return configuration;
@@ -480,7 +480,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Gets the name of the default bean class. This class is used if no bean class is specified in the configuration. It
      * may be <strong>null</strong> if no default class was set.
      *
-     * @return the default bean class name
+     * @return The default bean class name
      * @since 2.0
      */
     public String getDefaultBeanClassName() {
@@ -523,7 +523,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets the data about the associated node.
      *
-     * @return the node with the bean declaration
+     * @return The node with the bean declaration
      */
     NodeData<?> getNode() {
         return nodeData;
@@ -543,7 +543,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * configuration's parent. If sub classes need a different interpolation mechanism, they should override this method.
      *
      * @param value the value that is to be interpolated
-     * @return the interpolated value
+     * @return The interpolated value
      */
     protected Object interpolate(final Object value) {
         final ConfigurationInterpolator interpolator = getConfiguration().getInterpolator();

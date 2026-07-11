@@ -186,7 +186,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Gets the list with all defined keys.
          *
-         * @return the list with the defined keys
+         * @return The list with the defined keys
          */
         public Set<String> getKeyList() {
             return keyList;
@@ -240,7 +240,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Returns the defined flag.
          *
-         * @return the defined flag
+         * @return The defined flag
          */
         public boolean isDefined() {
             return defined;
@@ -404,7 +404,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Creates a copy of this object. This new configuration object will contain copies of all nodes in the same structure.
      * Registered event listeners won't be cloned; so they are not registered at the returned copy.
      *
-     * @return the copy
+     * @return The copy
      * @since 1.2
      */
     @SuppressWarnings("unchecked")
@@ -428,7 +428,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Creates a clone of the node model. This method is called by {@code clone()}.
      *
-     * @return the clone of the {@code NodeModel}
+     * @return The clone of the {@code NodeModel}
      * @since 2.0
      */
     protected abstract NodeModel<T> cloneNodeModel();
@@ -472,7 +472,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
-     * @return the current expression engine
+     * @return The current expression engine
      * @since 1.3
      */
     @Override
@@ -543,7 +543,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * key is not contained in this configuration, result is -1.
      *
      * @param key the key to be checked
-     * @return the maximum defined index for this key
+     * @return The maximum defined index for this key
      */
     @Override
     public final int getMaxIndex(final String key) {
@@ -555,7 +555,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Subclasses that need to adapt this operation have to override this method.
      *
      * @param key the key to be checked
-     * @return the maximum defined index for this key
+     * @return The maximum defined index for this key
      * @since 2.0
      */
     protected int getMaxIndexInternal(final String key) {
@@ -567,7 +567,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * the model is granted without any synchronization. This is in contrast to the &quot;official&quot;
      * {@code getNodeModel()} method which is guarded by the configuration's {@code Synchronizer}.
      *
-     * @return the node model
+     * @return The node model
      */
     protected NodeModel<T> getModel() {
         return nodeModel;
@@ -586,7 +586,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Fetches the specified property. This task is delegated to the associated expression engine.
      *
      * @param key the key to be looked up
-     * @return the found value
+     * @return The found value
      */
     @Override
     protected Object getPropertyInternal(final String key) {
@@ -616,7 +616,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Actually obtains the name of the root element. This method is called by {@code getRootElementName()}. It just returns
      * the name of the root node. Subclasses that treat the root element name differently can override this method.
      *
-     * @return the name of this configuration's root element
+     * @return The name of this configuration's root element
      */
     protected String getRootElementNameInternal() {
         final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
@@ -772,7 +772,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param result the {@code QueryResult}
      * @param handler the {@code NodeHandler}
-     * @return the value of this result (may be <strong>null</strong>)
+     * @return The value of this result (may be <strong>null</strong>)
      */
     private Object valueFromResult(final QueryResult<T> result, final NodeHandler<T> handler) {
         return result.isAttributeResult() ? result.getAttributeValue(handler) : handler.getValue(result.getNode());
@@ -781,7 +781,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Creates a {@code DefinedKeysVisitor} and visits all defined keys with it.
      *
-     * @return the visitor after all keys have been visited
+     * @return The visitor after all keys have been visited
      */
     private DefinedKeysVisitor visitDefinedKeys() {
         final DefinedKeysVisitor visitor = new DefinedKeysVisitor();

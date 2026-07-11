@@ -85,7 +85,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * in value contains a delimiter character. If this is the case, a split operation is performed.
      *
      * @param value the property value to be examined
-     * @return the processed value
+     * @return The processed value
      */
     protected Object handleDelimiters(Object value) {
         if (value instanceof String) {

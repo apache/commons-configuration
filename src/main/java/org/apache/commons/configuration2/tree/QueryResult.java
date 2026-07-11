@@ -46,7 +46,7 @@ public final class QueryResult<T> {
      * @param parentNode the node which owns the attribute
      * @param attrName the attribute name
      * @param <T> The type of the parent node
-     * @return the newly created instance
+     * @return The newly created instance
      */
     public static <T> QueryResult<T> createAttributeResult(final T parentNode, final String attrName) {
         return new QueryResult<>(parentNode, attrName);
@@ -57,7 +57,7 @@ public final class QueryResult<T> {
      *
      * @param <T> The type of the result node
      * @param resultNode the result node
-     * @return the newly created instance
+     * @return The newly created instance
      */
     public static <T> QueryResult<T> createNodeResult(final T resultNode) {
         return new QueryResult<>(resultNode, null);
@@ -103,7 +103,7 @@ public final class QueryResult<T> {
     /**
      * Gets the name of the attribute. This method is defined only for results of type attribute.
      *
-     * @return the attribute name
+     * @return The attribute name
      */
     public String getAttributeName() {
         return attributeName;
@@ -114,7 +114,7 @@ public final class QueryResult<T> {
      * thrown.
      *
      * @param handler the {@code NodeHandler}
-     * @return the attribute value
+     * @return The attribute value
      * @throws IllegalStateException if this is not an attribute result
      */
     public Object getAttributeValue(final NodeHandler<T> handler) {
@@ -128,7 +128,7 @@ public final class QueryResult<T> {
      * Gets the node referenced by this object. Depending on the result type, this is either the result node or the
      * parent node of the represented attribute.
      *
-     * @return the referenced node
+     * @return The referenced node
      */
     public T getNode() {
         return node;

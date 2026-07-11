@@ -58,7 +58,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Helper method for transforming a URL into a file object. This method handles file: and jar: URLs.
      *
      * @param url the URL to be converted
-     * @return the resulting file or <strong>null </strong>
+     * @return The resulting file or <strong>null </strong>
      */
     private static File fileFromURL(final URL url) {
         if (JAR_PROTOCOL.equals(url.getProtocol())) {
@@ -118,7 +118,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     /**
      * Gets the monitored {@code File} or <strong>null</strong> if it does not exist.
      *
-     * @return the monitored {@code File} or <strong>null</strong>
+     * @return The monitored {@code File} or <strong>null</strong>
      */
     private File getExistingFile() {
         File file = getFile();
@@ -134,7 +134,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * modification time is needed. If it returns <strong>null</strong>, no check is performed. This base implementation obtains the
      * {@code File} from the associated {@code FileHandler}. It can also deal with URLs to jar files.
      *
-     * @return the {@code File} to be monitored (can be <strong>null</strong>)
+     * @return The {@code File} to be monitored (can be <strong>null</strong>)
      */
     protected File getFile() {
         final URL url = getFileHandler().getURL();
@@ -145,7 +145,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Gets the {@code FileHandler} associated with this object. The underlying handler is directly returned, so changing
      * its location also changes the file monitored by this detector.
      *
-     * @return the associated {@code FileHandler}
+     * @return The associated {@code FileHandler}
      */
     public FileHandler getFileHandler() {
         return fileHandler;
@@ -155,7 +155,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Gets the date of the last modification of the monitored file. A return value of 0 indicates, that the monitored
      * file does not exist.
      *
-     * @return the last modification date in milliseconds.
+     * @return The last modification date in milliseconds.
      */
     protected long getLastModificationDate() {
         final File file = getExistingFile();
@@ -167,7 +167,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * whether the time since the previous check is more than this value in the past. Otherwise, no check is performed. This
      * is a means to limit file I/O caused by this class.
      *
-     * @return the refresh delay used by this object
+     * @return The refresh delay used by this object
      */
     public long getRefreshDelay() {
         return refreshDelayMillis;

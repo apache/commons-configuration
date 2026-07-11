@@ -47,7 +47,7 @@ public interface NodeHandler<T> {
      *
      * @param node the node
      * @param name the name of the attribute
-     * @return the value of this attribute
+     * @return The value of this attribute
      */
     Object getAttributeValue(T node, String name);
 
@@ -56,7 +56,7 @@ public interface NodeHandler<T> {
      *
      * @param node the node
      * @param index the index (0-based)
-     * @return the child with the given index
+     * @return The child with the given index
      */
     T getChild(T node, int index);
 
@@ -86,7 +86,7 @@ public interface NodeHandler<T> {
      *
      * @param node the node
      * @param name the name of the children in question (can be <strong>null</strong> for all children)
-     * @return the number of the selected children
+     * @return The number of the selected children
      */
     int getChildrenCount(T node, String name);
 
@@ -111,7 +111,7 @@ public interface NodeHandler<T> {
      * @param matcher the {@code NodeMatcher}
      * @param criterion the criterion to be passed to the {@code NodeMatcher}
      * @param <C> The type of the criterion
-     * @return the number of matched children
+     * @return The number of matched children
      */
     <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher, C criterion);
 
@@ -119,14 +119,14 @@ public interface NodeHandler<T> {
      * Gets the parent of the specified node.
      *
      * @param node the node
-     * @return the parent node
+     * @return The parent node
      */
     T getParent(T node);
 
     /**
      * Gets the root node of the underlying hierarchy.
      *
-     * @return the current root node
+     * @return The current root node
      */
     T getRootNode();
 
@@ -134,7 +134,7 @@ public interface NodeHandler<T> {
      * Gets the value of the specified node.
      *
      * @param node the node
-     * @return the value of this node
+     * @return The value of this node
      */
     Object getValue(T node);
 
@@ -154,7 +154,7 @@ public interface NodeHandler<T> {
      *
      * @param parent the parent node
      * @param child a child node whose index is to be retrieved
-     * @return the index of this child node
+     * @return The index of this child node
      */
     int indexOfChild(T parent, T child);
 
@@ -171,7 +171,7 @@ public interface NodeHandler<T> {
      * Returns the name of the specified node
      *
      * @param node the node
-     * @return the name of this node
+     * @return The name of this node
      */
     String nodeName(T node);
 }

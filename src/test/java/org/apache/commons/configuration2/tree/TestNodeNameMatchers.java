@@ -35,7 +35,7 @@ public class TestNodeNameMatchers {
      * Creates a node with the given name.
      *
      * @param name the name
-     * @return the newly created node
+     * @return The newly created node
      */
     private static ImmutableNode createNode(final String name) {
         return new ImmutableNode.Builder().name(name).create();

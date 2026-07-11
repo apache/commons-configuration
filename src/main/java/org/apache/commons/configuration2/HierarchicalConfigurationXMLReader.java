@@ -76,7 +76,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
          *
          * @param node the node to be checked
          * @param handler the node handler
-         * @return the name for this node
+         * @return The name for this node
          */
         private String nodeName(final T node, final NodeHandler<T> handler) {
             final String nodeName = handler.nodeName(node);
@@ -143,7 +143,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     /**
      * Gets the configuration object to be parsed.
      *
-     * @return the configuration object to be parsed
+     * @return The configuration object to be parsed
      */
     public HierarchicalConfiguration<T> getConfiguration() {
         return configuration;
@@ -152,7 +152,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     /**
      * Gets the configuration object to be processed.
      *
-     * @return the actual configuration object
+     * @return The actual configuration object
      */
     @Override
     public Configuration getParsedConfiguration() {

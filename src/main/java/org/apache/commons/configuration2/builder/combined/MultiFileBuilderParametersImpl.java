@@ -108,7 +108,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the pattern for determining file names for managed configurations.
      *
-     * @return the file pattern
+     * @return The file pattern
      */
     public String getFilePattern() {
         return filePattern;
@@ -117,7 +117,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the parameters object for managed configuration builders.
      *
-     * @return the parameters for sub configurations
+     * @return The parameters for sub configurations
      */
     public BuilderParameters getManagedBuilderParameters() {
         return managedBuilderParameters;

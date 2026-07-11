@@ -46,7 +46,7 @@ public interface Lookup {
      * concrete implementation has to return the value of this variable or <strong>null</strong> if the variable name is unknown.
      *
      * @param variable the name of the variable to be resolved
-     * @return the value of this variable or <strong>null</strong>
+     * @return The value of this variable or <strong>null</strong>
      */
     Object lookup(String variable);
 }

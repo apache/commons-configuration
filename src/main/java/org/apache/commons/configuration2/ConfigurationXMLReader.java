@@ -117,7 +117,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the actually set content handler.
      *
-     * @return the content handler
+     * @return The content handler
      */
     @Override
     public ContentHandler getContentHandler() {
@@ -127,7 +127,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the DTD handler. This class does not support DTD handlers, so this method always returns <strong>null</strong>.
      *
-     * @return the DTD handler
+     * @return The DTD handler
      */
     @Override
     public DTDHandler getDTDHandler() {
@@ -138,7 +138,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Gets the entity resolver. This class does not support an entity resolver, so this method always returns
      * <strong>null</strong>.
      *
-     * @return the entity resolver
+     * @return The entity resolver
      */
     @Override
     public EntityResolver getEntityResolver() {
@@ -148,7 +148,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the error handler. This class does not support an error handler, so this method always returns <strong>null</strong>.
      *
-     * @return the error handler
+     * @return The error handler
      */
     @Override
     public ErrorHandler getErrorHandler() {
@@ -178,7 +178,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets a reference to the configuration that is parsed by this object.
      *
-     * @return the parsed configuration
+     * @return The parsed configuration
      */
     public abstract Configuration getParsedConfiguration();
 
@@ -186,7 +186,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Dummy implementation of the interface method. No properties are supported, so this method always returns <strong>null</strong>.
      *
      * @param name the name of the requested property
-     * @return the property value
+     * @return The property value
      */
     @Override
     public Object getProperty(final String name) {
@@ -196,7 +196,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the name to be used for the root element.
      *
-     * @return the name for the root element
+     * @return The name for the root element
      */
     public String getRootName() {
         return rootName;

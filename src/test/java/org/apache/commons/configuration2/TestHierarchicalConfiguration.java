@@ -46,7 +46,7 @@ public class TestHierarchicalConfiguration {
     /**
      * Creates a {@code DefaultConfigurationKey} object.
      *
-     * @return the new key object
+     * @return The new key object
      */
     private static DefaultConfigurationKey createConfigurationKey() {
         return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);

@@ -29,7 +29,7 @@ public class TestConfigurationDynaBeanXMLConfig extends TestConfigurationDynaBea
     /**
      * Creates the underlying configuration object. This implementation will create a XMLConfiguration.
      *
-     * @return the underlying configuration
+     * @return The underlying configuration
      */
     @Override
     protected Configuration createConfiguration() {

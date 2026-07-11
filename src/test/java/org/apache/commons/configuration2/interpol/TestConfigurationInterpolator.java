@@ -101,7 +101,7 @@ public class TestConfigurationInterpolator {
     /**
      * Creates a lookup object that can resolve the test variable (and nothing else).
      *
-     * @return the test lookup object
+     * @return The test lookup object
      */
     private static Lookup setUpTestLookup() {
         return setUpTestLookup(TEST_NAME, TEST_VALUE);
@@ -112,7 +112,7 @@ public class TestConfigurationInterpolator {
      *
      * @param var the variable name
      * @param value the value of this variable
-     * @return the test lookup object
+     * @return The test lookup object
      */
     private static Lookup setUpTestLookup(final String var, final Object value) {
         final Lookup lookup = mock(Lookup.class);

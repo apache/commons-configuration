@@ -83,7 +83,7 @@ final class PrefixedKeysIterator implements Iterator<String> {
     /**
      * Returns the next element in the iteration. This is the next key that matches the specified prefix.
      *
-     * @return the next element in the iteration
+     * @return The next element in the iteration
      * @throws NoSuchElementException if there is no next element
      */
     @Override

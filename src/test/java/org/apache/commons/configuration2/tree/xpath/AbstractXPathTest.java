@@ -64,7 +64,7 @@ public abstract class AbstractXPathTest {
      * {@code true}.
      *
      * @param levels the number of levels in the hierarchy
-     * @return the root node of the hierarchy
+     * @return The root node of the hierarchy
      */
     protected ImmutableNode constructHierarchy(final int levels) {
         final ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
@@ -113,7 +113,7 @@ public abstract class AbstractXPathTest {
      * Determines the number of elements contained in the given iterator.
      *
      * @param iterator the iterator
-     * @return the number of elements in this iteration
+     * @return The number of elements in this iteration
      */
     protected int iteratorSize(final NodeIterator iterator) {
         int cnt = 0;

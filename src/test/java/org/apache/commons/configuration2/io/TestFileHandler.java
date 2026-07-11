@@ -80,7 +80,7 @@ public class TestFileHandler {
         /**
          * Returns the locator.
          *
-         * @return the file locator
+         * @return The file locator
          */
         public FileLocator getLocator() {
             return locator;
@@ -133,7 +133,7 @@ public class TestFileHandler {
         /**
          * Returns the content read from a reader.
          *
-         * @return the read content
+         * @return The read content
          */
         public String getContent() {
             return content;
@@ -248,7 +248,7 @@ public class TestFileHandler {
      * Reads the content of the specified file into a string
      *
      * @param f the file to be read
-     * @return the content of this file
+     * @return The content of this file
      */
     private static String readFile(final File f) {
         return assertDoesNotThrow(() -> {
@@ -262,7 +262,7 @@ public class TestFileHandler {
      * Reads the content of the specified reader into a string.
      *
      * @param in the reader
-     * @return the read content
+     * @return The read content
      * @throws IOException if an error occurs
      */
     private static String readReader(final Reader in) throws IOException {
@@ -281,7 +281,7 @@ public class TestFileHandler {
     /**
      * Creates a test file with the test content.
      *
-     * @return the File object pointing to the test file
+     * @return The File object pointing to the test file
      */
     private File createTestFile() {
         return createTestFile(null);
@@ -291,7 +291,7 @@ public class TestFileHandler {
      * Creates a test file with test content and allows specifying a file name.
      *
      * @param f the file to be created (may be <strong>null</strong>)
-     * @return the File object pointing to the test file
+     * @return The File object pointing to the test file
      */
     private File createTestFile(final File f) {
         return assertDoesNotThrow(() -> {

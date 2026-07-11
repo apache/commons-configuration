@@ -41,7 +41,7 @@ public interface ConfigurationDecoder {
      * application; so it should be in a readable form.
      *
      * @param s the string to be decoded (not <strong>null</strong>)
-     * @return the decoded string
+     * @return The decoded string
      */
     String decode(String s);
 }

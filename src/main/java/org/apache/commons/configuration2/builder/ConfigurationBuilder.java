@@ -45,7 +45,7 @@ public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends 
      * Gets the configuration provided by this builder. An implementation has to perform all necessary steps for creating
      * and initializing a {@code ImmutableConfiguration} object.
      *
-     * @return the configuration
+     * @return The configuration
      * @throws ConfigurationException if an error occurs
      */
     T getConfiguration() throws ConfigurationException;

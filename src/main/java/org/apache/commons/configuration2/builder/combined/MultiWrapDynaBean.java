@@ -46,7 +46,7 @@ final class MultiWrapDynaBean implements DynaBean {
      * Creates a {@code DynaBean} object for the given bean.
      *
      * @param bean the bean
-     * @return the {@code DynaBean} for this bean
+     * @return The {@code DynaBean} for this bean
      */
     private static DynaBean createDynaBean(final Object bean) {
         if (bean instanceof DynaBean) {
@@ -98,7 +98,7 @@ final class MultiWrapDynaBean implements DynaBean {
      * returned. (This causes the operation on this bean to fail with a meaningful error message.)
      *
      * @param property the property name
-     * @return the bean defining this property
+     * @return The bean defining this property
      */
     private DynaBean fetchBean(final String property) {
         DynaBean dynaBean = propsToBeans.get(property);

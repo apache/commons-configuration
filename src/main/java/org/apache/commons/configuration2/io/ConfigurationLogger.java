@@ -50,7 +50,7 @@ public class ConfigurationLogger {
      * Creates an internal logger for the given class. Throws an exception if the class is undefined.
      *
      * @param cls the logger class
-     * @return the logger object
+     * @return The logger object
      * @throws IllegalArgumentException if the logger class is undefined
      */
     private static Log createLoggerForClass(final Class<?> cls) {
@@ -64,7 +64,7 @@ public class ConfigurationLogger {
      * Creates an internal logger for the given name. Throws an exception if the name is undefined.
      *
      * @param name the name of the logger
-     * @return the logger object
+     * @return The logger object
      * @throws IllegalArgumentException if the logger name is undefined
      */
     private static Log createLoggerForName(final String name) {
@@ -78,7 +78,7 @@ public class ConfigurationLogger {
      * Creates a new dummy logger which produces no output. If such a logger is passed to a configuration object, logging is
      * effectively disabled.
      *
-     * @return the new dummy logger
+     * @return The new dummy logger
      */
     public static ConfigurationLogger newDummyLogger() {
         return new ConfigurationLogger(new NoOpLog());
@@ -157,7 +157,7 @@ public class ConfigurationLogger {
     /**
      * Gets the internal logger.
      *
-     * @return the internal logger
+     * @return The internal logger
      */
     Log getLog() {
         return log;

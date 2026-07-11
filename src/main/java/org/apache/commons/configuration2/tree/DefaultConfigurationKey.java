@@ -136,7 +136,7 @@ public class DefaultConfigurationKey {
          * Returns the current key of the iteration (without skipping to the next element). This is the same key the previous
          * {@code next()} call had returned. (Short form of {@code currentKey(false)}.
          *
-         * @return the current key
+         * @return The current key
          */
         public String currentKey() {
             return currentKey(false);
@@ -148,7 +148,7 @@ public class DefaultConfigurationKey {
          * attribute markers are stripped from the key; if it is <strong>true</strong>, they remain.
          *
          * @param decorated a flag if the decorated key is to be returned
-         * @return the current key
+         * @return The current key
          */
         public String currentKey(final boolean decorated) {
             return decorated && !isPropertyKey() ? constructAttributeKey(current) : current;
@@ -191,7 +191,7 @@ public class DefaultConfigurationKey {
          * escaped delimiter string. This relation will be determined by this method. For this to work the delimiter string must
          * be contained in the escaped delimiter string.
          *
-         * @return the relative offset of the escaped delimiter in relation to a delimiter
+         * @return The relative offset of the escaped delimiter in relation to a delimiter
          */
         private int escapeOffset() {
             return getSymbols().getEscapedDelimiter().indexOf(getSymbols().getPropertyDelimiter());
@@ -200,7 +200,7 @@ public class DefaultConfigurationKey {
         /**
          * Helper method for determining the next indices.
          *
-         * @return the next key part
+         * @return The next key part
          */
         private String findNextIndices() {
             startIndex = endIndex;
@@ -222,7 +222,7 @@ public class DefaultConfigurationKey {
          * Gets the index value of the current key. If the current key does not have an index, return value is -1. This
          * method can be called after {@code next()}.
          *
-         * @return the index value of the current key
+         * @return The index value of the current key
          */
         public int getIndex() {
             return indexValue;
@@ -285,7 +285,7 @@ public class DefaultConfigurationKey {
         /**
          * Returns the next object in the iteration.
          *
-         * @return the next object
+         * @return The next object
          */
         @Override
         public Object next() {
@@ -298,7 +298,7 @@ public class DefaultConfigurationKey {
          * @param key the key
          * @param pos the start position
          * @param endPos the end position
-         * @return the position of the next delimiter or -1 if there is none
+         * @return The position of the next delimiter or -1 if there is none
          */
         private int nextDelimiterPos(final String key, final int pos, final int endPos) {
             int delimiterPos = pos;
@@ -323,7 +323,7 @@ public class DefaultConfigurationKey {
         /**
          * Returns the next key part of this configuration key. This is a short form of {@code nextKey(false)}.
          *
-         * @return the next key part
+         * @return The next key part
          */
         public String nextKey() {
             return nextKey(false);
@@ -335,7 +335,7 @@ public class DefaultConfigurationKey {
          * the key; if it is <strong>true</strong>, they remain.
          *
          * @param decorated a flag if the decorated key is to be returned
-         * @return the next key part
+         * @return The next key part
          */
         public String nextKey(final boolean decorated) {
             if (!hasNext()) {
@@ -356,7 +356,7 @@ public class DefaultConfigurationKey {
         /**
          * Helper method for extracting the next key part. Takes escaping of delimiter characters into account.
          *
-         * @return the next key part
+         * @return The next key part
          */
         private String nextKeyPart() {
             int attrIdx = keyBuffer.toString().indexOf(getSymbols().getAttributeStart(), startIndex);
@@ -498,7 +498,7 @@ public class DefaultConfigurationKey {
      * from the specified key.
      *
      * @param key the attribute key
-     * @return the name of the corresponding attribute
+     * @return The name of the corresponding attribute
      */
     public String attributeName(final String key) {
         return isAttributeKey(key) ? removeAttributeMarkers(key) : key;
@@ -539,7 +539,7 @@ public class DefaultConfigurationKey {
      * will be modified only if does not already represent an attribute.
      *
      * @param key the key to be decorated
-     * @return the decorated attribute key
+     * @return The decorated attribute key
      */
     public String constructAttributeKey(final String key) {
         if (key == null) {
@@ -562,7 +562,7 @@ public class DefaultConfigurationKey {
      * arbitrary configuration key {@code key}.
      *
      * @param other the key for which the difference is to be calculated
-     * @return the difference key
+     * @return The difference key
      */
     public DefaultConfigurationKey differenceKey(final DefaultConfigurationKey other) {
         final DefaultConfigurationKey common = commonKey(other);
@@ -609,7 +609,7 @@ public class DefaultConfigurationKey {
      * Escapes the delimiters in the specified string.
      *
      * @param key the key to be escaped
-     * @return the escaped key
+     * @return The escaped key
      */
     private String escapeDelimiters(final String key) {
         return getSymbols().getEscapedDelimiter() == null || !key.contains(getSymbols().getPropertyDelimiter()) ? key
@@ -619,7 +619,7 @@ public class DefaultConfigurationKey {
     /**
      * Gets the associated default expression engine.
      *
-     * @return the associated expression engine
+     * @return The associated expression engine
      */
     public DefaultExpressionEngine getExpressionEngine() {
         return expressionEngine;
@@ -628,7 +628,7 @@ public class DefaultConfigurationKey {
     /**
      * Gets the symbols object from the associated expression engine.
      *
-     * @return the {@code DefaultExpressionEngineSymbols}
+     * @return The {@code DefaultExpressionEngineSymbols}
      */
     private DefaultExpressionEngineSymbols getSymbols() {
         return getExpressionEngine().getSymbols();
@@ -637,7 +637,7 @@ public class DefaultConfigurationKey {
     /**
      * Returns the hash code for this object.
      *
-     * @return the hash code
+     * @return The hash code
      */
     @Override
     public int hashCode() {
@@ -692,7 +692,7 @@ public class DefaultConfigurationKey {
     /**
      * Returns the actual length of this configuration key.
      *
-     * @return the length of this key
+     * @return The length of this key
      */
     public int length() {
         return keyBuffer.length();
@@ -702,7 +702,7 @@ public class DefaultConfigurationKey {
      * Helper method for removing attribute markers from a key.
      *
      * @param key the key
-     * @return the key with removed attribute markers
+     * @return The key with removed attribute markers
      */
     private String removeAttributeMarkers(final String key) {
         return key.substring(getSymbols().getAttributeStart().length(),
@@ -734,7 +734,7 @@ public class DefaultConfigurationKey {
      * Removes delimiters at the beginning and the end of the specified key.
      *
      * @param key the key
-     * @return the key with removed property delimiters
+     * @return The key with removed property delimiters
      */
     public String trim(final String key) {
         return trimRight(trimLeft(key));
@@ -744,7 +744,7 @@ public class DefaultConfigurationKey {
      * Removes leading property delimiters from the specified key.
      *
      * @param key the key
-     * @return the key with removed leading property delimiters
+     * @return The key with removed leading property delimiters
      */
     public String trimLeft(final String key) {
         if (key == null) {
@@ -761,7 +761,7 @@ public class DefaultConfigurationKey {
      * Removes trailing property delimiters from the specified key.
      *
      * @param key the key
-     * @return the key with removed trailing property delimiters
+     * @return The key with removed trailing property delimiters
      */
     public String trimRight(final String key) {
         if (key == null) {
@@ -778,7 +778,7 @@ public class DefaultConfigurationKey {
      * Unescapes the delimiters in the specified string.
      *
      * @param key the key to be unescaped
-     * @return the unescaped key
+     * @return The unescaped key
      */
     private String unescapeDelimiters(final String key) {
         return getSymbols().getEscapedDelimiter() == null ? key

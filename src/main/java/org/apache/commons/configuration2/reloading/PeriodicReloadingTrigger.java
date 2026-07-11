@@ -53,7 +53,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a default executor service. This method is called if no executor has been passed to the constructor.
      *
-     * @return the default executor service
+     * @return The default executor service
      */
     private static ScheduledExecutorService createDefaultExecutorService() {
         final ThreadFactory factory = BasicThreadFactory.builder().namingPattern("ReloadingTrigger-%s").daemon(true).build();
@@ -117,7 +117,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates the task which triggers the reloading controller.
      *
-     * @return the newly created trigger task
+     * @return The newly created trigger task
      */
     private Runnable createTriggerTaskCommand() {
         return () -> controller.checkForReloading(controllerParam);
@@ -126,7 +126,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Gets the {@code ScheduledExecutorService} used by this object.
      *
-     * @return the associated {@code ScheduledExecutorService}
+     * @return The associated {@code ScheduledExecutorService}
      */
     ScheduledExecutorService getExecutorService() {
         return executorService;

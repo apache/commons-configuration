@@ -108,7 +108,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * {@link CombinedReloadingController} which operates on the reloading controllers of the managed builders created so
      * far.
      *
-     * @return the newly created {@code ReloadingController}
+     * @return The newly created {@code ReloadingController}
      */
     private ReloadingController createReloadingController() {
         final Set<ReloadingController> empty = Collections.emptySet();

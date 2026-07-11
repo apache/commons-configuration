@@ -259,7 +259,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * this composite will also be cloned. This only works if all contained configurations support cloning; otherwise a
      * runtime exception will be thrown. Registered event handlers won't get cloned.
      *
-     * @return the copy
+     * @return The copy
      * @since 1.3
      */
     @Override
@@ -304,7 +304,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Gets the configuration at the specified index.
      *
      * @param index The index of the configuration to retrieve
-     * @return the configuration at this index
+     * @return The configuration at this index
      */
     public Configuration getConfiguration(final int index) {
         return syncRead(() -> configList.get(index), false);
@@ -313,7 +313,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Gets the &quot;in memory configuration&quot;. In this configuration changes are stored.
      *
-     * @return the in memory configuration
+     * @return The in memory configuration
      */
     public Configuration getInMemoryConfiguration() {
         return syncReadValue(inMemoryConfiguration, false);
@@ -374,7 +374,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Gets the number of configurations.
      *
-     * @return the number of configuration
+     * @return The number of configuration
      */
     public int getNumberOfConfigurations() {
         return syncRead(configList::size, false);
@@ -403,7 +403,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * </ul>
      *
      * @param key the key to be checked
-     * @return the source configuration of this key
+     * @return The source configuration of this key
      * @throws IllegalArgumentException if the source configuration cannot be determined
      * @since 1.5
      */

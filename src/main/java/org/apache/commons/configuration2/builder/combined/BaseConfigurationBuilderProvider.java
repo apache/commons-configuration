@@ -66,7 +66,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * Creates an instance of a parameter class using reflection.
      *
      * @param paramcls the parameter class
-     * @return the newly created instance
+     * @return The newly created instance
      * @throws Exception if an error occurs
      */
     private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
@@ -77,7 +77,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * Creates a new, unmodifiable collection for the parameter classes.
      *
      * @param paramCls the collection with parameter classes passed to the constructor
-     * @return the collection to be stored
+     * @return The collection to be stored
      */
     private static Collection<String> initParameterClasses(final Collection<String> paramCls) {
         if (paramCls == null) {
@@ -144,7 +144,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      *
      * @param decl the current {@code ConfigurationDeclaration}
      * @param params initialization parameters for the new builder object
-     * @return the newly created builder instance
+     * @return The newly created builder instance
      * @throws Exception if an error occurs
      */
     protected BasicConfigurationBuilder<? extends Configuration> createBuilder(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
@@ -180,7 +180,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * builder is desired, but this provider has no reloading support, an exception is thrown.
      *
      * @param decl the current {@code ConfigurationDeclaration}
-     * @return the name of the builder class
+     * @return The name of the builder class
      * @throws ConfigurationException if the builder class cannot be determined
      */
     protected String determineBuilderClass(final ConfigurationDeclaration decl) throws ConfigurationException {
@@ -201,7 +201,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      *
      * @param decl the current {@code ConfigurationDeclaration}
      * @param params the collection with parameter objects
-     * @return the name of the builder's result configuration class
+     * @return The name of the builder's result configuration class
      * @throws ConfigurationException if an error occurs
      */
     protected String determineConfigurationClass(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
@@ -212,7 +212,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Gets the name of the class of the builder created by this provider.
      *
-     * @return the builder class
+     * @return The builder class
      */
     public String getBuilderClass() {
         return builderClass;
@@ -240,7 +240,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Gets the name of the configuration class created by the builder produced by this provider.
      *
-     * @return the configuration class
+     * @return The configuration class
      */
     public String getConfigurationClass() {
         return configurationClass;
@@ -249,7 +249,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Gets an unmodifiable collection with the names of parameter classes supported by this provider.
      *
-     * @return the parameter classes
+     * @return The parameter classes
      */
     public Collection<String> getParameterClasses() {
         return parameterClasses;
@@ -259,7 +259,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * Gets the name of the class of the builder created by this provider if the reload flag is set. If this method
      * returns <strong>null</strong>, reloading builders are not supported by this provider.
      *
-     * @return the reloading builder class
+     * @return The reloading builder class
      */
     public String getReloadingBuilderClass() {
         return reloadingBuilderClass;
@@ -300,7 +300,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * optional, but an empty instance should be created if its creation fail.
      *
      * @param decl the current {@code ConfigurationDeclaration}
-     * @return the value of the <em>allowFailOnInit</em> flag
+     * @return The value of the <em>allowFailOnInit</em> flag
      */
     protected boolean isAllowFailOnInit(final ConfigurationDeclaration decl) {
         return decl.isOptional() && decl.isForceCreate();

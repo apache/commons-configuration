@@ -121,7 +121,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param <T> The type of the object to be checked.
      * @param key the key which caused the problem.
      * @param value the value to be checked.
-     * @return the passed in value for chaining this method call.
+     * @return The passed in value for chaining this method call.
      * @throws NoSuchElementException if the value is <strong>null</strong>.
      */
     private static <T> T checkNonNullValue(final String key, final T value) {
@@ -137,7 +137,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param ci the {@code ConfigurationInterpolator} in question.
      * @param targetConf the target configuration of the searched lookup.
-     * @return the found {@code Lookup} object or <strong>null</strong>.
+     * @return The found {@code Lookup} object or <strong>null</strong>.
      */
     private static Lookup findConfigurationLookup(final ConfigurationInterpolator ci, final ImmutableConfiguration targetConf) {
         for (final Lookup l : ci.getDefaultLookups()) {
@@ -154,7 +154,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param target the target collection.
      * @param defaultValue the default collection.
-     * @return the initialized target collection.
+     * @return The initialized target collection.
      */
     private static <T> Collection<T> handleDefaultCollection(final Collection<T> target, final Collection<T> defaultValue) {
         if (defaultValue == null) {
@@ -476,7 +476,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param key the key of the desired property.
      * @param defValue a default value.
      * @param throwOnMissing a flag whether an exception should be thrown for a missing value.
-     * @return the converted value.
+     * @return The converted value.
      */
     private <T> T convert(final Class<T> cls, final String key, final T defValue, final boolean throwOnMissing) {
         if (cls.isArray()) {
@@ -503,7 +503,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param cls the component class of the array.
      * @param key the configuration key.
      * @param defaultValue an optional default value.
-     * @return the converted array.
+     * @return The converted array.
      * @throws IllegalArgumentException if the default value is not a compatible array.
      */
     private Object convertToArray(final Class<?> cls, final String key, final Object defaultValue) {
@@ -539,7 +539,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * values have to be escaped.
      *
      * @param value the value to be encoded.
-     * @return the encoded value.
+     * @return The encoded value.
      */
     private Object encodeForCopy(final Object value) {
         if (value instanceof Collection) {
@@ -589,7 +589,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * this configuration.
      *
      * @param ci the {@code ConfigurationInterpolator} in question.
-     * @return the found {@code Lookup} object or <strong>null</strong>.
+     * @return The found {@code Lookup} object or <strong>null</strong>.
      */
     private Lookup findConfigurationLookup(final ConfigurationInterpolator ci) {
         return findConfigurationLookup(ci, this);
@@ -615,7 +615,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param cls the target class.
      * @param key the key of the desired property.
      * @param defaultValue a default value.
-     * @return the converted value of this property.
+     * @return The converted value of this property.
      * @throws ConversionException if the conversion cannot be performed.
      */
     private <T> T getAndConvertProperty(final Class<T> cls, final String key, final T defaultValue) {
@@ -693,7 +693,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key the key of the property.
      * @param defaultValue the default value.
-     * @return the value of this key converted to a {@code Boolean}.
+     * @return The value of this key converted to a {@code Boolean}.
      * @throws ConversionException if the value cannot be converted to a {@code Boolean}.
      */
     @Override
@@ -741,7 +741,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ConfigurationDecoder} used by this instance.
      *
-     * @return the {@code ConfigurationDecoder}.
+     * @return The {@code ConfigurationDecoder}.
      * @since 2.0
      */
     public ConfigurationDecoder getConfigurationDecoder() {
@@ -751,7 +751,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ConversionHandler} used by this instance.
      *
-     * @return the {@code ConversionHandler}.
+     * @return The {@code ConversionHandler}.
      * @since 2.0
      */
     public ConversionHandler getConversionHandler() {
@@ -853,7 +853,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * resolve values from this configuration instance and support the
      * {@link ConfigurationInterpolator#getDefaultPrefixLookups() default prefix lookups}.
      *
-     * @return the {@code ConfigurationInterpolator} associated with this configuration
+     * @return The {@code ConfigurationInterpolator} associated with this configuration
      * @since 1.4
      * @see ConfigurationInterpolator#getDefaultPrefixLookups()
      */
@@ -990,7 +990,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ListDelimiterHandler} used by this instance.
      *
-     * @return the {@code ListDelimiterHandler}
+     * @return The {@code ListDelimiterHandler}
      * @since 2.0
      */
     public ListDelimiterHandler getListDelimiterHandler() {
@@ -1000,7 +1000,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the logger used by this configuration object.
      *
-     * @return the logger
+     * @return The logger
      * @since 2.0
      */
     public ConfigurationLogger getLogger() {
@@ -1078,7 +1078,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * subclasses must define it to fetch the value of the desired property.
      *
      * @param key the key of the property in question.
-     * @return the (raw) value of this property.
+     * @return The (raw) value of this property.
      * @since 2.0
      */
     protected abstract Object getPropertyInternal(String key);
@@ -1138,7 +1138,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code Synchronizer} has been set, a {@link NoOpSynchronizer} is returned. So, per default, instances of
      * {@code AbstractConfiguration} are not thread-safe unless a suitable {@code Synchronizer} is set!
      *
-     * @return the {@code Synchronizer} used by this instance.
+     * @return The {@code Synchronizer} used by this instance.
      * @since 2.0
      */
     @Override
@@ -1190,7 +1190,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code ConfigurationInterpolator} is set, the passed in value is returned without changes.
      *
      * @param value the value to interpolate.
-     * @return the value with variables substituted.
+     * @return The value with variables substituted.
      */
     protected Object interpolate(final Object value) {
         final ConfigurationInterpolator ci = getInterpolator();
@@ -1201,7 +1201,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate.
-     * @return the key name with the ${key} substituted.
+     * @return The key name with the ${key} substituted.
      */
     protected String interpolate(final String base) {
         return Objects.toString(interpolate((Object) base), null);
@@ -1506,7 +1506,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * The base implementation provided here calculates the size based on the iterator returned by {@code getKeys()}. Sub
      * classes which can determine the size in a more efficient way should override this method.
      *
-     * @return the size of this configuration (i.e. the number of keys).
+     * @return The size of this configuration (i.e. the number of keys).
      */
     protected int sizeInternal() {
         int size = 0;

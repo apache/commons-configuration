@@ -64,7 +64,7 @@ public class TestDataConfiguration {
     /**
      * Returns the expected test date.
      *
-     * @return the expected test date
+     * @return The expected test date
      * @throws ParseException if the date cannot be parsed
      */
     private static Date expectedDate() throws ParseException {

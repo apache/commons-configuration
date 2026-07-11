@@ -165,7 +165,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
      * Escapes a property value before it is written to disk.
      *
      * @param value the value to be escaped
-     * @return the escaped value
+     * @return The escaped value
      */
     private String escapeValue(final Object value) {
         final String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
@@ -175,7 +175,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Gets the header comment of this configuration.
      *
-     * @return the header comment
+     * @return The header comment
      */
     public String getHeader() {
         return header;

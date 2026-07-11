@@ -94,7 +94,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * Gets the {@code ConfigurationInterpolator} object used by this {@code Configuration}. This object is responsible
      * for variable substitution.
      *
-     * @return the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     ConfigurationInterpolator getInterpolator();
 

@@ -47,7 +47,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      *
      * @param prefix the prefix
      * @param name the name (may be <strong>null</strong>)
-     * @return the qualified name
+     * @return The qualified name
      */
     protected static String prefixName(final String prefix, final String name) {
         return String.format(FMT_NAMESPACE, prefix, StringUtils.defaultString(name));
@@ -58,7 +58,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Otherwise, the namespace prefix is added.
      *
      * @param qName the {@code QName}
-     * @return the qualified name
+     * @return The qualified name
      */
     protected static String qualifiedName(final QName qName) {
         return qName.getPrefix() == null ? qName.getName() : prefixName(qName.getPrefix(), qName.getName());
@@ -92,14 +92,14 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Derived classes must create the correct pointer object.
      *
      * @param position the current position in the iteration
-     * @return the node pointer
+     * @return The node pointer
      */
     protected abstract NodePointer createNodePointer(int position);
 
     /**
      * Gets the maximum position for this iterator.
      *
-     * @return the maximum allowed position
+     * @return The maximum allowed position
      */
     protected int getMaxPosition() {
         return reverse ? getStartOffset() + 1 : size() - getStartOffset();
@@ -108,7 +108,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the node handler for the managed nodes. This is a convenience method.
      *
-     * @return the node handler
+     * @return The node handler
      */
     protected NodeHandler<T> getNodeHandler() {
         return getParent().getNodeHandler();
@@ -117,7 +117,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the current node pointer.
      *
-     * @return the current pointer in this iteration
+     * @return The current pointer in this iteration
      */
     @Override
     public NodePointer getNodePointer() {
@@ -131,7 +131,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the parent node pointer.
      *
-     * @return the parent node pointer
+     * @return The parent node pointer
      */
     protected ConfigurationNodePointer<T> getParent() {
         return parent;
@@ -140,7 +140,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the position of the iteration.
      *
-     * @return the position
+     * @return The position
      */
     @Override
     public int getPosition() {
@@ -150,7 +150,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the start offset of the iteration.
      *
-     * @return the start offset
+     * @return The start offset
      */
     protected int getStartOffset() {
         return startOffset;
@@ -160,7 +160,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Returns the index in the data list for the given position. This method also checks the reverse flag.
      *
      * @param pos the position (1-based)
-     * @return the corresponding list index
+     * @return The corresponding list index
      */
     protected int positionToIndex(final int pos) {
         return (reverse ? 1 - pos : pos - 1) + getStartOffset();
@@ -195,7 +195,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Returns the number of elements in this iteration.
      *
-     * @return the number of elements
+     * @return The number of elements
      */
     protected abstract int size();
 }

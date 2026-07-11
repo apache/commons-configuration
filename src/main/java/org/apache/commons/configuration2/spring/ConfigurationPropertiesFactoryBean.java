@@ -51,7 +51,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      *
      * @param src the source array
      * @param <T> The type of the array
-     * @return the defensive copy of the array
+     * @return The defensive copy of the array
      */
     private static <T> T[] clone(final T[] src) {
         return src != null ? src.clone() : null;
@@ -114,7 +114,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /**
      * Gets the composite configuration.
      *
-     * @return the composite configuration.
+     * @return The composite configuration.
      */
     public CompositeConfiguration getConfiguration() {
         return compositeConfiguration;
@@ -165,7 +165,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /**
      * Tests the underlying CompositeConfiguration throwExceptionOnMissing flag.
      *
-     * @return the underlying CompositeConfiguration throwExceptionOnMissing flag.
+     * @return The underlying CompositeConfiguration throwExceptionOnMissing flag.
      */
     public boolean isThrowExceptionOnMissing() {
         return throwExceptionOnMissing;

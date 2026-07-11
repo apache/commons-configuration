@@ -193,7 +193,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Gets the at position of this configuration.
          *
-         * @return the at position
+         * @return The at position
          */
         public String getAt() {
             return at;
@@ -202,7 +202,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Gets the stored configuration.
          *
-         * @return the configuration
+         * @return The configuration
          */
         public Configuration getConfiguration() {
             return configuration;
@@ -211,7 +211,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Gets the configuration's name.
          *
-         * @return the name
+         * @return The name
          */
         public String getName() {
             return name;
@@ -220,7 +220,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Gets the root node for this child configuration.
          *
-         * @return the root node of this child configuration
+         * @return The root node of this child configuration
          * @since 1.5
          */
         public ImmutableNode getRootNode() {
@@ -231,7 +231,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * Obtains the root node of the wrapped configuration. If necessary, a hierarchical representation of the configuration
          * has to be created first.
          *
-         * @return the root node of the associated configuration
+         * @return The root node of the associated configuration
          */
         private ImmutableNode getRootNodeOfConfiguration() {
             getConfiguration().lock(LockMode.READ);
@@ -249,7 +249,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * Gets the transformed root node of the stored configuration. The term &quot;transformed&quot; means that an
          * eventually defined at path has been applied.
          *
-         * @return the transformed root node
+         * @return The transformed root node
          */
         public ImmutableNode getTransformedRoot() {
             final ImmutableNode configRoot = getRootNodeOfConfiguration();
@@ -279,7 +279,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * Prepends the at path to the given node.
          *
          * @param node the root node of the represented configuration
-         * @return the new root node including the at path
+         * @return The new root node including the at path
          */
         private ImmutableNode prependAtPath(final ImmutableNode node) {
             final ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
@@ -490,7 +490,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * cloned, too. For this to work, all contained configurations must be cloneable. Registered event listeners won't be
      * cloned. The clone will use the same node combiner than the original.
      *
-     * @return the copied object
+     * @return The copied object
      */
     @Override
     public Object clone() {
@@ -509,7 +509,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Creates the root node of this combined configuration.
      *
-     * @return the combined root node
+     * @return The combined root node
      */
     private ImmutableNode constructCombinedNode() {
         if (getNumberOfConfigurationsInternal() < 1) {
@@ -559,7 +559,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * added to this combined configuration. The index of the first configuration is 0.
      *
      * @param index the index
-     * @return the configuration at this index
+     * @return The configuration at this index
      */
     public Configuration getConfiguration(final int index) {
         beginRead(true);
@@ -575,7 +575,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
      * @param name the name of the configuration
-     * @return the configuration with this name
+     * @return The configuration with this name
      */
     public Configuration getConfiguration(final String name) {
         beginRead(true);
@@ -635,7 +635,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Gets the {@code ExpressionEngine} for converting flat child configurations to hierarchical ones.
      *
-     * @return the conversion expression engine
+     * @return The conversion expression engine
      * @since 1.6
      */
     public ExpressionEngine getConversionExpressionEngine() {
@@ -650,7 +650,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Gets the node combiner that is used for creating the combined node structure.
      *
-     * @return the node combiner
+     * @return The node combiner
      */
     public NodeCombiner getNodeCombiner() {
         beginRead(true);
@@ -664,7 +664,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Gets the number of configurations that are contained in this combined configuration.
      *
-     * @return the number of contained configurations
+     * @return The number of contained configurations
      */
     public int getNumberOfConfigurations() {
         beginRead(true);
@@ -679,7 +679,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets the number of child configurations in this combined configuration. The internal list of child configurations
      * is accessed without synchronization.
      *
-     * @return the number of child configurations
+     * @return The number of child configurations
      */
     private int getNumberOfConfigurationsInternal() {
         return configurations.size();
@@ -699,7 +699,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * </ul>
      *
      * @param key the key of a configuration property
-     * @return the configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
+     * @return The configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
      *         the key is <strong>null</strong>
      * @since 1.5
@@ -844,7 +844,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Removes the configuration with the specified name.
      *
      * @param name the name of the configuration to be removed
-     * @return the removed configuration (<strong>null</strong> if this configuration was not found)
+     * @return The removed configuration (<strong>null</strong> if this configuration was not found)
      */
     public Configuration removeConfiguration(final String name) {
         final Configuration conf = getConfiguration(name);
@@ -858,7 +858,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Removes the configuration at the specified index.
      *
      * @param index the index
-     * @return the removed configuration
+     * @return The removed configuration
      */
     public Configuration removeConfigurationAt(final int index) {
         final ConfigData cd = configurations.remove(index);

@@ -37,7 +37,7 @@ public class TestMergeCombiner extends AbstractCombinerTest {
      * Helper method for checking the combined table structure.
      *
      * @param config the config
-     * @return the node for the table element
+     * @return The node for the table element
      */
     private ImmutableNode checkTable(final HierarchicalConfiguration<ImmutableNode> config) {
         assertEquals(1, config.getMaxIndex("database.tables.table"));
@@ -56,7 +56,7 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     /**
      * Creates the combiner.
      *
-     * @return the combiner
+     * @return The combiner
      */
     @Override
     protected NodeCombiner createCombiner() {

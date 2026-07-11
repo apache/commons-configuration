@@ -89,7 +89,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Gets the at position of this configuration.
          *
-         * @return the at position
+         * @return The at position
          */
         public String getAt() {
             return at;
@@ -98,7 +98,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Gets the stored configuration.
          *
-         * @return the configuration
+         * @return The configuration
          */
         public Configuration getConfiguration() {
             return configuration;
@@ -107,7 +107,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Gets the configuration's name.
          *
-         * @return the name
+         * @return The name
          */
         public String getName() {
             return name;
@@ -153,7 +153,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Gets the current configuration.
          *
-         * @return the current configuration
+         * @return The current configuration
          */
         public CombinedConfiguration getCurrentConfiguration() {
             return currentConfiguration;
@@ -162,7 +162,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Gets the current key.
          *
-         * @return the current key
+         * @return The current key
          */
         public String getKey() {
             return key;
@@ -375,7 +375,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Creates a new, uninitialized child configuration.
      *
-     * @return the new child configuration
+     * @return The new child configuration
      */
     private CombinedConfiguration createChildConfiguration() {
         return new CombinedConfiguration(getNodeCombiner());
@@ -404,7 +404,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * initialized, and associated with the current thread. The member for the current configuration is undefined if for the
      * current key no configuration exists yet.
      *
-     * @return the {@code CurrentConfigHolder} instance for the current thread
+     * @return The {@code CurrentConfigHolder} instance for the current thread
      */
     private CurrentConfigHolder ensureCurrentConfiguration() {
         CurrentConfigHolder cch = CURRENT_CONFIG.get();
@@ -472,7 +472,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * added to this combined configuration. The index of the first configuration is 0.
      *
      * @param index the index
-     * @return the configuration at this index
+     * @return The configuration at this index
      */
     @Override
     public Configuration getConfiguration(final int index) {
@@ -489,7 +489,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
      * @param name the name of the configuration
-     * @return the configuration with this name
+     * @return The configuration with this name
      */
     @Override
     public Configuration getConfiguration(final String name) {
@@ -522,7 +522,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * a thread-local variable. Some methods of this class call this method directly without requesting a lock before. To
      * deal with this, we always request an additional read lock.
      *
-     * @return the current configuration
+     * @return The current configuration
      */
     private CombinedConfiguration getCurrentConfig() {
         CombinedConfiguration config;
@@ -589,7 +589,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Gets the key pattern for the CombinedConfiguration map.
      *
-     * @return the key pattern for the CombinedConfiguration map.
+     * @return The key pattern for the CombinedConfiguration map.
      */
     public String getKeyPattern() {
         return this.keyPattern;
@@ -638,7 +638,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Gets the node combiner that is used for creating the combined node structure.
      *
-     * @return the node combiner
+     * @return The node combiner
      */
     @Override
     public NodeCombiner getNodeCombiner() {
@@ -648,7 +648,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Gets the number of configurations that are contained in this combined configuration.
      *
-     * @return the number of contained configurations
+     * @return The number of contained configurations
      */
     @Override
     public int getNumberOfConfigurations() {
@@ -699,7 +699,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * </ul>
      *
      * @param key the key of a configuration property
-     * @return the configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
+     * @return The configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
      *         the key is <strong>null</strong>
      */
@@ -749,7 +749,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * returns an object which shares the prefix lookups from this configuration's {@code ConfigurationInterpolator}, but
      * does not define any other lookups.
      *
-     * @return the {@code ConfigurationInterpolator}
+     * @return The {@code ConfigurationInterpolator}
      */
     private ConfigurationInterpolator initLocalInterpolator() {
         return new ConfigurationInterpolator() {
@@ -827,7 +827,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Removes the configuration with the specified name.
      *
      * @param name the name of the configuration to be removed
-     * @return the removed configuration (<strong>null</strong> if this configuration was not found)
+     * @return The removed configuration (<strong>null</strong> if this configuration was not found)
      */
     @Override
     public Configuration removeConfiguration(final String name) {
@@ -842,7 +842,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Removes the configuration at the specified index.
      *
      * @param index the index
-     * @return the removed configuration
+     * @return The removed configuration
      */
     @Override
     public Configuration removeConfigurationAt(final int index) {

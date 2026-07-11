@@ -46,7 +46,7 @@ public class NodeUpdateData<T> {
      *
      * @param col the collection to be copied
      * @param <T> The element type of the collection
-     * @return the unmodifiable copy
+     * @return The unmodifiable copy
      */
     private static <T> Collection<T> copyCollection(final Collection<? extends T> col) {
         if (col == null) {
@@ -61,7 +61,7 @@ public class NodeUpdateData<T> {
      * @param map the map to be copied
      * @param <K> The type of the keys involved
      * @param <V> The type of the values involved
-     * @return the unmodifiable copy
+     * @return The unmodifiable copy
      */
     private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map) {
         if (map == null) {
@@ -103,7 +103,7 @@ public class NodeUpdateData<T> {
      * Gets an unmodifiable map with the values to be changed. The keys of the map are the query results for the nodes
      * affected, the values are the new values to be assigned to these nodes.
      *
-     * @return the map with values to be changed
+     * @return The map with values to be changed
      */
     public Map<QueryResult<T>, Object> getChangedValues() {
         return changedValues;
@@ -112,7 +112,7 @@ public class NodeUpdateData<T> {
     /**
      * Gets the key for this update operation.
      *
-     * @return the key for this operation
+     * @return The key for this operation
      */
     public String getKey() {
         return key;
@@ -122,7 +122,7 @@ public class NodeUpdateData<T> {
      * Gets a collection with the values to be newly added. For these values new nodes have to be created and added under
      * the key stored in this object.
      *
-     * @return the collection with new values
+     * @return The collection with new values
      */
     public Collection<Object> getNewValues() {
         return newValues;
@@ -132,7 +132,7 @@ public class NodeUpdateData<T> {
      * Adds a collection with the nodes to be removed. These nodes are no longer needed and have to be removed from the node
      * model processing this request.
      *
-     * @return the collection with nodes to be removed
+     * @return The collection with nodes to be removed
      */
     public Collection<QueryResult<T>> getRemovedNodes() {
         return removedNodes;

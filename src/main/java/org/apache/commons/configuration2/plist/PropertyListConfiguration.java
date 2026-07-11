@@ -134,7 +134,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
          * @param s the string to be parsed
          * @param index the current parsing position
          * @param cal the calendar where to store the result
-         * @return the length of the processed component
+         * @return The length of the processed component
          * @throws ParseException if the component cannot be extracted
          */
         public abstract int parseComponent(String s, int index, Calendar cal) throws ParseException;
@@ -321,7 +321,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * Parses a date in a format like {@code <*D2002-03-22 11:30:00 +0100>}.
      *
      * @param s the string with the date to be parsed
-     * @return the parsed date
+     * @return The parsed date
      * @throws ParseException if an error occurred while parsing the string
      */
     static Date parseDate(final String s) throws ParseException {
@@ -341,7 +341,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * are not of type String are dropped.
      *
      * @param src the map to be converted
-     * @return the resulting map
+     * @return The resulting map
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
         final Map<String, Object> dest = new HashMap<>();

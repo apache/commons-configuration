@@ -99,7 +99,7 @@ public class HomeDirectoryLocationStrategy extends AbstractFileLocationStrategy 
      * user's home directory is looked up.
      *
      * @param homeDir the passed in home directory
-     * @return the directory to be used
+     * @return The directory to be used
      */
     private static String getHomeDirectory(final String homeDir) {
         return homeDir != null ? homeDir : SystemProperties.getUserHome();
@@ -158,7 +158,7 @@ public class HomeDirectoryLocationStrategy extends AbstractFileLocationStrategy 
      * Determines the base path to be used for the current locate() operation.
      *
      * @param locator the {@code FileLocator}
-     * @return the base path to be used
+     * @return The base path to be used
      */
     private String getBasePath(final FileLocator locator) {
         if (isEvaluateBasePath() && StringUtils.isNotEmpty(locator.getBasePath())) {
@@ -170,7 +170,7 @@ public class HomeDirectoryLocationStrategy extends AbstractFileLocationStrategy 
     /**
      * Gets the home directory. In this directory the strategy searches for files.
      *
-     * @return the home directory used by this object.
+     * @return The home directory used by this object.
      */
     public String getHomeDirectory() {
         return homeDirectory;
@@ -179,7 +179,7 @@ public class HomeDirectoryLocationStrategy extends AbstractFileLocationStrategy 
     /**
      * Returns a flag whether the base path is to be taken into account when searching for a file.
      *
-     * @return the flag whether the base path is evaluated
+     * @return The flag whether the base path is evaluated
      */
     public boolean isEvaluateBasePath() {
         return evaluateBasePath;

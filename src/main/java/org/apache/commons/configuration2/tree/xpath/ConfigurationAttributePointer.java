@@ -58,7 +58,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
      *
      * @param p1 the first pointer
      * @param p2 the second pointer
-     * @return the order of these pointers
+     * @return The order of these pointers
      */
     @Override
     public int compareChildNodePointers(final NodePointer p1, final NodePointer p2) {
@@ -68,7 +68,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Gets the base value. We return the value.
      *
-     * @return the base value
+     * @return The base value
      */
     @Override
     public Object getBaseValue() {
@@ -78,7 +78,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Gets the immediate node. This is actually a {@link QueryResult} object describing the represented attribute.
      *
-     * @return the immediate node
+     * @return The immediate node
      */
     @Override
     public Object getImmediateNode() {
@@ -88,7 +88,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Gets the length of the represented node. This is always 1.
      *
-     * @return the length
+     * @return The length
      */
     @Override
     public int getLength() {
@@ -98,7 +98,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Gets the name of this node. This is the attribute name.
      *
-     * @return the name of this node
+     * @return The name of this node
      */
     @Override
     public QName getName() {
@@ -108,7 +108,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Returns a reference to the current node handler. The handler is obtained from the parent pointer.
      *
-     * @return the node handler
+     * @return The node handler
      */
     private NodeHandler<T> getNodeHandler() {
         return getParentPointer().getNodeHandler();
@@ -117,7 +117,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Gets a reference to the parent node pointer.
      *
-     * @return the parent pointer
+     * @return The parent pointer
      */
     public ConfigurationNodePointer<T> getParentPointer() {
         // safe to cast because the constructor only expects pointers of this
@@ -140,7 +140,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Returns a flag whether this node is an attribute. Of course, this is the case.
      *
-     * @return the attribute flag
+     * @return The attribute flag
      */
     @Override
     public boolean isAttribute() {
@@ -150,7 +150,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Returns a flag whether the represented node is a collection. This is not the case.
      *
-     * @return the collection flag
+     * @return The collection flag
      */
     @Override
     public boolean isCollection() {
@@ -160,7 +160,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Returns a flag whether the represented node is a leaf. This is the case for attributes.
      *
-     * @return the leaf flag
+     * @return The leaf flag
      */
     @Override
     public boolean isLeaf() {

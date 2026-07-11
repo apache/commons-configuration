@@ -101,7 +101,7 @@ public class TestXMLBeanDeclaration {
     /**
      * Creates a configuration with data for testing nested bean declarations including constructor arguments.
      *
-     * @return the initialized test configuration
+     * @return The initialized test configuration
      */
     private static BaseHierarchicalConfiguration prepareNestedBeanDeclarations() {
         final BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();

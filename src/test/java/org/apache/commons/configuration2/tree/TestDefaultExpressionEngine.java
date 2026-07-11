@@ -54,7 +54,7 @@ public class TestDefaultExpressionEngine {
      * Helper method for creating a field node with its children for the test node hierarchy.
      *
      * @param name the name of the field
-     * @return the field node
+     * @return The field node
      */
     private static ImmutableNode createFieldNode(final String name) {
         final ImmutableNode.Builder nodeFieldBuilder = new ImmutableNode.Builder(1);
@@ -67,7 +67,7 @@ public class TestDefaultExpressionEngine {
      *
      * @param name the node name
      * @param value the node value
-     * @return the node instance
+     * @return The node instance
      */
     private static ImmutableNode createNode(final String name, final Object value) {
         return new ImmutableNode.Builder().name(name).value(value).create();
@@ -93,7 +93,7 @@ public class TestDefaultExpressionEngine {
      *                  name
      * </pre>
      *
-     * @return the root of the test node hierarchy
+     * @return The root of the test node hierarchy
      */
     private static ImmutableNode setUpNodes() {
         final ImmutableNode.Builder nodeTablesBuilder = new ImmutableNode.Builder(TABLES.length);
@@ -148,7 +148,7 @@ public class TestDefaultExpressionEngine {
      * @param key the key
      * @param name the name of the nodes to be returned
      * @param count the number of expected result nodes
-     * @return the list with the results of the query
+     * @return The list with the results of the query
      */
     private List<QueryResult<ImmutableNode>> checkKey(final String key, final String name, final int count) {
         final List<QueryResult<ImmutableNode>> nodes = query(key, count);
@@ -203,7 +203,7 @@ public class TestDefaultExpressionEngine {
      * Helper method for fetching a specific node by its key.
      *
      * @param key the key
-     * @return the node with this key
+     * @return The node with this key
      */
     private ImmutableNode fetchNode(final String key) {
         final QueryResult<ImmutableNode> result = query(key, 1).get(0);
@@ -216,7 +216,7 @@ public class TestDefaultExpressionEngine {
      *
      * @param key the key
      * @param expCount the expected number of result nodes
-     * @return the collection of retrieved nodes
+     * @return The collection of retrieved nodes
      */
     private List<QueryResult<ImmutableNode>> query(final String key, final int expCount) {
         final List<QueryResult<ImmutableNode>> nodes = engine.query(root, key, handler);

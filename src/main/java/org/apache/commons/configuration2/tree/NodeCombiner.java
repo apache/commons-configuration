@@ -54,7 +54,7 @@ public abstract class NodeCombiner {
      * Creates a node handler object for immutable nodes which can be used by sub classes to perform advanced operations on
      * nodes.
      *
-     * @return the node handler implementation
+     * @return The node handler implementation
      */
     private static NodeHandler<ImmutableNode> createNodeHandler() {
         return new AbstractImmutableNodeHandler() {
@@ -95,7 +95,7 @@ public abstract class NodeCombiner {
      *
      * @param node1 the first root node
      * @param node2 the second root node
-     * @return the root node of the resulting combined node structure
+     * @return The root node of the resulting combined node structure
      */
     public abstract ImmutableNode combine(ImmutableNode node1, ImmutableNode node2);
 

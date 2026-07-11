@@ -244,7 +244,7 @@ public class TestCombinedConfiguration {
     /**
      * Helper method for creating a test configuration to be added to the combined configuration.
      *
-     * @return the test configuration
+     * @return The test configuration
      */
     private static AbstractConfiguration setUpTestConfiguration() {
         final BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
@@ -323,7 +323,7 @@ public class TestCombinedConfiguration {
     /**
      * Prepares the test configuration for a test for sub configurations. Some child configurations are added.
      *
-     * @return the sub configuration at the test sub key
+     * @return The sub configuration at the test sub key
      */
     private AbstractConfiguration setUpSubConfigTest() {
         final AbstractConfiguration srcConfig = setUpTestConfiguration();
@@ -336,7 +336,7 @@ public class TestCombinedConfiguration {
     /**
      * Prepares a test for synchronization. This method installs a test synchronizer and adds some test configurations.
      *
-     * @return the test synchronizer
+     * @return The test synchronizer
      */
     private SynchronizerTestImpl setUpSynchronizerTest() {
         setUpSourceTest();

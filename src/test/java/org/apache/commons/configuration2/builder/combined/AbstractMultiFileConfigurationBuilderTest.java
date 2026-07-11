@@ -40,7 +40,7 @@ class AbstractMultiFileConfigurationBuilderTest {
     /**
      * Creates a {@code ConfigurationInterpolator} to be used by tests. This object contains a lookup for system properties.
      *
-     * @return the new {@code ConfigurationInterpolator}
+     * @return The new {@code ConfigurationInterpolator}
      */
     protected static ConfigurationInterpolator createInterpolator() {
         final ConfigurationInterpolator ci = new ConfigurationInterpolator();
@@ -52,7 +52,7 @@ class AbstractMultiFileConfigurationBuilderTest {
      * Creates a parameters object with default settings for a test builder instance.
      *
      * @param managedParams the parameters for managed configurations
-     * @return the test parameters
+     * @return The test parameters
      */
     protected static BasicBuilderParameters createTestBuilderParameters(final BuilderParameters managedParams) {
         return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN).setManagedBuilderParameters(managedParams).setInterpolator(createInterpolator());

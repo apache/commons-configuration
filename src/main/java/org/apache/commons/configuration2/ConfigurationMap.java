@@ -161,7 +161,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * configuration.
      *
      * @param key the key
-     * @return the value of this key
+     * @return The value of this key
      * @see Map#get(Object)
      */
     @Override
@@ -172,7 +172,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     /**
      * Gets the wrapped {@code Configuration} object.
      *
-     * @return the wrapped configuration
+     * @return The wrapped configuration
      * @since 1.2
      */
     public Configuration getConfiguration() {
@@ -184,7 +184,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      *
      * @param key the key (will be converted to a string)
      * @param value the value
-     * @return the old value of this key or <strong>null</strong> if it is new
+     * @return The old value of this key or <strong>null</strong> if it is new
      * @see Map#put(Object, Object)
      */
     @Override

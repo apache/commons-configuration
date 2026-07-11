@@ -86,7 +86,7 @@ public class TestCompositeConfiguration {
     /**
      * Creates a test synchronizer and installs it at the test configuration.
      *
-     * @return the test synchronizer
+     * @return The test synchronizer
      */
     private SynchronizerTestImpl installSynchronizer() {
         cc.addConfiguration(conf1);

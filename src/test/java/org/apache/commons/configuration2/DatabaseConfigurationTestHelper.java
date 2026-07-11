@@ -89,7 +89,7 @@ public class DatabaseConfigurationTestHelper {
      * @param <T> The type of the result configuration
      * @param configCls the configuration class
      * @param params the parameters object
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T createConfiguration(final Class<T> configCls, final DatabaseBuilderParameters params)
@@ -100,7 +100,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns the {@code DataSource} managed by this class. The data source is created on first access.
      *
-     * @return the {@code DataSource}
+     * @return The {@code DataSource}
      */
     public DataSource getDataSource() {
         if (dataSource == null) {
@@ -116,7 +116,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns the auto-commit mode of the configuration instances created by this helper.
      *
-     * @return the auto-commit mode
+     * @return The auto-commit mode
      */
     public boolean isAutoCommit() {
         return autoCommit;
@@ -145,7 +145,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates a database configuration with default settings.
      *
-     * @return the configuration
+     * @return The configuration
      * @throws ConfigurationException if an error occurs
      */
     public DatabaseConfiguration setUpConfig() throws ConfigurationException {
@@ -157,7 +157,7 @@ public class DatabaseConfigurationTestHelper {
      *
      * @param <T> The type of the result configuration
      * @param configCls the configuration class
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T setUpConfig(final Class<T> configCls) throws ConfigurationException {
@@ -167,7 +167,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates the internal data source. This method also initializes the database.
      *
-     * @return the data source
+     * @return The data source
      * @throws Exception if an error occurs
      */
     private DataSource setUpDataSource() throws Exception {
@@ -198,7 +198,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns a parameters object with default settings.
      *
-     * @return the parameters object
+     * @return The parameters object
      */
     public DatabaseBuilderParameters setUpDefaultParameters() {
         return new Parameters().database().setDataSource(getDataSource()).setTable(TABLE).setKeyColumn(COL_KEY).setValueColumn(COL_VALUE)
@@ -208,7 +208,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Creates a database configuration that supports multiple configurations in a table with default values.
      *
-     * @return the configuration
+     * @return The configuration
      * @throws ConfigurationException if an error occurs
      */
     public DatabaseConfiguration setUpMultiConfig() throws ConfigurationException {
@@ -221,7 +221,7 @@ public class DatabaseConfigurationTestHelper {
      * @param <T> The type of the result configuration
      * @param configCls the configuration class
      * @param configName the name of the configuration instance or <strong>null</strong> for the default name
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T setUpMultiConfig(final Class<T> configCls, final String configName) throws ConfigurationException {
@@ -232,7 +232,7 @@ public class DatabaseConfigurationTestHelper {
      * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
      *
      * @param configName the name of the configuration instance or <strong>null</strong> for the default name
-     * @return the parameters object
+     * @return The parameters object
      */
     public DatabaseBuilderParameters setUpMultiParameters(final String configName) {
         return setUpDefaultParameters().setTable(TABLE_MULTI).setConfigurationNameColumn(COL_NAME)

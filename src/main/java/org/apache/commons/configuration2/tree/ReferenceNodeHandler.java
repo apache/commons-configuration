@@ -42,7 +42,7 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
      * result is <strong>null</strong>.
      *
      * @param node the node in question
-     * @return the reference object for this node or <strong>null</strong>
+     * @return The reference object for this node or <strong>null</strong>
      */
     Object getReference(ImmutableNode node);
 

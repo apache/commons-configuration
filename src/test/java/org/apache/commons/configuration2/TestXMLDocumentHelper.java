@@ -68,7 +68,7 @@ public class TestXMLDocumentHelper {
      * Serializes the specified document to a string.
      *
      * @param document the document
-     * @return the document serialized to a string
+     * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
     private static String documentToString(final Document document) throws ConfigurationException {
@@ -83,7 +83,7 @@ public class TestXMLDocumentHelper {
      * Serializes the document wrapped by the given helper to a string.
      *
      * @param helper the document helper
-     * @return the document serialized to a string
+     * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
     private static String documentToString(final XMLDocumentHelper helper) throws ConfigurationException {
@@ -121,7 +121,7 @@ public class TestXMLDocumentHelper {
     /**
      * Loads a test XML document.
      *
-     * @return the test document
+     * @return The test document
      */
     private static Document loadDocument() throws ParserConfigurationException, IOException, SAXException {
         return loadDocument(TEST_FILE);
@@ -131,7 +131,7 @@ public class TestXMLDocumentHelper {
      * Loads the test document with the given name.
      *
      * @param name the name of the test document
-     * @return the parsed document
+     * @return The parsed document
      */
     private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
         final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

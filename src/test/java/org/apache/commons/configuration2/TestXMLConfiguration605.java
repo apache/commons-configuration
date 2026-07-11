@@ -51,7 +51,7 @@ public class TestXMLConfiguration605 {
      * Creates a configuration with the specified content and the legacy list delimiter handler.
      *
      * @param content the XML content
-     * @return the newly created configuration
+     * @return The newly created configuration
      */
     private static Configuration create(final String content) throws ConfigurationException {
         final XMLConfiguration config = new XMLConfiguration();
@@ -66,7 +66,7 @@ public class TestXMLConfiguration605 {
      *
      * @param content the XML content
      * @param delimiterHandler the list delimiter handler
-     * @return the newly created configuration
+     * @return The newly created configuration
      */
     private static Configuration create(final String content, final ListDelimiterHandler delimiterHandler) throws ConfigurationException {
         final XMLConfiguration config = new XMLConfiguration();

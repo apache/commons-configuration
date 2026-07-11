@@ -232,7 +232,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Gets the ConfigurationInterpolator.
          *
-         * @return the ConfigurationInterpolator.
+         * @return The ConfigurationInterpolator.
          */
         public ConfigurationInterpolator getInterpolator() {
             return interpolator;
@@ -244,7 +244,7 @@ public class CatalogResolver implements EntityResolver {
          *
          * This method always returns a new instance of the underlying catalog class.
          *
-         * @return the Catalog.
+         * @return The Catalog.
          */
         @Override
         public org.apache.xml.resolver.Catalog getPrivateCatalog() {
@@ -319,7 +319,7 @@ public class CatalogResolver implements EntityResolver {
      * @param fs the {@code FileSystem}
      * @param basePath the base path
      * @param name the file name
-     * @return the URL pointing to the file
+     * @return The URL pointing to the file
      */
     private static URL locate(final FileSystem fs, final String basePath, final String name) {
         return FileLocatorUtils.locate(FileLocatorUtils.fileLocator().fileSystem(fs).basePath(basePath).fileName(name).create());
@@ -358,7 +358,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Gets the logger used by this configuration object.
      *
-     * @return the logger
+     * @return The logger
      */
     public ConfigurationLogger getLogger() {
         return log;

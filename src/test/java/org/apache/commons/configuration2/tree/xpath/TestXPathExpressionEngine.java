@@ -106,7 +106,7 @@ public class TestXPathExpressionEngine {
      * Creates a mock for a context and prepares it to expect a select invocation yielding the provided results.
      *
      * @param results the results
-     * @return the mock context
+     * @return The mock context
      */
     private JXPathContext expectSelect(final Object... results) {
         final JXPathContext ctx = mock(JXPathContext.class);
@@ -120,7 +120,7 @@ public class TestXPathExpressionEngine {
      * Creates a test engine instance configured with a context factory which returns the given test context.
      *
      * @param ctx the context mock
-     * @return the test engine instance
+     * @return The test engine instance
      */
     private XPathExpressionEngine setUpEngine(final JXPathContext ctx) {
         final XPathContextFactory factory = mock(XPathContextFactory.class);

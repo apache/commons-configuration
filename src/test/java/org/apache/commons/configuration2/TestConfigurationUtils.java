@@ -78,7 +78,7 @@ public class TestConfigurationUtils {
         /**
          * Returns a flag whether this object was cloned.
          *
-         * @return the clone flag
+         * @return The clone flag
          */
         public boolean isCloned() {
             return cloned;

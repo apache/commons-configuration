@@ -42,7 +42,7 @@ public class TestImmutableConfiguration {
     /**
      * Creates a test configuration object filled with properties.
      *
-     * @return the test configuration
+     * @return The test configuration
      * @throws ConfigurationException if an error occurs
      */
     private static PropertiesConfiguration createTestConfig() throws ConfigurationException {

@@ -58,7 +58,7 @@ public class TestPropertyListConfiguration {
      *
      * @param config the configuration
      * @param name the name of the desired children
-     * @return the list with the corresponding child nodes
+     * @return The list with the corresponding child nodes
      */
     private static List<ImmutableNode> getNamedChildren(final HierarchicalConfiguration<ImmutableNode> config, final String name) {
         final NodeHandler<ImmutableNode> handler = config.getNodeModel().getNodeHandler();

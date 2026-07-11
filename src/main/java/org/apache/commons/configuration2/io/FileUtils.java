@@ -91,7 +91,7 @@ final class FileUtils {
      * </p>
      *
      * @param url the file URL to convert, {@code null} returns {@code null}
-     * @return the equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
+     * @return The equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
      */
     public static File toFile(final URL url) {
         if (url == null || !Strings.CI.equals("file", url.getProtocol())) {

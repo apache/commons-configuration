@@ -52,7 +52,7 @@ public class TestXMLPropertiesConfiguration {
      * Helper method for loading a configuration file.
      *
      * @param fileName the name of the file to be loaded
-     * @return the configuration instance
+     * @return The configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private static XMLPropertiesConfiguration load(final String fileName) throws ConfigurationException {

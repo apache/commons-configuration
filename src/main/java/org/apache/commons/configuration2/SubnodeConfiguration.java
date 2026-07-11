@@ -120,7 +120,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
      * {@inheritDoc} This implementation returns a copy of the current node model with the same settings. However, it has to
      * be ensured that the track count for the node selector is increased.
      *
-     * @return the node model for the clone
+     * @return The node model for the clone
      */
     @Override
     protected NodeModel<ImmutableNode> cloneNodeModel() {
@@ -162,7 +162,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     /**
      * Gets the parent configuration of this subnode configuration.
      *
-     * @return the parent configuration
+     * @return The parent configuration
      */
     public BaseHierarchicalConfiguration getParent() {
         return parent;
@@ -174,7 +174,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
      * top-level node model can be obtained. It works even in constellations where a {@code SubnodeConfiguration} has been
      * created from another {@code SubnodeConfiguration}.
      *
-     * @return the root node model
+     * @return The root node model
      * @since 2.2
      */
     public InMemoryNodeModel getRootNodeModel() {
@@ -187,7 +187,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     /**
      * Gets the selector to the root node of this configuration.
      *
-     * @return the {@code NodeSelector} to the root node
+     * @return The {@code NodeSelector} to the root node
      */
     public NodeSelector getRootSelector() {
         return rootSelector;
@@ -213,7 +213,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     /**
      * Convenience method that returns the tracked model used by this sub configuration.
      *
-     * @return the {@code TrackedNodeModel}
+     * @return The {@code TrackedNodeModel}
      */
     private TrackedNodeModel getTrackedModel() {
         return (TrackedNodeModel) getModel();

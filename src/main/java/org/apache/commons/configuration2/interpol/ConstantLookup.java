@@ -72,7 +72,7 @@ public class ConstantLookup implements Lookup {
      * ClassUtils</a>.
      *
      * @param className the name of the class to be loaded
-     * @return the corresponding class object
+     * @return The corresponding class object
      * @throws ClassNotFoundException if the class cannot be loaded
      */
     protected Class<?> fetchClass(final String className) throws ClassNotFoundException {
@@ -85,7 +85,7 @@ public class ConstantLookup implements Lookup {
      * will invoke the {@code resolveField()} method and pass in the name of the class and the field.
      *
      * @param var the name of the variable to be resolved
-     * @return the value of this variable or <strong>null</strong> if it cannot be resolved
+     * @return The value of this variable or <strong>null</strong> if it cannot be resolved
      */
     @Override
     public Object lookup(final String var) {
@@ -112,7 +112,7 @@ public class ConstantLookup implements Lookup {
      *
      * @param className the name of the class
      * @param fieldName the name of the member field of that class to read
-     * @return the field's value
+     * @return The field's value
      * @throws Exception if an error occurs
      */
     protected Object resolveField(final String className, final String fieldName) throws Exception {

@@ -52,7 +52,7 @@ public class TestDefaultConfigurationKey {
      * Helper method to create a key instance with the given content.
      *
      * @param k the key for initialization
-     * @return the newly created {@code DefaultConfigurationKey} instance
+     * @return The newly created {@code DefaultConfigurationKey} instance
      */
     private DefaultConfigurationKey key(final String k) {
         return new DefaultConfigurationKey(expressionEngine, k);
@@ -67,7 +67,7 @@ public class TestDefaultConfigurationKey {
     /**
      * Returns a builder for symbols with default property settings.
      *
-     * @return the initialized builder object
+     * @return The initialized builder object
      */
     private DefaultExpressionEngineSymbols.Builder symbols() {
         return new DefaultExpressionEngineSymbols.Builder(expressionEngine.getSymbols());

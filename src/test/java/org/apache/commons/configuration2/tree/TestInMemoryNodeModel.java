@@ -76,7 +76,7 @@ public class TestInMemoryNodeModel {
     /**
      * Creates a mock for a {@code NodeKeyResolver}.
      *
-     * @return the mock for the resolver
+     * @return The mock for the resolver
      */
     @SuppressWarnings("unchecked")
     private static NodeKeyResolver<ImmutableNode> createResolver() {

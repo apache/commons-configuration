@@ -30,7 +30,7 @@ public class TestDefaultExpressionEngineSymbols {
     /**
      * Helper method for creating a builder object which is initialized with the default symbols.
      *
-     * @return the initialized builder
+     * @return The initialized builder
      */
     private static DefaultExpressionEngineSymbols.Builder builder() {
         return new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);

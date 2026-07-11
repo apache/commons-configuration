@@ -160,7 +160,7 @@ public class ConfigurationEvent extends Event {
     /**
      * Gets the name of the affected property. This can be <strong>null</strong> if no property change has lead to this event.
      *
-     * @return the name of the property
+     * @return The name of the property
      */
     public String getPropertyName() {
         return propertyName;
@@ -169,7 +169,7 @@ public class ConfigurationEvent extends Event {
     /**
      * Gets the value of the affected property if available.
      *
-     * @return the value of the property; can be <strong>null</strong>
+     * @return The value of the property; can be <strong>null</strong>
      */
     public Object getPropertyValue() {
         return propertyValue;

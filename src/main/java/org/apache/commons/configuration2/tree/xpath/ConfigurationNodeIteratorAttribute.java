@@ -104,7 +104,7 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     /**
      * Returns the size of the managed iteration.
      *
-     * @return the iteration size
+     * @return The iteration size
      */
     @Override
     protected int size() {

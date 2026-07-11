@@ -209,7 +209,7 @@ public class TestDynamicCombinedConfiguration {
      * configuration and returns it.
      *
      * @param config the configuration
-     * @return the test Synchronizer
+     * @return The test Synchronizer
      */
     private SynchronizerTestImpl prepareSynchronizerTest(final Configuration config) {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();

@@ -69,7 +69,7 @@ public class ConfigurationBuilderEvent extends Event {
     /**
      * Gets the source of this event as a {@code ConfigurationBuilder}.
      *
-     * @return the {@code ConfigurationBuilder} which generated this event
+     * @return The {@code ConfigurationBuilder} which generated this event
      */
     @Override
     public ConfigurationBuilder<?> getSource() {

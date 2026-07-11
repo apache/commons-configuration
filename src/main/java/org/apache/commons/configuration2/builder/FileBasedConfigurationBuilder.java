@@ -60,7 +60,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * class (or one of its super classes), it is returned. Otherwise, result is <strong>null</strong>.
      *
      * @param configClass the configuration class in question
-     * @return the default encoding for this class (may be <strong>null</strong>)
+     * @return The default encoding for this class (may be <strong>null</strong>)
      */
     public static String getDefaultEncoding(final Class<?> configClass) {
         String enc = DEFAULT_ENCODINGS.get(configClass);
@@ -88,7 +88,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Creates a map with default encodings for configuration classes and populates it with default entries.
      *
-     * @return the map with default encodings
+     * @return The map with default encodings
      */
     private static Map<Class<?>, String> initializeDefaultEncodings() {
         final Map<Class<?>, String> enc = new ConcurrentHashMap<>();
@@ -177,7 +177,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * is found in this builder's parameters, a new one is created now and stored. This makes it possible to change the
      * location of the associated file even if no parameters object was provided.
      *
-     * @return the {@code FileHandler} from initialization parameters
+     * @return The {@code FileHandler} from initialization parameters
      */
     private FileHandler fetchFileHandlerFromParameters() {
         FileBasedBuilderParametersImpl fileParams = FileBasedBuilderParametersImpl.fromParameters(getParameters(), false);
@@ -193,7 +193,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * {@code FileHandler} can be used to save it. Otherwise, the {@code FileHandler} from the initialization parameters is
      * returned (which is not associated with a {@code FileBased} object). Result is never <strong>null</strong>.
      *
-     * @return the {@code FileHandler} associated with this builder
+     * @return The {@code FileHandler} associated with this builder
      */
     public synchronized FileHandler getFileHandler() {
         return currentFileHandler != null ? currentFileHandler : fetchFileHandlerFromParameters();

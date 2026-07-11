@@ -38,7 +38,7 @@ public class TestConfigurationConverter {
     /**
      * Creates a configuration object with some test values.
      *
-     * @return the test configuration
+     * @return The test configuration
      */
     private static BaseConfiguration createTestConfiguration() {
         final BaseConfiguration config = new BaseConfiguration();

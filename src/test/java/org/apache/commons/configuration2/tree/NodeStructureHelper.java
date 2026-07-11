@@ -87,7 +87,7 @@ public final class NodeStructureHelper {
      *
      * @param path the path
      * @param component the component to be added
-     * @return the resulting path
+     * @return The resulting path
      */
     public static String appendPath(final String path, final String component) {
         final StringBuilder buf = new StringBuilder(StringUtils.length(path) + StringUtils.length(component) + 1);
@@ -99,7 +99,7 @@ public final class NodeStructureHelper {
      * Returns the name of the author at the given index.
      *
      * @param idx the index
-     * @return the name of this author
+     * @return The name of this author
      */
     public static String author(final int idx) {
         return AUTHORS[idx];
@@ -108,7 +108,7 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of authors.
      *
-     * @return the number of authors
+     * @return The number of authors
      */
     public static int authorsLength() {
         return AUTHORS.length;
@@ -118,7 +118,7 @@ public final class NodeStructureHelper {
      * Creates a tree with a root node whose children are the test authors. Each other has his works as child nodes. Each
      * work has its personae as children.
      *
-     * @return the root node of the authors tree
+     * @return The root node of the authors tree
      */
     private static ImmutableNode createAuthorsTree() {
         final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(AUTHORS.length);
@@ -143,7 +143,7 @@ public final class NodeStructureHelper {
      * define a single column of a table.
      *
      * @param name the name of the field
-     * @return the field node
+     * @return The field node
      */
     public static ImmutableNode createFieldNode(final String name) {
         final ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
@@ -156,7 +156,7 @@ public final class NodeStructureHelper {
      *
      * @param name the node's name
      * @param value the node's value
-     * @return the new node
+     * @return The new node
      */
     public static ImmutableNode createNode(final String name, final Object value) {
         return new ImmutableNode.Builder().name(name).value(value).create();
@@ -167,7 +167,7 @@ public final class NodeStructureHelper {
      * attribute pointing to the author who invented this person. There is a single child node for the associated work which
      * has again a child and an attribute.
      *
-     * @return the root node of the personae tree
+     * @return The root node of the personae tree
      */
     private static ImmutableNode createPersonaeTree() {
         final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
@@ -189,7 +189,7 @@ public final class NodeStructureHelper {
     /**
      * Creates a mock for a resolver.
      *
-     * @return the resolver mock
+     * @return The resolver mock
      */
     @SuppressWarnings("unchecked")
     public static NodeKeyResolver<ImmutableNode> createResolverMock() {
@@ -201,7 +201,7 @@ public final class NodeStructureHelper {
      *
      * tables table name fields field name field name
      *
-     * @return the resulting nodes structure
+     * @return The resulting nodes structure
      */
     private static ImmutableNode createTablesTree() {
         return createTablesTree(TABLES, FIELDS);
@@ -213,7 +213,7 @@ public final class NodeStructureHelper {
      *
      * @param tables an array with the names of the tables
      * @param fields an array with the fields of the single tables
-     * @return the resulting nodes structure
+     * @return The resulting nodes structure
      */
     public static ImmutableNode createTablesTree(final String[] tables, final String[][] fields) {
         final ImmutableNode.Builder bldTables = new ImmutableNode.Builder(tables.length);
@@ -238,7 +238,7 @@ public final class NodeStructureHelper {
      *
      * @param tabIdx the index of the table
      * @param fldIdx the index of the field
-     * @return the name of this field
+     * @return The name of this field
      */
     public static String field(final int tabIdx, final int fldIdx) {
         return FIELDS[tabIdx][fldIdx];
@@ -248,7 +248,7 @@ public final class NodeStructureHelper {
      * Returns the number of fields in the test table with the given index.
      *
      * @param tabIdx the index of the table
-     * @return the number of fields in this table
+     * @return The number of fields in this table
      */
     public static int fieldsLength(final int tabIdx) {
         return FIELDS[tabIdx].length;
@@ -260,7 +260,7 @@ public final class NodeStructureHelper {
      * @param parent the current parent node
      * @param components the array with the components of the node key
      * @param currentIdx the index of the current path component
-     * @return the found target node
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     private static ImmutableNode findNode(final ImmutableNode parent, final String[] components, final int currentIdx) {
@@ -292,7 +292,7 @@ public final class NodeStructureHelper {
      * Returns a clone of the array with the table fields. This is useful if a slightly different tree structure should be
      * created.
      *
-     * @return the cloned field names
+     * @return The cloned field names
      */
     public static String[][] getClonedFields() {
         final String[][] fieldNamesNew = new String[FIELDS.length][];
@@ -306,7 +306,7 @@ public final class NodeStructureHelper {
      * Returns a clone of the array with the table names. This is useful if a slightly different tree structure should be
      * created.
      *
-     * @return the cloned table names
+     * @return The cloned table names
      */
     public static String[] getClonedTables() {
         return TABLES.clone();
@@ -319,7 +319,7 @@ public final class NodeStructureHelper {
      *
      * @param root the root node
      * @param key the key to the desired node
-     * @return the node with this key
+     * @return The node with this key
      * @throws NoSuchElementException if the key cannot be resolved
      */
     public static ImmutableNode nodeForKey(final ImmutableNode root, final String key) {
@@ -333,7 +333,7 @@ public final class NodeStructureHelper {
      *
      * @param model the node model
      * @param key the key to the desired node
-     * @return the found target node
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     public static ImmutableNode nodeForKey(final InMemoryNodeModel model, final String key) {
@@ -347,7 +347,7 @@ public final class NodeStructureHelper {
      *
      * @param handler the {@code NodeHandler} object
      * @param key the key to the desired node
-     * @return the found target node
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     public static ImmutableNode nodeForKey(final NodeHandler<ImmutableNode> handler, final String key) {
@@ -358,7 +358,7 @@ public final class NodeStructureHelper {
      * Convenience method for creating a path for accessing a node based on the node names.
      *
      * @param path an array with the expected node names on the path
-     * @return the resulting path as string
+     * @return The resulting path as string
      */
     public static String nodePath(final String... path) {
         return StringUtils.join(path, PATH_SEPARATOR);
@@ -369,7 +369,7 @@ public final class NodeStructureHelper {
      *
      * @param endNode the name of the last path component
      * @param path an array with the expected node names on the path
-     * @return the resulting path as string
+     * @return The resulting path as string
      */
     public static String nodePathWithEndNode(final String endNode, final String... path) {
         return nodePath(path) + PATH_SEPARATOR + endNode;
@@ -381,7 +381,7 @@ public final class NodeStructureHelper {
      * @param authorIdx the author index
      * @param workIdx the index of the work
      * @param personaIdx the index of the persona
-     * @return the name of this persona
+     * @return The name of this persona
      */
     public static String persona(final int authorIdx, final int workIdx, final int personaIdx) {
         return PERSONAE[authorIdx][workIdx][personaIdx];
@@ -392,7 +392,7 @@ public final class NodeStructureHelper {
      *
      * @param authorIdx the author index
      * @param workIdx the index of the work
-     * @return the number of personae in this work
+     * @return The number of personae in this work
      */
     public static int personaeLength(final int authorIdx, final int workIdx) {
         return PERSONAE[authorIdx][workIdx].length;
@@ -432,7 +432,7 @@ public final class NodeStructureHelper {
      * Returns the name of the test table with the given index.
      *
      * @param idx the index of the table
-     * @return the name of the test table with this index
+     * @return The name of the test table with this index
      */
     public static String table(final int idx) {
         return TABLES[idx];
@@ -441,7 +441,7 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of tables in the tables tree.
      *
-     * @return the number of tables
+     * @return The number of tables
      */
     public static int tablesLength() {
         return TABLES.length;
@@ -452,7 +452,7 @@ public final class NodeStructureHelper {
      *
      * @param authorIdx the author index
      * @param idx the index of the work
-     * @return the desired work
+     * @return The desired work
      */
     public static String work(final int authorIdx, final int idx) {
         return WORKS[authorIdx][idx];
@@ -462,7 +462,7 @@ public final class NodeStructureHelper {
      * Returns the number of works for the author with the given index.
      *
      * @param authorIdx the author index
-     * @return the number of works of this author
+     * @return The number of works of this author
      */
     public static int worksLength(final int authorIdx) {
         return WORKS[authorIdx].length;

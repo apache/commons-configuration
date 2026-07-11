@@ -36,7 +36,7 @@ public class TestConfigurationDeclaration {
      * Creates a default test instance.
      *
      * @param conf the configuration to be used (may be <strong>null</strong> for a default one)
-     * @return the test object
+     * @return The test object
      */
     private static ConfigurationDeclaration createDeclaration(final HierarchicalConfiguration<?> conf) {
         final HierarchicalConfiguration<?> config = conf != null ? conf : new BaseHierarchicalConfiguration();

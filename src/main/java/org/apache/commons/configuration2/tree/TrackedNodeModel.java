@@ -171,7 +171,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * Gets the parent model. Operations on this model are delegated to this parent model specifying the selector to the
      * tracked node.
      *
-     * @return the parent model
+     * @return The parent model
      */
     public InMemoryNodeModel getParentModel() {
         return getParentModelSupport().getNodeModel();
@@ -180,7 +180,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Gets the {@code InMemoryNodeModelSupport} object which is used to gain access to the underlying node model.
      *
-     * @return the associated {@code InMemoryNodeModelSupport} object
+     * @return The associated {@code InMemoryNodeModelSupport} object
      */
     public InMemoryNodeModelSupport getParentModelSupport() {
         return parentModelSupport;
@@ -189,7 +189,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Gets the {@code NodeSelector} pointing to the tracked node managed by this model.
      *
-     * @return the tracked node selector
+     * @return The tracked node selector
      */
     public NodeSelector getSelector() {
         return selector;

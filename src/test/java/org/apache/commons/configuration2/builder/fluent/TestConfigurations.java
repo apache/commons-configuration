@@ -62,7 +62,7 @@ public class TestConfigurations {
      * Generates an absolute path for the test file with the given name.
      *
      * @param name the name of the test file
-     * @return the full path to this file
+     * @return The full path to this file
      */
     private static String absolutePath(final String name) {
         return ConfigurationAssert.getTestFile(name).getAbsolutePath();

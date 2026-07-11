@@ -146,7 +146,7 @@ public final class ConfigurationUtils {
      * Errors that occur during the cloning process are re-thrown as runtime exceptions.
      *
      * @param obj the object to be cloned or null.
-     * @return the cloned object or null.
+     * @return The cloned object or null.
      * @throws CloneNotSupportedException if the object cannot be cloned.
      */
     @SuppressWarnings("unchecked")
@@ -171,7 +171,7 @@ public final class ConfigurationUtils {
      * {@code Cloneable} interface, its {@code clone()} method will be invoked. Otherwise an exception will be thrown.
      *
      * @param config the configuration object to be cloned (can be <strong>null</strong>).
-     * @return the cloned configuration (<strong>null</strong> if the argument was <strong>null</strong>, too).
+     * @return The cloned configuration (<strong>null</strong> if the argument was <strong>null</strong>, too).
      * @throws ConfigurationRuntimeException if cloning is not supported for this object.
      * @since 1.3
      */
@@ -190,7 +190,7 @@ public final class ConfigurationUtils {
      * caught and also cause this method to return the original object.
      *
      * @param obj the object to be cloned.
-     * @return the result of the cloning attempt.
+     * @return The result of the cloning attempt.
      * @since 2.0
      */
     public static Object cloneIfPossible(final Object obj) {
@@ -213,7 +213,7 @@ public final class ConfigurationUtils {
      * If all attempts fail, a {@code ConfigurationRuntimeException} is thrown.
      *
      * @param sync the {@code Synchronizer} object to be cloned.
-     * @return the clone of this {@code Synchronizer}.
+     * @return The clone of this {@code Synchronizer}.
      * @throws ConfigurationRuntimeException if no clone can be created.
      * @throws IllegalArgumentException if <strong>null</strong> is passed in.
      */
@@ -240,7 +240,7 @@ public final class ConfigurationUtils {
      * directly returned. Otherwise all properties are copied into a new hierarchical configuration.
      *
      * @param conf the configuration to convert.
-     * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
+     * @return The new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
      *         <strong>null</strong>).
      * @since 1.3
      */
@@ -260,7 +260,7 @@ public final class ConfigurationUtils {
      *
      * @param conf the configuration to convert.
      * @param engine the {@code ExpressionEngine} for the hierarchical configuration or <strong>null</strong> for the default.
-     * @return the new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
+     * @return The new hierarchical configuration (the result is <strong>null</strong> if and only if the passed in configuration is
      *         <strong>null</strong>).
      * @since 1.6
      */
@@ -414,7 +414,7 @@ public final class ConfigurationUtils {
      * tries the current thread's context class loader. If this fails, the class loader of this class is tried.
      *
      * @param clsName the name of the class to be loaded.
-     * @return the loaded class.
+     * @return The loaded class.
      * @throws ClassNotFoundException if the class cannot be resolved.
      * @since 2.0
      */
@@ -439,7 +439,7 @@ public final class ConfigurationUtils {
      * {@code ConfigurationRuntimeException}.
      *
      * @param clsName the name of the class to be loaded.
-     * @return the loaded class.
+     * @return The loaded class.
      * @throws ConfigurationRuntimeException if the class cannot be resolved.
      * @since 2.0
      */

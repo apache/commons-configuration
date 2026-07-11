@@ -108,7 +108,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * properly escaped.
      *
      * @param s the string to be escaped (not <strong>null</strong>)
-     * @return the escaped string
+     * @return The escaped string
      */
     protected abstract String escapeString(String s);
 

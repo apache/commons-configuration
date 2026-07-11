@@ -166,7 +166,7 @@ final class XMLListReference {
     /**
      * Gets the associated element.
      *
-     * @return the associated XML element
+     * @return The associated XML element
      */
     public Element getElement() {
         return element;

@@ -60,7 +60,7 @@ public class TestHomeDirectoryLocationStrategy {
      * Creates a strategy test object which uses the temporary root directory as its home directory.
      *
      * @param withBasePath the base path flag
-     * @return the test strategy
+     * @return The test strategy
      */
     private HomeDirectoryLocationStrategy setUpStrategy(final boolean withBasePath) {
         return new HomeDirectoryLocationStrategy(tempFolder.getAbsolutePath(), withBasePath);

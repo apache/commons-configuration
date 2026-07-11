@@ -62,7 +62,7 @@ public class TestTrackedNodeModel {
     /**
      * Creates a mock for a node handler and prepares the parent model to expect a request for the tracked node handler.
      *
-     * @return the mock for the node handler
+     * @return The mock for the node handler
      */
     private NodeHandler<ImmutableNode> prepareGetNodeHandler() {
         @SuppressWarnings("unchecked")
@@ -82,7 +82,7 @@ public class TestTrackedNodeModel {
     /**
      * Creates a test model with default settings.
      *
-     * @return the test model
+     * @return The test model
      */
     private TrackedNodeModel setUpModel() {
         return new TrackedNodeModel(modelSupport, selector, true);

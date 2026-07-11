@@ -66,7 +66,7 @@ public class TestInMemoryNodeModelReferences {
     /**
      * Creates the initial reference data for the test hierarchy.
      *
-     * @return the map with reference data
+     * @return The map with reference data
      */
     private Map<ImmutableNode, String> createReferences() {
         final Collection<ImmutableNode> nodes = collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);

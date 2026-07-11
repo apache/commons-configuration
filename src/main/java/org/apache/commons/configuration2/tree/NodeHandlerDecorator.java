@@ -75,7 +75,7 @@ public abstract class NodeHandlerDecorator<T> implements NodeHandler<T> {
      * Gets the {@code NodeHandler} object that is decorated by this instance. All method calls are delegated to this
      * object.
      *
-     * @return the decorated {@code NodeHandler}
+     * @return The decorated {@code NodeHandler}
      */
     protected abstract NodeHandler<T> getDecoratedNodeHandler();
 

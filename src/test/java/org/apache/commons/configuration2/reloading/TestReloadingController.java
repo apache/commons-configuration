@@ -42,7 +42,7 @@ public class TestReloadingController {
     /**
      * Creates a mock event listener.
      *
-     * @return the mock listener
+     * @return The mock listener
      */
     @SuppressWarnings("unchecked")
     private static EventListener<ReloadingEvent> createListenerMock() {
@@ -55,7 +55,7 @@ public class TestReloadingController {
     /**
      * Creates a default test instance.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private ReloadingController createController() {
         return new ReloadingController(detector);

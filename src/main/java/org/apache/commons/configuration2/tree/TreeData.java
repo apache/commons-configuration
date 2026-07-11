@@ -39,7 +39,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      *
      * @param replace the replacement node
      * @param mapping the replacement mapping
-     * @return the corresponding node according to the mapping
+     * @return The corresponding node according to the mapping
      */
     private static ImmutableNode handleReplacements(final ImmutableNode replace, final Map<ImmutableNode, ImmutableNode> mapping) {
         ImmutableNode node = replace;
@@ -96,7 +96,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Returns a copy of the mapping from nodes to their parents.
      *
-     * @return the copy of the parent mapping
+     * @return The copy of the parent mapping
      */
     public Map<ImmutableNode, ImmutableNode> copyParentMapping() {
         return new HashMap<>(parentMapping);
@@ -105,7 +105,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Returns a copy of the map storing the replaced nodes.
      *
-     * @return the copy of the replacement mapping
+     * @return The copy of the replacement mapping
      */
     public Map<ImmutableNode, ImmutableNode> copyReplacementMapping() {
         return new HashMap<>(replacementMapping);
@@ -115,7 +115,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * Creates the inverse replacement mapping.
      *
      * @param replacements the original replacement mapping
-     * @return the inverse replacement mapping
+     * @return The inverse replacement mapping
      */
     private Map<ImmutableNode, ImmutableNode> createInverseMapping(final Map<ImmutableNode, ImmutableNode> replacements) {
         return replacements.entrySet().stream().collect(Collectors.toMap(Entry::getValue, Entry::getKey));
@@ -124,7 +124,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Gets the {@code NodeTracker}
      *
-     * @return the {@code NodeTracker}
+     * @return The {@code NodeTracker}
      */
     public NodeTracker getNodeTracker() {
         return nodeTracker;
@@ -135,7 +135,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * be resolved, an exception is thrown.
      *
      * @param node the node in question
-     * @return the parent node for this node
+     * @return The parent node for this node
      * @throws IllegalArgumentException if the node cannot be resolved
      */
     @Override
@@ -163,7 +163,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Gets the {@code ReferenceTracker}.
      *
-     * @return the {@code ReferenceTracker}
+     * @return The {@code ReferenceTracker}
      */
     public ReferenceTracker getReferenceTracker() {
         return referenceTracker;
@@ -187,7 +187,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * the state of tracked nodes.
      *
      * @param newTracker the new {@code NodeTracker}
-     * @return the updated instance
+     * @return The updated instance
      */
     public TreeData updateNodeTracker(final NodeTracker newTracker) {
         return new TreeData(root, parentMapping, replacementMapping, newTracker, referenceTracker);
@@ -198,7 +198,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * method is called when there updates for references.
      *
      * @param newTracker the new {@code ReferenceTracker}
-     * @return the updated instance
+     * @return The updated instance
      */
     public TreeData updateReferenceTracker(final ReferenceTracker newTracker) {
         return new TreeData(root, parentMapping, replacementMapping, nodeTracker, newTracker);

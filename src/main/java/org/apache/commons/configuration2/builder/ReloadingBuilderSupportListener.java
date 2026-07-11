@@ -48,7 +48,7 @@ final class ReloadingBuilderSupportListener implements EventListener<Event> {
      *
      * @param configBuilder the {@code ConfigurationBuilder}
      * @param controller the {@code ReloadingController}
-     * @return the newly created listener object
+     * @return The newly created listener object
      */
     public static ReloadingBuilderSupportListener connect(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
         final ReloadingBuilderSupportListener listener = new ReloadingBuilderSupportListener(configBuilder, controller);

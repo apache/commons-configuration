@@ -95,7 +95,7 @@ public class ExprLookup implements Lookup {
         /**
          * Gets the name to be used in expressions.
          *
-         * @return the name to be used in expressions.
+         * @return The name to be used in expressions.
          */
         public String getName() {
             return key;
@@ -104,7 +104,7 @@ public class ExprLookup implements Lookup {
         /**
          * Sets the value to be used in expressions.
          *
-         * @return the value to be used in expressions.
+         * @return The value to be used in expressions.
          */
         public Object getValue() {
             return value;
@@ -174,7 +174,7 @@ public class ExprLookup implements Lookup {
         /**
          * Gets the variable or null if empty.
          *
-         * @return the variable or null if empty.
+         * @return The variable or null if empty.
          */
         public Variable getVariable() {
             return !isEmpty() ? get(size() - 1) : null;
@@ -243,7 +243,7 @@ public class ExprLookup implements Lookup {
     /**
      * Creates a new {@code JexlContext} and initializes it with the variables managed by this Lookup object.
      *
-     * @return the newly created context
+     * @return The newly created context
      */
     private JexlContext createContext() {
         final JexlContext ctx = new MapContext();
@@ -254,7 +254,7 @@ public class ExprLookup implements Lookup {
     /**
      * Gets the {@code ConfigurationInterpolator} used by this object.
      *
-     * @return the {@code ConfigurationInterpolator}
+     * @return The {@code ConfigurationInterpolator}
      * @since 2.0
      */
     public ConfigurationInterpolator getInterpolator() {
@@ -264,7 +264,7 @@ public class ExprLookup implements Lookup {
     /**
      * Gets the logger used by this object.
      *
-     * @return the {@code Log}
+     * @return The {@code Log}
      * @since 2.0
      */
     public ConfigurationLogger getLogger() {
@@ -275,7 +275,7 @@ public class ExprLookup implements Lookup {
      * Gets the list of Variables that are accessible within expressions. This method returns a copy of the variables
      * managed by this lookup; so modifying this object has no impact on this lookup.
      *
-     * @return the List of Variables that are accessible within expressions.
+     * @return The List of Variables that are accessible within expressions.
      */
     public Variables getVariables() {
         return new Variables(variables);

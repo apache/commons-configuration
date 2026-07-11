@@ -52,7 +52,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
      * Creates a new {@code NodeHandler} object for the specified nodes structure.
      *
      * @param root the root of the nodes structure
-     * @return the handler object
+     * @return The handler object
      */
     protected abstract NodeHandler<ImmutableNode> createHandler(ImmutableNode root);
 

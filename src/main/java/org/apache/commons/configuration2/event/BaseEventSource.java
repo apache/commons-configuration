@@ -110,7 +110,7 @@ public class BaseEventSource implements EventSource {
      * Overrides the {@code clone()} method to correctly handle so far registered event listeners. This implementation ensures that the clone will have empty
      * event listener lists, i.e. the listeners registered at an {@code BaseEventSource} object will not be copied.
      *
-     * @return the cloned object
+     * @return The cloned object
      * @throws CloneNotSupportedException if the object's class does not support the {@code Cloneable} interface. Subclasses that override the {@code clone}
      *                                    method can also throw this exception to indicate that an instance cannot be cloned.
      * @since 1.4
@@ -145,7 +145,7 @@ public class BaseEventSource implements EventSource {
      * @param propName the name of the affected property (can be <strong>null</strong>)
      * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param ex the {@code Throwable} object that caused this error event
-     * @return the event object
+     * @return The event object
      */
     protected ConfigurationErrorEvent createErrorEvent(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType,
         final String propName, final Object propValue, final Throwable ex) {
@@ -161,7 +161,7 @@ public class BaseEventSource implements EventSource {
      * @param propValue the value of the affected property (can be <strong>null</strong>)
      * @param before the before update flag
      * @param <T> The type of the event to be created
-     * @return the newly created event object
+     * @return The newly created event object
      */
     protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(final EventType<T> type, final String propName, final Object propValue,
         final boolean before) {

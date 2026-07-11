@@ -65,7 +65,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * collection.
      *
      * @param managedBuilders a collection in which to store managed builders
-     * @return the test builder instance
+     * @return The test builder instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createBuilderWithAccessToManagedBuilders(
         final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders) {
@@ -86,7 +86,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * Creates a test builder object with default settings.
      *
      * @param managedParams the parameters for managed configurations
-     * @return the test instance
+     * @return The test instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(final BuilderParameters managedParams) {
         return new MultiFileConfigurationBuilder<>(XMLConfiguration.class).configure(createTestBuilderParameters(managedParams));

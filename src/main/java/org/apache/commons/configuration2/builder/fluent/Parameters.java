@@ -142,7 +142,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for basic configuration properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public BasicBuilderParameters basic() {
         return new BasicBuilderParameters();
@@ -151,7 +151,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for combined configuration builder properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public CombinedBuilderParameters combined() {
         return createParametersProxy(new CombinedBuilderParametersImpl(), CombinedBuilderParameters.class);
@@ -165,7 +165,7 @@ public final class Parameters {
      * @param target the implementing target object
      * @param ifcClass the interface class
      * @param superIfcs an array with additional interface classes to be implemented
-     * @return the proxy object
+     * @return The proxy object
      */
     private <T> T createParametersProxy(final Object target, final Class<T> ifcClass, final Class<?>... superIfcs) {
         final Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
@@ -179,7 +179,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for database configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public DatabaseBuilderParameters database() {
         return createParametersProxy(new DatabaseBuilderParametersImpl(), DatabaseBuilderParameters.class);
@@ -188,7 +188,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for file-based configuration properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public FileBasedBuilderParameters fileBased() {
         return createParametersProxy(new FileBasedBuilderParametersImpl(), FileBasedBuilderParameters.class);
@@ -197,7 +197,7 @@ public final class Parameters {
     /**
      * Gets the {@code DefaultParametersManager} associated with this object.
      *
-     * @return the {@code DefaultParametersManager}
+     * @return The {@code DefaultParametersManager}
      */
     public DefaultParametersManager getDefaultParametersManager() {
         return defaultParametersManager;
@@ -206,7 +206,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for hierarchical configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public HierarchicalBuilderParameters hierarchical() {
         return createParametersProxy(new HierarchicalBuilderParametersImpl(), HierarchicalBuilderParameters.class, FileBasedBuilderParameters.class);
@@ -215,7 +215,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for INI configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public INIBuilderParameters ini() {
         return createParametersProxy(new INIBuilderParametersImpl(), INIBuilderParameters.class, FileBasedBuilderParameters.class,
@@ -225,7 +225,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for JNDI configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public JndiBuilderParameters jndi() {
         return createParametersProxy(new JndiBuilderParametersImpl(), JndiBuilderParameters.class);
@@ -234,7 +234,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for a builder for multiple file-based configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public MultiFileBuilderParameters multiFile() {
         return createParametersProxy(new MultiFileBuilderParametersImpl(), MultiFileBuilderParameters.class);
@@ -243,7 +243,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for properties configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public PropertiesBuilderParameters properties() {
         return createParametersProxy(new PropertiesBuilderParametersImpl(), PropertiesBuilderParameters.class, FileBasedBuilderParameters.class);
@@ -282,7 +282,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for XML configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public XMLBuilderParameters xml() {
         return createParametersProxy(new XMLBuilderParametersImpl(), XMLBuilderParameters.class, FileBasedBuilderParameters.class,

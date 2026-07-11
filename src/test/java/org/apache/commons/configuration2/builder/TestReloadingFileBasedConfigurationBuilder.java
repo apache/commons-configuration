@@ -76,7 +76,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
         /**
          * Returns the file handler that was passed to createReloadingDetector().
          *
-         * @return the file handler
+         * @return The file handler
          */
         public FileHandler getHandlerForDetector() {
             return handlerForDetector;

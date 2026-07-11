@@ -50,7 +50,7 @@ public interface ExpressionEngine {
      *
      * @param parentKey the key to the node owning this attribute
      * @param attributeName the name of the attribute in question
-     * @return the resulting key referencing this attribute
+     * @return The resulting key referencing this attribute
      */
     String attributeKey(String parentKey, String attributeName);
 
@@ -64,7 +64,7 @@ public interface ExpressionEngine {
      * @param node the node, for which the key must be constructed
      * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
      * @param handler the {@code NodeHandler} for accessing the node
-     * @return the canonical key of this node
+     * @return The canonical key of this node
      */
     <T> String canonicalKey(T node, String parentKey, NodeHandler<T> handler);
 

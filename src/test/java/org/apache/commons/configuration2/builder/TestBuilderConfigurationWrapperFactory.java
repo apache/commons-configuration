@@ -51,7 +51,7 @@ public class TestBuilderConfigurationWrapperFactory {
      * Returns a mock builder which always returns the specified configuration.
      *
      * @param conf the builder's result configuration
-     * @return the mock builder
+     * @return The mock builder
      */
     private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(final BaseHierarchicalConfiguration conf) {
         @SuppressWarnings("unchecked")

@@ -85,7 +85,7 @@ public class Event extends EventObject {
     /**
      * Gets the type of this event.
      *
-     * @return the event type
+     * @return The event type
      */
     public EventType<? extends Event> getEventType() {
         return eventType;

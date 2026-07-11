@@ -47,7 +47,7 @@ public abstract class AbstractCombinerTest {
     /**
      * Constructs a union configuration based on the source configurations.
      *
-     * @return the union configuration
+     * @return The union configuration
      * @throws ConfigurationException if an error occurs
      */
     protected BaseHierarchicalConfiguration createCombinedConfiguration() throws ConfigurationException {
@@ -67,7 +67,7 @@ public abstract class AbstractCombinerTest {
      * Creates the combiner to be tested. This method is called by {@code setUp()}. It must be implemented in concrete sub
      * classes.
      *
-     * @return the combiner to be tested
+     * @return The combiner to be tested
      */
     protected abstract NodeCombiner createCombiner();
 

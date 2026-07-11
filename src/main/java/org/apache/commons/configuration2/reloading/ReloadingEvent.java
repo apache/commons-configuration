@@ -57,7 +57,7 @@ public class ReloadingEvent extends Event {
     /**
      * Gets the {@code ReloadingController} which caused this event.
      *
-     * @return the responsible {@code ReloadingController}
+     * @return The responsible {@code ReloadingController}
      */
     public ReloadingController getController() {
         return (ReloadingController) getSource();

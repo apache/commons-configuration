@@ -141,7 +141,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
     /**
      * Gets a (unmodifiable) collection with the sub strategies managed by this object.
      *
-     * @return the sub {@code FileLocationStrategy} objects
+     * @return The sub {@code FileLocationStrategy} objects
      */
     public Collection<FileLocationStrategy> getSubStrategies() {
         return subStrategies;

@@ -122,7 +122,7 @@ public class NodeSelector {
      * @param root the root node on which to apply this selector
      * @param resolver the {@code NodeKeyResolver}
      * @param handler the {@code NodeHandler}
-     * @return the selected target node or <strong>null</strong>
+     * @return The selected target node or <strong>null</strong>
      */
     public ImmutableNode select(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler) {
         List<ImmutableNode> nodes = new LinkedList<>();
@@ -144,7 +144,7 @@ public class NodeSelector {
      * criteria. This is useful when another selection is to be performed on the results of a first selector.
      *
      * @param subKey the additional key for the sub selector
-     * @return the sub {@code NodeSelector} instance
+     * @return The sub {@code NodeSelector} instance
      */
     public NodeSelector subSelector(final String subKey) {
         final List<String> keys = new ArrayList<>(nodeKeys.size() + 1);

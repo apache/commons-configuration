@@ -87,7 +87,7 @@ public class OverrideCombiner extends NodeCombiner {
      *
      * @param node1 the first node
      * @param node2 the second node
-     * @return the resulting combined node structure
+     * @return The resulting combined node structure
      */
     @Override
     public ImmutableNode combine(final ImmutableNode node1, final ImmutableNode node2) {

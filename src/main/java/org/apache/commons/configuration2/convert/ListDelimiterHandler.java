@@ -66,7 +66,7 @@ public interface ListDelimiterHandler {
      *
      * @param value the value to be escaped
      * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
-     * @return the escaped value
+     * @return The escaped value
      */
     Object escape(Object value, ValueTransformer transformer);
 
@@ -77,7 +77,7 @@ public interface ListDelimiterHandler {
      *
      * @param values the list with all the values to be converted to a single value
      * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
-     * @return the resulting escaped value
+     * @return The resulting escaped value
      */
     Object escapeList(List<?> values, ValueTransformer transformer);
 

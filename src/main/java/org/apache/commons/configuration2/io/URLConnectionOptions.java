@@ -77,7 +77,7 @@ public final class URLConnectionOptions {
      * Applies the options to the given connection.
      *
      * @param urlConnection the target connection.
-     * @return the given connection.
+     * @return The given connection.
      */
     public URLConnection apply(final URLConnection urlConnection) {
         urlConnection.setUseCaches(useCaches);
@@ -111,7 +111,7 @@ public final class URLConnectionOptions {
     /**
      * Gets the connect timeout.
      *
-     * @return the connect timeout.
+     * @return The connect timeout.
      */
     public int getConnectTimeoutMillis() {
         return connectTimeoutMillis;
@@ -120,7 +120,7 @@ public final class URLConnectionOptions {
     /**
      * Gets the read timeout.
      *
-     * @return the read timeout.
+     * @return The read timeout.
      */
     public int getReadTimeoutMillis() {
         return readTimeoutMillis;

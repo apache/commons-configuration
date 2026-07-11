@@ -52,7 +52,7 @@ public class ConfigurationLookup implements Lookup {
     /**
      * Gets the {@code ImmutableConfiguration} used by this object.
      *
-     * @return the associated {@code ImmutableConfiguration}
+     * @return The associated {@code ImmutableConfiguration}
      */
     public ImmutableConfiguration getConfiguration() {
         return configuration;

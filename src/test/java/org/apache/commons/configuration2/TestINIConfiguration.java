@@ -184,7 +184,7 @@ public class TestINIConfiguration {
      * a configuration.
      *
      * @param config the configuration to be saved
-     * @return the content of this configuration saved to a string
+     * @return The content of this configuration saved to a string
      * @throws ConfigurationException if an error occurs
      */
     private static String saveToString(final INIConfiguration config) throws ConfigurationException {
@@ -201,7 +201,7 @@ public class TestINIConfiguration {
      * Creates a INIConfiguration object that is initialized from the given data.
      *
      * @param data the data of the configuration (an ini file as string)
-     * @return the initialized configuration
+     * @return The initialized configuration
      * @throws ConfigurationException if an error occurs
      */
     private static INIConfiguration setUpConfig(final String data) throws ConfigurationException {
@@ -213,7 +213,7 @@ public class TestINIConfiguration {
      *
      * @param data the data of the configuration (an ini file as string)
      * @param inLineCommentsAllowed when true, inline comments on section line are allowed
-     * @return the initialized configuration
+     * @return The initialized configuration
      * @throws ConfigurationException if an error occurs
      */
     private static INIConfiguration setUpConfig(final String data, final boolean inLineCommentsAllowed) throws ConfigurationException {
@@ -285,7 +285,7 @@ public class TestINIConfiguration {
      *
      * @param data the data of the ini configuration
      * @param expected the expected section names
-     * @return the configuration instance
+     * @return The configuration instance
      */
     private INIConfiguration checkSectionNames(final String data, final String[] expected) throws ConfigurationException {
         final INIConfiguration config = setUpConfig(data);
@@ -1108,7 +1108,7 @@ public class TestINIConfiguration {
      * Writes a test ini file.
      *
      * @param content the content of the file
-     * @return the newly created file
+     * @return The newly created file
      * @throws IOException if an error occurs
      */
     private File writeTestFile(final String content) throws IOException {

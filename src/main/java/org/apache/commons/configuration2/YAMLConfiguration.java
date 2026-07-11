@@ -44,7 +44,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
      * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
      *
      * @param options options for loading the file
-     * @return the {@code Yaml} instance for loading a file
+     * @return The {@code Yaml} instance for loading a file
      */
     private static Yaml createYamlForReading(final LoaderOptions options) {
         return new Yaml(new SafeConstructor(options), new Representer(new DumperOptions()), new DumperOptions(), options);

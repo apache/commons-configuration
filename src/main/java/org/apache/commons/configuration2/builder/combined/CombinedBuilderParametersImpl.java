@@ -57,7 +57,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * {@code fromParameters(params, false);}
      *
      * @param params the map with parameters (must not be <strong>null</strong>
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params) {
@@ -72,7 +72,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * @param params the map with parameters (must not be <strong>null</strong>
      * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
      *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
@@ -127,7 +127,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Gets the base path for relative names of configuration sources. Result may be <strong>null</strong> if no base path has been
      * set.
      *
-     * @return the base path for resolving relative file names
+     * @return The base path for resolving relative file names
      */
     public String getBasePath() {
         return basePath;
@@ -137,7 +137,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Gets the {@code DefaultParametersManager} object for initializing parameter objects for child configuration
      * sources. This method never returns <strong>null</strong>. If no manager was set, a new instance is created right now.
      *
-     * @return the {@code DefaultParametersManager} for child configuration sources
+     * @return The {@code DefaultParametersManager} for child configuration sources
      */
     public DefaultParametersManager getChildDefaultParametersManager() {
         if (childDefaultParametersManager == null) {
@@ -160,7 +160,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets the {@code ConfigurationBuilder} object for obtaining the definition configuration.
      *
-     * @return the definition {@code ConfigurationBuilder}
+     * @return The definition {@code ConfigurationBuilder}
      */
     public ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder() {
         return definitionBuilder;
@@ -169,7 +169,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets the parameters object for the definition configuration builder if present.
      *
-     * @return the parameters object for the definition configuration builder or <strong>null</strong>
+     * @return The parameters object for the definition configuration builder or <strong>null</strong>
      */
     public BuilderParameters getDefinitionBuilderParameters() {
         return definitionBuilderParameters;
@@ -189,7 +189,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets an (unmodifiable) map with the currently registered {@code ConfigurationBuilderProvider} objects.
      *
-     * @return the map with {@code ConfigurationBuilderProvider} objects (the keys are the tag names)
+     * @return The map with {@code ConfigurationBuilderProvider} objects (the keys are the tag names)
      */
     public Map<String, ConfigurationBuilderProvider> getProviders() {
         return Collections.unmodifiableMap(providers);
@@ -213,7 +213,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Returns the current value of the flag that controls whether the settings of the parent combined configuration builder
      * should be inherited by its child configurations.
      *
-     * @return the flag whether settings should be inherited by child configurations
+     * @return The flag whether settings should be inherited by child configurations
      */
     public boolean isInheritSettings() {
         return inheritSettings;
@@ -224,7 +224,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * there is no registration for this tag.
      *
      * @param tagName the tag name
-     * @return the provider registered for this tag or <strong>null</strong>
+     * @return The provider registered for this tag or <strong>null</strong>
      */
     public ConfigurationBuilderProvider providerForTag(final String tagName) {
         return providers.get(tagName);

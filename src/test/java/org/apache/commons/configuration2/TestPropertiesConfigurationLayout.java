@@ -129,7 +129,7 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Returns a string representation of the buffer's content.
          *
-         * @return the buffer as string
+         * @return The buffer as string
          */
         @Override
         public String toString() {
@@ -188,7 +188,7 @@ public class TestPropertiesConfigurationLayout {
     /**
      * Writes the layout's data into a string.
      *
-     * @return the layout file's content as string
+     * @return The layout file's content as string
      * @throws ConfigurationException if an error occurs
      */
     private String getLayoutString() throws ConfigurationException {

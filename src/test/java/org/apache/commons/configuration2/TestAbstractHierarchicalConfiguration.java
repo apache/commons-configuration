@@ -160,7 +160,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Creates a {@code DefaultConfigurationKey} object.
      *
-     * @return the new key object
+     * @return The new key object
      */
     private static DefaultConfigurationKey createConfigurationKey() {
         return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);
@@ -169,7 +169,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Returns the total number of fields in the test data structure.
      *
-     * @return the total number of fields
+     * @return The total number of fields
      */
     private static int totalFieldCount() {
         int fieldCount = 0;
@@ -239,7 +239,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Convenience method for obtaining the root node of the test configuration.
      *
-     * @return the root node of the test configuration
+     * @return The root node of the test configuration
      */
     private ImmutableNode getRootNode() {
         return config.getModel().getNodeHandler().getRootNode();

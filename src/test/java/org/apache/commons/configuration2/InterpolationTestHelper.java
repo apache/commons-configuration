@@ -51,7 +51,7 @@ public final class InterpolationTestHelper {
      * Tests obtaining a configuration with all variables replaced by their actual values.
      *
      * @param config the configuration to test
-     * @return the interpolated configuration
+     * @return The interpolated configuration
      */
     public static Configuration testInterpolatedConfiguration(final AbstractConfiguration config) {
         config.setProperty("applicationRoot", "/home/applicationRoot");

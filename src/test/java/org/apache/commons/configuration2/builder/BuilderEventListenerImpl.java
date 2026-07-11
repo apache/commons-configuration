@@ -49,7 +49,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
     /**
      * Ensures that the iterator for received events has been initialized.
      *
-     * @return the iterator to be used
+     * @return The iterator to be used
      */
     private Iterator<ConfigurationBuilderEvent> initIterator() {
         if (iterator == null) {
@@ -64,7 +64,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      *
      * @param eventType the expected event type
      * @param <T> The type of the received event
-     * @return the next received event
+     * @return The next received event
      */
     public <T extends ConfigurationBuilderEvent> T nextEvent(final EventType<T> eventType) {
         final Iterator<ConfigurationBuilderEvent> it = initIterator();

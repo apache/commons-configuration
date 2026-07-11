@@ -83,7 +83,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         /**
          * Returns the list with the mock reloading controllers for the managed configuration builders created by this instance.
          *
-         * @return the list with mock reloading controllers
+         * @return The list with mock reloading controllers
          */
         public List<ReloadingController> getReloadingControllers() {
             return reloadingControllers;

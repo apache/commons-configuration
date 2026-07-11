@@ -174,7 +174,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param nodeName the name of the current node
      * @param handler the node handler
      * @param <T> The type of the nodes to be dealt with
-     * @return the index of this node
+     * @return The index of this node
      */
     private <T> int determineIndex(final T node, final T parent, final String nodeName, final NodeHandler<T> handler) {
         return findChildNodesByName(handler, parent, nodeName).indexOf(node);
@@ -202,7 +202,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param keyIt the key iterator
      * @param node the current node
      * @param handler the node handler
-     * @return the last existing node on the given path
+     * @return The last existing node on the given path
      */
     protected <T> T findLastPathNode(final DefaultConfigurationKey.KeyIterator keyIt, final T node, final NodeHandler<T> handler) {
         final String keyPart = keyIt.nextKey(false);
@@ -249,7 +249,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     /**
      * Gets the {@code DefaultExpressionEngineSymbols} object associated with this instance.
      *
-     * @return the {@code DefaultExpressionEngineSymbols} used by this engine
+     * @return The {@code DefaultExpressionEngineSymbols} used by this engine
      * @since 2.0
      */
     public DefaultExpressionEngineSymbols getSymbols() {

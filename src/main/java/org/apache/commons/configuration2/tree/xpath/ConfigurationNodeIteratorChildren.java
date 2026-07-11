@@ -64,7 +64,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Creates the configuration node pointer for the current position.
      *
      * @param position the current position in the iteration
-     * @return the node pointer
+     * @return The node pointer
      */
     @Override
     protected NodePointer createNodePointer(final int position) {
@@ -103,7 +103,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      *
      * @param node the current node
      * @param qName the name to be selected
-     * @return the list with selected sub nodes
+     * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForName(final T node, final QName qName) {
         final String compareName = qualifiedName(qName);
@@ -121,7 +121,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      *
      * @param node the current node
      * @param qName the name to be selected
-     * @return the list with selected sub nodes
+     * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForWildcardName(final T node, final QName qName) {
         final List<T> children = getNodeHandler().getChildren(node);
@@ -144,7 +144,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      *
      * @param children the children of the root node
      * @param startNode the start node
-     * @return the start node's index
+     * @return The start node's index
      */
     private int findStartIndex(final List<T> children, final T startNode) {
         int index = 0;
@@ -161,7 +161,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Returns the number of elements in this iteration. This is the number of elements in the children list.
      *
-     * @return the number of elements
+     * @return The number of elements
      */
     @Override
     protected int size() {

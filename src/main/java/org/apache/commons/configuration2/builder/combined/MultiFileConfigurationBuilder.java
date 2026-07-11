@@ -82,7 +82,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param params the parameters of this builder
      * @param multiParams the parameters object for this builder
-     * @return the parameters for a new managed builder
+     * @return The parameters for a new managed builder
      */
     private static Map<String, Object> createManagedBuilderParameters(final Map<String, Object> params, final MultiFileBuilderParametersImpl multiParams) {
         final Map<String, Object> newParams = new HashMap<>(params);
@@ -191,7 +191,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * uses it to interpolate the file name pattern.
      *
      * @param multiParams the parameters object for this builder
-     * @return the name of the configuration file to be loaded
+     * @return The name of the configuration file to be loaded
      */
     protected String constructFileName(final MultiFileBuilderParametersImpl multiParams) {
         final ConfigurationInterpolator ci = getInterpolator();
@@ -204,7 +204,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * passed to the builder listeners registered at this object, but with the correct source property.
      *
      * @param event the event received from a managed builder
-     * @return the event to be propagated
+     * @return The event to be propagated
      */
     private ConfigurationBuilderEvent createEventWithChangedSource(final ConfigurationBuilderEvent event) {
         if (ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.equals(event.getEventType())) {
@@ -226,7 +226,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param fileName the name of the file to be loaded
      * @param params a map with initialization parameters for the new builder
-     * @return the newly created and initialized builder instance
+     * @return The newly created and initialized builder instance
      * @throws ConfigurationException if an error occurs
      */
     protected FileBasedConfigurationBuilder<T> createInitializedManagedBuilder(final String fileName, final Map<String, Object> params)
@@ -242,7 +242,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * from this builder's parameters. If no properties of the {@code ConfigurationInterpolator} are specified in the
      * parameters, a default instance without lookups is returned (which is probably not very helpful).
      *
-     * @return the {@code ConfigurationInterpolator} to be used
+     * @return The {@code ConfigurationInterpolator} to be used
      */
     protected ConfigurationInterpolator createInterpolator() {
         final InterpolatorSpecification spec = BasicBuilderParameters.fetchInterpolatorSpecification(getParameters());
@@ -258,7 +258,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param fileName the name of the file to be loaded
      * @param params a map with initialization parameters for the new builder
-     * @return the newly created builder instance
+     * @return The newly created builder instance
      * @throws ConfigurationException if an error occurs
      */
     protected FileBasedConfigurationBuilder<T> createManagedBuilder(final String fileName, final Map<String, Object> params) throws ConfigurationException {
@@ -271,7 +271,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * object causes a recursive lookup to this builder's configuration.
      *
      * @param multiParams the current builder parameters
-     * @return the file name for a managed builder
+     * @return The file name for a managed builder
      */
     private String fetchFileName(final MultiFileBuilderParametersImpl multiParams) {
         String fileName;
@@ -303,7 +303,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Gets the {@code ConfigurationInterpolator} used by this instance. This is the object used for evaluating the file
      * name pattern. It is created on demand.
      *
-     * @return the {@code ConfigurationInterpolator}
+     * @return The {@code ConfigurationInterpolator}
      */
     protected ConfigurationInterpolator getInterpolator() {
         ConfigurationInterpolator result;
@@ -329,7 +329,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * on the evaluation of the file name pattern using the configured {@code ConfigurationInterpolator}. If this is the
      * first access to this configuration file, the builder is created.
      *
-     * @return the configuration builder for the configuration corresponding to the current evaluation of the file name
+     * @return The configuration builder for the configuration corresponding to the current evaluation of the file name
      *         pattern
      * @throws ConfigurationException if the builder cannot be determined (for example due to missing initialization parameters)
      */
@@ -359,7 +359,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * exposed to derived classes so they can access managed builders directly. However, derived classes are not expected to
      * manipulate this map.
      *
-     * @return the map with the managed builders
+     * @return The map with the managed builders
      */
     protected ConcurrentMap<String, FileBasedConfigurationBuilder<T>> getManagedBuilders() {
         return managedBuilders;

@@ -83,7 +83,7 @@ public class TestXMLListHandling {
      *
      * @param key the key
      * @param value the value
-     * @return the string representation of this element
+     * @return The string representation of this element
      */
     private static String element(final String key, final String value) {
         return "<" + key + '>' + value + "</" + key + '>';
@@ -93,7 +93,7 @@ public class TestXMLListHandling {
      * Parses the specified string into an XML configuration.
      *
      * @param xml the XML to be parsed
-     * @return the resulting configuration
+     * @return The resulting configuration
      */
     private static XMLConfiguration readFromString(final String xml) throws ConfigurationException {
         final XMLConfiguration config = new XMLConfiguration();
@@ -109,7 +109,7 @@ public class TestXMLListHandling {
     /**
      * Saves the test configuration into a string.
      *
-     * @return the resulting string
+     * @return The resulting string
      */
     private String saveToString() throws ConfigurationException {
         final StringWriter writer = new StringWriter(4096);

@@ -161,7 +161,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets the base context with the prefix applied.
      *
-     * @return the base context
+     * @return The base context
      * @throws NamingException if an error occurs
      */
     public Context getBaseContext() throws NamingException {
@@ -175,7 +175,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets the initial context used by this configuration. This context is independent of the prefix specified.
      *
-     * @return the initial context
+     * @return The initial context
      */
     public Context getContext() {
         return context;
@@ -273,7 +273,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets the prefix.
      *
-     * @return the prefix
+     * @return The prefix
      */
     public String getPrefix() {
         return prefix;
@@ -283,7 +283,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Gets the value of the specified property.
      *
      * @param key the key of the property
-     * @return the value of this property
+     * @return The value of this property
      */
     @Override
     protected Object getPropertyInternal(String key) {
@@ -306,7 +306,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Returns a flag whether this configuration is empty.
      *
-     * @return the empty flag
+     * @return The empty flag
      */
     @Override
     protected boolean isEmptyInternal() {

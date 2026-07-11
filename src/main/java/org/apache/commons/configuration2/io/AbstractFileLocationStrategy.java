@@ -305,7 +305,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     /**
      * Gets the enabled hosts.
      *
-     * @return the enabled hosts.
+     * @return The enabled hosts.
      */
     Set<Pattern> getHosts() {
         return hosts;
@@ -314,7 +314,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     /**
      * Gets the enabled schemes.
      *
-     * @return the enabled schemes.
+     * @return The enabled schemes.
      */
     Set<String> getSchemes() {
         return schemes;

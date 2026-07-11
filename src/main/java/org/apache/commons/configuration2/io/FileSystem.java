@@ -51,7 +51,7 @@ public abstract class FileSystem {
      * Gets the base path of the given path, for example a directory for a file.
      *
      * @param path the source path.
-     * @return the base path.
+     * @return The base path.
      */
     public abstract String getBasePath(String path);
 
@@ -59,14 +59,14 @@ public abstract class FileSystem {
      * Gets the file name of the given path.
      *
      * @param path the source path.
-     * @return the file name.
+     * @return The file name.
      */
     public abstract String getFileName(String path);
 
     /**
      * Gets the FileSystem options provider.
      *
-     * @return the FileSystem options provider.
+     * @return The FileSystem options provider.
      */
     public FileOptionsProvider getFileOptionsProvider() {
         return this.optionsProvider;
@@ -86,7 +86,7 @@ public abstract class FileSystem {
      *
      * @param url the URL of the file
      * @param urlConnectionOptions the URLConnection options
-     * @return the input stream for the specified URL
+     * @return The input stream for the specified URL
      * @throws ConfigurationException if an error occurs while opening the file
      *
      * @since 2.8.0
@@ -98,7 +98,7 @@ public abstract class FileSystem {
     /**
      * Gets the logger used by this FileSystem.
      *
-     * @return the logger
+     * @return The logger
      */
     public ConfigurationLogger getLogger() {
         final ConfigurationLogger result = log;

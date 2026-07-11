@@ -67,7 +67,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
         /**
          * Gets the wrapped node.
          *
-         * @return the node
+         * @return The node
          */
         public T getNode() {
             return node;
@@ -76,7 +76,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
         /**
          * Gets the node handler for the wrapped node.
          *
-         * @return the node handler
+         * @return The node handler
          */
         public NodeHandler<T> getNodeHandler() {
             return nodeHandler;

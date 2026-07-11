@@ -115,7 +115,7 @@ public class MergeCombiner extends NodeCombiner {
      *
      * @param node1 the first source node
      * @param node2 the second source node
-     * @return the union node
+     * @return The union node
      */
 
     @Override

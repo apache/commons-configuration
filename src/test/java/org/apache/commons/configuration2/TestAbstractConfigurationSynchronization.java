@@ -49,7 +49,7 @@ public class TestAbstractConfigurationSynchronization {
     /**
      * Prepares a mock configuration for a copy operation.
      *
-     * @return the mock configuration
+     * @return The mock configuration
      */
     private static Configuration prepareConfigurationMockForCopy() {
         final Configuration config2 = mock(Configuration.class);

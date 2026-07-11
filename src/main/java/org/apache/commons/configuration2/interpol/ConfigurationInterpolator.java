@@ -265,7 +265,7 @@ public class ConfigurationInterpolator {
      * Creates a new instance based on the properties in the given specification object.
      *
      * @param spec the {@code InterpolatorSpecification}
-     * @return the newly created instance
+     * @return The newly created instance
      */
     private static ConfigurationInterpolator createInterpolator(final InterpolatorSpecification spec) {
         final ConfigurationInterpolator ci = new ConfigurationInterpolator();
@@ -280,7 +280,7 @@ public class ConfigurationInterpolator {
      * Extracts the variable name from a value that consists of a single variable.
      *
      * @param strValue the value
-     * @return the extracted variable name
+     * @return The extracted variable name
      */
     private static String extractVariableName(final String strValue) {
         return strValue.substring(VAR_START_LENGTH, strValue.length() - VAR_END_LENGTH);
@@ -292,7 +292,7 @@ public class ConfigurationInterpolator {
      * Otherwise, a new instance is created and initialized with the properties stored in the specification.
      *
      * @param spec the {@code InterpolatorSpecification} (must not be <strong>null</strong>)
-     * @return the {@code ConfigurationInterpolator} obtained or created based on the given specification
+     * @return The {@code ConfigurationInterpolator} obtained or created based on the given specification
      * @throws IllegalArgumentException if the specification is <strong>null</strong>
      * @since 2.0
      */
@@ -494,7 +494,7 @@ public class ConfigurationInterpolator {
      * object will be returned (never <strong>null</strong>).
      *
      * @param prefix the prefix
-     * @return the lookup object to be used for this prefix
+     * @return The lookup object to be used for this prefix
      */
     protected Lookup fetchLookupForPrefix(final String prefix) {
         return nullSafeLookup(prefixLookups.get(prefix));
@@ -505,7 +505,7 @@ public class ConfigurationInterpolator {
      * objects are not associated with a variable prefix. The returned list is a snapshot copy of the internal collection of
      * default lookups; so manipulating it does not affect this instance.
      *
-     * @return the default lookup objects
+     * @return The default lookup objects
      */
     public List<Lookup> getDefaultLookups() {
         return new ArrayList<>(defaultLookups);
@@ -524,7 +524,7 @@ public class ConfigurationInterpolator {
     /**
      * Gets the parent {@code ConfigurationInterpolator}.
      *
-     * @return the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getParentInterpolator() {
         return this.parentInterpolator;
@@ -542,7 +542,7 @@ public class ConfigurationInterpolator {
      * {@code StringSubstitutor} is assigned a specialized lookup object implementing the correct variable resolving
      * algorithm.
      *
-     * @return the {@code StringSubstitutor} used by this object
+     * @return The {@code StringSubstitutor} used by this object
      */
     private StringSubstitutor initSubstitutor() {
         return new StringSubstitutor(key -> {
@@ -575,7 +575,7 @@ public class ConfigurationInterpolator {
      * </pre>
      *
      * @param value the value to be interpolated
-     * @return the interpolated value
+     * @return The interpolated value
      */
     public Object interpolate(final Object value) {
         if (value instanceof String) {
@@ -599,7 +599,7 @@ public class ConfigurationInterpolator {
      * Sets a flag that variable names can contain other variables. If enabled, variable substitution is also done in
      * variable names.
      *
-     * @return the substitution in variables flag
+     * @return The substitution in variables flag
      */
     public boolean isEnableSubstitutionInVariables() {
         return substitutor.isEnableSubstitutionInVariables();
@@ -678,7 +678,7 @@ public class ConfigurationInterpolator {
      * {@code ConfigurationInterpolator} is available, this object is asked to resolve the variable.
      *
      * @param var the name of the variable whose value is to be looked up which may contain a prefix.
-     * @return the value of this variable or <strong>null</strong> if it cannot be resolved
+     * @return The value of this variable or <strong>null</strong> if it cannot be resolved
      */
     public Object resolve(final String var) {
         if (var == null) {
@@ -713,7 +713,7 @@ public class ConfigurationInterpolator {
      * Interpolates a string value that consists of a single variable.
      *
      * @param strValue the string to be interpolated
-     * @return the resolved value or <strong>null</strong> if resolving failed
+     * @return The resolved value or <strong>null</strong> if resolving failed
      */
     private Object resolveSingleVariable(final String strValue) {
         return resolve(extractVariableName(strValue));

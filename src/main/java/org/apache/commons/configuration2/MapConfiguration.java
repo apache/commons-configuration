@@ -148,7 +148,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     /**
      * Returns a copy of this object. The returned configuration will contain the same properties as the original. Event listeners are not cloned.
      *
-     * @return the copy.
+     * @return The copy.
      * @since 1.3
      */
     @Override
@@ -188,7 +188,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     /**
      * Gets the Map decorated by this configuration.
      *
-     * @return the map this configuration is based onto.
+     * @return The map this configuration is based onto.
      */
     public Map<String, Object> getMap() {
         return map;

@@ -91,7 +91,7 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * if necessary so that the underlying configuration cannot be manipulated.
      *
      * @param result the result object
-     * @return the processed result object
+     * @return The processed result object
      */
     private static Object handleResult(final Object result) {
         if (result instanceof Iterator) {

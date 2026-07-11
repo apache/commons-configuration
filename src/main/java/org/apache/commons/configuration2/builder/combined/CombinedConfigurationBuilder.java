@@ -270,7 +270,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         /**
          * Returns a set with the names of all known named builders.
          *
-         * @return the names of the available sub builders
+         * @return The names of the available sub builders
          */
         public Set<String> builderNames() {
             return namedBuilders.keySet();
@@ -329,7 +329,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * Creates a configuration builder based on a source declaration in the definition configuration.
          *
          * @param decl the current {@code ConfigurationDeclaration}
-         * @return the newly created builder
+         * @return The newly created builder
          * @throws ConfigurationException if an error occurs
          */
         private ConfigurationBuilder<? extends Configuration> createConfigurationBuilder(final ConfigurationDeclaration decl) throws ConfigurationException {
@@ -373,7 +373,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         /**
          * Gets a collection containing the builders for all child configuration sources.
          *
-         * @return the child configuration builders
+         * @return The child configuration builders
          */
         public Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders() {
             return allBuilders;
@@ -384,7 +384,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * configuration, result is <strong>null</strong>.
          *
          * @param name the name of the builder in question
-         * @return the builder with this name or <strong>null</strong>
+         * @return The builder with this name or <strong>null</strong>
          */
         public ConfigurationBuilder<? extends Configuration> getNamedBuilder(final String name) {
             return namedBuilders.get(name);
@@ -393,7 +393,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         /**
          * Gets a collection with all configuration source declarations defined in the override section.
          *
-         * @return the override configuration builders
+         * @return The override configuration builders
          */
         public List<ConfigurationDeclaration> getOverrideSources() {
             return overrideDeclarations;
@@ -402,7 +402,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         /**
          * Gets a collection with all configuration source declarations defined in the union section.
          *
-         * @return the union configuration builders
+         * @return The union configuration builders
          */
         public List<ConfigurationDeclaration> getUnionSources() {
             return unionDeclarations;
@@ -604,7 +604,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /**
      * Creates the map with the default configuration builder providers.
      *
-     * @return the map with default providers
+     * @return The map with default providers
      */
     private static Map<String, ConfigurationBuilderProvider> createDefaultProviders() {
         final Map<String, ConfigurationBuilderProvider> providers = new HashMap<>();
@@ -759,7 +759,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * {@code CombinedConfiguration} and initializes some properties from the result configuration.
      *
      * @param resultConfig the result configuration (this is the configuration that will be returned by the builder)
-     * @return the {@code CombinedConfiguration} for the additional configuration sources
+     * @return The {@code CombinedConfiguration} for the additional configuration sources
      * @since 1.7
      */
     protected CombinedConfiguration createAdditionalsConfiguration(final CombinedConfiguration resultConfig) {
@@ -793,7 +793,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /**
      * Creates the data object for configuration sources and the corresponding builders.
      *
-     * @return the newly created data object
+     * @return The newly created data object
      * @throws ConfigurationException if an error occurs
      */
     private ConfigurationSourceData createSourceData() throws ConfigurationException {
@@ -809,7 +809,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * This method is called in a synchronized block.
      *
      * @param builderParams the parameters object for the builder
-     * @return the standard builder for the definition configuration
+     * @return The standard builder for the definition configuration
      */
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(final BuilderParameters builderParams) {
         return new FileBasedConfigurationBuilder<>(XMLConfiguration.class).configure(builderParams);
@@ -819,7 +819,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Returns a map with the current prefix lookup objects. This map is obtained from the {@code ConfigurationInterpolator}
      * of the configuration under construction.
      *
-     * @return the map with current prefix lookups (may be <strong>null</strong>)
+     * @return The map with current prefix lookups (may be <strong>null</strong>)
      */
     private Map<String, ? extends Lookup> fetchPrefixLookups() {
         final CombinedConfiguration cc = getConfigurationUnderConstruction();
@@ -830,7 +830,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Gets the current base path of this configuration builder. This is used for instance by all file-based child
      * configurations.
      *
-     * @return the base path
+     * @return The base path
      */
     private String getBasePath() {
         return currentXMLParameters.getFileHandler().getBasePath();
@@ -852,7 +852,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * result configuration. It is intended for internal usage, for example some specialized builder providers need access to this
      * configuration to perform advanced initialization.
      *
-     * @return the configuration that us currently under construction
+     * @return The configuration that us currently under construction
      */
     CombinedConfiguration getConfigurationUnderConstruction() {
         return currentConfiguration;
@@ -861,7 +861,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /**
      * Gets the {@code ConfigurationBuilder} which creates the definition configuration.
      *
-     * @return the builder for the definition configuration
+     * @return The builder for the definition configuration
      * @throws ConfigurationException if an error occurs
      */
     public synchronized ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder() throws ConfigurationException {
@@ -879,7 +879,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * always the same configuration instance is used. (Otherwise, it would be possible that the definition builder returns
      * a different instance when queried multiple times.)
      *
-     * @return the definition configuration
+     * @return The definition configuration
      * @throws ConfigurationException if an error occurs
      */
     protected HierarchicalConfiguration<?> getDefinitionConfiguration() throws ConfigurationException {
@@ -900,7 +900,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * </p>
      *
      * @param name the name of the builder in question
-     * @return the child configuration builder with this name
+     * @return The child configuration builder with this name
      * @throws ConfigurationException if information about named builders is not yet available or no builder with this name
      *         exists
      */
@@ -919,7 +919,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Obtains the data object for the configuration sources and the corresponding builders. This object is created on first
      * access and reset when the definition builder sends a change event. This method is called in a synchronized block.
      *
-     * @return the object with information about configuration sources
+     * @return The object with information about configuration sources
      * @throws ConfigurationException if an error occurs
      */
     private ConfigurationSourceData getSourceData() throws ConfigurationException {
@@ -1068,7 +1068,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * sources.
      *
      * @param config the definition configuration
-     * @return the default {@code FileSystem} (may be <strong>null</strong>)
+     * @return The default {@code FileSystem} (may be <strong>null</strong>)
      * @throws ConfigurationException if an error occurs
      */
     protected FileSystem initFileSystem(final HierarchicalConfiguration<?> config) throws ConfigurationException {
@@ -1155,7 +1155,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * supports all default providers and custom providers added through the parameters object as well.
      *
      * @param tagName the name of the tag
-     * @return the provider that was registered for this tag or <strong>null</strong> if there is none
+     * @return The provider that was registered for this tag or <strong>null</strong> if there is none
      */
     protected ConfigurationBuilderProvider providerForTag(final String tagName) {
         return currentParameters.providerForTag(tagName);
@@ -1243,7 +1243,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * configuration builder is created which loads this file. Note: This method is called from a synchronized block.
      *
      * @param params the current parameters for this builder
-     * @return the builder for the definition configuration
+     * @return The builder for the definition configuration
      * @throws ConfigurationException if an error occurs
      */
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> setupDefinitionBuilder(final Map<String, Object> params)

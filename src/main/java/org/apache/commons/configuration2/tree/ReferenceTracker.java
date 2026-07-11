@@ -77,7 +77,7 @@ final class ReferenceTracker {
      * new set of references.
      *
      * @param refs the references to be added
-     * @return the new instance
+     * @return The new instance
      */
     public ReferenceTracker addReferences(final Map<ImmutableNode, ?> refs) {
         final Map<ImmutableNode, Object> newRefs = new HashMap<>(references);
@@ -89,7 +89,7 @@ final class ReferenceTracker {
      * Gets the reference object associated with the given node.
      *
      * @param node the node
-     * @return the reference object for this node or <strong>null</strong>
+     * @return The reference object for this node or <strong>null</strong>
      */
     public Object getReference(final ImmutableNode node) {
         return references.get(node);
@@ -98,7 +98,7 @@ final class ReferenceTracker {
     /**
      * Gets the list with removed references. This list is immutable.
      *
-     * @return the list with removed references
+     * @return The list with removed references
      */
     public List<Object> getRemovedReferences() {
         return Collections.unmodifiableList(removedReferences);
@@ -111,7 +111,7 @@ final class ReferenceTracker {
      *
      * @param replacedNodes the map with nodes that have been replaced
      * @param removedNodes the list with nodes that have been removed
-     * @return the new instance
+     * @return The new instance
      */
     public ReferenceTracker updateReferences(final Map<ImmutableNode, ImmutableNode> replacedNodes, final Collection<ImmutableNode> removedNodes) {
         if (!references.isEmpty()) {

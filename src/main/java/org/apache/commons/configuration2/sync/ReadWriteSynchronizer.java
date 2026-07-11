@@ -40,7 +40,7 @@ public class ReadWriteSynchronizer implements Synchronizer {
     /**
      * Returns a new default lock object which is used if no lock is passed to the constructor.
      *
-     * @return the new default lock object
+     * @return The new default lock object
      */
     private static ReadWriteLock createDefaultLock() {
         return new ReentrantReadWriteLock();

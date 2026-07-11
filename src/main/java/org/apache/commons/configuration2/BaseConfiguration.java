@@ -92,7 +92,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * Creates a copy of this object. This implementation will create a deep clone, i.e. the map that stores the properties
      * is cloned, too. So changes performed at the copy won't affect the original and vice versa.
      *
-     * @return the copy
+     * @return The copy
      * @since 1.3
      */
     @Override

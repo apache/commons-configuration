@@ -86,7 +86,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Gets the event type for this listener registration.
      *
-     * @return the event type
+     * @return The event type
      */
     public EventType<T> getEventType() {
         return eventType;
@@ -95,7 +95,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Gets the listener this registration is about.
      *
-     * @return the event listener
+     * @return The event listener
      */
     public EventListener<? super T> getListener() {
         return listener;

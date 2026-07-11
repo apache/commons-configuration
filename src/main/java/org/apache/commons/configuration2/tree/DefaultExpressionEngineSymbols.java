@@ -87,7 +87,7 @@ public final class DefaultExpressionEngineSymbols {
          * method does not change the state of this builder. So it is possible to change properties and create another
          * {@code DefaultExpressionEngineSymbols} instance.
          *
-         * @return the newly created {@code DefaultExpressionEngineSymbols} instance
+         * @return The newly created {@code DefaultExpressionEngineSymbols} instance
          */
         public DefaultExpressionEngineSymbols create() {
             return new DefaultExpressionEngineSymbols(this);
@@ -190,7 +190,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Creates the {@code DefaultExpressionEngineSymbols} object with default symbols.
      *
-     * @return the default symbols instance
+     * @return The default symbols instance
      */
     private static DefaultExpressionEngineSymbols createDefaultSmybols() {
         return new Builder().setPropertyDelimiter(DEFAULT_PROPERTY_DELIMITER).setEscapedDelimiter(DEFAULT_ESCAPED_DELIMITER).setIndexStart(DEFAULT_INDEX_START)
@@ -254,7 +254,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an attribute end marker.
      *
-     * @return the attribute end marker
+     * @return The attribute end marker
      */
     public String getAttributeEnd() {
         return attributeEnd;
@@ -263,7 +263,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an attribute start marker.
      *
-     * @return the attribute start marker
+     * @return The attribute start marker
      */
     public String getAttributeStart() {
         return attributeStart;
@@ -272,7 +272,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an escaped property delimiter.
      *
-     * @return the escaped property delimiter
+     * @return The escaped property delimiter
      */
     public String getEscapedDelimiter() {
         return escapedDelimiter;
@@ -281,7 +281,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing the end of an index in a property key.
      *
-     * @return the index end marker
+     * @return The index end marker
      */
     public String getIndexEnd() {
         return indexEnd;
@@ -290,7 +290,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing the start of an index in a property key.
      *
-     * @return the index start marker
+     * @return The index start marker
      */
     public String getIndexStart() {
         return indexStart;
@@ -299,7 +299,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string used as delimiter in property keys.
      *
-     * @return the property delimiter
+     * @return The property delimiter
      */
     public String getPropertyDelimiter() {
         return propertyDelimiter;

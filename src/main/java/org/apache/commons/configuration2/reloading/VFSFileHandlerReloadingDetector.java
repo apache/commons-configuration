@@ -79,7 +79,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      * Gets the file that is monitored by this strategy. Note that the return value can be <strong>null </strong> under some
      * circumstances.
      *
-     * @return the monitored file
+     * @return The monitored file
      */
     protected FileObject getFileObject() {
         if (!getFileHandler().isLocationDefined()) {
@@ -122,7 +122,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     /**
      * Resolves the URI of the monitored file.
      *
-     * @return the URI of the monitored file or <strong>null</strong> if it cannot be resolved
+     * @return The URI of the monitored file or <strong>null</strong> if it cannot be resolved
      */
     protected String resolveFileURI() {
         final FileSystem fs = getFileHandler().getFileSystem();

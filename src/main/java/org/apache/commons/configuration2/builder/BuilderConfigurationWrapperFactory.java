@@ -75,7 +75,7 @@ public class BuilderConfigurationWrapperFactory {
          *
          * @param method the method to be invoked
          * @param args method arguments
-         * @return the return value of the method
+         * @return The return value of the method
          * @throws Exception if an error occurs
          */
         private Object handleConfigurationInvocation(final Method method, final Object[] args) throws ReflectiveOperationException, ConfigurationException {
@@ -88,7 +88,7 @@ public class BuilderConfigurationWrapperFactory {
          *
          * @param method the method to be invoked
          * @param args method arguments
-         * @return the return value of the method
+         * @return The return value of the method
          * @throws ReflectiveOperationException if an error occurs
          */
         private Object handleEventSourceInvocation(final Method method, final Object... args) throws ReflectiveOperationException {
@@ -105,7 +105,7 @@ public class BuilderConfigurationWrapperFactory {
          * @param proxy the proxy object
          * @param method the method to be invoked
          * @param args method arguments
-         * @return the return value of the method
+         * @return The return value of the method
          * @throws ReflectiveOperationException if an error occurs
          * @throws ConfigurationException if an error occurs
          */
@@ -160,7 +160,7 @@ public class BuilderConfigurationWrapperFactory {
      *        must not be <strong>null</strong>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
      * @param evSrcSupport the level of {@code EventSource} support
-     * @return the wrapper configuration
+     * @return The wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error occurs when creating the
      *         result {@code ImmutableConfiguration}
@@ -220,7 +220,7 @@ public class BuilderConfigurationWrapperFactory {
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
-     * @return the wrapper configuration
+     * @return The wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error occurs when creating the
      *         result {@code ImmutableConfiguration}
@@ -232,7 +232,7 @@ public class BuilderConfigurationWrapperFactory {
     /**
      * Gets the level of {@code EventSource} support used when generating {@code ImmutableConfiguration} objects.
      *
-     * @return the level of {@code EventSource} support
+     * @return The level of {@code EventSource} support
      */
     public EventSourceSupport getEventSourceSupport() {
         return eventSourceSupport;

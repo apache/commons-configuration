@@ -367,7 +367,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param rootBuilder the builder for the top-level section
      * @param sectionBuilders a map storing the section builders
-     * @return the root node of the newly created hierarchy
+     * @return The root node of the newly created hierarchy
      */
     private static ImmutableNode createNewRootNode(final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders) {
         sectionBuilders.forEach((k, v) -> rootBuilder.addChild(v.name(k).create()));
@@ -380,7 +380,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param line the line to be investigated
      * @param separators a string with the separator characters to look for
-     * @return the lowest index of a separator character or -1 if no separator is found
+     * @return The lowest index of a separator character or -1 if no separator is found
      */
     private static int findFirstOccurrence(final String line, final String separators) {
         int index = -1;
@@ -403,7 +403,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param line the line to be investigated
      * @param quoteIndex the index of the quote character
-     * @return the index of the separator before the quote or &lt; 0 if there is none
+     * @return The index of the separator before the quote or &lt; 0 if there is none
      */
     private static int findSeparatorBeforeQuote(final String line, final int quoteIndex) {
         int index = quoteIndex - 1;
@@ -568,7 +568,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Escapes comment characters in the given value.
      *
      * @param value the value to be escaped
-     * @return the value with comment characters escaped
+     * @return The value with comment characters escaped
      */
     private String escapeComments(final String value) {
         final String commentChars = getCommentLeadingCharsUsedInInput();
@@ -604,7 +604,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * correct separator. If there are quoting characters, they are taken into account, too.
      *
      * @param line the line to be checked
-     * @return the index of the separator character or -1 if none is found
+     * @return The index of the separator character or -1 if none is found
      */
     private int findSeparator(final String line) {
         int index = findSeparatorBeforeQuote(line, findFirstOccurrence(line, QUOTE_CHARACTERS));
@@ -618,7 +618,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets comment leading separator used in INI reading. see {@code setCommentLeadingCharsUsedInInput} for further
      * explanation
      *
-     * @return the current separator for reading the INI input
+     * @return The current separator for reading the INI input
      * @since 2.5
      */
     public String getCommentLeadingCharsUsedInInput() {
@@ -628,7 +628,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Creates a sub configuration for the global section of the represented INI configuration.
      *
-     * @return the sub configuration for the global section
+     * @return The sub configuration for the global section
      */
     private SubnodeConfiguration getGlobalSection() {
         final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
@@ -701,7 +701,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Gets separator used in INI reading. see {@code setSeparatorUsedInInput} for further explanation
      *
-     * @return the current separator for reading the INI input
+     * @return The current separator for reading the INI input
      * @since 2.5
      */
     public String getSeparatorUsedInInput() {
@@ -711,7 +711,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Gets separator used in INI output. see {@code setSeparatorUsedInOutput} for further explanation
      *
-     * @return the current separator for writing the INI output
+     * @return The current separator for writing the INI output
      * @since 2.2
      */
     public String getSeparatorUsedInOutput() {

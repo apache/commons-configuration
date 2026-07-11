@@ -72,7 +72,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Helper method for creating a combined strategy with the mock sub strategies.
      *
-     * @return the newly created combined strategy
+     * @return The newly created combined strategy
      */
     private CombinedLocationStrategy createCombinedStrategy() {
         return new CombinedLocationStrategy(Arrays.asList(getSubStrategies()));
@@ -81,7 +81,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Returns the mock file system. It is created on demand.
      *
-     * @return the mock file system
+     * @return The mock file system
      */
     private FileSystem getFileSystem() {
         if (fileSystem == null) {
@@ -93,7 +93,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Returns an array with mock objects for sub strategies.
      *
-     * @return the array with mock strategies
+     * @return The array with mock strategies
      */
     private FileLocationStrategy[] getSubStrategies() {
         if (subStrategies == null) {

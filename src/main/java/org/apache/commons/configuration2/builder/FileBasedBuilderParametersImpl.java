@@ -62,7 +62,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * uninitialized instance is returned.
      *
      * @param map the map with properties (must not be <strong>null</strong>)
-     * @return the newly created instance
+     * @return The newly created instance
      * @throws ClassCastException if the map contains invalid data
      */
     public static FileBasedBuilderParametersImpl fromMap(final Map<String, ?> map) {
@@ -79,7 +79,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * {@code fromParameters(params, false};}
      *
      * @param params the map with parameters (must not be <strong>null</strong>
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static FileBasedBuilderParametersImpl fromParameters(final Map<String, ?> params) {
@@ -94,7 +94,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * @param params the map with parameters (must not be <strong>null</strong>
      * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
      *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static FileBasedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
@@ -151,7 +151,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Gets the {@code FileHandler} managed by this object. This object is updated every time the file location is
      * changed.
      *
-     * @return the managed {@code FileHandler}
+     * @return The managed {@code FileHandler}
      */
     public FileHandler getFileHandler() {
         return fileHandler;
@@ -173,7 +173,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Gets the {@code ReloadingDetectorFactory}. Result may be <strong>null</strong> which means that the default factory is to be
      * used.
      *
-     * @return the {@code ReloadingDetectorFactory}
+     * @return The {@code ReloadingDetectorFactory}
      */
     public ReloadingDetectorFactory getReloadingDetectorFactory() {
         return reloadingDetectorFactory;
@@ -182,7 +182,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the refresh delay for reload operations. Result may be <strong>null</strong> if this value has not been set.
      *
-     * @return the reloading refresh delay
+     * @return The reloading refresh delay
      */
     public Long getReloadingRefreshDelay() {
         return reloadingRefreshDelay;

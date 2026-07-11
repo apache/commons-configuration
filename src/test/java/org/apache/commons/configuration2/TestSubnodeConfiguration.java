@@ -72,7 +72,7 @@ public class TestSubnodeConfiguration {
     /**
      * Initializes the parent configuration. This method creates the typical structure of tables and fields nodes.
      *
-     * @return the parent configuration
+     * @return The parent configuration
      */
     private static BaseHierarchicalConfiguration setUpParentConfig() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
@@ -143,7 +143,7 @@ public class TestSubnodeConfiguration {
      * Sets up the tracked model for the sub configuration.
      *
      * @param selector the selector
-     * @return the tracked model
+     * @return The tracked model
      */
     private TrackedNodeModel setUpTrackedModel(final NodeSelector selector) {
         final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();

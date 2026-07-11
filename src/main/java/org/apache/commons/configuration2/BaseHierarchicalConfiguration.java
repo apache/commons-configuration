@@ -184,7 +184,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Gets the result of this builder: the root node of the interpolated nodes hierarchy.
          *
-         * @return the resulting root node
+         * @return The resulting root node
          */
         public ImmutableNode getInterpolatedRoot() {
             return interpolatedRoot;
@@ -212,7 +212,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param node the current node to be processed
          * @param handler the {@code NodeHandler}
-         * @return the map with interpolated attributes
+         * @return The map with interpolated attributes
          */
         private Map<String, Object> interpolateAttributes(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
             final Map<String, Object> attributes = new HashMap<>();
@@ -255,7 +255,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Returns the top-level element from the stack without removing it.
          *
-         * @return the top-level element from the stack
+         * @return The top-level element from the stack
          */
         private ImmutableNode.Builder peek() {
             return builderStack.get(0);
@@ -264,7 +264,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Pops the top-level element from the stack.
          *
-         * @return the element popped from the stack
+         * @return The element popped from the stack
          */
         private ImmutableNode.Builder pop() {
             return builderStack.remove(0);
@@ -330,7 +330,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * the root node of this configuration. Otherwise, a new, empty root node is used.
      *
      * @param c the configuration that is to be copied
-     * @return the {@code NodeModel} for the new configuration
+     * @return The {@code NodeModel} for the new configuration
      */
     private static NodeModel<ImmutableNode> createNodeModel(final HierarchicalConfiguration<ImmutableNode> c) {
         return new InMemoryNodeModel(obtainRootNode(c));
@@ -341,7 +341,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * called correctly.
      *
      * @param c the configuration that is to be copied
-     * @return the root node of this configuration
+     * @return The root node of this configuration
      */
     private static ImmutableNode obtainRootNode(final HierarchicalConfiguration<ImmutableNode> c) {
         return c != null ? c.getNodeModel().getNodeHandler().getRootNode() : null;
@@ -481,7 +481,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a listener which reacts on all changes on this configuration or one of its {@code SubnodeConfiguration}
      * instances. If such a change is detected, some updates have to be performed.
      *
-     * @return the newly created change listener
+     * @return The newly created change listener
      */
     private EventListener<ConfigurationEvent> createChangeListener() {
         return this::subnodeConfigurationChanged;
@@ -492,7 +492,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * creates a {@link SubnodeConfiguration} with a tracked node identified by the passed in key.
      *
      * @param key the key of the sub configuration
-     * @return the new sub configuration
+     * @return The new sub configuration
      */
     private BaseHierarchicalConfiguration createConnectedSubConfiguration(final String key) {
         final NodeSelector selector = getSubConfigurationNodeSelector(key);
@@ -505,7 +505,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @param parentModelSupport the parent node model support object
      * @param selectors the list of {@code NodeSelector} objects
-     * @return the list with sub configurations
+     * @return The list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(final InMemoryNodeModelSupport parentModelSupport,
         final Collection<NodeSelector> selectors) {
@@ -517,7 +517,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * sub configuration operates on a separate node model (although the nodes are initially shared).
      *
      * @param key the key of the sub configuration
-     * @return the new sub configuration
+     * @return The new sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfiguration(final String key) {
         final List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
@@ -535,7 +535,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * {@code BaseHierarchicalConfiguration}. Thus, it is independent from this configuration.
      *
      * @param node the root node for the sub configuration
-     * @return the initialized sub configuration
+     * @return The initialized sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfigurationForNode(final ImmutableNode node) {
         final BaseHierarchicalConfiguration sub = new BaseHierarchicalConfiguration(new InMemoryNodeModel(node));
@@ -548,7 +548,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @param selector the {@code NodeSelector}
      * @param parentModelSupport the {@code InMemoryNodeModelSupport} object for the parent node model
-     * @return the newly created sub configuration
+     * @return The newly created sub configuration
      * @since 2.0
      */
     protected SubnodeConfiguration createSubConfigurationForTrackedNode(final NodeSelector selector, final InMemoryNodeModelSupport parentModelSupport) {
@@ -563,7 +563,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * assigned as value of the new root node.
      *
      * @param results the collection of query results
-     * @return the root node for the subset configuration
+     * @return The root node for the subset configuration
      */
     private ImmutableNode createSubsetRootNode(final Collection<QueryResult<ImmutableNode>> results) {
         final ImmutableNode.Builder builder = new ImmutableNode.Builder();
@@ -593,7 +593,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Executes a query on the specified key and filters it for node results.
      *
      * @param key the key
-     * @return the filtered list with result nodes
+     * @return The filtered list with result nodes
      */
     private List<ImmutableNode> fetchFilteredNodeResults(final String key) {
         final NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
@@ -627,7 +627,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * whenever a sub configuration is to be created. This base implementation returns the model of this configuration. Sub
      * classes with different requirements for the parent models of sub configurations have to override it.
      *
-     * @return the parent model for a new sub configuration
+     * @return The parent model for a new sub configuration
      */
     protected InMemoryNodeModel getSubConfigurationParentModel() {
         return (InMemoryNodeModel) getModel();

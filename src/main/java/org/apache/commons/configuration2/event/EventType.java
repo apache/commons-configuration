@@ -106,7 +106,7 @@ public class EventType<T extends Event> implements Serializable {
      * Gets the name of this event type. The name has no specific semantic meaning. It is just used for debugging
      * purposes and also part of the string representation of this event type.
      *
-     * @return the event type name
+     * @return The event type name
      */
     public String getName() {
         return name;
@@ -115,7 +115,7 @@ public class EventType<T extends Event> implements Serializable {
     /**
      * Gets the super event type. Result is <strong>null</strong> for the root event type.
      *
-     * @return the super event type
+     * @return The super event type
      */
     public EventType<? super T> getSuperType() {
         return superType;

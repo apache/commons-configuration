@@ -61,7 +61,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Returns a {@code ReloadingDetectorFactory} either from the passed in parameters or a default factory.
      *
      * @param params the current parameters object
-     * @return the {@code ReloadingDetectorFactory} to be used
+     * @return The {@code ReloadingDetectorFactory} to be used
      */
     private static ReloadingDetectorFactory fetchDetectorFactory(final FileBasedBuilderParametersImpl params) {
         final ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
@@ -133,7 +133,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * not support changing the reloading detector; therefore, this level of indirection is needed to change the monitored
      * file dynamically.)
      *
-     * @return the new {@code ReloadingController}
+     * @return The new {@code ReloadingController}
      */
     private ReloadingController createReloadingController() {
         final ReloadingDetector ctrlDetector = createReloadingDetectorForController();
@@ -163,7 +163,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a {@code ReloadingDetector} wrapper to be passed to the associated {@code ReloadingController}. This detector
      * wrapper simply delegates to the current {@code ReloadingDetector} if it is available.
      *
-     * @return the wrapper {@code ReloadingDetector}
+     * @return The wrapper {@code ReloadingDetector}
      */
     private ReloadingDetector createReloadingDetectorForController() {
         return new ReloadingDetector() {
@@ -187,7 +187,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Gets the {@code ReloadingController} associated with this builder. This controller is directly created. However,
      * it becomes active (i.e. associated with a meaningful reloading detector) not before a result object was created.
      *
-     * @return the {@code ReloadingController}
+     * @return The {@code ReloadingController}
      */
     @Override
     public ReloadingController getReloadingController() {

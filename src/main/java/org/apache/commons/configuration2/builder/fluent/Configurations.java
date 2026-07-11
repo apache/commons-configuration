@@ -134,7 +134,7 @@ public class Configurations {
      * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given file to be loaded.
      *
      * @param file the file to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
+     * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final File file) {
         return new CombinedConfigurationBuilder().configure(fileParams(file));
@@ -145,7 +145,7 @@ public class Configurations {
      * loaded.
      *
      * @param path the path to the file to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
+     * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final String path) {
         return new CombinedConfigurationBuilder().configure(fileParams(path));
@@ -155,7 +155,7 @@ public class Configurations {
      * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
-     * @return the newly created {@code CombinedConfigurationBuilder}
+     * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final URL url) {
         return new CombinedConfigurationBuilder().configure(fileParams(url));
@@ -166,7 +166,7 @@ public class Configurations {
      *
      * @param configClass the configuration class
      * @param <T> The type of the configuration to be constructed
-     * @return the newly created builder
+     * @return The newly created builder
      * @since 2.6
      */
     private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass) {
@@ -179,7 +179,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param params the parameters object for configuring the builder
      * @param <T> The type of the configuration to be constructed
-     * @return the newly created builder
+     * @return The newly created builder
      */
     private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(final Class<T> configClass,
         final FileBasedBuilderParameters params) {
@@ -238,7 +238,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param file the file to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
+     * @return The new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final File file) {
         return createFileBasedBuilder(configClass, fileParams(file));
@@ -251,7 +251,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param path the path to the file to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
+     * @return The new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final String path) {
         return createFileBasedBuilder(configClass, fileParams(path));
@@ -264,7 +264,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param url the URL to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return the new {@code FileBasedConfigurationBuilder}
+     * @return The new {@code FileBasedConfigurationBuilder}
      */
     public <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> fileBasedBuilder(final Class<T> configClass, final URL url) {
         return createFileBasedBuilder(configClass, fileParams(url));
@@ -273,7 +273,7 @@ public class Configurations {
     /**
      * Convenience method for creating a parameters object for a file-based configuration.
      *
-     * @return the newly created parameters object
+     * @return The newly created parameters object
      */
     private FileBasedBuilderParameters fileParams() {
         return getParameters().fileBased();
@@ -283,7 +283,7 @@ public class Configurations {
      * Convenience method for creating a file-based parameters object initialized with the given file.
      *
      * @param file the file to be loaded
-     * @return the initialized parameters object
+     * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final File file) {
         return fileParams().setFile(file);
@@ -293,7 +293,7 @@ public class Configurations {
      * Convenience method for creating a file-based parameters object initialized with the given file path.
      *
      * @param path the path to the file to be loaded
-     * @return the initialized parameters object
+     * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final String path) {
         return fileParams().setFileName(path);
@@ -303,7 +303,7 @@ public class Configurations {
      * Convenience method for creating a file-based parameters object initialized with the given file.
      *
      * @param url the URL to be loaded
-     * @return the initialized parameters object
+     * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final URL url) {
         return fileParams().setURL(url);
@@ -312,7 +312,7 @@ public class Configurations {
     /**
      * Gets the {@code Parameters} instance associated with this object.
      *
-     * @return the associated {@code Parameters} object
+     * @return The associated {@code Parameters} object
      */
     public Parameters getParameters() {
         return parameters;
@@ -361,7 +361,7 @@ public class Configurations {
      * Creates a builder for a {@code INIConfiguration} and initializes it with the given file to be loaded.
      *
      * @param file the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final File file) {
         return fileBasedBuilder(INIConfiguration.class, file);
@@ -371,7 +371,7 @@ public class Configurations {
      * Creates a builder for a {@code INIConfiguration} and initializes it with the file file identified by the given path.
      *
      * @param path the path to the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final String path) {
         return fileBasedBuilder(INIConfiguration.class, path);
@@ -381,7 +381,7 @@ public class Configurations {
      * Creates a builder for a {@code INIConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final URL url) {
         return fileBasedBuilder(INIConfiguration.class, url);
@@ -429,7 +429,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code PropertiesConfiguration}.
      *
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      * @since 2.6
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder() {
@@ -440,7 +440,7 @@ public class Configurations {
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given file to be loaded.
      *
      * @param file the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final File file) {
         return fileBasedBuilder(PropertiesConfiguration.class, file);
@@ -450,7 +450,7 @@ public class Configurations {
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given parameters to be loaded.
      *
      * @param parameters the parameters to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      * @since 2.6
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final PropertiesBuilderParameters parameters) {
@@ -462,7 +462,7 @@ public class Configurations {
      * loaded.
      *
      * @param path the path to the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final String path) {
         return fileBasedBuilder(PropertiesConfiguration.class, path);
@@ -472,7 +472,7 @@ public class Configurations {
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final URL url) {
         return fileBasedBuilder(PropertiesConfiguration.class, url);
@@ -521,7 +521,7 @@ public class Configurations {
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given file to be loaded.
      *
      * @param file the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final File file) {
         return fileBasedBuilder(XMLConfiguration.class, file);
@@ -531,7 +531,7 @@ public class Configurations {
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given path to the file to be loaded.
      *
      * @param path the path to the file to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final String path) {
         return fileBasedBuilder(XMLConfiguration.class, path);
@@ -541,7 +541,7 @@ public class Configurations {
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given URL to be loaded.
      *
      * @param url the URL to be loaded
-     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final URL url) {
         return fileBasedBuilder(XMLConfiguration.class, url);

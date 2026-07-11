@@ -126,7 +126,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * tries to add something to an attribute.
      *
      * @param key the invalid key causing this exception
-     * @return the exception
+     * @return The exception
      */
     private static IllegalArgumentException attributeKeyException(final String key) {
         return new IllegalArgumentException("New nodes cannot be added to an attribute key: " + key);
@@ -151,7 +151,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param childName the name of the child node
      * @param resolver the {@code NodeKeyResolver}
      * @param refSelector here the newly created {@code NodeSelector} is returned
-     * @return the new {@code TreeData} instance
+     * @return The new {@code TreeData} instance
      */
     private static TreeData createDataWithTrackedChildNode(final TreeData current, final ImmutableNode parent, final String childName,
         final NodeKeyResolver<ImmutableNode> resolver, final MutableObject<NodeSelector> refSelector) {
@@ -174,7 +174,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param it the iterator over the names of the path nodes
      * @param newNodes the collection of new child nodes
-     * @return the newly created path node
+     * @return The newly created path node
      */
     private static ImmutableNode createNodeOnPath(final Iterator<String> it, final Collection<ImmutableNode> newNodes) {
         final String nodeName = it.next();
@@ -194,7 +194,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param newNodeName the name of the new nodes
      * @param values the collection with node values
-     * @return the newly created collection
+     * @return The newly created collection
      */
     private static Collection<ImmutableNode> createNodesToAdd(final String newNodeName, final Iterable<?> values) {
         final Collection<ImmutableNode> nodes = new LinkedList<>();
@@ -208,7 +208,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param addData the {@code NodeAddData}
      * @param newNodes the collection of new child nodes
-     * @return the parent node of the newly created hierarchy
+     * @return The parent node of the newly created hierarchy
      */
     private static ImmutableNode createNodeToAddWithPath(final NodeAddData<ImmutableNode> addData, final Collection<ImmutableNode> newNodes) {
         return createNodeOnPath(addData.getPathNodes().iterator(), newNodes);
@@ -221,7 +221,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param nodes the nodes to be tracked
      * @param current the current {@code TreeData} object
      * @param resolver the {@code NodeKeyResolver}
-     * @return the updated {@code TreeData} object
+     * @return The updated {@code TreeData} object
      */
     private static TreeData createSelectorsForTrackedNodes(final Mutable<Collection<NodeSelector>> refSelectors, final List<ImmutableNode> nodes,
             final TreeData current, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -241,7 +241,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param rootNode the current root node
      * @param node the node to be merged with the root node
      * @param rootName the name of the resulting node
-     * @return the new name of the root node
+     * @return The new name of the root node
      */
     private static String determineRootName(final ImmutableNode rootNode, final ImmutableNode node, final String rootName) {
         if (rootName != null) {
@@ -297,7 +297,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * dummy root node is created.
      *
      * @param providedRoot the passed in root node
-     * @return the root node to be used
+     * @return The root node to be used
      */
     private static ImmutableNode initialRootNode(final ImmutableNode providedRoot) {
         return providedRoot != null ? providedRoot : new ImmutableNode.Builder().create();
@@ -310,7 +310,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param node the node in question
      * @param resolver the {@code NodeKeyResolver}
      * @param refSelector here the newly created {@code NodeSelector} is returned
-     * @return the new {@code TreeData} instance
+     * @return The new {@code TreeData} instance
      */
     private static TreeData updateDataWithNewTrackedNode(final TreeData current, final ImmutableNode node, final NodeKeyResolver<ImmutableNode> resolver,
         final MutableObject<NodeSelector> refSelector) {
@@ -522,7 +522,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * huge structures.
      *
      * @param root the root node of the structure
-     * @return the parent node mapping
+     * @return The parent node mapping
      */
     private Map<ImmutableNode, ImmutableNode> createParentMapping(final ImmutableNode root) {
         final Map<ImmutableNode, ImmutableNode> parents = new HashMap<>();
@@ -535,7 +535,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param root the root node of the current tree
      * @param current the current {@code TreeData} object (may be <strong>null</strong>)
-     * @return the {@code TreeData} describing the current tree
+     * @return The {@code TreeData} describing the current tree
      */
     private TreeData createTreeData(final ImmutableNode root, final TreeData current) {
         final NodeTracker newTracker = current != null ? current.getNodeTracker().detachAllTrackedNodes() : new NodeTracker();
@@ -548,7 +548,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param root the new root node for this model
      * @param newTracker the new {@code NodeTracker}
-     * @return the new {@code TreeData} object
+     * @return The new {@code TreeData} object
      */
     private TreeData createTreeDataForRootAndTracker(final ImmutableNode root, final NodeTracker newTracker) {
         return new TreeData(root, createParentMapping(root), Collections.<ImmutableNode, ImmutableNode>emptyMap(), newTracker, new ReferenceTracker());
@@ -622,7 +622,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Gets a {@code ReferenceNodeHandler} object for this model. This extended node handler can be used to query
      * references objects stored for this model.
      *
-     * @return the {@code ReferenceNodeHandler}
+     * @return The {@code ReferenceNodeHandler}
      */
     public ReferenceNodeHandler getReferenceNodeHandler() {
         return getTreeData();
@@ -635,7 +635,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * connection between a node handler and its root node remain constant because an update of the model causes the whole
      * node handler to be replaced.
      *
-     * @return the current root node
+     * @return The current root node
      */
     public ImmutableNode getRootNode() {
         return getTreeData().getRootNode();
@@ -647,7 +647,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * selector.
      *
      * @param selector the {@code NodeSelector} defining the desired node
-     * @return the current {@code ImmutableNode} associated with this selector
+     * @return The current {@code ImmutableNode} associated with this selector
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
     public ImmutableNode getTrackedNode(final NodeSelector selector) {
@@ -674,7 +674,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Gets the current {@code TreeData} object. This object contains all information about the current node structure.
      *
-     * @return the current {@code TreeData} object
+     * @return The current {@code TreeData} object
      */
     TreeData getTreeData() {
         return structure.get();
@@ -925,7 +925,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param key the key for selecting the parent node
      * @param childName the name of the child node
      * @param resolver the {@code NodeKeyResolver}
-     * @return the {@code NodeSelector} for the tracked child node
+     * @return The {@code NodeSelector} for the tracked child node
      * @throws ConfigurationRuntimeException if the passed in key does not select a single node
      */
     public NodeSelector trackChildNodeWithCreation(final String key, final String childName, final NodeKeyResolver<ImmutableNode> resolver) {

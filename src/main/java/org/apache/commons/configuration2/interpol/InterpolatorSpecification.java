@@ -103,7 +103,7 @@ public final class InterpolatorSpecification {
          * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
          * instance is reset so that it can be reused for creating further specification objects.
          *
-         * @return the newly created {@code InterpolatorSpecification}
+         * @return The newly created {@code InterpolatorSpecification}
          */
         public InterpolatorSpecification create() {
             final InterpolatorSpecification spec = new InterpolatorSpecification(this);
@@ -252,7 +252,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets a collection with the default lookups.
      *
-     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
+     * @return The default lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Collection<Lookup> getDefaultLookups() {
         return defaultLookups;
@@ -261,7 +261,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the {@code ConfigurationInterpolator} instance to be used directly.
      *
-     * @return the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getInterpolator() {
         return interpolator;
@@ -270,7 +270,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the parent {@code ConfigurationInterpolator} object.
      *
-     * @return the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getParentInterpolator() {
         return parentInterpolator;
@@ -280,7 +280,7 @@ public final class InterpolatorSpecification {
      * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
      * {@code Lookup} objects.
      *
-     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
+     * @return The prefix lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Map<String, Lookup> getPrefixLookups() {
         return prefixLookups;

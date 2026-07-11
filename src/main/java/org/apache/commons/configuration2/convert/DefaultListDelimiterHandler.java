@@ -104,7 +104,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
     /**
      * Gets the list delimiter character used by this instance.
      *
-     * @return the list delimiter character
+     * @return The list delimiter character
      */
     public char getDelimiter() {
         return delimiter;

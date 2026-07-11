@@ -64,7 +64,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          *
          *
          * @param children the collection to be filtered
-         * @return the collection with null entries removed
+         * @return The collection with null entries removed
          */
         private static Collection<? extends ImmutableNode> filterNull(final Collection<? extends ImmutableNode> children) {
             final List<ImmutableNode> result = new ArrayList<>(children.size());
@@ -207,7 +207,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
         /**
          * Creates a new {@code ImmutableNode} instance based on the properties set for this builder.
          *
-         * @return the newly created {@code ImmutableNode}
+         * @return The newly created {@code ImmutableNode}
          */
         public ImmutableNode create() {
             final ImmutableNode newNode = new ImmutableNode(this);
@@ -236,7 +236,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Creates a list with the children of the newly created node. The list returned here is always immutable. It depends on
          * the way this builder was populated.
          *
-         * @return the list with the children of the new node
+         * @return The list with the children of the new node
          */
         List<ImmutableNode> createChildren() {
             if (directChildren != null) {
@@ -341,7 +341,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Creates a new {@code ImmutableNode} instance which is a copy of this object, but has the given child node added.
      *
      * @param child the child node to be added (must not be <strong>null</strong>)
-     * @return the new node with the child node added
+     * @return The new node with the child node added
      * @throws IllegalArgumentException if the child node is <strong>null</strong>
      */
     public ImmutableNode addChild(final ImmutableNode child) {
@@ -356,7 +356,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * a helper method for updating a node when only children or attributes are affected.
      *
      * @param builder the already prepared builder
-     * @return the newly created node
+     * @return The newly created node
      */
     private ImmutableNode createWithBasicProperties(final Builder builder) {
         return builder.name(nodeName).value(value).create();
@@ -367,7 +367,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * attributes.
      *
      * @param newAttrs the new attributes
-     * @return the new node instance
+     * @return The new node instance
      */
     private ImmutableNode createWithNewAttributes(final Map<String, Object> newAttrs) {
         return createWithBasicProperties(new Builder(children, null).addAttributes(newAttrs));
@@ -407,7 +407,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Gets the name of this node.
      *
-     * @return the name of this node
+     * @return The name of this node
      */
     public String getNodeName() {
         return nodeName;
@@ -416,7 +416,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Gets the value of this node.
      *
-     * @return the value of this node
+     * @return The value of this node
      */
     public Object getValue() {
         return value;
@@ -436,7 +436,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * removed. If there is no attribute with the given name, the same node instance is returned.
      *
      * @param name the name of the attribute
-     * @return the new node without this attribute
+     * @return The new node without this attribute
      */
     public ImmutableNode removeAttribute(final String name) {
         final Map<String, Object> newAttrs = new HashMap<>(attributes);
@@ -451,7 +451,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * If the child node does not belong to this node, the same node instance is returned.
      *
      * @param child the child node to be removed
-     * @return the new node with the child node removed
+     * @return The new node with the child node removed
      */
     public ImmutableNode removeChild(final ImmutableNode child) {
         // use same size of children in case the child does not exist
@@ -474,7 +474,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      *
      * @param oldChild the child node to be replaced
      * @param newChild the replacing child node (must not be <strong>null</strong>)
-     * @return the new node with the child replaced
+     * @return The new node with the child replaced
      * @throws IllegalArgumentException if the new child node is <strong>null</strong>
      */
     public ImmutableNode replaceChild(final ImmutableNode oldChild, final ImmutableNode newChild) {
@@ -499,7 +499,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * the same rules apply as for {@link Builder#addChildren(Collection)}.
      *
      * @param newChildren the collection with the new children (may be <strong>null</strong>)
-     * @return the new node with replaced children
+     * @return The new node with replaced children
      */
     public ImmutableNode replaceChildren(final Collection<ImmutableNode> newChildren) {
         final Builder builder = new Builder(null, attributes);
@@ -514,7 +514,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      *
      * @param name the name of the attribute
      * @param value the attribute value
-     * @return the new node with this attribute
+     * @return The new node with this attribute
      */
     public ImmutableNode setAttribute(final String name, final Object value) {
         final Map<String, Object> newAttrs = new HashMap<>(attributes);
@@ -528,7 +528,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * are added. If the map is <strong>null</strong> or empty, this method has no effect.
      *
      * @param newAttributes the map with attributes to be added
-     * @return the new node with these attributes
+     * @return The new node with these attributes
      */
     public ImmutableNode setAttributes(final Map<String, ?> newAttributes) {
         if (newAttributes == null || newAttributes.isEmpty()) {
@@ -545,7 +545,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * value.
      *
      * @param name the name of the newly created node
-     * @return the new node with the changed name
+     * @return The new node with the changed name
      */
     public ImmutableNode setName(final String name) {
         return new Builder(children, attributes).name(name).value(value).create();
@@ -556,7 +556,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * value.
      *
      * @param newValue the value of the newly created node
-     * @return the new node with the changed value
+     * @return The new node with the changed value
      */
     public ImmutableNode setValue(final Object newValue) {
         return new Builder(children, attributes).name(nodeName).value(newValue).create();

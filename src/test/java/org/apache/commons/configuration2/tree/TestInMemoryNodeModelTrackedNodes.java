@@ -131,7 +131,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Creates a default resolver which supports arbitrary queries on a target node.
      *
-     * @return the resolver
+     * @return The resolver
      */
     private static NodeKeyResolver<ImmutableNode> createResolver() {
         final NodeKeyResolver<ImmutableNode> resolver = NodeStructureHelper.createResolverMock();
@@ -205,7 +205,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Returns the fields node from the model.
      *
-     * @return the fields node
+     * @return The fields node
      */
     private ImmutableNode fieldsNodeFromModel() {
         return NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
@@ -214,7 +214,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Returns the fields node from a tracked node.
      *
-     * @return the fields node
+     * @return The fields node
      */
     private ImmutableNode fieldsNodeFromTrackedNode() {
         return NodeStructureHelper.nodeForKey(model.getTrackedNode(selector), "fields");

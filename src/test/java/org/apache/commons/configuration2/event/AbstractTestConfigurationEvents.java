@@ -47,7 +47,7 @@ public abstract class AbstractTestConfigurationEvents {
     /**
      * Creates the configuration instance to be tested.
      *
-     * @return the configuration instance under test
+     * @return The configuration instance under test
      */
     protected abstract AbstractConfiguration createConfiguration();
 
