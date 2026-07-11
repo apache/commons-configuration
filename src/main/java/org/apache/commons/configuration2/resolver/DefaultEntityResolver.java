@@ -84,8 +84,8 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
      * Resolves the requested external entity. This is the default implementation of the {@code EntityResolver} interface.
      * It checks the passed in public ID against the registered entity IDs and uses a local URL if possible.
      *
-     * @param publicId the public identifier of the entity being referenced
-     * @param systemId the system identifier of the entity being referenced
+     * @param publicId The public identifier of the entity being referenced
+     * @param systemId The system identifier of the entity being referenced
      * @return An input source for the specified entity
      * @throws org.xml.sax.SAXException if a parsing exception occurs
      */

@@ -57,7 +57,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
     /**
      * Helper method for transforming a URL into a file object. This method handles file: and jar: URLs.
      *
-     * @param url the URL to be converted
+     * @param url The URL to be converted
      * @return The resulting file or <strong>null </strong>
      */
     private static File fileFromURL(final URL url) {
@@ -96,7 +96,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Creates a new instance of {@code FileHandlerReloadingDetector} and initializes it with the {@code FileHandler} to
      * monitor and a default refresh delay.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can be <strong>null</strong>)
+     * @param handler The {@code FileHandler} associated with this detector (can be <strong>null</strong>)
      */
     public FileHandlerReloadingDetector(final FileHandler handler) {
         this(handler, DEFAULT_REFRESH_DELAY_MILLIS);
@@ -107,8 +107,8 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * monitor and the refresh delay. The handler is directly used, no copy is created. So it is possible to change the
      * location monitored by manipulating the {@code FileHandler} object.
      *
-     * @param handler the {@code FileHandler} associated with this detector (can be <strong>null</strong>)
-     * @param refreshDelayMillis the refresh delay; a value of 0 means that a check is performed in all cases
+     * @param handler The {@code FileHandler} associated with this detector (can be <strong>null</strong>)
+     * @param refreshDelayMillis The refresh delay; a value of 0 means that a check is performed in all cases
      */
     public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelayMillis) {
         fileHandler = handler != null ? handler : new FileHandler();
@@ -218,7 +218,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector {
      * Updates the last modification date of the monitored file. The need for a reload is detected only if the file's
      * modification date is different from this value.
      *
-     * @param timeMillis the new last modification date
+     * @param timeMillis The new last modification date
      */
     protected void updateLastModified(final long timeMillis) {
         lastModifiedMillis = timeMillis;

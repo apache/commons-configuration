@@ -70,8 +70,8 @@ public class TestReloadingController {
      * Prepares the given event listener mock to expect an event notification. The event received is stored in the given
      * mutable object.
      *
-     * @param l the listener mock
-     * @param evRef the reference where to store the event
+     * @param l The listener mock
+     * @param evRef The reference where to store the event
      */
     private void setupEvent(final EventListener<ReloadingEvent> l, final MutableObject<ReloadingEvent> evRef) {
         doAnswer(invocation -> {
@@ -198,7 +198,7 @@ public class TestReloadingController {
     /**
      * Verifies that an invocation has occurred on the given event listener for an event notification.
      *
-     * @param l the listener mock
+     * @param l The listener mock
      */
     private void verifyEvent(final EventListener<ReloadingEvent> l) {
         verify(l).onEvent(any());

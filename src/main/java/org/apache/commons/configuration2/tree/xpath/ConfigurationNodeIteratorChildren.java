@@ -42,10 +42,10 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorChildren} and initializes it.
      *
-     * @param parent the parent pointer
-     * @param nodeTest the test selecting the sub nodes
-     * @param reverse the reverse flag
-     * @param startsWith the first element of the iteration
+     * @param parent The parent pointer
+     * @param nodeTest The test selecting the sub nodes
+     * @param reverse The reverse flag
+     * @param startsWith The first element of the iteration
      */
     public ConfigurationNodeIteratorChildren(final ConfigurationNodePointer<T> parent, final NodeTest nodeTest, final boolean reverse,
         final ConfigurationNodePointer<T> startsWith) {
@@ -63,7 +63,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Creates the configuration node pointer for the current position.
      *
-     * @param position the current position in the iteration
+     * @param position The current position in the iteration
      * @return The node pointer
      */
     @Override
@@ -75,8 +75,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Creates the list with sub nodes. This method gets called during initialization phase. It finds out, based on the
      * given test, which nodes must be iterated over.
      *
-     * @param node the current node
-     * @param test the test object
+     * @param node The current node
+     * @param test The test object
      * @return A list with the matching nodes
      */
     private List<T> createSubNodeList(final T node, final NodeTest test) {
@@ -101,8 +101,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Obtains the list of selected nodes for a {@code NodeNameTest} with either a simple or a qualified name.
      *
-     * @param node the current node
-     * @param qName the name to be selected
+     * @param node The current node
+     * @param qName The name to be selected
      * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForName(final T node, final QName qName) {
@@ -119,8 +119,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Obtains the list of selected sub nodes for a {@code NodeNameTest} with a wildcard name.
      *
-     * @param node the current node
-     * @param qName the name to be selected
+     * @param node The current node
+     * @param qName The name to be selected
      * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForWildcardName(final T node, final QName qName) {
@@ -142,8 +142,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Determines the start position of the iteration. Finds the index of the given start node in the children of the root
      * node.
      *
-     * @param children the children of the root node
-     * @param startNode the start node
+     * @param children The children of the root node
+     * @param startNode The start node
      * @return The start node's index
      */
     private int findStartIndex(final List<T> children, final T startNode) {

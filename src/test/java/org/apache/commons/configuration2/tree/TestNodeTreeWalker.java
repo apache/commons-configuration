@@ -63,7 +63,7 @@ public class TestNodeTreeWalker {
         /**
          * Sets the maximum number of nodes to be visited. After this the terminate flag is set.
          *
-         * @param maxNodeCount the maximum number of nodes
+         * @param maxNodeCount The maximum number of nodes
          */
         public void setMaxNodeCount(final int maxNodeCount) {
             this.maxNodeCount = maxNodeCount;
@@ -107,7 +107,7 @@ public class TestNodeTreeWalker {
     /**
      * Generates a name which indicates that the corresponding node was visited after its children.
      *
-     * @param name the node name to be decorated
+     * @param name The node name to be decorated
      * @return The name with the after indicator
      */
     private static String visitAfterName(final String name) {

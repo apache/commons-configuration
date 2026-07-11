@@ -65,7 +65,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Creates an instance of a parameter class using reflection.
      *
-     * @param paramcls the parameter class
+     * @param paramcls The parameter class
      * @return The newly created instance
      * @throws Exception if an error occurs
      */
@@ -76,7 +76,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Creates a new, unmodifiable collection for the parameter classes.
      *
-     * @param paramCls the collection with parameter classes passed to the constructor
+     * @param paramCls The collection with parameter classes passed to the constructor
      * @return The collection to be stored
      */
     private static Collection<String> initParameterClasses(final Collection<String> paramCls) {
@@ -101,11 +101,11 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
     /**
      * Creates a new instance of {@code BaseConfigurationBuilderProvider} and initializes all its properties.
      *
-     * @param bldrCls the name of the builder class (must not be <strong>null</strong>)
-     * @param reloadBldrCls the name of a builder class to be used if reloading support is required (<strong>null</strong> if
+     * @param bldrCls The name of the builder class (must not be <strong>null</strong>)
+     * @param reloadBldrCls The name of a builder class to be used if reloading support is required (<strong>null</strong> if
      *        reloading is not supported)
-     * @param configCls the name of the configuration class (must not be <strong>null</strong>)
-     * @param paramCls a collection with the names of parameters classes
+     * @param configCls The name of the configuration class (must not be <strong>null</strong>)
+     * @param paramCls A collection with the names of parameters classes
      * @throws IllegalArgumentException if a required parameter is missing
      */
     public BaseConfigurationBuilderProvider(final String bldrCls, final String reloadBldrCls, final String configCls, final Collection<String> paramCls) {
@@ -127,9 +127,9 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * instance was created using reflection. This implementation passes the parameter objects to the builder's
      * {@code configure()} method.
      *
-     * @param builder the builder to be initialized
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with initialization parameter objects
+     * @param builder The builder to be initialized
+     * @param decl The current {@code ConfigurationDeclaration}
+     * @param params The collection with initialization parameter objects
      * @throws Exception if an error occurs
      */
     protected void configureBuilder(final BasicConfigurationBuilder<? extends Configuration> builder, final ConfigurationDeclaration decl,
@@ -142,7 +142,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * the builder class to be used by delegating to {@code determineBuilderClass()}. It then calls the constructor
      * expecting the configuration class, the map with properties, and the<em>allowFailOnInit</em> flag.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
+     * @param decl The current {@code ConfigurationDeclaration}
      * @param params initialization parameters for the new builder object
      * @return The newly created builder instance
      * @throws Exception if an error occurs
@@ -179,7 +179,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * normal and the reloading builder class, based on the passed in {@code ConfigurationDeclaration}. If a reloading
      * builder is desired, but this provider has no reloading support, an exception is thrown.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
+     * @param decl The current {@code ConfigurationDeclaration}
      * @return The name of the builder class
      * @throws ConfigurationException if the builder class cannot be determined
      */
@@ -199,8 +199,8 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * configuration class name. Derived classes may determine this class name dynamically based on the passed in
      * parameters.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with parameter objects
+     * @param decl The current {@code ConfigurationDeclaration}
+     * @param params The collection with parameter objects
      * @return The name of the builder's result configuration class
      * @throws ConfigurationException if an error occurs
      */
@@ -271,8 +271,8 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * definition configuration. This way properties from the parent builder are inherited, but can be overridden for child
      * configurations.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with (uninitialized) parameter objects
+     * @param decl The current {@code ConfigurationDeclaration}
+     * @param params The collection with (uninitialized) parameter objects
      */
     protected void inheritParentBuilderProperties(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) {
         params.forEach(p -> decl.getConfigurationBuilder().initChildBuilderParameters(p));
@@ -284,8 +284,8 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * to properties of parameter objects. In addition, it invokes the parent {@code CombinedConfigurationBuilder} so that
      * the parameters object can inherit properties already defined for this builder.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
-     * @param params the collection with (uninitialized) parameter objects
+     * @param decl The current {@code ConfigurationDeclaration}
+     * @param params The collection with (uninitialized) parameter objects
      * @throws Exception if an error occurs
      */
     protected void initializeParameterObjects(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) throws Exception {
@@ -299,7 +299,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * {@code ConfigurationDeclaration}. Some combinations of flags in the declaration say that a configuration source is
      * optional, but an empty instance should be created if its creation fail.
      *
-     * @param decl the current {@code ConfigurationDeclaration}
+     * @param decl The current {@code ConfigurationDeclaration}
      * @return The value of the <em>allowFailOnInit</em> flag
      */
     protected boolean isAllowFailOnInit(final ConfigurationDeclaration decl) {

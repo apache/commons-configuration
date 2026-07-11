@@ -35,7 +35,7 @@ public class TestConfigurationDeclaration {
     /**
      * Creates a default test instance.
      *
-     * @param conf the configuration to be used (may be <strong>null</strong> for a default one)
+     * @param conf The configuration to be used (may be <strong>null</strong> for a default one)
      * @return The test object
      */
     private static ConfigurationDeclaration createDeclaration(final HierarchicalConfiguration<?> conf) {
@@ -48,7 +48,7 @@ public class TestConfigurationDeclaration {
      * attributes "at" and "optional" are also treated as reserved attributes, but only if there are no corresponding
      * attributes with the "config-" prefix.
      *
-     * @param name the attribute name
+     * @param name The attribute name
      */
     private void checkOldReservedAttribute(final String name) {
         final String prefixName = "config-" + name;

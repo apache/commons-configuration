@@ -38,7 +38,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests accessing and manipulating the interpolator object.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testGetInterpolator(final AbstractConfiguration config) {
         config.addProperty("var", "${echo:testVar}");
@@ -50,7 +50,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests obtaining a configuration with all variables replaced by their actual values.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      * @return The interpolated configuration
      */
     public static Configuration testInterpolatedConfiguration(final AbstractConfiguration config) {
@@ -79,7 +79,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests basic interpolation facilities of the specified configuration.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolation(final Configuration config) {
         config.setProperty("applicationRoot", "/home/applicationRoot");
@@ -103,7 +103,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation of constant values.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationConstants(final Configuration config) {
         config.addProperty("key.code", "${const:java.awt.event.KeyEvent.VK_CANCEL}");
@@ -114,7 +114,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation of environment properties.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationEnvironment(final Configuration config) {
         final Map<String, String> env = System.getenv();
@@ -130,7 +130,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests whether a variable can be escaped, so that it won't be interpolated.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationEscaped(final Configuration config) {
         config.addProperty("var", "x");
@@ -141,7 +141,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation of localhost properties.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationLocalhost(final Configuration config) {
         final String[] localhostKeys = {"name", "canonical-name", "address"};
@@ -160,7 +160,7 @@ public final class InterpolationTestHelper {
      * Tests an invalid interpolation that results in an infinite loop. This loop should be detected and an exception should
      * be thrown.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationLoop(final Configuration config) {
         config.setProperty("test.a", "${test.b}");
@@ -172,7 +172,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation when a subset configuration is involved.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationSubset(final Configuration config) {
         config.addProperty("test.a", Integer.valueOf(42));
@@ -186,7 +186,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation of system properties.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationSystemProperties(final Configuration config) {
         final String[] sysProperties = {"java.version", "java.vendor", "os.name", "java.class.path"};
@@ -202,7 +202,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests interpolation when the referred property is not found.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testInterpolationUnknownProperty(final Configuration config) {
         config.addProperty("test.interpol", "${unknown.property}");
@@ -212,7 +212,7 @@ public final class InterpolationTestHelper {
     /**
      * Tests an interpolation over multiple levels (i.e. the replacement of a variable is another variable and so on).
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     public static void testMultipleInterpolation(final Configuration config) {
         config.setProperty("test.base-level", "/base-level");

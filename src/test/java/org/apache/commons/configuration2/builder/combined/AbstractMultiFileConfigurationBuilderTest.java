@@ -51,7 +51,7 @@ class AbstractMultiFileConfigurationBuilderTest {
     /**
      * Creates a parameters object with default settings for a test builder instance.
      *
-     * @param managedParams the parameters for managed configurations
+     * @param managedParams The parameters for managed configurations
      * @return The test parameters
      */
     protected static BasicBuilderParameters createTestBuilderParameters(final BuilderParameters managedParams) {
@@ -61,7 +61,7 @@ class AbstractMultiFileConfigurationBuilderTest {
     /**
      * Selects a specific configuration to be obtained from the builder.
      *
-     * @param index the index of the configuration to be accessed (valid indices are 1-3)
+     * @param index The index of the configuration to be accessed (valid indices are 1-3)
      */
     protected static void switchToConfig(final int index) {
         switchToConfig("100" + index);
@@ -71,7 +71,7 @@ class AbstractMultiFileConfigurationBuilderTest {
      * Sets a system property for accessing a specific configuration file from the test builder. The passed in id can be
      * null, then the system property is removed.
      *
-     * @param id the ID of the managed configuration to load
+     * @param id The ID of the managed configuration to load
      */
     protected static void switchToConfig(final String id) {
         if (id != null) {

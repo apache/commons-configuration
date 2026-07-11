@@ -39,7 +39,7 @@ public interface ConfigurationBuilderProvider {
      * Gets the builder for the configuration source managed by this provider. This method is called during processing of
      * the combined configuration definition file.
      *
-     * @param decl the bean declaration with initialization parameters for the configuration builder
+     * @param decl The bean declaration with initialization parameters for the configuration builder
      * @return The {@code ConfigurationBuilder} object created by this provider
      * @throws ConfigurationException if an error occurs
      */

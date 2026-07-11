@@ -46,8 +46,8 @@ final class ReloadingBuilderSupportListener implements EventListener<Event> {
      * {@code ConfigurationBuilder} with the given {@code ReloadingController}. Listeners are registered to react on
      * notifications and implement a reloading protocol as described in the class comment.
      *
-     * @param configBuilder the {@code ConfigurationBuilder}
-     * @param controller the {@code ReloadingController}
+     * @param configBuilder The {@code ConfigurationBuilder}
+     * @param controller The {@code ReloadingController}
      * @return The newly created listener object
      */
     public static ReloadingBuilderSupportListener connect(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
@@ -66,8 +66,8 @@ final class ReloadingBuilderSupportListener implements EventListener<Event> {
     /**
      * Creates a new instance of {@code ReloadingBuilderSupportListener} and initializes it with the associated objects.
      *
-     * @param configBuilder the configuration builder
-     * @param controller the {@code ReloadingController}
+     * @param configBuilder The configuration builder
+     * @param controller The {@code ReloadingController}
      */
     private ReloadingBuilderSupportListener(final BasicConfigurationBuilder<?> configBuilder, final ReloadingController controller) {
         builder = configBuilder;

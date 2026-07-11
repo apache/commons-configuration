@@ -37,8 +37,8 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * Adds a property to this configuration. <strong>This operation is not supported and will throw an
      * UnsupportedOperationException.</strong>
      *
-     * @param key the key of the property
-     * @param obj the value to be added
+     * @param key The key of the property
+     * @param obj The value to be added
      * @throws UnsupportedOperationException because this operation is not allowed
      */
     @Override
@@ -50,7 +50,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * Removes the property with the given key. <strong>This operation is not supported and will throw an
      * UnsupportedOperationException.</strong>
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      * @throws UnsupportedOperationException because this operation is not allowed
      */
     @Override
@@ -61,7 +61,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
     /**
      * Checks whether the specified key is stored in this configuration.
      *
-     * @param key the key
+     * @param key The key
      * @return A flag whether this key exists in this configuration
      */
     @Override
@@ -84,7 +84,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * Takes care of list delimiters in property values. This method checks if delimiter parsing is enabled and the passed
      * in value contains a delimiter character. If this is the case, a split operation is performed.
      *
-     * @param value the property value to be examined
+     * @param value The property value to be examined
      * @return The processed value
      */
     protected Object handleDelimiters(Object value) {

@@ -69,7 +69,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX characters event.
      *
-     * @param text the text
+     * @param text The text
      */
     protected void fireCharacters(final String text) {
         if (getException() == null) {
@@ -85,7 +85,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX element end event.
      *
-     * @param name the name of the affected element
+     * @param name The name of the affected element
      */
     protected void fireElementEnd(final String name) {
         if (getException() == null) {
@@ -100,8 +100,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX element start event.
      *
-     * @param name the name of the actual element
-     * @param attribs the attributes of this element (can be <strong>null</strong>)
+     * @param name The name of the actual element
+     * @param attribs The attributes of this element (can be <strong>null</strong>)
      */
     protected void fireElementStart(final String name, final Attributes attribs) {
         if (getException() == null) {
@@ -167,7 +167,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Dummy implementation of the interface method.
      *
-     * @param name the name of the feature
+     * @param name The name of the feature
      * @return always <strong>false</strong> (no features are supported)
      */
     @Override
@@ -185,7 +185,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Dummy implementation of the interface method. No properties are supported, so this method always returns <strong>null</strong>.
      *
-     * @param name the name of the requested property
+     * @param name The name of the requested property
      * @return The property value
      */
     @Override
@@ -205,7 +205,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the actual configuration object. The passed input source will be ignored.
      *
-     * @param input the input source (ignored)
+     * @param input The input source (ignored)
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
      */
@@ -217,7 +217,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the current configuration object. The passed system ID will be ignored.
      *
-     * @param systemId the system ID (ignored)
+     * @param systemId The system ID (ignored)
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
      */
@@ -262,7 +262,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the content handler. The object specified here will receive SAX events during parsing.
      *
-     * @param handler the content handler
+     * @param handler The content handler
      */
     @Override
     public void setContentHandler(final ContentHandler handler) {
@@ -272,7 +272,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the DTD handler. The passed value is ignored.
      *
-     * @param handler the handler to be set
+     * @param handler The handler to be set
      */
     @Override
     public void setDTDHandler(final DTDHandler handler) {
@@ -281,7 +281,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the entity resolver. The passed value is ignored.
      *
-     * @param resolver the entity resolver
+     * @param resolver The entity resolver
      */
     @Override
     public void setEntityResolver(final EntityResolver resolver) {
@@ -290,7 +290,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the error handler. The passed value is ignored.
      *
-     * @param handler the error handler
+     * @param handler The error handler
      */
     @Override
     public void setErrorHandler(final ErrorHandler handler) {
@@ -299,8 +299,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Dummy implementation of the interface method.
      *
-     * @param name the name of the feature to be set
-     * @param value the value of the feature
+     * @param name The name of the feature to be set
+     * @param value The value of the feature
      */
     @Override
     public void setFeature(final String name, final boolean value) {
@@ -310,8 +310,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Dummy implementation of the interface method. No properties are supported, so a call of this method just has no
      * effect.
      *
-     * @param name the property name
-     * @param value the property value
+     * @param name The property name
+     * @param value The property value
      */
     @Override
     public void setProperty(final String name, final Object value) {
@@ -320,7 +320,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the name for the root element.
      *
-     * @param string the name for the root element.
+     * @param string The name for the root element.
      */
     public void setRootName(final String string) {
         rootName = string;

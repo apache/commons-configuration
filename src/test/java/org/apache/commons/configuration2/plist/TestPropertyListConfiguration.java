@@ -56,8 +56,8 @@ public class TestPropertyListConfiguration {
     /**
      * Returns a list with the children of the given configuration's root note with the specified name.
      *
-     * @param config the configuration
-     * @param name the name of the desired children
+     * @param config The configuration
+     * @param name The name of the desired children
      * @return The list with the corresponding child nodes
      */
     private static List<ImmutableNode> getNamedChildren(final HierarchicalConfiguration<ImmutableNode> config, final String name) {
@@ -68,8 +68,8 @@ public class TestPropertyListConfiguration {
     /**
      * Loads a configuration from the specified test file.
      *
-     * @param c the configuration to be loaded
-     * @param f the file to be loaded
+     * @param c The configuration to be loaded
+     * @param f The file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final PropertyListConfiguration c, final File f) throws ConfigurationException {
@@ -87,7 +87,7 @@ public class TestPropertyListConfiguration {
     /**
      * Saves the test configuration to the specified file.
      *
-     * @param file the target file
+     * @param file The target file
      * @throws ConfigurationException if an error occurs
      */
     private void saveConfig(final File file) throws ConfigurationException {

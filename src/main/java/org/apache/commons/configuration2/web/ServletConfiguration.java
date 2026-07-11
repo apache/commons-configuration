@@ -39,7 +39,7 @@ public class ServletConfiguration extends BaseWebConfiguration {
     /**
      * Creates a ServletConfiguration using the initialization parameter of the specified servlet.
      *
-     * @param servlet the servlet
+     * @param servlet The servlet
      */
     public ServletConfiguration(final Servlet servlet) {
         this(Objects.requireNonNull(servlet, "servlet").getServletConfig());
@@ -48,7 +48,7 @@ public class ServletConfiguration extends BaseWebConfiguration {
     /**
      * Creates a ServletConfiguration using the servlet initialization parameters.
      *
-     * @param config the servlet configuration
+     * @param config The servlet configuration
      */
     public ServletConfiguration(final ServletConfig config) {
         this.config = Objects.requireNonNull(config, "config");

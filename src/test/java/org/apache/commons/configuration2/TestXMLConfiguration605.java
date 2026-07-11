@@ -37,7 +37,7 @@ public class TestXMLConfiguration605 {
     /**
      * Checks whether the specified configuration contains all expected keys.
      *
-     * @param config the configuration to be checked
+     * @param config The configuration to be checked
      */
     private static void checkConfiguration(final Configuration config) {
         assertTrue(config.containsKey("key0"));
@@ -50,7 +50,7 @@ public class TestXMLConfiguration605 {
     /**
      * Creates a configuration with the specified content and the legacy list delimiter handler.
      *
-     * @param content the XML content
+     * @param content The XML content
      * @return The newly created configuration
      */
     private static Configuration create(final String content) throws ConfigurationException {
@@ -64,8 +64,8 @@ public class TestXMLConfiguration605 {
     /**
      * Creates a new configuration with the specified content and the given list delimiter handler.
      *
-     * @param content the XML content
-     * @param delimiterHandler the list delimiter handler
+     * @param content The XML content
+     * @param delimiterHandler The list delimiter handler
      * @return The newly created configuration
      */
     private static Configuration create(final String content, final ListDelimiterHandler delimiterHandler) throws ConfigurationException {

@@ -50,7 +50,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return The maximum defined index for this key
      */
     int getMaxIndex(String key);
@@ -71,7 +71,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * queried without having to know their exact names. If the passed in key does not point to a single node, an empty list
      * is returned. This is also the result if the node referred to by the key does not have child elements.
      *
-     * @param key the key for selecting the desired parent node
+     * @param key The key for selecting the desired parent node
      * @return A collection with immutable configurations for all child nodes of the selected parent node
      */
     List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(String key);
@@ -81,7 +81,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * {@code immutableConfigurationAt(key,
      * <strong>false</strong>)}.
      *
-     * @param key the key that selects the sub tree
+     * @param key The key that selects the sub tree
      * @return A hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key);
@@ -101,8 +101,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * subnode configurations and when they should be used.
      * </p>
      *
-     * @param key the key that selects the sub tree
-     * @param supportUpdates a flag whether the returned subnode configuration should be able to handle updates of its
+     * @param key The key that selects the sub tree
+     * @param supportUpdates A flag whether the returned subnode configuration should be able to handle updates of its
      *        parent
      * @return A hierarchical configuration that contains this sub tree
      */
@@ -129,7 +129,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      *     ...
      * </pre>
      *
-     * @param key the key for selecting the desired nodes
+     * @param key The key for selecting the desired nodes
      * @return A list with immutable hierarchical configuration objects; each configuration represents one of the nodes
      *         selected by the passed in key
      */

@@ -60,9 +60,9 @@ public class TestInMemoryNodeModel {
     /**
      * Helper method for checking whether the expected nodes are encountered on a path from a start node to the root node.
      *
-     * @param model the node model
-     * @param node the start node in the path
-     * @param path an array with the expected node names on the path
+     * @param model The node model
+     * @param node The start node in the path
+     * @param path An array with the expected node names on the path
      */
     private static void checkPathToRoot(final InMemoryNodeModel model, ImmutableNode node, final String... path) {
         final NodeHandler<ImmutableNode> handler = model.getNodeHandler();
@@ -86,7 +86,7 @@ public class TestInMemoryNodeModel {
     /**
      * Helper method for testing the behavior of addNodes() if no nodes to be added are provided.
      *
-     * @param newNodes the collection with new nodes
+     * @param newNodes The collection with new nodes
      */
     private void checkAddNodesNoNodes(final Collection<ImmutableNode> newNodes) {
         final NodeKeyResolver<ImmutableNode> resolver = createResolver();
@@ -99,8 +99,8 @@ public class TestInMemoryNodeModel {
     /**
      * Helper method for testing whether nodes removed from the model can no longer be looked up in the parent mapping.
      *
-     * @param pathToRemove the path to the node to be removed
-     * @param nodeToCheck the node to check in the parent mapping
+     * @param pathToRemove The path to the node to be removed
+     * @param nodeToCheck The node to check in the parent mapping
      */
     private void checkClearTreeUpdatedParentMapping(final String pathToRemove, final ImmutableNode nodeToCheck) {
         final NodeKeyResolver<ImmutableNode> resolver = createResolver();

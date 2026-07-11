@@ -147,7 +147,7 @@ public class TestFileHandler {
         /**
          * Sets the content.
          *
-         * @param content the content
+         * @param content The content
          */
         public void setContent(final String content) {
             this.content = content;
@@ -179,7 +179,7 @@ public class TestFileHandler {
         /**
          * Tests whether the expected listener methods have been called.
          *
-         * @param expMethods the expected methods as plain string
+         * @param expMethods The expected methods as plain string
          */
         public void checkMethods(final String expMethods) {
             assertEquals(expMethods, methods.toString());
@@ -206,8 +206,8 @@ public class TestFileHandler {
         /**
          * One of the listener methods was called. Records this invocation.
          *
-         * @param handler the file handler
-         * @param method the called method
+         * @param handler The file handler
+         * @param method The called method
          */
         private void methodCalled(final FileHandler handler, final String method) {
             assertEquals(expHandler, handler);
@@ -236,7 +236,7 @@ public class TestFileHandler {
     /**
      * Checks a FileLocator which is expected to contain no data.
      *
-     * @param content the data object which was passed the locator
+     * @param content The data object which was passed the locator
      */
     private static void checkEmptyLocator(final FileBasedFileLocatorAwareTestImpl content) {
         assertNull(content.getLocator().getSourceURL());
@@ -247,7 +247,7 @@ public class TestFileHandler {
     /**
      * Reads the content of the specified file into a string
      *
-     * @param f the file to be read
+     * @param f The file to be read
      * @return The content of this file
      */
     private static String readFile(final File f) {
@@ -261,7 +261,7 @@ public class TestFileHandler {
     /**
      * Reads the content of the specified reader into a string.
      *
-     * @param in the reader
+     * @param in The reader
      * @return The read content
      * @throws IOException if an error occurs
      */
@@ -290,7 +290,7 @@ public class TestFileHandler {
     /**
      * Creates a test file with test content and allows specifying a file name.
      *
-     * @param f the file to be created (may be <strong>null</strong>)
+     * @param f The file to be created (may be <strong>null</strong>)
      * @return The File object pointing to the test file
      */
     private File createTestFile(final File f) {

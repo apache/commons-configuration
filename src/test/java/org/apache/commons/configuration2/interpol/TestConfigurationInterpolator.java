@@ -110,8 +110,8 @@ public class TestConfigurationInterpolator {
     /**
      * Creates a lookup object that can resolve the specified variable (and nothing else).
      *
-     * @param var the variable name
-     * @param value the value of this variable
+     * @param var The variable name
+     * @param value The value of this variable
      * @return The test lookup object
      */
     private static Lookup setUpTestLookup(final String var, final Object value) {

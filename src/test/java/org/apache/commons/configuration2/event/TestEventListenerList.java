@@ -93,9 +93,9 @@ public class TestEventListenerList {
         /**
          * Checks that this listener has received an event with the expected properties.
          *
-         * @param expSource the expected source
-         * @param expType the expected type
-         * @param expMessage the expected message
+         * @param expSource The expected source
+         * @param expType The expected type
+         * @param expMessage The expected message
          */
         public void assertEvent(final Object expSource, final EventType<?> expType, final String expMessage) {
             assertNotNull(receivedEvent);
@@ -133,7 +133,7 @@ public class TestEventListenerList {
     /**
      * Helper method for collecting the elements in the given iterable.
      *
-     * @param iterable the iterable
+     * @param iterable The iterable
      * @return A list with the content of the iterable
      */
     private static <T> List<T> fetchElements(final Iterable<? extends T> iterable) {
@@ -157,8 +157,8 @@ public class TestEventListenerList {
     /**
      * Helper method for checking whether a specific set of event listeners is returned by getEventListeners().
      *
-     * @param eventType the event type
-     * @param expListeners the expected listeners
+     * @param eventType The event type
+     * @param expListeners The expected listeners
      */
     private void checkEventListenersForType(final EventType<? extends Event> eventType, final EventListener<?>... expListeners) {
         final List<?> listeners = fetchElements(list.getEventListeners(eventType));

@@ -176,7 +176,7 @@ public class DataConfiguration extends AbstractConfiguration {
     /**
      * Creates a new instance of {@code DataConfiguration} and sets the wrapped configuration.
      *
-     * @param configuration the wrapped configuration
+     * @param configuration The wrapped configuration
      */
     public DataConfiguration(final Configuration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
@@ -244,7 +244,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated BigDecimal array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigDecimals.
      */
@@ -294,7 +294,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated BigInteger array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of BigIntegers.
      */
@@ -394,7 +394,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated byte array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of bytes.
      */
@@ -509,7 +509,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated Calendar array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Calendars.
      */
@@ -643,7 +643,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated Color array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Colors.
      */
@@ -773,7 +773,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * {@link #DEFAULT_DATE_FORMAT} pattern. If the key doesn't map to an existing object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated Date array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Dates.
      */
@@ -890,7 +890,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated double array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of doubles.
      */
@@ -940,7 +940,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated float array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of floats.
      */
@@ -990,7 +990,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated int array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of integers.
      */
@@ -1069,7 +1069,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated Locale array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of Locales.
      */
@@ -1119,7 +1119,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated long array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of longs.
      */
@@ -1185,7 +1185,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * object an empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated short array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of shorts.
      */
@@ -1259,7 +1259,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated URI array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URIs.
      */
@@ -1333,7 +1333,7 @@ public class DataConfiguration extends AbstractConfiguration {
      * empty array is returned.
      *
      * @param key The configuration key.
-     * @param defaultValue the default value, which will be returned if the property is not found
+     * @param defaultValue The default value, which will be returned if the property is not found
      * @return The associated URL array if the key is found.
      * @throws ConversionException is thrown if the key maps to an object that is not a list of URLs.
      */

@@ -59,7 +59,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
          * should be executed. A result of <strong>false</strong> means that the update is to be aborted (maybe another update method was
          * called).
          *
-         * @param tx the transaction to be initialized
+         * @param tx The transaction to be initialized
          * @return A flag whether the update should continue
          */
         boolean initTransaction(ModelTransaction tx);
@@ -74,9 +74,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Handles an add property operation if the property to be added is an attribute.
      *
-     * @param tx the transaction
-     * @param addData the {@code NodeAddData}
-     * @param values the collection with node values
+     * @param tx The transaction
+     * @param addData The {@code NodeAddData}
+     * @param values The collection with node values
      */
     private static void addAttributeProperty(final ModelTransaction tx, final NodeAddData<ImmutableNode> addData, final Iterable<?> values) {
         if (addData.getPathNodes().isEmpty()) {
@@ -95,9 +95,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Handles an add property operation if the property to be added is a node.
      *
-     * @param tx the transaction
-     * @param addData the {@code NodeAddData}
-     * @param values the collection with node values
+     * @param tx The transaction
+     * @param addData The {@code NodeAddData}
+     * @param values The collection with node values
      */
     private static void addNodeProperty(final ModelTransaction tx, final NodeAddData<ImmutableNode> addData, final Iterable<?> values) {
         final Collection<ImmutableNode> newNodes = createNodesToAdd(addData.getNewNodeName(), values);
@@ -108,9 +108,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Initializes a transaction to add a collection of nodes as described by a {@code NodeAddData} object. If necessary,
      * new path nodes are created. Eventually, the new nodes are added as children to the specified target node.
      *
-     * @param tx the transaction
-     * @param addData the {@code NodeAddData}
-     * @param newNodes the collection of new child nodes
+     * @param tx The transaction
+     * @param addData The {@code NodeAddData}
+     * @param newNodes The collection of new child nodes
      */
     private static void addNodesByAddData(final ModelTransaction tx, final NodeAddData<ImmutableNode> addData, final Collection<ImmutableNode> newNodes) {
         if (addData.getPathNodes().isEmpty()) {
@@ -125,7 +125,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Creates an exception referring to an invalid key for adding properties. Such an exception is thrown when an operation
      * tries to add something to an attribute.
      *
-     * @param key the invalid key causing this exception
+     * @param key The invalid key causing this exception
      * @return The exception
      */
     private static IllegalArgumentException attributeKeyException(final String key) {
@@ -135,7 +135,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Checks if the passed in node is defined. Result is <strong>true</strong> if the node contains any data.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return <strong>true</strong> if the node is defined, <strong>false</strong> otherwise
      */
     static boolean checkIfNodeDefined(final ImmutableNode node) {
@@ -146,10 +146,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Creates a new data object with a tracked child node of the given parent node. If such a child node already exists, it
      * is used. Otherwise, a new one is created.
      *
-     * @param current the current {@code TreeData} object
-     * @param parent the parent node
-     * @param childName the name of the child node
-     * @param resolver the {@code NodeKeyResolver}
+     * @param current The current {@code TreeData} object
+     * @param parent The parent node
+     * @param childName The name of the child node
+     * @param resolver The {@code NodeKeyResolver}
      * @param refSelector here the newly created {@code NodeSelector} is returned
      * @return The new {@code TreeData} instance
      */
@@ -172,8 +172,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Recursive helper method for creating a path node for an add operation. All path nodes except for the last have a
      * single child. The last path node has the new nodes as children.
      *
-     * @param it the iterator over the names of the path nodes
-     * @param newNodes the collection of new child nodes
+     * @param it The iterator over the names of the path nodes
+     * @param newNodes The collection of new child nodes
      * @return The newly created path node
      */
     private static ImmutableNode createNodeOnPath(final Iterator<String> it, final Collection<ImmutableNode> newNodes) {
@@ -192,8 +192,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Creates a collection with new nodes with a given name and a value from a given collection.
      *
-     * @param newNodeName the name of the new nodes
-     * @param values the collection with node values
+     * @param newNodeName The name of the new nodes
+     * @param values The collection with node values
      * @return The newly created collection
      */
     private static Collection<ImmutableNode> createNodesToAdd(final String newNodeName, final Iterable<?> values) {
@@ -206,8 +206,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Creates a node structure consisting of the path nodes defined by the passed in {@code NodeAddData} instance and all
      * new child nodes.
      *
-     * @param addData the {@code NodeAddData}
-     * @param newNodes the collection of new child nodes
+     * @param addData The {@code NodeAddData}
+     * @param newNodes The collection of new child nodes
      * @return The parent node of the newly created hierarchy
      */
     private static ImmutableNode createNodeToAddWithPath(final NodeAddData<ImmutableNode> addData, final Collection<ImmutableNode> newNodes) {
@@ -217,10 +217,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Creates tracked node entries for the specified nodes and creates the corresponding selectors.
      *
-     * @param refSelectors the reference where to store the selectors
-     * @param nodes the nodes to be tracked
-     * @param current the current {@code TreeData} object
-     * @param resolver the {@code NodeKeyResolver}
+     * @param refSelectors The reference where to store the selectors
+     * @param nodes The nodes to be tracked
+     * @param current The current {@code TreeData} object
+     * @param resolver The {@code NodeKeyResolver}
      * @return The updated {@code TreeData} object
      */
     private static TreeData createSelectorsForTrackedNodes(final Mutable<Collection<NodeSelector>> refSelectors, final List<ImmutableNode> nodes,
@@ -238,9 +238,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * current root node has no name, the name of the node to be merged is used. A result of <strong>null</strong> means that no node
      * name has to be set.
      *
-     * @param rootNode the current root node
-     * @param node the node to be merged with the root node
-     * @param rootName the name of the resulting node
+     * @param rootNode The current root node
+     * @param node The node to be merged with the root node
+     * @param rootName The name of the resulting node
      * @return The new name of the root node
      */
     private static String determineRootName(final ImmutableNode rootNode, final ImmutableNode node, final String rootName) {
@@ -256,8 +256,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Initializes a transaction to clear the values of a property based on the passed in collection of affected results.
      *
-     * @param tx the transaction to be initialized
-     * @param results a collection with results pointing to the nodes to be cleared
+     * @param tx The transaction to be initialized
+     * @param results A collection with results pointing to the nodes to be cleared
      * @return A flag whether there are elements to be cleared
      */
     private static boolean initializeClearTransaction(final ModelTransaction tx, final Collection<QueryResult<ImmutableNode>> results) {
@@ -275,8 +275,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Initializes a transaction to change the values of some query results based on the passed in map.
      *
-     * @param tx the transaction to be initialized
-     * @param changedValues the map defining the elements to be changed
+     * @param tx The transaction to be initialized
+     * @param changedValues The map defining the elements to be changed
      * @return A flag whether there are elements to be updated
      */
     private static boolean initializeUpdateTransaction(final ModelTransaction tx, final Map<QueryResult<ImmutableNode>, Object> changedValues) {
@@ -296,7 +296,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Determines the initial root node of this model. If a root node has been provided, it is used. Otherwise, an empty
      * dummy root node is created.
      *
-     * @param providedRoot the passed in root node
+     * @param providedRoot The passed in root node
      * @return The root node to be used
      */
     private static ImmutableNode initialRootNode(final ImmutableNode providedRoot) {
@@ -306,9 +306,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Adds a tracked node that has already been resolved to the specified data object.
      *
-     * @param current the current {@code TreeData} object
-     * @param node the node in question
-     * @param resolver the {@code NodeKeyResolver}
+     * @param current The current {@code TreeData} object
+     * @param node The node in question
+     * @param resolver The {@code NodeKeyResolver}
      * @param refSelector here the newly created {@code NodeSelector} is returned
      * @return The new {@code TreeData} instance
      */
@@ -325,8 +325,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * children and grand-children of the passed in root node. For each node in the subtree the parent relation is added to
      * the map.
      *
-     * @param parents the map with parent nodes
-     * @param root the root node of the current tree
+     * @param parents The map with parent nodes
+     * @param root The root node of the current tree
      */
     static void updateParentMapping(final Map<ImmutableNode, ImmutableNode> parents, final ImmutableNode root) {
         NodeTreeWalker.INSTANCE.walkBFS(root, new ConfigurationNodeVisitorAdapter<ImmutableNode>() {
@@ -340,7 +340,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Checks whether the specified collection with values is not empty.
      *
-     * @param values the collection with node values
+     * @param values The collection with node values
      * @return <strong>true</strong> if values are provided, <strong>false</strong> otherwise
      */
     private static boolean valuesNotEmpty(final Iterable<?> values) {
@@ -361,7 +361,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Creates a new instance of {@code InMemoryNodeModel} and initializes it from the given root node. If the passed in
      * node is <strong>null</strong>, a new, empty root node is created.
      *
-     * @param root the new root node for this model
+     * @param root The new root node for this model
      */
     public InMemoryNodeModel(final ImmutableNode root) {
         structure = new AtomicReference<>(createTreeData(initialRootNode(root), null));
@@ -377,10 +377,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * the origin of the operation (also for the interpretation of the passed in key) is a tracked node identified by the
      * passed in {@code NodeSelector}. The selector can be <strong>null</strong>, then the root node is assumed.
      *
-     * @param key the key
-     * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
-     * @param nodes the collection of new nodes to be added
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param selector The {@code NodeSelector} defining the root node (or <strong>null</strong>)
+     * @param nodes The collection of new nodes to be added
+     * @param resolver The {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public void addNodes(final String key, final NodeSelector selector, final Collection<? extends ImmutableNode> nodes,
@@ -416,10 +416,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * method, but the origin of the operation (also for the interpretation of the passed in key) is a tracked node
      * identified by the passed in {@code NodeSelector}. The selector can be <strong>null</strong>, then the root node is assumed.
      *
-     * @param key the key
-     * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
-     * @param values the values to be added
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param selector The {@code NodeSelector} defining the root node (or <strong>null</strong>)
+     * @param values The values to be added
+     * @param resolver The {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public void addProperty(final String key, final NodeSelector selector, final Iterable<?> values, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -435,7 +435,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * {@inheritDoc} A new empty root node is created with the same name as the current root node. Implementation note:
      * Because this is a hard reset the usual dance for dealing with concurrent updates is not required here.
      *
-     * @param resolver the {@code NodeKeyResolver}
+     * @param resolver The {@code NodeKeyResolver}
      */
     @Override
     public void clear(final NodeKeyResolver<ImmutableNode> resolver) {
@@ -456,9 +456,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * method, but the origin of the operation (also for the interpretation of the passed in key) is a tracked node
      * identified by the passed in {@code NodeSelector}. The selector can be <strong>null</strong>, then the root node is assumed.
      *
-     * @param key the key
-     * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param selector The {@code NodeSelector} defining the root node (or <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public void clearProperty(final String key, final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -483,9 +483,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * method, but the origin of the operation (also for the interpretation of the passed in key) is a tracked node
      * identified by the passed in {@code NodeSelector}. The selector can be <strong>null</strong>, then the root node is assumed.
      *
-     * @param key the key
-     * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param selector The {@code NodeSelector} defining the root node (or <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
      * @return A list with the results to be removed
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
@@ -521,7 +521,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * assigned its parent node. Here an iterative algorithm is used rather than a recursive one to avoid stack overflow for
      * huge structures.
      *
-     * @param root the root node of the structure
+     * @param root The root node of the structure
      * @return The parent node mapping
      */
     private Map<ImmutableNode, ImmutableNode> createParentMapping(final ImmutableNode root) {
@@ -533,8 +533,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Creates a {@code TreeData} object for the specified root node.
      *
-     * @param root the root node of the current tree
-     * @param current the current {@code TreeData} object (may be <strong>null</strong>)
+     * @param root The root node of the current tree
+     * @param current The current {@code TreeData} object (may be <strong>null</strong>)
      * @return The {@code TreeData} describing the current tree
      */
     private TreeData createTreeData(final ImmutableNode root, final TreeData current) {
@@ -546,8 +546,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Creates a {@code TreeData} object for the specified root node and {@code NodeTracker}. Other parameters are set to
      * default values.
      *
-     * @param root the new root node for this model
-     * @param newTracker the new {@code NodeTracker}
+     * @param root The new root node for this model
+     * @param newTracker The new {@code NodeTracker}
      * @return The new {@code TreeData} object
      */
     private TreeData createTreeDataForRootAndTracker(final ImmutableNode root, final NodeTracker newTracker) {
@@ -558,10 +558,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * Executes a transaction on the current data of this model. This method is called if an operation is to be executed on
      * the model's root node or a tracked node which is not yet detached.
      *
-     * @param txInit the {@code TransactionInitializer}
-     * @param selector an optional {@code NodeSelector} defining the target node
-     * @param currentData the current data of the model
-     * @param resolver the {@code NodeKeyResolver}
+     * @param txInit The {@code TransactionInitializer}
+     * @param selector An optional {@code NodeSelector} defining the target node
+     * @param currentData The current data of the model
+     * @param resolver The {@code NodeKeyResolver}
      * @return A flag whether the operation has been completed successfully
      */
     private boolean executeTransactionOnCurrentStructure(final TransactionInitializer txInit, final NodeSelector selector, final TreeData currentData,
@@ -582,10 +582,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * the transaction is a tracked node and if this node is already detached. If this is the case, the update operation is
      * independent on this model and has to be executed on the specific model for the detached node.
      *
-     * @param txInit the {@code TransactionInitializer}
-     * @param selector an optional {@code NodeSelector} defining the target node
-     * @param currentData the current data of the model
-     * @param resolver the {@code NodeKeyResolver} @return A flag whether the transaction could be executed
+     * @param txInit The {@code TransactionInitializer}
+     * @param selector An optional {@code NodeSelector} defining the target node
+     * @param currentData The current data of the model
+     * @param resolver The {@code NodeKeyResolver} @return A flag whether the transaction could be executed
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     private boolean executeTransactionOnDetachedTrackedNode(final TransactionInitializer txInit, final NodeSelector selector, final TreeData currentData,
@@ -646,7 +646,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * tracked node, i.e. {@link #trackNode(NodeSelector, NodeKeyResolver)} must have been called before with the given
      * selector.
      *
-     * @param selector the {@code NodeSelector} defining the desired node
+     * @param selector The {@code NodeSelector} defining the desired node
      * @return The current {@code ImmutableNode} associated with this selector
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
@@ -660,7 +660,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * is used which shares some data (especially the parent mapping) with this model. Detached track nodes in contrast have
      * their own separate model; in this case a handler associated with this model is returned.
      *
-     * @param selector the {@code NodeSelector} defining the tracked node
+     * @param selector The {@code NodeSelector} defining the tracked node
      * @return A {@code NodeHandler} for this tracked node
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
@@ -683,10 +683,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Initializes a transaction for an add operation.
      *
-     * @param tx the transaction to be initialized
-     * @param key the key
-     * @param values the collection with node values
-     * @param resolver the {@code NodeKeyResolver}
+     * @param tx The transaction to be initialized
+     * @param key The key
+     * @param values The collection with node values
+     * @param resolver The {@code NodeKeyResolver}
      */
     private void initializeAddTransaction(final ModelTransaction tx, final String key, final Iterable<?> values,
         final NodeKeyResolver<ImmutableNode> resolver) {
@@ -706,7 +706,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * are no longer tracked for this node. So even if there are further changes which would make the {@code NodeSelector}
      * valid again, the tracked node stays in detached state.
      *
-     * @param selector the {@code NodeSelector} defining the desired node
+     * @param selector The {@code NodeSelector} defining the desired node
      * @return A flag whether this tracked node is in detached state
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
@@ -719,12 +719,12 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * implementations when a configuration source is loaded, and its data has to be added to the model. It is possible to
      * define the new name of the root node and to pass in a map with reference objects.
      *
-     * @param node the node to be merged with the root node
-     * @param rootName the new name of the root node; can be <strong>null</strong>, then the name of the root node is not changed
+     * @param node The node to be merged with the root node
+     * @param rootName The new name of the root node; can be <strong>null</strong>, then the name of the root node is not changed
      *        unless it is <strong>null</strong>
-     * @param references an optional map with reference objects
-     * @param rootRef an optional reference object for the new root node
-     * @param resolver the {@code NodeKeyResolver}
+     * @param references An optional map with reference objects
+     * @param rootRef An optional reference object for the new root node
+     * @param resolver The {@code NodeKeyResolver}
      */
     public void mergeRoot(final ImmutableNode node, final String rootName, final Map<ImmutableNode, ?> references, final Object rootRef,
         final NodeKeyResolver<ImmutableNode> resolver) {
@@ -752,9 +752,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Replaces an active tracked node. The node then becomes detached.
      *
-     * @param currentData the current data of the model
-     * @param selector the {@code NodeSelector} defining the tracked node
-     * @param newNode the node replacing the tracked node
+     * @param currentData The current data of the model
+     * @param selector The {@code NodeSelector} defining the tracked node
+     * @param newNode The node replacing the tracked node
      * @return A flag whether the operation was successful
      */
     private boolean replaceActiveTrackedNode(final TreeData currentData, final NodeSelector selector, final ImmutableNode newNode) {
@@ -765,9 +765,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Replaces a tracked node if it is already detached.
      *
-     * @param currentData the current data of the model
-     * @param selector the {@code NodeSelector} defining the tracked node
-     * @param newNode the node replacing the tracked node
+     * @param currentData The current data of the model
+     * @param selector The {@code NodeSelector} defining the tracked node
+     * @param newNode The node replacing the tracked node
      * @return A flag whether the operation was successful
      */
     private boolean replaceDetachedTrackedNode(final TreeData currentData, final NodeSelector selector, final ImmutableNode newNode) {
@@ -787,8 +787,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * operation is useful if the new nodes hierarchy to be set is known to be similar to the old one. Note that reference
      * objects are lost; there is no way to automatically match nodes between the old and the new nodes hierarchy.
      *
-     * @param newRoot the new root node to be set (must not be <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
+     * @param newRoot The new root node to be set (must not be <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
      * @throws IllegalArgumentException if the new root node is <strong>null</strong>
      */
     public void replaceRoot(final ImmutableNode newRoot, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -807,8 +807,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * in node (which must not be <strong>null</strong>) becomes the new root node of an independent model for this tracked node.
      * Further updates of this model do not affect the tracked node's model and vice versa.
      *
-     * @param selector the {@code NodeSelector} defining the tracked node
-     * @param newNode the node replacing the tracked node (must not be <strong>null</strong>)
+     * @param selector The {@code NodeSelector} defining the tracked node
+     * @param newNode The node replacing the tracked node (must not be <strong>null</strong>)
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      * @throws IllegalArgumentException if the replacement node is <strong>null</strong>
      */
@@ -829,8 +829,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * For all selected nodes corresponding {@code NodeSelector} objects are created, and they are tracked. The returned
      * collection of {@code NodeSelector} objects can be used for interacting with the selected nodes.
      *
-     * @param key the key for selecting the nodes to track
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key for selecting the nodes to track
+     * @param resolver The {@code NodeKeyResolver}
      * @return A collection with the {@code NodeSelector} objects for the new tracked nodes
      */
     public Collection<NodeSelector> selectAndTrackNodes(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -853,10 +853,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * tracked node identified by the passed in {@code NodeSelector}. The selector can be <strong>null</strong>, then the root node is
      * assumed.
      *
-     * @param key the key
-     * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
-     * @param value the new value for this property
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param selector The {@code NodeSelector} defining the root node (or <strong>null</strong>)
+     * @param value The new value for this property
+     * @param resolver The {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public void setProperty(final String key, final NodeSelector selector, final Object value, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -883,7 +883,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * this method is used and the model is accessed by multiple threads. It is not deterministic which concurrent
      * operations see the old root and which see the new root node.
      *
-     * @param newRoot the new root node to be set (can be <strong>null</strong>, then an empty root node is set)
+     * @param newRoot The new root node to be set (can be <strong>null</strong>, then an empty root node is set)
      */
     @Override
     public void setRootNode(final ImmutableNode newRoot) {
@@ -895,8 +895,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * for all children of this node {@code NodeSelector} objects are created, and they become tracked nodes. The returned
      * collection of {@code NodeSelector} objects can be used for interacting with the selected nodes.
      *
-     * @param key the key for selecting the parent node whose children are to be tracked
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key for selecting the parent node whose children are to be tracked
+     * @param resolver The {@code NodeKeyResolver}
      * @return A collection with the {@code NodeSelector} objects for the new tracked nodes
      */
     public Collection<NodeSelector> trackChildNodes(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -922,9 +922,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * with this name, it is tracked and its selector is returned. Otherwise, a new child node with this name is created
      * first.
      *
-     * @param key the key for selecting the parent node
-     * @param childName the name of the child node
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key for selecting the parent node
+     * @param childName The name of the child node
+     * @param resolver The {@code NodeKeyResolver}
      * @return The {@code NodeSelector} for the tracked child node
      * @throws ConfigurationRuntimeException if the passed in key does not select a single node
      */
@@ -955,8 +955,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * idea to simply hold a reference to a node; this might become outdated soon. Rather, the node should be tracked. This
      * mechanism ensures that always the correct node reference can be obtained.
      *
-     * @param selector the {@code NodeSelector} defining the desired node
-     * @param resolver the {@code NodeKeyResolver}
+     * @param selector The {@code NodeSelector} defining the desired node
+     * @param resolver The {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector does not select a single node
      */
     public void trackNode(final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -973,7 +973,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * the need to track a specific node. Note that for each call of {@code trackNode()} there has to be a corresponding
      * {@code untrackNode()} call. This ensures that multiple observers can track the same node.
      *
-     * @param selector the {@code NodeSelector} defining the desired node
+     * @param selector The {@code NodeSelector} defining the desired node
      * @throws ConfigurationRuntimeException if the specified node is not tracked
      */
     public void untrackNode(final NodeSelector selector) {
@@ -990,9 +990,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * initializer. This method uses the atomic reference for the model's current data to ensure that an update was
      * successful even if the model is concurrently accessed.
      *
-     * @param txInit the {@code TransactionInitializer}
-     * @param selector an optional {@code NodeSelector} defining the target node of the transaction
-     * @param resolver the {@code NodeKeyResolver}
+     * @param txInit The {@code TransactionInitializer}
+     * @param selector An optional {@code NodeSelector} defining the target node of the transaction
+     * @param resolver The {@code NodeKeyResolver}
      */
     private void updateModel(final TransactionInitializer txInit, final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver) {
         boolean done;

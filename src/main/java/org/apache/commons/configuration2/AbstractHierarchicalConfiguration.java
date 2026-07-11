@@ -176,7 +176,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Creates a new {@code DefinedKeysVisitor} instance and sets the prefix for the keys to fetch.
          *
-         * @param prefix the prefix
+         * @param prefix The prefix
          */
         public DefinedKeysVisitor(final String prefix) {
             this();
@@ -195,9 +195,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Appends all attribute keys of the current node.
          *
-         * @param parentKey the parent key
-         * @param node the current node
-         * @param handler the {@code NodeHandler}
+         * @param parentKey The parent key
+         * @param node The current node
+         * @param handler The {@code NodeHandler}
          */
         public void handleAttributeKeys(final String parentKey, final T node, final NodeHandler<T> handler) {
             handler.getAttributes(node).forEach(attr -> keyList.add(getExpressionEngine().attributeKey(parentKey, attr)));
@@ -259,7 +259,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Visits the node. Checks if a value is defined.
          *
-         * @param node the actual node
+         * @param node The actual node
          */
         @Override
         public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
@@ -276,7 +276,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Creates a new instance of {@code AbstractHierarchicalConfiguration} and sets the {@code NodeModel} to be used.
      *
-     * @param nodeModel the {@code NodeModel}
+     * @param nodeModel The {@code NodeModel}
      */
     protected AbstractHierarchicalConfiguration(final NodeModel<T> nodeModel) {
         this.nodeModel = nodeModel;
@@ -291,8 +291,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * hierarchy. Implementation node: This method performs some book-keeping and then delegates to
      * {@code addNodesInternal()}.
      *
-     * @param key the key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
-     * @param nodes a collection with the {@code Node} objects to be added
+     * @param key The key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
+     * @param nodes A collection with the {@code Node} objects to be added
      */
     @Override
     public final void addNodes(final String key, final Collection<? extends T> nodes) {
@@ -310,8 +310,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Actually adds a collection of new nodes to this configuration. This method is called by {@code addNodes()}. It can be
      * overridden by subclasses that need to adapt this operation.
      *
-     * @param key the key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
-     * @param nodes a collection with the {@code Node} objects to be added
+     * @param key The key where the nodes are to be added; can be <strong>null</strong>, then they are added to the root node
+     * @param nodes A collection with the {@code Node} objects to be added
      * @since 2.0
      */
     protected void addNodesInternal(final String key, final Collection<? extends T> nodes) {
@@ -333,8 +333,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Adds the property with the specified key. This task will be delegated to the associated {@code ExpressionEngine}, so
      * the passed in key must match the requirements of this implementation.
      *
-     * @param key the key of the new property
-     * @param obj the value of the new property
+     * @param key The key of the new property
+     * @param obj The value of the new property
      */
     @Override
     protected void addPropertyInternal(final String key, final Object obj) {
@@ -344,8 +344,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Helper method for executing an add property operation on the model.
      *
-     * @param key the key of the new property
-     * @param values the values to be added for this property
+     * @param key The key of the new property
+     * @param values The values to be added for this property
      */
     private void addPropertyToModel(final String key, final Iterable<?> values) {
         getModel().addProperty(key, values, this);
@@ -364,7 +364,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Removes the property with the given key. Properties with names that start with the given key (i.e. properties below
      * the specified key in the hierarchy) won't be affected. This implementation delegates to the node+ model.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      */
     @Override
     protected void clearPropertyDirect(final String key) {
@@ -376,7 +376,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * property with the key &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call of
      * {@code clearTree("foo")} would remove both properties.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      */
     @Override
     public final void clearTree(final String key) {
@@ -391,7 +391,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Subclasses that need to adapt this operation can override this method. This base implementation delegates to the node
      * model.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      * @return An object with information about the nodes that have been removed (this is needed for firing a meaningful
      *         event of type CLEAR_TREE)
      * @since 2.0
@@ -438,7 +438,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * &quot;contained&quot; means that the key has an associated value. If there is a node for this key that has no value
      * but children (either defined or undefined), this method will still return <strong>false </strong>.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return A flag if this key is contained in this configuration
      */
     @Override
@@ -460,7 +460,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Helper method for resolving the specified key.
      *
-     * @param key the key
+     * @param key The key
      * @return A list with all results selected by this key
      */
     protected List<QueryResult<T>> fetchNodeList(final String key) {
@@ -497,7 +497,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * prefix. Then the subtree of this node is traversed, and the keys of all nodes encountered (including attributes) are
      * added to the result set.
      *
-     * @param prefix the prefix of the keys to start with
+     * @param prefix The prefix of the keys to start with
      * @return An iterator with the found keys
      */
     @Override
@@ -511,8 +511,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * prefix. Then the subtree of this node is traversed, and the keys of all nodes encountered (including attributes) are
      * added to the result set.
      *
-     * @param prefix the prefix of the keys to start with
-     * @param delimiter the prefix delimiter (unused)
+     * @param prefix The prefix of the keys to start with
+     * @param delimiter The prefix delimiter (unused)
      * @return An iterator with the found keys
      * @since 2.12.0
      */
@@ -542,7 +542,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * can then be addressed separately by specifying indices from 0 to the return value of this method. If the passed in
      * key is not contained in this configuration, result is -1.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return The maximum defined index for this key
      */
     @Override
@@ -554,7 +554,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Actually retrieves the maximum defined index for the given key. This method is called by {@code getMaxIndex()}.
      * Subclasses that need to adapt this operation have to override this method.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return The maximum defined index for this key
      * @since 2.0
      */
@@ -585,7 +585,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Fetches the specified property. This task is delegated to the associated expression engine.
      *
-     * @param key the key to be looked up
+     * @param key The key to be looked up
      * @return The found value
      */
     @Override
@@ -637,7 +637,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Checks if the specified node is defined.
      *
-     * @param node the node to be checked
+     * @param node The node to be checked
      * @return A flag if this node is defined
      */
     protected boolean nodeDefined(final T node) {
@@ -732,7 +732,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
      * will be interpreted by this engine.
      *
-     * @param expressionEngine the new expression engine; can be <strong>null</strong>, then the default expression engine will be
+     * @param expressionEngine The new expression engine; can be <strong>null</strong>, then the default expression engine will be
      *        used
      * @since 1.3
      */
@@ -744,8 +744,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Sets the value of the specified property.
      *
-     * @param key the key of the property to set
-     * @param value the new value of this property
+     * @param key The key of the property to set
+     * @param value The new value of this property
      */
     @Override
     protected void setPropertyInternal(final String key, final Object value) {
@@ -770,8 +770,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Extracts the value from a query result.
      *
-     * @param result the {@code QueryResult}
-     * @param handler the {@code NodeHandler}
+     * @param result The {@code QueryResult}
+     * @param handler The {@code NodeHandler}
      * @return The value of this result (may be <strong>null</strong>)
      */
     private Object valueFromResult(final QueryResult<T> result, final NodeHandler<T> handler) {

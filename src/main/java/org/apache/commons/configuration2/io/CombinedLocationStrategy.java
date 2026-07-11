@@ -97,7 +97,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
         /**
          * Sets the collection with sub strategies.
          *
-         * @param subStrategies the collection with sub strategies.
+         * @param subStrategies The collection with sub strategies.
          * @return {@code this} instance.
          */
         public Builder setSubStrategies(final Collection<FileLocationStrategy> subStrategies) {
@@ -131,7 +131,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
      * Creates a new instance of {@code CombinedLocationStrategy} and initializes it with the provided sub strategies. The
      * passed in collection must not be <strong>null</strong> or contain <strong>null</strong> elements.
      *
-     * @param subs the collection with sub strategies.
+     * @param subs The collection with sub strategies.
      * @throws IllegalArgumentException if the collection is <strong>null</strong> or has <strong>null</strong> elements.
      */
     public CombinedLocationStrategy(final Collection<FileLocationStrategy> subs) {

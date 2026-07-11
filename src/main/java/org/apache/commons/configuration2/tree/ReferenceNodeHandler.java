@@ -41,7 +41,7 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
      * Gets the reference object associated with the specified node. If no reference data is associated with this node,
      * result is <strong>null</strong>.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return The reference object for this node or <strong>null</strong>
      */
     Object getReference(ImmutableNode node);

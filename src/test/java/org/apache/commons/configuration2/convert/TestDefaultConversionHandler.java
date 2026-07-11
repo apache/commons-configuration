@@ -70,7 +70,7 @@ public class TestDefaultConversionHandler {
     /**
      * Helper method for testing the result of the conversion of a single value.
      *
-     * @param expResult the expected result
+     * @param expResult The expected result
      */
     private void checkSingleValue(final Integer expResult) {
         assertEquals(Integer.parseInt(REPLACEMENT), expResult.intValue());

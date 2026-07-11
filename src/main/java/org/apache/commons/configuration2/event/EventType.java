@@ -52,7 +52,7 @@ public class EventType<T extends Event> implements Serializable {
      * indirect super types and also includes the given type itself. The passed in type may be <strong>null</strong>, then an empty
      * set is returned.
      *
-     * @param eventType the event type in question
+     * @param eventType The event type in question
      * @return A set with all super event types
      */
     public static Set<EventType<?>> fetchSuperEventTypes(final EventType<?> eventType) {
@@ -69,8 +69,8 @@ public class EventType<T extends Event> implements Serializable {
      * Checks whether an event type is derived from another type. This implementation tests whether {@code baseType} is a
      * direct or indirect super type of {@code derivedType}. If one of the types is <strong>null</strong>, result is <strong>false</strong>.
      *
-     * @param derivedType the derived event type
-     * @param baseType the base event type
+     * @param derivedType The derived event type
+     * @param baseType The base event type
      * @return <strong>true</strong> if the derived type is an instance of the base type, <strong>false</strong> otherwise
      */
     public static boolean isInstanceOf(final EventType<?> derivedType, final EventType<?> baseType) {
@@ -94,8 +94,8 @@ public class EventType<T extends Event> implements Serializable {
      * Creates a new instance of {@code EventType} and initializes it with the super type and a type name. If no super type
      * is specified, this is the root event type.
      *
-     * @param superEventType the super event type
-     * @param typeName the name of this event type
+     * @param superEventType The super event type
+     * @param typeName The name of this event type
      */
     public EventType(final EventType<? super T> superEventType, final String typeName) {
         superType = superEventType;

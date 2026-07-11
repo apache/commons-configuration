@@ -85,7 +85,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Checks whether a map with parameters is present. Throws an exception if not.
      *
-     * @param params the map with parameters to check
+     * @param params The map with parameters to check
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     private static void checkParameters(final Map<String, Object> params) {
@@ -98,7 +98,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Creates defensive copies for collection structures when constructing the map with parameters. It should not be
      * possible to modify this object's internal state when having access to the parameters map.
      *
-     * @param params the map with parameters to be passed to the caller
+     * @param params The map with parameters to be passed to the caller
      */
     private static void createDefensiveCopies(final HashMap<String, Object> params) {
         final Map<String, ? extends Lookup> prefixLookups = fetchPrefixLookups(params);
@@ -115,7 +115,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Tests whether the passed in map with parameters contains a valid collection with default lookups. This method works
      * like {@link #fetchAndCheckPrefixLookups(Map)}, but tests the default lookups collection.
      *
-     * @param params the map with parameters
+     * @param params The map with parameters
      * @return The collection with default lookups (may be <strong>null</strong>)
      * @throws IllegalArgumentException if invalid data is found
      */
@@ -136,7 +136,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * parameters map is from an insecure source and we cannot be sure that it contains valid data. Therefore, we have to
      * map that the key for the prefix lookups actually points to a map containing keys and values of expected data types.
      *
-     * @param params the parameters map
+     * @param params The parameters map
      * @return The obtained map with prefix lookups
      * @throws IllegalArgumentException if the map contains invalid data
      */
@@ -158,7 +158,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * instance from a parameters map that has been set via the {@code setBeanHelper()} method. If no such instance is
      * found, result is <strong>null</strong>.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>)
+     * @param params The map with parameters (must not be <strong>null</strong>)
      * @return The {@code BeanHelper} stored in this map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
@@ -170,7 +170,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Obtains the collection with default lookups from the parameters map.
      *
-     * @param params the map with parameters
+     * @param params The map with parameters
      * @return The collection with default lookups (may be <strong>null</strong>)
      */
     private static Collection<? extends Lookup> fetchDefaultLookups(final Map<String, Object> params) {
@@ -186,7 +186,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains a specification for a {@link ConfigurationInterpolator} from the specified map with parameters. All
      * properties related to interpolation are evaluated and added to the specification object.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>)
+     * @param params The map with parameters (must not be <strong>null</strong>)
      * @return An {@code InterpolatorSpecification} object constructed with data from the map
      * @throws IllegalArgumentException if the map is <strong>null</strong> or contains invalid data
      */
@@ -200,9 +200,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Obtains a parameter from a map and performs a type check.
      *
-     * @param params the map with parameters
-     * @param key the key of the parameter
-     * @param expClass the expected class of the parameter value
+     * @param params The map with parameters
+     * @param key The key of the parameter
+     * @param expClass The expected class of the parameter value
      * @param <T> The parameter type
      * @return The value of the parameter in the correct data type
      * @throws IllegalArgumentException if the parameter is not of the expected type
@@ -221,7 +221,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Obtains the map with prefix lookups from the parameters map.
      *
-     * @param params the map with parameters
+     * @param params The map with parameters
      * @return The map with prefix lookups (may be <strong>null</strong>)
      */
     private static Map<String, ? extends Lookup> fetchPrefixLookups(final Map<String, Object> params) {
@@ -269,8 +269,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Copies a number of properties from the given map into this object. Properties are only copied if they are defined in
      * the source map.
      *
-     * @param source the source map
-     * @param keys the keys to be copied
+     * @param source The source map
+     * @param keys The keys to be copied
      */
     protected void copyPropertiesFrom(final Map<String, ?> source, final String... keys) {
         for (final String key : keys) {
@@ -285,7 +285,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Obtains the value of the specified property from the internal map. This method can be used by derived classes if a
      * specific property is to be accessed. If the given key is not found, result is <strong>null</strong>.
      *
-     * @param key the key of the property in question
+     * @param key The key of the property in question
      * @return The value of the property with this key or <strong>null</strong>
      */
     protected Object fetchProperty(final String key) {
@@ -321,7 +321,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * name, it does not make sense to copy it. Therefore, an implementation has to be explicit in the properties it wants
      * to take over.
      *
-     * @param source the source properties to inherit from
+     * @param source The source properties to inherit from
      * @throws IllegalArgumentException if the source map is <strong>null</strong>
      */
     public void inheritFrom(final Map<String, ?> source) {
@@ -337,7 +337,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * parameters object to the internal storage which are not already in. So properties already defined in this object take
      * precedence. Property names starting with the reserved parameter prefix are ignored.
      *
-     * @param p the object whose properties should be merged (must not be <strong>null</strong>)
+     * @param p The object whose properties should be merged (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the passed in object is <strong>null</strong>
      */
     public void merge(final BuilderParameters p) {
@@ -406,7 +406,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration} does not allow setting this
      * property to <strong>null</strong>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
      *
-     * @param handler the {@code ListDelimiterHandler}
+     * @param handler The {@code ListDelimiterHandler}
      * @return A reference to this object for method chaining
      */
     @Override
@@ -418,7 +418,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Sets the <em>logger</em> property. With this property a concrete {@code Log} object can be set for the configuration.
      * Thus logging behavior can be controlled.
      *
-     * @param log the {@code Log} for the configuration produced by this builder
+     * @param log The {@code Log} for the configuration produced by this builder
      * @return A reference to this object for method chaining
      */
     @Override
@@ -451,8 +451,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
     /**
      * Helper method for setting a property value.
      *
-     * @param key the key of the property
-     * @param value the value of the property
+     * @param key The key of the property
+     * @param value The value of the property
      * @return A reference to this object
      */
     private BasicBuilderParameters setProperty(final String key, final Object value) {
@@ -474,7 +474,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * of <strong>false</strong> it will return <strong>null</strong> values. (Note: Methods returning a primitive data type will always throw
      * an exception if the property is not defined.)
      *
-     * @param b the value of the property
+     * @param b The value of the property
      * @return A reference to this object for method chaining
      */
     @Override
@@ -487,8 +487,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * can be added to this map. If the value is <strong>null</strong>, the key is removed from the internal map. This method can be
      * used by sub classes which also store properties in a map.
      *
-     * @param key the key of the property
-     * @param value the value of the property
+     * @param key The key of the property
+     * @param value The value of the property
      */
     protected void storeProperty(final String key, final Object value) {
         if (value == null) {

@@ -51,8 +51,8 @@ public class TestImmutableNode {
     /**
      * Checks whether a node has the expected attributes.
      *
-     * @param node the node to be checked
-     * @param expAttrs the expected attributes
+     * @param node The node to be checked
+     * @param expAttrs The expected attributes
      */
     private static void checkAttributes(final ImmutableNode node, final Map<String, ?> expAttrs) {
         assertEquals(expAttrs, node.getAttributes());
@@ -61,8 +61,8 @@ public class TestImmutableNode {
     /**
      * Helper method for testing whether a node contains all the attributes in the specified map.
      *
-     * @param node the node to be checked
-     * @param attributes the map with expected attributes
+     * @param node The node to be checked
+     * @param attributes The map with expected attributes
      */
     private static void checkAttributesContained(final ImmutableNode node, final Map<String, Object> attributes) {
         for (final Map.Entry<String, Object> e : attributes.entrySet()) {
@@ -73,8 +73,8 @@ public class TestImmutableNode {
     /**
      * Checks whether a node has exactly the specified children.
      *
-     * @param parent the parent node to be checked
-     * @param children the expected children
+     * @param parent The parent node to be checked
+     * @param children The expected children
      */
     private static void checkChildNodes(final ImmutableNode parent, final ImmutableNode... children) {
         checkChildNodes(parent, Arrays.asList(children));
@@ -83,8 +83,8 @@ public class TestImmutableNode {
     /**
      * Checks whether a node has the expected children.
      *
-     * @param node the node to be checked
-     * @param expChildren the collection with the expected children
+     * @param node The node to be checked
+     * @param expChildren The collection with the expected children
      */
     private static void checkChildNodes(final ImmutableNode node, final List<ImmutableNode> expChildren) {
         assertEquals(expChildren, node.getChildren());
@@ -93,8 +93,8 @@ public class TestImmutableNode {
     /**
      * Checks whether an updated node has the expected basic properties.
      *
-     * @param org the original node
-     * @param updated the updated node
+     * @param org The original node
+     * @param updated The updated node
      */
     private static void checkUpdatedNode(final ImmutableNode org, final ImmutableNode updated) {
         assertNotSame(org, updated);
@@ -119,7 +119,7 @@ public class TestImmutableNode {
     /**
      * Helper method for testing a setAttributes() operation which has no effect.
      *
-     * @param attributes the map with attributes
+     * @param attributes The map with attributes
      */
     private void checkSetAttributesNoOp(final Map<String, Object> attributes) {
         final ImmutableNode node = createDefaultNode(VALUE);
@@ -139,7 +139,7 @@ public class TestImmutableNode {
     /**
      * Creates a default node instance which can be used by tests for updating properties.
      *
-     * @param value the value of the node
+     * @param value The value of the node
      * @return The default node instance
      */
     private ImmutableNode createDefaultNode(final Object value) {
@@ -149,8 +149,8 @@ public class TestImmutableNode {
     /**
      * Creates a default node instance with a variable name and value that can be used by tests for updating properties.
      *
-     * @param name the name of the node
-     * @param value the value of the node
+     * @param name The name of the node
+     * @param value The value of the node
      * @return The default node instance
      */
     private ImmutableNode createDefaultNode(final String name, final Object value) {

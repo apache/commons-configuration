@@ -48,16 +48,16 @@ public interface ConfigurationNodeVisitor<T> {
     /**
      * Visits the specified node after after its children - if existing - have been processed.
      *
-     * @param node the node to be visited
-     * @param handler the {@code NodeHandler}
+     * @param node The node to be visited
+     * @param handler The {@code NodeHandler}
      */
     void visitAfterChildren(T node, NodeHandler<T> handler);
 
     /**
      * Visits the specified node before the children of this node - if existing - are processed.
      *
-     * @param node the node to be visited
-     * @param handler the {@code NodeHandler}
+     * @param node The node to be visited
+     * @param handler The {@code NodeHandler}
      */
     void visitBeforeChildren(T node, NodeHandler<T> handler);
 }

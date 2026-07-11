@@ -39,7 +39,7 @@ public interface ReloadingDetectorFactory {
      * {@code FileBasedBuilderParametersImpl} object may contain additional information for configuring the detector, for example a
      * refresh delay.
      *
-     * @param handler the handler of the file to be monitored
+     * @param handler The handler of the file to be monitored
      * @param params parameters related to file-based configurations
      * @return The newly created {@code ReloadingDetector}
      * @throws ConfigurationException if an error occurs

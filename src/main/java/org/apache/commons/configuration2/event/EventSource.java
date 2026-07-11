@@ -34,8 +34,8 @@ public interface EventSource {
      * Adds an event listener for the specified event type. This listener is notified about events of this type and all its
      * sub types.
      *
-     * @param eventType the event type (must not be <strong>null</strong>)
-     * @param listener the listener to be registered (must not be <strong>null</strong>)
+     * @param eventType The event type (must not be <strong>null</strong>)
+     * @param listener The listener to be registered (must not be <strong>null</strong>)
      * @param <T> The type of events processed by this listener
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
@@ -47,8 +47,8 @@ public interface EventSource {
      * registration in question has to be specified. The return value indicates whether a registration was removed. A value
      * of <strong>false</strong> means that no such combination of event type and listener was found.
      *
-     * @param eventType the event type
-     * @param listener the event listener to be removed
+     * @param eventType The event type
+     * @param listener The event listener to be removed
      * @param <T> The type of events processed by this listener
      * @return A flag whether a listener registration was removed
      */

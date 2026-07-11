@@ -143,11 +143,11 @@ public class ConfigurationEvent extends Event {
     /**
      * Creates a new instance of {@code ConfigurationEvent} and initializes it.
      *
-     * @param source the event source
-     * @param type the event's type
-     * @param propertyName the name of the affected property
-     * @param propertyValue the value of the affected property
-     * @param beforeUpdate the before update flag
+     * @param source The event source
+     * @param type The event's type
+     * @param propertyName The name of the affected property
+     * @param propertyValue The value of the affected property
+     * @param beforeUpdate The before update flag
      */
     public ConfigurationEvent(final Object source, final EventType<? extends ConfigurationEvent> type, final String propertyName, final Object propertyValue,
         final boolean beforeUpdate) {

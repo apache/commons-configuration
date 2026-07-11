@@ -59,9 +59,9 @@ public class TestXPathExpressionEngine {
     /**
      * Helper method for testing the path nodes in the given add data object.
      *
-     * @param data the data object to check
-     * @param attr a flag if the new node is an attribute
-     * @param expected an array with the expected path elements
+     * @param data The data object to check
+     * @param attr A flag if the new node is an attribute
+     * @param expected An array with the expected path elements
      */
     private static void checkAddPath(final NodeAddData<ImmutableNode> data, final boolean attr, final String... expected) {
         assertSame(root, data.getParent());
@@ -80,7 +80,7 @@ public class TestXPathExpressionEngine {
     /**
      * Helper method for testing queries with undefined keys.
      *
-     * @param key the key
+     * @param key The key
      */
     private void checkEmptyKey(final String key) {
         final XPathContextFactory factory = mock(XPathContextFactory.class);
@@ -93,7 +93,7 @@ public class TestXPathExpressionEngine {
     /**
      * Helper method for checking whether an exception is thrown for an invalid path passed to prepareAdd().
      *
-     * @param path the path to be tested
+     * @param path The path to be tested
      * @throws IllegalArgumentException if the test is successful
      */
     private void checkInvalidAddPath(final String path) {
@@ -105,7 +105,7 @@ public class TestXPathExpressionEngine {
     /**
      * Creates a mock for a context and prepares it to expect a select invocation yielding the provided results.
      *
-     * @param results the results
+     * @param results The results
      * @return The mock context
      */
     private JXPathContext expectSelect(final Object... results) {
@@ -119,7 +119,7 @@ public class TestXPathExpressionEngine {
     /**
      * Creates a test engine instance configured with a context factory which returns the given test context.
      *
-     * @param ctx the context mock
+     * @param ctx The context mock
      * @return The test engine instance
      */
     private XPathExpressionEngine setUpEngine(final JXPathContext ctx) {

@@ -75,13 +75,13 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * inserted into the original structure. The passed in nodes define the position of the node to be inserted: its parent
          * and the siblings between to insert.
          *
-         * @param newNode the node to be inserted
-         * @param parent the parent node
-         * @param sibling1 the sibling after which the node is to be inserted; can be <strong>null</strong> if the new node is going to be
+         * @param newNode The node to be inserted
+         * @param parent The parent node
+         * @param sibling1 The sibling after which the node is to be inserted; can be <strong>null</strong> if the new node is going to be
          *        the first child node
-         * @param sibling2 the sibling before which the node is to be inserted; can be <strong>null</strong> if the new node is going to
+         * @param sibling2 The sibling before which the node is to be inserted; can be <strong>null</strong> if the new node is going to
          *        be the last child node
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param refHandler The {@code ReferenceNodeHandler}
          */
         protected abstract void insert(ImmutableNode newNode, ImmutableNode parent, ImmutableNode sibling1, ImmutableNode sibling2,
             ReferenceNodeHandler refHandler);
@@ -89,8 +89,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Inserts new children that have been added to the specified node.
          *
-         * @param node the current node to be processed
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param node The current node to be processed
+         * @param refHandler The {@code ReferenceNodeHandler}
          */
         private void insertNewChildNodes(final ImmutableNode node, final ReferenceNodeHandler refHandler) {
             final Collection<ImmutableNode> subNodes = new LinkedList<>(refHandler.getChildren(node));
@@ -134,9 +134,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * assigned reference object. A concrete implementation should update the reference according to the node's current
          * value.
          *
-         * @param node the current node to be processed
-         * @param reference the reference object for this node
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param node The current node to be processed
+         * @param reference The reference object for this node
+         * @param refHandler The {@code ReferenceNodeHandler}
          */
         protected abstract void update(ImmutableNode node, Object reference, ReferenceNodeHandler refHandler);
 
@@ -144,8 +144,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * Updates the value of a node. If this node is associated with a reference object, the {@code update()} method is
          * called.
          *
-         * @param node the current node to be processed
-         * @param refHandler the {@code ReferenceNodeHandler}
+         * @param node The current node to be processed
+         * @param refHandler The {@code ReferenceNodeHandler}
          */
         private void updateNode(final ImmutableNode node, final ReferenceNodeHandler refHandler) {
             final Object reference = refHandler.getReference(node);
@@ -194,8 +194,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * Handles interpolation for a node with no children. If interpolation does not change this node, it is copied as is to
          * the resulting structure. Otherwise, a new node is created with the interpolated values.
          *
-         * @param node the current node to be processed
-         * @param handler the {@code NodeHandler}
+         * @param node The current node to be processed
+         * @param handler The {@code NodeHandler}
          */
         private void handleLeafNode(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
             final Object value = interpolate(node.getValue());
@@ -210,8 +210,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Returns a map with interpolated attributes of the passed in node.
          *
-         * @param node the current node to be processed
-         * @param handler the {@code NodeHandler}
+         * @param node The current node to be processed
+         * @param handler The {@code NodeHandler}
          * @return The map with interpolated attributes
          */
         private Map<String, Object> interpolateAttributes(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
@@ -223,9 +223,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Populates a map with interpolated attributes of the passed in node.
          *
-         * @param node the current node to be processed
-         * @param handler the {@code NodeHandler}
-         * @param interpolatedAttributes a map for storing the results
+         * @param node The current node to be processed
+         * @param handler The {@code NodeHandler}
+         * @param interpolatedAttributes A map for storing the results
          * @return A flag whether an attribute value was changed by interpolation
          */
         private boolean interpolateAttributes(final ImmutableNode node, final NodeHandler<ImmutableNode> handler,
@@ -244,8 +244,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Returns a flag whether the given node is a leaf. This is the case if it does not have children.
          *
-         * @param node the node in question
-         * @param handler the {@code NodeHandler}
+         * @param node The node in question
+         * @param handler The {@code NodeHandler}
          * @return A flag whether this is a leaf node
          */
         private boolean isLeafNode(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
@@ -273,7 +273,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Pushes a new builder on the stack.
          *
-         * @param builder the builder
+         * @param builder The builder
          */
         private void push(final ImmutableNode.Builder builder) {
             builderStack.add(0, builder);
@@ -283,7 +283,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * Stores a processed node. Per default, the node is added to the current builder on the stack. If no such builder
          * exists, this is the result node.
          *
-         * @param node the node to be stored
+         * @param node The node to be stored
          */
         private void storeInterpolatedNode(final ImmutableNode node) {
             if (builderStack.isEmpty()) {
@@ -296,8 +296,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         /**
          * Tests whether a value is changed because of interpolation.
          *
-         * @param interpolatedValue the interpolated value
-         * @param value the original value
+         * @param interpolatedValue The interpolated value
+         * @param value The original value
          * @return A flag whether the value was changed
          */
         private boolean valueChanged(final Object interpolatedValue, final Object value) {
@@ -329,7 +329,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * creates an {@link InMemoryNodeModel}. If the passed in source configuration is defined, its root node also becomes
      * the root node of this configuration. Otherwise, a new, empty root node is used.
      *
-     * @param c the configuration that is to be copied
+     * @param c The configuration that is to be copied
      * @return The {@code NodeModel} for the new configuration
      */
     private static NodeModel<ImmutableNode> createNodeModel(final HierarchicalConfiguration<ImmutableNode> c) {
@@ -340,7 +340,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Obtains the root node from a configuration whose data is to be copied. It has to be ensured that the synchronizer is
      * called correctly.
      *
-     * @param c the configuration that is to be copied
+     * @param c The configuration that is to be copied
      * @return The root node of this configuration
      */
     private static ImmutableNode obtainRootNode(final HierarchicalConfiguration<ImmutableNode> c) {
@@ -350,7 +350,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * Creates a list with immutable configurations from the given input list.
      *
-     * @param subs a list with mutable configurations
+     * @param subs A list with mutable configurations
      * @return A list with corresponding immutable configurations
      */
     private static List<ImmutableHierarchicalConfiguration> toImmutable(final List<? extends HierarchicalConfiguration<?>> subs) {
@@ -371,7 +371,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a new instance of {@code BaseHierarchicalConfiguration} and copies all data contained in the specified
      * configuration into the new one.
      *
-     * @param c the configuration that is to be copied (if <strong>null</strong>, this constructor will behave like the standard
+     * @param c The configuration that is to be copied (if <strong>null</strong>, this constructor will behave like the standard
      *        constructor)
      * @since 1.4
      */
@@ -382,7 +382,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * Creates a new instance of {@code BaseHierarchicalConfiguration} and initializes it with the given {@code NodeModel}.
      *
-     * @param model the {@code NodeModel}
+     * @param model The {@code NodeModel}
      */
     protected BaseHierarchicalConfiguration(final NodeModel<ImmutableNode> model) {
         super(model);
@@ -491,7 +491,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a sub configuration from the specified key which is connected to this configuration. This implementation
      * creates a {@link SubnodeConfiguration} with a tracked node identified by the passed in key.
      *
-     * @param key the key of the sub configuration
+     * @param key The key of the sub configuration
      * @return The new sub configuration
      */
     private BaseHierarchicalConfiguration createConnectedSubConfiguration(final String key) {
@@ -503,8 +503,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * Creates a list of connected sub configurations based on a passed in list of node selectors.
      *
-     * @param parentModelSupport the parent node model support object
-     * @param selectors the list of {@code NodeSelector} objects
+     * @param parentModelSupport The parent node model support object
+     * @param selectors The list of {@code NodeSelector} objects
      * @return The list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(final InMemoryNodeModelSupport parentModelSupport,
@@ -516,7 +516,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a sub configuration from the specified key which is independent on this configuration. This means that the
      * sub configuration operates on a separate node model (although the nodes are initially shared).
      *
-     * @param key the key of the sub configuration
+     * @param key The key of the sub configuration
      * @return The new sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfiguration(final String key) {
@@ -534,7 +534,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Returns an initialized sub configuration for this configuration that is based on another
      * {@code BaseHierarchicalConfiguration}. Thus, it is independent from this configuration.
      *
-     * @param node the root node for the sub configuration
+     * @param node The root node for the sub configuration
      * @return The initialized sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfigurationForNode(final ImmutableNode node) {
@@ -546,8 +546,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * Creates a connected sub configuration based on a selector for a tracked node.
      *
-     * @param selector the {@code NodeSelector}
-     * @param parentModelSupport the {@code InMemoryNodeModelSupport} object for the parent node model
+     * @param selector The {@code NodeSelector}
+     * @param parentModelSupport The {@code InMemoryNodeModelSupport} object for the parent node model
      * @return The newly created sub configuration
      * @since 2.0
      */
@@ -562,7 +562,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * node and adds the children and attributes of all result nodes to it. If only a single node value is defined, it is
      * assigned as value of the new root node.
      *
-     * @param results the collection of query results
+     * @param results The collection of query results
      * @return The root node for the subset configuration
      */
     private ImmutableNode createSubsetRootNode(final Collection<QueryResult<ImmutableNode>> results) {
@@ -592,7 +592,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * Executes a query on the specified key and filters it for node results.
      *
-     * @param key the key
+     * @param key The key
      * @return The filtered list with result nodes
      */
     private List<ImmutableNode> fetchFilteredNodeResults(final String key) {
@@ -614,7 +614,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * initialized with the passed in key. Sub classes may override this method if they have a different strategy for
      * creating a selector.
      *
-     * @param key the key of the sub configuration
+     * @param key The key of the sub configuration
      * @return A {@code NodeSelector} for initializing a sub configuration
      * @since 2.0
      */
@@ -675,7 +675,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Initializes properties of a sub configuration. A sub configuration inherits some settings from its parent, for example the
      * expression engine or the synchronizer. The corresponding values are copied by this method.
      *
-     * @param sub the sub configuration to be initialized
+     * @param sub The sub configuration to be initialized
      */
     private void initSubConfiguration(final BaseHierarchicalConfiguration sub) {
         sub.setSynchronizer(getSynchronizer());
@@ -690,7 +690,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * for this configuration. It ensures that the sub configuration is correctly connected to its parent instance and that
      * update events are correctly propagated.
      *
-     * @param subConfig the sub configuration to be initialized
+     * @param subConfig The sub configuration to be initialized
      * @since 2.0
      */
     protected void initSubConfigurationForThisParent(final SubnodeConfiguration subConfig) {
@@ -722,7 +722,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * implementation transforms the received event into an event of type {@code SUBNODE_CHANGED} and notifies the
      * registered listeners.
      *
-     * @param event the event describing the change
+     * @param event The event describing the change
      * @since 1.5
      */
     protected void subnodeConfigurationChanged(final ConfigurationEvent event) {
@@ -740,7 +740,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * not reflected in the subset and vice versa. The returned configuration uses the same {@code Synchronizer} as this
      * configuration.
      *
-     * @param prefix the prefix of the keys for the subset
+     * @param prefix The prefix of the keys for the subset
      * @return A new configuration object representing the selected subset
      */
     @Override

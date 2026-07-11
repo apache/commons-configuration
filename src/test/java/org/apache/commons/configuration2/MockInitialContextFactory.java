@@ -97,9 +97,9 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Adds a new name-and-value pair to list of {@link NameClassPair}s.
      *
-     * @param pairs the list to add to
-     * @param name the name
-     * @param value the value
+     * @param pairs The list to add to
+     * @param name The name
+     * @param value The value
      */
     private void addEnumPair(final List<NameClassPair> pairs, final String name, final Object value) {
         final NameClassPair ncp = new NameClassPair(name, value.getClass().getName());
@@ -109,9 +109,9 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Binds a property value to the mock context.
      *
-     * @param mockCtx the context
-     * @param name the name of the property
-     * @param value the value of the property
+     * @param mockCtx The context
+     * @param name The name of the property
+     * @param value The value of the property
      */
     private void bind(final Context mockCtx, final String name, final String value) throws NamingException {
         when(mockCtx.lookup(name)).thenReturn(value);
@@ -121,8 +121,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Configures the mock to expect a call for a non existing property.
      *
-     * @param mockCtx the mock
-     * @param name the name of the property
+     * @param mockCtx The mock
+     * @param name The name of the property
      */
     private void bindError(final Context mockCtx, final String name) throws NamingException {
         when(mockCtx.lookup(name)).thenThrow(new NameNotFoundException("unknown property"));
@@ -131,7 +131,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Creates a mock for a Context with the specified prefix.
      *
-     * @param prefix the prefix
+     * @param prefix The prefix
      * @return The mock for the context
      */
     private Context createCtxMock(final String prefix) throws NamingException {
@@ -151,8 +151,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
     /**
      * Creates and initializes a list of {@link NameClassPair}s that can be used to create a naming enumeration.
      *
-     * @param names the names contained in the iteration
-     * @param values the corresponding values
+     * @param names The names contained in the iteration
+     * @param values The corresponding values
      * @return The mock for the enumeration
      */
     private List<NameClassPair> createNameClassPairs(final String[] names, final Object[] values) {
@@ -167,8 +167,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Creates and initializes a naming enumeration. This is a shortcut of wrapping the result of
      * {@link #createNameClassPairs(String[], Object[])} in an instance of {@link ListBasedNamingEnumeration}.
      *
-     * @param names the names contained in the iteration
-     * @param values the corresponding values
+     * @param names The names contained in the iteration
+     * @param values The corresponding values
      * @return The mock for the enumeration
      */
     private NamingEnumeration<NameClassPair> createNamingEnumeration(final String[] names, final Object[] values) {
@@ -179,7 +179,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * Creates a {@code Context} object that is backed by a mock object. The mock context can be queried for the values of
      * certain test properties. It also supports listing the contained (sub) properties.
      *
-     * @param env the environment
+     * @param env The environment
      * @return The context mock
      */
     @Override

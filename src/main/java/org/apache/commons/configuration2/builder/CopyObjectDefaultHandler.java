@@ -48,7 +48,7 @@ public class CopyObjectDefaultHandler implements DefaultParametersHandler<Object
      * Creates a new instance of {@code CopyObjectDefaultHandler} and initializes it with the specified source object. The
      * properties defined by the source object are copied onto the objects to be initialized.
      *
-     * @param src the source object (must not be <strong>null</strong>)
+     * @param src The source object (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the source object is <strong>null</strong>
      */
     public CopyObjectDefaultHandler(final BuilderParameters src) {

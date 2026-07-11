@@ -58,9 +58,9 @@ public class DefaultBeanFactory implements BeanFactory {
      * Checks whether exactly one matching constructor was found. Throws a meaningful exception if there
      * is not a single matching constructor.
      *
-     * @param beanClass the bean class
-     * @param data the bean declaration
-     * @param matchingConstructors the list with matching constructors
+     * @param beanClass The bean class
+     * @param data The bean declaration
+     * @param matchingConstructors The list with matching constructors
      * @throws ConfigurationRuntimeException if there is not exactly one match
      */
     private static <T> void checkSingleMatchingConstructor(final Class<T> beanClass, final BeanDeclaration data,
@@ -76,9 +76,9 @@ public class DefaultBeanFactory implements BeanFactory {
     /**
      * Constructs an exception if no single matching constructor was found with a meaningful error message.
      *
-     * @param beanClass the affected bean class
-     * @param data the bean declaration
-     * @param msg an error message
+     * @param beanClass The affected bean class
+     * @param data The bean declaration
+     * @param msg An error message
      * @return The exception with the error message
      */
     private static ConfigurationRuntimeException constructorMatchingException(final Class<?> beanClass, final BeanDeclaration data, final String msg) {
@@ -90,8 +90,8 @@ public class DefaultBeanFactory implements BeanFactory {
      * constructor. If this is not possible, an exception is thrown. Note: This method is intended to be used by concrete
      * {@link BeanFactory} implementations and not by client code.
      *
-     * @param beanClass the class of the bean to be created
-     * @param data the current {@code BeanDeclaration}
+     * @param beanClass The class of the bean to be created
+     * @param data The current {@code BeanDeclaration}
      * @param <T> The type of the bean to be created
      * @return The single matching constructor
      * @throws ConfigurationRuntimeException if no single matching constructor can be found
@@ -107,8 +107,8 @@ public class DefaultBeanFactory implements BeanFactory {
      * Returns a list with all constructors which are compatible with the constructor arguments specified by the given
      * {@code BeanDeclaration}.
      *
-     * @param beanClass the bean class to be instantiated
-     * @param data the current {@code BeanDeclaration}
+     * @param beanClass The bean class to be instantiated
+     * @param data The current {@code BeanDeclaration}
      * @return A list with all matching constructors
      */
     private static <T> List<Constructor<T>> findMatchingConstructors(final Class<T> beanClass, final BeanDeclaration data) {
@@ -129,7 +129,7 @@ public class DefaultBeanFactory implements BeanFactory {
     /**
      * Gets constructor arguments from a bean declaration. Deals with <strong>null</strong> values.
      *
-     * @param data the bean declaration
+     * @param data The bean declaration
      * @return The collection with constructor arguments (never <strong>null</strong>)
      */
     private static Collection<ConstructorArg> getConstructorArgs(final BeanDeclaration data) {
@@ -143,8 +143,8 @@ public class DefaultBeanFactory implements BeanFactory {
     /**
      * Checks whether the given constructor is compatible with the given list of arguments.
      *
-     * @param ctor the constructor to be checked
-     * @param args the collection of constructor arguments
+     * @param ctor The constructor to be checked
+     * @param args The collection of constructor arguments
      * @return A flag whether this constructor is compatible with the given arguments
      */
     private static boolean matchesConstructor(final Constructor<?> ctor, final Collection<ConstructorArg> args) {
@@ -166,7 +166,7 @@ public class DefaultBeanFactory implements BeanFactory {
     /**
      * Fetches constructor arguments from the given bean declaration. Handles <strong>null</strong> values safely.
      *
-     * @param data the bean declaration
+     * @param data The bean declaration
      * @return The collection with constructor arguments (never <strong>null</strong>)
      */
     private static Collection<ConstructorArg> nullSafeConstructorArgs(final BeanDeclaration data) {
@@ -191,7 +191,7 @@ public class DefaultBeanFactory implements BeanFactory {
      * Constructs a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
      * conversions.
      *
-     * @param convHandler the {@code ConversionHandler}; can be <strong>null</strong>, then a default handler is used
+     * @param convHandler The {@code ConversionHandler}; can be <strong>null</strong>, then a default handler is used
      * @since 2.0
      */
     public DefaultBeanFactory(final ConversionHandler convHandler) {
@@ -203,7 +203,7 @@ public class DefaultBeanFactory implements BeanFactory {
      * {@code initBeanInstance()} for creating and initializing the bean. This makes it easier for derived classes that need
      * to change specific functionality of the base class.
      *
-     * @param bcc the context object defining the bean to be created
+     * @param bcc The context object defining the bean to be created
      * @return The new bean instance
      * @throws Exception if an error occurs
      */
@@ -218,7 +218,7 @@ public class DefaultBeanFactory implements BeanFactory {
      * Creates the bean instance. This method is called by {@code createBean()}. It uses reflection to create a new instance
      * of the specified class.
      *
-     * @param bcc the context object defining the bean to be created
+     * @param bcc The context object defining the bean to be created
      * @return The new bean instance
      * @throws Exception if an error occurs
      */
@@ -232,8 +232,8 @@ public class DefaultBeanFactory implements BeanFactory {
      * Obtains the arguments for a constructor call to create a bean. This method resolves nested bean declarations and
      * performs necessary type conversions.
      *
-     * @param ctor the constructor to be invoked
-     * @param bcc the context object defining the bean to be created
+     * @param ctor The constructor to be invoked
+     * @param bcc The context object defining the bean to be created
      * @return An array with constructor arguments
      */
     private Object[] fetchConstructorArgs(final Constructor<?> ctor, final BeanCreationContext bcc) {
@@ -275,8 +275,8 @@ public class DefaultBeanFactory implements BeanFactory {
      * Initializes the newly created bean instance. This method is called by {@code createBean()}. It calls the
      * {@code initBean()} method of the context object for performing the initialization.
      *
-     * @param bean the newly created bean instance
-     * @param bcc the context object defining the bean to be created
+     * @param bean The newly created bean instance
+     * @param bcc The context object defining the bean to be created
      * @throws Exception if an error occurs
      */
     protected void initBeanInstance(final Object bean, final BeanCreationContext bcc) throws Exception {

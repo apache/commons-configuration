@@ -70,8 +70,8 @@ final class ModelTransaction {
         /**
          * Creates a new instance of {@code AddAttributeOperation}.
          *
-         * @param name the name of the attribute
-         * @param value the value of the attribute
+         * @param name The name of the attribute
+         * @param value The value of the attribute
          */
         public AddAttributeOperation(final String name, final Object value) {
             attributeName = name;
@@ -95,7 +95,7 @@ final class ModelTransaction {
         /**
          * Creates a new instance of {@code AddAttributesOperation}.
          *
-         * @param attrs the map with attributes
+         * @param attrs The map with attributes
          */
         public AddAttributesOperation(final Map<String, Object> attrs) {
             attributes = attrs;
@@ -118,7 +118,7 @@ final class ModelTransaction {
         /**
          * Creates a new instance of {@code ChangeNodeNameOperation} and sets the new node name.
          *
-         * @param name the new node name
+         * @param name The new node name
          */
         public ChangeNodeNameOperation(final String name) {
             newName = name;
@@ -141,7 +141,7 @@ final class ModelTransaction {
         /**
          * Creates a new instance of {@code ChangeNodeValueOperation} and initializes it with the new value to set for the node.
          *
-         * @param value the new node value
+         * @param value The new node value
          */
         public ChangeNodeValueOperation(final Object value) {
             newValue = value;
@@ -175,7 +175,7 @@ final class ModelTransaction {
         /**
          * Adds a node to be added to the target of the operation.
          *
-         * @param node the new node to be added
+         * @param node The new node to be added
          */
         public void addNewNode(final ImmutableNode node) {
             newNodes = append(newNodes, node);
@@ -184,7 +184,7 @@ final class ModelTransaction {
         /**
          * Adds a collection of nodes to be added to the target of the operation.
          *
-         * @param nodes the collection with new nodes
+         * @param nodes The collection with new nodes
          */
         public void addNewNodes(final Collection<? extends ImmutableNode> nodes) {
             newNodes = concatenate(newNodes, nodes);
@@ -193,7 +193,7 @@ final class ModelTransaction {
         /**
          * Adds a node for a remove operation. This child node is going to be removed from its parent.
          *
-         * @param node the child node to be removed
+         * @param node The child node to be removed
          */
         public void addNodeToRemove(final ImmutableNode node) {
             nodesToRemove = append(nodesToRemove, node);
@@ -202,8 +202,8 @@ final class ModelTransaction {
         /**
          * Adds a node for a replacement operation. The original node is going to be replaced by its replacement.
          *
-         * @param org the original node
-         * @param replacement the replacement node
+         * @param org The original node
+         * @param replacement The replacement node
          */
         public void addNodeToReplace(final ImmutableNode org, final ImmutableNode replacement) {
             nodesToReplace = append(nodesToReplace, org, replacement);
@@ -239,7 +239,7 @@ final class ModelTransaction {
         /**
          * Adds all operations defined by the specified object to this instance.
          *
-         * @param op the operation to be combined
+         * @param op The operation to be combined
          */
         public void combine(final ChildrenUpdateOperation op) {
             newNodes = concatenate(newNodes, op.newNodes);
@@ -275,8 +275,8 @@ final class ModelTransaction {
         /**
          * Executes this operation on the provided target node returning the result.
          *
-         * @param target the target node for this operation
-         * @param operations the current {@code Operations} instance
+         * @param target The target node for this operation
+         * @param operations The current {@code Operations} instance
          * @return The manipulated node
          */
         protected abstract ImmutableNode apply(ImmutableNode target, Operations operations);
@@ -301,7 +301,7 @@ final class ModelTransaction {
         /**
          * Adds an operation which manipulates children.
          *
-         * @param co the operation
+         * @param co The operation
          */
         public void addChildrenOperation(final ChildrenUpdateOperation co) {
             if (childrenOperation == null) {
@@ -314,7 +314,7 @@ final class ModelTransaction {
         /**
          * Adds an operation.
          *
-         * @param op the operation
+         * @param op The operation
          */
         public void addOperation(final Operation op) {
             operations = append(operations, op);
@@ -325,8 +325,8 @@ final class ModelTransaction {
          * in the current node hierarchy. Unless the root node is already reached, this causes another updated operation to be
          * created which replaces the manipulated child in the parent node.
          *
-         * @param target the target node for this operation
-         * @param level the level of the target node
+         * @param target The target node for this operation
+         * @param level The level of the target node
          */
         public void apply(final ImmutableNode target, final int level) {
             ImmutableNode node = target;
@@ -354,7 +354,7 @@ final class ModelTransaction {
         /**
          * Checks whether new nodes have been added during operation execution. If so, the parent mapping has to be updated.
          *
-         * @param node the resulting node after applying all operations
+         * @param node The resulting node after applying all operations
          */
         private void handleAddedNodes(final ImmutableNode node) {
             if (addedNodesInOperation != null) {
@@ -369,7 +369,7 @@ final class ModelTransaction {
          * Notifies this object that new nodes have been added by a sub operation. It has to be ensured that these nodes are
          * added to the parent mapping.
          *
-         * @param newNodes the collection of newly added nodes
+         * @param newNodes The collection of newly added nodes
          */
         public void newNodesAdded(final Collection<ImmutableNode> newNodes) {
             addedNodesInOperation = concatenate(addedNodesInOperation, newNodes);
@@ -379,9 +379,9 @@ final class ModelTransaction {
          * Propagates the changes on the target node to the next level above of the hierarchy. If the updated node is no longer
          * defined, it can even be removed from its parent. Otherwise, it is just replaced.
          *
-         * @param target the target node for this operation
-         * @param node the resulting node after applying all operations
-         * @param level the level of the target node
+         * @param target The target node for this operation
+         * @param node The resulting node after applying all operations
+         * @param level The level of the target node
          */
         private void propagateChange(final ImmutableNode target, final ImmutableNode node, final int level) {
             final ImmutableNode parent = getParent(target);
@@ -406,7 +406,7 @@ final class ModelTransaction {
         /**
          * Creates a new instance of {@code RemoveAttributeOperation}.
          *
-         * @param name the name of the attribute
+         * @param name The name of the attribute
          */
         public RemoveAttributeOperation(final String name) {
             attributeName = name;
@@ -432,8 +432,8 @@ final class ModelTransaction {
     /**
      * Appends a single element to a collection. The collection may be null, then it is created.
      *
-     * @param col the collection
-     * @param node the element to be added
+     * @param col The collection
+     * @param node The element to be added
      * @param <E> The type of elements involved
      * @return The resulting collection
      */
@@ -446,9 +446,9 @@ final class ModelTransaction {
     /**
      * Adds a single key-value pair to a map. The map may be null, then it is created.
      *
-     * @param map the map
-     * @param key the key
-     * @param value the value
+     * @param map The map
+     * @param key The key
+     * @param value The value
      * @param <K> The type of the key
      * @param <V> The type of the value
      * @return The resulting map
@@ -462,8 +462,8 @@ final class ModelTransaction {
     /**
      * Appends a single element to a set. The set may be null then it is created.
      *
-     * @param col the set
-     * @param elem the element to be added
+     * @param col The set
+     * @param elem The element to be added
      * @param <E> The type of the elements involved
      * @return The resulting set
      */
@@ -476,8 +476,8 @@ final class ModelTransaction {
     /**
      * Constructs the concatenation of two collections. Both can be null.
      *
-     * @param col1 the first collection
-     * @param col2 the second collection
+     * @param col1 The first collection
+     * @param col2 The second collection
      * @param <E> The type of the elements involved
      * @return The resulting collection
      */
@@ -494,8 +494,8 @@ final class ModelTransaction {
     /**
      * Constructs the concatenation of two maps. Both can be null.
      *
-     * @param map1 the first map
-     * @param map2 the second map
+     * @param map1 The first map
+     * @param map2 The second map
      * @param <K> The type of the keys
      * @param <V> The type of the values
      * @return The resulting map
@@ -513,8 +513,8 @@ final class ModelTransaction {
     /**
      * Constructs the concatenation of two sets. Both can be null.
      *
-     * @param set1 the first set
-     * @param set2 the second set
+     * @param set1 The first set
+     * @param set2 The second set
      * @param <E> The type of the elements involved
      * @return The resulting set
      */
@@ -576,10 +576,10 @@ final class ModelTransaction {
     /**
      * Creates a new instance of {@code ModelTransaction} for the current tree data.
      *
-     * @param treeData the current {@code TreeData} structure to operate on
-     * @param selector an optional {@code NodeSelector} defining the target root node for this transaction; this can be used
+     * @param treeData The current {@code TreeData} structure to operate on
+     * @param selector An optional {@code NodeSelector} defining the target root node for this transaction; this can be used
      *        to perform operations on tracked nodes
-     * @param resolver the {@code NodeKeyResolver}
+     * @param resolver The {@code NodeKeyResolver}
      */
     public ModelTransaction(final TreeData treeData, final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver) {
         currentData = treeData;
@@ -598,8 +598,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for adding a new child to a given parent node.
      *
-     * @param parent the parent node
-     * @param newChild the new child to be added
+     * @param parent The parent node
+     * @param newChild The new child to be added
      */
     public void addAddNodeOperation(final ImmutableNode parent, final ImmutableNode newChild) {
         final ChildrenUpdateOperation op = new ChildrenUpdateOperation();
@@ -610,8 +610,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for adding a number of new children to a given parent node.
      *
-     * @param parent the parent node
-     * @param newNodes the collection of new child nodes
+     * @param parent The parent node
+     * @param newNodes The collection of new child nodes
      */
     public void addAddNodesOperation(final ImmutableNode parent, final Collection<? extends ImmutableNode> newNodes) {
         final ChildrenUpdateOperation op = new ChildrenUpdateOperation();
@@ -622,9 +622,9 @@ final class ModelTransaction {
     /**
      * Adds an operation for adding an attribute to a target node.
      *
-     * @param target the target node
-     * @param name the name of the attribute
-     * @param value the value of the attribute
+     * @param target The target node
+     * @param name The name of the attribute
+     * @param value The value of the attribute
      */
     public void addAttributeOperation(final ImmutableNode target, final String name, final Object value) {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(new AddAttributeOperation(name, value));
@@ -633,8 +633,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for adding multiple attributes to a target node.
      *
-     * @param target the target node
-     * @param attributes the map with attributes to be set
+     * @param target The target node
+     * @param attributes The map with attributes to be set
      */
     public void addAttributesOperation(final ImmutableNode target, final Map<String, Object> attributes) {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(new AddAttributesOperation(attributes));
@@ -643,8 +643,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for changing the name of a target node.
      *
-     * @param target the target node
-     * @param newName the new name for this node
+     * @param target The target node
+     * @param newName The new name for this node
      */
     public void addChangeNodeNameOperation(final ImmutableNode target, final String newName) {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(new ChangeNodeNameOperation(newName));
@@ -653,8 +653,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for changing the value of a target node.
      *
-     * @param target the target node
-     * @param newValue the new value for this node
+     * @param target The target node
+     * @param newValue The new value for this node
      */
     public void addChangeNodeValueOperation(final ImmutableNode target, final Object newValue) {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(new ChangeNodeValueOperation(newValue));
@@ -663,7 +663,7 @@ final class ModelTransaction {
     /**
      * Adds an operation for clearing the value of a target node.
      *
-     * @param target the target node
+     * @param target The target node
      */
     public void addClearNodeValueOperation(final ImmutableNode target) {
         addChangeNodeValueOperation(target, null);
@@ -672,8 +672,8 @@ final class ModelTransaction {
     /**
      * Adds a new reference object for the given node.
      *
-     * @param node the affected node
-     * @param ref the reference object for this node
+     * @param node The affected node
+     * @param ref The reference object for this node
      */
     public void addNewReference(final ImmutableNode node, final Object ref) {
         fetchReferenceMap().put(node, ref);
@@ -683,7 +683,7 @@ final class ModelTransaction {
      * Adds a map with new reference objects. The entries in this map are passed to the {@code ReferenceTracker} during
      * execution of this transaction.
      *
-     * @param refs the map with new reference objects
+     * @param refs The map with new reference objects
      */
     public void addNewReferences(final Map<ImmutableNode, ?> refs) {
         fetchReferenceMap().putAll(refs);
@@ -692,8 +692,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for removing an attribute from a target node.
      *
-     * @param target the target node
-     * @param name the name of the attribute
+     * @param target The target node
+     * @param name The name of the attribute
      */
     public void addRemoveAttributeOperation(final ImmutableNode target, final String name) {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(new RemoveAttributeOperation(name));
@@ -702,8 +702,8 @@ final class ModelTransaction {
     /**
      * Adds an operation for removing a child node of a given node.
      *
-     * @param parent the parent node
-     * @param node the child node to be removed
+     * @param parent The parent node
+     * @param node The child node to be removed
      */
     public void addRemoveNodeOperation(final ImmutableNode parent, final ImmutableNode node) {
         final ChildrenUpdateOperation op = new ChildrenUpdateOperation();
@@ -738,8 +738,8 @@ final class ModelTransaction {
      * Obtains the {@code Operations} object for manipulating the specified node. If no such object exists yet, it is
      * created. The level can be undefined, then it is determined based on the target node.
      *
-     * @param target the target node
-     * @param level the level of the target node (may be undefined)
+     * @param target The target node
+     * @param level The level of the target node (may be undefined)
      * @return The {@code Operations} object for this node
      */
     Operations fetchOperations(final ImmutableNode target, final int level) {
@@ -772,7 +772,7 @@ final class ModelTransaction {
     /**
      * Gets the parent node of the given node.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return The parent of this node
      */
     ImmutableNode getParent(final ImmutableNode node) {
@@ -802,8 +802,8 @@ final class ModelTransaction {
      * Initializes the root node to be used within queries. If a tracked node selector is provided, this node becomes the
      * root node. Otherwise, the actual root node is used.
      *
-     * @param treeData the current data of the model
-     * @param selector an optional {@code NodeSelector} defining the target root
+     * @param treeData The current data of the model
+     * @param selector An optional {@code NodeSelector} defining the target root
      * @return The query root node for this transaction
      */
     private ImmutableNode initQueryRoot(final TreeData treeData, final NodeSelector selector) {
@@ -814,7 +814,7 @@ final class ModelTransaction {
      * Determines the level of the specified node in the current hierarchy. The level of the root node is 0, the children of
      * the root have level 1 and so on.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return The level of this node
      */
     private int level(final ImmutableNode node) {
@@ -841,7 +841,7 @@ final class ModelTransaction {
      * Removes the specified node completely from the replacement mapping. This also includes the nodes that replace the
      * given one.
      *
-     * @param node the node to be removed
+     * @param node The node to be removed
      */
     private void removeNodeFromReplacementMapping(final ImmutableNode node) {
         ImmutableNode replacement = node;
@@ -853,7 +853,7 @@ final class ModelTransaction {
     /**
      * Removes a node and its children (recursively) from the parent and the replacement mappings.
      *
-     * @param root the root of the subtree to be removed
+     * @param root The root of the subtree to be removed
      */
     private void removeNodesFromParentAndReplacementMapping(final ImmutableNode root) {
         NodeTreeWalker.INSTANCE.walkBFS(root, new ConfigurationNodeVisitorAdapter<ImmutableNode>() {

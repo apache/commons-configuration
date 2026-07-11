@@ -64,7 +64,7 @@ public final class URLConnectionOptions {
     /**
      * Constructs an instance with values from the given URLConnectionOptions.
      *
-     * @param urlConnectionOptions the source
+     * @param urlConnectionOptions The source
      */
     public URLConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
         this.allowUserInteraction = urlConnectionOptions.getAllowUserInteraction();
@@ -76,7 +76,7 @@ public final class URLConnectionOptions {
     /**
      * Applies the options to the given connection.
      *
-     * @param urlConnection the target connection.
+     * @param urlConnection The target connection.
      * @return The given connection.
      */
     public URLConnection apply(final URLConnection urlConnection) {
@@ -143,7 +143,7 @@ public final class URLConnectionOptions {
     /**
      * Opens a connection for the given URL with our options.
      *
-     * @param url the URL to open
+     * @param url The URL to open
      * @return A new connection
      * @throws IOException if an I/O exception occurs.
      */

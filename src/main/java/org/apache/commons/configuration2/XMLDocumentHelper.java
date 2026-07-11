@@ -63,7 +63,7 @@ final class XMLDocumentHelper {
     /**
      * Creates a copy of the specified document.
      *
-     * @param doc the {@code Document}
+     * @param doc The {@code Document}
      * @return The copy of this document
      * @throws ConfigurationException if an error occurs
      */
@@ -80,7 +80,7 @@ final class XMLDocumentHelper {
      * Creates a new {@code DocumentBuilder} using the specified factory. Exceptions are rethrown as
      * {@code ConfigurationException} exceptions.
      *
-     * @param factory the {@code DocumentBuilderFactory}
+     * @param factory The {@code DocumentBuilderFactory}
      * @return The newly created {@code DocumentBuilder}
      * @throws ConfigurationException if an error occurs
      */
@@ -105,8 +105,8 @@ final class XMLDocumentHelper {
      * Creates the element mapping for the specified documents. For each node in the source document an entry is created
      * pointing to the corresponding node in the destination object.
      *
-     * @param doc1 the source document
-     * @param doc2 the destination document
+     * @param doc1 The source document
+     * @param doc2 The destination document
      * @return The element mapping
      */
     private static Map<Node, Node> createElementMapping(final Document doc1, final Document doc2) {
@@ -120,7 +120,7 @@ final class XMLDocumentHelper {
      *
      * @param n1 node 1
      * @param n2 node 2
-     * @param mapping the mapping to be filled
+     * @param mapping The mapping to be filled
      */
     private static void createElementMappingForNodes(final Node n1, final Node n2, final Map<Node, Node> mapping) {
         mapping.put(n1, n2);
@@ -145,7 +145,7 @@ final class XMLDocumentHelper {
     /**
      * Creates a {@code Transformer} using the specified factory.
      *
-     * @param factory the {@code TransformerFactory}
+     * @param factory The {@code TransformerFactory}
      * @return The newly created {@code Transformer}
      * @throws ConfigurationException if an error occurs
      */
@@ -179,7 +179,7 @@ final class XMLDocumentHelper {
      * Creates a new instance of {@code XMLDocumentHelper} and initializes it with a newly created, empty {@code Document}.
      * The new document has a root element with the given element name. This element has no further child nodes.
      *
-     * @param rootElementName the name of the root element
+     * @param rootElementName The name of the root element
      * @return The newly created instance
      * @throws ConfigurationException if an error occurs when creating the document
      */
@@ -201,7 +201,7 @@ final class XMLDocumentHelper {
      * document stored in this instance.</li>
      * </ul>
      *
-     * @param srcDoc the source document
+     * @param srcDoc The source document
      * @return The newly created instance
      * @throws ConfigurationException if an error occurs
      */
@@ -223,9 +223,9 @@ final class XMLDocumentHelper {
      * Performs an XSL transformation on the passed in operands. All possible exceptions are caught and redirected as
      * {@code ConfigurationException} exceptions.
      *
-     * @param transformer the transformer
-     * @param source the source
-     * @param result the result
+     * @param transformer The transformer
+     * @param source The source
+     * @param result The result
      * @throws ConfigurationException if an error occurs
      */
     public static void transform(final Transformer transformer, final Source source, final Result result) throws ConfigurationException {
@@ -253,10 +253,10 @@ final class XMLDocumentHelper {
      * constructor is package private only for testing purposes. Instances should be created using the static factory
      * methods.
      *
-     * @param doc the {@code Document}
-     * @param elemMap the element mapping
-     * @param pubID the public ID of the source document
-     * @param sysID the system ID of the source document
+     * @param doc The {@code Document}
+     * @param elemMap The element mapping
+     * @param pubID The public ID of the source document
+     * @param sysID The system ID of the source document
      */
     XMLDocumentHelper(final Document doc, final Map<Node, Node> elemMap, final String pubID, final String sysID) {
         document = doc;

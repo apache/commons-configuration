@@ -42,7 +42,7 @@ public interface PropertiesBuilderProperties<T> {
     /**
      * Sets the current include listener, may be null.
      *
-     * @param includeListener the current include listener, may be null.
+     * @param includeListener The current include listener, may be null.
      * @return A reference to this object for method chaining
      * @since 2.6
      */
@@ -54,7 +54,7 @@ public interface PropertiesBuilderProperties<T> {
      * Sets a flag whether include files are supported by the properties configuration object. If set to <strong>true</strong>, files
      * listed by an include property are loaded automatically.
      *
-     * @param f the value of the flag
+     * @param f The value of the flag
      * @return A reference to this object for method chaining
      */
     T setIncludesAllowed(boolean f);
@@ -64,7 +64,7 @@ public interface PropertiesBuilderProperties<T> {
      * input and output streams can be set. This allows customizing the format of properties read or written by the
      * configuration. If no {@code IOFactory} is provided, the configuration uses a default one.
      *
-     * @param factory the {@code IOFactory} to be used by the configuration
+     * @param factory The {@code IOFactory} to be used by the configuration
      * @return A reference to this object for method chaining
      */
     T setIOFactory(IOFactory factory);
@@ -73,7 +73,7 @@ public interface PropertiesBuilderProperties<T> {
      * Sets the layout object for the properties configuration object. With this method a custom layout object can be set.
      * If no layout is provided, the configuration will use a default layout.
      *
-     * @param layout the {@code PropertiesConfigurationLayout} object to be used by the configuration
+     * @param layout The {@code PropertiesConfigurationLayout} object to be used by the configuration
      * @return A reference to this object for method chaining
      */
     T setLayout(PropertiesConfigurationLayout layout);

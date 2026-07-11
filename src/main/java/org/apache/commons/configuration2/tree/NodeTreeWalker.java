@@ -47,9 +47,9 @@ public class NodeTreeWalker {
      * structures on the heap. Therefore, it can deal with larger structures than would be the case in a recursive approach
      * (where the stack size limits the size of the structures which can be traversed).
      *
-     * @param root the root node to be navigated
-     * @param visitor the visitor
-     * @param handler the handler
+     * @param root The root node to be navigated
+     * @param visitor The visitor
+     * @param handler The handler
      * @param <T> The type of the nodes involved
      */
     private static <T> void bfs(final T root, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
@@ -69,9 +69,9 @@ public class NodeTreeWalker {
      * Helper method for checking the parameters for the walk() methods. If mandatory parameters are missing, an exception
      * is thrown. The return value indicates whether an operation can be performed.
      *
-     * @param root the root node
-     * @param visitor the visitor
-     * @param handler the handler
+     * @param root The root node
+     * @param visitor The visitor
+     * @param handler The handler
      * @param <T> The type of the nodes involved
      * @return <strong>true</strong> if a walk operation can be performed, <strong>false</strong> otherwise
      * @throws IllegalArgumentException if a required parameter is missing
@@ -89,9 +89,9 @@ public class NodeTreeWalker {
     /**
      * Recursive helper method for performing a DFS traversal.
      *
-     * @param node the current node
-     * @param visitor the visitor
-     * @param handler the handler
+     * @param node The current node
+     * @param visitor The visitor
+     * @param handler The handler
      * @param <T> The type of the nodes involved
      */
     private static <T> void dfs(final T node, final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler) {
@@ -118,9 +118,9 @@ public class NodeTreeWalker {
      * etc. In this mode of traversal, there is no direct connection between the encounter of a node and its children.
      * <strong>Therefore, on the visitor object only the {@code visitBeforeChildren()} method gets called!</strong>.
      *
-     * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
-     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
-     * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
+     * @param root The root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
+     * @param visitor The {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
+     * @param handler The {@code NodeHandler} (must not be <strong>null</strong>)
      * @param <T> The type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
@@ -136,9 +136,9 @@ public class NodeTreeWalker {
      * recursively all of its children are processed, and eventually
      * {@link ConfigurationNodeVisitor#visitAfterChildren(Object, NodeHandler)} gets invoked.
      *
-     * @param root the root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
-     * @param visitor the {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
-     * @param handler the {@code NodeHandler} (must not be <strong>null</strong>)
+     * @param root The root node of the hierarchy to be processed (may be <strong>null</strong>, then this call has no effect)
+     * @param visitor The {@code ConfigurationNodeVisitor} (must not be <strong>null</strong>)
+     * @param handler The {@code NodeHandler} (must not be <strong>null</strong>)
      * @param <T> The type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */

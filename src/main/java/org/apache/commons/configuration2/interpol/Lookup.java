@@ -45,7 +45,7 @@ public interface Lookup {
      * variable name extracted from the expression to interpolate (i.e. the prefix name has already been removed). A
      * concrete implementation has to return the value of this variable or <strong>null</strong> if the variable name is unknown.
      *
-     * @param variable the name of the variable to be resolved
+     * @param variable The name of the variable to be resolved
      * @return The value of this variable or <strong>null</strong>
      */
     Object lookup(String variable);

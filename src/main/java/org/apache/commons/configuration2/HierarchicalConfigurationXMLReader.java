@@ -53,8 +53,8 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
         /**
          * Returns an object with all attributes for the specified node.
          *
-         * @param node the current node
-         * @param handler the node handler
+         * @param node The current node
+         * @param handler The node handler
          * @return An object with all attributes of this node
          */
         protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler) {
@@ -74,8 +74,8 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
          * Helper method for determining the name of a node. If a node has no name (which is true for the root node), the
          * specified default name will be used.
          *
-         * @param node the node to be checked
-         * @param handler the node handler
+         * @param node The node to be checked
+         * @param handler The node handler
          * @return The name for this node
          */
         private String nodeName(final T node, final NodeHandler<T> handler) {
@@ -96,8 +96,8 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
         /**
          * Visits the specified node after its children have been processed.
          *
-         * @param node the actual node
-         * @param handler the node handler
+         * @param node The actual node
+         * @param handler The node handler
          */
         @Override
         public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
@@ -107,8 +107,8 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
         /**
          * Visits the specified node.
          *
-         * @param node the actual node
-         * @param handler the node handler
+         * @param node The actual node
+         * @param handler The node handler
          */
         @Override
         public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
@@ -133,7 +133,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     /**
      * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and sets the configuration to be parsed.
      *
-     * @param config the configuration object
+     * @param config The configuration object
      */
     public HierarchicalConfigurationXMLReader(final HierarchicalConfiguration<T> config) {
         this();
@@ -171,7 +171,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
     /**
      * Sets the configuration object to be parsed.
      *
-     * @param config the configuration object to be parsed
+     * @param config The configuration object to be parsed
      */
     public void setConfiguration(final HierarchicalConfiguration<T> config) {
         configuration = config;

@@ -117,8 +117,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Constructs a new instance of {@code NodeData}.
          *
-         * @param node the node
-         * @param nodeHandler the node handler
+         * @param node The node
+         * @param nodeHandler The node handler
          */
         NodeData(final T node, final NodeHandler<T> nodeHandler) {
             this.node = node;
@@ -130,7 +130,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * may contain reserved characters with a special meaning for the current expression engine. In this case, the
          * characters affected have to be escaped accordingly.
          *
-         * @param config the configuration
+         * @param config The configuration
          * @return The escaped node name
          */
         String escapedNodeName(final HierarchicalConfiguration<?> config) {
@@ -140,7 +140,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Gets the value of the attribute with the given name of the wrapped node.
          *
-         * @param key the key of the attribute
+         * @param key The key of the attribute
          * @return The value of this attribute
          */
         Object getAttribute(final String key) {
@@ -169,7 +169,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * Gets a list with the children of the wrapped node with the given name, again wrapped into {@code NodeData}
          * objects.
          *
-         * @param name the name of the desired child nodes
+         * @param name The name of the desired child nodes
          * @return A list with the children with this name
          */
         List<NodeData<T>> getChildren(final String name) {
@@ -179,7 +179,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Returns a flag whether the wrapped node is the root node of the passed in configuration.
          *
-         * @param config the configuration
+         * @param config The configuration
          * @return A flag whether this node is the configuration's root node
          */
         boolean matchesConfigRootNode(final HierarchicalConfiguration<?> config) {
@@ -198,7 +198,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Wraps the passed in list of nodes in {@code NodeData} objects.
          *
-         * @param nodes the list with nodes
+         * @param nodes The list with nodes
          * @return The wrapped nodes
          */
         List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
@@ -240,7 +240,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Creates a {@code NodeData} object from the root node of the given configuration.
      *
-     * @param config the configuration
+     * @param config The configuration
      * @param <T> The type of the nodes
      * @return The {@code NodeData} object
      */
@@ -252,7 +252,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Tests whether the constructor argument represented by the given configuration node is a bean declaration.
      *
-     * @param nodeData the configuration node in question
+     * @param nodeData The configuration node in question
      * @return A flag whether this constructor argument is a bean declaration
      */
     private static boolean isBeanDeclarationArgument(final NodeData<?> nodeData) {
@@ -272,8 +272,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it with the configuration node that contains the
      * bean declaration. This constructor is used internally.
      *
-     * @param config the configuration
-     * @param node the node with the bean declaration.
+     * @param config The configuration
+     * @param node The node with the bean declaration.
      */
     XMLBeanDeclaration(final HierarchicalConfiguration<?> config, final NodeData<?> node) {
         this.nodeData = node;
@@ -286,7 +286,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The
      * configuration's root node must contain the bean declaration.
      *
-     * @param config the configuration with the bean declaration
+     * @param config The configuration with the bean declaration
      * @param <T> The node type of the configuration
      */
     public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config) {
@@ -297,8 +297,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The passed in
      * key points to the bean declaration.
      *
-     * @param config the configuration (must not be <strong>null</strong>)
-     * @param key the key to the bean declaration (this key must point to exactly one bean declaration or a
+     * @param config The configuration (must not be <strong>null</strong>)
+     * @param key The key to the bean declaration (this key must point to exactly one bean declaration or a
      *        {@code IllegalArgumentException} exception will be thrown)
      * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
@@ -311,9 +311,9 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
      * optional declarations.
      *
-     * @param config the configuration (must not be <strong>null</strong>)
-     * @param key the key to the bean declaration
-     * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
+     * @param config The configuration (must not be <strong>null</strong>)
+     * @param key The key to the bean declaration
+     * @param optional A flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
      * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
@@ -331,11 +331,11 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * {@code IllegalArgumentException} exception will be thrown. It is possible to set a default bean class name; this name
      * is used if the configuration does not contain a bean class.
      *
-     * @param config the configuration (must not be <strong>null</strong>)
-     * @param key the key to the bean declaration
-     * @param optional a flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
+     * @param config The configuration (must not be <strong>null</strong>)
+     * @param key The key to the bean declaration
+     * @param optional A flag whether this declaration is optional; if set to <strong>true</strong>, no exception will be thrown if
      *        the passed in key is undefined
-     * @param defBeanClsName a default bean class name
+     * @param defBeanClsName A default bean class name
      * @param <T> The node type of the configuration
      * @throws IllegalArgumentException if required information is missing to construct the bean declaration
      * @since 2.0
@@ -367,7 +367,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * in if they need a specific initialization. This base implementation creates a {@code XMLBeanDeclaration} that is
      * properly initialized from the passed in node.
      *
-     * @param nodeData the child node, for which a {@code BeanDeclaration} is to be created
+     * @param nodeData The child node, for which a {@code BeanDeclaration} is to be created
      * @return The {@code BeanDeclaration} for this child node
      */
     BeanDeclaration createBeanDeclaration(final NodeData<?> nodeData) {
@@ -382,7 +382,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Creates a {@code ConstructorArg} object for the specified configuration node.
      *
-     * @param child the configuration node
+     * @param child The configuration node
      * @return The corresponding {@code ConstructorArg} object
      */
     private ConstructorArg createConstructorArg(final NodeData<?> child) {
@@ -396,8 +396,8 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets an attribute of a configuration node. This method also takes interpolation into account.
      *
-     * @param nodeData the node
-     * @param attribute the name of the attribute
+     * @param nodeData The node
+     * @param attribute The name of the attribute
      * @return The string value of this attribute (can be <strong>null</strong>)
      */
     private String getAttribute(final NodeData<?> nodeData, final String attribute) {
@@ -532,7 +532,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Initializes the internally managed sub configuration. This method will set some default values for some properties.
      *
-     * @param conf the configuration to initialize
+     * @param conf The configuration to initialize
      */
     private void initSubnodeConfiguration(final HierarchicalConfiguration<?> conf) {
         conf.setExpressionEngine(null);
@@ -542,7 +542,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Performs interpolation for the specified value. This implementation will interpolate against the current subnode
      * configuration's parent. If sub classes need a different interpolation mechanism, they should override this method.
      *
-     * @param value the value that is to be interpolated
+     * @param value The value that is to be interpolated
      * @return The interpolated value
      */
     protected Object interpolate(final Object value) {
@@ -555,7 +555,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * This method is called when processing the attributes of this bean declaration. It is then possible to ignore some
      * attributes with a specific meaning. This implementation delegates to {@link #isReservedName(String)}.
      *
-     * @param name the name of the attribute to be checked
+     * @param name The name of the attribute to be checked
      * @return A flag whether this name is reserved
      * @since 2.0
      */
@@ -568,7 +568,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * child nodes of this bean declaration. It is then possible to ignore some nodes with a specific meaning. This
      * implementation delegates to {@link #isReservedName(String)}.
      *
-     * @param name the name of the child node to be checked
+     * @param name The name of the child node to be checked
      * @return A flag whether this name is reserved
      * @since 2.0
      */
@@ -581,7 +581,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * default by the methods for checking attribute and child node names. It checks whether the passed in name starts with
      * the reserved prefix.
      *
-     * @param name the name to be checked
+     * @param name The name to be checked
      * @return A flag whether this name is reserved
      */
     protected boolean isReservedName(final String name) {

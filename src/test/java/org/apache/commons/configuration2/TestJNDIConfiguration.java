@@ -81,7 +81,7 @@ public class TestJNDIConfiguration {
         /**
          * Prepares this object to throw an exception when the JNDI context is queried.
          *
-         * @param nex the exception to be thrown
+         * @param nex The exception to be thrown
          */
         public void installException(final NamingException nex) {
             exception = nex;
@@ -99,10 +99,10 @@ public class TestJNDIConfiguration {
     /**
      * Tests whether the expected error events have been received.
      *
-     * @param type the expected event type
-     * @param opEventType the event type of the failed operation
-     * @param propName the name of the property
-     * @param propValue the property value
+     * @param type The expected event type
+     * @param opEventType The event type of the failed operation
+     * @param propName The name of the property
+     * @param propValue The property value
      */
     private void checkErrorListener(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opEventType, final String propName,
         final Object propValue) {

@@ -75,8 +75,8 @@ public class TestCombinedConfiguration {
         /**
          * Checks if the expected number of events was fired.
          *
-         * @param expectedInvalidate the expected number of invalidate events
-         * @param expectedOthers the expected number of other events
+         * @param expectedInvalidate The expected number of invalidate events
+         * @param expectedOthers The expected number of other events
          */
         public void checkEvent(final int expectedInvalidate, final int expectedOthers) {
             assertEquals(expectedInvalidate, invalidateEvents);
@@ -114,10 +114,10 @@ public class TestCombinedConfiguration {
         /**
          * Creates a new instance of {@code ReadThread}.
          *
-         * @param readConfig the configuration to be read
-         * @param latch the latch for synchronizing thread start
-         * @param errCnt the counter for read errors
-         * @param readCount the number of reads to be performed
+         * @param readConfig The configuration to be read
+         * @param latch The latch for synchronizing thread start
+         * @param errCnt The counter for read errors
+         * @param readCount The number of reads to be performed
          */
         public ReadThread(final Configuration readConfig, final CountDownLatch latch, final AtomicInteger errCnt, final int readCount) {
             config = readConfig;
@@ -188,10 +188,10 @@ public class TestCombinedConfiguration {
         /**
          * Creates a new instance of {@code WriteThread}.
          *
-         * @param cc the test combined configuration
-         * @param latch the latch for synchronizing test start
-         * @param errCnt a counter for errors
-         * @param writeCount the number of writes to be performed
+         * @param cc The test combined configuration
+         * @param latch The latch for synchronizing test start
+         * @param errCnt A counter for errors
+         * @param writeCount The number of writes to be performed
          */
         public WriteThread(final CombinedConfiguration cc, final CountDownLatch latch, final AtomicInteger errCnt, final int writeCount) {
             testConfigs = cc.getConfigurations();
@@ -262,7 +262,7 @@ public class TestCombinedConfiguration {
     /**
      * Checks if a configuration was correctly added to the combined config.
      *
-     * @param c the config to check
+     * @param c The config to check
      */
     private void checkAddConfig(final AbstractConfiguration c) {
         final Collection<EventListener<? super ConfigurationEvent>> listeners = c.getEventListeners(ConfigurationEvent.ANY);
@@ -292,7 +292,7 @@ public class TestCombinedConfiguration {
     /**
      * Tests whether a configuration was completely removed.
      *
-     * @param c the removed configuration
+     * @param c The removed configuration
      */
     private void checkRemoveConfig(final AbstractConfiguration c) {
         assertTrue(c.getEventListeners(ConfigurationEvent.ANY).isEmpty());

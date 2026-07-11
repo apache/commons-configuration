@@ -70,8 +70,8 @@ public class TestFileBasedConfigurationBuilder {
     /**
      * Checks whether a test configuration was saved successfully.
      *
-     * @param file the file to which the configuration was saved
-     * @param expValue the expected value of the test property
+     * @param file The file to which the configuration was saved
+     * @param expValue The expected value of the test property
      * @throws ConfigurationException if an error occurs
      */
     private static void checkSavedConfig(final File file, final int expValue) throws ConfigurationException {
@@ -88,7 +88,7 @@ public class TestFileBasedConfigurationBuilder {
     /**
      * Creates a test properties file with the given property value
      *
-     * @param value the value for the test property
+     * @param value The value for the test property
      * @return The File object pointing to the test file
      */
     private File createTestFile(final int value) {

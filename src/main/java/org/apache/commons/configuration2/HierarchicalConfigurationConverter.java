@@ -52,8 +52,8 @@ abstract class HierarchicalConfigurationConverter {
      * configuration to be converted. It calculates the common part of the actual and the last processed key and thus
      * determines how many elements must be closed.
      *
-     * @param keyLast the last processed key
-     * @param keyAct the actual key
+     * @param keyLast The last processed key
+     * @param keyAct The actual key
      */
     protected void closeElements(final DefaultConfigurationKey keyLast, final DefaultConfigurationKey keyAct) {
         final DefaultConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
@@ -72,7 +72,7 @@ abstract class HierarchicalConfigurationConverter {
      * An event handler method that is called when an element ends. For each call of {@code elementStart()} there will be a
      * corresponding call of this method. Concrete sub classes must implement it to perform a proper event handling.
      *
-     * @param name the name of the ending element
+     * @param name The name of the ending element
      */
     protected abstract void elementEnd(String name);
 
@@ -80,8 +80,8 @@ abstract class HierarchicalConfigurationConverter {
      * An event handler method that is called when an element starts. Concrete sub classes must implement it to perform a
      * proper event handling.
      *
-     * @param name the name of the new element
-     * @param value the element's value; can be <strong>null</strong> if the element does not have any value
+     * @param name The name of the new element
+     * @param value The element's value; can be <strong>null</strong> if the element does not have any value
      */
     protected abstract void elementStart(String name, Object value);
 
@@ -90,8 +90,8 @@ abstract class HierarchicalConfigurationConverter {
      * from the configuration to be processed with the last part of the key as argument. The value can be either a single
      * value or a collection.
      *
-     * @param name the name of the actual element
-     * @param value the element's value
+     * @param name The name of the actual element
+     * @param value The element's value
      */
     protected void fireValue(final String name, final Object value) {
         if (value instanceof Collection) {
@@ -108,10 +108,10 @@ abstract class HierarchicalConfigurationConverter {
      * configuration to be converted. It ensures that all elements "between" the last key and the actual key are opened and
      * their values are set.
      *
-     * @param keyLast the last processed key
-     * @param keyAct the actual key
-     * @param config the configuration to process
-     * @param keySet the set with the processed keys
+     * @param keyLast The last processed key
+     * @param keyAct The actual key
+     * @param config The configuration to process
+     * @param keySet The set with the processed keys
      * @return The name of the last element on the path
      */
     protected String openElements(final DefaultConfigurationKey keyLast, final DefaultConfigurationKey keyAct, final Configuration config,
@@ -131,7 +131,7 @@ abstract class HierarchicalConfigurationConverter {
      * defined keys are translated into a set of element start and end events represented by calls to the
      * {@code elementStart()} and {@code elementEnd()} methods.
      *
-     * @param config the configuration to be processed
+     * @param config The configuration to be processed
      */
     public void process(final Configuration config) {
         if (config != null) {
@@ -162,7 +162,7 @@ abstract class HierarchicalConfigurationConverter {
      * Helper method for determining a reverse iterator for the specified key. This implementation returns an iterator that
      * returns the parts of the given key in reverse order, ignoring indices.
      *
-     * @param key the key
+     * @param key The key
      * @return A reverse iterator for the parts of this key
      */
     protected Iterator<String> reverseIterator(final DefaultConfigurationKey key) {

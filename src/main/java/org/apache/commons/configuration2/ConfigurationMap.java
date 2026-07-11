@@ -160,7 +160,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
      * Gets the value of the specified key. The key is converted to a string and then passed to the underlying
      * configuration.
      *
-     * @param key the key
+     * @param key The key
      * @return The value of this key
      * @see Map#get(Object)
      */
@@ -182,8 +182,8 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     /**
      * Stores the value for the specified key. The value is stored in the underlying configuration.
      *
-     * @param key the key (will be converted to a string)
-     * @param value the value
+     * @param key The key (will be converted to a string)
+     * @param value The value
      * @return The old value of this key or <strong>null</strong> if it is new
      * @see Map#put(Object, Object)
      */

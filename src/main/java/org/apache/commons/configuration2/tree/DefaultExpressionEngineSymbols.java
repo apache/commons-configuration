@@ -71,7 +71,7 @@ public final class DefaultExpressionEngineSymbols {
          * {@code DefaultExpressionEngineSymbols} object. This is useful if symbols are to be created which are similar to the
          * passed in instance.
          *
-         * @param c the {@code DefaultExpressionEngineSymbols} object serving as starting point for this builder
+         * @param c The {@code DefaultExpressionEngineSymbols} object serving as starting point for this builder
          */
         public Builder(final DefaultExpressionEngineSymbols c) {
             propertyDelimiter = c.getPropertyDelimiter();
@@ -96,7 +96,7 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing the end marker of an attribute in a property key.
          *
-         * @param attributeEnd the attribute end marker
+         * @param attributeEnd The attribute end marker
          * @return A reference to this object for method chaining
          */
         public Builder setAttributeEnd(final String attributeEnd) {
@@ -108,7 +108,7 @@ public final class DefaultExpressionEngineSymbols {
          * Sets the string representing the start marker of an attribute in a property key. Attribute start and end marker are
          * used together to detect attributes in a property key.
          *
-         * @param attributeStart the attribute start marker
+         * @param attributeStart The attribute start marker
          * @return A reference to this object for method chaining
          */
         public Builder setAttributeStart(final String attributeStart) {
@@ -121,7 +121,7 @@ public final class DefaultExpressionEngineSymbols {
          * property can be escaped. If for instance &quot;.&quot; is used as property delimiter, you can set the escaped
          * delimiter to &quot;\.&quot; and can then escape the delimiter with a back slash.
          *
-         * @param escapedDelimiter the escaped property delimiter
+         * @param escapedDelimiter The escaped property delimiter
          * @return A reference to this object for method chaining
          */
         public Builder setEscapedDelimiter(final String escapedDelimiter) {
@@ -132,7 +132,7 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing the end of an index in a property key.
          *
-         * @param indexEnd the index end
+         * @param indexEnd The index end
          * @return A reference to this object for method chaining
          */
         public Builder setIndexEnd(final String indexEnd) {
@@ -144,7 +144,7 @@ public final class DefaultExpressionEngineSymbols {
          * Sets the string representing the start of an index in a property key. Index start and end marker are used together to
          * detect indices in a property key.
          *
-         * @param is the index start
+         * @param is The index start
          * @return A reference to this object for method chaining
          */
         public Builder setIndexStart(final String is) {
@@ -155,7 +155,7 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing a delimiter for properties.
          *
-         * @param propertyDelimiter the property delimiter
+         * @param propertyDelimiter The property delimiter
          * @return A reference to this object for method chaining
          */
         public Builder setPropertyDelimiter(final String propertyDelimiter) {
@@ -218,7 +218,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Creates a new instance of {@code DefaultExpressionEngineSymbols}.
      *
-     * @param b the builder for defining the properties of this instance
+     * @param b The builder for defining the properties of this instance
      */
     private DefaultExpressionEngineSymbols(final Builder b) {
         propertyDelimiter = b.propertyDelimiter;
@@ -233,7 +233,7 @@ public final class DefaultExpressionEngineSymbols {
      * Compares this object with another one. Two instances of {@code DefaultExpressionEngineSymbols} are considered equal
      * if all of their properties are equal.
      *
-     * @param obj the object to compare to
+     * @param obj The object to compare to
      * @return A flag whether these objects are equal
      */
     @Override

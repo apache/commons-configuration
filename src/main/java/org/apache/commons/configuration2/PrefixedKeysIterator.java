@@ -48,8 +48,8 @@ final class PrefixedKeysIterator implements Iterator<String> {
      * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix for the accepted
      * keys.
      *
-     * @param wrappedIterator the wrapped iterator
-     * @param keyPrefix the prefix of the allowed keys
+     * @param wrappedIterator The wrapped iterator
+     * @param keyPrefix The prefix of the allowed keys
      */
     public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix) {
         this(wrappedIterator, keyPrefix, AbstractConfiguration.DELIMITER);
@@ -59,9 +59,9 @@ final class PrefixedKeysIterator implements Iterator<String> {
      * Creates a new instance of {@code PrefixedKeysIterator} and sets the wrapped iterator and the prefix as well as the delimiter for the preix for the
      * accepted keys.
      *
-     * @param wrappedIterator the wrapped iterator
-     * @param keyPrefix       the prefix of the allowed keys
-     * @param prefixDelimiter the prefix delimiter
+     * @param wrappedIterator The wrapped iterator
+     * @param keyPrefix       The prefix of the allowed keys
+     * @param prefixDelimiter The prefix delimiter
      * @since 2.10.0
      */
     public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix, final String prefixDelimiter) {

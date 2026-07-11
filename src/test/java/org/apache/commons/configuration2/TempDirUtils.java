@@ -34,7 +34,7 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh file with a random name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the file under
+     * @param tempFolder The temporary folder to create the file under
      * @return The created file
      * @throws IOException if an error occurs
      */
@@ -45,7 +45,7 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh file with the given name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the file under
+     * @param tempFolder The temporary folder to create the file under
      * @return The created file
      * @throws IOException if an error occurs
      */
@@ -56,7 +56,7 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh folder with a random name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the folder under
+     * @param tempFolder The temporary folder to create the folder under
      * @return The created folder
      * @throws IOException if an error occurs
      */
@@ -67,7 +67,7 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh folder with the given path under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the folder under
+     * @param tempFolder The temporary folder to create the folder under
      * @return The created folder
      * @throws IOException if an error occurs
      */

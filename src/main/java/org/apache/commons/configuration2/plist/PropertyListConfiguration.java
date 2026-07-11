@@ -96,9 +96,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
          * Checks whether the given string has at least {@code length} characters starting from the given parsing position. If
          * this is not the case, an exception will be thrown.
          *
-         * @param s the string to be tested
-         * @param index the current index
-         * @param length the minimum length after the index
+         * @param s The string to be tested
+         * @param index The current index
+         * @param length The minimum length after the index
          * @throws ParseException if the string is too short
          */
         protected void checkLength(final String s, final int index, final int length) throws ParseException {
@@ -112,17 +112,17 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
          * Formats a date component. This method is used for converting a date in its internal representation into a string
          * literal.
          *
-         * @param buf the target buffer
-         * @param cal the calendar with the current date
+         * @param buf The target buffer
+         * @param cal The calendar with the current date
          */
         public abstract void formatComponent(StringBuilder buf, Calendar cal);
 
         /**
          * Adds a number to the given string buffer and adds leading '0' characters until the given length is reached.
          *
-         * @param buf the target buffer
-         * @param num the number to add
-         * @param length the required length
+         * @param buf The target buffer
+         * @param num The number to add
+         * @param length The required length
          */
         protected void padNum(final StringBuilder buf, final int num, final int length) {
             buf.append(StringUtils.leftPad(String.valueOf(num), length, PAD_CHAR));
@@ -131,9 +131,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
         /**
          * Parses a component from the given input string.
          *
-         * @param s the string to be parsed
-         * @param index the current parsing position
-         * @param cal the calendar where to store the result
+         * @param s The string to be parsed
+         * @param index The current parsing position
+         * @param cal The calendar where to store the result
          * @return The length of the processed component
          * @throws ParseException if the component cannot be extracted
          */
@@ -158,8 +158,8 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
         /**
          * Creates a new instance of {@code DateFieldParser}.
          *
-         * @param calFld the calendar field code
-         * @param len the length of this field
+         * @param calFld The calendar field code
+         * @param len The length of this field
          */
         public DateFieldParser(final int calFld, final int len) {
             this(calFld, len, 0);
@@ -168,9 +168,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
         /**
          * Creates a new instance of {@code DateFieldParser} and fully initializes it.
          *
-         * @param calFld the calendar field code
-         * @param len the length of this field
-         * @param ofs an offset to add to the calendar field
+         * @param calFld The calendar field code
+         * @param len The length of this field
+         * @param ofs An offset to add to the calendar field
          */
         public DateFieldParser(final int calFld, final int len, final int ofs) {
             calendarField = calFld;
@@ -206,7 +206,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
         /**
          * Creates a new instance of {@code DateSeparatorParser} and sets the separator string.
          *
-         * @param sep the separator string
+         * @param sep The separator string
          */
         public DateSeparatorParser(final String sep) {
             separator = sep;
@@ -292,7 +292,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * Returns a string representation for the date specified by the given calendar.
      *
-     * @param cal the calendar with the initialized date
+     * @param cal The calendar with the initialized date
      * @return A string for this date
      */
     static String formatDate(final Calendar cal) {
@@ -308,7 +308,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * Returns a string representation for the specified date.
      *
-     * @param date the date
+     * @param date The date
      * @return A string for this date
      */
     static String formatDate(final Date date) {
@@ -320,7 +320,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * Parses a date in a format like {@code <*D2002-03-22 11:30:00 +0100>}.
      *
-     * @param s the string with the date to be parsed
+     * @param s The string with the date to be parsed
      * @return The parsed date
      * @throws ParseException if an error occurred while parsing the string
      */
@@ -340,7 +340,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * Transform a map of arbitrary types into a map with string keys and object values. All keys of the source map which
      * are not of type String are dropped.
      *
-     * @param src the map to be converted
+     * @param src The map to be converted
      * @return The resulting map
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
@@ -364,7 +364,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * Creates a new instance of {@code PropertyListConfiguration} and copies the content of the specified configuration
      * into this object.
      *
-     * @param c the configuration to copy
+     * @param c The configuration to copy
      * @since 1.4
      */
     public PropertyListConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
@@ -374,7 +374,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
     /**
      * Creates a new instance of {@code PropertyListConfiguration} with the given root node.
      *
-     * @param root the root node
+     * @param root The root node
      */
     PropertyListConfiguration(final ImmutableNode root) {
         super(new InMemoryNodeModel(root));

@@ -81,7 +81,7 @@ public class BaseEventSource implements EventSource {
      * Helper method for checking the current counter for detail events. This method checks whether the counter is greater
      * than the passed in limit.
      *
-     * @param limit the limit to be compared to
+     * @param limit The limit to be compared to
      * @return <strong>true</strong> if the counter is greater than the limit, <strong>false</strong> otherwise
      */
     private boolean checkDetailEvents(final int limit) {
@@ -125,7 +125,7 @@ public class BaseEventSource implements EventSource {
     /**
      * Copies all event listener registrations maintained by this object to the specified {@code BaseEventSource} object.
      *
-     * @param source the target source for the copy operation (must not be <strong>null</strong>)
+     * @param source The target source for the copy operation (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the target source is <strong>null</strong>
      * @since 2.0
      */
@@ -140,11 +140,11 @@ public class BaseEventSource implements EventSource {
      * Creates a {@code ConfigurationErrorEvent} object based on the passed in parameters. This is called by
      * {@code fireError()} if it decides that an event needs to be generated.
      *
-     * @param type the event's type
-     * @param opType the operation type related to this error
-     * @param propName the name of the affected property (can be <strong>null</strong>)
-     * @param propValue the value of the affected property (can be <strong>null</strong>)
-     * @param ex the {@code Throwable} object that caused this error event
+     * @param type The event's type
+     * @param opType The operation type related to this error
+     * @param propName The name of the affected property (can be <strong>null</strong>)
+     * @param propValue The value of the affected property (can be <strong>null</strong>)
+     * @param ex The {@code Throwable} object that caused this error event
      * @return The event object
      */
     protected ConfigurationErrorEvent createErrorEvent(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType,
@@ -156,10 +156,10 @@ public class BaseEventSource implements EventSource {
      * Creates a {@code ConfigurationEvent} object based on the passed in parameters. This method is called by
      * {@code fireEvent()} if it decides that an event needs to be generated.
      *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <strong>null</strong>)
-     * @param propValue the value of the affected property (can be <strong>null</strong>)
-     * @param before the before update flag
+     * @param type The event's type
+     * @param propName The name of the affected property (can be <strong>null</strong>)
+     * @param propValue The value of the affected property (can be <strong>null</strong>)
+     * @param before The before update flag
      * @param <T> The type of the event to be created
      * @return The newly created event object
      */
@@ -171,11 +171,11 @@ public class BaseEventSource implements EventSource {
     /**
      * Creates an error event object and delivers it to all registered error listeners of a matching type.
      *
-     * @param eventType the event's type
-     * @param operationType the type of the failed operation
-     * @param propertyName the name of the affected property (can be <strong>null</strong>)
-     * @param propertyValue the value of the affected property (can be <strong>null</strong>)
-     * @param cause the {@code Throwable} object that caused this error event
+     * @param eventType The event's type
+     * @param operationType The type of the failed operation
+     * @param propertyName The name of the affected property (can be <strong>null</strong>)
+     * @param propertyValue The value of the affected property (can be <strong>null</strong>)
+     * @param cause The {@code Throwable} object that caused this error event
      * @param <T> The event type
      */
     public <T extends ConfigurationErrorEvent> void fireError(final EventType<T> eventType, final EventType<?> operationType, final String propertyName,
@@ -193,10 +193,10 @@ public class BaseEventSource implements EventSource {
      * Creates an event object and delivers it to all registered event listeners. The method checks first if sending an
      * event is allowed (making use of the {@code detailEvents} property), and if listeners are registered.
      *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <strong>null</strong>)
-     * @param propValue the value of the affected property (can be <strong>null</strong>)
-     * @param before the before update flag
+     * @param type The event's type
+     * @param propName The name of the affected property (can be <strong>null</strong>)
+     * @param propValue The value of the affected property (can be <strong>null</strong>)
+     * @param before The before update flag
      * @param <T> The type of the event to be fired
      */
     protected <T extends ConfigurationEvent> void fireEvent(final EventType<T> type, final String propName, final Object propValue, final boolean before) {
@@ -225,7 +225,7 @@ public class BaseEventSource implements EventSource {
      * Gets a collection with all event listeners of the specified event type that are currently registered at this
      * object.
      *
-     * @param eventType the event type object
+     * @param eventType The event type object
      * @param <T> The event type
      * @return A collection with the event listeners of the specified event type (this collection is a snapshot of the
      *         currently registered listeners; it cannot be manipulated)
@@ -262,7 +262,7 @@ public class BaseEventSource implements EventSource {
      * Note that this method records the number of calls, i.e. if for instance {@code setDetailEvents(false)} was called
      * three times, you will have to invoke the method as often to enable the details.
      *
-     * @param enable a flag if detail events should be enabled or disabled
+     * @param enable A flag if detail events should be enabled or disabled
      */
     public void setDetailEvents(final boolean enable) {
         synchronized (lockDetailEventsCount) {

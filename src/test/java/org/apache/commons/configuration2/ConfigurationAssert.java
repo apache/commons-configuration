@@ -53,8 +53,8 @@ public final class ConfigurationAssert {
     /**
      * Appends all keys in the specified configuration to the given collection.
      *
-     * @param config the configuration
-     * @param collection the target collection
+     * @param config The configuration
+     * @param collection The target collection
      */
     public static void appendKeys(final ImmutableConfiguration config, final Collection<String> collection) {
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
@@ -65,8 +65,8 @@ public final class ConfigurationAssert {
     /**
      * Checks the content of a configuration.
      *
-     * @param expected the expected properties
-     * @param actual the configuration to check
+     * @param expected The expected properties
+     * @param actual The configuration to check
      */
     public static void assertConfigurationEquals(final ImmutableConfiguration expected, final ImmutableConfiguration actual) {
         // check that the actual configuration contains all the properties of the expected configuration
@@ -89,7 +89,7 @@ public final class ConfigurationAssert {
      *
      * @param o1 test object 1
      * @param o2 test object 2
-     * @param expEquals the expected result of equals()
+     * @param expEquals The expected result of equals()
      */
     public static void checkEquals(final Object o1, final Object o2, final boolean expEquals) {
         assertEquals(expEquals, o1.equals(o2));
@@ -104,7 +104,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a {@code File} object for the specified out file.
      *
-     * @param name the name of the out file
+     * @param name The name of the out file
      * @return A {@code File} object pointing to that out file
      */
     public static File getOutFile(final String name) {
@@ -114,7 +114,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a URL pointing to the specified output file. If the URL cannot be constructed, a runtime exception is thrown.
      *
-     * @param name the name of the output file
+     * @param name The name of the output file
      * @return The corresponding URL
      */
     public static URL getOutURL(final String name) {
@@ -124,7 +124,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a {@code File} object for the specified test file.
      *
-     * @param name the name of the test file
+     * @param name The name of the test file
      * @return A {@code File} object pointing to that test file
      */
     public static File getTestFile(final String name) {
@@ -134,7 +134,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a {@code File} object for the specified test file.
      *
-     * @param name the name of the test file
+     * @param name The name of the test file
      * @return A {@code File} object pointing to that test file
      */
     public static Path getTestPath(final String name) {
@@ -144,7 +144,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a URL pointing to the specified test file. If the URL cannot be constructed, a runtime exception is thrown.
      *
-     * @param name the name of the test file
+     * @param name The name of the test file
      * @return The corresponding URL
      */
     public static URL getTestURL(final String name) {
@@ -154,7 +154,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a list with all keys defined for the specified configuration.
      *
-     * @param config the configuration
+     * @param config The configuration
      * @return A list with all keys of this configuration
      */
     public static List<String> keysToList(final ImmutableConfiguration config) {
@@ -166,7 +166,7 @@ public final class ConfigurationAssert {
     /**
      * Returns a set with all keys defined for the specified configuration.
      *
-     * @param config the configuration
+     * @param config The configuration
      * @return A set with all keys of this configuration
      */
     public static Set<String> keysToSet(final ImmutableConfiguration config) {
@@ -178,7 +178,7 @@ public final class ConfigurationAssert {
     /**
      * Helper method for converting a file to a URL.
      *
-     * @param file the file
+     * @param file The file
      * @return The corresponding URL
      * @throws ConfigurationRuntimeException if the URL cannot be constructed
      */

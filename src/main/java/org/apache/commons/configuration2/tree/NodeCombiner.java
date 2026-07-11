@@ -83,7 +83,7 @@ public abstract class NodeCombiner {
     /**
      * Adds the name of a node to the list of known list nodes. This means that nodes with this name will never be combined.
      *
-     * @param nodeName the name to be added
+     * @param nodeName The name to be added
      */
     public void addListNode(final String nodeName) {
         listNodes.add(nodeName);
@@ -93,8 +93,8 @@ public abstract class NodeCombiner {
      * Combines the hierarchies represented by the given root nodes. This method must be defined in concrete sub classes
      * with the implementation of a specific combination algorithm.
      *
-     * @param node1 the first root node
-     * @param node2 the second root node
+     * @param node1 The first root node
+     * @param node2 The second root node
      * @return The root node of the resulting combined node structure
      */
     public abstract ImmutableNode combine(ImmutableNode node1, ImmutableNode node2);
@@ -112,7 +112,7 @@ public abstract class NodeCombiner {
      * Checks if a node is a list node. This implementation tests if the given node name is contained in the set of known
      * list nodes. Derived classes which use different criteria may overload this method.
      *
-     * @param node the node to be tested
+     * @param node The node to be tested
      * @return A flag whether this is a list node
      */
     public boolean isListNode(final ImmutableNode node) {

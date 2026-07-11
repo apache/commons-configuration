@@ -39,7 +39,7 @@ public class JakartaServletContextConfiguration extends BaseWebConfiguration {
     /**
      * Create a ServletContextConfiguration using the context of the specified servlet.
      *
-     * @param servlet the servlet
+     * @param servlet The servlet
      */
     public JakartaServletContextConfiguration(final Servlet servlet) {
         this.context = Objects.requireNonNull(servlet, "servlet").getServletConfig().getServletContext();
@@ -48,7 +48,7 @@ public class JakartaServletContextConfiguration extends BaseWebConfiguration {
     /**
      * Create a ServletContextConfiguration using the servlet context initialization parameters.
      *
-     * @param context the servlet context
+     * @param context The servlet context
      */
     public JakartaServletContextConfiguration(final ServletContext context) {
         this.context = Objects.requireNonNull(context, "context");

@@ -61,7 +61,7 @@ public class TestConfigurations {
     /**
      * Generates an absolute path for the test file with the given name.
      *
-     * @param name the name of the test file
+     * @param name The name of the test file
      * @return The full path to this file
      */
     private static String absolutePath(final String name) {
@@ -71,7 +71,7 @@ public class TestConfigurations {
     /**
      * Checks whether a combined configuration was successfully loaded.
      *
-     * @param config the configuration instance to be checked.
+     * @param config The configuration instance to be checked.
      */
     private static void checkCombined(final Configuration config) {
         checkProperties(config);
@@ -81,7 +81,7 @@ public class TestConfigurations {
     /**
      * Checks whether a test INI configuration was correctly loaded.
      *
-     * @param config the configuration instance to be checked.
+     * @param config The configuration instance to be checked.
      */
     private static void checkINI(final INIConfiguration config) {
         assertEquals("yes", config.getProperty("testini.loaded"));
@@ -90,7 +90,7 @@ public class TestConfigurations {
     /**
      * Checks whether a property list configuration was correctly loaded.
      *
-     * @param config the configuration instance to be checked.
+     * @param config The configuration instance to be checked.
      */
     private static void checkPList(final Configuration config) {
         assertEquals("string1", config.getProperty("simple-string"));
@@ -99,7 +99,7 @@ public class TestConfigurations {
     /**
      * Checks whether a test properties configuration was correctly loaded.
      *
-     * @param config the configuration instance to be checked.
+     * @param config The configuration instance to be checked.
      */
     private static void checkProperties(final Configuration config) {
         assertEquals("true", config.getString("configuration.loaded"));
@@ -108,7 +108,7 @@ public class TestConfigurations {
     /**
      * Checks whether a test XML configuration was correctly loaded.
      *
-     * @param config the configuration instance to be checked.
+     * @param config The configuration instance to be checked.
      */
     private static void checkXML(final Configuration config) {
         assertEquals("value", config.getProperty("element"));

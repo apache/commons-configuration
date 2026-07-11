@@ -57,7 +57,7 @@ public interface BasicBuilderProperties<T> {
      * contain several specialized bean declarations.) If no specific {@code BeanHelper} is set, the builder uses the
      * default instance.
      *
-     * @param beanHelper the {@code BeanHelper} to be used by the builder
+     * @param beanHelper The {@code BeanHelper} to be used by the builder
      * @return A reference to this object for method chaining
      */
     T setBeanHelper(BeanHelper beanHelper);
@@ -66,7 +66,7 @@ public interface BasicBuilderProperties<T> {
      * Sets the {@code ConfigurationDecoder} object for this configuration. This object is called when encoded properties
      * are queried using the {@code getEncodedString()} method.
      *
-     * @param decoder the {@code ConfigurationDecoder} to be used
+     * @param decoder The {@code ConfigurationDecoder} to be used
      * @return A reference to this object for method chaining
      */
     T setConfigurationDecoder(ConfigurationDecoder decoder);
@@ -76,7 +76,7 @@ public interface BasicBuilderProperties<T> {
      * conversions required for accessing configuration properties in a specific target type. If this property is not set, a
      * default {@code ConversionHandler} is used.
      *
-     * @param handler the {@code ConversionHandler} to be used
+     * @param handler The {@code ConversionHandler} to be used
      * @return A reference to this object for method chaining
      */
     T setConversionHandler(ConversionHandler handler);
@@ -86,7 +86,7 @@ public interface BasicBuilderProperties<T> {
      * configuration object. Note: This method only takes effect if no {@code ConfigurationInterpolator} is set using the
      * {@link #setInterpolator(ConfigurationInterpolator)} method.
      *
-     * @param lookups a collection with {@code Lookup} objects to be added as default lookups at the configuration's
+     * @param lookups A collection with {@code Lookup} objects to be added as default lookups at the configuration's
      *        {@code ConfigurationInterpolator}
      * @return A reference to this object for method chaining
      * @see ConfigurationInterpolator#addDefaultLookups(Collection)
@@ -98,7 +98,7 @@ public interface BasicBuilderProperties<T> {
      * {@code ConfigurationInterpolator} can be set which can be freely configured. Alternatively, it is possible to add
      * custom {@code Lookup} objects using other methods provided by this interface.
      *
-     * @param ci the {@code ConfigurationInterpolator} for this configuration
+     * @param ci The {@code ConfigurationInterpolator} for this configuration
      * @return A reference to this object for method chaining
      */
     T setInterpolator(ConfigurationInterpolator ci);
@@ -109,7 +109,7 @@ public interface BasicBuilderProperties<T> {
      * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration} does not allow setting this
      * property to <strong>null</strong>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
      *
-     * @param handler the {@code ListDelimiterHandler}
+     * @param handler The {@code ListDelimiterHandler}
      * @return A reference to this object for method chaining
      */
     T setListDelimiterHandler(ListDelimiterHandler handler);
@@ -118,7 +118,7 @@ public interface BasicBuilderProperties<T> {
      * Sets the <em>logger</em> property. With this property a concrete {@code ConfigurationLogger} object can be set for
      * the configuration. Thus logging behavior can be controlled.
      *
-     * @param log the {@code Log} for the configuration produced by this builder
+     * @param log The {@code Log} for the configuration produced by this builder
      * @return A reference to this object for method chaining
      */
     T setLogger(ConfigurationLogger log);
@@ -128,7 +128,7 @@ public interface BasicBuilderProperties<T> {
      * a parent {@code ConfigurationInterpolator} can be used for defining a default behavior for variables which cannot be
      * resolved.
      *
-     * @param parent the new parent {@code ConfigurationInterpolator}
+     * @param parent The new parent {@code ConfigurationInterpolator}
      * @return A reference to this object for method chaining
      * @see ConfigurationInterpolator#setParentInterpolator(ConfigurationInterpolator)
      */
@@ -140,7 +140,7 @@ public interface BasicBuilderProperties<T> {
      * method only takes effect if no {@code ConfigurationInterpolator} is set using the
      * {@link #setInterpolator(ConfigurationInterpolator)} method.
      *
-     * @param lookups a map with {@code Lookup} objects and their associated prefixes
+     * @param lookups A map with {@code Lookup} objects and their associated prefixes
      * @return A reference to this object for method chaining
      * @see ConfigurationInterpolator#registerLookups(Map)
      */
@@ -151,7 +151,7 @@ public interface BasicBuilderProperties<T> {
      * instance against concurrent access. The concrete {@code Synchronizer} implementation used determines whether a
      * configuration instance is thread-safe or not.
      *
-     * @param sync the {@code Synchronizer} to be used (a value of <strong>null</strong> means that a default {@code Synchronizer} is
+     * @param sync The {@code Synchronizer} to be used (a value of <strong>null</strong> means that a default {@code Synchronizer} is
      *        used)
      * @return A reference to this object for method chaining
      */
@@ -163,7 +163,7 @@ public interface BasicBuilderProperties<T> {
      * of <strong>false</strong> it will return <strong>null</strong> values. (Note: Methods returning a primitive data type will always throw
      * an exception if the property is not defined.)
      *
-     * @param b the value of the property
+     * @param b The value of the property
      * @return A reference to this object for method chaining
      */
     T setThrowExceptionOnMissing(boolean b);

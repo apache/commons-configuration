@@ -291,7 +291,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Sets the ConfigurationInterpolator.
          *
-         * @param configurationInterpolator the ConfigurationInterpolator.
+         * @param configurationInterpolator The ConfigurationInterpolator.
          */
         public void setInterpolator(final ConfigurationInterpolator configurationInterpolator) {
             interpolator = configurationInterpolator;
@@ -316,9 +316,9 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Locates a given file. This implementation delegates to the corresponding method in {@link FileLocatorUtils}.
      *
-     * @param fs the {@code FileSystem}
-     * @param basePath the base path
-     * @param name the file name
+     * @param fs The {@code FileSystem}
+     * @param basePath The base path
+     * @param name The file name
      * @return The URL pointing to the file
      */
     private static URL locate(final FileSystem fs, final String basePath, final String name) {
@@ -374,7 +374,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Initializes the logger. Checks for null parameters.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     private void initLogger(final ConfigurationLogger log) {
         this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
@@ -475,7 +475,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Sets the {@code ConfigurationInterpolator}.
      *
-     * @param ci the {@code ConfigurationInterpolator}
+     * @param ci The {@code ConfigurationInterpolator}
      */
     public void setInterpolator(final ConfigurationInterpolator ci) {
         manager.setInterpolator(ci);
@@ -487,7 +487,7 @@ public class CatalogResolver implements EntityResolver {
      * logging should call this method during their initialization with the logger to be used. Passing in <strong>null</strong> as
      * argument disables logging.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     public void setLogger(final ConfigurationLogger log) {
         initLogger(log);

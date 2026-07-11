@@ -37,7 +37,7 @@ final class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T> {
     /**
      * Creates a new instance of {@code FindNodeVisitor} and sets the node to be searched for.
      *
-     * @param node the search node
+     * @param node The search node
      */
     public FindNodeVisitor(final T node) {
         searchNode = node;

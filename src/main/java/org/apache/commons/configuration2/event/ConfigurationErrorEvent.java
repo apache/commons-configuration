@@ -86,12 +86,12 @@ public class ConfigurationErrorEvent extends Event {
     /**
      * Creates a new instance of {@code ConfigurationErrorEvent} and sets all its properties.
      *
-     * @param source the event source
-     * @param eventType the type of this event
-     * @param operationType the event type of the operation causing this error
-     * @param propName the name of the affected property
-     * @param propValue the value of the affected property
-     * @param cause the exception object that caused this event
+     * @param source The event source
+     * @param eventType The type of this event
+     * @param operationType The event type of the operation causing this error
+     * @param propName The name of the affected property
+     * @param propValue The value of the affected property
+     * @param cause The exception object that caused this event
      */
     public ConfigurationErrorEvent(final Object source, final EventType<? extends ConfigurationErrorEvent> eventType, final EventType<?> operationType,
         final String propName, final Object propValue, final Throwable cause) {

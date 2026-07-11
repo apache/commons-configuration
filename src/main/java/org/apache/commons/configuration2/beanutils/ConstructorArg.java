@@ -40,7 +40,7 @@ public final class ConstructorArg {
      * Creates a new instance of {@code ConstructorArg} for the specified {@code BeanDeclaration}. The actual value of this
      * argument is the resolved {@code BeanDeclaration}.
      *
-     * @param decl the {@code BeanDeclaration}
+     * @param decl The {@code BeanDeclaration}
      * @return The newly created instance of this class
      * @throws NullPointerException if the {@code BeanDeclaration} is <strong>null</strong>
      */
@@ -53,8 +53,8 @@ public final class ConstructorArg {
      * explicitly. The type name is used to match this argument against the parameter type of a constructor or the bean
      * class.
      *
-     * @param beanDeclaration the {@code BeanDeclaration}
-     * @param typeName the name of the data type of this argument
+     * @param beanDeclaration The {@code BeanDeclaration}
+     * @param typeName The name of the data type of this argument
      * @return The newly created instance of this class
      * @throws NullPointerException if the {@code BeanDeclaration} is <strong>null</strong>
      */
@@ -67,7 +67,7 @@ public final class ConstructorArg {
      * Creates a new instance of {@code ConstructorArg} for the specified simple value. The value is passed to the
      * constructor invocation.
      *
-     * @param value the value of this constructor argument (may be <strong>null</strong>)
+     * @param value The value of this constructor argument (may be <strong>null</strong>)
      * @return The newly created instance of this class
      */
     public static ConstructorArg forValue(final Object value) {
@@ -78,8 +78,8 @@ public final class ConstructorArg {
      * Creates a new instance of {@code ConstructorArg} for the specified simple value and sets the type name explicitly.
      * The type name is used to match this argument against the parameter type of a constructor or the bean class.
      *
-     * @param value the value of this constructor argument (may be <strong>null</strong>)
-     * @param typeName the name of the data type of this argument
+     * @param value The value of this constructor argument (may be <strong>null</strong>)
+     * @param typeName The name of the data type of this argument
      * @return The newly created instance of this class
      */
     public static ConstructorArg forValue(final Object value, final String typeName) {
@@ -98,9 +98,9 @@ public final class ConstructorArg {
     /**
      * Constructs a new instance of {@code ConstructorArg}.
      *
-     * @param decl the associated bean declaration
-     * @param val the value of the argument
-     * @param type the type name
+     * @param decl The associated bean declaration
+     * @param val The value of the argument
+     * @param type The type name
      */
     private ConstructorArg(final BeanDeclaration decl, final Object val, final String type) {
         beanDeclaration = decl;
@@ -161,7 +161,7 @@ public final class ConstructorArg {
      * constructor. Only if there are multiple constructors with the same number of arguments, explicit type names have to
      * be provided to select a specific constructor.
      *
-     * @param argCls the class of the constructor argument to compare with
+     * @param argCls The class of the constructor argument to compare with
      * @return <strong>true</strong> if this constructor argument is compatible with this class, <strong>false</strong> otherwise
      */
     public boolean matches(final Class<?> argCls) {

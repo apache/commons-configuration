@@ -64,9 +64,9 @@ public class TestBaseConfigurationXMLReader {
     /**
      * Helper method for checking values in the created document.
      *
-     * @param ctx the JXPath context
-     * @param path the path to be checked
-     * @param values the expected element values
+     * @param ctx The JXPath context
+     * @param path The path to be checked
+     * @param values The expected element values
      */
     private void check(final JXPathContext ctx, final String path, final String[] values) {
         final Iterator<?> it = ctx.iterate(path);

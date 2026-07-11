@@ -93,8 +93,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Registers an event listener at an event source object.
      *
-     * @param evSrc the event source
-     * @param regData the registration data object
+     * @param evSrc The event source
+     * @param regData The registration data object
      * @param <E> The type of the event listener
      */
     private static <E extends Event> void registerListener(final EventSource evSrc, final EventListenerRegistrationData<E> regData) {
@@ -104,8 +104,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Removes an event listener from an event source object.
      *
-     * @param evSrc the event source
-     * @param regData the registration data object
+     * @param evSrc The event source
+     * @param regData The registration data object
      * @param <E> The type of the event listener
      */
     private static <E extends Event> void removeListener(final EventSource evSrc, final EventListenerRegistrationData<E> regData) {
@@ -134,7 +134,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class. No
      * initialization properties are set.
      *
-     * @param resCls the result class (must not be <strong>null</strong>)
+     * @param resCls The result class (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls) {
@@ -145,8 +145,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class and an
      * initial set of builder parameters. The <em>allowFailOnInit</em> flag is set to <strong>false</strong>.
      *
-     * @param resCls the result class (must not be <strong>null</strong>)
-     * @param params a map with initialization parameters
+     * @param resCls The result class (must not be <strong>null</strong>)
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public BasicConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
@@ -158,9 +158,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * initial set of builder parameters, and the <em>allowFailOnInit</em> flag. The map with parameters may be <strong>null</strong>,
      * in this case no initialization parameters are set.
      *
-     * @param resCls the result class (must not be <strong>null</strong>)
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit a flag whether exceptions on initializing a newly created {@code ImmutableConfiguration}
+     * @param resCls The result class (must not be <strong>null</strong>)
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit A flag whether exceptions on initializing a newly created {@code ImmutableConfiguration}
      *        object are allowed
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
@@ -189,7 +189,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Adds the content of the given map to the already existing initialization parameters.
      *
-     * @param params the map with additional initialization parameters; may be <strong>null</strong>, then this call has no effect
+     * @param params The map with additional initialization parameters; may be <strong>null</strong>, then this call has no effect
      * @return A reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> addParameters(final Map<String, Object> params) {
@@ -205,7 +205,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Checks whether the class of the result configuration is compatible with this builder's result class. This is done to
      * ensure that only objects of the expected result class are created.
      *
-     * @param inst the result instance to be checked
+     * @param inst The result instance to be checked
      * @throws ConfigurationRuntimeException if an invalid result class is detected
      */
     private void checkResultInstance(final Object inst) {
@@ -218,7 +218,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Appends the content of the specified {@code BuilderParameters} objects to the current initialization parameters.
      * Calling this method multiple times will create a union of the parameters provided.
      *
-     * @param params an arbitrary number of objects with builder parameters
+     * @param params An arbitrary number of objects with builder parameters
      * @return A reference to this builder for method chaining
      * @throws NullPointerException if a <strong>null</strong> array is passed
      */
@@ -242,7 +242,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * detected again.</li>
      * </ul>
      *
-     * @param controller the {@code ReloadingController} to connect to (must not be <strong>null</strong>)
+     * @param controller The {@code ReloadingController} to connect to (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the controller is <strong>null</strong>
      */
     public final void connectToReloadingController(final ReloadingController controller) {
@@ -257,7 +257,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * This method is intended to be used by derived classes which support inheritance of their properties to other builder
      * objects.
      *
-     * @param target the target configuration builder (must not be <strong>null</strong>)
+     * @param target The target configuration builder (must not be <strong>null</strong>)
      * @throws NullPointerException if the target builder is <strong>null</strong>
      */
     protected synchronized void copyEventListeners(final BasicConfigurationBuilder<?> target) {
@@ -269,8 +269,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * intended to be used by derived classes which have to deal with managed configuration builders that need to be
      * initialized with event listeners.
      *
-     * @param target the target configuration builder (must not be <strong>null</strong>)
-     * @param listeners the event listeners to be copied over
+     * @param target The target configuration builder (must not be <strong>null</strong>)
+     * @param listeners The event listeners to be copied over
      * @throws NullPointerException if the target builder is <strong>null</strong>
      */
     protected void copyEventListeners(final BasicConfigurationBuilder<?> target, final EventListenerList listeners) {
@@ -311,7 +311,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * parameters. The {@code BeanDeclaration} must be initialized with the result class of this builder, otherwise
      * exceptions will be thrown when the result object is created. Note: This method is invoked in a synchronized block.
      *
-     * @param params a snapshot of the current initialization parameters
+     * @param params A snapshot of the current initialization parameters
      * @return The {@code BeanDeclaration} for creating result objects
      * @throws ConfigurationException if an error occurs
      */
@@ -392,7 +392,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Sends the specified builder event to all registered listeners.
      *
-     * @param event the event to be fired
+     * @param event The event to be fired
      */
     protected void fireBuilderEvent(final ConfigurationBuilderEvent event) {
         eventListeners.fire(event);
@@ -477,7 +477,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Checks whether the specified parameters object implements the {@code EventListenerProvider} interface. If so, the
      * event listeners it provides are added to this builder.
      *
-     * @param params the parameters object
+     * @param params The parameters object
      */
     private void handleEventListenerProviders(final BuilderParameters params) {
         if (params instanceof EventListenerProvider) {
@@ -489,7 +489,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Performs special initialization of the result object. This method is called after parameters have been set on a newly
      * created result instance. If supported by the result class, the {@code initialize()} method is now called.
      *
-     * @param obj the newly created result object
+     * @param obj The newly created result object
      */
     private void handleInitializable(final T obj) {
         if (obj instanceof Initializable) {
@@ -504,7 +504,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * block. This is required because internal state is accessed. Sub classes must not call this method without proper
      * synchronization.
      *
-     * @param obj the object to be initialized
+     * @param obj The object to be initialized
      * @throws ConfigurationException if an error occurs
      */
     protected void initResultInstance(final T obj) throws ConfigurationException {
@@ -518,8 +518,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * actual listener registration. Because it is final it can be called by sub classes in the constructor if there is
      * already the need to register an event listener.
      *
-     * @param eventType the event type object
-     * @param listener the listener to be registered
+     * @param eventType The event type object
+     * @param listener The listener to be registered
      * @param <E> The event type
      */
     protected final <E extends Event> void installEventListener(final EventType<E> eventType, final EventListener<? super E> listener) {
@@ -540,7 +540,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Registers the available event listeners at the given object. This method is called for each result object created by
      * the builder.
      *
-     * @param obj the object to initialize
+     * @param obj The object to initialize
      */
     private void registerEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
@@ -561,7 +561,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Removes all available event listeners from the given result object. This method is called when the result of this
      * builder is reset. Then the old managed configuration should no longer generate events.
      *
-     * @param obj the affected result object
+     * @param obj The affected result object
      */
     private void removeEventListeners(final T obj) {
         final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
@@ -607,7 +607,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Sets the initialization parameters of this builder. Already existing parameters are replaced by the content of the
      * given map.
      *
-     * @param params the new initialization parameters of this builder; can be <strong>null</strong>, then all initialization
+     * @param params The new initialization parameters of this builder; can be <strong>null</strong>, then all initialization
      *        parameters are removed
      * @return A reference to this builder for method chaining
      */
@@ -619,7 +619,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     /**
      * Replaces the current map with parameters by a new one.
      *
-     * @param newParams the map with new parameters (may be <strong>null</strong>)
+     * @param newParams The map with new parameters (may be <strong>null</strong>)
      */
     private void updateParameters(final Map<String, Object> newParams) {
         final Map<String, Object> map = new HashMap<>();

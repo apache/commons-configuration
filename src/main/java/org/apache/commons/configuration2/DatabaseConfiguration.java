@@ -150,10 +150,10 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         /**
          * Creates a new instance of {@code JdbcOperation} and initializes the properties related to the error event.
          *
-         * @param errEvType the type of the error event
-         * @param opType the operation event type
-         * @param errPropName the property configurationName for the error event
-         * @param errPropVal the property value for the error event
+         * @param errEvType The type of the error event
+         * @param opType The operation event type
+         * @param errPropName The property configurationName for the error event
+         * @param errPropVal The property value for the error event
          */
         protected AbstractJdbcOperation(final EventType<? extends ConfigurationErrorEvent> errEvType, final EventType<?> opType, final String errPropName,
             final Object errPropVal) {
@@ -166,8 +166,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         /**
          * Creates a {@code PreparedStatement} object for executing the specified SQL statement.
          *
-         * @param sql the statement to be executed
-         * @param nameCol a flag whether the configurationName column should be taken into account
+         * @param sql The statement to be executed
+         * @param nameCol A flag whether the configurationName column should be taken into account
          * @return The prepared statement object
          * @throws SQLException if an SQL error occurs
          */
@@ -227,9 +227,9 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Creates an initializes a {@code PreparedStatement} object for executing an SQL statement. This method first calls
          * {@code createStatement()} for creating the statement and then initializes the statement's parameters.
          *
-         * @param sql the statement to be executed
-         * @param nameCol a flag whether the configurationName column should be taken into account
-         * @param params the parameters for the statement
+         * @param sql The statement to be executed
+         * @param nameCol A flag whether the configurationName column should be taken into account
+         * @param params The parameters for the statement
          * @return The initialized statement object
          * @throws SQLException if an SQL error occurs
          */
@@ -251,9 +251,9 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Creates a {@code PreparedStatement} for a query, initializes it and executes it. The resulting {@code ResultSet} is
          * returned.
          *
-         * @param sql the statement to be executed
-         * @param nameCol a flag whether the configurationName column should be taken into account
-         * @param params the parameters for the statement
+         * @param sql The statement to be executed
+         * @param nameCol A flag whether the configurationName column should be taken into account
+         * @param params The parameters for the statement
          * @return The {@code ResultSet} produced by the query
          * @throws SQLException if an SQL error occurs
          */
@@ -289,7 +289,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Converts a CLOB to a string.
      *
-     * @param clob the CLOB to be converted
+     * @param clob The CLOB to be converted
      * @return The extracted string value
      * @throws SQLException if an error occurs
      */
@@ -332,8 +332,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * {@code ADD_PROPERTY} with the causing exception. The event's {@code propertyName} is set to the passed in property
      * key, the {@code propertyValue} points to the passed in value.
      *
-     * @param key the property key
-     * @param obj the value of the property to add
+     * @param key The property key
+     * @param obj The value of the property to add
      */
     @Override
     protected void addPropertyDirect(final String key, final Object obj) {
@@ -371,8 +371,8 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * of {@code getProperty()} takes care about delimiters. So list delimiters are fully supported by
      * {@code DatabaseConfiguration}, but internally treated a bit differently.
      *
-     * @param key the key of the new property
-     * @param value the value to be added
+     * @param key The key of the new property
+     * @param value The value to be added
      */
     @Override
     protected void addPropertyInternal(final String key, final Object value) {
@@ -409,7 +409,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * generated of type {@code CLEAR_PROPERTY} with the causing exception. The event's {@code propertyName} will be set to
      * the passed in key, the {@code propertyValue} will be undefined.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      */
     @Override
     protected void clearPropertyDirect(final String key) {
@@ -429,7 +429,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      *
      * @param conn The database connection to close
      * @param stmt The statement to close
-     * @param rs the result set to close
+     * @param rs The result set to close
      */
     protected void close(final Connection conn, final Statement stmt, final ResultSet rs) {
         try {
@@ -462,7 +462,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * generated of type {@code READ} with the causing exception. The event's {@code propertyName} will be set to the passed
      * in key, the {@code propertyValue} will be undefined.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return A flag whether this key is defined
      */
     @Override
@@ -506,7 +506,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * {@code valueColumn} property. Normally the contained value is directly returned. However, if it is of type
      * {@code CLOB}, text is extracted as string.
      *
-     * @param rs the current {@code ResultSet}
+     * @param rs The current {@code ResultSet}
      * @return The value of the property column
      * @throws SQLException if an error occurs
      */
@@ -596,7 +596,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * type {@code READ} with the causing exception. The event's {@code propertyName} is set to the passed in property key,
      * the {@code propertyValue} is undefined.
      *
-     * @param key the key of the desired property
+     * @param key The key of the desired property
      * @return The value of this property
      */
     @Override
@@ -673,7 +673,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the auto commit flag. If set to <strong>true</strong>, this configuration performs a commit after each database update.
      *
-     * @param autoCommit the auto commit flag
+     * @param autoCommit The auto commit flag
      */
     public void setAutoCommit(final boolean autoCommit) {
         this.autoCommit = autoCommit;
@@ -682,7 +682,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the name of this configuration instance.
      *
-     * @param configurationName the name of this configuration
+     * @param configurationName The name of this configuration
      */
     public void setConfigurationName(final String configurationName) {
         this.configurationName = configurationName;
@@ -691,7 +691,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the name of the table column with the configuration name.
      *
-     * @param configurationNameColumn the name of the column with the configuration name
+     * @param configurationNameColumn The name of the column with the configuration name
      */
     public void setConfigurationNameColumn(final String configurationNameColumn) {
         this.configurationNameColumn = configurationNameColumn;
@@ -700,7 +700,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the {@code DataSource} for obtaining database connections.
      *
-     * @param dataSource the {@code DataSource}
+     * @param dataSource The {@code DataSource}
      */
     public void setDataSource(final DataSource dataSource) {
         this.dataSource = dataSource;
@@ -709,7 +709,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the name of the column containing the configuration keys.
      *
-     * @param keyColumn the name of the key column
+     * @param keyColumn The name of the key column
      */
     public void setKeyColumn(final String keyColumn) {
         this.keyColumn = keyColumn;
@@ -718,7 +718,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the name of the table containing configuration data.
      *
-     * @param table the table name
+     * @param table The table name
      */
     public void setTable(final String table) {
         this.table = table;
@@ -727,7 +727,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Sets the name of the column containing the configuration values.
      *
-     * @param valueColumn the name of the value column
+     * @param valueColumn The name of the value column
      */
     public void setValueColumn(final String valueColumn) {
         this.valueColumn = valueColumn;

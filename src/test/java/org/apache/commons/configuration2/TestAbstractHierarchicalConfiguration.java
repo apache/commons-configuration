@@ -125,7 +125,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Checks the content of the passed in configuration object. Used by some tests that copy a configuration.
      *
-     * @param c the configuration to check
+     * @param c The configuration to check
      */
     private static void checkContent(final Configuration c) {
         for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
@@ -212,8 +212,8 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Helper method for testing the getKeys(String) method.
      *
-     * @param prefix the key to pass into getKeys()
-     * @param expected the expected result
+     * @param prefix The key to pass into getKeys()
+     * @param expected The expected result
      */
     private void checkKeys(final String prefix, final String[] expected) {
         final Set<String> expectedKeys = new HashSet<>();

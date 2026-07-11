@@ -47,8 +47,8 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Creates a new instance of {@code EventListenerRegistrationData}.
      *
-     * @param type the event type (must not be <strong>null</strong>)
-     * @param lstnr the event listener (must not be <strong>null</strong>)
+     * @param type The event type (must not be <strong>null</strong>)
+     * @param lstnr The event listener (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public EventListenerRegistrationData(final EventType<T> type, final EventListener<? super T> lstnr) {
@@ -67,7 +67,7 @@ public final class EventListenerRegistrationData<T extends Event> {
      * Compares this object with another one. Two instances of {@code EventListenerRegistrationData} are considered equal if
      * they reference the same listener and event type.
      *
-     * @param obj the object to be compared to
+     * @param obj The object to be compared to
      * @return A flag whether these objects are equal
      */
     @Override

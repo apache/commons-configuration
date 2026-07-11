@@ -40,7 +40,7 @@ public interface DefaultParametersHandler<T> {
      * parameters type they are called in the order they have been registered. So handlers registered later can override
      * initializations done by handlers registered earlier.
      *
-     * @param parameters the parameters object to be initialized
+     * @param parameters The parameters object to be initialized
      */
     void initializeDefaults(T parameters);
 }

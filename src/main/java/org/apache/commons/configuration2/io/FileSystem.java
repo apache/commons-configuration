@@ -50,7 +50,7 @@ public abstract class FileSystem {
     /**
      * Gets the base path of the given path, for example a directory for a file.
      *
-     * @param path the source path.
+     * @param path The source path.
      * @return The base path.
      */
     public abstract String getBasePath(String path);
@@ -58,7 +58,7 @@ public abstract class FileSystem {
     /**
      * Gets the file name of the given path.
      *
-     * @param path the source path.
+     * @param path The source path.
      * @return The file name.
      */
     public abstract String getFileName(String path);
@@ -75,7 +75,7 @@ public abstract class FileSystem {
     /**
      * Gets an input stream for a URL.
      *
-     * @param url the source URL.
+     * @param url The source URL.
      * @return An input stream.
      * @throws ConfigurationException if an problem occurs getting the input stream.
      */
@@ -84,8 +84,8 @@ public abstract class FileSystem {
     /**
      * Not abstract for binary compatibility.
      *
-     * @param url the URL of the file
-     * @param urlConnectionOptions the URLConnection options
+     * @param url The URL of the file
+     * @param urlConnectionOptions The URLConnection options
      * @return The input stream for the specified URL
      * @throws ConfigurationException if an error occurs while opening the file
      *
@@ -108,7 +108,7 @@ public abstract class FileSystem {
     /**
      * Gets an output stream for a File.
      *
-     * @param file the source File.
+     * @param file The source File.
      * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
@@ -117,7 +117,7 @@ public abstract class FileSystem {
     /**
      * Gets an output stream for a URL.
      *
-     * @param url the source URL.
+     * @param url The source URL.
      * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
@@ -171,7 +171,7 @@ public abstract class FileSystem {
      * logging should call this method during their initialization with the logger to be used. Passing in a <strong>null</strong>
      * argument disables logging.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     public void setLogger(final ConfigurationLogger log) {
         this.log = log;

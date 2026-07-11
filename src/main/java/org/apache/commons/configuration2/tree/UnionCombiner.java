@@ -108,8 +108,8 @@ public class UnionCombiner extends NodeCombiner {
     /**
      * Combines the given nodes to a new union node.
      *
-     * @param node1 the first source node
-     * @param node2 the second source node
+     * @param node1 The first source node
+     * @param node2 The second source node
      * @return The union node
      */
     @Override
@@ -160,9 +160,9 @@ public class UnionCombiner extends NodeCombiner {
      * result is <strong>null</strong>.
      * </p>
      *
-     * @param node1 the first source node
-     * @param node2 the second source node
-     * @param child the child node of the first source node to be checked
+     * @param node1 The first source node
+     * @param node2 The second source node
+     * @param child The child node of the first source node to be checked
      * @return The matching child node of the second source node or <strong>null</strong> if there is none
      */
     protected ImmutableNode findCombineNode(final ImmutableNode node1, final ImmutableNode node2, final ImmutableNode child) {

@@ -36,7 +36,7 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     /**
      * Helper method for checking the combined table structure.
      *
-     * @param config the config
+     * @param config The config
      * @return The node for the table element
      */
     private ImmutableNode checkTable(final HierarchicalConfiguration<ImmutableNode> config) {

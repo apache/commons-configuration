@@ -49,8 +49,8 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * node, the new nodes are added to this node. Otherwise a new node will be created at the specified position in the
      * hierarchy.
      *
-     * @param key the key where the nodes are to be added; can be <strong>null </strong>, then they are added to the root node
-     * @param nodes a collection with the {@code Node} objects to be added
+     * @param key The key where the nodes are to be added; can be <strong>null </strong>, then they are added to the root node
+     * @param nodes A collection with the {@code Node} objects to be added
      */
     void addNodes(String key, Collection<? extends T> nodes);
 
@@ -59,7 +59,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * like {@link #immutableChildConfigurationsAt(String)}, but returns a list with mutable configuration objects. The
      * configuration objects returned are <strong>not</strong> connected to the parent configuration.
      *
-     * @param key the key for selecting the desired parent node
+     * @param key The key for selecting the desired parent node
      * @return A collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
      */
     List<HierarchicalConfiguration<T>> childConfigurationsAt(String key);
@@ -68,8 +68,8 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * Returns a list with sub configurations for all child nodes of the node selected by the given key allowing the caller
      * to specify the {@code supportUpdates} flag.
      *
-     * @param key the key for selecting the desired parent node
-     * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
+     * @param key The key for selecting the desired parent node
+     * @param supportUpdates A flag whether the returned sub configuration should be directly connected to its parent
      * @return A collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
      */
     List<HierarchicalConfiguration<T>> childConfigurationsAt(String key, boolean supportUpdates);
@@ -79,7 +79,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * property with the key &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call of
      * {@code clearTree("foo")} would remove both properties.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      */
     void clearTree(String key);
 
@@ -88,7 +88,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * {@code configurationAt(key,
      * <strong>false</strong>)}.
      *
-     * @param key the key that selects the sub tree
+     * @param key The key that selects the sub tree
      * @return A hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
      */
@@ -118,8 +118,8 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * parent and vice verse. Also, it is not possible to reattach a once detached sub configuration.
      * </p>
      *
-     * @param key the key that selects the sub tree
-     * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
+     * @param key The key that selects the sub tree
+     * @param supportUpdates A flag whether the returned sub configuration should be directly connected to its parent
      * @return A hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
      */
@@ -146,7 +146,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      *
      * The configuration objects returned are <strong>not</strong> connected to the parent configuration.
      *
-     * @param key the key for selecting the desired nodes
+     * @param key The key for selecting the desired nodes
      * @return A list with hierarchical configuration objects; each configuration represents one of the nodes selected by
      *         the passed in key
      */
@@ -158,8 +158,8 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * additional boolean parameter it can be specified whether the returned configurations react on updates of the parent
      * configuration.
      *
-     * @param key the key for selecting the desired nodes
-     * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
+     * @param key The key for selecting the desired nodes
+     * @param supportUpdates A flag whether the returned sub configuration should be directly connected to its parent
      * @return A list with hierarchical configuration objects; each configuration represents one of the nodes selected by
      *         the passed in key
      * @see #configurationsAt(String, boolean)
@@ -170,7 +170,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * Sets the expression engine to be used by this configuration. All property keys this configuration has to deal with
      * will be interpreted by this engine.
      *
-     * @param expressionEngine the new expression engine; can be <strong>null</strong>, then the default expression engine will be
+     * @param expressionEngine The new expression engine; can be <strong>null</strong>, then the default expression engine will be
      *        used
      */
     void setExpressionEngine(ExpressionEngine expressionEngine);

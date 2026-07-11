@@ -44,7 +44,7 @@ public class TestCatalogResolver {
     /**
      * Loads the test configuration from the specified file.
      *
-     * @param fileName the file name
+     * @param fileName The file name
      * @throws ConfigurationException if an error occurs
      */
     private void load(final String fileName) throws ConfigurationException {

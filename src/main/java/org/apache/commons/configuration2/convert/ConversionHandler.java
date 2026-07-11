@@ -55,9 +55,9 @@ public interface ConversionHandler {
      * values are handled; a default strategy would be to return <strong>null</strong> if the source object is <strong>null</strong>.
      *
      * @param <T> The type of the desired result
-     * @param src the object to be converted
-     * @param targetCls the target class of the conversion
-     * @param ci an object for performing variable substitution
+     * @param src The object to be converted
+     * @param targetCls The target class of the conversion
+     * @param ci An object for performing variable substitution
      * @return The converted object
      * @throws ConversionException if the requested conversion is not possible
      */
@@ -71,9 +71,9 @@ public interface ConversionHandler {
      * method is {@code Object}; because this method can also produce arrays of a primitive type the return type
      * {@code Object[]} cannot be used.
      *
-     * @param src the object to be converted
-     * @param elemClass the element class of the resulting array
-     * @param ci an object for performing variable substitution
+     * @param src The object to be converted
+     * @param elemClass The element class of the resulting array
+     * @param ci An object for performing variable substitution
      * @return The array with the converted values
      * @throws ConversionException if the conversion of an element is not possible
      */
@@ -87,10 +87,10 @@ public interface ConversionHandler {
      * is thrown.
      *
      * @param <T> The type of the elements of the destination collection
-     * @param src the object to be converted
-     * @param elemClass the element class of the destination collection
-     * @param ci an object for performing variable substitution
-     * @param dest the destination collection
+     * @param src The object to be converted
+     * @param elemClass The element class of the destination collection
+     * @param ci An object for performing variable substitution
+     * @param dest The destination collection
      */
     <T> void toCollection(Object src, Class<T> elemClass, ConfigurationInterpolator ci, Collection<T> dest);
 }

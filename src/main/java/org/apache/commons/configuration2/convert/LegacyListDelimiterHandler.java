@@ -60,7 +60,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     /**
      * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
      *
-     * @param line the string to investigate
+     * @param line The string to investigate
      * @return The number of trailing backslashes
      */
     private static int countTrailingBS(final String line) {
@@ -78,7 +78,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
     /**
      * Creates a new instance of {@code LegacyListDelimiterHandler} and sets the list delimiter character.
      *
-     * @param listDelimiter the list delimiter character
+     * @param listDelimiter The list delimiter character
      */
     public LegacyListDelimiterHandler(final char listDelimiter) {
         delimiter = listDelimiter;
@@ -98,8 +98,8 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
      * (single line) list. In addition, because the output is written into a properties file, each occurrence of a backslash
      * again has to be doubled. This method is called by {@code escapeValue()}.
      *
-     * @param value the value to be escaped
-     * @param inList a flag whether the value is part of a list
+     * @param value The value to be escaped
+     * @param inList A flag whether the value is part of a list
      * @return The value with escaped backslashes as string
      */
     protected String escapeBackslashs(final Object value, final boolean inList) {
@@ -151,9 +151,9 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
      * ensures a correct handling of backslash characters and also takes care that list delimiter characters in the value
      * are escaped.
      *
-     * @param value the property value
-     * @param inList a flag whether the value is part of a list
-     * @param transformer the {@code ValueTransformer}
+     * @param value The property value
+     * @param inList A flag whether the value is part of a list
+     * @param transformer The {@code ValueTransformer}
      * @return The escaped property value
      */
     protected String escapeValue(final Object value, final boolean inList, final ValueTransformer transformer) {

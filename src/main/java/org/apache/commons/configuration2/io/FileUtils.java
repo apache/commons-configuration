@@ -90,7 +90,7 @@ final class FileUtils {
      * literally.
      * </p>
      *
-     * @param url the file URL to convert, {@code null} returns {@code null}
+     * @param url The file URL to convert, {@code null} returns {@code null}
      * @return The equivalent {@code File} object, or {@code null} if the URL's protocol is not {@code file}
      */
     public static File toFile(final URL url) {

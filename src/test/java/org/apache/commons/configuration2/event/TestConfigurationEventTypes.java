@@ -35,7 +35,7 @@ public class TestConfigurationEventTypes {
     /**
      * Helper method for checking the relevant properties of an error event type.
      *
-     * @param type the type to be checked
+     * @param type The type to be checked
      */
     private void checkErrorEvent(final EventType<ConfigurationErrorEvent> type) {
         assertSame(ConfigurationErrorEvent.ANY, type.getSuperType(), "Wrong super type for " + type);
@@ -44,7 +44,7 @@ public class TestConfigurationEventTypes {
     /**
      * Helper method for checking the relevant properties of a given event type representing a hierarchical update event.
      *
-     * @param eventType the event type to check
+     * @param eventType The event type to check
      */
     private void checkHierarchicalEvent(final EventType<ConfigurationEvent> eventType) {
         assertSame(ConfigurationEvent.ANY_HIERARCHICAL, eventType.getSuperType(), "Wrong super type for " + eventType);
@@ -53,7 +53,7 @@ public class TestConfigurationEventTypes {
     /**
      * Helper method for checking the relevant properties of a given event type representing a configuration update event.
      *
-     * @param eventType the event type to check
+     * @param eventType The event type to check
      */
     private void checkUpdateEvent(final EventType<ConfigurationEvent> eventType) {
         assertSame(ConfigurationEvent.ANY, eventType.getSuperType(), "Wrong super type for " + eventType);

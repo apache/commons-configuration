@@ -44,8 +44,8 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorAttribute}.
      *
-     * @param parent the parent node pointer
-     * @param qName the name of the selected attribute
+     * @param parent The parent node pointer
+     * @param qName The name of the selected attribute
      */
     public ConfigurationNodeIteratorAttribute(final ConfigurationNodePointer<T> parent, final QName qName) {
         super(parent, false);
@@ -56,9 +56,9 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     /**
      * Helper method for checking whether an attribute is defined and adding it to the list of attributes to iterate over.
      *
-     * @param parent the parent node pointer
-     * @param result the result list
-     * @param name the name of the current attribute
+     * @param parent The parent node pointer
+     * @param result The result list
+     * @param name The name of the current attribute
      */
     private void addAttributeData(final ConfigurationNodePointer<T> parent, final List<String> result, final String name) {
         if (parent.getNodeHandler().getAttributeValue(parent.getConfigurationNode(), name) != null) {
@@ -69,8 +69,8 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     /**
      * Determines which attributes are selected based on the passed in node name.
      *
-     * @param parent the parent node pointer
-     * @param qName the name of the selected attribute
+     * @param parent The parent node pointer
+     * @param qName The name of the selected attribute
      * @return A list with the selected attributes
      */
     private List<String> createAttributeDataList(final ConfigurationNodePointer<T> parent, final QName qName) {
@@ -93,7 +93,7 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
     /**
      * Creates a pointer for the node at the specified position.
      *
-     * @param position the desired position
+     * @param position The desired position
      * @return A pointer for the attribute at this position
      */
     @Override

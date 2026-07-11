@@ -81,10 +81,10 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} with a default executor service.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
-     * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
-     * @param triggerPeriod the period in which the controller is triggered
-     * @param unit the time unit for the period
+     * @param ctrl The {@code ReloadingController} (must not be <strong>null</strong>)
+     * @param ctrlParam The optional parameter to be passed to the controller when doing reloading checks
+     * @param triggerPeriod The period in which the controller is triggered
+     * @param unit The time unit for the period
      * @throws IllegalArgumentException if a required argument is missing
      */
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit) {
@@ -94,11 +94,11 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} and sets all parameters.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
-     * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
-     * @param triggerPeriod the period in which the controller is triggered
-     * @param unit the time unit for the period
-     * @param exec the executor service to use (can be <strong>null</strong>, then a default executor service is created
+     * @param ctrl The {@code ReloadingController} (must not be <strong>null</strong>)
+     * @param ctrlParam The optional parameter to be passed to the controller when doing reloading checks
+     * @param triggerPeriod The period in which the controller is triggered
+     * @param unit The time unit for the period
+     * @param exec The executor service to use (can be <strong>null</strong>, then a default executor service is created
      * @throws IllegalArgumentException if a required argument is missing
      */
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit,
@@ -156,7 +156,7 @@ public class PeriodicReloadingTrigger {
      * is <strong>true</strong>, the executor service is also shut down. This should be done if this trigger is the only user of this
      * executor service.
      *
-     * @param shutdownExecutor a flag whether the associated {@code ScheduledExecutorService} is to be shut down
+     * @param shutdownExecutor A flag whether the associated {@code ScheduledExecutorService} is to be shut down
      */
     public void shutdown(final boolean shutdownExecutor) {
         stop();

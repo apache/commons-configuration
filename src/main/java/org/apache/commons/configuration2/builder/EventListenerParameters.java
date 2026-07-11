@@ -67,7 +67,7 @@ public class EventListenerParameters implements BuilderParameters, EventListener
     /**
      * Adds the specified {@code EventListenerRegistrationData} instance to this object.
      *
-     * @param registrationData the registration object to be added
+     * @param registrationData The registration object to be added
      * @param <T> The event type of the contained event listener
      * @return A reference to this object for method chaining
      */
@@ -79,8 +79,8 @@ public class EventListenerParameters implements BuilderParameters, EventListener
     /**
      * Adds an event listener of the specified event type to this object.
      *
-     * @param eventType the event type object
-     * @param listener the event listener
+     * @param eventType The event type object
+     * @param listener The event listener
      * @param <T> The event type
      * @return A reference to this object for method chaining
      */

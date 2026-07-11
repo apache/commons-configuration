@@ -72,7 +72,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler {
     /**
      * Creates a new instance of {@code DefaultListDelimiterHandler} and sets the list delimiter character.
      *
-     * @param listDelimiter the list delimiter character
+     * @param listDelimiter The list delimiter character
      */
     public DefaultListDelimiterHandler(final char listDelimiter) {
         delimiter = listDelimiter;

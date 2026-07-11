@@ -66,7 +66,7 @@ public interface SynchronizerSupport {
      * directly. An implementation may perform additional actions which are not executed when only interacting with the
      * {@code Synchronizer}.
      *
-     * @param mode the {@code LockMode}
+     * @param mode The {@code LockMode}
      */
     void lock(LockMode mode);
 
@@ -75,7 +75,7 @@ public interface SynchronizerSupport {
      * {@code Synchronizer} determines whether this object can be accessed in a thread-safe way or not. The argument may be
      * <strong>null</strong>; in this case an implementation should switch to a default {@code Synchronizer}.
      *
-     * @param sync the {@code Synchronizer} for this object
+     * @param sync The {@code Synchronizer} for this object
      */
     void setSynchronizer(Synchronizer sync);
 
@@ -84,7 +84,7 @@ public interface SynchronizerSupport {
      * called pair-wise with {@code lock()}. The argument must match to the one passed to the corresponding {@code lock()}
      * call; otherwise, the behavior of the {@link Synchronizer} is unspecified.
      *
-     * @param mode the {@code LockMode}
+     * @param mode The {@code LockMode}
      */
     void unlock(LockMode mode);
 }

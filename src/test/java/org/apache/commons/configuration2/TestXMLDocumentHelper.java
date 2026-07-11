@@ -67,7 +67,7 @@ public class TestXMLDocumentHelper {
     /**
      * Serializes the specified document to a string.
      *
-     * @param document the document
+     * @param document The document
      * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
@@ -82,7 +82,7 @@ public class TestXMLDocumentHelper {
     /**
      * Serializes the document wrapped by the given helper to a string.
      *
-     * @param helper the document helper
+     * @param helper The document helper
      * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
@@ -93,7 +93,7 @@ public class TestXMLDocumentHelper {
     /**
      * Obtains all text elements contained in the given document.
      *
-     * @param document the document
+     * @param document The document
      * @return A collection with all text elements
      */
     private static Collection<Node> findTextElements(final Document document) {
@@ -105,8 +105,8 @@ public class TestXMLDocumentHelper {
     /**
      * Recursively obtains all text elements for the given node.
      *
-     * @param node the node
-     * @param texts the collection with text elements
+     * @param node The node
+     * @param texts The collection with text elements
      */
     private static void findTextElementsForNode(final Node node, final Collection<Node> texts) {
         if (node instanceof Text) {
@@ -130,7 +130,7 @@ public class TestXMLDocumentHelper {
     /**
      * Loads the test document with the given name.
      *
-     * @param name the name of the test document
+     * @param name The name of the test document
      * @return The parsed document
      */
     private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
@@ -141,7 +141,7 @@ public class TestXMLDocumentHelper {
     /**
      * Helper method for testing the element mapping of a copied document.
      *
-     * @param file the name of the test file
+     * @param file The name of the test file
      */
     private void checkCopyElementMapping(final String file) throws Exception {
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument(file));

@@ -54,8 +54,8 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
      * Helper method for checking the values of the nodes returned by an iterator. Because the values indicate the order of
      * the child nodes with this test it can be checked whether the nodes were returned in the correct order.
      *
-     * @param iterator the iterator
-     * @param expectedIndices an array with the expected indices
+     * @param iterator The iterator
+     * @param expectedIndices An array with the expected indices
      */
     private void checkValues(final NodeIterator iterator, final int... expectedIndices) {
         final List<NodePointer> nodes = iterationElements(iterator);
@@ -68,7 +68,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest {
     /**
      * Helper method for creating a node pointer for a given node.
      *
-     * @param node the node the pointer points to
+     * @param node The node the pointer points to
      * @return The node pointer
      */
     private ConfigurationNodePointer<ImmutableNode> createPointer(final ImmutableNode node) {

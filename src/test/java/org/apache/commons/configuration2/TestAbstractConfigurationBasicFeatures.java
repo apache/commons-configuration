@@ -133,7 +133,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * Prepares a test configuration for a test for a list conversion. The configuration is populated with a list property.
      * The returned list contains the expected list values converted to integers.
      *
-     * @param config the test configuration
+     * @param config The test configuration
      * @return The list with expected values
      */
     private static List<Integer> prepareListTest(final PropertiesConfiguration config) {
@@ -148,7 +148,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for adding properties with multiple values.
      *
-     * @param config the configuration to be used for testing
+     * @param config The configuration to be used for testing
      */
     private void checkAddListProperty(final AbstractConfiguration config) {
         config.addProperty("test", "value1");
@@ -168,9 +168,9 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Tests whether the correct events are received for a copy operation.
      *
-     * @param l the event listener
-     * @param src the configuration that was copied
-     * @param eventType the expected event type
+     * @param l The event listener
+     * @param src The configuration that was copied
+     * @param eventType The expected event type
      */
     private void checkCopyEvents(final CollectingConfigurationListener l, final Configuration src, final EventType<?> eventType) {
         final Map<String, ConfigurationEvent> events = new HashMap<>();
@@ -193,7 +193,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for checking getList() if the property value is a scalar.
      *
-     * @param value the value of the property
+     * @param value The value of the property
      */
     private void checkGetListScalar(final Object value) {
         final BaseConfiguration config = new BaseConfiguration();
@@ -205,7 +205,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for checking getStringArray() if the property value is a scalar.
      *
-     * @param value the value of the property
+     * @param value The value of the property
      */
     private void checkGetStringArrayScalar(final Object value) {
         final BaseConfiguration config = new BaseConfiguration();
@@ -217,7 +217,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Tests the values of list properties after a copy operation.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     private void checkListProperties(final Configuration config) {
         List<Object> values = config.getList("list1");

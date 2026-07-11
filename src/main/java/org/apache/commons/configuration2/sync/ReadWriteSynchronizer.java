@@ -62,7 +62,7 @@ public class ReadWriteSynchronizer implements Synchronizer {
      * constructor can be used to pass a lock object which has been configured externally. If the lock object is
      * <strong>null</strong>, a default lock object is created.
      *
-     * @param l the lock object to be used (can be <strong>null</strong>)
+     * @param l The lock object to be used (can be <strong>null</strong>)
      */
     public ReadWriteSynchronizer(final ReadWriteLock l) {
         lock = l != null ? l : createDefaultLock();

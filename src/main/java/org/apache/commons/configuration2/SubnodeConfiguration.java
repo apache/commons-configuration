@@ -99,8 +99,8 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration {
     /**
      * Creates a new instance of {@code SubnodeConfiguration} and initializes it with all relevant properties.
      *
-     * @param parent the parent configuration
-     * @param model the {@code TrackedNodeModel} to be used for this configuration
+     * @param parent The parent configuration
+     * @param model The {@code TrackedNodeModel} to be used for this configuration
      * @throws IllegalArgumentException if a required argument is missing
      */
     public SubnodeConfiguration(final BaseHierarchicalConfiguration parent, final TrackedNodeModel model) {

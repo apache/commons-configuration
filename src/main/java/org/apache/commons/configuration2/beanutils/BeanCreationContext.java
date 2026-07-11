@@ -34,7 +34,7 @@ public interface BeanCreationContext {
      * Creates a bean based on the given {@code BeanDeclaration}. This method can be used to create dependent beans needed
      * for the initialization of the bean that is actually created.
      *
-     * @param data the {@code BeanDeclaration} describing the bean
+     * @param data The {@code BeanDeclaration} describing the bean
      * @return The bean created based on this declaration
      */
     Object createBean(BeanDeclaration data);
@@ -65,8 +65,8 @@ public interface BeanCreationContext {
     /**
      * Initializes a bean's property based on the given {@code BeanDeclaration}.
      *
-     * @param bean the bean to be initialized
-     * @param data the {@code BeanDeclaration} with initialization data for this bean
+     * @param bean The bean to be initialized
+     * @param data The {@code BeanDeclaration} with initialization data for this bean
      */
     void initBean(Object bean, BeanDeclaration data);
 }

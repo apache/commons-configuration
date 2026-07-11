@@ -56,8 +56,8 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
         /**
          * Creates a new instance of {@code NodeWrapper} and initializes it.
          *
-         * @param nd the node
-         * @param handler the node handler
+         * @param nd The node
+         * @param handler The node handler
          */
         public NodeWrapper(final T nd, final NodeHandler<T> handler) {
             node = nd;
@@ -91,8 +91,8 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * instead of the original node.
      *
      * @param <T> The type of the node
-     * @param node the node
-     * @param handler the corresponding node handler
+     * @param node The node
+     * @param handler The corresponding node handler
      * @return A wrapper for this node
      */
     public static <T> Object wrapNode(final T node, final NodeHandler<T> handler) {
@@ -110,9 +110,9 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Creates a node pointer for the specified bean. If the bean is a configuration node, a corresponding pointer is
      * returned.
      *
-     * @param parent the parent node
-     * @param qName the name
-     * @param bean the bean
+     * @param parent The parent node
+     * @param qName The name
+     * @param bean The bean
      * @return A pointer for a configuration node if the bean is such a node
      */
     @Override
@@ -133,9 +133,9 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * Creates a node pointer for the specified bean. If the bean is a configuration node (indicated by a wrapper object), a
      * corresponding pointer is returned.
      *
-     * @param qName the name of the node
-     * @param bean the bean
-     * @param locale the locale
+     * @param qName The name of the node
+     * @param bean The bean
+     * @param locale The locale
      * @return A pointer for a configuration node if the bean is such a node
      */
     @Override

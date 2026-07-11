@@ -34,7 +34,7 @@ public class TestNodeNameMatchers {
     /**
      * Creates a node with the given name.
      *
-     * @param name the name
+     * @param name The name
      * @return The newly created node
      */
     private static ImmutableNode createNode(final String name) {
@@ -47,7 +47,7 @@ public class TestNodeNameMatchers {
     /**
      * Tests whether a matcher can handle null input safely.
      *
-     * @param matcher the matcher to be tested
+     * @param matcher The matcher to be tested
      */
     private void checkMatcherWithNullInput(final NodeMatcher<String> matcher) {
         assertFalse(matcher.matches(createNode(NODE_NAME), handler, null));

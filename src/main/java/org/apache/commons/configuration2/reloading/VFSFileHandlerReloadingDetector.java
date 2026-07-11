@@ -58,7 +58,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
      * {@code FileHandler} object.
      *
-     * @param handler the {@code FileHandler}
+     * @param handler The {@code FileHandler}
      */
     public VFSFileHandlerReloadingDetector(final FileHandler handler) {
         super(handler);
@@ -68,8 +68,8 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
      * {@code FileHandler} object and the given refresh delay.
      *
-     * @param handler the {@code FileHandler}
-     * @param refreshDelay the refresh delay
+     * @param handler The {@code FileHandler}
+     * @param refreshDelay The refresh delay
      */
     public VFSFileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay) {
         super(handler, refreshDelay);

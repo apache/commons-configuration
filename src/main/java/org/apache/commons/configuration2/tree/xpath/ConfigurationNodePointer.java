@@ -53,9 +53,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Creates a new instance of {@code ConfigurationNodePointer} and initializes it with its parent pointer.
      *
-     * @param parent the parent pointer
-     * @param node the associated node
-     * @param handler the {@code NodeHandler}
+     * @param parent The parent pointer
+     * @param node The associated node
+     * @param handler The {@code NodeHandler}
      */
     public ConfigurationNodePointer(final ConfigurationNodePointer<T> parent, final T node, final NodeHandler<T> handler) {
         super(parent);
@@ -66,9 +66,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Creates a new instance of {@code ConfigurationNodePointer} pointing to the specified node.
      *
-     * @param node the wrapped node
-     * @param locale the locale
-     * @param handler the {@code NodeHandler}
+     * @param node The wrapped node
+     * @param locale The locale
+     * @param handler The {@code NodeHandler}
      */
     public ConfigurationNodePointer(final T node, final Locale locale, final NodeHandler<T> handler) {
         super(null, locale);
@@ -79,7 +79,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the attributes that match the given name.
      *
-     * @param qName the attribute name
+     * @param qName The attribute name
      * @return The iterator for the attributes
      */
     @Override
@@ -92,7 +92,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      * child node pointers can only be created by this instance which ensures that they are of the correct type. Therefore,
      * this cast is safe.
      *
-     * @param p the {@code NodePointer} to cast
+     * @param p The {@code NodePointer} to cast
      * @return The resulting {@code ConfigurationNodePointer}
      */
     private ConfigurationNodePointer<T> castPointer(final NodePointer p) {
@@ -104,9 +104,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the children of this pointer that match the given test object.
      *
-     * @param test the test object
-     * @param reverse the reverse flag
-     * @param startWith the start value of the iteration
+     * @param test The test object
+     * @param reverse The reverse flag
+     * @param startWith The start value of the iteration
      */
     @Override
     public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith) {
@@ -238,7 +238,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Sets the value of this node. This is not supported, so always an exception is thrown.
      *
-     * @param value the new value
+     * @param value The new value
      */
     @Override
     public void setValue(final Object value) {
@@ -248,7 +248,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Tests if this node matches the given test. Configuration nodes are text nodes, too because they can contain a value.
      *
-     * @param test the test object
+     * @param test The test object
      * @return A flag if this node corresponds to the test
      */
     @Override

@@ -58,7 +58,7 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
     /**
      * Creates a new instance of {@code JSONConfiguration} as a copy of the specified configuration.
      *
-     * @param c the configuration to be copied
+     * @param c The configuration to be copied
      */
     public JSONConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
@@ -67,7 +67,7 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
     /**
      * Loads the configuration from the given input stream.
      *
-     * @param in the input stream
+     * @param in The input stream
      * @throws ConfigurationException if an error occurs
      */
     @Override

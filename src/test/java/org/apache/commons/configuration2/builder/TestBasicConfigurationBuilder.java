@@ -87,9 +87,9 @@ public class TestBasicConfigurationBuilder {
         /**
          * Creates a new instance of {@code AccessBuilderThread}.
          *
-         * @param lstart the latch for controlling the thread start
-         * @param lend the latch for controlling the thread end
-         * @param bldr the builder to be tested
+         * @param lstart The latch for controlling the thread start
+         * @param lend The latch for controlling the thread end
+         * @param bldr The builder to be tested
          */
         public AccessBuilderThread(final CountDownLatch lstart, final CountDownLatch lend, final ConfigurationBuilder<?> bldr) {
             startLatch = lstart;

@@ -26,7 +26,7 @@ public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<Configu
     /**
      * Creates a new instance of {@code ErrorListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<strong>null</strong> if the source need not to be checked)
+     * @param source The event source (<strong>null</strong> if the source need not to be checked)
      */
     public ErrorListenerTestImpl(final Object source) {
         super(source);
@@ -35,10 +35,10 @@ public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<Configu
     /**
      * Checks the next event which has been received by this listener.
      *
-     * @param type the expected event type
-     * @param opType the event type for the failed operation
-     * @param propName the expected property name
-     * @param propValue the expected property value
+     * @param type The expected event type
+     * @param opType The event type for the failed operation
+     * @param propName The expected property name
+     * @param propValue The expected property value
      * @return The exception stored in the next error event
      */
     public Throwable checkEvent(final EventType<?> type, final EventType<?> opType, final String propName, final Object propValue) {

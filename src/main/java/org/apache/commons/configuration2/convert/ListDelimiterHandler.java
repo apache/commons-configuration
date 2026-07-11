@@ -64,8 +64,8 @@ public interface ListDelimiterHandler {
      * this method can rely on the fact that the passed in object is not a list. An implementation has to check whether the
      * value contains list delimiter characters and - if so - escape them accordingly.
      *
-     * @param value the value to be escaped
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
+     * @param value The value to be escaped
+     * @param transformer A {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
      * @return The escaped value
      */
     Object escape(Object value, ValueTransformer transformer);
@@ -75,8 +75,8 @@ public interface ListDelimiterHandler {
      * configurations that have to represent properties with multiple values in a single line in their external
      * configuration representation. This may require an advanced escaping in some cases.
      *
-     * @param values the list with all the values to be converted to a single value
-     * @param transformer a {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
+     * @param values The list with all the values to be converted to a single value
+     * @param transformer A {@code ValueTransformer} for an additional encoding (must not be <strong>null</strong>)
      * @return The resulting escaped value
      */
     Object escapeList(List<?> values, ValueTransformer transformer);
@@ -88,8 +88,8 @@ public interface ListDelimiterHandler {
      * the input object, it might be exceeded. (The limit is just an indicator to stop the process to avoid unnecessary work
      * if the caller is only interested in a few values.)
      *
-     * @param value the value to be processed
-     * @param limit the limit for aborting the processing
+     * @param value The value to be processed
+     * @param limit The limit for aborting the processing
      * @return A &quot;flat&quot; collection containing all primitive values of the passed in object
      * @since 2.9.0
      */
@@ -102,7 +102,7 @@ public interface ListDelimiterHandler {
      * single value or a complex one, for example a collection, an array, or an {@code Iterable}. It is the responsibility of this
      * method to return an {@code Iterable} which contains all extracted values.
      *
-     * @param value the value to be parsed
+     * @param value The value to be parsed
      * @return An {@code Iterable} allowing access to all extracted values
      */
     Iterable<?> parse(Object value);
@@ -114,8 +114,8 @@ public interface ListDelimiterHandler {
      * typically makes sense as the list delimiter may be surrounded by whitespace. However, there may be specific use cases
      * in which automatic trimming is not desired.
      *
-     * @param s the string to be split
-     * @param trim a flag whether each component of the string is to be trimmed
+     * @param s The string to be split
+     * @param trim A flag whether each component of the string is to be trimmed
      * @return A collection with all components extracted from the string
      */
     Collection<String> split(String s, boolean trim);

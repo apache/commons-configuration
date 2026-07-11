@@ -50,7 +50,7 @@ public class NodeSelector {
      * Creates a new instance of {@code NodeSelector} and initializes it with the list of keys to be used as selection
      * criteria.
      *
-     * @param keys the keys for selecting nodes
+     * @param keys The keys for selecting nodes
      */
     private NodeSelector(final List<String> keys) {
         nodeKeys = keys;
@@ -59,7 +59,7 @@ public class NodeSelector {
     /**
      * Creates a new instance of {@code NodeSelector} and initializes it with the key to the target node.
      *
-     * @param key the key
+     * @param key The key
      */
     public NodeSelector(final String key) {
         this(Collections.singletonList(key));
@@ -69,7 +69,7 @@ public class NodeSelector {
      * Compares this object with another one. Two instances of {@code NodeSelector} are considered equal if they have the
      * same keys as selection criteria.
      *
-     * @param obj the object to be compared
+     * @param obj The object to be compared
      * @return A flag whether these objects are equal
      */
     @Override
@@ -88,10 +88,10 @@ public class NodeSelector {
     /**
      * Executes a query for a given key and filters the results for nodes only.
      *
-     * @param root the root node for the query
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
-     * @param key the key
+     * @param root The root node for the query
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
+     * @param key The key
      * @param nodes here the results are stored
      */
     private void getFilteredResults(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler,
@@ -119,9 +119,9 @@ public class NodeSelector {
      * this object and tries to determine a single target node. If this is successful, the target node is returned.
      * Otherwise, result is <strong>null</strong>.
      *
-     * @param root the root node on which to apply this selector
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
+     * @param root The root node on which to apply this selector
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
      * @return The selected target node or <strong>null</strong>
      */
     public ImmutableNode select(final ImmutableNode root, final NodeKeyResolver<ImmutableNode> resolver, final NodeHandler<ImmutableNode> handler) {
@@ -143,7 +143,7 @@ public class NodeSelector {
      * Creates a sub {@code NodeSelector} object which uses the key(s) of this selector plus the specified key as selection
      * criteria. This is useful when another selection is to be performed on the results of a first selector.
      *
-     * @param subKey the additional key for the sub selector
+     * @param subKey The additional key for the sub selector
      * @return The sub {@code NodeSelector} instance
      */
     public NodeSelector subSelector(final String subKey) {

@@ -62,7 +62,7 @@ public class CombinedReloadingController extends ReloadingController {
         /**
          * Creates a new instance of {@code MultiReloadingControllerDetector}.
          *
-         * @param owner the owner
+         * @param owner The owner
          */
         public MultiReloadingControllerDetector(final CombinedReloadingController owner) {
             this.owner = owner;
@@ -93,7 +93,7 @@ public class CombinedReloadingController extends ReloadingController {
     /**
      * Checks the collection with the passed in sub controllers and creates a defensive copy.
      *
-     * @param subCtrls the collection with sub controllers
+     * @param subCtrls The collection with sub controllers
      * @return A copy of the collection to be stored in the newly created instance
      * @throws IllegalArgumentException if the passed in collection is <strong>null</strong> or contains <strong>null</strong> entries
      */
@@ -119,7 +119,7 @@ public class CombinedReloadingController extends ReloadingController {
      * Creates a new instance of {@code CombinedReloadingController} and initializes it with the {@code ReloadingController}
      * objects to be managed.
      *
-     * @param subCtrls the collection with sub {@code ReloadingController}s (must not be <strong>null</strong> or contain <strong>null</strong>
+     * @param subCtrls The collection with sub {@code ReloadingController}s (must not be <strong>null</strong> or contain <strong>null</strong>
      *        entries)
      * @throws IllegalArgumentException if the passed in collection is <strong>null</strong> or contains <strong>null</strong> entries
      */

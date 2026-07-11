@@ -68,8 +68,8 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Checks whether a fields node was correctly changed by an update operation.
      *
-     * @param nodeFields the fields node
-     * @param idx the index of the changed node
+     * @param nodeFields The fields node
+     * @param idx The index of the changed node
      */
     private static void checkedForChangedField(final ImmutableNode nodeFields, final int idx) {
         assertEquals(NodeStructureHelper.fieldsLength(1), nodeFields.getChildren().size());
@@ -84,8 +84,8 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Checks whether a field node has the expected content.
      *
-     * @param nodeField the field node to be checked
-     * @param name the expected name of this field
+     * @param nodeField The field node to be checked
+     * @param name The expected name of this field
      */
     private static void checkFieldNode(final ImmutableNode nodeField, final String name) {
         assertEquals("field", nodeField.getNodeName());
@@ -98,7 +98,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Tests whether a field node was added.
      *
-     * @param nodeFields the fields node
+     * @param nodeFields The fields node
      */
     private static void checkForAddedField(final ImmutableNode nodeFields) {
         assertEquals(NodeStructureHelper.fieldsLength(1) + 1, nodeFields.getChildren().size());
@@ -109,8 +109,8 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Helper method for checking whether the expected field node was removed.
      *
-     * @param nodeFields the fields node
-     * @param idx the index of the removed field
+     * @param nodeFields The fields node
+     * @param idx The index of the removed field
      */
     private static void checkForRemovedField(final ImmutableNode nodeFields, final int idx) {
         assertEquals(NodeStructureHelper.fieldsLength(1) - 1, nodeFields.getChildren().size());
@@ -143,7 +143,7 @@ public class TestInMemoryNodeModelTrackedNodes {
      * Prepares a mock for a resolver to handle keys for update operations. Support is limited. It is expected that only a
      * single value is changed.
      *
-     * @param resolver the {@code NodeKeyResolver} mock
+     * @param resolver The {@code NodeKeyResolver} mock
      */
     private static void prepareResolverForUpdateKeys(final NodeKeyResolver<ImmutableNode> resolver) {
         when(resolver.resolveUpdateKey(any(), any(), any(), any())).thenAnswer(invocation -> {
@@ -178,7 +178,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Checks trackChildNodes() if the passed in key has a result set which causes the operation to be aborted.
      *
-     * @param queryResult the result set of the key
+     * @param queryResult The result set of the key
      */
     private void checkTrackChildNodesNoResult(final List<ImmutableNode> queryResult) {
         final NodeKeyResolver<ImmutableNode> resolver = createResolver();
@@ -193,7 +193,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Helper method for testing trackChildNodeWithCreation() if invalid query results are generated.
      *
-     * @param queryResult the result set of the key
+     * @param queryResult The result set of the key
      */
     private void checkTrackChildNodeWithCreationInvalidKey(final List<ImmutableNode> queryResult) {
         final NodeKeyResolver<ImmutableNode> resolver = createResolver();
@@ -223,7 +223,7 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Produces a tracked node with the default selector and executes an operation which detaches this node.
      *
-     * @param resolver the {@code NodeKeyResolver}
+     * @param resolver The {@code NodeKeyResolver}
      */
     private void initDetachedNode(final NodeKeyResolver<ImmutableNode> resolver) {
         model.trackNode(selector, resolver);
@@ -233,9 +233,9 @@ public class TestInMemoryNodeModelTrackedNodes {
     /**
      * Prepares the resolver mock to expect a nodeKey() request.
      *
-     * @param resolver the {@code NodeKeyResolver}
-     * @param node the node whose name is to be resolved
-     * @param key the key to be returned for this node
+     * @param resolver The {@code NodeKeyResolver}
+     * @param node The node whose name is to be resolved
+     * @param key The key to be returned for this node
      */
     private void prepareNodeKey(final NodeKeyResolver<ImmutableNode> resolver, final ImmutableNode node, final String key) {
         final Map<ImmutableNode, String> cache = new HashMap<>();

@@ -64,7 +64,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * instance overrides the method for creating managed builders. It stores newly created builders in the passed in
      * collection.
      *
-     * @param managedBuilders a collection in which to store managed builders
+     * @param managedBuilders A collection in which to store managed builders
      * @return The test builder instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createBuilderWithAccessToManagedBuilders(
@@ -85,7 +85,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     /**
      * Creates a test builder object with default settings.
      *
-     * @param managedParams the parameters for managed configurations
+     * @param managedParams The parameters for managed configurations
      * @return The test instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(final BuilderParameters managedParams) {

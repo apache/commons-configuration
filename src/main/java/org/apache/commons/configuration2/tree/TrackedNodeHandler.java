@@ -46,8 +46,8 @@ final class TrackedNodeHandler extends AbstractImmutableNodeHandler {
     /**
      * Creates a new instance of {@code TrackedNodeHandler} and initializes it with all required information.
      *
-     * @param root the root node of the represented hierarchy
-     * @param handler an underlying handler for delegation
+     * @param root The root node of the represented hierarchy
+     * @param handler An underlying handler for delegation
      */
     public TrackedNodeHandler(final ImmutableNode root, final NodeHandler<ImmutableNode> handler) {
         rootNode = root;

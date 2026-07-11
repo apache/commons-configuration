@@ -32,8 +32,8 @@ class XPathContextFactory {
     /**
      * Creates a new {@code JXPathContext} based on the passed in arguments.
      *
-     * @param root the root node
-     * @param handler the node handler
+     * @param root The root node
+     * @param handler The node handler
      * @param <T> The type of the nodes to be handled
      * @return The newly created context
      */

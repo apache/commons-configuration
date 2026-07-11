@@ -200,8 +200,8 @@ public enum DefaultLookups {
     /**
      * Creates a new instance of {@code DefaultLookups} and sets the prefix and the associated lookup instance.
      *
-     * @param prefix the prefix
-     * @param lookup the {@code Lookup} instance
+     * @param prefix The prefix
+     * @param lookup The {@code Lookup} instance
      */
     DefaultLookups(final String prefix, final Lookup lookup) {
         this.prefix = prefix;

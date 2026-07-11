@@ -55,9 +55,9 @@ public class TestXMLListHandling {
     /**
      * Checks whether the specified XML contains a list of values as a single, comma-separated string.
      *
-     * @param xml the XML
-     * @param key the key
-     * @param values the expected values
+     * @param xml The XML
+     * @param key The key
+     * @param values The expected values
      */
     private static void checkCommaSeparated(final String xml, final String key, final String... values) {
         final String strValues = StringUtils.join(values, ',');
@@ -68,9 +68,9 @@ public class TestXMLListHandling {
     /**
      * Checks whether the specified XML contains a list of values as multiple XML elements.
      *
-     * @param xml the XML
-     * @param key the key
-     * @param values the expected values
+     * @param xml The XML
+     * @param key The key
+     * @param values The expected values
      */
     private static void checkSplit(final String xml, final String key, final String... values) {
         for (final String v : values) {
@@ -81,8 +81,8 @@ public class TestXMLListHandling {
     /**
      * Generates an XML element with the specified value as body.
      *
-     * @param key the key
-     * @param value the value
+     * @param key The key
+     * @param value The value
      * @return The string representation of this element
      */
     private static String element(final String key, final String value) {
@@ -92,7 +92,7 @@ public class TestXMLListHandling {
     /**
      * Parses the specified string into an XML configuration.
      *
-     * @param xml the XML to be parsed
+     * @param xml The XML to be parsed
      * @return The resulting configuration
      */
     private static XMLConfiguration readFromString(final String xml) throws ConfigurationException {

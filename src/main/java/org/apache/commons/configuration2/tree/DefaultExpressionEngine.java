@@ -115,7 +115,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     /**
      * Creates a new instance of {@code DefaultExpressionEngine} and initializes its symbols.
      *
-     * @param syms the object with the symbols (must not be <strong>null</strong>)
+     * @param syms The object with the symbols (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the symbols are <strong>null</strong>
      */
     public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms) {
@@ -127,8 +127,8 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * node names. The passed in matcher is always used when the names of nodes have to be matched against parts of
      * configuration keys.
      *
-     * @param syms the object with the symbols (must not be <strong>null</strong>)
-     * @param nodeNameMatcher the matcher for node names; can be <strong>null</strong>, then a default matcher is used
+     * @param syms The object with the symbols (must not be <strong>null</strong>)
+     * @param nodeNameMatcher The matcher for node names; can be <strong>null</strong>, then a default matcher is used
      * @throws IllegalArgumentException if the symbols are <strong>null</strong>
      */
     public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms, final NodeMatcher<String> nodeNameMatcher) {
@@ -169,10 +169,10 @@ public class DefaultExpressionEngine implements ExpressionEngine {
     /**
      * Determines the index of the given node based on its parent node.
      *
-     * @param node the current node
-     * @param parent the parent node
-     * @param nodeName the name of the current node
-     * @param handler the node handler
+     * @param node The current node
+     * @param parent The parent node
+     * @param nodeName The name of the current node
+     * @param handler The node handler
      * @param <T> The type of the nodes to be dealt with
      * @return The index of this node
      */
@@ -184,9 +184,9 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * Returns a list with all child nodes of the given parent node which match the specified node name. The match is done
      * using the current node name matcher.
      *
-     * @param handler the {@code NodeHandler}
-     * @param parent the parent node
-     * @param nodeName the name of the current node
+     * @param handler The {@code NodeHandler}
+     * @param parent The parent node
+     * @param nodeName The name of the current node
      * @param <T> The type of the nodes to be dealt with
      * @return A list with all matching child nodes
      */
@@ -199,9 +199,9 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * last existing node on this path is returned.
      *
      * @param <T> The type of the nodes to be dealt with
-     * @param keyIt the key iterator
-     * @param node the current node
-     * @param handler the node handler
+     * @param keyIt The key iterator
+     * @param node The current node
+     * @param handler The node handler
      * @return The last existing node on the given path
      */
     protected <T> T findLastPathNode(final DefaultConfigurationKey.KeyIterator keyIt, final T node, final NodeHandler<T> handler) {
@@ -226,10 +226,10 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * tree of properties and fetches the results of all matching properties.
      *
      * @param <T> The type of nodes to be dealt with
-     * @param keyPart the configuration key iterator
-     * @param node the current node
+     * @param keyPart The configuration key iterator
+     * @param node The current node
      * @param results here the found results are stored
-     * @param handler the node handler
+     * @param handler The node handler
      */
     protected <T> void findNodesForKey(final DefaultConfigurationKey.KeyIterator keyPart, final T node, final Collection<QueryResult<T>> results,
         final NodeHandler<T> handler) {
@@ -338,9 +338,9 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * </p>
      *
      * @param <T> The type of the nodes to be dealt with
-     * @param root the root node of the nodes hierarchy
-     * @param key the key of the new property
-     * @param handler the node handler
+     * @param root The root node of the nodes hierarchy
+     * @param key The key of the new property
+     * @param handler The node handler
      * @return A data object with information needed for the add operation
      */
     @Override
@@ -369,10 +369,10 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * key part (children, attributes, or both).
      *
      * @param <T> The type of the nodes to be dealt with
-     * @param keyPart the key part
-     * @param subNodes a list with the sub nodes to process
-     * @param nodes the target collection
-     * @param handler the node handler
+     * @param keyPart The key part
+     * @param subNodes A list with the sub nodes to process
+     * @param nodes The target collection
+     * @param handler The node handler
      */
     private <T> void processSubNodes(final DefaultConfigurationKey.KeyIterator keyPart, final List<T> subNodes, final Collection<QueryResult<T>> nodes,
         final NodeHandler<T> handler) {

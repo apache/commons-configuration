@@ -33,7 +33,7 @@ public interface FileHandlerListener {
     /**
      * Notification that the associated file has been loaded. This method is called directly after the load operation.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      */
     void loaded(FileHandler handler);
 
@@ -41,21 +41,21 @@ public interface FileHandlerListener {
      * Notification that the associated file is about to be loaded. This method is called immediately before the load
      * operation.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      */
     void loading(FileHandler handler);
 
     /**
      * Notification that a property of the monitored {@code FileHandler} has changed.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      */
     void locationChanged(FileHandler handler);
 
     /**
      * Notification that the associated file has been saved. This method is called directly after the save operation.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      */
     void saved(FileHandler handler);
 
@@ -63,7 +63,7 @@ public interface FileHandlerListener {
      * Notification that the associated file is about to be saved. This method is called immediately before the save
      * operation.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      */
     void saving(FileHandler handler);
 }

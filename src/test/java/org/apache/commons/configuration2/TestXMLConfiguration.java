@@ -127,7 +127,7 @@ public class TestXMLConfiguration {
     /**
      * Creates a new XMLConfiguration and loads the specified file.
      *
-     * @param fileName the name of the file to be loaded
+     * @param fileName The name of the file to be loaded
      * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -141,8 +141,8 @@ public class TestXMLConfiguration {
     /**
      * Helper method for loading the specified configuration file.
      *
-     * @param config the configuration
-     * @param fileName the name of the file to be loaded
+     * @param config The configuration
+     * @param fileName The name of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final XMLConfiguration config, final String fileName) throws ConfigurationException {
@@ -203,7 +203,7 @@ public class TestXMLConfiguration {
     /**
      * Tests whether the saved configuration file matches the original data.
      *
-     * @param saveFile the saved configuration file
+     * @param saveFile The saved configuration file
      * @return The newly loaded configuration
      * @throws ConfigurationException if an error occurs
      */
@@ -216,7 +216,7 @@ public class TestXMLConfiguration {
     /**
      * Helper method for testing saving and loading a configuration when delimiter parsing is disabled.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @throws ConfigurationException if an error occurs
      */
     private void checkSaveDelimiterParsingDisabled(final String key) throws ConfigurationException {

@@ -83,7 +83,7 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Adds a comment line.
          *
-         * @param s the comment (can be <strong>null</strong>, then a blank line is added)
+         * @param s The comment (can be <strong>null</strong>, then a blank line is added)
          */
         public void addComment(final String s) {
             if (s != null) {
@@ -101,7 +101,7 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Adds a line verbatim to the simulated file.
          *
-         * @param s the content of the line
+         * @param s The content of the line
          */
         public void addLine(final String s) {
             buf.append(s).append(CR);
@@ -110,8 +110,8 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Adds a property to the simulated file.
          *
-         * @param key the property key
-         * @param value the value
+         * @param key The property key
+         * @param value The value
          */
         public void addProperty(final String key, final String value) {
             buf.append(key).append(" = ").append(value).append(CR);
@@ -164,7 +164,7 @@ public class TestPropertiesConfigurationLayout {
     /**
      * Checks if the layout's output is correct.
      *
-     * @param expected the expected result
+     * @param expected The expected result
      * @throws ConfigurationException if an error occurs
      */
     private void checkLayoutString(final String expected) throws ConfigurationException {

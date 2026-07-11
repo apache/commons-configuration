@@ -37,8 +37,8 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * node structures. Therefore, it initially remains constant, and a map with replacements is used. When querying a
      * parent node, the replacement map has to be consulted whether the parent node is still valid.
      *
-     * @param replace the replacement node
-     * @param mapping the replacement mapping
+     * @param replace The replacement node
+     * @param mapping The replacement mapping
      * @return The corresponding node according to the mapping
      */
     private static ImmutableNode handleReplacements(final ImmutableNode replace, final Map<ImmutableNode, ImmutableNode> mapping) {
@@ -77,11 +77,11 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Creates a new instance of {@code TreeData} and initializes it with all data to be stored.
      *
-     * @param root the root node of the current tree
-     * @param parentMapping the mapping to parent nodes
-     * @param replacements the map with the nodes that have been replaced
-     * @param tracker the {@code NodeTracker}
-     * @param refTracker the {@code ReferenceTracker}
+     * @param root The root node of the current tree
+     * @param parentMapping The mapping to parent nodes
+     * @param replacements The map with the nodes that have been replaced
+     * @param tracker The {@code NodeTracker}
+     * @param refTracker The {@code ReferenceTracker}
      */
     public TreeData(final ImmutableNode root, final Map<ImmutableNode, ImmutableNode> parentMapping, final Map<ImmutableNode, ImmutableNode> replacements,
         final NodeTracker tracker, final ReferenceTracker refTracker) {
@@ -114,7 +114,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
     /**
      * Creates the inverse replacement mapping.
      *
-     * @param replacements the original replacement mapping
+     * @param replacements The original replacement mapping
      * @return The inverse replacement mapping
      */
     private Map<ImmutableNode, ImmutableNode> createInverseMapping(final Map<ImmutableNode, ImmutableNode> replacements) {
@@ -134,7 +134,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * Gets the parent node of the specified node. Result is <strong>null</strong> for the root node. If the passed in node cannot
      * be resolved, an exception is thrown.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return The parent node for this node
      * @throws IllegalArgumentException if the node cannot be resolved
      */
@@ -186,7 +186,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * Creates a new instance which uses the specified {@code NodeTracker}. This method is called when there are updates of
      * the state of tracked nodes.
      *
-     * @param newTracker the new {@code NodeTracker}
+     * @param newTracker The new {@code NodeTracker}
      * @return The updated instance
      */
     public TreeData updateNodeTracker(final NodeTracker newTracker) {
@@ -197,7 +197,7 @@ final class TreeData extends AbstractImmutableNodeHandler implements ReferenceNo
      * Creates a new instance which uses the specified {@code ReferenceTracker}. All other information are unchanged. This
      * method is called when there updates for references.
      *
-     * @param newTracker the new {@code ReferenceTracker}
+     * @param newTracker The new {@code ReferenceTracker}
      * @return The updated instance
      */
     public TreeData updateReferenceTracker(final ReferenceTracker newTracker) {

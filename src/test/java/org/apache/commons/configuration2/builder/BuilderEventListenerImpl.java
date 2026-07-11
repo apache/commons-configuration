@@ -62,7 +62,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      * Checks whether the next received event is of the specified event type and returns it. Causes the test to fail if
      * there are no more events or the next event is of a different event type.
      *
-     * @param eventType the expected event type
+     * @param eventType The expected event type
      * @param <T> The type of the received event
      * @return The next received event
      */

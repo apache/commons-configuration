@@ -79,7 +79,7 @@ public final class FileLocator {
          * Creates a new instance of {@code FileLocatorBuilder} and initializes the builder's properties from the passed in
          * {@code FileLocator} object.
          *
-         * @param src the source {@code FileLocator} (may be <strong>null</strong>)
+         * @param src The source {@code FileLocator} (may be <strong>null</strong>)
          */
         FileLocatorBuilder(final FileLocator src) {
             if (src != null) {
@@ -90,7 +90,7 @@ public final class FileLocator {
         /**
          * Specifies the base path of the new {@code FileLocator}.
          *
-         * @param path the base path
+         * @param path The base path
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder basePath(final String path) {
@@ -110,7 +110,7 @@ public final class FileLocator {
         /**
          * Specifies the encoding of the new {@code FileLocator}.
          *
-         * @param enc the encoding
+         * @param enc The encoding
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder encoding(final String enc) {
@@ -121,7 +121,7 @@ public final class FileLocator {
         /**
          * Specifies the file name of the new {@code FileLocator}.
          *
-         * @param name the file name
+         * @param name The file name
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileName(final String name) {
@@ -132,7 +132,7 @@ public final class FileLocator {
         /**
          * Specifies the {@code FileSystem} of the new {@code FileLocator}.
          *
-         * @param fs the {@code FileSystem}
+         * @param fs The {@code FileSystem}
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileSystem(final FileSystem fs) {
@@ -143,7 +143,7 @@ public final class FileLocator {
         /**
          * Initializes the properties of this builder from the passed in locator object.
          *
-         * @param src the source {@code FileLocator}
+         * @param src The source {@code FileLocator}
          */
         private void initBuilder(final FileLocator src) {
             basePath = src.getBasePath();
@@ -158,7 +158,7 @@ public final class FileLocator {
         /**
          * Specifies the {@code FileLocationStrategy} to be used when the referenced file is to be located.
          *
-         * @param strategy the {@code FileLocationStrategy}
+         * @param strategy The {@code FileLocationStrategy}
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy) {
@@ -169,7 +169,7 @@ public final class FileLocator {
         /**
          * Specifies the source URL of the new {@code FileLocator}.
          *
-         * @param url the source URL
+         * @param url The source URL
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder sourceURL(final URL url) {
@@ -180,7 +180,7 @@ public final class FileLocator {
         /**
          * Specifies the source URL connection options of the new {@code FileLocator}.
          *
-         * @param urlConnectionOptions the source URL connection options.
+         * @param urlConnectionOptions The source URL connection options.
          * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder urlConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
@@ -214,7 +214,7 @@ public final class FileLocator {
     /**
      * Creates a new instance of {@code FileLocatorImpl} and initializes it from the given builder instance
      *
-     * @param builder the builder
+     * @param builder The builder
      */
     public FileLocator(final FileLocatorBuilder builder) {
         fileName = builder.fileName;
@@ -230,7 +230,7 @@ public final class FileLocator {
      * Compares this object with another one. Two instances of {@code FileLocatorImpl} are considered equal if all of their
      * properties are equal.
      *
-     * @param obj the object to compare to
+     * @param obj The object to compare to
      * @return A flag whether these objects are equal
      */
     @Override

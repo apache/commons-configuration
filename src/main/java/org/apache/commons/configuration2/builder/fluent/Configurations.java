@@ -85,7 +85,7 @@ public class Configurations {
     /**
      * Creates a new instance of {@code Configurations} and initializes it with the specified {@code Parameters} object.
      *
-     * @param params the {@code Parameters} (may be <strong>null</strong>, then a default instance is created)
+     * @param params The {@code Parameters} (may be <strong>null</strong>, then a default instance is created)
      */
     public Configurations(final Parameters params) {
         parameters = params != null ? params : new Parameters();
@@ -96,7 +96,7 @@ public class Configurations {
      * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
      * builder is created).
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return A {@code CombinedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -109,7 +109,7 @@ public class Configurations {
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return A {@code CombinedConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -122,7 +122,7 @@ public class Configurations {
      * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
      * builder is created).
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return A {@code CombinedConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -133,7 +133,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given file to be loaded.
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final File file) {
@@ -144,7 +144,7 @@ public class Configurations {
      * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given path to the file to be
      * loaded.
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final String path) {
@@ -154,7 +154,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code CombinedConfiguration} and initializes it with the given URL to be loaded.
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return The newly created {@code CombinedConfigurationBuilder}
      */
     public CombinedConfigurationBuilder combinedBuilder(final URL url) {
@@ -164,7 +164,7 @@ public class Configurations {
     /**
      * Creates a configured builder for a file-based configuration of the specified type.
      *
-     * @param configClass the configuration class
+     * @param configClass The configuration class
      * @param <T> The type of the configuration to be constructed
      * @return The newly created builder
      * @since 2.6
@@ -176,8 +176,8 @@ public class Configurations {
     /**
      * Creates a configured builder for a file-based configuration of the specified type.
      *
-     * @param configClass the configuration class
-     * @param params the parameters object for configuring the builder
+     * @param configClass The configuration class
+     * @param params The parameters object for configuring the builder
      * @param <T> The type of the configuration to be constructed
      * @return The newly created builder
      */
@@ -191,8 +191,8 @@ public class Configurations {
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
      *
-     * @param configClass the configuration class
-     * @param file the file to be loaded
+     * @param configClass The configuration class
+     * @param file The file to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
@@ -206,8 +206,8 @@ public class Configurations {
      * given path. This is a convenience method which can be used if no builder is needed for managing the configuration
      * object. (Although, behind the scenes a builder is created).
      *
-     * @param configClass the configuration class
-     * @param path the path to the file to be loaded
+     * @param configClass The configuration class
+     * @param path The path to the file to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
@@ -221,8 +221,8 @@ public class Configurations {
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
      *
-     * @param configClass the configuration class
-     * @param url the URL to be loaded
+     * @param configClass The configuration class
+     * @param url The URL to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
@@ -235,8 +235,8 @@ public class Configurations {
      * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
      * file to be loaded.
      *
-     * @param configClass the configuration class
-     * @param file the file to be loaded
+     * @param configClass The configuration class
+     * @param file The file to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return The new {@code FileBasedConfigurationBuilder}
      */
@@ -248,8 +248,8 @@ public class Configurations {
      * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the
      * path to the file to be loaded.
      *
-     * @param configClass the configuration class
-     * @param path the path to the file to be loaded
+     * @param configClass The configuration class
+     * @param path The path to the file to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return The new {@code FileBasedConfigurationBuilder}
      */
@@ -261,8 +261,8 @@ public class Configurations {
      * Creates a {@code FileBasedConfigurationBuilder} for the specified configuration class and initializes it with the URL
      * to the file to be loaded.
      *
-     * @param configClass the configuration class
-     * @param url the URL to be loaded
+     * @param configClass The configuration class
+     * @param url The URL to be loaded
      * @param <T> The type of the configuration to be constructed
      * @return The new {@code FileBasedConfigurationBuilder}
      */
@@ -282,7 +282,7 @@ public class Configurations {
     /**
      * Convenience method for creating a file-based parameters object initialized with the given file.
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final File file) {
@@ -292,7 +292,7 @@ public class Configurations {
     /**
      * Convenience method for creating a file-based parameters object initialized with the given file path.
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final String path) {
@@ -302,7 +302,7 @@ public class Configurations {
     /**
      * Convenience method for creating a file-based parameters object initialized with the given file.
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return The initialized parameters object
      */
     private FileBasedBuilderParameters fileParams(final URL url) {
@@ -323,7 +323,7 @@ public class Configurations {
      * can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
      * created).
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -336,7 +336,7 @@ public class Configurations {
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -349,7 +349,7 @@ public class Configurations {
      * be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
      * created).
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -360,7 +360,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code INIConfiguration} and initializes it with the given file to be loaded.
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final File file) {
@@ -370,7 +370,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code INIConfiguration} and initializes it with the file file identified by the given path.
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final String path) {
@@ -380,7 +380,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code INIConfiguration} and initializes it with the given URL to be loaded.
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<INIConfiguration> iniBuilder(final URL url) {
@@ -392,7 +392,7 @@ public class Configurations {
      * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
      * builder is created).
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return A {@code PropertiesConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -405,7 +405,7 @@ public class Configurations {
      * a convenience method which can be used if no builder is needed for managing the configuration object. (Although,
      * behind the scenes a builder is created).
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return A {@code PropertiesConfiguration} object initialized from this path
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -418,7 +418,7 @@ public class Configurations {
      * which can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a
      * builder is created).
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return A {@code PropertiesConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -439,7 +439,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given file to be loaded.
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final File file) {
@@ -449,7 +449,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given parameters to be loaded.
      *
-     * @param parameters the parameters to be loaded
+     * @param parameters The parameters to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      * @since 2.6
      */
@@ -461,7 +461,7 @@ public class Configurations {
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given path to the file to be
      * loaded.
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final String path) {
@@ -471,7 +471,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code PropertiesConfiguration} and initializes it with the given URL to be loaded.
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(final URL url) {
@@ -483,7 +483,7 @@ public class Configurations {
      * can be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
      * created).
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -496,7 +496,7 @@ public class Configurations {
      * convenience method which can be used if no builder is needed for managing the configuration object. (Although, behind
      * the scenes a builder is created).
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -509,7 +509,7 @@ public class Configurations {
      * be used if no builder is needed for managing the configuration object. (Although, behind the scenes a builder is
      * created).
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
@@ -520,7 +520,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given file to be loaded.
      *
-     * @param file the file to be loaded
+     * @param file The file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final File file) {
@@ -530,7 +530,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given path to the file to be loaded.
      *
-     * @param path the path to the file to be loaded
+     * @param path The path to the file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final String path) {
@@ -540,7 +540,7 @@ public class Configurations {
     /**
      * Creates a builder for a {@code XMLConfiguration} and initializes it with the given URL to be loaded.
      *
-     * @param url the URL to be loaded
+     * @param url The URL to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}
      */
     public FileBasedConfigurationBuilder<XMLConfiguration> xmlBuilder(final URL url) {

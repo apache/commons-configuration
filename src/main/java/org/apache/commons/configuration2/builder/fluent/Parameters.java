@@ -87,7 +87,7 @@ public final class Parameters {
         /**
          * Checks whether the specified method belongs to an interface which requires fluent result values.
          *
-         * @param method the method to be checked
+         * @param method The method to be checked
          * @return A flag whether the method's result should be handled as a fluent result value
          */
         private static boolean isFluentResult(final Method method) {
@@ -101,7 +101,7 @@ public final class Parameters {
         /**
          * Creates a new instance of {@code ParametersIfcInvocationHandler} and sets the wrapped parameters object.
          *
-         * @param targetObj the target object for reflection calls
+         * @param targetObj The target object for reflection calls
          */
         public ParametersIfcInvocationHandler(final Object targetObj) {
             target = targetObj;
@@ -133,7 +133,7 @@ public final class Parameters {
      * Because {@code DefaultParametersManager} is thread-safe, it makes sense to share a single instance between multiple
      * {@code Parameters} objects; that way the same initialization is performed on newly created parameters objects.
      *
-     * @param manager the {@code DefaultParametersHandler} (may be <strong>null</strong>, then a new default instance is created)
+     * @param manager The {@code DefaultParametersHandler} (may be <strong>null</strong>, then a new default instance is created)
      */
     public Parameters(final DefaultParametersManager manager) {
         defaultParametersManager = manager != null ? manager : new DefaultParametersManager();
@@ -162,9 +162,9 @@ public final class Parameters {
      * object is initialized with default values if there are matching {@link DefaultParametersHandler} objects.
      *
      * @param <T> The type of the parameters interface
-     * @param target the implementing target object
-     * @param ifcClass the interface class
-     * @param superIfcs an array with additional interface classes to be implemented
+     * @param target The implementing target object
+     * @param ifcClass The interface class
+     * @param superIfcs An array with additional interface classes to be implemented
      * @return The proxy object
      */
     private <T> T createParametersProxy(final Object target, final Class<T> ifcClass, final Class<?>... superIfcs) {
@@ -254,8 +254,8 @@ public final class Parameters {
      * method which just delegates to the associated {@code DefaultParametersManager}.
      *
      * @param <T> The type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
+     * @param paramsClass The parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler The {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
      * @see DefaultParametersManager
      */
@@ -269,9 +269,9 @@ public final class Parameters {
      * {@code DefaultParametersManager}.
      *
      * @param <T> The type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
-     * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be
+     * @param paramsClass The parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler The {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
+     * @param startClass An optional start class in the hierarchy of parameter objects for which this handler should be
      *        applied
      * @throws IllegalArgumentException if a required parameter is missing
      */

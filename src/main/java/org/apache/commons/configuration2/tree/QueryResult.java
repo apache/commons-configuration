@@ -43,8 +43,8 @@ public final class QueryResult<T> {
      * Creates a {@code QueryResult} instance representing an attribute result. An attribute result consists of the node the
      * attribute belongs to and the attribute name. (The value can be obtained based on this information.)
      *
-     * @param parentNode the node which owns the attribute
-     * @param attrName the attribute name
+     * @param parentNode The node which owns the attribute
+     * @param attrName The attribute name
      * @param <T> The type of the parent node
      * @return The newly created instance
      */
@@ -56,7 +56,7 @@ public final class QueryResult<T> {
      * Creates a {@code QueryResult} instance representing the specified result node.
      *
      * @param <T> The type of the result node
-     * @param resultNode the result node
+     * @param resultNode The result node
      * @return The newly created instance
      */
     public static <T> QueryResult<T> createNodeResult(final T resultNode) {
@@ -72,8 +72,8 @@ public final class QueryResult<T> {
     /**
      * Creates a new instance of {@code QueryResult}.
      *
-     * @param nd the node
-     * @param attr the attribute name
+     * @param nd The node
+     * @param attr The attribute name
      */
     private QueryResult(final T nd, final String attr) {
         node = nd;
@@ -84,7 +84,7 @@ public final class QueryResult<T> {
      * Compares this object with another one. Two instances of {@code QueryResult} are considered equal if they are of the
      * same result type and have the same properties.
      *
-     * @param obj the object to compare to
+     * @param obj The object to compare to
      * @return A flag whether these objects are equal
      */
     @Override
@@ -113,7 +113,7 @@ public final class QueryResult<T> {
      * Gets the attribute value if this is an attribute result. If this is not an attribute result, an exception is
      * thrown.
      *
-     * @param handler the {@code NodeHandler}
+     * @param handler The {@code NodeHandler}
      * @return The attribute value
      * @throws IllegalStateException if this is not an attribute result
      */

@@ -408,7 +408,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * Uses this configuration's {@code ConfigurationInterpolator} to perform variable substitution on the given pattern
      * string.
      *
-     * @param pattern the pattern string
+     * @param pattern The pattern string
      * @return The string with variables replaced
      */
     private String substitute(final String pattern) {

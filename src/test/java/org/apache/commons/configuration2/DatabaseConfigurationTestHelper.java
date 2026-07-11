@@ -87,8 +87,8 @@ public class DatabaseConfigurationTestHelper {
      * Creates a configuration instance of the specified class with the given parameters.
      *
      * @param <T> The type of the result configuration
-     * @param configCls the configuration class
-     * @param params the parameters object
+     * @param configCls The configuration class
+     * @param params The parameters object
      * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -125,7 +125,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Sets the auto-commit mode of the configuration instances created by this helper.
      *
-     * @param autoCommit the auto-commit mode
+     * @param autoCommit The auto-commit mode
      */
     public void setAutoCommit(final boolean autoCommit) {
         this.autoCommit = autoCommit;
@@ -156,7 +156,7 @@ public class DatabaseConfigurationTestHelper {
      * Creates a database configuration with default settings of the specified class.
      *
      * @param <T> The type of the result configuration
-     * @param configCls the configuration class
+     * @param configCls The configuration class
      * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -219,8 +219,8 @@ public class DatabaseConfigurationTestHelper {
      * Creates a configuration with support for multiple configuration instances in a single table of the specified class.
      *
      * @param <T> The type of the result configuration
-     * @param configCls the configuration class
-     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
+     * @param configCls The configuration class
+     * @param configName The name of the configuration instance or <strong>null</strong> for the default name
      * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
@@ -231,7 +231,7 @@ public class DatabaseConfigurationTestHelper {
     /**
      * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
      *
-     * @param configName the name of the configuration instance or <strong>null</strong> for the default name
+     * @param configName The name of the configuration instance or <strong>null</strong> for the default name
      * @return The parameters object
      */
     public DatabaseBuilderParameters setUpMultiParameters(final String configName) {

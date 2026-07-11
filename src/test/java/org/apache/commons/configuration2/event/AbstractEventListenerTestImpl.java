@@ -41,7 +41,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     /**
      * Creates a new instance of {@code AbstractEventListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<strong>null</strong> if the source need not to be checked)
+     * @param source The event source (<strong>null</strong> if the source need not to be checked)
      */
     protected AbstractEventListenerTestImpl(final Object source) {
         expectedSource = source;
@@ -51,7 +51,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     /**
      * Checks if at least {@code minEvents} events have been received.
      *
-     * @param minEvents the minimum number of expected events
+     * @param minEvents The minimum number of expected events
      */
     public void checkEventCount(final int minEvents) {
         assertTrue(events.size() >= minEvents);
@@ -67,7 +67,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     /**
      * Returns the next received event and checks for the expected type.
      *
-     * @param expectedType the expected type of the event
+     * @param expectedType The expected type of the event
      * @return The event object
      */
     public T nextEvent(final EventType<?> expectedType) {
@@ -89,7 +89,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * Skips to the last received event and checks that no events of the given type have been received. This method is used
      * by checks for detail events to ignore the detail events.
      *
-     * @param type the event type
+     * @param type The event type
      */
     public void skipToLast(final EventType<?> type) {
         while (events.size() > 1) {

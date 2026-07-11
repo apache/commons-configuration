@@ -62,7 +62,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     /**
      * Constructs a new instance of {@code ConfigurationDynaBean} and sets the configuration this bean is associated with.
      *
-     * @param configuration the configuration
+     * @param configuration The configuration
      */
     public ConfigurationDynaBean(final Configuration configuration) {
         super(configuration);
@@ -75,7 +75,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      * Checks whether the given name references an indexed property. This implementation tests for properties of type list or
      * array. If the property does not exist, an exception is thrown.
      *
-     * @param name the name of the property to check
+     * @param name The name of the property to check
      * @return A flag whether this is an indexed property
      * @throws IllegalArgumentException if the property does not exist
      */

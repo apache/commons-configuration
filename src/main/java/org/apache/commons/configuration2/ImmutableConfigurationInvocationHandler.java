@@ -55,7 +55,7 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
         /**
          * Creates a new instance of {@code ImmutableIterator} and sets the underlying iterator.
          *
-         * @param it the underlying iterator
+         * @param it The underlying iterator
          */
         public ImmutableIterator(final Iterator<?> it) {
             wrappedIterator = it;
@@ -90,7 +90,7 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * Handles the result from the method invocation on the wrapped configuration. This implementation wraps result objects
      * if necessary so that the underlying configuration cannot be manipulated.
      *
-     * @param result the result object
+     * @param result The result object
      * @return The processed result object
      */
     private static Object handleResult(final Object result) {
@@ -107,7 +107,7 @@ final class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * Creates a new instance of {@code ImmutableConfigurationInvocationHandler} and initializes it with the wrapped
      * configuration object.
      *
-     * @param configuration the wrapped {@code Configuration} (must not be <strong>null</strong>)
+     * @param configuration The wrapped {@code Configuration} (must not be <strong>null</strong>)
      * @throws NullPointerException if the {@code Configuration} is <strong>null</strong>
      */
     public ImmutableConfigurationInvocationHandler(final Configuration configuration) {

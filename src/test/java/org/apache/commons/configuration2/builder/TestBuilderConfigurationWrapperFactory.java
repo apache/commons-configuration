@@ -50,7 +50,7 @@ public class TestBuilderConfigurationWrapperFactory {
     /**
      * Returns a mock builder which always returns the specified configuration.
      *
-     * @param conf the builder's result configuration
+     * @param conf The builder's result configuration
      * @return The mock builder
      */
     private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(final BaseHierarchicalConfiguration conf) {

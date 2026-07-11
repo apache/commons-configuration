@@ -51,7 +51,7 @@ public class TestDefaultConfigurationKey {
     /**
      * Helper method to create a key instance with the given content.
      *
-     * @param k the key for initialization
+     * @param k The key for initialization
      * @return The newly created {@code DefaultConfigurationKey} instance
      */
     private DefaultConfigurationKey key(final String k) {

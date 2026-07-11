@@ -179,9 +179,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Creates a new instance of {@code ConfigData} and initializes it.
          *
-         * @param config the configuration
-         * @param n the name
-         * @param at the at position
+         * @param config The configuration
+         * @param n The name
+         * @param at The at position
          */
         public ConfigData(final Configuration config, final String n, final String at) {
             configuration = config;
@@ -259,7 +259,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Splits the at path into its components.
          *
-         * @param at the at string
+         * @param at The at string
          * @return A collection with the names of the single components
          */
         private Collection<String> parseAt(final String at) {
@@ -278,7 +278,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         /**
          * Prepends the at path to the given node.
          *
-         * @param node the root node of the represented configuration
+         * @param node The root node of the represented configuration
          * @return The new root node including the at path
          */
         private ImmutableNode prependAtPath(final ImmutableNode node) {
@@ -292,10 +292,10 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * Handles a single component of the at path. A corresponding node is created and added to the hierarchical path to the
          * original root node of the configuration.
          *
-         * @param builder the current node builder object
-         * @param currentComponent the name of the current path component
-         * @param components an iterator with all components of the at path
-         * @param orgRoot the original root node of the wrapped configuration
+         * @param builder The current node builder object
+         * @param currentComponent The name of the current path component
+         * @param components An iterator with all components of the at path
+         * @param orgRoot The original root node of the wrapped configuration
          */
         private void prependAtPathComponent(final ImmutableNode.Builder builder, final String currentComponent, final Iterator<String> components,
             final ImmutableNode orgRoot) {
@@ -357,7 +357,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Creates a new instance of {@code CombinedConfiguration} and initializes the combiner to be used.
      *
-     * @param comb the node combiner (can be <strong>null</strong>, then a union combiner is used as default)
+     * @param comb The node combiner (can be <strong>null</strong>, then a union combiner is used as default)
      */
     public CombinedConfiguration(final NodeCombiner comb) {
         nodeCombiner = comb != null ? comb : DEFAULT_COMBINER;
@@ -368,7 +368,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Adds a new configuration to this combined configuration. The new configuration is not given a name. Its properties
      * will be added under the root of the combined node structure.
      *
-     * @param config the configuration to add (must not be <strong>null</strong>)
+     * @param config The configuration to add (must not be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config) {
         addConfiguration(config, null, null);
@@ -378,8 +378,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Adds a new configuration to this combined configuration with an optional name. The new configuration's properties
      * will be added under the root of the combined node structure.
      *
-     * @param config the configuration to add (must not be <strong>null</strong>)
-     * @param name the name of this configuration (can be <strong>null</strong>)
+     * @param config The configuration to add (must not be <strong>null</strong>)
+     * @param name The name of this configuration (can be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config, final String name) {
         addConfiguration(config, name, null);
@@ -393,9 +393,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * expression engine). For instance if you pass in the string {@code "database.tables"}, all properties of the added
      * configuration will occur in this branch.
      *
-     * @param config the configuration to add (must not be <strong>null</strong>)
-     * @param name the name of this configuration (can be <strong>null</strong>)
-     * @param at the position of this configuration in the combined tree (can be <strong>null</strong>)
+     * @param config The configuration to add (must not be <strong>null</strong>)
+     * @param name The name of this configuration (can be <strong>null</strong>)
+     * @param at The position of this configuration in the combined tree (can be <strong>null</strong>)
      */
     public void addConfiguration(final Configuration config, final String name, final String at) {
         if (config == null) {
@@ -536,7 +536,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Determines the configurations to which the specified node belongs. This is done by inspecting the nodes structures of
      * all child configurations.
      *
-     * @param node the node
+     * @param node The node
      * @return A set with the owning configurations
      */
     private Set<Configuration> findSourceConfigurations(final ImmutableNode node) {
@@ -558,7 +558,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets the configuration at the specified index. The contained configurations are numbered in the order they were
      * added to this combined configuration. The index of the first configuration is 0.
      *
-     * @param index the index
+     * @param index The index
      * @return The configuration at this index
      */
     public Configuration getConfiguration(final int index) {
@@ -574,7 +574,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
-     * @param name the name of the configuration
+     * @param name The name of the configuration
      * @return The configuration with this name
      */
     public Configuration getConfiguration(final String name) {
@@ -698,7 +698,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * defined by existing child configurations this configuration will be returned.</li>
      * </ul>
      *
-     * @param key the key of a configuration property
+     * @param key The key of a configuration property
      * @return The configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
      *         the key is <strong>null</strong>
@@ -731,7 +731,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * defined by existing child configurations this combined configuration is contained in the result set.</li>
      * </ul>
      *
-     * @param key the key of a configuration property
+     * @param key The key of a configuration property
      * @return A set with the configuration sources, which contain this property
      * @since 2.0
      */
@@ -803,7 +803,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Event listener call back for configuration update events. This method is called whenever one of the contained
      * configurations was modified. It invalidates this combined configuration.
      *
-     * @param event the update event
+     * @param event The update event
      */
     @Override
     public void onEvent(final ConfigurationEvent event) {
@@ -815,7 +815,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Registers this combined configuration as listener at the given child configuration.
      *
-     * @param configuration the child configuration
+     * @param configuration The child configuration
      */
     private void registerListenerAt(final Configuration configuration) {
         if (configuration instanceof EventSource) {
@@ -826,7 +826,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Removes the specified configuration from this combined configuration.
      *
-     * @param config the configuration to be removed
+     * @param config The configuration to be removed
      * @return A flag whether this configuration was found and could be removed
      */
     public boolean removeConfiguration(final Configuration config) {
@@ -843,7 +843,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Removes the configuration with the specified name.
      *
-     * @param name the name of the configuration to be removed
+     * @param name The name of the configuration to be removed
      * @return The removed configuration (<strong>null</strong> if this configuration was not found)
      */
     public Configuration removeConfiguration(final String name) {
@@ -857,7 +857,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Removes the configuration at the specified index.
      *
-     * @param index the index
+     * @param index The index
      * @return The removed configuration
      */
     public Configuration removeConfigurationAt(final int index) {
@@ -878,7 +878,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * expression engine used by hierarchical configurations. Therefore it is possible to specify a specific expression
      * engine to be used for this purpose.
      *
-     * @param conversionExpressionEngine the conversion expression engine
+     * @param conversionExpressionEngine The conversion expression engine
      * @see ConfigurationUtils#convertToHierarchical(Configuration, ExpressionEngine)
      * @since 1.6
      */
@@ -896,7 +896,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * be <strong>null</strong>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
      * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
      *
-     * @param nodeCombiner the node combiner
+     * @param nodeCombiner The node combiner
      */
     public void setNodeCombiner(final NodeCombiner nodeCombiner) {
         if (nodeCombiner == null) {
@@ -915,7 +915,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /**
      * Removes this combined configuration as listener from the given child configuration.
      *
-     * @param configuration the child configuration
+     * @param configuration The child configuration
      */
     private void unregisterListenerAt(final Configuration configuration) {
         if (configuration instanceof EventSource) {

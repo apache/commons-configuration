@@ -80,8 +80,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a map with parameters for a new managed configuration builder. This method merges the basic parameters set
      * for this builder with the specific parameters object for managed builders (if provided).
      *
-     * @param params the parameters of this builder
-     * @param multiParams the parameters object for this builder
+     * @param params The parameters of this builder
+     * @param multiParams The parameters object for this builder
      * @return The parameters for a new managed builder
      */
     private static Map<String, Object> createManagedBuilderParameters(final Map<String, Object> params, final MultiFileBuilderParametersImpl multiParams) {
@@ -101,7 +101,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * the methods for managing event listeners to find out whether a listener should be passed to the managed builders,
      * too.
      *
-     * @param eventType the event type object
+     * @param eventType The event type object
      * @return A flag whether this event type is of interest for managed builders
      */
     private static boolean isEventTypeForManagedBuilders(final EventType<?> eventType) {
@@ -131,7 +131,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Creates a new instance of {@code MultiFileConfigurationBuilder} without setting initialization parameters.
      *
-     * @param resCls the result configuration class
+     * @param resCls The result configuration class
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls) {
@@ -141,8 +141,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Creates a new instance of {@code MultiFileConfigurationBuilder} and sets initialization parameters.
      *
-     * @param resCls the result configuration class
-     * @param params a map with initialization parameters
+     * @param resCls The result configuration class
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
@@ -153,9 +153,9 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code MultiFileConfigurationBuilder} and sets initialization parameters and a flag whether
      * initialization failures should be ignored.
      *
-     * @param resCls the result configuration class
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit a flag whether initialization errors should be ignored
+     * @param resCls The result configuration class
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit A flag whether initialization errors should be ignored
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public MultiFileConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
@@ -190,7 +190,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * this builder's configuration. It obtains the {@link ConfigurationInterpolator} from this builder's parameters and
      * uses it to interpolate the file name pattern.
      *
-     * @param multiParams the parameters object for this builder
+     * @param multiParams The parameters object for this builder
      * @return The name of the configuration file to be loaded
      */
     protected String constructFileName(final MultiFileBuilderParametersImpl multiParams) {
@@ -203,7 +203,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * builder. This method is called when an event was received from a managed builder. In this case, the event has to be
      * passed to the builder listeners registered at this object, but with the correct source property.
      *
-     * @param event the event received from a managed builder
+     * @param event The event received from a managed builder
      * @return The event to be propagated
      */
     private ConfigurationBuilderEvent createEventWithChangedSource(final ConfigurationBuilderEvent event) {
@@ -224,8 +224,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * {@code createManagedBuilder()} for actually creating the builder object. Then it sets the location to the
      * configuration file.
      *
-     * @param fileName the name of the file to be loaded
-     * @param params a map with initialization parameters for the new builder
+     * @param fileName The name of the file to be loaded
+     * @param params A map with initialization parameters for the new builder
      * @return The newly created and initialized builder instance
      * @throws ConfigurationException if an error occurs
      */
@@ -256,8 +256,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * creates a standard builder for file-based configurations. Derived classes may override it to create special purpose
      * builders.
      *
-     * @param fileName the name of the file to be loaded
-     * @param params a map with initialization parameters for the new builder
+     * @param fileName The name of the file to be loaded
+     * @param params A map with initialization parameters for the new builder
      * @return The newly created builder instance
      * @throws ConfigurationException if an error occurs
      */
@@ -270,7 +270,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * could happen if the file name pattern cannot be resolved and the {@code ConfigurationInterpolator} used by this
      * object causes a recursive lookup to this builder's configuration.
      *
-     * @param multiParams the current builder parameters
+     * @param multiParams The current builder parameters
      * @return The file name for a managed builder
      */
     private String fetchFileName(final MultiFileBuilderParametersImpl multiParams) {
@@ -369,7 +369,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Handles events received from managed configuration builders. This method creates a new event with a source pointing
      * to this builder and propagates it to all registered listeners.
      *
-     * @param event the event received from a managed builder
+     * @param event The event received from a managed builder
      */
     private void handleManagedBuilderEvent(final ConfigurationBuilderEvent event) {
         if (ConfigurationBuilderEvent.RESET.equals(event.getEventType())) {
@@ -384,7 +384,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * {@code EventListener} which propagates builder events to listeners registered at this builder. In addition,
      * {@code ConfigurationListener} and {@code ConfigurationErrorListener} objects are registered at the new builder.
      *
-     * @param newBuilder the builder to be initialized
+     * @param newBuilder The builder to be initialized
      */
     private void initListeners(final FileBasedConfigurationBuilder<T> newBuilder) {
         copyEventListeners(newBuilder, configurationListeners);

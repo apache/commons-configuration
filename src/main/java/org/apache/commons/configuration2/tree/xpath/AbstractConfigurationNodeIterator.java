@@ -45,8 +45,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Generates a qualified name with a namespace prefix.
      *
-     * @param prefix the prefix
-     * @param name the name (may be <strong>null</strong>)
+     * @param prefix The prefix
+     * @param name The name (may be <strong>null</strong>)
      * @return The qualified name
      */
     protected static String prefixName(final String prefix, final String name) {
@@ -57,7 +57,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Returns the qualified name from the given {@code QName}. If the name has no namespace, result is the simple name.
      * Otherwise, the namespace prefix is added.
      *
-     * @param qName the {@code QName}
+     * @param qName The {@code QName}
      * @return The qualified name
      */
     protected static String qualifiedName(final QName qName) {
@@ -79,8 +79,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorBase} and initializes it.
      *
-     * @param parent the parent pointer
-     * @param reverse the reverse flag
+     * @param parent The parent pointer
+     * @param reverse The reverse flag
      */
     protected AbstractConfigurationNodeIterator(final ConfigurationNodePointer<T> parent, final boolean reverse) {
         this.parent = parent;
@@ -91,7 +91,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Creates the configuration node pointer for the current position. This method is called by {@code getNodePointer()}.
      * Derived classes must create the correct pointer object.
      *
-     * @param position the current position in the iteration
+     * @param position The current position in the iteration
      * @return The node pointer
      */
     protected abstract NodePointer createNodePointer(int position);
@@ -159,7 +159,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Returns the index in the data list for the given position. This method also checks the reverse flag.
      *
-     * @param pos the position (1-based)
+     * @param pos The position (1-based)
      * @return The corresponding list index
      */
     protected int positionToIndex(final int pos) {
@@ -169,7 +169,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Sets the position of the iteration.
      *
-     * @param pos the new position
+     * @param pos The new position
      * @return A flag if this is a valid position
      */
     @Override
@@ -181,7 +181,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Sets the start offset of the iteration. This is used when a start element was set.
      *
-     * @param startOffset the start offset
+     * @param startOffset The start offset
      */
     protected void setStartOffset(final int startOffset) {
         this.startOffset = startOffset;

@@ -47,7 +47,7 @@ public class TestInterpolatorSpecification {
     /**
      * Checks whether the given test object contains the expected default lookups.
      *
-     * @param spec the object to be tested
+     * @param spec The object to be tested
      * @param defLook1 default lookup 1
      * @param defLook2 default lookup 2
      */
@@ -59,7 +59,7 @@ public class TestInterpolatorSpecification {
     /**
      * Checks whether the given test object contains the expected prefix lookups.
      *
-     * @param spec the object to be tested
+     * @param spec The object to be tested
      * @param prefLook1 prefix lookup 1
      * @param prefLook2 prefix lookup 2
      */

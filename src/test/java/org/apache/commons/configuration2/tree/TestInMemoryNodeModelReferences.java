@@ -49,7 +49,7 @@ public class TestInMemoryNodeModelReferences {
     /**
      * Returns a flat collection of all nodes contained in the specified nodes hierarchy.
      *
-     * @param root the root node of the hierarchy
+     * @param root The root node of the hierarchy
      * @return A collection with all nodes in this hierarchy
      */
     private Collection<ImmutableNode> collectNodes(final ImmutableNode root) {

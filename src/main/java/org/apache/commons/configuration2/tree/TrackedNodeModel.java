@@ -75,9 +75,9 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * {@code SubnodeConfiguration}, there is typically no way to discard the model explicitly. Therefore, it makes sense to
      * do this automatically on finalization.
      *
-     * @param modelSupport the underlying {@code InMemoryNodeModelSupport} (must not be <strong>null</strong>)
-     * @param sel the selector to the root node of this model (must not be <strong>null</strong>)
-     * @param untrackOnFinalize a flag whether the tracked node should be released on finalization
+     * @param modelSupport The underlying {@code InMemoryNodeModelSupport} (must not be <strong>null</strong>)
+     * @param sel The selector to the root node of this model (must not be <strong>null</strong>)
+     * @param untrackOnFinalize A flag whether the tracked node should be released on finalization
      * @throws IllegalArgumentException if a required parameter is missing
      */
     public TrackedNodeModel(final InMemoryNodeModelSupport modelSupport, final NodeSelector sel, final boolean untrackOnFinalize) {
@@ -108,7 +108,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * {@inheritDoc} This implementation clears the sub tree spanned by the associate tracked node. This has the side effect
      * that this in any case becomes detached.
      *
-     * @param resolver the {@code NodeKeyResolver}.
+     * @param resolver The {@code NodeKeyResolver}.
      */
     @Override
     public void clear(final NodeKeyResolver<ImmutableNode> resolver) {

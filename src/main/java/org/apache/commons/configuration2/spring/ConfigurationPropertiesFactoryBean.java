@@ -49,7 +49,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /**
      * Creates a defensive copy of the specified array. Handles null values correctly.
      *
-     * @param src the source array
+     * @param src The source array
      * @param <T> The type of the array
      * @return The defensive copy of the array
      */

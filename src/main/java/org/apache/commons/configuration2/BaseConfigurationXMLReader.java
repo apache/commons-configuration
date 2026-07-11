@@ -38,7 +38,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
         /**
          * Callback for the end of an element.
          *
-         * @param name the element name
+         * @param name The element name
          */
         @Override
         protected void elementEnd(final String name) {
@@ -48,8 +48,8 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
         /**
          * Callback for the start of an element.
          *
-         * @param name the element name
-         * @param value the element value
+         * @param name The element name
+         * @param value The element value
          */
         @Override
         protected void elementStart(final String name, final Object value) {
@@ -72,7 +72,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     /**
      * Creates a new instance of {@code BaseConfigurationXMLReader} and sets the configuration object to be parsed.
      *
-     * @param conf the configuration to be parsed
+     * @param conf The configuration to be parsed
      */
     public BaseConfigurationXMLReader(final Configuration conf) {
         this();
@@ -112,7 +112,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
     /**
      * Sets the configuration to be processed.
      *
-     * @param conf the configuration
+     * @param conf The configuration
      */
     public void setConfiguration(final Configuration conf) {
         config = conf;

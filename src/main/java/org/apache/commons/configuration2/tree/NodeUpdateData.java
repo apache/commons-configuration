@@ -44,7 +44,7 @@ public class NodeUpdateData<T> {
     /**
      * Creates an unmodifiable defensive copy of the passed in collection with may be null.
      *
-     * @param col the collection to be copied
+     * @param col The collection to be copied
      * @param <T> The element type of the collection
      * @return The unmodifiable copy
      */
@@ -58,7 +58,7 @@ public class NodeUpdateData<T> {
     /**
      * Creates an unmodifiable defensive copy of the passed in map which may be null.
      *
-     * @param map the map to be copied
+     * @param map The map to be copied
      * @param <K> The type of the keys involved
      * @param <V> The type of the values involved
      * @return The unmodifiable copy
@@ -86,10 +86,10 @@ public class NodeUpdateData<T> {
      * Creates a new instance of {@code NodeUpdateData} and initializes all its properties. All passed in collections are
      * optional and can be <strong>null</strong>.
      *
-     * @param changedValues the map defining the changed values
-     * @param newValues the collection with the new values
-     * @param removedNodes the collection with the nodes to be removed
-     * @param key the key of the update operation
+     * @param changedValues The map defining the changed values
+     * @param newValues The collection with the new values
+     * @param removedNodes The collection with the nodes to be removed
+     * @param key The key of the update operation
      */
     public NodeUpdateData(final Map<QueryResult<T>, Object> changedValues, final Collection<Object> newValues, final Collection<QueryResult<T>> removedNodes,
         final String key) {

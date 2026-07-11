@@ -126,8 +126,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Adds a source for a configuration which can be reloaded to the definition configuration.
      *
-     * @param config the definition configuration
-     * @param fileName the name of the file
+     * @param config The definition configuration
+     * @param fileName The name of the file
      */
     private static void addReloadSource(final Configuration config, final String fileName) {
         config.addProperty(PROP_SRC + "(-1)[@fileName]", fileName);
@@ -137,7 +137,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Returns the name of a test property.
      *
-     * @param idx the index of the property
+     * @param idx The index of the property
      * @return The test property with this index
      */
     private static String testProperty(final int idx) {
@@ -147,8 +147,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Helper method for writing a file.
      *
-     * @param file the file to be written
-     * @param content the file's content
+     * @param file The file to be written
+     * @param content The file's content
      * @throws IOException if an error occurs
      */
     private static void writeFile(final File file, final String content) throws IOException {
@@ -171,7 +171,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Helper method for testing whether the builder's definition file can be reloaded. This method expects that the test
      * builder has been fully initialized.
      *
-     * @param defFile the path to the definition file
+     * @param defFile The path to the definition file
      * @throws IOException if an I/O error occurs.
      * @throws ConfigurationException if a configuration-related error occurs
      * @throws InterruptedException if waiting is interrupted
@@ -295,8 +295,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Writes a configuration definition file that refers to the specified file source.
      *
-     * @param defFile the target definition file
-     * @param src the configuration source file to be referenced
+     * @param defFile The target definition file
+     * @param src The configuration source file to be referenced
      * @throws ConfigurationException if an error occurs
      */
     private void writeDefinitionFile(final File defFile, final File src) throws ConfigurationException {
@@ -308,9 +308,9 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
     /**
      * Writes a file for testing reload operations.
      *
-     * @param f the file to be written or <strong>null</strong> for creating a new one
-     * @param tagIdx the index of the tag
-     * @param value the value of the reload test property
+     * @param f The file to be written or <strong>null</strong> for creating a new one
+     * @param tagIdx The index of the tag
+     * @param value The value of the reload test property
      * @return The file that was written
      * @throws IOException if an error occurs
      */
@@ -322,8 +322,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * Helper method for writing a test file for reloading. The file will be created in the test directory. It is also
      * scheduled for automatic deletion after the test.
      *
-     * @param f the file to be written or <strong>null</strong> for creating a new one
-     * @param content the content of the file
+     * @param f The file to be written or <strong>null</strong> for creating a new one
+     * @param content The content of the file
      * @return The {@code File} object for the test file
      * @throws IOException if an error occurs
      */

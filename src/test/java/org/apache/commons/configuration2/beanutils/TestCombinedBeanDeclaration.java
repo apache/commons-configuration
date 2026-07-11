@@ -57,7 +57,7 @@ public class TestCombinedBeanDeclaration {
     /**
      * Convenience method for accessing a mock declaration with the given index.
      *
-     * @param idx the index
+     * @param idx The index
      * @return The corresponding mock child bean declaration
      */
     private BeanDeclaration decl(final int idx) {

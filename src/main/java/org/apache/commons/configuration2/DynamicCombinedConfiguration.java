@@ -76,9 +76,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Creates a new instance of {@code ConfigData} and initializes it.
          *
-         * @param config the configuration
-         * @param n the name
-         * @param at the at position
+         * @param config The configuration
+         * @param n The name
+         * @param at The at position
          */
         public ConfigData(final Configuration config, final String n, final String at) {
             configuration = config;
@@ -134,7 +134,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Creates a new instance of {@code CurrentConfigHolder} and initializes it with the key for the current configuration.
          *
-         * @param curKey the current key
+         * @param curKey The current key
          */
         public CurrentConfigHolder(final String curKey) {
             key = curKey;
@@ -178,7 +178,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
         /**
          * Sets the current configuration.
          *
-         * @param currentConfiguration the current configuration
+         * @param currentConfiguration The current configuration
          */
         public void setCurrentConfiguration(final CombinedConfiguration currentConfiguration) {
             this.currentConfiguration = currentConfiguration;
@@ -225,7 +225,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Creates a new instance of {@code DynamicCombinedConfiguration} and initializes the combiner to be used.
      *
-     * @param comb the node combiner (can be <strong>null</strong>, then a union combiner is used as default)
+     * @param comb The node combiner (can be <strong>null</strong>, then a union combiner is used as default)
      */
     public DynamicCombinedConfiguration(final NodeCombiner comb) {
         setNodeCombiner(comb);
@@ -241,9 +241,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * expression engine). For instance if you pass in the string {@code "database.tables"}, all properties of the added
      * configuration will occur in this branch.
      *
-     * @param config the configuration to add (must not be <strong>null</strong>)
-     * @param name the name of this configuration (can be <strong>null</strong>)
-     * @param at the position of this configuration in the combined tree (can be <strong>null</strong>)
+     * @param config The configuration to add (must not be <strong>null</strong>)
+     * @param name The name of this configuration (can be <strong>null</strong>)
+     * @param at The position of this configuration in the combined tree (can be <strong>null</strong>)
      */
     @Override
     public void addConfiguration(final Configuration config, final String name, final String at) {
@@ -471,7 +471,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Gets the configuration at the specified index. The contained configurations are numbered in the order they were
      * added to this combined configuration. The index of the first configuration is 0.
      *
-     * @param index the index
+     * @param index The index
      * @return The configuration at this index
      */
     @Override
@@ -488,7 +488,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Gets the configuration with the given name. This can be <strong>null</strong> if no such configuration exists.
      *
-     * @param name the name of the configuration
+     * @param name The name of the configuration
      * @return The configuration with this name
      */
     @Override
@@ -698,7 +698,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * defined by existing child configurations this configuration will be returned.</li>
      * </ul>
      *
-     * @param key the key of a configuration property
+     * @param key The key of a configuration property
      * @return The configuration, to which this property belongs or <strong>null</strong> if the key cannot be resolved
      * @throws IllegalArgumentException if the key maps to multiple properties and the source cannot be determined, or if
      *         the key is <strong>null</strong>
@@ -730,7 +730,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Initializes a newly created child configuration. This method copies a bunch of settings from this instance to the
      * child configuration.
      *
-     * @param config the child configuration to be initialized
+     * @param config The child configuration to be initialized
      */
     private void initChildConfiguration(final CombinedConfiguration config) {
         if (loggerName != null) {
@@ -803,7 +803,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Removes the specified configuration from this combined configuration.
      *
-     * @param config the configuration to be removed
+     * @param config The configuration to be removed
      * @return A flag whether this configuration was found and could be removed
      */
     @Override
@@ -826,7 +826,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Removes the configuration with the specified name.
      *
-     * @param name the name of the configuration to be removed
+     * @param name The name of the configuration to be removed
      * @return The removed configuration (<strong>null</strong> if this configuration was not found)
      */
     @Override
@@ -841,7 +841,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Removes the configuration at the specified index.
      *
-     * @param index the index
+     * @param index The index
      * @return The removed configuration
      */
     @Override
@@ -867,7 +867,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     /**
      * Sets the key pattern for the CombinedConfiguration map.
      *
-     * @param pattern the key pattern for the CombinedConfiguration map.
+     * @param pattern The key pattern for the CombinedConfiguration map.
      */
     public void setKeyPattern(final String pattern) {
         this.keyPattern = pattern;
@@ -887,7 +887,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * be <strong>null</strong>, otherwise an {@code IllegalArgumentException} exception is thrown. Changing the node combiner causes
      * an invalidation of this combined configuration, so that the new combiner immediately takes effect.
      *
-     * @param nodeCombiner the node combiner
+     * @param nodeCombiner The node combiner
      */
     @Override
     public void setNodeCombiner(final NodeCombiner nodeCombiner) {

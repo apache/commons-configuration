@@ -71,7 +71,7 @@ public class ConstantLookup implements Lookup {
      * <a href="https://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
      * ClassUtils</a>.
      *
-     * @param className the name of the class to be loaded
+     * @param className The name of the class to be loaded
      * @return The corresponding class object
      * @throws ClassNotFoundException if the class cannot be loaded
      */
@@ -84,7 +84,7 @@ public class ConstantLookup implements Lookup {
      * a class. If the value has already been obtained, it can be retrieved from an internal cache. Otherwise this method
      * will invoke the {@code resolveField()} method and pass in the name of the class and the field.
      *
-     * @param var the name of the variable to be resolved
+     * @param var The name of the variable to be resolved
      * @return The value of this variable or <strong>null</strong> if it cannot be resolved
      */
     @Override
@@ -110,8 +110,8 @@ public class ConstantLookup implements Lookup {
      * {@code fetchClass()} to obtain the {@link Class} object for the target class. Then it will use reflection
      * to obtain the field's value. For this to work the field must be accessible.
      *
-     * @param className the name of the class
-     * @param fieldName the name of the member field of that class to read
+     * @param className The name of the class
+     * @param fieldName The name of the member field of that class to read
      * @return The field's value
      * @throws Exception if an error occurs
      */

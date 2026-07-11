@@ -47,7 +47,7 @@ final class MultiWrapDynaClass implements DynaClass {
     /**
      * Creates a new instance of {@code MultiWrapDynaClass} and initializes it with the collection of classes to be wrapped.
      *
-     * @param wrappedCls the collection with wrapped classes
+     * @param wrappedCls The collection with wrapped classes
      */
     public MultiWrapDynaClass(final Collection<? extends DynaClass> wrappedCls) {
         properties = new LinkedList<>();
@@ -76,7 +76,7 @@ final class MultiWrapDynaClass implements DynaClass {
     /**
      * Initializes the members related to the properties of the wrapped classes.
      *
-     * @param wrappedCls the collection with the wrapped classes
+     * @param wrappedCls The collection with the wrapped classes
      */
     private void initProperties(final Collection<? extends DynaClass> wrappedCls) {
         wrappedCls.forEach(cls -> Stream.of(cls.getDynaProperties()).forEach(p -> {

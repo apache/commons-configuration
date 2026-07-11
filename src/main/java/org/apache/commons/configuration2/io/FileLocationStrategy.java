@@ -54,8 +54,8 @@ public interface FileLocationStrategy {
      * Implementations should not throw an exception (unless parameters are <strong>null</strong>) as there might be alternative
      * strategies which can find the file in question.
      *
-     * @param fileSystem the {@code FileSystem} to be used for this operation
-     * @param locator the object describing the file to be located
+     * @param fileSystem The {@code FileSystem} to be used for this operation
+     * @param locator The object describing the file to be located
      * @return A URL pointing to the referenced file if location was successful; <strong>null</strong> if the file could not be
      *         resolved
      */

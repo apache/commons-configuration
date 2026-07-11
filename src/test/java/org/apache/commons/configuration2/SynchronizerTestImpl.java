@@ -39,7 +39,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Adds a method name to the internal buffer. Called by all interface methods.
      *
-     * @param m the method that was invoked
+     * @param m The method that was invoked
      */
     private void append(final Methods m) {
         methods.append(m);
@@ -71,7 +71,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Generates a string with expected methods from the given array.
      *
-     * @param expMethods the array with expected methods
+     * @param expMethods The array with expected methods
      * @return A corresponding string representation
      */
     private String constructExpectedMethods(final Methods... expMethods) {
@@ -101,7 +101,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Verifies that the passed in methods were called in this order.
      *
-     * @param expMethods the expected methods
+     * @param expMethods The expected methods
      */
     public void verify(final Methods... expMethods) {
         assertEquals(constructExpectedMethods(expMethods), methods.toString());
@@ -110,7 +110,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Verifies that the specified sequence of methods was called somewhere in the interaction with the synchronizer.
      *
-     * @param expMethods the expected methods
+     * @param expMethods The expected methods
      */
     public void verifyContains(final Methods... expMethods) {
         assertTrue(methods.toString().contains(constructExpectedMethods(expMethods)));
@@ -119,7 +119,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Verifies that the specified methods were called at the end of the interaction with the synchronizer.
      *
-     * @param expMethods the expected methods
+     * @param expMethods The expected methods
      */
     public void verifyEnd(final Methods... expMethods) {
         assertTrue(methods.toString().endsWith(constructExpectedMethods(expMethods)));
@@ -128,7 +128,7 @@ public class SynchronizerTestImpl implements Synchronizer {
     /**
      * Verifies that the specified methods were called at the beginning of the interaction with the synchronizer.
      *
-     * @param expMethods the expected methods
+     * @param expMethods The expected methods
      */
     public void verifyStart(final Methods... expMethods) {
         assertTrue(methods.toString().startsWith(constructExpectedMethods(expMethods)));

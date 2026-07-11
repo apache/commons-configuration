@@ -61,7 +61,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * additional settings which are stored directly in the newly created object. If the map is <strong>null</strong>, an
      * uninitialized instance is returned.
      *
-     * @param map the map with properties (must not be <strong>null</strong>)
+     * @param map The map with properties (must not be <strong>null</strong>)
      * @return The newly created instance
      * @throws ClassCastException if the map contains invalid data
      */
@@ -78,7 +78,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Looks up an instance of this class in the specified parameters map. This is equivalent to
      * {@code fromParameters(params, false};}
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
      * @return The instance obtained from the map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
@@ -91,7 +91,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * This method can be used to obtain an instance of this class which has been stored in a parameters map. It is
      * compatible with the {@code getParameters()} method.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
      * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
      *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
      * @return The instance obtained from the map or <strong>null</strong>
@@ -131,7 +131,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Creates a new instance of {@code FileBasedBuilderParametersImpl} and associates it with the given {@code FileHandler}
      * object. If the handler is <strong>null</strong>, a new handler instance is created.
      *
-     * @param handler the associated {@code FileHandler} (can be <strong>null</strong>)
+     * @param handler The associated {@code FileHandler} (can be <strong>null</strong>)
      */
     public FileBasedBuilderParametersImpl(final FileHandler handler) {
         fileHandler = handler != null ? handler : new FileHandler();

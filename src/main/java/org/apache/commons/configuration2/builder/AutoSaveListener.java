@@ -60,7 +60,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
     /**
      * Creates a new instance of {@code AutoSaveListener} and initializes it with the associated builder.
      *
-     * @param bldr the associated builder
+     * @param bldr The associated builder
      */
     public AutoSaveListener(final FileBasedConfigurationBuilder<?> bldr) {
         builder = bldr;
@@ -70,7 +70,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
      * Checks whether an auto save operation has to be performed based on the passed in event and the current state of this
      * object.
      *
-     * @param event the configuration change event
+     * @param event The configuration change event
      * @return <strong>true</strong> if a save operation should be performed, <strong>false</strong> otherwise
      */
     private boolean autoSaveRequired(final ConfigurationEvent event) {
@@ -123,7 +123,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
      * which is associated with a new file handler. It updates the internal file handler reference and performs necessary
      * listener registrations.
      *
-     * @param fh the new {@code FileHandler} (can be <strong>null</strong>)
+     * @param fh The new {@code FileHandler} (can be <strong>null</strong>)
      */
     public synchronized void updateFileHandler(final FileHandler fh) {
         if (handler != null) {

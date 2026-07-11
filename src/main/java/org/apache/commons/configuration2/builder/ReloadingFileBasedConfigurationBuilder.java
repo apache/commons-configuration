@@ -60,7 +60,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     /**
      * Returns a {@code ReloadingDetectorFactory} either from the passed in parameters or a default factory.
      *
-     * @param params the current parameters object
+     * @param params The current parameters object
      * @return The {@code ReloadingDetectorFactory} to be used
      */
     private static ReloadingDetectorFactory fetchDetectorFactory(final FileBasedBuilderParametersImpl params) {
@@ -82,7 +82,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
+     * @param resCls The result class (must not be <strong>null</strong>
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls) {
@@ -94,8 +94,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
@@ -107,9 +107,9 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit The <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
@@ -149,8 +149,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Otherwise, a default factory is used to create a {@code FileHandlerReloadingDetector} object. Note: This method is
      * called from a synchronized block.
      *
-     * @param handler the current {@code FileHandler}
-     * @param fbparams the object with parameters related to file-based builders
+     * @param handler The current {@code FileHandler}
+     * @param fbparams The object with parameters related to file-based builders
      * @return A {@code ReloadingDetector} for this {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */

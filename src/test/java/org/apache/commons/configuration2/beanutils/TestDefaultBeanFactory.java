@@ -53,8 +53,8 @@ public class TestDefaultBeanFactory {
     /**
      * Creates a bean creation context for a create operation.
      *
-     * @param cls the bean class
-     * @param decl the bean declaration
+     * @param cls The bean class
+     * @param decl The bean declaration
      * @return The new creation context
      */
     private static BeanCreationContext createBcc(final Class<?> cls, final BeanDeclaration decl) {

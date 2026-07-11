@@ -97,10 +97,10 @@ public class TestDatabaseConfiguration {
      * Checks the error listener for an expected error. The properties of the error event will be compared with the expected
      * values.
      *
-     * @param type the expected type of the error event
-     * @param opType the expected operation type
-     * @param key the expected property key
-     * @param value the expected property value
+     * @param type The expected type of the error event
+     * @param opType The expected operation type
+     * @param key The expected property key
+     * @param value The expected property value
      */
     private void checkErrorListener(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opType, final String key, final Object value) {
         final Throwable exception = listener.checkEvent(type, opType, key, value);
@@ -155,7 +155,7 @@ public class TestDatabaseConfiguration {
     /**
      * Creates an error listener and adds it to the specified configuration.
      *
-     * @param config the configuration
+     * @param config The configuration
      */
     private void setUpErrorListener(final PotentialErrorDatabaseConfiguration config) {
         // remove log listener to avoid exception longs

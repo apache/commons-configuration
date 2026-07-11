@@ -53,7 +53,7 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for creating a field node with its children for the test node hierarchy.
      *
-     * @param name the name of the field
+     * @param name The name of the field
      * @return The field node
      */
     private static ImmutableNode createFieldNode(final String name) {
@@ -65,8 +65,8 @@ public class TestDefaultExpressionEngine {
     /**
      * Convenience method for creating a simple node with a name and a value.
      *
-     * @param name the node name
-     * @param value the node value
+     * @param name The node name
+     * @param value The node value
      * @return The node instance
      */
     private static ImmutableNode createNode(final String name, final Object value) {
@@ -130,9 +130,9 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for checking whether an attribute key is correctly evaluated.
      *
-     * @param key the attribute key
-     * @param attr the attribute name
-     * @param expValue the expected attribute value
+     * @param key The attribute key
+     * @param attr The attribute name
+     * @param expValue The expected attribute value
      */
     private void checkAttributeValue(final String key, final String attr, final Object expValue) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, attr, 1);
@@ -145,9 +145,9 @@ public class TestDefaultExpressionEngine {
      * Helper method for checking the evaluation of a key. Queries the expression engine and tests if the expected results
      * are returned.
      *
-     * @param key the key
-     * @param name the name of the nodes to be returned
-     * @param count the number of expected result nodes
+     * @param key The key
+     * @param name The name of the nodes to be returned
+     * @param count The number of expected result nodes
      * @return The list with the results of the query
      */
     private List<QueryResult<ImmutableNode>> checkKey(final String key, final String name, final int count) {
@@ -166,9 +166,9 @@ public class TestDefaultExpressionEngine {
      * Helper method for checking the value of a node specified by the given key. This method evaluates the key and checks
      * whether the resulting node has the expected value.
      *
-     * @param key the key
-     * @param name the expected name of the result node
-     * @param value the expected value of the result node
+     * @param key The key
+     * @param name The expected name of the result node
+     * @param value The expected value of the result node
      */
     private void checkKeyValue(final String key, final String name, final String value) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, name, 1);
@@ -180,8 +180,8 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for checking the path of an add operation.
      *
-     * @param data the add data object
-     * @param expected the expected path nodes
+     * @param data The add data object
+     * @param expected The expected path nodes
      */
     private void checkNodePath(final NodeAddData<ImmutableNode> data, final String... expected) {
         assertEquals(Arrays.asList(expected), data.getPathNodes());
@@ -190,7 +190,7 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for testing a query for the root node.
      *
-     * @param key the key to be used
+     * @param key The key to be used
      */
     private void checkQueryRootNode(final String key) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, null, 1);
@@ -202,7 +202,7 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for fetching a specific node by its key.
      *
-     * @param key the key
+     * @param key The key
      * @return The node with this key
      */
     private ImmutableNode fetchNode(final String key) {
@@ -214,8 +214,8 @@ public class TestDefaultExpressionEngine {
     /**
      * Helper method for querying the test engine for a specific key.
      *
-     * @param key the key
-     * @param expCount the expected number of result nodes
+     * @param key The key
+     * @param expCount The expected number of result nodes
      * @return The collection of retrieved nodes
      */
     private List<QueryResult<ImmutableNode>> query(final String key, final int expCount) {

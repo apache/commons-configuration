@@ -48,8 +48,8 @@ public interface ExpressionEngine {
      * Returns the key of an attribute. The passed in {@code parentKey} must reference the parent node of the attribute. A
      * concrete implementation must concatenate this parent key with the attribute name to a valid key for this attribute.
      *
-     * @param parentKey the key to the node owning this attribute
-     * @param attributeName the name of the attribute in question
+     * @param parentKey The key to the node owning this attribute
+     * @param attributeName The name of the attribute in question
      * @return The resulting key referencing this attribute
      */
     String attributeKey(String parentKey, String attributeName);
@@ -61,9 +61,9 @@ public interface ExpressionEngine {
      * child nodes having the same names.
      *
      * @param <T> The type of the node to be processed
-     * @param node the node, for which the key must be constructed
-     * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
-     * @param handler the {@code NodeHandler} for accessing the node
+     * @param node The node, for which the key must be constructed
+     * @param parentKey The key of this node's parent (can be <strong>null</strong> for the root node)
+     * @param handler The {@code NodeHandler} for accessing the node
      * @return The canonical key of this node
      */
     <T> String canonicalKey(T node, String parentKey, NodeHandler<T> handler);
@@ -74,9 +74,9 @@ public interface ExpressionEngine {
      * {@link org.apache.commons.configuration2.Configuration#getKeys() getKeys()} method.
      *
      * @param <T> The type of the node to be processed
-     * @param node the node, for which the key must be constructed
-     * @param parentKey the key of this node's parent (can be <strong>null</strong> for the root node)
-     * @param handler the {@code NodeHandler} for accessing the node
+     * @param node The node, for which the key must be constructed
+     * @param parentKey The key of this node's parent (can be <strong>null</strong> for the root node)
+     * @param handler The {@code NodeHandler} for accessing the node
      * @return this node's key
      */
     <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler);
@@ -87,9 +87,9 @@ public interface ExpressionEngine {
      * provide all information about new nodes to be added.
      *
      * @param <T> The type of the node to be processed
-     * @param root the root node
-     * @param key the key for the new property
-     * @param handler the {@code NodeHandler} for accessing the node
+     * @param root The root node
+     * @param key The key for the new property
+     * @param handler The {@code NodeHandler} for accessing the node
      * @return An object with all information needed for the add operation
      */
     <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler);
@@ -102,9 +102,9 @@ public interface ExpressionEngine {
      * the required information from the node object.
      *
      * @param <T> The type of the node to be processed
-     * @param root the root node of a hierarchy of nodes
-     * @param key the key to be evaluated
-     * @param handler the {@code NodeHandler} for accessing the node
+     * @param root The root node of a hierarchy of nodes
+     * @param key The key to be evaluated
+     * @param handler The {@code NodeHandler} for accessing the node
      * @return A list with the results that are matched by the key (should never be <strong>null</strong>)
      */
     <T> List<QueryResult<T>> query(T root, String key, NodeHandler<T> handler);

@@ -53,7 +53,7 @@ public class TestImmutableConfiguration {
     /**
      * Obtains all keys from the given iteration.
      *
-     * @param it the iterator
+     * @param it The iterator
      * @return A set with all keys
      */
     private static Set<String> fetchKeys(final Iterator<String> it) {

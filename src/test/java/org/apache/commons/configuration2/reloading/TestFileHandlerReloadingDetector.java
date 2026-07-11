@@ -46,7 +46,7 @@ public class TestFileHandlerReloadingDetector {
         /**
          * Creates a new instance of {@code FileHandlerReloadingDetectorTestImpl} and initializes it with the mock file.
          *
-         * @param file the mock file
+         * @param file The mock file
          */
         public FileHandlerReloadingDetectorTestImpl(final File file) {
             this(file, 0);
@@ -56,8 +56,8 @@ public class TestFileHandlerReloadingDetector {
          * Creates a new instance of {@code FileHandlerReloadingDetectorTestImpl} and initializes it with the mock file and a
          * refresh delay.
          *
-         * @param file the mock file
-         * @param delay the delay
+         * @param file The mock file
+         * @param delay The delay
          */
         public FileHandlerReloadingDetectorTestImpl(final File file, final long delay) {
             super(null, delay);

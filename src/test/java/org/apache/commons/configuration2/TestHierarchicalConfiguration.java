@@ -58,8 +58,8 @@ public class TestHierarchicalConfiguration {
     /**
      * Tests access to sub configurations as children of a defined node.
      *
-     * @param withUpdates the updates flag
-     * @param expectedName the expected table name when reading a property
+     * @param withUpdates The updates flag
+     * @param expectedName The expected table name when reading a property
      */
     private void checkChildConfigurationsAtWithUpdates(final boolean withUpdates, final String expectedName) {
         final String key = "tables.table(0)";
@@ -74,7 +74,7 @@ public class TestHierarchicalConfiguration {
     /**
      * Checks configurationAt() if the passed in key selects an attribute.
      *
-     * @param withUpdates the updates flag
+     * @param withUpdates The updates flag
      */
     private void checkConfigurationAtAttributeNode(final boolean withUpdates) {
         final String key = "tables.table(0)[@type]";
@@ -86,8 +86,8 @@ public class TestHierarchicalConfiguration {
      * Helper method for checking a configurationsAt() method. It is also tested whether the configuration is connected to
      * its parent.
      *
-     * @param withUpdates the updates flag
-     * @param expName the expected name in the parent configuration
+     * @param withUpdates The updates flag
+     * @param expName The expected name in the parent configuration
      */
     private void checkConfigurationsAtWithUpdate(final boolean withUpdates, final String expName) {
         final String key = "tables.table(1).fields.field";
@@ -100,7 +100,7 @@ public class TestHierarchicalConfiguration {
     /**
      * Checks the content of the passed in configuration object. Used by some tests that copy a configuration.
      *
-     * @param c the configuration to check
+     * @param c The configuration to check
      */
     private void checkContent(final Configuration c) {
         for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
@@ -114,7 +114,7 @@ public class TestHierarchicalConfiguration {
     /**
      * Helper method for checking a list of sub configurations pointing to the single fields of the table configuration.
      *
-     * @param lstFlds the list with sub configurations
+     * @param lstFlds The list with sub configurations
      */
     private void checkSubConfigurations(final List<? extends ImmutableConfiguration> lstFlds) {
         assertEquals(NodeStructureHelper.fieldsLength(1), lstFlds.size());

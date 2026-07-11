@@ -112,7 +112,7 @@ public final class ConfigurationConverter {
     /**
      * Helper method for joining all elements of a list to a string using the default value separator.
      *
-     * @param list the list
+     * @param list The list
      * @return The resulting string
      */
     private static String listToString(final List<?> list) {

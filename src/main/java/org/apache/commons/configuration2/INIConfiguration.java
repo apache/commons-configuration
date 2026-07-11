@@ -254,8 +254,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Creates a new instance of {@code GlobalSectionNodeModel} and initializes it with the given underlying model.
          *
-         * @param modelSupport the underlying {@code InMemoryNodeModel}
-         * @param selector the {@code NodeSelector}
+         * @param modelSupport The underlying {@code InMemoryNodeModel}
+         * @param selector The {@code NodeSelector}
          */
         public GlobalSectionNodeModel(final InMemoryNodeModelSupport modelSupport, final NodeSelector selector) {
             super(modelSupport, selector, true);
@@ -269,8 +269,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                  * Filters the child nodes of the global section. This method checks whether the passed in node is the root node of the
                  * configuration. If so, from the list of children all nodes are filtered which are section nodes.
                  *
-                 * @param node the node in question
-                 * @param children the children of this node
+                 * @param node The node in question
+                 * @param children The children of this node
                  * @return A list with the filtered children
                  */
                 private List<ImmutableNode> filterChildrenOfGlobalSection(final ImmutableNode node, final List<ImmutableNode> children) {
@@ -365,8 +365,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Creates a new root node from the builders constructed while reading the configuration file.
      *
-     * @param rootBuilder the builder for the top-level section
-     * @param sectionBuilders a map storing the section builders
+     * @param rootBuilder The builder for the top-level section
+     * @param sectionBuilders A map storing the section builders
      * @return The root node of the newly created hierarchy
      */
     private static ImmutableNode createNewRootNode(final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders) {
@@ -378,8 +378,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Checks for the occurrence of the specified separators in the given line. The index of the first separator is
      * returned.
      *
-     * @param line the line to be investigated
-     * @param separators a string with the separator characters to look for
+     * @param line The line to be investigated
+     * @param separators A string with the separator characters to look for
      * @return The lowest index of a separator character or -1 if no separator is found
      */
     private static int findFirstOccurrence(final String line, final String separators) {
@@ -401,8 +401,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * a quote character is a separator, it is considered the "real" separator in this line - even if there are other
      * separators before.
      *
-     * @param line the line to be investigated
-     * @param quoteIndex the index of the quote character
+     * @param line The line to be investigated
+     * @param quoteIndex The index of the quote character
      * @return The index of the separator before the quote or &lt; 0 if there is none
      */
     private static int findSeparatorBeforeQuote(final String line, final int quoteIndex) {
@@ -431,7 +431,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Checks whether the specified configuration node represents a section.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return A flag whether this node represents a section
      */
     private static boolean isSectionNode(final ImmutableNode node) {
@@ -451,7 +451,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Tests whether the specified string contains a line continuation marker.
      *
-     * @param line the string to check
+     * @param line The string to check
      * @return A flag whether this line continues
      */
     private static boolean lineContinues(final String line) {
@@ -498,7 +498,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Creates a new instance of {@code INIConfiguration} with the content of the specified
      * {@code HierarchicalConfiguration}.
      *
-     * @param c the configuration to be copied
+     * @param c The configuration to be copied
      * @since 2.0
      */
     public INIConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
@@ -509,9 +509,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Reads the content of an INI file from the passed in reader and creates a structure of builders for constructing the
      * {@code ImmutableNode} objects representing the data.
      *
-     * @param in the reader
-     * @param rootBuilder the builder for the top-level section
-     * @param sectionBuilders a map storing the section builders
+     * @param in The reader
+     * @param rootBuilder The builder for the top-level section
+     * @param sectionBuilders A map storing the section builders
      * @throws IOException if an I/O error occurs.
      */
     private void createNodeBuilders(final BufferedReader in, final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders)
@@ -556,9 +556,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Creates the node(s) for the given key value-pair. If delimiter parsing is enabled, the value string is split if
      * possible, and for each single value a node is created. Otherwise only a single node is added to the section.
      *
-     * @param sectionBuilder the section builder for adding new nodes
-     * @param key the key
-     * @param value the value string
+     * @param sectionBuilder The section builder for adding new nodes
+     * @param key The key
+     * @param value The value string
      */
     private void createValueNodes(final ImmutableNode.Builder sectionBuilder, final String key, final String value) {
         getListDelimiterHandler().split(value, false).forEach(v -> sectionBuilder.addChild(new ImmutableNode.Builder().name(key).value(v).create()));
@@ -567,7 +567,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Escapes comment characters in the given value.
      *
-     * @param value the value to be escaped
+     * @param value The value to be escaped
      * @return The value with comment characters escaped
      */
     private String escapeComments(final String value) {
@@ -592,7 +592,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Escapes the given property value before it is written. This method add quotes around the specified value if it
      * contains a comment character and handles list delimiter characters.
      *
-     * @param value the string to be escaped
+     * @param value The string to be escaped
      */
     private String escapeValue(final String value) {
         return String.valueOf(getListDelimiterHandler().escape(escapeComments(value), ListDelimiterHandler.NOOP_TRANSFORMER));
@@ -603,7 +603,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * separator characters in the given string. If multiple characters are found, the first one is assumed to be the
      * correct separator. If there are quoting characters, they are taken into account, too.
      *
-     * @param line the line to be checked
+     * @param line The line to be checked
      * @return The index of the separator character or -1 if none is found
      */
     private int findSeparator(final String line) {
@@ -656,7 +656,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * with the content of the global section (which may also be empty).</li>
      * </ul>
      *
-     * @param name the name of the section in question; <strong>null</strong> represents the global section
+     * @param name The name of the section in question; <strong>null</strong> represents the global section
      * @return A configuration containing only the properties of the specified section
      */
     public SubnodeConfiguration getSection(final String name) {
@@ -721,7 +721,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Tests whether the specified character is a comment character.
      *
-     * @param c the character
+     * @param c The character
      * @return A flag whether this character starts a comment
      */
     private boolean isCommentChar(final char c) {
@@ -760,8 +760,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * parses the string to remove a comment that might be present. Then it checks whether a line continuation marker can be
      * found at the end.
      *
-     * @param line the line to check
-     * @param pos the start position
+     * @param line The line to check
+     * @param pos The start position
      * @return A flag whether this line continues
      */
     private boolean lineContinues(final String line, final int pos) {
@@ -798,8 +798,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * C:\\Windows;C:\\Windows\\system32
      * </pre>
      *
-     * @param val the value to be parsed
-     * @param reader the reader (needed if multiple lines have to be read)
+     * @param val The value to be parsed
+     * @param reader The reader (needed if multiple lines have to be read)
      * @throws IOException if an IO error occurs
      */
     private String parseValue(final String val, final BufferedReader reader) throws IOException {
@@ -871,7 +871,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Reads the configuration from the given reader. Note that the {@code clear()} method is not called so the configuration
      * read in will be merged with the current configuration.
      *
-     * @param in the reader to read the configuration from.
+     * @param in The reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the configuration
      * @throws IOException if an I/O error occurs.
      */
@@ -964,9 +964,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Writes data about a property into the given stream.
      *
-     * @param out the output stream
-     * @param key the key
-     * @param value the value
+     * @param out The output stream
+     * @param key The key
+     * @param value The value
      */
     private void writeProperty(final PrintWriter out, final String key, final Object value, final String separator) {
         out.print(key);

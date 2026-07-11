@@ -60,7 +60,7 @@ public class TestAbstractConfigurationSynchronization {
     /**
      * Verifies a mock configuration after a copy operation.
      *
-     * @param mock the mock configuration
+     * @param mock The mock configuration
      */
     private static void verifyConfigurationMockAfterCopy(final Configuration mock) {
         verify(mock).lock(LockMode.READ);

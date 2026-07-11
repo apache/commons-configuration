@@ -78,7 +78,7 @@ public class TestINIConfiguration {
         /**
          * Creates a new instance of {@code GlobalSectionTestThread} and initializes it.
          *
-         * @param conf the configuration object
+         * @param conf The configuration object
          */
         public GlobalSectionTestThread(final INIConfiguration conf) {
             config = conf;
@@ -147,8 +147,8 @@ public class TestINIConfiguration {
     /**
      * Loads the specified content into the given configuration instance.
      *
-     * @param instance the configuration
-     * @param data the data to be loaded
+     * @param instance The configuration
+     * @param data The data to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final INIConfiguration instance, final String data) throws ConfigurationException {
@@ -183,7 +183,7 @@ public class TestINIConfiguration {
      * Saves the specified configuration to a string. The string can be compared with an expected value or again loaded into
      * a configuration.
      *
-     * @param config the configuration to be saved
+     * @param config The configuration to be saved
      * @return The content of this configuration saved to a string
      * @throws ConfigurationException if an error occurs
      */
@@ -200,7 +200,7 @@ public class TestINIConfiguration {
     /**
      * Creates a INIConfiguration object that is initialized from the given data.
      *
-     * @param data the data of the configuration (an ini file as string)
+     * @param data The data of the configuration (an ini file as string)
      * @return The initialized configuration
      * @throws ConfigurationException if an error occurs
      */
@@ -211,7 +211,7 @@ public class TestINIConfiguration {
     /**
      * Creates a INIConfiguration object that is initialized from the given data.
      *
-     * @param data the data of the configuration (an ini file as string)
+     * @param data The data of the configuration (an ini file as string)
      * @param inLineCommentsAllowed when true, inline comments on section line are allowed
      * @return The initialized configuration
      * @throws ConfigurationException if an error occurs
@@ -234,7 +234,7 @@ public class TestINIConfiguration {
     /**
      * Tests the values of some properties to ensure that the configuration was correctly loaded.
      *
-     * @param instance the configuration to check
+     * @param instance The configuration to check
      */
     private void checkContent(final INIConfiguration instance) {
         assertEquals("foo", instance.getString("section1.var1"));
@@ -249,7 +249,7 @@ public class TestINIConfiguration {
      * Helper method for testing the load operation. Loads the specified content into a configuration and then checks some
      * properties.
      *
-     * @param data the data to load
+     * @param data The data to load
      */
     private void checkLoad(final String data) throws ConfigurationException {
         final INIConfiguration instance = setUpConfig(data);
@@ -260,7 +260,7 @@ public class TestINIConfiguration {
      * Helper method for testing a save operation. This method constructs a configuration from the specified content string.
      * Then it saves this configuration and checks whether the result matches the original content.
      *
-     * @param content the content of the configuration
+     * @param content The content of the configuration
      * @throws ConfigurationException if an error occurs
      */
     private void checkSave(final String content) throws ConfigurationException {
@@ -272,8 +272,8 @@ public class TestINIConfiguration {
     /**
      * Tests whether the specified configuration contains exactly the expected sections.
      *
-     * @param config the configuration to check
-     * @param expected an array with the expected sections
+     * @param config The configuration to check
+     * @param expected An array with the expected sections
      */
     private void checkSectionNames(final INIConfiguration config, final String[] expected) {
         final Set<String> sectionNames = config.getSections();
@@ -283,8 +283,8 @@ public class TestINIConfiguration {
     /**
      * Tests the names of the sections returned by the configuration.
      *
-     * @param data the data of the ini configuration
-     * @param expected the expected section names
+     * @param data The data of the ini configuration
+     * @param expected The expected section names
      * @return The configuration instance
      */
     private INIConfiguration checkSectionNames(final String data, final String[] expected) throws ConfigurationException {
@@ -1107,7 +1107,7 @@ public class TestINIConfiguration {
     /**
      * Writes a test ini file.
      *
-     * @param content the content of the file
+     * @param content The content of the file
      * @return The newly created file
      * @throws IOException if an error occurs
      */

@@ -84,9 +84,9 @@ public class TestXMLBeanDeclaration {
     /**
      * Checks the properties returned by a bean declaration.
      *
-     * @param beanDecl the bean declaration
-     * @param names an array with the expected property names
-     * @param values an array with the expected property values
+     * @param beanDecl The bean declaration
+     * @param names An array with the expected property names
+     * @param values An array with the expected property values
      */
     private static void checkProperties(final BeanDeclaration beanDecl, final String[] names, final String[] values) {
         final Map<String, Object> props = beanDecl.getBeanProperties();
@@ -122,10 +122,10 @@ public class TestXMLBeanDeclaration {
      * Initializes a configuration object with a bean declaration. Under the specified key the given properties will be
      * added.
      *
-     * @param config the configuration to initialize
-     * @param key the key of the bean declaration
-     * @param names an array with the names of the properties
-     * @param values an array with the corresponding values
+     * @param config The configuration to initialize
+     * @param key The key of the bean declaration
+     * @param names An array with the names of the properties
+     * @param values An array with the corresponding values
      */
     private static void setupBeanDeclaration(final HierarchicalConfiguration<?> config, final String key, final String[] names, final String[] values) {
         for (int i = 0; i < names.length; i++) {

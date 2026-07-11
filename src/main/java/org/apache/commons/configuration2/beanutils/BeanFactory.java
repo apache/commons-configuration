@@ -43,7 +43,7 @@ public interface BeanFactory {
      * the provided {@code BeanCreationContext} object. This includes a {@link BeanDeclaration} defining the properties of
      * the bean. It is up to a concrete implementation how the bean is created and initialized.
      *
-     * @param bcc the context object for the bean to be created
+     * @param bcc The context object for the bean to be created
      * @return The new bean instance (should not be <strong>null</strong>)
      * @throws Exception if an error occurs (the helper classes for creating beans will catch this generic exception and
      *         wrap it in a configuration exception)

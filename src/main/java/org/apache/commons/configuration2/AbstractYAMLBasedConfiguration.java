@@ -50,9 +50,9 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * Adds a key value pair to a map, taking list structures into account. If a key is added which is already present in
      * the map, this method ensures that a list is created.
      *
-     * @param map the map
-     * @param key the key
-     * @param value the value
+     * @param map The map
+     * @param key The key
+     * @param value The value
      */
     private static void addEntry(final Map<String, Object> map, final String key, final Object value) {
         final Object oldValue = map.get(key);
@@ -75,9 +75,9 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * Creates a part of the hierarchical nodes structure of the resulting configuration. The passed in element is converted into one or multiple configuration
      * nodes. (If list structures are involved, multiple nodes are returned.)
      *
-     * @param key     the key of the new node(s).
-     * @param elem    the element to be processed.
-     * @param visited the set of visited objects.
+     * @param key     The key of the new node(s).
+     * @param elem    The element to be processed.
+     * @param visited The set of visited objects.
      * @return A list with configuration nodes representing the element
      */
     private static List<ImmutableNode> constructHierarchy(final String key, final Object elem, final Set<Object> visited) {
@@ -97,9 +97,9 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     /**
      * Parses a collection structure. The elements of the collection are processed recursively.
      *
-     * @param col     the collection to be processed.
-     * @param key     the key under which this collection is to be stored.
-     * @param visited the set of visited objects.
+     * @param col     The collection to be processed.
+     * @param key     The key under which this collection is to be stored.
+     * @param visited The set of visited objects.
      * @return A node representing this collection.
      */
     private static List<ImmutableNode> parseCollection(final Collection<Object> col, final String key, final Set<Object> visited) {
@@ -109,9 +109,9 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     /**
      * Parses a map structure. The single keys of the map are processed recursively.
      *
-     * @param map     the map to be processed.
-     * @param key     the key under which this map is to be stored.
-     * @param visited the set of visited objects.
+     * @param map     The map to be processed.
+     * @param key     The key under which this map is to be stored.
+     * @param visited The set of visited objects.
      * @return A node representing this map
      */
     private static List<ImmutableNode> parseMap(final Map<String, Object> map, final String key, final Set<Object> visited) {
@@ -123,7 +123,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     /**
      * Internal helper method to wrap an exception in a {@code ConfigurationException}.
      *
-     * @param e the exception to be wrapped
+     * @param e The exception to be wrapped
      * @throws ConfigurationException the resulting exception
      */
     static void rethrowException(final Exception e) throws ConfigurationException {
@@ -143,7 +143,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     /**
      * Creates a new instance of {@code AbstractYAMLBasedConfiguration} as a copy of the specified configuration.
      *
-     * @param c the configuration to be copied
+     * @param c The configuration to be copied
      */
     protected AbstractYAMLBasedConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
@@ -166,7 +166,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * Loads this configuration from the content of the specified map. The data in the map is transformed into a hierarchy
      * of {@link ImmutableNode} objects.
      *
-     * @param map the map to be processed
+     * @param map The map to be processed
      */
     protected void load(final Map<String, Object> map) {
         final List<ImmutableNode> roots = constructHierarchy(StringUtils.EMPTY, map, new HashSet<>());

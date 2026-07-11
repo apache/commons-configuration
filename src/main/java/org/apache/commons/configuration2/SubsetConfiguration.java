@@ -47,7 +47,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
         /**
          * Creates a new instance of {@code SubsetIterator} and initializes it with the parent iterator.
          *
-         * @param it the iterator of the parent configuration
+         * @param it The iterator of the parent configuration
          */
         public SubsetIterator(final Iterator<String> it) {
             parentIterator = it;
@@ -263,7 +263,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Sets the prefix used to select the properties in the parent configuration.
      *
-     * @param prefix the prefix
+     * @param prefix The prefix
      */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;

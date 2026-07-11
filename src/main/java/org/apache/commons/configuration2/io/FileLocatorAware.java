@@ -44,7 +44,7 @@ public interface FileLocatorAware {
      * the {@code FileHandler}'s {@code load(InputStream)} method was called, no file information is available, and all
      * methods of the {@code FileLocator} will return <strong>null</strong>.
      *
-     * @param locator the current {@code FileLocator}
+     * @param locator The current {@code FileLocator}
      */
     void initFileLocator(FileLocator locator);
 }

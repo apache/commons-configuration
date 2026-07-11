@@ -44,9 +44,9 @@ final class XMLListReference {
      * Assigns an instance of this class as reference to the specified configuration node. This reference acts as a marker
      * indicating that this node is subject to extended list handling.
      *
-     * @param refs the mapping for node references
-     * @param node the affected configuration node
-     * @param elem the current XML element
+     * @param refs The mapping for node references
+     * @param node The affected configuration node
+     * @param elem The current XML element
      */
     public static void assignListReference(final Map<ImmutableNode, Object> refs, final ImmutableNode node, final Element elem) {
         if (refs != null) {
@@ -57,8 +57,8 @@ final class XMLListReference {
     /**
      * Checks whether the specified node has an associated list reference. This marks the node as part of a list.
      *
-     * @param node the node to be checked
-     * @param handler the reference handler
+     * @param node The node to be checked
+     * @param handler The reference handler
      * @return A flag whether this node has a list reference
      */
     private static boolean hasListReference(final ImmutableNode node, final ReferenceNodeHandler handler) {
@@ -70,8 +70,8 @@ final class XMLListReference {
      * collected and stored as value of the first list node. Note: This method requires that the passed in node is a list
      * node, so {@link #isListNode(ImmutableNode, ReferenceNodeHandler)} must have returned <strong>true</strong> for it.
      *
-     * @param node the configuration node
-     * @param handler the reference node handler
+     * @param node The configuration node
+     * @param handler The reference node handler
      * @return A flag whether this is the first node of a list
      */
     public static boolean isFirstListItem(final ImmutableNode node, final ReferenceNodeHandler handler) {
@@ -94,8 +94,8 @@ final class XMLListReference {
      * that the passed in node does not necessarily have such a reference; if it has been added at a later point in time, it
      * also has to become an item of the list.)
      *
-     * @param node the configuration node
-     * @param handler the reference node handler
+     * @param node The configuration node
+     * @param handler The reference node handler
      * @return A flag whether this node is relevant for list handling
      */
     public static boolean isListNode(final ImmutableNode node, final ReferenceNodeHandler handler) {
@@ -120,9 +120,9 @@ final class XMLListReference {
      * is called when saving an {@link XMLConfiguration}. Then configuration nodes created for list items have to be
      * collected again and transformed into a string defining all list elements.
      *
-     * @param node the configuration node
-     * @param nodeHandler the reference node handler
-     * @param delimiterHandler the list delimiter handler of the configuration
+     * @param node The configuration node
+     * @param nodeHandler The reference node handler
+     * @param delimiterHandler The list delimiter handler of the configuration
      * @return A string with all values of the current list
      * @throws ConfigurationRuntimeException if the list delimiter handler does not support the transformation of list items
      *         to a string
@@ -157,7 +157,7 @@ final class XMLListReference {
     /**
      * Private constructor. No instances can be created from other classes.
      *
-     * @param e the associated element
+     * @param e The associated element
      */
     private XMLListReference(final Element e) {
         element = e;

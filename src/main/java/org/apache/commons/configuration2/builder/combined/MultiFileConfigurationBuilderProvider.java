@@ -63,8 +63,8 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
         /**
          * Creates a new instance of {@code ReloadableWrapperBuilder}.
          *
-         * @param conf the managed configuration
-         * @param bldr the underlying builder (must implement {@code ReloadingControllerSupport})
+         * @param conf The managed configuration
+         * @param bldr The underlying builder (must implement {@code ReloadingControllerSupport})
          */
         public ReloadableWrapperBuilder(final Configuration conf, final ConfigurationBuilder<? extends Configuration> bldr) {
             super(conf, bldr);
@@ -92,8 +92,8 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
         /**
          * Creates a new instance of {@code WrapperBuilder}.
          *
-         * @param conf the managed configuration
-         * @param bldr the underlying builder
+         * @param conf The managed configuration
+         * @param bldr The underlying builder
          */
         public WrapperBuilder(final Configuration conf, final ConfigurationBuilder<? extends Configuration> bldr) {
             configuration = conf;
@@ -131,8 +131,8 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      * {@code MultiFileConfigurationBuilder}. If reloading is support, the builder returned by this method also implements
      * the {@link ReloadingControllerSupport} interface.
      *
-     * @param multiBuilder the {@code MultiFileConfigurationBuilder}
-     * @param wrapConfig the configuration to be returned
+     * @param multiBuilder The {@code MultiFileConfigurationBuilder}
+     * @param wrapConfig The configuration to be returned
      * @return The wrapper builder
      */
     private static ConfigurationBuilder<? extends Configuration> createWrapperBuilder(final ConfigurationBuilder<? extends Configuration> multiBuilder,
@@ -147,8 +147,8 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
      * Creates a new instance of {@code MultiFileConfigurationBuilderProvider} and sets the name of the configuration class
      * to be returned by {@code MultiFileConfigurationBuilder}.
      *
-     * @param configCls the name of the managed configuration class
-     * @param paramCls the name of the class of the parameters object to configure the managed configuration
+     * @param configCls The name of the managed configuration class
+     * @param paramCls The name of the class of the parameters object to configure the managed configuration
      */
     public MultiFileConfigurationBuilderProvider(final String configCls, final String paramCls) {
         super(BUILDER_CLASS, RELOADING_BUILDER_CLASS, configCls, Arrays.asList(paramCls, PARAM_CLASS));
@@ -157,7 +157,7 @@ public class MultiFileConfigurationBuilderProvider extends BaseConfigurationBuil
     /**
      * Creates a configuration which wraps the specified builder.
      *
-     * @param builder the builder
+     * @param builder The builder
      * @return The wrapping configuration
      */
     // It is safe to disable any type checks because we manually determine

@@ -71,10 +71,10 @@ public class TestBaseHierarchicalConfigurationSynchronization {
         /**
          * Creates a new instance of {@code SubNodeAccessThread}
          *
-         * @param c the test configuration
-         * @param startLatch the start latch
-         * @param keySubConfig the key for the sub configuration
-         * @param keyProperty the key for the property
+         * @param c The test configuration
+         * @param startLatch The start latch
+         * @param keySubConfig The key for the sub configuration
+         * @param keyProperty The key for the property
          */
         public SubNodeAccessThread(final HierarchicalConfiguration<ImmutableNode> c, final CountDownLatch startLatch, final String keySubConfig,
             final String keyProperty) {
@@ -111,7 +111,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     /**
      * Tests whether the specified configuration is detached.
      *
-     * @param c the configuration to test
+     * @param c The configuration to test
      * @return A flag whether the root node of this configuration is detached
      */
     private static boolean isDetached(final HierarchicalConfiguration<ImmutableNode> c) {

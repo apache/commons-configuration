@@ -63,7 +63,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Filters null entries from the passed in collection with child nodes.
          *
          *
-         * @param children the collection to be filtered
+         * @param children The collection to be filtered
          * @return The collection with null entries removed
          */
         private static Collection<? extends ImmutableNode> filterNull(final Collection<? extends ImmutableNode> children) {
@@ -109,7 +109,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Creates a new instance of {@code Builder} and sets the number of expected child nodes. Using this constructor helps
          * the class to create a properly sized list for the child nodes to be added.
          *
-         * @param childCount the number of child nodes
+         * @param childCount The number of child nodes
          */
         public Builder(final int childCount) {
             this();
@@ -122,8 +122,8 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * change the children. The new number of child nodes can be passed so that the collection for the new children can be
          * created with an appropriate size.
          *
-         * @param childCount the expected number of new children
-         * @param dirAttrs the attributes of the new node
+         * @param childCount The expected number of new children
+         * @param dirAttrs The attributes of the new node
          */
         private Builder(final int childCount, final Map<String, Object> dirAttrs) {
             this(null, dirAttrs);
@@ -136,8 +136,8 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * The passed in collections are passed directly to the newly created instance; thus they already need to be immutable.
          * (Background is that the creation of intermediate objects is to be avoided.)
          *
-         * @param dirChildren the children of the new node
-         * @param dirAttrs the attributes of the new node
+         * @param dirChildren The children of the new node
+         * @param dirAttrs The attributes of the new node
          */
         private Builder(final List<ImmutableNode> dirChildren, final Map<String, Object> dirAttrs) {
             directChildren = dirChildren;
@@ -148,8 +148,8 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Adds an attribute to this builder. The passed in attribute key and value are stored in an internal map. If there is
          * already an attribute with this name, it is overridden.
          *
-         * @param name the attribute name
-         * @param value the attribute value
+         * @param name The attribute name
+         * @param value The attribute value
          * @return A reference to this object for method chaining
          */
         public Builder addAttribute(final String name, final Object value) {
@@ -162,7 +162,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Adds all attributes of the given map to this builder. This method works like {@link #addAttribute(String, Object)},
          * but it allows setting multiple attributes at once.
          *
-         * @param attrs the map with attributes to be added (may be <strong>null</strong>
+         * @param attrs The map with attributes to be added (may be <strong>null</strong>
          * @return A reference to this object for method chaining
          */
         public Builder addAttributes(final Map<String, ?> attrs) {
@@ -177,7 +177,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Adds a child node to this builder. The passed in node becomes a child of the newly created node. If it is
          * <strong>null</strong>, it is ignored.
          *
-         * @param c the child node (must not be <strong>null</strong>)
+         * @param c The child node (must not be <strong>null</strong>)
          * @return A reference to this object for method chaining
          */
         public Builder addChild(final ImmutableNode c) {
@@ -193,7 +193,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * setting a number of child nodes at once.
          *
          *
-         * @param children a collection with the child nodes to be added
+         * @param children A collection with the child nodes to be added
          * @return A reference to this object for method chaining
          */
         public Builder addChildren(final Collection<? extends ImmutableNode> children) {
@@ -269,7 +269,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
         /**
          * Creates the collection for child nodes based on the expected number of children.
          *
-         * @param childCount the expected number of new children
+         * @param childCount The expected number of new children
          */
         private void initChildrenCollection(final int childCount) {
             if (childCount > 0) {
@@ -280,7 +280,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
         /**
          * Sets the name of the node to be created.
          *
-         * @param n the node name
+         * @param n The node name
          * @return A reference to this object for method chaining
          */
         public Builder name(final String n) {
@@ -291,7 +291,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
         /**
          * Sets the value of the node to be created.
          *
-         * @param v the value
+         * @param v The value
          * @return A reference to this object for method chaining
          */
         public Builder value(final Object v) {
@@ -304,7 +304,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Checks whether the given child node is not null. This check is done at multiple places to ensure that newly added
      * child nodes are always defined.
      *
-     * @param child the child node to be checked
+     * @param child The child node to be checked
      * @throws IllegalArgumentException if the child node is <strong>null</strong>
      */
     private static void checkChildNode(final ImmutableNode child) {
@@ -328,7 +328,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Creates a new instance of {@code ImmutableNode} from the given {@code Builder} object.
      *
-     * @param b the {@code Builder}
+     * @param b The {@code Builder}
      */
     private ImmutableNode(final Builder b) {
         children = b.createChildren();
@@ -340,7 +340,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Creates a new {@code ImmutableNode} instance which is a copy of this object, but has the given child node added.
      *
-     * @param child the child node to be added (must not be <strong>null</strong>)
+     * @param child The child node to be added (must not be <strong>null</strong>)
      * @return The new node with the child node added
      * @throws IllegalArgumentException if the child node is <strong>null</strong>
      */
@@ -355,7 +355,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Initializes the given builder with basic properties (node name and value) and returns the newly created node. This is
      * a helper method for updating a node when only children or attributes are affected.
      *
-     * @param builder the already prepared builder
+     * @param builder The already prepared builder
      * @return The newly created node
      */
     private ImmutableNode createWithBasicProperties(final Builder builder) {
@@ -366,7 +366,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Creates a new {@code ImmutableNode} instance with the same properties as this object, but with the given new
      * attributes.
      *
-     * @param newAttrs the new attributes
+     * @param newAttrs The new attributes
      * @return The new node instance
      */
     private ImmutableNode createWithNewAttributes(final Map<String, Object> newAttrs) {
@@ -394,7 +394,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Returns a list with the children of this node.
      *
-     * @param name the node name to find
+     * @param name The node name to find
      * @return A list with the child nodes
      */
     public List<ImmutableNode> getChildren(final String name) {
@@ -435,7 +435,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Returns a new {@code ImmutableNode} instance which is a copy of this object, but with the specified attribute
      * removed. If there is no attribute with the given name, the same node instance is returned.
      *
-     * @param name the name of the attribute
+     * @param name The name of the attribute
      * @return The new node without this attribute
      */
     public ImmutableNode removeAttribute(final String name) {
@@ -450,7 +450,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Returns a new {@code ImmutableNode} instance which is a copy of this object, but with the given child node removed.
      * If the child node does not belong to this node, the same node instance is returned.
      *
-     * @param child the child node to be removed
+     * @param child The child node to be removed
      * @return The new node with the child node removed
      */
     public ImmutableNode removeChild(final ImmutableNode child) {
@@ -472,8 +472,8 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Returns a new {@code ImmutableNode} instance which is a copy of this object, but with the given child replaced by the
      * new one. If the child to be replaced cannot be found, the same node instance is returned.
      *
-     * @param oldChild the child node to be replaced
-     * @param newChild the replacing child node (must not be <strong>null</strong>)
+     * @param oldChild The child node to be replaced
+     * @param newChild The replacing child node (must not be <strong>null</strong>)
      * @return The new node with the child replaced
      * @throws IllegalArgumentException if the new child node is <strong>null</strong>
      */
@@ -498,7 +498,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * ones in the passed in collection. With this method all children can be replaced in a single step. For the collection
      * the same rules apply as for {@link Builder#addChildren(Collection)}.
      *
-     * @param newChildren the collection with the new children (may be <strong>null</strong>)
+     * @param newChildren The collection with the new children (may be <strong>null</strong>)
      * @return The new node with replaced children
      */
     public ImmutableNode replaceChildren(final Collection<ImmutableNode> newChildren) {
@@ -512,8 +512,8 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * the given value. If an attribute with this name does not exist, it is created now. Otherwise, the new value overrides
      * the old one.
      *
-     * @param name the name of the attribute
-     * @param value the attribute value
+     * @param name The name of the attribute
+     * @param value The attribute value
      * @return The new node with this attribute
      */
     public ImmutableNode setAttribute(final String name, final Object value) {
@@ -527,7 +527,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * the given map. This method is analogous to {@link #setAttribute(String, Object)}, but all attributes in the given map
      * are added. If the map is <strong>null</strong> or empty, this method has no effect.
      *
-     * @param newAttributes the map with attributes to be added
+     * @param newAttributes The map with attributes to be added
      * @return The new node with these attributes
      */
     public ImmutableNode setAttributes(final Map<String, ?> newAttributes) {
@@ -544,7 +544,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Creates a new {@code ImmutableNode} instance which is a copy of this object with the name changed to the passed in
      * value.
      *
-     * @param name the name of the newly created node
+     * @param name The name of the newly created node
      * @return The new node with the changed name
      */
     public ImmutableNode setName(final String name) {
@@ -555,7 +555,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Creates a new {@code ImmutableNode} instance which is a copy of this object with the value changed to the passed in
      * value.
      *
-     * @param newValue the value of the newly created node
+     * @param newValue The value of the newly created node
      * @return The new node with the changed value
      */
     public ImmutableNode setValue(final Object newValue) {

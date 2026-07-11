@@ -38,7 +38,7 @@ public class ServletFilterConfiguration extends BaseWebConfiguration {
     /**
      * Create a ServletFilterConfiguration using the filter initialization parameters.
      *
-     * @param config the filter configuration
+     * @param config The filter configuration
      */
     public ServletFilterConfiguration(final FilterConfig config) {
         this.config = Objects.requireNonNull(config, "config");

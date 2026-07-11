@@ -42,8 +42,8 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Creates a new instance of {@code ConfigurationDeclaration} and initializes it.
      *
-     * @param builder the associated configuration builder
-     * @param config the configuration this declaration is based onto
+     * @param builder The associated configuration builder
+     * @param config The configuration this declaration is based onto
      */
     public ConfigurationDeclaration(final CombinedConfigurationBuilder builder, final HierarchicalConfiguration<?> config) {
         super(config);

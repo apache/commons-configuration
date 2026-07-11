@@ -275,8 +275,8 @@ public class TestPropertiesConfiguration {
     /**
      * Helper method for loading a configuration from a given file.
      *
-     * @param pc the configuration to be loaded
-     * @param fileName the file name
+     * @param pc The configuration to be loaded
+     * @param fileName The file name
      * @return The file handler associated with the configuration
      * @throws ConfigurationException if an error occurs
      */
@@ -297,7 +297,7 @@ public class TestPropertiesConfiguration {
     /**
      * Helper method for testing the content of a list with elements that contain backslashes.
      *
-     * @param key the key
+     * @param key The key
      */
     private void checkBackslashList(final String key) {
         final Object prop = conf.getProperty("test." + key);
@@ -309,7 +309,7 @@ public class TestPropertiesConfiguration {
     /**
      * Tests whether the data of a configuration that was copied into the test configuration is correctly saved.
      *
-     * @param copyConf the copied configuration
+     * @param copyConf The copied configuration
      * @throws ConfigurationException if an error occurs
      */
     private void checkCopiedConfig(final Configuration copyConf) throws ConfigurationException {
@@ -325,7 +325,7 @@ public class TestPropertiesConfiguration {
     /**
      * Checks for a property without a value.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      */
     private void checkEmpty(final String key) {
         final String empty = conf.getString(key);

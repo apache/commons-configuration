@@ -72,7 +72,7 @@ final class NodeTracker {
         /**
          * Creates a new instance of {@code TrackedNodeData} and initializes it with the current reference to the tracked node.
          *
-         * @param nd the tracked node
+         * @param nd The tracked node
          */
         public TrackedNodeData(final ImmutableNode nd) {
             this(nd, 1, null);
@@ -81,9 +81,9 @@ final class NodeTracker {
         /**
          * Creates a new instance of {@code TrackedNodeData} and initializes its properties.
          *
-         * @param nd the tracked node
-         * @param obsCount the observer count
-         * @param detachedNodeModel a model to be used in detached mode
+         * @param nd The tracked node
+         * @param obsCount The observer count
+         * @param detachedNodeModel A model to be used in detached mode
          */
         private TrackedNodeData(final ImmutableNode nd, final int obsCount, final InMemoryNodeModel detachedNodeModel) {
             node = nd;
@@ -96,7 +96,7 @@ final class NodeTracker {
          * not match a single node any more. It is possible to pass in a new node instance which becomes the current tracked
          * node. If this is <strong>null</strong>, the previous node instance is used.
          *
-         * @param newNode the new tracked node instance (may be <strong>null</strong>)
+         * @param newNode The new tracked node instance (may be <strong>null</strong>)
          * @return The updated instance
          */
         public TrackedNodeData detach(final ImmutableNode newNode) {
@@ -156,7 +156,7 @@ final class NodeTracker {
          * Updates the node reference. This method is called after an update of the underlying node structure if the tracked
          * node was replaced by another instance.
          *
-         * @param newNode the new tracked node instance
+         * @param newNode The new tracked node instance
          * @return The updated instance
          */
         public TrackedNodeData updateNode(final ImmutableNode newNode) {
@@ -168,7 +168,7 @@ final class NodeTracker {
      * Creates an empty node derived from the passed in {@code TrackedNodeData} object. This method is called if a tracked
      * node got cleared by a transaction.
      *
-     * @param data the {@code TrackedNodeData}
+     * @param data The {@code TrackedNodeData}
      * @return The new node instance for this tracked node
      */
     private static ImmutableNode createEmptyTrackedNode(final TrackedNodeData data) {
@@ -180,8 +180,8 @@ final class NodeTracker {
      * transaction. This method checks whether the affected node is the root node of the current transaction. If so, it is
      * cleared.
      *
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
-     * @param e the current selector and {@code TrackedNodeData}
+     * @param txTarget The {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
+     * @param e The current selector and {@code TrackedNodeData}
      * @return The new {@code TrackedNodeData} object to be used for this tracked node
      */
     private static TrackedNodeData detachedTrackedNodeData(final NodeSelector txTarget, final Map.Entry<NodeSelector, TrackedNodeData> e) {
@@ -193,11 +193,11 @@ final class NodeTracker {
      * Returns a {@code TrackedNodeData} object for an update operation. If the tracked node is still life, its selector is
      * applied to the current root node. It may become detached if there is no match.
      *
-     * @param root the root node
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
-     * @param e the current selector and {@code TrackedNodeData}
+     * @param root The root node
+     * @param txTarget The {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
+     * @param e The current selector and {@code TrackedNodeData}
      * @return The updated {@code TrackedNodeData}
      */
     private static TrackedNodeData determineUpdatedTrackedNodeData(final ImmutableNode root, final NodeSelector txTarget,
@@ -225,11 +225,11 @@ final class NodeTracker {
     /**
      * Creates a {@code TrackedNodeData} object for a newly added observer for the specified node selector.
      *
-     * @param root the root node
-     * @param selector the {@code NodeSelector}
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
-     * @param trackData the current data for this selector
+     * @param root The root node
+     * @param selector The {@code NodeSelector}
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
+     * @param trackData The current data for this selector
      * @return The updated {@code TrackedNodeData}
      * @throws ConfigurationRuntimeException if the selector does not select a single node
      */
@@ -259,7 +259,7 @@ final class NodeTracker {
      * Creates a new instance of {@code NodeTracker} and initializes it with the given map of tracked nodes. This
      * constructor is used internally when the state of tracked nodes has changed.
      *
-     * @param map the map with tracked nodes
+     * @param map The map with tracked nodes
      */
     private NodeTracker(final Map<NodeSelector, TrackedNodeData> map) {
         trackedNodes = map;
@@ -285,7 +285,7 @@ final class NodeTracker {
      * independent from the original model. To implement this, a separate node model is created wrapping this tracked node.
      * This model can be queried by this method. If the node affected is not detached, result is <strong>null</strong>.
      *
-     * @param selector the {@code NodeSelector}
+     * @param selector The {@code NodeSelector}
      * @return The detached node model for this node or <strong>null</strong>
      * @throws ConfigurationRuntimeException if no data for this selector is available
      */
@@ -296,7 +296,7 @@ final class NodeTracker {
     /**
      * Gets the current {@code ImmutableNode} instance associated with the given selector.
      *
-     * @param selector the {@code NodeSelector}
+     * @param selector The {@code NodeSelector}
      * @return The {@code ImmutableNode} selected by this selector
      * @throws ConfigurationRuntimeException if no data for this selector is available
      */
@@ -308,7 +308,7 @@ final class NodeTracker {
      * Obtains the {@code TrackedNodeData} object for the specified selector. If the selector cannot be resolved, an
      * exception is thrown.
      *
-     * @param selector the {@code NodeSelector}
+     * @param selector The {@code NodeSelector}
      * @return The {@code TrackedNodeData} object for this selector
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
@@ -323,7 +323,7 @@ final class NodeTracker {
     /**
      * Returns a flag whether the specified tracked node is detached.
      *
-     * @param selector the {@code NodeSelector}
+     * @param selector The {@code NodeSelector}
      * @return A flag whether this node is detached
      * @throws ConfigurationRuntimeException if no data for this selector is available
      */
@@ -334,8 +334,8 @@ final class NodeTracker {
     /**
      * Replaces a tracked node by another one. This operation causes the tracked node to become detached.
      *
-     * @param selector the {@code NodeSelector}
-     * @param newNode the replacement node
+     * @param selector The {@code NodeSelector}
+     * @param newNode The replacement node
      * @return The updated instance
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
@@ -349,10 +349,10 @@ final class NodeTracker {
      * Adds a node to be tracked. The passed in selector must select exactly one target node, otherwise an exception is
      * thrown. A new instance is created with the updated tracking state.
      *
-     * @param root the root node
-     * @param selector the {@code NodeSelector}
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
+     * @param root The root node
+     * @param selector The {@code NodeSelector}
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
      * @return The updated instance
      * @throws ConfigurationRuntimeException if the selector does not select a single node
      */
@@ -368,8 +368,8 @@ final class NodeTracker {
      * Adds a number of nodes to be tracked. For each node in the passed in collection, a tracked node entry is created
      * unless already one exists.
      *
-     * @param selectors a collection with the {@code NodeSelector} objects
-     * @param nodes a collection with the nodes to be tracked
+     * @param selectors A collection with the {@code NodeSelector} objects
+     * @param nodes A collection with the nodes to be tracked
      * @return The updated instance
      */
     public NodeTracker trackNodes(final Collection<NodeSelector> selectors, final Collection<ImmutableNode> nodes) {
@@ -393,7 +393,7 @@ final class NodeTracker {
      * Notifies this object that an observer was removed for the specified tracked node. If this was the last observer, the
      * track data for this selector can be removed.
      *
-     * @param selector the {@code NodeSelector}
+     * @param selector The {@code NodeSelector}
      * @return The updated instance
      * @throws ConfigurationRuntimeException if no information about this node is available
      */
@@ -419,10 +419,10 @@ final class NodeTracker {
      * this means that the node has been cleared by this operation. In this case, the previous node instance is not used,
      * but an empty node is created.
      *
-     * @param root the root node
-     * @param txTarget the {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
+     * @param root The root node
+     * @param txTarget The {@code NodeSelector} referencing the target node of the current transaction (may be <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
+     * @param handler The {@code NodeHandler}
      * @return The updated instance
      */
     public NodeTracker update(final ImmutableNode root, final NodeSelector txTarget, final NodeKeyResolver<ImmutableNode> resolver,

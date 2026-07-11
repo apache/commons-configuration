@@ -45,8 +45,8 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Creates a new instance of {@code ConfigurationAttributePointer}.
      *
-     * @param parent the parent node pointer
-     * @param attrName the name of the managed attribute
+     * @param parent The parent node pointer
+     * @param attrName The name of the managed attribute
      */
     public ConfigurationAttributePointer(final ConfigurationNodePointer<T> parent, final String attrName) {
         super(parent);
@@ -56,8 +56,8 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Compares two child node pointers. Attributes do not have any children, so this is just a dummy implementation.
      *
-     * @param p1 the first pointer
-     * @param p2 the second pointer
+     * @param p1 The first pointer
+     * @param p2 The second pointer
      * @return The order of these pointers
      */
     @Override
@@ -171,7 +171,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
      * Sets the value of this node. This is not supported because the classes of the {@code XPathExpressionEngine} are only
      * used for queries. This implementation always throws an exception.
      *
-     * @param value the new value
+     * @param value The new value
      */
     @Override
     public void setValue(final Object value) {
@@ -181,7 +181,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * Tests if this node matches the given test. Attribute nodes are text nodes, too, because they can contain a value.
      *
-     * @param test the test object
+     * @param test The test object
      * @return A flag if this node corresponds to the test
      */
     @Override

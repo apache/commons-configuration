@@ -130,7 +130,7 @@ public class FileHandler {
          * Updates the passed in builder object to apply the manipulation to be performed by this {@code Updater}. The builder
          * has been setup with the former content of the {@code FileLocator} to be manipulated.
          *
-         * @param builder the builder for creating an updated {@code FileLocator}
+         * @param builder The builder for creating an updated {@code FileLocator}
          */
         protected abstract void updateBuilder(FileLocatorBuilder builder);
     }
@@ -170,7 +170,7 @@ public class FileHandler {
     /**
      * Helper method for checking a file handler which is to be copied. Throws an exception if the handler is <strong>null</strong>.
      *
-     * @param c the {@code FileHandler} from which to copy the location
+     * @param c The {@code FileHandler} from which to copy the location
      * @return The same {@code FileHandler}
      */
     private static FileHandler checkSourceHandler(final FileHandler c) {
@@ -183,7 +183,7 @@ public class FileHandler {
     /**
      * A helper method for closing a stream. Occurring exceptions will be ignored.
      *
-     * @param closeable the stream to be closed, may be {@code null}.
+     * @param closeable The stream to be closed, may be {@code null}.
      */
     private static void closeSilent(final Closeable closeable) {
         IOUtils.closeQuietly(closeable, e -> LogFactory.getLog(FileHandler.class).warn("Exception when closing " + closeable, e));
@@ -193,7 +193,7 @@ public class FileHandler {
      * Creates a {@code File} object from the content of the given {@code FileLocator} object. If the locator is not
      * defined, result is <strong>null</strong>.
      *
-     * @param loc the {@code FileLocator}
+     * @param loc The {@code FileLocator}
      * @return A {@code File} object pointing to the associated file
      */
     private static File createFile(final FileLocator loc) {
@@ -219,7 +219,7 @@ public class FileHandler {
      * Creates a new {@code FileHandler} instance from properties stored in a map. This method tries to extract a
      * {@link FileLocator} from the map. A new {@code FileHandler} is created based on this {@code FileLocator}.
      *
-     * @param map the map (may be <strong>null</strong>)
+     * @param map The map (may be <strong>null</strong>)
      * @return The newly created {@code FileHandler}
      * @see FileLocatorUtils#fromMap(Map)
      */
@@ -230,7 +230,7 @@ public class FileHandler {
     /**
      * Normalizes URLs to files. Ensures that file URLs start with the correct protocol.
      *
-     * @param fileName the string to be normalized
+     * @param fileName The string to be normalized
      * @return The normalized file URL
      */
     private static String normalizeFileURL(String fileName) {
@@ -261,7 +261,7 @@ public class FileHandler {
     /**
      * Creates a new instance of {@code FileHandler} and sets the managed {@code FileBased} object.
      *
-     * @param obj the file-based object to manage
+     * @param obj The file-based object to manage
      */
     public FileHandler(final FileBased obj) {
         this(obj, emptyFileLocator());
@@ -272,8 +272,8 @@ public class FileHandler {
      * location defined for the given {@code FileHandler} object. A copy of the location of the given {@code FileHandler} is
      * created. This constructor is a possibility to associate a file location with a {@code FileBased} object.
      *
-     * @param obj the {@code FileBased} object to manage
-     * @param c the {@code FileHandler} from which to copy the location (must not be <strong>null</strong>)
+     * @param obj The {@code FileBased} object to manage
+     * @param c The {@code FileHandler} from which to copy the location (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the {@code FileHandler} is <strong>null</strong>
      */
     public FileHandler(final FileBased obj, final FileHandler c) {
@@ -283,8 +283,8 @@ public class FileHandler {
     /**
      * Creates a new instance of {@code FileHandler} based on the given {@code FileBased} and {@code FileLocator} objects.
      *
-     * @param obj the {@code FileBased} object to manage
-     * @param locator the {@code FileLocator}
+     * @param obj The {@code FileBased} object to manage
+     * @param locator The {@code FileLocator}
      */
     private FileHandler(final FileBased obj, final FileLocator locator) {
         content = obj;
@@ -294,7 +294,7 @@ public class FileHandler {
     /**
      * Adds a listener to this {@code FileHandler}. It is notified about property changes and IO operations.
      *
-     * @param l the listener to be added (must not be <strong>null</strong>)
+     * @param l The listener to be added (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the listener is <strong>null</strong>
      */
     public void addFileHandlerListener(final FileHandlerListener l) {
@@ -345,8 +345,8 @@ public class FileHandler {
      * Creates a {@code FileLocator} which is a copy of the passed in one, but has the given file name set to reference the
      * target file.
      *
-     * @param fileName the file name
-     * @param locator the {@code FileLocator} to copy
+     * @param fileName The file name
+     * @param locator The {@code FileLocator} to copy
      * @return The manipulated {@code FileLocator} with the file name
      */
     private FileLocator createLocatorWithFileName(final String fileName, final FileLocator locator) {
@@ -528,7 +528,7 @@ public class FileHandler {
      * Injects a {@code FileLocator} pointing to the specified URL if the current {@code FileBased} object implements the
      * {@code FileLocatorAware} interface.
      *
-     * @param url the URL for the locator
+     * @param url The URL for the locator
      */
     private void injectFileLocator(final URL url) {
         if (url == null) {
@@ -576,7 +576,7 @@ public class FileHandler {
     /**
      * Loads the associated file from the specified {@code File}.
      *
-     * @param file the file to load
+     * @param file The file to load
      * @throws ConfigurationException if an error occurs
      */
     public void load(final File file) throws ConfigurationException {
@@ -592,7 +592,7 @@ public class FileHandler {
     /**
      * Internal helper method for loading the associated file from the location specified in the given {@code FileLocator}.
      *
-     * @param locator the current {@code FileLocator}
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
     private void load(final FileLocator locator) throws ConfigurationException {
@@ -602,7 +602,7 @@ public class FileHandler {
     /**
      * Loads the associated file from the specified stream, using the encoding returned by {@link #getEncoding()}.
      *
-     * @param in the input stream
+     * @param in The input stream
      * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(final InputStream in) throws ConfigurationException {
@@ -612,8 +612,8 @@ public class FileHandler {
     /**
      * Internal helper method for loading a file from the given input stream.
      *
-     * @param in the input stream
-     * @param locator the current {@code FileLocator}
+     * @param in The input stream
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
     private void load(final InputStream in, final FileLocator locator) throws ConfigurationException {
@@ -624,8 +624,8 @@ public class FileHandler {
      * Loads the associated file from the specified stream, using the specified encoding. If the encoding is <strong>null</strong>,
      * the default encoding is used.
      *
-     * @param in the input stream
-     * @param encoding the encoding used, {@code null} to use the default encoding
+     * @param in The input stream
+     * @param encoding The encoding used, {@code null} to use the default encoding
      * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(final InputStream in, final String encoding) throws ConfigurationException {
@@ -635,7 +635,7 @@ public class FileHandler {
     /**
      * Loads the associated file from the specified reader.
      *
-     * @param in the reader
+     * @param in The reader
      * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(final Reader in) throws ConfigurationException {
@@ -647,7 +647,7 @@ public class FileHandler {
      * location (for example if it is a relative file name, a base path is applied if available). The underlying location is not
      * changed.
      *
-     * @param fileName the name of the file to be loaded
+     * @param fileName The name of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     public void load(final String fileName) throws ConfigurationException {
@@ -657,8 +657,8 @@ public class FileHandler {
     /**
      * Internal helper method for loading a file from a file name.
      *
-     * @param fileName the file name
-     * @param locator the current {@code FileLocator}
+     * @param fileName The file name
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
     private void load(final String fileName, final FileLocator locator) throws ConfigurationException {
@@ -670,7 +670,7 @@ public class FileHandler {
     /**
      * Loads the associated file from the specified URL. The location stored in this object is not changed.
      *
-     * @param url the URL of the file to be loaded
+     * @param url The URL of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     public void load(final URL url) throws ConfigurationException {
@@ -680,8 +680,8 @@ public class FileHandler {
     /**
      * Internal helper method for loading a file from the given URL.
      *
-     * @param url the URL
-     * @param locator the current {@code FileLocator}
+     * @param url The URL
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
     private void load(final URL url, final FileLocator locator) throws ConfigurationException {
@@ -703,7 +703,7 @@ public class FileHandler {
     /**
      * Internal helper method for loading a file from the given reader.
      *
-     * @param in the reader
+     * @param in The reader
      * @throws ConfigurationException if an error occurs
      */
     private void loadFromReader(final Reader in) throws ConfigurationException {
@@ -720,9 +720,9 @@ public class FileHandler {
     /**
      * Internal helper method for loading a file from an input stream.
      *
-     * @param in the input stream
-     * @param encoding the encoding
-     * @param url the URL of the file to be loaded (if known)
+     * @param in The input stream
+     * @param encoding The encoding
+     * @param url The URL of the file to be loaded (if known)
      * @throws ConfigurationException if an error occurs
      */
     private void loadFromStream(final InputStream in, final String encoding, final URL url) throws ConfigurationException {
@@ -744,7 +744,7 @@ public class FileHandler {
      * Loads data from an input stream if the associated {@code FileBased} object implements the {@code InputStreamSupport}
      * interface.
      *
-     * @param in the input stream
+     * @param in The input stream
      * @throws ConfigurationException if an error occurs
      */
     private void loadFromStreamDirectly(final InputStream in) throws ConfigurationException {
@@ -758,8 +758,8 @@ public class FileHandler {
     /**
      * Internal helper method for transforming an input stream to a reader and reading its content.
      *
-     * @param in the input stream
-     * @param encoding the encoding
+     * @param in The input stream
+     * @param encoding The encoding
      * @throws ConfigurationException if an error occurs
      */
     private void loadFromTransformedStream(final InputStream in, final String encoding) throws ConfigurationException {
@@ -822,7 +822,7 @@ public class FileHandler {
     /**
      * Removes the specified listener from this object.
      *
-     * @param l the listener to be removed
+     * @param l The listener to be removed
      */
     public void removeFileHandlerListener(final FileHandlerListener l) {
         listeners.remove(l);
@@ -849,7 +849,7 @@ public class FileHandler {
      * Saves the associated file to the specified {@code File}. The file is created automatically if it doesn't exist. This
      * does not change the location of this object (use {@link #setFile} if you need it).
      *
-     * @param file the target file
+     * @param file The target file
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final File file) throws ConfigurationException {
@@ -859,8 +859,8 @@ public class FileHandler {
     /**
      * Internal helper method for saving data to the given {@code File}.
      *
-     * @param file the target file
-     * @param locator the current {@code FileLocator}
+     * @param file The target file
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     private void save(final File file, final FileLocator locator) throws ConfigurationException {
@@ -879,7 +879,7 @@ public class FileHandler {
     /**
      * Internal helper method for saving data to the internal location stored for this object.
      *
-     * @param locator the current {@code FileLocator}
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     private void save(final FileLocator locator) throws ConfigurationException {
@@ -897,7 +897,7 @@ public class FileHandler {
     /**
      * Saves the associated file to the specified stream using the encoding returned by {@link #getEncoding()}.
      *
-     * @param out the output stream
+     * @param out The output stream
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final OutputStream out) throws ConfigurationException {
@@ -907,8 +907,8 @@ public class FileHandler {
     /**
      * Internal helper method for saving a file to the given output stream.
      *
-     * @param out the output stream
-     * @param locator the current {@code FileLocator}
+     * @param out The output stream
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     private void save(final OutputStream out, final FileLocator locator) throws ConfigurationException {
@@ -919,8 +919,8 @@ public class FileHandler {
      * Saves the associated file to the specified stream using the specified encoding. If the encoding is <strong>null</strong>, the
      * default encoding is used.
      *
-     * @param out the output stream
-     * @param encoding the encoding to be used, {@code null} to use the default encoding
+     * @param out The output stream
+     * @param encoding The encoding to be used, {@code null} to use the default encoding
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final OutputStream out, final String encoding) throws ConfigurationException {
@@ -931,7 +931,7 @@ public class FileHandler {
      * Saves the associated file to the specified file name. This does not change the location of this object (use
      * {@link #setFileName(String)} if you need it).
      *
-     * @param fileName the file name
+     * @param fileName The file name
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final String fileName) throws ConfigurationException {
@@ -941,8 +941,8 @@ public class FileHandler {
     /**
      * Internal helper method for saving data to the given file name.
      *
-     * @param fileName the path to the target file
-     * @param locator the current {@code FileLocator}
+     * @param fileName The path to the target file
+     * @param locator The current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     private void save(final String fileName, final FileLocator locator) throws ConfigurationException {
@@ -963,7 +963,7 @@ public class FileHandler {
      * Saves the associated file to the specified URL. This does not change the location of this object (use
      * {@link #setURL(URL)} if you need it).
      *
-     * @param url the URL
+     * @param url The URL
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final URL url) throws ConfigurationException {
@@ -973,8 +973,8 @@ public class FileHandler {
     /**
      * Internal helper method for saving data to the given URL.
      *
-     * @param url the target URL
-     * @param locator the {@code FileLocator}
+     * @param url The target URL
+     * @param locator The {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     private void save(final URL url, final FileLocator locator) throws ConfigurationException {
@@ -997,7 +997,7 @@ public class FileHandler {
     /**
      * Saves the associated file to the given {@code Writer}.
      *
-     * @param out the {@code Writer}
+     * @param out The {@code Writer}
      * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(final Writer out) throws ConfigurationException {
@@ -1007,9 +1007,9 @@ public class FileHandler {
     /**
      * Internal helper method for saving a file to the given stream.
      *
-     * @param out the output stream
-     * @param encoding the encoding
-     * @param url the URL of the output file if known
+     * @param out The output stream
+     * @param encoding The encoding
+     * @param url The URL of the output file if known
      * @throws ConfigurationException if an error occurs
      */
     private void saveToStream(final OutputStream out, final String encoding, final URL url) throws ConfigurationException {
@@ -1037,7 +1037,7 @@ public class FileHandler {
     /**
      * Internal helper method for saving a file into the given writer.
      *
-     * @param out the writer
+     * @param out The writer
      * @throws ConfigurationException if an error occurs
      */
     private void saveToWriter(final Writer out) throws ConfigurationException {
@@ -1061,7 +1061,7 @@ public class FileHandler {
      * method automatically sets the URL to <strong>null</strong> because it has to be determined anew based on the file name and the
      * base path.
      *
-     * @param basePath the base path.
+     * @param basePath The base path.
      */
     public void setBasePath(final String basePath) {
         final String path = normalizeFileURL(basePath);
@@ -1078,7 +1078,7 @@ public class FileHandler {
      * Sets the encoding of the associated file. The encoding applies if binary files are loaded. Note that in this case
      * setting an encoding is recommended; otherwise the platform's default encoding is used.
      *
-     * @param encoding the encoding of the associated file
+     * @param encoding The encoding of the associated file
      */
     public void setEncoding(final String encoding) {
         new AbstractUpdater() {
@@ -1093,7 +1093,7 @@ public class FileHandler {
      * Sets the location of the associated file as a {@code File} object. The passed in {@code File} is made absolute if it
      * is not yet. Then the file's path component becomes the base path and its name component becomes the file name.
      *
-     * @param file the location of the associated file
+     * @param file The location of the associated file
      */
     public void setFile(final File file) {
         final String fileName = file.getName();
@@ -1109,7 +1109,7 @@ public class FileHandler {
     /**
      * Sets the file to be accessed by this {@code FileHandler} as a {@code FileLocator} object.
      *
-     * @param locator the {@code FileLocator} with the definition of the file to be accessed (must not be <strong>null</strong>
+     * @param locator The {@code FileLocator} with the definition of the file to be accessed (must not be <strong>null</strong>
      * @throws IllegalArgumentException if the {@code FileLocator} is <strong>null</strong>
      */
     public void setFileLocator(final FileLocator locator) {
@@ -1126,7 +1126,7 @@ public class FileHandler {
      * with relative paths from classpath. Use {@code setPath()} to set a full qualified file name. The URL is set to
      * <strong>null</strong> as it has to be determined anew based on the file name and the base path.
      *
-     * @param fileName the name of the file
+     * @param fileName The name of the file
      */
     public void setFileName(final String fileName) {
         final String name = normalizeFileURL(fileName);
@@ -1143,7 +1143,7 @@ public class FileHandler {
      * Sets the {@code FileSystem} to be used by this object when locating files. If a <strong>null</strong> value is passed in, the
      * file system is reset to the default file system.
      *
-     * @param fileSystem the {@code FileSystem}
+     * @param fileSystem The {@code FileSystem}
      */
     public void setFileSystem(final FileSystem fileSystem) {
         new AbstractUpdater() {
@@ -1159,7 +1159,7 @@ public class FileHandler {
      * underlying {@link FileLocator}. The argument can be <strong>null</strong>; this causes the default {@code FileLocationStrategy}
      * to be used.
      *
-     * @param strategy the {@code FileLocationStrategy}
+     * @param strategy The {@code FileLocationStrategy}
      * @see FileLocatorUtils#DEFAULT_LOCATION_STRATEGY
      */
     public void setLocationStrategy(final FileLocationStrategy strategy) {
@@ -1178,7 +1178,7 @@ public class FileHandler {
      * plain file system or compressed archive, because this method expands any relative path to an absolute one which may
      * end in an invalid absolute path for classpath references.
      *
-     * @param path the full path name of the associated file
+     * @param path The full path name of the associated file
      */
     public void setPath(final String path) {
         setFile(new File(path));
@@ -1189,7 +1189,7 @@ public class FileHandler {
      * protocol. If the file is to be saved, too, a URL with the &quot;file&quot; protocol should be provided. This method
      * sets the file name and the base path to <strong>null</strong>. They have to be determined anew based on the new URL.
      *
-     * @param url the location of the file as URL
+     * @param url The location of the file as URL
      */
     public void setURL(final URL url) {
         setURL(url, URLConnectionOptions.DEFAULT);
@@ -1200,7 +1200,7 @@ public class FileHandler {
      * protocol. If the file is to be saved, too, a URL with the &quot;file&quot; protocol should be provided. This method
      * sets the file name and the base path to <strong>null</strong>. They have to be determined anew based on the new URL.
      *
-     * @param url the location of the file as URL
+     * @param url The location of the file as URL
      * @param urlConnectionOptions URL connection options
      * @since 2.8.0
      */

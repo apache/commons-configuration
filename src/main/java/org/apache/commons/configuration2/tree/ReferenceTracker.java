@@ -64,8 +64,8 @@ final class ReferenceTracker {
      * Creates a new instance of {@code ReferenceTracker} and sets the data to be managed. This constructor is used
      * internally when references are updated.
      *
-     * @param refs the references
-     * @param removedRefs the removed references
+     * @param refs The references
+     * @param removedRefs The removed references
      */
     private ReferenceTracker(final Map<ImmutableNode, Object> refs, final List<Object> removedRefs) {
         references = refs;
@@ -76,7 +76,7 @@ final class ReferenceTracker {
      * Adds all references stored in the passed in map to the managed references. A new instance is created managing this
      * new set of references.
      *
-     * @param refs the references to be added
+     * @param refs The references to be added
      * @return The new instance
      */
     public ReferenceTracker addReferences(final Map<ImmutableNode, ?> refs) {
@@ -88,7 +88,7 @@ final class ReferenceTracker {
     /**
      * Gets the reference object associated with the given node.
      *
-     * @param node the node
+     * @param node The node
      * @return The reference object for this node or <strong>null</strong>
      */
     public Object getReference(final ImmutableNode node) {
@@ -109,8 +109,8 @@ final class ReferenceTracker {
      * transaction with the nodes that have been replaced by others and the nodes that have been removed. The internal data
      * structures are updated correspondingly.
      *
-     * @param replacedNodes the map with nodes that have been replaced
-     * @param removedNodes the list with nodes that have been removed
+     * @param replacedNodes The map with nodes that have been replaced
+     * @param removedNodes The list with nodes that have been removed
      * @return The new instance
      */
     public ReferenceTracker updateReferences(final Map<ImmutableNode, ImmutableNode> replacedNodes, final Collection<ImmutableNode> removedNodes) {

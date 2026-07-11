@@ -46,8 +46,8 @@ public class ReloadingEvent extends Event {
     /**
      * Creates a new instance of {@code ReloadingEvent} and initializes it.
      *
-     * @param source the controller which generated this event
-     * @param addData an arbitrary data object to be evaluated by event listeners
+     * @param source The controller which generated this event
+     * @param addData An arbitrary data object to be evaluated by event listeners
      */
     public ReloadingEvent(final ReloadingController source, final Object addData) {
         super(source, ANY);

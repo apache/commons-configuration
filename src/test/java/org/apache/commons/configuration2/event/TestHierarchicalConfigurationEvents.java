@@ -39,8 +39,8 @@ public class TestHierarchicalConfigurationEvents extends AbstractTestConfigurati
     /**
      * Tests whether a received event contains a correct subnode event.
      *
-     * @param event the event object
-     * @param before the expected before flag
+     * @param event The event object
+     * @param before The expected before flag
      */
     private void checkSubnodeEvent(final ConfigurationEvent event, final boolean before) {
         assertEquals(before, event.isBeforeUpdate());

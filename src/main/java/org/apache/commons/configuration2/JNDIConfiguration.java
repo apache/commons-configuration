@@ -67,7 +67,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Creates a JNDIConfiguration using the specified initial context as the root of the properties.
      *
-     * @param context the initial context
+     * @param context The initial context
      */
     public JNDIConfiguration(final Context context) {
         this(context, null);
@@ -77,8 +77,8 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Creates a JNDIConfiguration using the specified initial context shifted by the specified prefix as the root of the
      * properties.
      *
-     * @param context the initial context
-     * @param prefix the prefix
+     * @param context The initial context
+     * @param prefix The prefix
      */
     public JNDIConfiguration(final Context context, final String prefix) {
         this.context = context;
@@ -91,7 +91,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Creates a JNDIConfiguration using the default initial context, shifted with the specified prefix, as the root of the
      * properties.
      *
-     * @param prefix the prefix
+     * @param prefix The prefix
      * @throws NamingException thrown if an error occurs when initializing the default context
      */
     public JNDIConfiguration(final String prefix) throws NamingException {
@@ -103,8 +103,8 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * <strong>This operation is not supported and will throw an UnsupportedOperationException.</strong>
      * </p>
      *
-     * @param key the key
-     * @param obj the value
+     * @param key The key
+     * @param obj The value
      * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
@@ -115,7 +115,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Removes the specified property.
      *
-     * @param key the key of the property to remove
+     * @param key The key of the property to remove
      */
     @Override
     protected void clearPropertyDirect(final String key) {
@@ -125,7 +125,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Checks whether the specified key is contained in this configuration.
      *
-     * @param key the key to check
+     * @param key The key to check
      * @return A flag whether this key is stored in this configuration
      */
     @Override
@@ -185,8 +185,8 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Because JNDI is based on a tree configuration, we need to filter down the tree, till we find the Context specified by
      * the key to start from. Otherwise return null.
      *
-     * @param path the path of keys to traverse in order to find the context
-     * @param context the context to start from
+     * @param path The path of keys to traverse in order to find the context
+     * @param context The context to start from
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
@@ -237,7 +237,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets an iterator with all property keys starting with the given prefix.
      *
-     * @param prefix the prefix
+     * @param prefix The prefix
      * @return An iterator with the selected keys
      */
     @Override
@@ -282,7 +282,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets the value of the specified property.
      *
-     * @param key the key of the property
+     * @param key The key of the property
      * @return The value of this property
      */
     @Override
@@ -335,7 +335,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * @param keys All the keys that have been found.
      * @param context The parent context
      * @param prefix What prefix we are building on.
-     * @param processedCtx a set with the so far processed objects
+     * @param processedCtx A set with the so far processed objects
      * @throws NamingException If JNDI has an issue.
      */
     private void recursiveGetKeys(final Set<String> keys, final Context context, final String prefix, final Set<Context> processedCtx) throws NamingException {
@@ -381,7 +381,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Sets the initial context of the configuration.
      *
-     * @param context the context
+     * @param context The context
      */
     public void setContext(final Context context) {
         // forget the removed properties
@@ -408,8 +408,8 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * <strong>This operation is not supported and will throw an UnsupportedOperationException.</strong>
      * </p>
      *
-     * @param key the key
-     * @param value the value
+     * @param key The key
+     * @param value The value
      * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override

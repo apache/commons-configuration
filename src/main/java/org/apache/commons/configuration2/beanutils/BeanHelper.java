@@ -135,8 +135,8 @@ public final class BeanHelper {
      * {@code PropertyUtilsBean} instance. This method ensures that enhanced introspection is enabled when doing the copy
      * operation.
      *
-     * @param dest the destination bean
-     * @param orig the source bean
+     * @param dest The destination bean
+     * @param orig The source bean
      * @throws NoSuchMethodException exception thrown by {@code PropertyUtilsBean}
      * @throws InvocationTargetException exception thrown by {@code PropertyUtilsBean}
      * @throws IllegalAccessException exception thrown by {@code PropertyUtilsBean}
@@ -151,8 +151,8 @@ public final class BeanHelper {
      * appropriate collection type. Mostly the type of the property will be one of the collection interfaces rather than a
      * concrete class; so we have to create a concrete equivalent.
      *
-     * @param propName the name of the collection property
-     * @param propertyClass the type of the property
+     * @param propName The name of the collection property
+     * @param propertyClass The type of the property
      * @return The newly created collection
      */
     private static Collection<Object> createPropertyCollection(final String propName, final Class<?> propertyClass) {
@@ -171,7 +171,7 @@ public final class BeanHelper {
     /**
      * Creates a {@code DynaBean} instance which wraps the passed in bean.
      *
-     * @param bean the bean to be wrapped (must not be <strong>null</strong>)
+     * @param bean The bean to be wrapped (must not be <strong>null</strong>)
      * @return A {@code DynaBean} wrapping the passed in bean
      * @throws IllegalArgumentException if the bean is <strong>null</strong>
      * @since 2.0
@@ -189,9 +189,9 @@ public final class BeanHelper {
      * Otherwise it is checked whether a default class is provided. If this is not the case, the factory's default class is
      * used. If this class is undefined, too, an exception is thrown.
      *
-     * @param data the bean declaration
-     * @param defaultClass the default class
-     * @param factory the bean factory to use
+     * @param data The bean declaration
+     * @param defaultClass The default class
+     * @param factory The bean factory to use
      * @return The class of the bean to be created
      * @throws ConfigurationRuntimeException if the class cannot be determined
      */
@@ -238,8 +238,8 @@ public final class BeanHelper {
     /**
      * Initializes the beans properties.
      *
-     * @param bean the bean to be initialized
-     * @param data the bean declaration
+     * @param bean The bean to be initialized
+     * @param data The bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
     public static void initBeanProperties(final Object bean, final BeanDeclaration data) {
@@ -264,9 +264,9 @@ public final class BeanHelper {
     /**
      * Sets a property on the given bean using Common Beanutils.
      *
-     * @param bean the bean
-     * @param propName the name of the property
-     * @param value the property's value
+     * @param bean The bean
+     * @param propName The name of the property
+     * @param value The property's value
      * @throws ConfigurationRuntimeException if the property is not writable or an error occurred
      */
     private static void initProperty(final Object bean, final String propName, final Object value) {
@@ -284,8 +284,8 @@ public final class BeanHelper {
     /**
      * Tests whether the specified property of the given bean instance supports write access.
      *
-     * @param bean the bean instance
-     * @param propName the name of the property in question
+     * @param bean The bean instance
+     * @param propName The name of the property in question
      * @return <strong>true</strong> if this property can be written, <strong>false</strong> otherwise
      */
     private static boolean isPropertyWriteable(final Object bean, final String propName) {
@@ -297,7 +297,7 @@ public final class BeanHelper {
      * environments the code for retrieving a class by its name was extracted into this helper method. So if changes are
      * necessary, they can be made at a single place.
      *
-     * @param name the name of the class to be loaded
+     * @param name The name of the class to be loaded
      * @return The class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
@@ -308,9 +308,9 @@ public final class BeanHelper {
     /**
      * Sets a property on the bean only if the property exists
      *
-     * @param bean the bean
-     * @param propName the name of the property
-     * @param value the property's value
+     * @param bean The bean
+     * @param propName The name of the property
+     * @param value The property's value
      * @throws ConfigurationRuntimeException if the property is not writable or an error occurred
      */
     public static void setProperty(final Object bean, final String propName, final Object value) {
@@ -338,7 +338,7 @@ public final class BeanHelper {
     /**
      * Constructs a new instance of {@code BeanHelper} and sets the specified default {@code BeanFactory}.
      *
-     * @param defaultBeanFactory the default {@code BeanFactory} (can be <strong>null</strong>, then a default instance is used)
+     * @param defaultBeanFactory The default {@code BeanFactory} (can be <strong>null</strong>, then a default instance is used)
      */
     public BeanHelper(final BeanFactory defaultBeanFactory) {
         this.defaultBeanFactory = defaultBeanFactory != null ? defaultBeanFactory : DefaultBeanFactory.INSTANCE;
@@ -348,7 +348,7 @@ public final class BeanHelper {
      * Creates a bean instance for the specified declaration. This method is a short cut for
      * {@code createBean(data, null);}.
      *
-     * @param data the bean declaration
+     * @param data The bean declaration
      * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
@@ -360,8 +360,8 @@ public final class BeanHelper {
      * Creates a bean instance for the specified declaration. This method is a short cut for
      * {@code createBean(data, null, null);}.
      *
-     * @param data the bean declaration
-     * @param defaultClass the class to be used when in the declaration no class is specified
+     * @param data The bean declaration
+     * @param defaultClass The class to be used when in the declaration no class is specified
      * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
@@ -376,9 +376,9 @@ public final class BeanHelper {
      * creating the bean is queried. The declaration may here return <strong>null</strong>, then a default factory is used. This
      * factory is then invoked to perform the create operation.
      *
-     * @param data the bean declaration
-     * @param defaultClass the default class to use
-     * @param param an additional parameter that will be passed to the bean factory; some factories may support parameters
+     * @param data The bean declaration
+     * @param defaultClass The default class to use
+     * @param param An additional parameter that will be passed to the bean factory; some factories may support parameters
      *        and behave different depending on the value passed in here
      * @return The new bean
      * @throws ConfigurationRuntimeException if an error occurs
@@ -400,11 +400,11 @@ public final class BeanHelper {
     /**
      * Creates a {@code BeanCreationContext} object for the creation of the specified bean.
      *
-     * @param data the bean declaration
-     * @param defaultClass the default class to use
-     * @param param an additional parameter that will be passed to the bean factory; some factories may support parameters
+     * @param data The bean declaration
+     * @param defaultClass The default class to use
+     * @param param An additional parameter that will be passed to the bean factory; some factories may support parameters
      *        and behave different depending on the value passed in here
-     * @param factory the current bean factory
+     * @param factory The current bean factory
      * @return The {@code BeanCreationContext}
      * @throws ConfigurationRuntimeException if the bean class cannot be determined
      */
@@ -417,7 +417,7 @@ public final class BeanHelper {
     /**
      * Deregisters the bean factory with the given name. After that this factory cannot be used any longer.
      *
-     * @param name the name of the factory to be deregistered
+     * @param name The name of the factory to be deregistered
      * @return The factory that was registered under this name; <strong>null</strong> if there was no such factory
      */
     public BeanFactory deregisterBeanFactory(final String name) {
@@ -428,7 +428,7 @@ public final class BeanHelper {
      * Obtains the bean factory to use for creating the specified bean. This method will check whether a factory is
      * specified in the bean declaration. If this is not the case, the default bean factory will be used.
      *
-     * @param data the bean declaration
+     * @param data The bean declaration
      * @return The bean factory to use
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
@@ -457,8 +457,8 @@ public final class BeanHelper {
      * Initializes the passed in bean. This method will obtain all the bean's properties that are defined in the passed in
      * bean declaration. These properties will be set on the bean. If necessary, further beans will be created recursively.
      *
-     * @param bean the bean to be initialized
-     * @param data the bean declaration
+     * @param bean The bean to be initialized
+     * @param data The bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
     public void initBean(final Object bean, final BeanDeclaration data) {
@@ -504,8 +504,8 @@ public final class BeanHelper {
      * Registers a bean factory under a symbolic name. This factory object can then be specified in bean declarations with
      * the effect that this factory will be used to obtain an instance for the corresponding bean declaration.
      *
-     * @param name the name of the factory
-     * @param factory the factory to be registered
+     * @param name The name of the factory
+     * @param factory The factory to be registered
      */
     public void registerBeanFactory(final String name, final BeanFactory factory) {
         if (name == null) {

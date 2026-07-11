@@ -62,7 +62,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Checks whether the passed in combined strategy contains the expected sub strategies.
      *
-     * @param strategy the combined strategy to check
+     * @param strategy The combined strategy to check
      */
     private void checkSubStrategies(final CombinedLocationStrategy strategy) {
         final Collection<FileLocationStrategy> subs = strategy.getSubStrategies();

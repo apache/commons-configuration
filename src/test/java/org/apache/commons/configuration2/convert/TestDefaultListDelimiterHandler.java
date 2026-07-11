@@ -42,9 +42,9 @@ public class TestDefaultListDelimiterHandler {
      * Helper methods for testing a split operation. A split is executed with the passed in parameters. Then the results are
      * compared to the expected elements.
      *
-     * @param value the value to be split
-     * @param trim the trim flag
-     * @param expectedElements the expected results
+     * @param value The value to be split
+     * @param trim The trim flag
+     * @param expectedElements The expected results
      */
     private void checkSplit(final String value, final boolean trim, final String... expectedElements) {
         final Collection<String> elems = handler.split(value, trim);

@@ -42,7 +42,7 @@ public interface ValueTransformer {
      * Performs an arbitrary encoding of the passed in value object. This method is called by a {@link ListDelimiterHandler}
      * implementation before or after list delimiters have been escaped.
      *
-     * @param value the property value to be transformed
+     * @param value The property value to be transformed
      * @return The transformed property value
      */
     Object transformValue(Object value);

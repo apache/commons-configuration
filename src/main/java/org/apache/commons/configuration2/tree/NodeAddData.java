@@ -50,7 +50,7 @@ public class NodeAddData<T> {
     /**
      * Creates the list with path nodes. Handles null input.
      *
-     * @param intermediateNodes the nodes passed to the constructor
+     * @param intermediateNodes The nodes passed to the constructor
      * @return An unmodifiable list of path nodes
      */
     private static List<String> createPathNodes(final Collection<String> intermediateNodes) {
@@ -77,10 +77,10 @@ public class NodeAddData<T> {
     /**
      * Creates a new instance of {@code NodeAddData} and initializes it.
      *
-     * @param parentNode the parent node of the add operation
-     * @param newName the name of the new node
+     * @param parentNode The parent node of the add operation
+     * @param newName The name of the new node
      * @param isAttr flag whether the new node is an attribute
-     * @param intermediateNodes an optional collection with path nodes
+     * @param intermediateNodes An optional collection with path nodes
      */
     public NodeAddData(final T parentNode, final String newName, final boolean isAttr, final Collection<String> intermediateNodes) {
         parent = parentNode;

@@ -86,7 +86,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
     /**
      * Remove a property from the configuration.
      *
-     * @param key the key to remove along with corresponding value.
+     * @param key The key to remove along with corresponding value.
      */
     void clearProperty(String key);
 
@@ -106,8 +106,8 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * to the {@link #setInterpolator(ConfigurationInterpolator)} method which sets the passed in object as is without
      * adding this special lookup.
      *
-     * @param prefixLookups the map with {@code Lookup} objects associated with specific prefixes (can be <strong>null</strong>)
-     * @param defLookups a collection with default {@code Lookup} objects (can be <strong>null</strong>)
+     * @param prefixLookups The map with {@code Lookup} objects associated with specific prefixes (can be <strong>null</strong>)
+     * @param defLookups A collection with default {@code Lookup} objects (can be <strong>null</strong>)
      * @see ConfigurationInterpolator
      */
     void installInterpolator(Map<String, ? extends Lookup> prefixLookups, Collection<? extends Lookup> defLookups);
@@ -117,7 +117,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * for each access of a string property in order to substitute variables which may be contained. The argument can be
      * <strong>null</strong> to disable interpolation at all.
      *
-     * @param ci the new {@code ConfigurationInterpolator}
+     * @param ci The new {@code ConfigurationInterpolator}
      */
     void setInterpolator(ConfigurationInterpolator ci);
 

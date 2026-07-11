@@ -67,10 +67,10 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     /**
      * Flattens the given iterator. For each element in the iteration {@code flatten()} is called recursively.
      *
-     * @param handler the working handler
-     * @param target the target collection
-     * @param iterator the iterator to process
-     * @param limit a limit for the number of elements to extract
+     * @param handler The working handler
+     * @param target The target collection
+     * @param iterator The iterator to process
+     * @param limit A limit for the number of elements to extract
      * @param dejaVue Previously visited objects.
      */
     static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
@@ -107,7 +107,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * subclasses have to implement their specific escaping logic here, so that the list delimiters they support are
      * properly escaped.
      *
-     * @param s the string to be escaped (not <strong>null</strong>)
+     * @param s The string to be escaped (not <strong>null</strong>)
      * @return The escaped string
      */
     protected abstract String escapeString(String s);
@@ -116,7 +116,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * Performs the actual work as advertised by the {@code parse()} method. This method delegates to
      * {@link #flatten(Object, int)} without specifying a limit.
      *
-     * @param value the value to be processed
+     * @param value The value to be processed
      * @return A &quot;flat&quot; collection containing all primitive values of the passed in object
      */
     private Collection<?> flatten(final Object value) {
@@ -154,8 +154,8 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * Actually splits the passed in string which is guaranteed to be not <strong>null</strong>. This method is called by the base
      * implementation of the {@code split()} method. Here the actual splitting logic has to be implemented.
      *
-     * @param s the string to be split (not <strong>null</strong>)
-     * @param trim a flag whether the single components have to be trimmed
+     * @param s The string to be split (not <strong>null</strong>)
+     * @param trim A flag whether the single components have to be trimmed
      * @return A collection with the extracted components of the passed in string
      */
     protected abstract Collection<String> splitString(String s, boolean trim);

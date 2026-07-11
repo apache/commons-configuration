@@ -64,7 +64,7 @@ public class TestConfigurationUtils {
         /**
          * Creates a new instance of {@code CloneableSynchronizer} and sets the clone flag.
          *
-         * @param clone the clone flag
+         * @param clone The clone flag
          */
         public CloneableSynchronizer(final boolean clone) {
             cloned = clone;

@@ -60,7 +60,7 @@ public interface INIBuilderProperties<T> {
     /**
      * Sets the separator between key and value to be used when writing an INI file.
      *
-     * @param separator the new separator for INI output
+     * @param separator The new separator for INI output
      * @return A reference to this object for method chaining
      */
     T setSeparatorUsedInOutput(String separator);

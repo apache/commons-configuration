@@ -39,7 +39,7 @@ public interface MultiFileBuilderProperties<T> {
     /**
      * Sets the pattern string. Based on this pattern the configuration file to be loaded is determined.
      *
-     * @param p the pattern string
+     * @param p The pattern string
      * @return A reference to this object for method chaining
      */
     T setFilePattern(String p);
@@ -48,7 +48,7 @@ public interface MultiFileBuilderProperties<T> {
      * Sets a parameters object to be used when creating a managed configuration. These parameters configure sub
      * configurations.
      *
-     * @param p the parameters object for a sub configuration
+     * @param p The parameters object for a sub configuration
      * @return A reference to this object for method chaining
      */
     T setManagedBuilderParameters(BuilderParameters p);

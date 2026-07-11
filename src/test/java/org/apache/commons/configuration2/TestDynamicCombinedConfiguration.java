@@ -208,7 +208,7 @@ public class TestDynamicCombinedConfiguration {
      * Prepares a test for calling the Synchronizer. This method creates a test Synchronizer, installs it at the
      * configuration and returns it.
      *
-     * @param config the configuration
+     * @param config The configuration
      * @return The test Synchronizer
      */
     private SynchronizerTestImpl prepareSynchronizerTest(final Configuration config) {

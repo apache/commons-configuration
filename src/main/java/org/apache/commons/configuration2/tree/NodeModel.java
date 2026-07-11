@@ -46,9 +46,9 @@ public interface NodeModel<T> {
      * selects exactly one node) or to a newly created node. The passed in {@code NodeKeyResolver} is used to interpret the
      * given key.
      *
-     * @param key the key
-     * @param nodes the collection of nodes to be added (may be <strong>null</strong>)
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param nodes The collection of nodes to be added (may be <strong>null</strong>)
+     * @param resolver The {@code NodeKeyResolver}
      * @throws IllegalArgumentException if the key references an attribute (of course, it is not possible to add something
      *         to an attribute)
      */
@@ -59,16 +59,16 @@ public interface NodeModel<T> {
      * provided. For each value a new node has to be added. The passed in resolver is queried for a {@link NodeAddData}
      * object defining the add operation to be performed.
      *
-     * @param key the key
-     * @param values the values to be added at the position defined by the key
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param values The values to be added at the position defined by the key
+     * @param resolver The {@code NodeKeyResolver}
      */
     void addProperty(String key, Iterable<?> values, NodeKeyResolver<T> resolver);
 
     /**
      * Removes all data from this model.
      *
-     * @param resolver the {@code NodeKeyResolver}
+     * @param resolver The {@code NodeKeyResolver}
      */
     void clear(NodeKeyResolver<T> resolver);
 
@@ -76,8 +76,8 @@ public interface NodeModel<T> {
      * Clears the value of a property. This method is similar to {@link #clearTree(String, NodeKeyResolver)}: However, the
      * nodes referenced by the passed in key are not removed completely, but only their value is set to <strong>null</strong>.
      *
-     * @param key the key selecting the properties to be cleared
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key selecting the properties to be cleared
+     * @param resolver The {@code NodeKeyResolver}
      */
     void clearProperty(String key, NodeKeyResolver<T> resolver);
 
@@ -85,8 +85,8 @@ public interface NodeModel<T> {
      * Removes the sub trees defined by the given key from this model. All nodes selected by this key are retrieved from the
      * specified {@code NodeKeyResolver} and removed from the model.
      *
-     * @param key the key selecting the properties to be removed
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key selecting the properties to be removed
+     * @param resolver The {@code NodeKeyResolver}
      * @return An object with information about the data removed
      */
     Object clearTree(String key, NodeKeyResolver<T> resolver);
@@ -116,16 +116,16 @@ public interface NodeModel<T> {
      * which will produce a corresponding {@link NodeUpdateData} object. Based on the content of this object, update
      * operations are performed.
      *
-     * @param key the key
-     * @param value the new value for this property (to be evaluated by the {@code NodeKeyResolver})
-     * @param resolver the {@code NodeKeyResolver}
+     * @param key The key
+     * @param value The new value for this property (to be evaluated by the {@code NodeKeyResolver})
+     * @param resolver The {@code NodeKeyResolver}
      */
     void setProperty(String key, Object value, NodeKeyResolver<T> resolver);
 
     /**
      * Sets a new root node for this model. The whole structure is replaced by the new node and its children.
      *
-     * @param newRoot the new root node to be set (can be <strong>null</strong>, then an empty root node is set)
+     * @param newRoot The new root node to be set (can be <strong>null</strong>, then an empty root node is set)
      */
     void setRootNode(T newRoot);
 }

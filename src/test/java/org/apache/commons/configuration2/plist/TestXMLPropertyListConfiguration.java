@@ -56,8 +56,8 @@ public class TestXMLPropertyListConfiguration {
     /**
      * Loads a test configuration.
      *
-     * @param c the configuration object to be loaded
-     * @param file the test file to be loaded
+     * @param c The configuration object to be loaded
+     * @param file The test file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final XMLPropertyListConfiguration c, final File file) throws ConfigurationException {
@@ -74,7 +74,7 @@ public class TestXMLPropertyListConfiguration {
     /**
      * Checks whether the test configuration contains a key with an array value.
      *
-     * @param expectedValues the expected values
+     * @param expectedValues The expected values
      */
     private void checkArrayProperty(final List<?> expectedValues) throws ConfigurationException {
         final StringWriter out = new StringWriter();
@@ -90,7 +90,7 @@ public class TestXMLPropertyListConfiguration {
     /**
      * Saves the test configuration to the specified file.
      *
-     * @param file the target file
+     * @param file The target file
      * @throws ConfigurationException if an error occurs
      */
     private void save(final File file) throws ConfigurationException {

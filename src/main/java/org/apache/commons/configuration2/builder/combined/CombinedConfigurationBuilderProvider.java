@@ -57,8 +57,8 @@ public class CombinedConfigurationBuilderProvider extends BaseConfigurationBuild
      * Populates the specified parameters object with properties from the given configuration. This method is used to set
      * default values for basic properties based on the result configuration of the parent builder.
      *
-     * @param config the configuration whose properties are to be copied
-     * @param params the target parameters object
+     * @param config The configuration whose properties are to be copied
+     * @param params The target parameters object
      */
     private static void setUpBasicParameters(final CombinedConfiguration config, final BasicBuilderParameters params) {
         params.setListDelimiterHandler(config.getListDelimiterHandler()).setLogger(config.getLogger())

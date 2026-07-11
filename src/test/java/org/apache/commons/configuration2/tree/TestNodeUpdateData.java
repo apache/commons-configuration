@@ -36,7 +36,7 @@ public class TestNodeUpdateData {
     /**
      * Convenience method for creating a query result object.
      *
-     * @param value the value of this result
+     * @param value The value of this result
      * @return The result object
      */
     private static QueryResult<Object> result(final Object value) {

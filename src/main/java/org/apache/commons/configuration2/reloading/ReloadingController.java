@@ -69,7 +69,7 @@ public class ReloadingController implements EventSource {
      * Creates a new instance of {@code ReloadingController} and associates it with the given {@code ReloadingDetector}
      * object.
      *
-     * @param detect the {@code ReloadingDetector} (must not be <strong>null</strong>)
+     * @param detect The {@code ReloadingDetector} (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the detector is undefined
      */
     public ReloadingController(final ReloadingDetector detect) {

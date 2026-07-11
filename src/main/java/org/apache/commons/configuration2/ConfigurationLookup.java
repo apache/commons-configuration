@@ -39,7 +39,7 @@ public class ConfigurationLookup implements Lookup {
     /**
      * Creates a new instance of {@code ConfigurationLookup} and sets the associated {@code ImmutableConfiguration}.
      *
-     * @param config the configuration to use for lookups (must not be <strong>null</strong>)
+     * @param config The configuration to use for lookups (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the configuration is <strong>null</strong>
      */
     public ConfigurationLookup(final ImmutableConfiguration config) {

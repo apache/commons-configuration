@@ -78,8 +78,8 @@ public final class PropertyConverter {
     /**
      * Converts a value to a constant of an enumeration class.
      *
-     * @param enumClass the enumeration class
-     * @param value the value to be converted
+     * @param enumClass The enumeration class
+     * @param value The value to be converted
      * @return The converted value
      */
     @SuppressWarnings("unchecked")
@@ -94,9 +94,9 @@ public final class PropertyConverter {
      * object. If the class is a primitive type (Integer.TYPE, Boolean.TYPE, etc), the value returned will use the wrapper
      * type (Integer.class, Boolean.class, etc).
      *
-     * @param cls the target class of the converted value
-     * @param value the value to convert
-     * @param convHandler the conversion handler object
+     * @param cls The target class of the converted value
+     * @param value The value to convert
+     * @param convHandler The conversion handler object
      * @return The converted value
      * @throws ConversionException if the value is not compatible with the requested type
      */
@@ -191,7 +191,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a BigDecimal.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigDecimal
      */
@@ -206,7 +206,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a BigInteger.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigInteger
      */
@@ -224,7 +224,7 @@ public final class PropertyConverter {
      * class accepts some more tokens for the boolean value of <strong>true</strong>, for example {@code yes} and {@code on}. Please refer to
      * the documentation of this class for more details.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a boolean
      */
@@ -245,7 +245,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Byte.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a byte
      */
@@ -260,8 +260,8 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Calendar.
      *
-     * @param value the value to convert
-     * @param format the DateFormat pattern to parse String values
+     * @param value The value to convert
+     * @param format The DateFormat pattern to parse String values
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
@@ -290,7 +290,7 @@ public final class PropertyConverter {
      * Converts the specified value object to a {@code Character}. This method converts the passed in object to a string. If
      * the string has exactly one character, this character is returned as result. Otherwise, conversion fails.
      *
-     * @param value the value to be converted
+     * @param value The value to be converted
      * @return The resulting {@code Character} object
      * @throws ConversionException if the conversion is not possible
      */
@@ -312,7 +312,7 @@ public final class PropertyConverter {
      * <li>#00FF00A0 (semi transparent green)</li>
      * </ul>
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Color
      */
@@ -361,8 +361,8 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Date.
      *
-     * @param value the value to convert
-     * @param format the DateFormat pattern to parse String values
+     * @param value The value to convert
+     * @param format The DateFormat pattern to parse String values
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
@@ -386,7 +386,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Double.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Double
      */
@@ -401,7 +401,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Duration.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Duration
      * @since 2.8.0
@@ -423,8 +423,8 @@ public final class PropertyConverter {
     /**
      * Converts the specified value into an {@link Enum}.
      *
-     * @param value the value to convert
-     * @param cls the type of the enumeration
+     * @param value The value to convert
+     * @param cls The type of the enumeration
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to an enumeration
      * @since 1.5
@@ -454,7 +454,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a File.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a File
      * @since 2.3
@@ -475,7 +475,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Float.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Float
      */
@@ -490,7 +490,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified value into an internet address.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a InetAddress
      * @since 1.5
@@ -512,7 +512,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into an Integer.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to an integer
      */
@@ -527,8 +527,8 @@ public final class PropertyConverter {
     /**
      * Converts the specified value into an email address with the given class name.
      *
-     * @param value the value to convert
-     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, for example,
+     * @param value The value to convert
+     * @param targetClassName The fully qualified name of the {@code InternetAddress} class to convert to, for example,
      *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to an email address
@@ -552,7 +552,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Locale.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Locale
      */
@@ -579,7 +579,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Long.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Long
      */
@@ -596,8 +596,8 @@ public final class PropertyConverter {
      * types. Note that the return value is not in always of the specified target class, but only if a new object has to be
      * created.
      *
-     * @param value the value to be converted (must not be <strong>null</strong>)
-     * @param targetClass the target class of the conversion (must be derived from {@link Number})
+     * @param value The value to be converted (must not be <strong>null</strong>)
+     * @param targetClass The target class of the conversion (must be derived from {@link Number})
      * @return The converted number
      * @throws ConversionException if the object cannot be converted
      */
@@ -634,7 +634,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Path.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Path
      * @since 2.3
@@ -655,7 +655,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Pattern.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a Pattern
      */
@@ -676,7 +676,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into a Short.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to a short
      */
@@ -691,7 +691,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into an URI.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to an URI
      */
@@ -712,7 +712,7 @@ public final class PropertyConverter {
     /**
      * Converts the specified object into an URL.
      *
-     * @param value the value to convert
+     * @param value The value to convert
      * @return The converted value
      * @throws ConversionException thrown if the value cannot be converted to an URL
      */

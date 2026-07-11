@@ -63,7 +63,7 @@ public class TestParameters {
     /**
      * Checks whether the given parameters map contains the standard values for basic properties.
      *
-     * @param map the map to be tested
+     * @param map The map to be tested
      */
     private static void checkBasicProperties(final Map<String, Object> map) {
         assertEquals(listHandler, map.get("listDelimiterHandler"));
@@ -73,8 +73,8 @@ public class TestParameters {
     /**
      * Checks whether a given parameters object implements all the specified interfaces.
      *
-     * @param params the parameters object to check
-     * @param ifcClasses the interface classes to be implemented
+     * @param params The parameters object to check
+     * @param ifcClasses The interface classes to be implemented
      */
     private static void checkInheritance(final Object params, final Class<?>... ifcClasses) {
         assertInstanceOf(BasicBuilderProperties.class, params);

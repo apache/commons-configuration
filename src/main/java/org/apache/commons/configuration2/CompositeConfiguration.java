@@ -85,7 +85,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Create a CompositeConfiguration with an empty in memory configuration and adds the collection of configurations
      * specified.
      *
-     * @param configurations the collection of configurations to add
+     * @param configurations The collection of configurations to add
      */
     public CompositeConfiguration(final Collection<? extends Configuration> configurations) {
         this(new BaseConfiguration(), configurations);
@@ -97,7 +97,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * type of in-memory configuration. If you have a configuration which should act as both a child configuration and as
      * in-memory configuration, use {@link #addConfiguration(Configuration, boolean)} with a value of <strong>true</strong> instead.
      *
-     * @param inMemoryConfiguration the in memory configuration to use
+     * @param inMemoryConfiguration The in memory configuration to use
      */
     public CompositeConfiguration(final Configuration inMemoryConfiguration) {
         this.configList.clear();
@@ -109,8 +109,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Creates a CompositeConfiguration with a specified <em>in-memory configuration</em>, and then adds the given
      * collection of configurations.
      *
-     * @param inMemoryConfiguration the in memory configuration to use
-     * @param configurations the collection of configurations to add
+     * @param inMemoryConfiguration The in memory configuration to use
+     * @param configurations The collection of configurations to add
      * @see #CompositeConfiguration(Configuration)
      */
     public CompositeConfiguration(final Configuration inMemoryConfiguration, final Collection<? extends Configuration> configurations) {
@@ -123,7 +123,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Add a configuration.
      *
-     * @param config the configuration to add
+     * @param config The configuration to add
      */
     public void addConfiguration(final Configuration config) {
         addConfiguration(config, false);
@@ -136,7 +136,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * child configurations! Otherwise, it stays in the list of child configurations at its current position, but it passes
      * its role as in-memory configuration to the new one.
      *
-     * @param config the configuration to be added
+     * @param config The configuration to be added
      * @param asInMemory <strong>true</strong> if this configuration becomes the new <em>in-memory</em> configuration, <strong>false</strong>
      *        otherwise
      * @since 1.8
@@ -169,7 +169,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Add a configuration to the start of the list of child configurations.
      *
-     * @param config the configuration to add
+     * @param config The configuration to add
      * @since 2.3
      */
     public void addConfigurationFirst(final Configuration config) {
@@ -183,7 +183,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * constructor, it is removed from the list of child configurations! Otherwise, it stays in the list of child
      * configurations at its current position, but it passes its role as in-memory configuration to the new one.
      *
-     * @param config the configuration to be added
+     * @param config The configuration to be added
      * @param asInMemory <strong>true</strong> if this configuration becomes the new <em>in-memory</em> configuration, <strong>false</strong>
      *        otherwise
      * @since 2.3
@@ -218,9 +218,9 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * Adds the value of a property to the given list. This method is used by {@code getList()} for gathering property
      * values from the child configurations.
      *
-     * @param dest the list for collecting the data
-     * @param config the configuration to query
-     * @param key the key of the property
+     * @param dest The list for collecting the data
+     * @param config The configuration to query
+     * @param key The key of the property
      */
     private void appendListProperty(final List<Object> dest, final Configuration config, final String key) {
         final Object value = interpolate(config.getProperty(key));
@@ -402,7 +402,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * {@code IllegalArgumentException} is thrown. In this case the source configuration cannot be determined.</li>
      * </ul>
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @return The source configuration of this key
      * @throws IllegalArgumentException if the source configuration cannot be determined
      * @since 1.5
@@ -462,7 +462,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Replaces the current in-memory configuration by the given one.
      *
-     * @param config the new in-memory configuration
+     * @param config The new in-memory configuration
      */
     private void replaceInMemoryConfiguration(final Configuration config) {
         if (!inMemoryConfigIsChild) {
