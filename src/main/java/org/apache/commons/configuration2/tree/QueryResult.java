@@ -85,7 +85,7 @@ public final class QueryResult<T> {
      * same result type and have the same properties.
      *
      * @param obj the object to compare to
-     * @return a flag whether these objects are equal
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -153,7 +153,7 @@ public final class QueryResult<T> {
      * Returns a string representation of this object. Depending on the result type either the result node or the parent
      * node and the attribute name are contained in this string.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

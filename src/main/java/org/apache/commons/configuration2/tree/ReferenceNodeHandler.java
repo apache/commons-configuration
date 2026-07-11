@@ -52,7 +52,7 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
      * This is necessary for instance to free some resources. With this method all recorded reference objects can be
      * queried. They are typically returned in the order in which they have been removed.
      *
-     * @return a list with reference objects for nodes removed from the model
+     * @return A list with reference objects for nodes removed from the model
      */
     List<Object> removedReferences();
 }

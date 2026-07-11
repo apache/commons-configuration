@@ -190,7 +190,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Adds the content of the given map to the already existing initialization parameters.
      *
      * @param params the map with additional initialization parameters; may be <strong>null</strong>, then this call has no effect
-     * @return a reference to this builder for method chaining
+     * @return A reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> addParameters(final Map<String, Object> params) {
         final Map<String, Object> newParams = new HashMap<>(getParameters());
@@ -219,7 +219,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Calling this method multiple times will create a union of the parameters provided.
      *
      * @param params an arbitrary number of objects with builder parameters
-     * @return a reference to this builder for method chaining
+     * @return A reference to this builder for method chaining
      * @throws NullPointerException if a <strong>null</strong> array is passed
      */
     public BasicConfigurationBuilder<T> configure(final BuilderParameters... params) {
@@ -441,7 +441,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Gets a (unmodifiable) map with the current initialization parameters set for this builder. The map is populated
      * with the parameters set using the various configuration options.
      *
-     * @return a map with the current set of initialization parameters
+     * @return A map with the current set of initialization parameters
      */
     protected final synchronized Map<String, Object> getParameters() {
         if (parameters != null) {
@@ -609,7 +609,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param params the new initialization parameters of this builder; can be <strong>null</strong>, then all initialization
      *        parameters are removed
-     * @return a reference to this builder for method chaining
+     * @return A reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
         updateParameters(params);

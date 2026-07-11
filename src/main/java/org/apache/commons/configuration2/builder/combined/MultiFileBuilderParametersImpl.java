@@ -56,7 +56,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      * result is <strong>null</strong>. This is equivalent to {@code fromParameters(params, false)}.
      *
      * @param params the map with parameters (must not be <strong>null</strong>)
-     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @return An instance of this class fetched from the map or <strong>null</strong>
      * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params) {
@@ -71,7 +71,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      *
      * @param params the map with parameters (must not be <strong>null</strong>)
      * @param createIfMissing a flag whether a new instance should be created if necessary
-     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @return An instance of this class fetched from the map or <strong>null</strong>
      * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params, final boolean createIfMissing) {

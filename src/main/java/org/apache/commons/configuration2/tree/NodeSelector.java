@@ -70,7 +70,7 @@ public class NodeSelector {
      * same keys as selection criteria.
      *
      * @param obj the object to be compared
-     * @return a flag whether these objects are equal
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -107,7 +107,7 @@ public class NodeSelector {
     /**
      * Returns a hash code for this object.
      *
-     * @return a hash code
+     * @return A hash code
      */
     @Override
     public int hashCode() {
@@ -156,7 +156,7 @@ public class NodeSelector {
     /**
      * Returns a string representation for this object. This string contains the keys to be used as selection criteria.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

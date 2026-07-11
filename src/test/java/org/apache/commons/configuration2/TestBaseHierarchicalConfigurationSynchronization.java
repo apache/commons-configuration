@@ -112,7 +112,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * Tests whether the specified configuration is detached.
      *
      * @param c the configuration to test
-     * @return a flag whether the root node of this configuration is detached
+     * @return A flag whether the root node of this configuration is detached
      */
     private static boolean isDetached(final HierarchicalConfiguration<ImmutableNode> c) {
         final SubnodeConfiguration subnodeConfig = assertInstanceOf(SubnodeConfiguration.class, c);

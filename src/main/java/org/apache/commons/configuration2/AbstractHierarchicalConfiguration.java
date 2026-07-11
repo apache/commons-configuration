@@ -249,7 +249,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * Checks if iteration should be stopped. This can be done if the first defined node is found.
          *
-         * @return a flag if iteration should be stopped
+         * @return A flag if iteration should be stopped
          */
         @Override
         public boolean terminate() {
@@ -392,7 +392,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * model.
      *
      * @param key the key of the property to be removed
-     * @return an object with information about the nodes that have been removed (this is needed for firing a meaningful
+     * @return An object with information about the nodes that have been removed (this is needed for firing a meaningful
      *         event of type CLEAR_TREE)
      * @since 2.0
      */
@@ -439,7 +439,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * but children (either defined or undefined), this method will still return <strong>false </strong>.
      *
      * @param key the key to be checked
-     * @return a flag if this key is contained in this configuration
+     * @return A flag if this key is contained in this configuration
      */
     @Override
     protected boolean containsKeyInternal(final String key) {
@@ -461,7 +461,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Helper method for resolving the specified key.
      *
      * @param key the key
-     * @return a list with all results selected by this key
+     * @return A list with all results selected by this key
      */
     protected List<QueryResult<T>> fetchNodeList(final String key) {
         final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
@@ -484,7 +484,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Gets an iterator with all keys defined in this configuration. Note that the keys returned by this method will not
      * contain any indices. This means that some structure will be lost.
      *
-     * @return an iterator with the defined keys in this configuration
+     * @return An iterator with the defined keys in this configuration
      */
     @Override
     protected Iterator<String> getKeysInternal() {
@@ -498,7 +498,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * added to the result set.
      *
      * @param prefix the prefix of the keys to start with
-     * @return an iterator with the found keys
+     * @return An iterator with the found keys
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix) {
@@ -513,7 +513,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param prefix the prefix of the keys to start with
      * @param delimiter the prefix delimiter (unused)
-     * @return an iterator with the found keys
+     * @return An iterator with the found keys
      * @since 2.12.0
      */
     @Override
@@ -627,7 +627,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Checks if this configuration is empty. Empty means that there are no keys with any values, though there can be some
      * (empty) nodes.
      *
-     * @return a flag if this configuration is empty
+     * @return A flag if this configuration is empty
      */
     @Override
     protected boolean isEmptyInternal() {
@@ -638,7 +638,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Checks if the specified node is defined.
      *
      * @param node the node to be checked
-     * @return a flag if this node is defined
+     * @return A flag if this node is defined
      */
     protected boolean nodeDefined(final T node) {
         final DefinedVisitor<T> visitor = new DefinedVisitor<>();

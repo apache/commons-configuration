@@ -60,7 +60,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * configuration objects returned are <strong>not</strong> connected to the parent configuration.
      *
      * @param key the key for selecting the desired parent node
-     * @return a collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
+     * @return A collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
      */
     List<HierarchicalConfiguration<T>> childConfigurationsAt(String key);
 
@@ -70,7 +70,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      *
      * @param key the key for selecting the desired parent node
      * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
-     * @return a collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
+     * @return A collection with {@code HierarchicalConfiguration} objects for all child nodes of the selected parent node
      */
     List<HierarchicalConfiguration<T>> childConfigurationsAt(String key, boolean supportUpdates);
 
@@ -89,7 +89,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * <strong>false</strong>)}.
      *
      * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
+     * @return A hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
      */
     HierarchicalConfiguration<T> configurationAt(String key);
@@ -120,7 +120,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      *
      * @param key the key that selects the sub tree
      * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
-     * @return a hierarchical configuration that contains this sub tree
+     * @return A hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
      */
     HierarchicalConfiguration<T> configurationAt(String key, boolean supportUpdates);
@@ -147,7 +147,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      * The configuration objects returned are <strong>not</strong> connected to the parent configuration.
      *
      * @param key the key for selecting the desired nodes
-     * @return a list with hierarchical configuration objects; each configuration represents one of the nodes selected by
+     * @return A list with hierarchical configuration objects; each configuration represents one of the nodes selected by
      *         the passed in key
      */
     List<HierarchicalConfiguration<T>> configurationsAt(String key);
@@ -160,7 +160,7 @@ public interface HierarchicalConfiguration<T> extends Configuration, ImmutableHi
      *
      * @param key the key for selecting the desired nodes
      * @param supportUpdates a flag whether the returned sub configuration should be directly connected to its parent
-     * @return a list with hierarchical configuration objects; each configuration represents one of the nodes selected by
+     * @return A list with hierarchical configuration objects; each configuration represents one of the nodes selected by
      *         the passed in key
      * @see #configurationsAt(String, boolean)
      */

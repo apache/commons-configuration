@@ -72,7 +72,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * is returned. This is also the result if the node referred to by the key does not have child elements.
      *
      * @param key the key for selecting the desired parent node
-     * @return a collection with immutable configurations for all child nodes of the selected parent node
+     * @return A collection with immutable configurations for all child nodes of the selected parent node
      */
     List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(String key);
 
@@ -82,7 +82,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * <strong>false</strong>)}.
      *
      * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
+     * @return A hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key);
 
@@ -104,7 +104,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * @param key the key that selects the sub tree
      * @param supportUpdates a flag whether the returned subnode configuration should be able to handle updates of its
      *        parent
-     * @return a hierarchical configuration that contains this sub tree
+     * @return A hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key, boolean supportUpdates);
 
@@ -130,7 +130,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * </pre>
      *
      * @param key the key for selecting the desired nodes
-     * @return a list with immutable hierarchical configuration objects; each configuration represents one of the nodes
+     * @return A list with immutable hierarchical configuration objects; each configuration represents one of the nodes
      *         selected by the passed in key
      */
     List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(String key);

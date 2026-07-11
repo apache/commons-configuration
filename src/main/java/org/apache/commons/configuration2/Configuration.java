@@ -156,7 +156,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * is available to the Configuration, and reciprocally.
      *
      * @param prefix The prefix used to select the properties.
-     * @return a subset configuration
+     * @return A subset configuration
      * @see SubsetConfiguration
      */
     Configuration subset(String prefix);

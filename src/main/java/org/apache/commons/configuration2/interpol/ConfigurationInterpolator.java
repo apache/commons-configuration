@@ -405,7 +405,7 @@ public class ConfigurationInterpolator {
      * </tr>
      * </table>
      *
-     * @return a map with the default prefix {@code Lookup} objects and their prefixes
+     * @return A map with the default prefix {@code Lookup} objects and their prefixes
      * @since 2.0
      */
     public static Map<String, Lookup> getDefaultPrefixLookups() {
@@ -418,7 +418,7 @@ public class ConfigurationInterpolator {
      * is a dummy {@code Lookup} which does not provide any values.
      *
      * @param lookup the {@code Lookup} to check
-     * @return a non-<strong>null</strong> {@code Lookup} object
+     * @return A non-<strong>null</strong> {@code Lookup} object
      * @since 2.0
      */
     public static Lookup nullSafeLookup(Lookup lookup) {
@@ -482,7 +482,7 @@ public class ConfigurationInterpolator {
      * instance.
      *
      * @param prefix the variable prefix
-     * @return a flag whether for this prefix a lookup object had been registered
+     * @return A flag whether for this prefix a lookup object had been registered
      */
     public boolean deregisterLookup(final String prefix) {
         return prefixLookups.remove(prefix) != null;
@@ -515,7 +515,7 @@ public class ConfigurationInterpolator {
      * Gets a map with the currently registered {@code Lookup} objects and their prefixes. This is a snapshot copy of the
      * internally used map. So modifications of this map do not effect this instance.
      *
-     * @return a copy of the map with the currently registered {@code Lookup} objects
+     * @return A copy of the map with the currently registered {@code Lookup} objects
      */
     public Map<String, Lookup> getLookups() {
         return new HashMap<>(prefixLookups);
@@ -622,7 +622,7 @@ public class ConfigurationInterpolator {
      * Returns an unmodifiable set with the prefixes, for which {@code Lookup} objects are registered at this instance. This
      * means that variables with these prefixes can be processed.
      *
-     * @return a set with the registered variable prefixes
+     * @return A set with the registered variable prefixes
      */
     public Set<String> prefixSet() {
         return Collections.unmodifiableSet(prefixLookups.keySet());
@@ -664,7 +664,7 @@ public class ConfigurationInterpolator {
      * Removes the specified {@code Lookup} object from the list of default {@code Lookup}s.
      *
      * @param lookup the {@code Lookup} object to be removed
-     * @return a flag whether this {@code Lookup} object actually existed and was removed
+     * @return A flag whether this {@code Lookup} object actually existed and was removed
      */
     public boolean removeDefaultLookup(final Lookup lookup) {
         return defaultLookups.remove(lookup);

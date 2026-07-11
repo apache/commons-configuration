@@ -54,7 +54,7 @@ public class TestImmutableConfiguration {
      * Obtains all keys from the given iteration.
      *
      * @param it the iterator
-     * @return a set with all keys
+     * @return A set with all keys
      */
     private static Set<String> fetchKeys(final Iterator<String> it) {
         final Set<String> keys = new HashSet<>();

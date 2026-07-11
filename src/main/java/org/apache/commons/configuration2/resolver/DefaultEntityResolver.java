@@ -47,7 +47,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
     /**
      * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
-     * @return a map with the registered entity IDs
+     * @return A map with the registered entity IDs
      */
     @Override
     public Map<String, URL> getRegisteredEntities() {
@@ -86,7 +86,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
      *
      * @param publicId the public identifier of the entity being referenced
      * @param systemId the system identifier of the entity being referenced
-     * @return an input source for the specified entity
+     * @return An input source for the specified entity
      * @throws org.xml.sax.SAXException if a parsing exception occurs
      */
     @SuppressWarnings("resource") // The stream is managed by the InputSource returned by this method.

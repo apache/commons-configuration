@@ -184,7 +184,7 @@ public class BuilderConfigurationWrapperFactory {
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
      * @param evSrcSupport the level of {@code EventSource} support
-     * @return an array with the interface classes to implement
+     * @return An array with the interface classes to implement
      */
     private static Class<?>[] getSupportedInterfaces(final Class<?> ifcClass, final EventSourceSupport evSrcSupport) {
         return EventSourceSupport.NONE == evSrcSupport ? new Class<?>[] {ifcClass} : new Class<?>[] {EventSource.class, ifcClass};

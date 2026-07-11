@@ -76,7 +76,7 @@ public abstract class FileSystem {
      * Gets an input stream for a URL.
      *
      * @param url the source URL.
-     * @return an input stream.
+     * @return An input stream.
      * @throws ConfigurationException if an problem occurs getting the input stream.
      */
     public abstract InputStream getInputStream(URL url) throws ConfigurationException;
@@ -109,7 +109,7 @@ public abstract class FileSystem {
      * Gets an output stream for a File.
      *
      * @param file the source File.
-     * @return an output stream.
+     * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
     public abstract OutputStream getOutputStream(File file) throws ConfigurationException;
@@ -118,7 +118,7 @@ public abstract class FileSystem {
      * Gets an output stream for a URL.
      *
      * @param url the source URL.
-     * @return an output stream.
+     * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
     public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
@@ -142,7 +142,7 @@ public abstract class FileSystem {
      *
      * @param basePath The base path.
      * @param fileName The file name.
-     * @return a URL.
+     * @return A URL.
      * @throws MalformedURLException if a problem occurs creating the URL.
      */
     public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
@@ -152,7 +152,7 @@ public abstract class FileSystem {
      *
      * @param basePath The base path.
      * @param fileName The file name.
-     * @return a URL.
+     * @return A URL.
      */
     public abstract URL locateFromURL(String basePath, String fileName);
 

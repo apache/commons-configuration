@@ -105,7 +105,7 @@ public final class ConfigurationAssert {
      * Returns a {@code File} object for the specified out file.
      *
      * @param name the name of the out file
-     * @return a {@code File} object pointing to that out file
+     * @return A {@code File} object pointing to that out file
      */
     public static File getOutFile(final String name) {
         return new File(OUT_DIR, name);
@@ -125,7 +125,7 @@ public final class ConfigurationAssert {
      * Returns a {@code File} object for the specified test file.
      *
      * @param name the name of the test file
-     * @return a {@code File} object pointing to that test file
+     * @return A {@code File} object pointing to that test file
      */
     public static File getTestFile(final String name) {
         return new File(TEST_DIR, name);
@@ -135,7 +135,7 @@ public final class ConfigurationAssert {
      * Returns a {@code File} object for the specified test file.
      *
      * @param name the name of the test file
-     * @return a {@code File} object pointing to that test file
+     * @return A {@code File} object pointing to that test file
      */
     public static Path getTestPath(final String name) {
         return TEST_DIR.toPath().resolve(name);
@@ -155,7 +155,7 @@ public final class ConfigurationAssert {
      * Returns a list with all keys defined for the specified configuration.
      *
      * @param config the configuration
-     * @return a list with all keys of this configuration
+     * @return A list with all keys of this configuration
      */
     public static List<String> keysToList(final ImmutableConfiguration config) {
         final List<String> keyList = new LinkedList<>();
@@ -167,7 +167,7 @@ public final class ConfigurationAssert {
      * Returns a set with all keys defined for the specified configuration.
      *
      * @param config the configuration
-     * @return a set with all keys of this configuration
+     * @return A set with all keys of this configuration
      */
     public static Set<String> keysToSet(final ImmutableConfiguration config) {
         final Set<String> keySet = new HashSet<>();

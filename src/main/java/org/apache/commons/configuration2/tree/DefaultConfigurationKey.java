@@ -80,7 +80,7 @@ public class DefaultConfigurationKey {
          * Helper method for checking if the passed key is an attribute. If this is the case, the internal fields will be set.
          *
          * @param key the key to be checked
-         * @return a flag if the key is an attribute
+         * @return A flag if the key is an attribute
          */
         private boolean checkAttribute(final String key) {
             if (isAttributeKey(key)) {
@@ -94,7 +94,7 @@ public class DefaultConfigurationKey {
          * Helper method for checking if the passed key contains an index. If this is the case, internal fields will be set.
          *
          * @param key the key to be checked
-         * @return a flag if an index is defined
+         * @return A flag if an index is defined
          */
         private boolean checkIndex(final String key) {
             boolean result = false;
@@ -120,7 +120,7 @@ public class DefaultConfigurationKey {
         /**
          * Creates a clone of this object.
          *
-         * @return a clone of this object
+         * @return A clone of this object
          */
         @Override
         public Object clone() {
@@ -231,7 +231,7 @@ public class DefaultConfigurationKey {
         /**
          * Returns a flag if the current key has an associated index. This method can be called after {@code next()}.
          *
-         * @return a flag if the current key has an index
+         * @return A flag if the current key has an index
          */
         public boolean hasIndex() {
             return hasIndex;
@@ -240,7 +240,7 @@ public class DefaultConfigurationKey {
         /**
          * Checks if there is a next element.
          *
-         * @return a flag if there is a next element
+         * @return A flag if there is a next element
          */
         @Override
         public boolean hasNext() {
@@ -250,7 +250,7 @@ public class DefaultConfigurationKey {
         /**
          * Returns a flag if the current key is an attribute. This method can be called after {@code next()}.
          *
-         * @return a flag if the current key is an attribute
+         * @return A flag if the current key is an attribute
          */
         public boolean isAttribute() {
             // if attribute emulation mode is active, the last part of a key is
@@ -264,7 +264,7 @@ public class DefaultConfigurationKey {
          * way than other child nodes, so an expression engine supports to set the attribute markers to the same value than the
          * property delimiter. If this is the case, some special checks have to be performed.
          *
-         * @return a flag if attributes and normal property keys are treated the same way
+         * @return A flag if attributes and normal property keys are treated the same way
          */
         private boolean isAttributeEmulatingMode() {
             return getSymbols().getAttributeEnd() == null && Strings.CS.equals(getSymbols().getPropertyDelimiter(), getSymbols().getAttributeStart());
@@ -275,7 +275,7 @@ public class DefaultConfigurationKey {
          * will return the opposite of {@code isAttribute()}, but if the delimiters for normal properties and attributes are set
          * to the same string, it is possible that both methods return <strong>true</strong>.
          *
-         * @return a flag if the current key is a property key
+         * @return A flag if the current key is a property key
          * @see #isAttribute()
          */
         public boolean isPropertyKey() {
@@ -391,7 +391,7 @@ public class DefaultConfigurationKey {
      *
      * @param it1 the iterator with the first part
      * @param it2 the iterator with the second part
-     * @return a flag if both parts are equal
+     * @return A flag if both parts are equal
      */
     private static boolean partsEqual(final KeyIterator it1, final KeyIterator it2) {
         return it1.nextKey().equals(it2.nextKey()) && it1.getIndex() == it2.getIndex() && it1.isAttribute() == it2.isAttribute();
@@ -438,7 +438,7 @@ public class DefaultConfigurationKey {
      * the given string will not be escaped.
      *
      * @param property the name of the property to be added
-     * @return a reference to this object
+     * @return A reference to this object
      */
     public DefaultConfigurationKey append(final String property) {
         return append(property, false);
@@ -450,7 +450,7 @@ public class DefaultConfigurationKey {
      *
      * @param property the name of the property to be added
      * @param escape a flag if property delimiters in the passed in property name should be escaped
-     * @return a reference to this object
+     * @return A reference to this object
      */
     public DefaultConfigurationKey append(final String property, final boolean escape) {
         String key;
@@ -473,7 +473,7 @@ public class DefaultConfigurationKey {
      * Appends an attribute to this configuration key.
      *
      * @param attr the name of the attribute to be appended
-     * @return a reference to this object
+     * @return A reference to this object
      */
     public DefaultConfigurationKey appendAttribute(final String attr) {
         keyBuffer.append(constructAttributeKey(attr));
@@ -484,7 +484,7 @@ public class DefaultConfigurationKey {
      * Appends an index to this configuration key.
      *
      * @param index the index to be appended
-     * @return a reference to this object
+     * @return A reference to this object
      */
     public DefaultConfigurationKey appendIndex(final int index) {
         keyBuffer.append(getSymbols().getIndexStart());
@@ -509,7 +509,7 @@ public class DefaultConfigurationKey {
      * passed in key.
      *
      * @param other the other key
-     * @return a key object with the common key part
+     * @return A key object with the common key part
      */
     public DefaultConfigurationKey commonKey(final DefaultConfigurationKey other) {
         if (other == null) {
@@ -590,7 +590,7 @@ public class DefaultConfigurationKey {
      * taken into account.
      *
      * @param obj the object to compare
-     * @return a flag if both objects are equal
+     * @return A flag if both objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -648,7 +648,7 @@ public class DefaultConfigurationKey {
      * Helper method that checks if the specified key starts with a property delimiter.
      *
      * @param key the key to check
-     * @return a flag if there is a leading delimiter
+     * @return A flag if there is a leading delimiter
      */
     private boolean hasLeadingDelimiter(final String key) {
         return key.startsWith(getSymbols().getPropertyDelimiter())
@@ -659,7 +659,7 @@ public class DefaultConfigurationKey {
      * Helper method that checks if the specified key ends with a property delimiter.
      *
      * @param key the key to check
-     * @return a flag if there is a trailing delimiter
+     * @return A flag if there is a trailing delimiter
      */
     private boolean hasTrailingDelimiter(final String key) {
         return key.endsWith(getSymbols().getPropertyDelimiter())
@@ -683,7 +683,7 @@ public class DefaultConfigurationKey {
     /**
      * Returns an iterator for iterating over the single components of this configuration key.
      *
-     * @return an iterator for this key
+     * @return An iterator for this key
      */
     public KeyIterator iterator() {
         return new KeyIterator();
@@ -723,7 +723,7 @@ public class DefaultConfigurationKey {
     /**
      * Returns a string representation of this object. This is the configuration key as a plain string.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

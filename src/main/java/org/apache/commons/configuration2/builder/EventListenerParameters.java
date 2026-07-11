@@ -69,7 +69,7 @@ public class EventListenerParameters implements BuilderParameters, EventListener
      *
      * @param registrationData the registration object to be added
      * @param <T> The event type of the contained event listener
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     public <T extends Event> EventListenerParameters addEventListener(final EventListenerRegistrationData<T> registrationData) {
         eventListeners.addEventListener(registrationData);
@@ -82,7 +82,7 @@ public class EventListenerParameters implements BuilderParameters, EventListener
      * @param eventType the event type object
      * @param listener the event listener
      * @param <T> The event type
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     public <T extends Event> EventListenerParameters addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
         eventListeners.addEventListener(eventType, listener);

@@ -72,7 +72,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * Generates a string with expected methods from the given array.
      *
      * @param expMethods the array with expected methods
-     * @return a corresponding string representation
+     * @return A corresponding string representation
      */
     private String constructExpectedMethods(final Methods... expMethods) {
         final StringBuilder buf = new StringBuilder();

@@ -59,7 +59,7 @@ final class XMLListReference {
      *
      * @param node the node to be checked
      * @param handler the reference handler
-     * @return a flag whether this node has a list reference
+     * @return A flag whether this node has a list reference
      */
     private static boolean hasListReference(final ImmutableNode node, final ReferenceNodeHandler handler) {
         return handler.getReference(node) instanceof XMLListReference;
@@ -72,7 +72,7 @@ final class XMLListReference {
      *
      * @param node the configuration node
      * @param handler the reference node handler
-     * @return a flag whether this is the first node of a list
+     * @return A flag whether this is the first node of a list
      */
     public static boolean isFirstListItem(final ImmutableNode node, final ReferenceNodeHandler handler) {
         final ImmutableNode parent = handler.getParent(node);
@@ -96,7 +96,7 @@ final class XMLListReference {
      *
      * @param node the configuration node
      * @param handler the reference node handler
-     * @return a flag whether this node is relevant for list handling
+     * @return A flag whether this node is relevant for list handling
      */
     public static boolean isListNode(final ImmutableNode node, final ReferenceNodeHandler handler) {
         if (hasListReference(node, handler)) {
@@ -123,7 +123,7 @@ final class XMLListReference {
      * @param node the configuration node
      * @param nodeHandler the reference node handler
      * @param delimiterHandler the list delimiter handler of the configuration
-     * @return a string with all values of the current list
+     * @return A string with all values of the current list
      * @throws ConfigurationRuntimeException if the list delimiter handler does not support the transformation of list items
      *         to a string
      */
@@ -145,7 +145,7 @@ final class XMLListReference {
      *
      * @param n1 node 1
      * @param n2 node 2
-     * @return a flag whether these nodes have equal names
+     * @return A flag whether these nodes have equal names
      */
     private static boolean nameEquals(final ImmutableNode n1, final ImmutableNode n2) {
         return Strings.CS.equals(n2.getNodeName(), n1.getNodeName());

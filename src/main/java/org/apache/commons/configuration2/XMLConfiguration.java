@@ -463,7 +463,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Checks whether an element defines a complete list. If this is the case, extended list handling can be applied.
      *
      * @param element the element to be checked.
-     * @return a flag whether this is the only element defining the list.
+     * @return A flag whether this is the only element defining the list.
      */
     private static boolean isSingleElementList(final Element element) {
         final Node parentNode = element.getParentNode();
@@ -474,7 +474,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * Helper method for initializing the attributes of a configuration node from the given XML element.
      *
      * @param element the current XML element
-     * @return a map with all attribute values extracted for the current node
+     * @return A map with all attribute values extracted for the current node
      */
     private static Map<String, String> processAttributes(final Node element) {
         final NamedNodeMap attributes = element.getAttributes();
@@ -497,7 +497,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param element the current XML element
      * @param currentTrim the current trim flag
-     * @return a flag whether the content of this element should be trimmed
+     * @return A flag whether the content of this element should be trimmed
      */
     private static boolean shouldTrim(final Element element, final boolean currentTrim) {
         final Attr attr = element.getAttributeNode(ATTR_SPACE);
@@ -561,7 +561,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @param elemRefs a map for assigning references objects to nodes; can be <strong>null</strong>, then reference objects are irrelevant.
      * @param trim     a flag whether the text content of elements should be trimmed; this controls the whitespace handling.
      * @param level    the current level in the hierarchy.
-     * @return a map with all attribute values extracted for the current node; this map also contains the value of the trim flag for this node under the key
+     * @return A map with all attribute values extracted for the current node; this map also contains the value of the trim flag for this node under the key
      *         {@value #ATTR_SPACE}.
      */
     private Map<String, String> constructHierarchy(final ImmutableNode.Builder node, final MutableObject<String> refValue, final Element element,

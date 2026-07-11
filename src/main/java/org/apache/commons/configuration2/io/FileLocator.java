@@ -91,7 +91,7 @@ public final class FileLocator {
          * Specifies the base path of the new {@code FileLocator}.
          *
          * @param path the base path
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder basePath(final String path) {
             basePath = path;
@@ -111,7 +111,7 @@ public final class FileLocator {
          * Specifies the encoding of the new {@code FileLocator}.
          *
          * @param enc the encoding
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder encoding(final String enc) {
             encoding = enc;
@@ -122,7 +122,7 @@ public final class FileLocator {
          * Specifies the file name of the new {@code FileLocator}.
          *
          * @param name the file name
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileName(final String name) {
             fileName = name;
@@ -133,7 +133,7 @@ public final class FileLocator {
          * Specifies the {@code FileSystem} of the new {@code FileLocator}.
          *
          * @param fs the {@code FileSystem}
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileSystem(final FileSystem fs) {
             fileSystem = fs;
@@ -159,7 +159,7 @@ public final class FileLocator {
          * Specifies the {@code FileLocationStrategy} to be used when the referenced file is to be located.
          *
          * @param strategy the {@code FileLocationStrategy}
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy) {
             locationStrategy = strategy;
@@ -170,7 +170,7 @@ public final class FileLocator {
          * Specifies the source URL of the new {@code FileLocator}.
          *
          * @param url the source URL
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder sourceURL(final URL url) {
             this.sourceURL = url;
@@ -181,7 +181,7 @@ public final class FileLocator {
          * Specifies the source URL connection options of the new {@code FileLocator}.
          *
          * @param urlConnectionOptions the source URL connection options.
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder urlConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
             this.urlConnectionOptions = urlConnectionOptions;
@@ -231,7 +231,7 @@ public final class FileLocator {
      * properties are equal.
      *
      * @param obj the object to compare to
-     * @return a flag whether these objects are equal
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -316,7 +316,7 @@ public final class FileLocator {
     /**
      * Returns a hash code for this object.
      *
-     * @return a hash code for this object
+     * @return A hash code for this object
      */
     @Override
     public int hashCode() {

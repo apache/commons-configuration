@@ -188,7 +188,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param parent the parent node
      * @param nodeName the name of the current node
      * @param <T> The type of the nodes to be dealt with
-     * @return a list with all matching child nodes
+     * @return A list with all matching child nodes
      */
     private <T> List<T> findChildNodesByName(final NodeHandler<T> handler, final T parent, final String nodeName) {
         return handler.getMatchingChildren(parent, nameMatcher, nodeName);
@@ -341,7 +341,7 @@ public class DefaultExpressionEngine implements ExpressionEngine {
      * @param root the root node of the nodes hierarchy
      * @param key the key of the new property
      * @param handler the node handler
-     * @return a data object with information needed for the add operation
+     * @return A data object with information needed for the add operation
      */
     @Override
     public <T> NodeAddData<T> prepareAdd(final T root, final String key, final NodeHandler<T> handler) {

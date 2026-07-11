@@ -90,7 +90,7 @@ public interface ListDelimiterHandler {
      *
      * @param value the value to be processed
      * @param limit the limit for aborting the processing
-     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
+     * @return A &quot;flat&quot; collection containing all primitive values of the passed in object
      * @since 2.9.0
      */
     default Collection<?> flatten(final Object value, final int limit) {
@@ -103,7 +103,7 @@ public interface ListDelimiterHandler {
      * method to return an {@code Iterable} which contains all extracted values.
      *
      * @param value the value to be parsed
-     * @return an {@code Iterable} allowing access to all extracted values
+     * @return An {@code Iterable} allowing access to all extracted values
      */
     Iterable<?> parse(Object value);
 
@@ -116,7 +116,7 @@ public interface ListDelimiterHandler {
      *
      * @param s the string to be split
      * @param trim a flag whether each component of the string is to be trimmed
-     * @return a collection with all components extracted from the string
+     * @return A collection with all components extracted from the string
      */
     Collection<String> split(String s, boolean trim);
 

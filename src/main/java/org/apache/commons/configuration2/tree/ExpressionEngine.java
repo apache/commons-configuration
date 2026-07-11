@@ -90,7 +90,7 @@ public interface ExpressionEngine {
      * @param root the root node
      * @param key the key for the new property
      * @param handler the {@code NodeHandler} for accessing the node
-     * @return an object with all information needed for the add operation
+     * @return An object with all information needed for the add operation
      */
     <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler);
 
@@ -105,7 +105,7 @@ public interface ExpressionEngine {
      * @param root the root node of a hierarchy of nodes
      * @param key the key to be evaluated
      * @param handler the {@code NodeHandler} for accessing the node
-     * @return a list with the results that are matched by the key (should never be <strong>null</strong>)
+     * @return A list with the results that are matched by the key (should never be <strong>null</strong>)
      */
     <T> List<QueryResult<T>> query(T root, String key, NodeHandler<T> handler);
 }

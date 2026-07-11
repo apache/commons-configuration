@@ -82,7 +82,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * to do this cast.
      *
      * @param props the {@code Properties} to be copied.
-     * @return a newly created map with all string keys of the properties.
+     * @return A newly created map with all string keys of the properties.
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Object> toMap(final Properties props) {

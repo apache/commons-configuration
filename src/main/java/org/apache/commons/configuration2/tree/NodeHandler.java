@@ -37,7 +37,7 @@ public interface NodeHandler<T> {
      * Gets an unmodifiable set with the names of all attributes of the specified node.
      *
      * @param node the node
-     * @return a set with the names of all attributes of this node
+     * @return A set with the names of all attributes of this node
      */
     Set<String> getAttributes(T node);
 
@@ -64,7 +64,7 @@ public interface NodeHandler<T> {
      * Gets an unmodifiable list with all children of the specified node.
      *
      * @param node the node
-     * @return a list with the child nodes of this node
+     * @return A list with the child nodes of this node
      */
     List<T> getChildren(T node);
 
@@ -73,7 +73,7 @@ public interface NodeHandler<T> {
      *
      * @param node the node
      * @param name the name of the desired child nodes
-     * @return a list with all children with the given name
+     * @return A list with all children with the given name
      */
     List<T> getChildren(T node, String name);
 
@@ -98,7 +98,7 @@ public interface NodeHandler<T> {
      * @param matcher the {@code NodeMatcher} defining filter criteria
      * @param criterion the criterion to be matched against; this object is passed to the {@code NodeMatcher}
      * @param <C> The type of the criterion
-     * @return a list with all children matched by the matcher
+     * @return A list with all children matched by the matcher
      */
     <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher, C criterion);
 
@@ -142,7 +142,7 @@ public interface NodeHandler<T> {
      * Returns a flag whether the passed in node has any attributes.
      *
      * @param node the node
-     * @return a flag whether this node has any attributes
+     * @return A flag whether this node has any attributes
      */
     boolean hasAttributes(T node);
 
@@ -163,7 +163,7 @@ public interface NodeHandler<T> {
      * or attributes, or defined children.
      *
      * @param node the node to test
-     * @return a flag whether the passed in node is defined
+     * @return A flag whether the passed in node is defined
      */
     boolean isDefined(T node);
 

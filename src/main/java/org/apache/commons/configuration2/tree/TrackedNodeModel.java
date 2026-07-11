@@ -200,7 +200,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * returns the value of the corresponding flag passed to the constructor. If result is true, the underlying model is
      * asked to untrack the managed node when this object is claimed by the GC.
      *
-     * @return a flag whether the managed tracked node should be released when this object dies
+     * @return A flag whether the managed tracked node should be released when this object dies
      * @see InMemoryNodeModel#untrackNode(NodeSelector)
      */
     public boolean isReleaseTrackedNodeOnFinalize() {

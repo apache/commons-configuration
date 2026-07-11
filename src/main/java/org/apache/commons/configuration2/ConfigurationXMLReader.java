@@ -158,7 +158,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets a reference to an exception that occurred during parsing.
      *
-     * @return a SAXExcpetion or <strong>null</strong> if none occurred
+     * @return A SAXExcpetion or <strong>null</strong> if none occurred
      */
     public SAXException getException() {
         return exception;

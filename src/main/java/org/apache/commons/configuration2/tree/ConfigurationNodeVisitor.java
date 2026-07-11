@@ -41,7 +41,7 @@ public interface ConfigurationNodeVisitor<T> {
      * hierarchy. After that node was found, there is no need to process the remaining nodes, too. This method is called
      * after each visited node. A result of <strong>true</strong> indicates that the current iteration is to be aborted.
      *
-     * @return a flag if the visit process should be stopped
+     * @return A flag if the visit process should be stopped
      */
     boolean terminate();
 

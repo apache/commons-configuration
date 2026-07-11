@@ -38,7 +38,7 @@ public class ProvidedURLLocationStrategy extends AbstractFileLocationStrategy {
     /**
      * Builds new instances of {@link ProvidedURLLocationStrategy}.
      *
-     * @return a new builder.
+     * @return A new builder.
      * @since 2.15.0
      */
     public static StrategyBuilder<ProvidedURLLocationStrategy> builder() {

@@ -260,7 +260,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * Splits the at path into its components.
          *
          * @param at the at string
-         * @return a collection with the names of the single components
+         * @return A collection with the names of the single components
          */
         private Collection<String> parseAt(final String at) {
             if (StringUtils.isEmpty(at)) {
@@ -537,7 +537,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * all child configurations.
      *
      * @param node the node
-     * @return a set with the owning configurations
+     * @return A set with the owning configurations
      */
     private Set<Configuration> findSourceConfigurations(final ImmutableNode node) {
         final Set<Configuration> result = new HashSet<>();
@@ -606,7 +606,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
-     * @return a set with the names of the contained configurations (never <strong>null</strong>)
+     * @return A set with the names of the contained configurations (never <strong>null</strong>)
      */
     public Set<String> getConfigurationNames() {
         beginRead(true);
@@ -732,7 +732,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * </ul>
      *
      * @param key the key of a configuration property
-     * @return a set with the configuration sources, which contain this property
+     * @return A set with the configuration sources, which contain this property
      * @since 2.0
      */
     public Set<Configuration> getSources(final String key) {
@@ -793,7 +793,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Returns a flag whether this configuration has been invalidated. This means that the combined nodes structure has to
      * be rebuilt before the configuration can be accessed.
      *
-     * @return a flag whether this configuration is invalid
+     * @return A flag whether this configuration is invalid
      */
     private boolean isUpToDate() {
         return upToDate;
@@ -827,7 +827,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * Removes the specified configuration from this combined configuration.
      *
      * @param config the configuration to be removed
-     * @return a flag whether this configuration was found and could be removed
+     * @return A flag whether this configuration was found and could be removed
      */
     public boolean removeConfiguration(final Configuration config) {
         for (int index = 0; index < getNumberOfConfigurations(); index++) {

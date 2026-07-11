@@ -259,7 +259,7 @@ public class EventListenerList {
      *
      * @param eventType the event type object
      * @param <T> The event type
-     * @return an {@code Iterator} with the selected event listeners
+     * @return An {@code Iterator} with the selected event listeners
      */
     public <T extends Event> EventListenerIterator<T> getEventListenerIterator(final EventType<T> eventType) {
         return new EventListenerIterator<>(listeners.iterator(), eventType);
@@ -271,7 +271,7 @@ public class EventListenerList {
      *
      * @param eventType the event type object
      * @param <T> The event type
-     * @return an {@code Iterable} with the selected event listeners
+     * @return An {@code Iterable} with the selected event listeners
      */
     public <T extends Event> Iterable<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
         return () -> getEventListenerIterator(eventType);
@@ -280,7 +280,7 @@ public class EventListenerList {
     /**
      * Gets an (unmodifiable) list with registration information about all event listeners registered at this object.
      *
-     * @return a list with event listener registration information
+     * @return A list with event listener registration information
      */
     public List<EventListenerRegistrationData<?>> getRegistrations() {
         return Collections.unmodifiableList(listeners);
@@ -295,7 +295,7 @@ public class EventListenerList {
      *
      * @param eventType the event type object
      * @param <T> The event type
-     * @return a list with the matching event listener registration objects
+     * @return A list with the matching event listener registration objects
      */
     public <T extends Event> List<EventListenerRegistrationData<? extends T>> getRegistrationsForSuperType(final EventType<T> eventType) {
         final Map<EventType<?>, Set<EventType<?>>> superTypes = new HashMap<>();
@@ -321,7 +321,7 @@ public class EventListenerList {
      *
      * @param regData the registration data object
      * @param <T> The type of events processed by this listener
-     * @return a flag whether a listener registration was removed
+     * @return A flag whether a listener registration was removed
      * @see #removeEventListener(EventType, EventListener)
      */
     public <T extends Event> boolean removeEventListener(final EventListenerRegistrationData<T> regData) {
@@ -337,7 +337,7 @@ public class EventListenerList {
      * @param eventType the event type
      * @param listener the event listener to be removed
      * @param <T> The type of events processed by this listener
-     * @return a flag whether a listener registration was removed
+     * @return A flag whether a listener registration was removed
      */
     public <T extends Event> boolean removeEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
         return !(listener == null || eventType == null) && removeEventListener(new EventListenerRegistrationData<>(eventType, listener));

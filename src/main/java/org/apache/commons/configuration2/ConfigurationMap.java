@@ -148,7 +148,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object> {
     /**
      * Returns a set with the entries contained in this configuration-based map.
      *
-     * @return a set with the contained entries
+     * @return A set with the contained entries
      * @see Map#entrySet()
      */
     @Override

@@ -39,7 +39,7 @@ public interface JndiBuilderProperties<T> {
      * Sets the JNDI context to be used by the JNDI configuration.
      *
      * @param ctx the JNDI {@code Context}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setContext(Context ctx);
 
@@ -47,7 +47,7 @@ public interface JndiBuilderProperties<T> {
      * Sets the prefix in the JNDI tree. When creating the root JNDI context this prefix is taken into account.
      *
      * @param p the prefix
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setPrefix(String p);
 }

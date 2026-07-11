@@ -68,7 +68,7 @@ public final class EventListenerRegistrationData<T extends Event> {
      * they reference the same listener and event type.
      *
      * @param obj the object to be compared to
-     * @return a flag whether these objects are equal
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {

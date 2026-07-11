@@ -55,7 +55,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
          *
          * @param node the current node
          * @param handler the node handler
-         * @return an object with all attributes of this node
+         * @return An object with all attributes of this node
          */
         protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler) {
             final AttributesImpl attrs = new AttributesImpl();
@@ -86,7 +86,7 @@ public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReade
         /**
          * Checks if iteration should be terminated. This implementation stops iteration after an exception has occurred.
          *
-         * @return a flag if iteration should be stopped
+         * @return A flag if iteration should be stopped
          */
         @Override
         public boolean terminate() {

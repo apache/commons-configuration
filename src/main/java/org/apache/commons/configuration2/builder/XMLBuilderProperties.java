@@ -42,7 +42,7 @@ public interface XMLBuilderProperties<T> {
      * XML processing.
      *
      * @param docBuilder the {@code DocumentBuilder} to use
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setDocumentBuilder(DocumentBuilder docBuilder);
 
@@ -50,7 +50,7 @@ public interface XMLBuilderProperties<T> {
      * Sets the {@code EntityResolver} which maps entity references during XML parsing.
      *
      * @param resolver the {@code EntityResolver} to use
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setEntityResolver(EntityResolver resolver);
 
@@ -58,7 +58,7 @@ public interface XMLBuilderProperties<T> {
      * Sets the public ID of the DOCTYPE declaration.
      *
      * @param pubID the public ID
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setPublicID(String pubID);
 
@@ -66,7 +66,7 @@ public interface XMLBuilderProperties<T> {
      * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
      *
      * @param f the flag value, <strong>true</strong> for schema validation, <strong>false</strong> for DTD validation
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setSchemaValidation(boolean f);
 
@@ -74,7 +74,7 @@ public interface XMLBuilderProperties<T> {
      * Sets the system ID of the DOCTYPE declaration.
      *
      * @param sysID the system ID
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setSystemID(String sysID);
 
@@ -82,7 +82,7 @@ public interface XMLBuilderProperties<T> {
      * Sets a flag whether schema/DTD validation should be performed.
      *
      * @param f the validation flag
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setValidating(boolean f);
 }

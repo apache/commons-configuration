@@ -135,7 +135,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Returns a flag whether this trigger is currently active.
      *
-     * @return a flag whether this trigger is running
+     * @return A flag whether this trigger is running
      */
     public synchronized boolean isRunning() {
         return triggerTask != null;

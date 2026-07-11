@@ -286,7 +286,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Tests whether a line is a comment, i.e. whether it starts with a comment character.
      *
      * @param line the line
-     * @return a flag if this is a comment line
+     * @return A flag if this is a comment line
      */
     static boolean isCommentLine(final String line) {
         return PropertiesConfiguration.isCommentLine(line);
@@ -602,7 +602,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     /**
      * Gets a set with all property keys managed by this object.
      *
-     * @return a set with all contained property keys
+     * @return A set with all contained property keys
      */
     public Set<String> getKeys() {
         return layoutData.keySet();
@@ -644,7 +644,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * has multiple values.
      *
      * @param key the property key
-     * @return a flag if this property is defined on a single line
+     * @return A flag if this property is defined on a single line
      */
     public boolean isSingleLine(final String key) {
         return fetchLayoutData(key).isSingleLine();

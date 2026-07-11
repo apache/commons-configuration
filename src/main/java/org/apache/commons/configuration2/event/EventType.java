@@ -53,7 +53,7 @@ public class EventType<T extends Event> implements Serializable {
      * set is returned.
      *
      * @param eventType the event type in question
-     * @return a set with all super event types
+     * @return A set with all super event types
      */
     public static Set<EventType<?>> fetchSuperEventTypes(final EventType<?> eventType) {
         final Set<EventType<?>> types = new HashSet<>();
@@ -125,7 +125,7 @@ public class EventType<T extends Event> implements Serializable {
      * Returns a string representation for this object. This method is mainly overridden for debugging purposes. The
      * returned string contains the name of this event type.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

@@ -78,7 +78,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param key     the key of the new node(s).
      * @param elem    the element to be processed.
      * @param visited the set of visited objects.
-     * @return a list with configuration nodes representing the element
+     * @return A list with configuration nodes representing the element
      */
     private static List<ImmutableNode> constructHierarchy(final String key, final Object elem, final Set<Object> visited) {
         if (elem instanceof Map) {
@@ -100,7 +100,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param col     the collection to be processed.
      * @param key     the key under which this collection is to be stored.
      * @param visited the set of visited objects.
-     * @return a node representing this collection.
+     * @return A node representing this collection.
      */
     private static List<ImmutableNode> parseCollection(final Collection<Object> col, final String key, final Set<Object> visited) {
         return col.stream().flatMap(elem -> constructHierarchy(key, elem, visited).stream()).collect(Collectors.toList());
@@ -112,7 +112,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param map     the map to be processed.
      * @param key     the key under which this map is to be stored.
      * @param visited the set of visited objects.
-     * @return a node representing this map
+     * @return A node representing this map
      */
     private static List<ImmutableNode> parseMap(final Map<String, Object> map, final String key, final Set<Object> visited) {
         final ImmutableNode.Builder subtree = new ImmutableNode.Builder().name(key);

@@ -99,7 +99,7 @@ public class ReloadingController implements EventSource {
      * it then returns always <strong>true</strong>.
      *
      * @param data additional data for an event notification
-     * @return a flag whether a reload operation is necessary
+     * @return A flag whether a reload operation is necessary
      */
     public boolean checkForReloading(final Object data) {
         boolean sendEvent = false;
@@ -134,7 +134,7 @@ public class ReloadingController implements EventSource {
      * invocation of {@code checkForReloading()} has detected the necessity for a reload operation, but
      * {@code resetReloadingState()} has not been called yet. In this state no further reloading checks are possible.
      *
-     * @return a flag whether this controller is in reloading state
+     * @return A flag whether this controller is in reloading state
      */
     public synchronized boolean isInReloadingState() {
         return reloadingState;

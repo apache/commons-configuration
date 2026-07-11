@@ -172,7 +172,7 @@ public final class BeanHelper {
      * Creates a {@code DynaBean} instance which wraps the passed in bean.
      *
      * @param bean the bean to be wrapped (must not be <strong>null</strong>)
-     * @return a {@code DynaBean} wrapping the passed in bean
+     * @return A {@code DynaBean} wrapping the passed in bean
      * @throws IllegalArgumentException if the bean is <strong>null</strong>
      * @since 2.0
      */
@@ -521,7 +521,7 @@ public final class BeanHelper {
     /**
      * Gets a set with the names of all currently registered bean factories.
      *
-     * @return a set with the names of the registered bean factories
+     * @return A set with the names of the registered bean factories
      */
     public Set<String> registeredFactoryNames() {
         return beanFactories.keySet();

@@ -134,7 +134,7 @@ public class TestEventListenerList {
      * Helper method for collecting the elements in the given iterable.
      *
      * @param iterable the iterable
-     * @return a list with the content of the iterable
+     * @return A list with the content of the iterable
      */
     private static <T> List<T> fetchElements(final Iterable<? extends T> iterable) {
         final List<T> elems = new LinkedList<>();

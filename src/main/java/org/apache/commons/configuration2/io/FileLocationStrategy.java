@@ -56,7 +56,7 @@ public interface FileLocationStrategy {
      *
      * @param fileSystem the {@code FileSystem} to be used for this operation
      * @param locator the object describing the file to be located
-     * @return a URL pointing to the referenced file if location was successful; <strong>null</strong> if the file could not be
+     * @return A URL pointing to the referenced file if location was successful; <strong>null</strong> if the file could not be
      *         resolved
      */
     URL locate(FileSystem fileSystem, FileLocator locator);

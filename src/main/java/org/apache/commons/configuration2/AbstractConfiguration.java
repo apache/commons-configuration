@@ -553,7 +553,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code encodeForCopy()} for all list elements.
      *
      * @param values the list to be encoded.
-     * @return a list with encoded elements.
+     * @return A list with encoded elements.
      */
     private Object encodeListForCopy(final Collection<?> values) {
         return values.stream().map(this::encodeForCopy).collect(Collectors.toList());
@@ -896,7 +896,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Creates an iterator for iterating over the keys in this configuration. This method is called by
      * {@code getKeys()}, it has to be defined by concrete subclasses.
      *
-     * @return an {@code Iterator} with all property keys in this configuration.
+     * @return An {@code Iterator} with all property keys in this configuration.
      * @since 2.0
      */
     protected abstract Iterator<String> getKeysInternal();
@@ -908,7 +908,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * to iterate over specific keys only.
      *
      * @param prefix the prefix for the keys to be taken into account.
-     * @return an {@code Iterator} returning the filtered keys.
+     * @return An {@code Iterator} returning the filtered keys.
      * @since 2.0
      */
     protected Iterator<String> getKeysInternal(final String prefix) {
@@ -923,7 +923,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param prefix the prefix for the keys to be taken into account.
      * @param delimiter the prefix delimiter.
-     * @return an {@code Iterator} returning the filtered keys.
+     * @return An {@code Iterator} returning the filtered keys.
      * @since 2.10.0
      */
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
@@ -1214,7 +1214,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * unchanged). This operation is useful if the content of a configuration is to be exported or processed by an external
      * component that does not support variable interpolation.
      *
-     * @return a configuration with all variables interpolated.
+     * @return A configuration with all variables interpolated.
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if this configuration cannot be cloned.
      * @since 1.5
      */
@@ -1252,7 +1252,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * implementation returns <strong>true</strong> if the value is of a wrapper type for a primitive type.
      *
      * @param value the value to be checked.
-     * @return a flag whether the value is a scalar.
+     * @return A flag whether the value is a scalar.
      * @since 1.7
      */
     protected boolean isScalarValue(final Object value) {

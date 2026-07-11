@@ -76,7 +76,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      * array. If the property does not exist, an exception is thrown.
      *
      * @param name the name of the property to check
-     * @return a flag whether this is an indexed property
+     * @return A flag whether this is an indexed property
      * @throws IllegalArgumentException if the property does not exist
      */
     private boolean checkIndexedProperty(final String name) {

@@ -124,7 +124,7 @@ public final class ConfigurationUtils {
      *
      * @param obj the object to be cast as {@code EventSource}.
      * @param mockIfUnsupported a flag whether a mock object should be returned if necessary.
-     * @return an {@code EventSource}.
+     * @return An {@code EventSource}.
      * @throws ConfigurationRuntimeException if the object cannot be cast to {@code EventSource} and the mock flag is
      *         <strong>false</strong>.
      * @since 2.0
@@ -329,7 +329,7 @@ public final class ConfigurationUtils {
      *
      * @param ifcs an array with the interface classes the proxy must implement.
      * @param c the configuration object to be wrapped.
-     * @return a proxy object for an immutable configuration.
+     * @return A proxy object for an immutable configuration.
      * @throws NullPointerException if the configuration is <strong>null</strong>.
      */
     private static ImmutableConfiguration createUnmodifiableConfiguration(final Class<?>[] ifcs, final Configuration c) {
@@ -456,7 +456,7 @@ public final class ConfigurationUtils {
      * backwards compatibility reason.
      *
      * @param configuration the configuration.
-     * @return a string representation of the configuration.
+     * @return A string representation of the configuration.
      */
     public static String toString(final Configuration configuration) {
         return toString((ImmutableConfiguration) configuration);
@@ -466,7 +466,7 @@ public final class ConfigurationUtils {
      * Gets a string representation of the key/value mappings of a configuration.
      *
      * @param configuration the configuration.
-     * @return a string representation of the configuration.
+     * @return A string representation of the configuration.
      * @since 2.2
      */
     public static String toString(final ImmutableConfiguration configuration) {
@@ -482,7 +482,7 @@ public final class ConfigurationUtils {
      * returned object back to a {@code Configuration} instance to circumvent this protection.
      *
      * @param c the {@code Configuration} to be wrapped (must not be <strong>null</strong>).
-     * @return an {@code ImmutableConfiguration} view on the specified {@code Configuration} object.
+     * @return An {@code ImmutableConfiguration} view on the specified {@code Configuration} object.
      * @throws NullPointerException if the passed in {@code Configuration} is <strong>null</strong>.
      * @since 2.0
      */
@@ -495,7 +495,7 @@ public final class ConfigurationUtils {
      * method works exactly like the method with the same name, but it operates on hierarchical configurations.
      *
      * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be <strong>null</strong>).
-     * @return an {@code ImmutableHierarchicalConfiguration} view on the specified {@code HierarchicalConfiguration} object.
+     * @return An {@code ImmutableHierarchicalConfiguration} view on the specified {@code HierarchicalConfiguration} object.
      * @throws NullPointerException if the passed in {@code HierarchicalConfiguration} is <strong>null</strong>.
      * @since 2.0
      */

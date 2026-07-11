@@ -150,7 +150,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          *
          * @param name the attribute name
          * @param value the attribute value
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder addAttribute(final String name, final Object value) {
             ensureAttributesExist();
@@ -163,7 +163,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * but it allows setting multiple attributes at once.
          *
          * @param attrs the map with attributes to be added (may be <strong>null</strong>
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder addAttributes(final Map<String, ?> attrs) {
             if (attrs != null) {
@@ -178,7 +178,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * <strong>null</strong>, it is ignored.
          *
          * @param c the child node (must not be <strong>null</strong>)
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder addChild(final ImmutableNode c) {
             if (c != null) {
@@ -194,7 +194,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          *
          *
          * @param children a collection with the child nodes to be added
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder addChildren(final Collection<? extends ImmutableNode> children) {
             if (children != null) {
@@ -220,7 +220,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Creates a map with the attributes of the newly created node. This is an immutable map. If direct attributes were set,
          * they are returned. Otherwise an unmodifiable map from the attributes passed to this builder is constructed.
          *
-         * @return a map with the attributes for the new node
+         * @return A map with the attributes for the new node
          */
         private Map<String, Object> createAttributes() {
             if (directAttributes != null) {
@@ -281,7 +281,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Sets the name of the node to be created.
          *
          * @param n the node name
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder name(final String n) {
             name = n;
@@ -292,7 +292,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
          * Sets the value of the node to be created.
          *
          * @param v the value
-         * @return a reference to this object for method chaining
+         * @return A reference to this object for method chaining
          */
         public Builder value(final Object v) {
             value = v;
@@ -376,7 +376,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Gets a map with the attributes of this node. This map cannot be modified.
      *
-     * @return a map with this node's attributes
+     * @return A map with this node's attributes
      */
     public Map<String, Object> getAttributes() {
         return attributes;
@@ -385,7 +385,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Gets a list with the children of this node. This list cannot be modified.
      *
-     * @return a list with the child nodes
+     * @return A list with the child nodes
      */
     public List<ImmutableNode> getChildren() {
         return children;
@@ -395,7 +395,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
      * Returns a list with the children of this node.
      *
      * @param name the node name to find
-     * @return a list with the child nodes
+     * @return A list with the child nodes
      */
     public List<ImmutableNode> getChildren(final String name) {
         if (name == null) {
@@ -565,7 +565,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode> {
     /**
      * Returns a sequential {@code Stream} with this node as its source.
      *
-     * @return a sequential {@code Stream} over the elements in this node.
+     * @return A sequential {@code Stream} over the elements in this node.
      * @since 2.9.0
      */
     public Stream<ImmutableNode> stream() {

@@ -508,7 +508,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * of backslashes.
          *
          * @param line the line
-         * @return a flag if the lines should be combined
+         * @return A flag if the lines should be combined
          */
         static boolean checkCombineLines(final String line) {
             return countTrailingBS(line) % 2 != 0;
@@ -519,7 +519,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param line the line to parse
          * @param trimValue flag whether the value is to be trimmed
-         * @return an array with the property's key, value, and separator
+         * @return An array with the property's key, value, and separator
          */
         static String[] doParseProperty(final String line, final boolean trimValue) {
             final Matcher matcher = PROPERTY_PATTERN.matcher(line);
@@ -645,7 +645,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * can be obtained using the provided getter methods. The return value indicates whether EOF was reached (<strong>false</strong>)
          * or whether further properties are available (<strong>true</strong>).
          *
-         * @return a flag if further properties are available
+         * @return A flag if further properties are available
          * @throws IOException if an error occurs
          * @since 1.3
          */
@@ -1110,7 +1110,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * Tests whether a line is a comment, i.e. whether it starts with a comment character.
      *
      * @param line the line
-     * @return a flag if this is a comment line
+     * @return A flag if this is a comment line
      * @since 1.3
      */
     static boolean isCommentLine(final String line) {
@@ -1125,7 +1125,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * special character which is escaped per default in a Java properties file, it has to be unescaped.
      *
      * @param ch the character in question
-     * @return a flag whether this character has to be unescaped
+     * @return A flag whether this character has to be unescaped
      */
     private static boolean needsUnescape(final char ch) {
         return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
@@ -1490,7 +1490,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * @param key the property key
      * @param value the property value
      * @param seenStack the stack of seen include URLs
-     * @return a flag whether this is a normal property
+     * @return A flag whether this is a normal property
      * @throws ConfigurationException if an error occurs
      * @since 1.3
      */

@@ -73,7 +73,7 @@ public class OverrideCombiner extends NodeCombiner {
      * @param node1 the first node
      * @param node2 the second node
      * @param child the child node (of the first node)
-     * @return a child of the second node, with which a combination is possible
+     * @return A child of the second node, with which a combination is possible
      */
     protected ImmutableNode canCombine(final ImmutableNode node1, final ImmutableNode node2, final ImmutableNode child) {
         if (HANDLER.getChildrenCount(node2, child.getNodeName()) == 1 && HANDLER.getChildrenCount(node1, child.getNodeName()) == 1 && !isListNode(child)) {

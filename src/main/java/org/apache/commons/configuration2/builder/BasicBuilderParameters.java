@@ -187,7 +187,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * properties related to interpolation are evaluated and added to the specification object.
      *
      * @param params the map with parameters (must not be <strong>null</strong>)
-     * @return an {@code InterpolatorSpecification} object constructed with data from the map
+     * @return An {@code InterpolatorSpecification} object constructed with data from the map
      * @throws IllegalArgumentException if the map is <strong>null</strong> or contains invalid data
      */
     public static InterpolatorSpecification fetchInterpolatorSpecification(final Map<String, Object> params) {
@@ -251,7 +251,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * However, no a full deep clone operation is performed. Objects like a {@code ConfigurationInterpolator} or
      * {@code Lookup}s are shared between this and the newly created instance.
      *
-     * @return a clone of this object
+     * @return A clone of this object
      */
     @Override
     public BasicBuilderParameters clone() {
@@ -407,7 +407,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * property to <strong>null</strong>. If the default {@code ListDelimiterHandler} is to be used, do not call this method.
      *
      * @param handler the {@code ListDelimiterHandler}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public BasicBuilderParameters setListDelimiterHandler(final ListDelimiterHandler handler) {
@@ -419,7 +419,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * Thus logging behavior can be controlled.
      *
      * @param log the {@code Log} for the configuration produced by this builder
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public BasicBuilderParameters setLogger(final ConfigurationLogger log) {
@@ -453,7 +453,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      *
      * @param key the key of the property
      * @param value the value of the property
-     * @return a reference to this object
+     * @return A reference to this object
      */
     private BasicBuilderParameters setProperty(final String key, final Object value) {
         storeProperty(key, value);
@@ -475,7 +475,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters, Bas
      * an exception if the property is not defined.)
      *
      * @param b the value of the property
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public BasicBuilderParameters setThrowExceptionOnMissing(final boolean b) {

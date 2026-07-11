@@ -151,7 +151,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * same objects (in the same order) that were passed to {@code addChildParameters()}. The returned collection is a
      * defensive copy; it can be modified, but this has no effect on the parameters stored in this object.
      *
-     * @return a map with default parameters for child sources
+     * @return A map with default parameters for child sources
      */
     public Collection<? extends BuilderParameters> getDefaultChildParameters() {
         return new ArrayList<>(childParameters);
@@ -257,7 +257,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * passed in parameters object.
      *
      * @param params the parameters object from which to copy providers(must not be <strong>null</strong>)
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if the source parameters object is <strong>null</strong>
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final CombinedBuilderParametersImpl params) {
@@ -275,7 +275,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      *
      * @param providers a map with tag names and corresponding providers (must not be <strong>null</strong> or contain <strong>null</strong>
      *        entries)
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if the map with providers is <strong>null</strong> or contains <strong>null</strong> entries
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final Map<String, ConfigurationBuilderProvider> providers) {
@@ -296,7 +296,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      *
      * @param tagName the name of the tag (must not be <strong>null</strong>)
      * @param provider the {@code ConfigurationBuilderProvider} (must not be <strong>null</strong>)
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */
     @Override
@@ -319,7 +319,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * path for relative file names can be specified using this method.
      *
      * @param path the base path for resolving relative file names
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setBasePath(final String path) {
@@ -342,7 +342,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * configuration sources that form the combined configuration.
      *
      * @param builder the definition {@code ConfigurationBuilder}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilder(final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder) {
@@ -356,7 +356,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * method). In this case, a builder for an XML configuration is created and configured with this parameters object.
      *
      * @param params the parameters object for the definition configuration builder
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilderParameters(final BuilderParameters params) {

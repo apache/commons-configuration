@@ -44,7 +44,7 @@ public interface NodeKeyResolver<T> {
      * @param node the node in question
      * @param cache a map serving as cache
      * @param handler the {@code NodeHandler}
-     * @return a key for the specified node
+     * @return A key for the specified node
      */
     String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler);
 
@@ -55,7 +55,7 @@ public interface NodeKeyResolver<T> {
      * @param root the root node
      * @param key the key to be resolved
      * @param handler the {@code NodeHandler}
-     * @return a {@code NodeAddData} object to be used for the add operation
+     * @return A {@code NodeAddData} object to be used for the add operation
      */
     NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
 
@@ -66,7 +66,7 @@ public interface NodeKeyResolver<T> {
      * @param root the root node
      * @param key the key to be resolved
      * @param handler the {@code NodeHandler}
-     * @return a list with query results
+     * @return A list with query results
      */
     List<QueryResult<T>> resolveKey(T root, String key, NodeHandler<T> handler);
 
@@ -78,7 +78,7 @@ public interface NodeKeyResolver<T> {
      * @param root the root node
      * @param key the key to be resolved
      * @param handler the {@code NodeHandler}
-     * @return a list with the resolved nodes
+     * @return A list with the resolved nodes
      */
     List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler);
 
@@ -91,7 +91,7 @@ public interface NodeKeyResolver<T> {
      * @param newValue the new value for the key to be updated; this can be a single value or a container for multiple
      *        values
      * @param handler the {@code NodeHandler}
-     * @return a {@code NodeUpdateData} object to be used for this update operation
+     * @return A {@code NodeUpdateData} object to be used for this update operation
      */
     NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue, NodeHandler<T> handler);
 }

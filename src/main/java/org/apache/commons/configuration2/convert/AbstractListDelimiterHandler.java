@@ -117,7 +117,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * {@link #flatten(Object, int)} without specifying a limit.
      *
      * @param value the value to be processed
-     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
+     * @return A &quot;flat&quot; collection containing all primitive values of the passed in object
      */
     private Collection<?> flatten(final Object value) {
         return flatten(value, Integer.MAX_VALUE);
@@ -156,7 +156,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      *
      * @param s the string to be split (not <strong>null</strong>)
      * @param trim a flag whether the single components have to be trimmed
-     * @return a collection with the extracted components of the passed in string
+     * @return A collection with the extracted components of the passed in string
      */
     protected abstract Collection<String> splitString(String s, boolean trim);
 }

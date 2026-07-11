@@ -291,7 +291,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @param ccResult the result configuration.
          * @param srcDecl the collection with the declarations of configuration sources to process.
          * @param builders List of configuration builders.
-         * @return a list with configuration builders.
+         * @return A list with configuration builders.
          * @throws ConfigurationException if an error occurs.
          */
         public List<ConfigurationBuilder<? extends Configuration>> createAndAddConfigurations(final CombinedConfiguration ccResult,
@@ -353,7 +353,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * The remaining nodes are treated as definitions for override configurations.
          *
          * @param config the definition configuration
-         * @return a list with sub configurations for the top level override configurations
+         * @return A list with sub configurations for the top level override configurations
          */
         private List<? extends HierarchicalConfiguration<?>> fetchTopLevelOverrideConfigs(final HierarchicalConfiguration<?> config) {
 
@@ -707,7 +707,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * created by calling {@code getConfiguration()}. If called before, always an empty set is returned.
      * </p>
      *
-     * @return a set with the names of all builders
+     * @return A set with the names of all builders
      */
     public synchronized Set<String> builderNames() {
         if (sourceData == null) {
@@ -772,7 +772,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Creates {@code ConfigurationDeclaration} objects for the specified configurations.
      *
      * @param configs the list with configurations
-     * @return a collection with corresponding declarations
+     * @return A collection with corresponding declarations
      */
     private Collection<ConfigurationDeclaration> createDeclarations(final Collection<? extends HierarchicalConfiguration<?>> configs) {
         return configs.stream().map(c -> new ConfigurationDeclaration(this, c)).collect(Collectors.toList());
@@ -841,7 +841,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * classes providing additional functionality on top of the declared configuration sources. It only returns a defined
      * value during construction of the result configuration instance.
      *
-     * @return a collection with the builders for child configuration sources
+     * @return A collection with the builders for child configuration sources
      */
     protected synchronized Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders() {
         return sourceData.getChildBuilders();

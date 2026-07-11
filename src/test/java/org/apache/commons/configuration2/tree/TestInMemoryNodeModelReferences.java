@@ -50,7 +50,7 @@ public class TestInMemoryNodeModelReferences {
      * Returns a flat collection of all nodes contained in the specified nodes hierarchy.
      *
      * @param root the root node of the hierarchy
-     * @return a collection with all nodes in this hierarchy
+     * @return A collection with all nodes in this hierarchy
      */
     private Collection<ImmutableNode> collectNodes(final ImmutableNode root) {
         final Set<ImmutableNode> nodes = new HashSet<>();

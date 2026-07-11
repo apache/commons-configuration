@@ -88,7 +88,7 @@ public final class Parameters {
          * Checks whether the specified method belongs to an interface which requires fluent result values.
          *
          * @param method the method to be checked
-         * @return a flag whether the method's result should be handled as a fluent result value
+         * @return A flag whether the method's result should be handled as a fluent result value
          */
         private static boolean isFluentResult(final Method method) {
             final Class<?> declaringClass = method.getDeclaringClass();

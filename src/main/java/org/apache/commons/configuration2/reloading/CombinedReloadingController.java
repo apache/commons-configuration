@@ -94,7 +94,7 @@ public class CombinedReloadingController extends ReloadingController {
      * Checks the collection with the passed in sub controllers and creates a defensive copy.
      *
      * @param subCtrls the collection with sub controllers
-     * @return a copy of the collection to be stored in the newly created instance
+     * @return A copy of the collection to be stored in the newly created instance
      * @throws IllegalArgumentException if the passed in collection is <strong>null</strong> or contains <strong>null</strong> entries
      */
     private static Collection<ReloadingController> checkManagedControllers(final Collection<? extends ReloadingController> subCtrls) {
@@ -140,7 +140,7 @@ public class CombinedReloadingController extends ReloadingController {
     /**
      * Gets a (unmodifiable) collection with the sub controllers managed by this combined controller.
      *
-     * @return a collection with sub controllers
+     * @return A collection with sub controllers
      */
     public Collection<ReloadingController> getSubControllers() {
         return controllers;

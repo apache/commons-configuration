@@ -62,7 +62,7 @@ public interface BeanDeclaration {
      * specified. The purpose of this additional parameter is to support a further configuration of the bean factory that
      * can be placed directly at the bean declaration.
      *
-     * @return a parameter for the bean factory
+     * @return A parameter for the bean factory
      */
     Object getBeanFactoryParameter();
 
@@ -71,7 +71,7 @@ public interface BeanDeclaration {
      * the properties; the corresponding values are the properties' values. The return value can be <strong>null</strong> if no
      * properties should be set.
      *
-     * @return a map with properties to be initialized
+     * @return A map with properties to be initialized
      */
     Map<String, Object> getBeanProperties();
 
@@ -80,7 +80,7 @@ public interface BeanDeclaration {
      * be invoked. The values of the arguments are passed to the constructor. An implementation can return <strong>null</strong> or an
      * empty collection; then the standard constructor of the bean class is called.
      *
-     * @return a collection with the arguments to be passed to the bean class's constructor
+     * @return A collection with the arguments to be passed to the bean class's constructor
      */
     Collection<ConstructorArg> getConstructorArgs();
 
@@ -92,7 +92,7 @@ public interface BeanDeclaration {
      * treated like this declaration (in a recursive manner), and the resulting beans are assigned to the corresponding
      * properties.
      *
-     * @return a map with nested bean declarations
+     * @return A map with nested bean declarations
      */
     Map<String, Object> getNestedBeanDeclarations();
 }

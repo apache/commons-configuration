@@ -159,7 +159,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         /**
          * Gets a list with the children of the wrapped node, again wrapped into {@code NodeData} objects.
          *
-         * @return a list with the children
+         * @return A list with the children
          */
         List<NodeData<T>> getChildren() {
             return wrapInNodeData(nodeHandler.getChildren(node));
@@ -170,7 +170,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * objects.
          *
          * @param name the name of the desired child nodes
-         * @return a list with the children with this name
+         * @return A list with the children with this name
          */
         List<NodeData<T>> getChildren(final String name) {
             return wrapInNodeData(nodeHandler.getChildren(node, name));
@@ -180,7 +180,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * Returns a flag whether the wrapped node is the root node of the passed in configuration.
          *
          * @param config the configuration
-         * @return a flag whether this node is the configuration's root node
+         * @return A flag whether this node is the configuration's root node
          */
         boolean matchesConfigRootNode(final HierarchicalConfiguration<?> config) {
             return config.getNodeModel().getNodeHandler().getRootNode().equals(node);
@@ -253,7 +253,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Tests whether the constructor argument represented by the given configuration node is a bean declaration.
      *
      * @param nodeData the configuration node in question
-     * @return a flag whether this constructor argument is a bean declaration
+     * @return A flag whether this constructor argument is a bean declaration
      */
     private static boolean isBeanDeclarationArgument(final NodeData<?> nodeData) {
         return !nodeData.getAttributes().contains(ATTR_BEAN_CLASS_NAME);
@@ -449,7 +449,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Gets a map with the bean's (simple) properties. The properties are collected from all attribute nodes, which are
      * not reserved.
      *
-     * @return a map with the bean's properties
+     * @return A map with the bean's properties
      */
     @Override
     public Map<String, Object> getBeanProperties() {
@@ -491,7 +491,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * Gets a map with bean declarations for the complex properties of the bean to be created. These declarations are
      * obtained from the child nodes of this declaration's root node.
      *
-     * @return a map with bean declarations for complex properties
+     * @return A map with bean declarations for complex properties
      */
     @Override
     public Map<String, Object> getNestedBeanDeclarations() {
@@ -556,7 +556,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * attributes with a specific meaning. This implementation delegates to {@link #isReservedName(String)}.
      *
      * @param name the name of the attribute to be checked
-     * @return a flag whether this name is reserved
+     * @return A flag whether this name is reserved
      * @since 2.0
      */
     protected boolean isReservedAttributeName(final String name) {
@@ -569,7 +569,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * implementation delegates to {@link #isReservedName(String)}.
      *
      * @param name the name of the child node to be checked
-     * @return a flag whether this name is reserved
+     * @return A flag whether this name is reserved
      * @since 2.0
      */
     protected boolean isReservedChildName(final String name) {
@@ -582,7 +582,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * the reserved prefix.
      *
      * @param name the name to be checked
-     * @return a flag whether this name is reserved
+     * @return A flag whether this name is reserved
      */
     protected boolean isReservedName(final String name) {
         return name == null || name.startsWith(RESERVED_PREFIX);

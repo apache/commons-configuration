@@ -90,7 +90,7 @@ public interface ImmutableConfiguration {
     /**
      * Returns a {@link Set} view of the mappings contained in this configuration.
      *
-     * @return a set view of the mappings contained in this configuration.
+     * @return A set view of the mappings contained in this configuration.
      * @since 2.13.0
      */
     default Set<Map.Entry<String, Object>> entrySet() {
@@ -823,7 +823,7 @@ public interface ImmutableConfiguration {
      * (The key for the value "Jakarta" is an empty string)
      *
      * @param prefix The prefix used to select the properties.
-     * @return a subset immutable configuration
+     * @return A subset immutable configuration
      */
     ImmutableConfiguration immutableSubset(String prefix);
 

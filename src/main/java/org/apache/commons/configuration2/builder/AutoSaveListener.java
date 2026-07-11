@@ -80,7 +80,7 @@ final class AutoSaveListener extends FileHandlerListenerAdapter implements Event
     /**
      * Returns a flag whether a load operation is currently in progress.
      *
-     * @return a flag whether a load operation is in progress
+     * @return A flag whether a load operation is in progress
      */
     private synchronized boolean inLoadOperation() {
         return loading > 0;

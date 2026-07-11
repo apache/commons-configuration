@@ -94,7 +94,7 @@ public class TestXMLDocumentHelper {
      * Obtains all text elements contained in the given document.
      *
      * @param document the document
-     * @return a collection with all text elements
+     * @return A collection with all text elements
      */
     private static Collection<Node> findTextElements(final Document document) {
         final Collection<Node> texts = new HashSet<>();

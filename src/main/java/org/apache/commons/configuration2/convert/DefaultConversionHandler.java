@@ -170,7 +170,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * Extracts all values contained in the given source object and returns them as a flat collection.
      *
      * @param source the source object (may be a single value or a complex object)
-     * @return a collection with all extracted values
+     * @return A collection with all extracted values
      */
     protected Collection<?> extractValues(final Object source) {
         return extractValues(source, Integer.MAX_VALUE);
@@ -182,7 +182,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      *
      * @param source the source object (may be a single value or a complex object)
      * @param limit the number of elements to extract
-     * @return a collection with all extracted values
+     * @return A collection with all extracted values
      */
     protected Collection<?> extractValues(final Object source, final int limit) {
         return listDelimiterHandler.flatten(source, limit);
@@ -232,7 +232,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * and how empty elements in configurations are handled.
      *
      * @param src the object to be tested
-     * @return a flag whether this object is an empty element
+     * @return A flag whether this object is an empty element
      */
     protected boolean isEmptyElement(final Object src) {
         return src instanceof CharSequence && ((CharSequence) src).length() == 0;

@@ -163,7 +163,7 @@ abstract class HierarchicalConfigurationConverter {
      * returns the parts of the given key in reverse order, ignoring indices.
      *
      * @param key the key
-     * @return a reverse iterator for the parts of this key
+     * @return A reverse iterator for the parts of this key
      */
     protected Iterator<String> reverseIterator(final DefaultConfigurationKey key) {
         final List<String> list = new ArrayList<>();

@@ -102,7 +102,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * too.
      *
      * @param eventType the event type object
-     * @return a flag whether this event type is of interest for managed builders
+     * @return A flag whether this event type is of interest for managed builders
      */
     private static boolean isEventTypeForManagedBuilders(final EventType<?> eventType) {
         return !EventType.isInstanceOf(eventType, ConfigurationBuilderEvent.ANY);

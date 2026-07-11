@@ -47,7 +47,7 @@ public class MergeCombiner extends NodeCombiner {
      *
      * @param attrs1 the attributes of the first node
      * @param node the 2nd node
-     * @return a flag whether these nodes can be combined regarding their attributes
+     * @return A flag whether these nodes can be combined regarding their attributes
      */
     private static boolean matchAttributes(final Map<String, Object> attrs1, final ImmutableNode node) {
         final Map<String, Object> attrs2 = node.getAttributes();
@@ -87,7 +87,7 @@ public class MergeCombiner extends NodeCombiner {
      * @param node2 the second node
      * @param child the child node (of the first node)
      * @param children2 the children of the 2nd node
-     * @return a child of the second node, with which a combination is possible
+     * @return A child of the second node, with which a combination is possible
      */
     protected ImmutableNode canCombine(final ImmutableNode node2, final ImmutableNode child, final List<ImmutableNode> children2) {
         final Map<String, Object> attrs1 = child.getAttributes();

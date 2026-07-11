@@ -505,7 +505,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Gets a set with the names of all configurations contained in this combined configuration. Of course here are only
      * these configurations listed, for which a name was specified when they were added.
      *
-     * @return a set with the names of the contained configurations (never <strong>null</strong>)
+     * @return A set with the names of the contained configurations (never <strong>null</strong>)
      */
     @Override
     public Set<String> getConfigurationNames() {
@@ -804,7 +804,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
      * Removes the specified configuration from this combined configuration.
      *
      * @param config the configuration to be removed
-     * @return a flag whether this configuration was found and could be removed
+     * @return A flag whether this configuration was found and could be removed
      */
     @Override
     public boolean removeConfiguration(final Configuration config) {

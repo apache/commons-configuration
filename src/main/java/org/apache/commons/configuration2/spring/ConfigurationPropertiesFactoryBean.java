@@ -123,7 +123,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /**
      * Gets a copy of the configurations.
      *
-     * @return a copy of the configurations.
+     * @return A copy of the configurations.
      */
     public Configuration[] getConfigurations() {
         return clone(configurations);
@@ -132,7 +132,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     /**
      * Gets a copy of the resource locations.
      *
-     * @return a copy of the resource locations.
+     * @return A copy of the resource locations.
      */
     public Resource[] getLocations() {
         return clone(locations);

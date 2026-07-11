@@ -42,7 +42,7 @@ public class ManagedReloadingDetector implements ReloadingDetector, ManagedReloa
      * Checks whether reloading is required. This implementation checks whether the {@code refresh()} method has been
      * invoked.
      *
-     * @return a flag whether reloading is required
+     * @return A flag whether reloading is required
      */
     @Override
     public boolean isReloadingRequired() {

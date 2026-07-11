@@ -115,7 +115,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
     /**
      * Gets a flag whether this is an optional configuration.
      *
-     * @return a flag if this declaration points to an optional configuration
+     * @return A flag if this declaration points to an optional configuration
      */
     public boolean isOptional() {
         Boolean value = getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_OPTIONAL_RES, null);
@@ -129,7 +129,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
      * Returns a flag whether a builder with reloading support should be created. This may not be supported by all
      * configuration builder providers.
      *
-     * @return a flag whether a reloading builder should be created
+     * @return A flag whether a reloading builder should be created
      */
     public boolean isReload() {
         return getConfiguration().getBoolean(CombinedConfigurationBuilder.ATTR_RELOAD, false);

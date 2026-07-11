@@ -109,7 +109,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param beanClass the bean class to be instantiated
      * @param data the current {@code BeanDeclaration}
-     * @return a list with all matching constructors
+     * @return A list with all matching constructors
      */
     private static <T> List<Constructor<T>> findMatchingConstructors(final Class<T> beanClass, final BeanDeclaration data) {
         final List<Constructor<T>> result = new LinkedList<>();
@@ -145,7 +145,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param ctor the constructor to be checked
      * @param args the collection of constructor arguments
-     * @return a flag whether this constructor is compatible with the given arguments
+     * @return A flag whether this constructor is compatible with the given arguments
      */
     private static boolean matchesConstructor(final Constructor<?> ctor, final Collection<ConstructorArg> args) {
         final Class<?>[] types = ctor.getParameterTypes();
@@ -234,7 +234,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param ctor the constructor to be invoked
      * @param bcc the context object defining the bean to be created
-     * @return an array with constructor arguments
+     * @return An array with constructor arguments
      */
     private Object[] fetchConstructorArgs(final Constructor<?> ctor, final BeanCreationContext bcc) {
         final Class<?>[] types = ctor.getParameterTypes();

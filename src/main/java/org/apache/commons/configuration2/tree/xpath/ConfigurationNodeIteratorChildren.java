@@ -77,7 +77,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      *
      * @param node the current node
      * @param test the test object
-     * @return a list with the matching nodes
+     * @return A list with the matching nodes
      */
     private List<T> createSubNodeList(final T node, final NodeTest test) {
         if (test == null) {

@@ -39,7 +39,7 @@ public interface HierarchicalBuilderProperties<T> {
      * Sets the {@code ExpressionEngine} to be used when querying the configuration.
      *
      * @param engine the {@code ExpressionEngine}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setExpressionEngine(ExpressionEngine engine);
 }

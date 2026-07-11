@@ -163,7 +163,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * Creates a collection of parameter objects to be used for configuring the builder. This method creates instances of
      * the parameter classes passed to the constructor.
      *
-     * @return a collection with parameter objects for the builder
+     * @return A collection with parameter objects for the builder
      * @throws Exception if an error occurs while creating parameter objects via reflection
      */
     protected Collection<BuilderParameters> createParameterObjects() throws Exception {

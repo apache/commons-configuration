@@ -293,7 +293,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * Returns a string representation for the date specified by the given calendar.
      *
      * @param cal the calendar with the initialized date
-     * @return a string for this date
+     * @return A string for this date
      */
     static String formatDate(final Calendar cal) {
         final StringBuilder buf = new StringBuilder();
@@ -309,7 +309,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration imp
      * Returns a string representation for the specified date.
      *
      * @param date the date
-     * @return a string for this date
+     * @return A string for this date
      */
     static String formatDate(final Date date) {
         final Calendar cal = Calendar.getInstance();

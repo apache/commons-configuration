@@ -94,7 +94,7 @@ public class Event extends EventObject {
     /**
      * Returns a string representation for this object. This string contains the event class and a list of all properties.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

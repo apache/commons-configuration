@@ -93,7 +93,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * @param <T> The type of the node
      * @param node the node
      * @param handler the corresponding node handler
-     * @return a wrapper for this node
+     * @return A wrapper for this node
      */
     public static <T> Object wrapNode(final T node, final NodeHandler<T> handler) {
         return new NodeWrapper<>(node, handler);
@@ -113,7 +113,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * @param parent the parent node
      * @param qName the name
      * @param bean the bean
-     * @return a pointer for a configuration node if the bean is such a node
+     * @return A pointer for a configuration node if the bean is such a node
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -136,7 +136,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      * @param qName the name of the node
      * @param bean the bean
      * @param locale the locale
-     * @return a pointer for a configuration node if the bean is such a node
+     * @return A pointer for a configuration node if the bean is such a node
      */
     @Override
     @SuppressWarnings("unchecked")

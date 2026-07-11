@@ -212,7 +212,7 @@ public final class FileLocatorUtils {
      * FileLocator locator = FileLocatorUtils.fileLocator().basePath(myBasePath).fileName("test.xml").create();
      * </pre>
      *
-     * @return a builder object for defining a {@code FileLocator}
+     * @return A builder object for defining a {@code FileLocator}
      */
     public static FileLocator.FileLocatorBuilder fileLocator() {
         return fileLocator(null);
@@ -232,7 +232,7 @@ public final class FileLocatorUtils {
      * </pre>
      *
      * @param src the source {@code FileLocator} (may be <strong>null</strong>)
-     * @return an initialized builder object for defining a {@code FileLocator}
+     * @return An initialized builder object for defining a {@code FileLocator}
      */
     public static FileLocator.FileLocatorBuilder fileLocator(final FileLocator src) {
         return new FileLocator.FileLocatorBuilder(src);
@@ -272,7 +272,7 @@ public final class FileLocatorUtils {
      * </ul>
      *
      * @param locator the {@code FileLocator} to be completed
-     * @return a {@code FileLocator} with a fully initialized location if possible or <strong>null</strong>
+     * @return A {@code FileLocator} with a fully initialized location if possible or <strong>null</strong>
      */
     public static FileLocator fullyInitializedLocator(final FileLocator locator) {
         if (isFullyInitialized(locator)) {
@@ -428,7 +428,7 @@ public final class FileLocatorUtils {
      * passed in {@code FileLocator} is <strong>null</strong>, result is <strong>false</strong>.
      *
      * @param locator the {@code FileLocator} to be checked (may be <strong>null</strong>)
-     * @return a flag whether all components describing the referenced file are initialized
+     * @return A flag whether all components describing the referenced file are initialized
      */
     public static boolean isFullyInitialized(final FileLocator locator) {
         if (locator == null) {
@@ -442,7 +442,7 @@ public final class FileLocatorUtils {
      * file name or a URL is defined. If the passed in {@code FileLocator} is <strong>null</strong>, result is <strong>false</strong>.
      *
      * @param locator the {@code FileLocator} to check
-     * @return a flag whether a file location is defined by this {@code FileLocator}
+     * @return A flag whether a file location is defined by this {@code FileLocator}
      */
     public static boolean isLocationDefined(final FileLocator locator) {
         return locator != null && (locator.getFileName() != null || locator.getSourceURL() != null);
@@ -532,7 +532,7 @@ public final class FileLocatorUtils {
      * file.toURI().toURL().
      *
      * @param file the file to be converted into an URL
-     * @return a URL
+     * @return A URL
      * @throws MalformedURLException If the file protocol handler is not found (should not happen) or if an error occurred
      *         while constructing the URL
      */

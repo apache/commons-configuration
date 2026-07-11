@@ -60,7 +60,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
          * called).
          *
          * @param tx the transaction to be initialized
-         * @return a flag whether the update should continue
+         * @return A flag whether the update should continue
          */
         boolean initTransaction(ModelTransaction tx);
     }
@@ -258,7 +258,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param tx the transaction to be initialized
      * @param results a collection with results pointing to the nodes to be cleared
-     * @return a flag whether there are elements to be cleared
+     * @return A flag whether there are elements to be cleared
      */
     private static boolean initializeClearTransaction(final ModelTransaction tx, final Collection<QueryResult<ImmutableNode>> results) {
         results.forEach(result -> {
@@ -277,7 +277,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param tx the transaction to be initialized
      * @param changedValues the map defining the elements to be changed
-     * @return a flag whether there are elements to be updated
+     * @return A flag whether there are elements to be updated
      */
     private static boolean initializeUpdateTransaction(final ModelTransaction tx, final Map<QueryResult<ImmutableNode>, Object> changedValues) {
         changedValues.forEach((k, v) -> {
@@ -486,7 +486,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param key the key
      * @param selector the {@code NodeSelector} defining the root node (or <strong>null</strong>)
      * @param resolver the {@code NodeKeyResolver}
-     * @return a list with the results to be removed
+     * @return A list with the results to be removed
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public List<QueryResult<ImmutableNode>> clearTree(final String key, final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver) {
@@ -562,7 +562,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param selector an optional {@code NodeSelector} defining the target node
      * @param currentData the current data of the model
      * @param resolver the {@code NodeKeyResolver}
-     * @return a flag whether the operation has been completed successfully
+     * @return A flag whether the operation has been completed successfully
      */
     private boolean executeTransactionOnCurrentStructure(final TransactionInitializer txInit, final NodeSelector selector, final TreeData currentData,
         final NodeKeyResolver<ImmutableNode> resolver) {
@@ -585,7 +585,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param txInit the {@code TransactionInitializer}
      * @param selector an optional {@code NodeSelector} defining the target node
      * @param currentData the current data of the model
-     * @param resolver the {@code NodeKeyResolver} @return a flag whether the transaction could be executed
+     * @param resolver the {@code NodeKeyResolver} @return A flag whether the transaction could be executed
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     private boolean executeTransactionOnDetachedTrackedNode(final TransactionInitializer txInit, final NodeSelector selector, final TreeData currentData,
@@ -661,7 +661,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * their own separate model; in this case a handler associated with this model is returned.
      *
      * @param selector the {@code NodeSelector} defining the tracked node
-     * @return a {@code NodeHandler} for this tracked node
+     * @return A {@code NodeHandler} for this tracked node
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
     public NodeHandler<ImmutableNode> getTrackedNodeHandler(final NodeSelector selector) {
@@ -707,7 +707,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * valid again, the tracked node stays in detached state.
      *
      * @param selector the {@code NodeSelector} defining the desired node
-     * @return a flag whether this tracked node is in detached state
+     * @return A flag whether this tracked node is in detached state
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
     public boolean isTrackedNodeDetached(final NodeSelector selector) {
@@ -755,7 +755,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param currentData the current data of the model
      * @param selector the {@code NodeSelector} defining the tracked node
      * @param newNode the node replacing the tracked node
-     * @return a flag whether the operation was successful
+     * @return A flag whether the operation was successful
      */
     private boolean replaceActiveTrackedNode(final TreeData currentData, final NodeSelector selector, final ImmutableNode newNode) {
         final NodeTracker newTracker = currentData.getNodeTracker().replaceAndDetachTrackedNode(selector, newNode);
@@ -768,7 +768,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param currentData the current data of the model
      * @param selector the {@code NodeSelector} defining the tracked node
      * @param newNode the node replacing the tracked node
-     * @return a flag whether the operation was successful
+     * @return A flag whether the operation was successful
      */
     private boolean replaceDetachedTrackedNode(final TreeData currentData, final NodeSelector selector, final ImmutableNode newNode) {
         final InMemoryNodeModel detachedNodeModel = currentData.getNodeTracker().getDetachedNodeModel(selector);
@@ -831,7 +831,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param key the key for selecting the nodes to track
      * @param resolver the {@code NodeKeyResolver}
-     * @return a collection with the {@code NodeSelector} objects for the new tracked nodes
+     * @return A collection with the {@code NodeSelector} objects for the new tracked nodes
      */
     public Collection<NodeSelector> selectAndTrackNodes(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
         final Mutable<Collection<NodeSelector>> refSelectors = new MutableObject<>();
@@ -897,7 +897,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      *
      * @param key the key for selecting the parent node whose children are to be tracked
      * @param resolver the {@code NodeKeyResolver}
-     * @return a collection with the {@code NodeSelector} objects for the new tracked nodes
+     * @return A collection with the {@code NodeSelector} objects for the new tracked nodes
      */
     public Collection<NodeSelector> trackChildNodes(final String key, final NodeKeyResolver<ImmutableNode> resolver) {
         final Mutable<Collection<NodeSelector>> refSelectors = new MutableObject<>();

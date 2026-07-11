@@ -47,7 +47,7 @@ public interface BuilderParameters {
      * supported by the {@code Configuration} implementation class the builder produces. The values are the corresponding
      * property values. The return value must not be <strong>null</strong>.
      *
-     * @return a map with builder parameters
+     * @return A map with builder parameters
      */
     Map<String, Object> getParameters();
 }

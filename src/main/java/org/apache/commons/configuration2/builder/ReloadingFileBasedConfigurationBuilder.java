@@ -151,7 +151,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      *
      * @param handler the current {@code FileHandler}
      * @param fbparams the object with parameters related to file-based builders
-     * @return a {@code ReloadingDetector} for this {@code FileHandler}
+     * @return A {@code ReloadingDetector} for this {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */
     protected ReloadingDetector createReloadingDetector(final FileHandler handler, final FileBasedBuilderParametersImpl fbparams)

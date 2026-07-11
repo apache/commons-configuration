@@ -62,7 +62,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * Checks whether the specified key is stored in this configuration.
      *
      * @param key the key
-     * @return a flag whether this key exists in this configuration
+     * @return A flag whether this key exists in this configuration
      */
     @Override
     protected boolean containsKeyInternal(final String key) {
@@ -100,7 +100,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration {
      * Checks if this configuration is empty. This implementation makes use of the {@code getKeys()} method (which must be
      * defined by concrete sub classes) to find out whether properties exist.
      *
-     * @return a flag whether this configuration is empty
+     * @return A flag whether this configuration is empty
      */
     @Override
     protected boolean isEmptyInternal() {

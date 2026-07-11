@@ -43,7 +43,7 @@ public interface PropertiesBuilderProperties<T> {
      * Sets the current include listener, may be null.
      *
      * @param includeListener the current include listener, may be null.
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @since 2.6
      */
     default T setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener) {
@@ -55,7 +55,7 @@ public interface PropertiesBuilderProperties<T> {
      * listed by an include property are loaded automatically.
      *
      * @param f the value of the flag
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setIncludesAllowed(boolean f);
 
@@ -65,7 +65,7 @@ public interface PropertiesBuilderProperties<T> {
      * configuration. If no {@code IOFactory} is provided, the configuration uses a default one.
      *
      * @param factory the {@code IOFactory} to be used by the configuration
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setIOFactory(IOFactory factory);
 
@@ -74,7 +74,7 @@ public interface PropertiesBuilderProperties<T> {
      * If no layout is provided, the configuration will use a default layout.
      *
      * @param layout the {@code PropertiesConfigurationLayout} object to be used by the configuration
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setLayout(PropertiesConfigurationLayout layout);
 }

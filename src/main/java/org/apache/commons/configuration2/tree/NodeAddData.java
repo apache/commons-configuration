@@ -51,7 +51,7 @@ public class NodeAddData<T> {
      * Creates the list with path nodes. Handles null input.
      *
      * @param intermediateNodes the nodes passed to the constructor
-     * @return an unmodifiable list of path nodes
+     * @return An unmodifiable list of path nodes
      */
     private static List<String> createPathNodes(final Collection<String> intermediateNodes) {
         if (intermediateNodes == null) {
@@ -114,7 +114,7 @@ public class NodeAddData<T> {
      * Then {@code username} is the name of the new node, but the nodes {@code connection} and {@code settings} must be
      * added to the parent node first. In this example these names would be returned by this method.
      *
-     * @return a list with the names of nodes that must be added as parents of the new node (never <strong>null</strong>)
+     * @return A list with the names of nodes that must be added as parents of the new node (never <strong>null</strong>)
      */
     public List<String> getPathNodes() {
         return pathNodes;

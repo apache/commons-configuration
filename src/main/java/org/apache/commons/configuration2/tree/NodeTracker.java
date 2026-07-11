@@ -324,7 +324,7 @@ final class NodeTracker {
      * Returns a flag whether the specified tracked node is detached.
      *
      * @param selector the {@code NodeSelector}
-     * @return a flag whether this node is detached
+     * @return A flag whether this node is detached
      * @throws ConfigurationRuntimeException if no data for this selector is available
      */
     public boolean isTrackedNodeDetached(final NodeSelector selector) {

@@ -102,7 +102,7 @@ public abstract class NodeCombiner {
     /**
      * Gets a set with the names of nodes that are known to be list nodes.
      *
-     * @return a set with the names of list nodes
+     * @return A set with the names of list nodes
      */
     public Set<String> getListNodes() {
         return Collections.unmodifiableSet(listNodes);
@@ -113,7 +113,7 @@ public abstract class NodeCombiner {
      * list nodes. Derived classes which use different criteria may overload this method.
      *
      * @param node the node to be tested
-     * @return a flag whether this is a list node
+     * @return A flag whether this is a list node
      */
     public boolean isListNode(final ImmutableNode node) {
         return listNodes.contains(node.getNodeName());

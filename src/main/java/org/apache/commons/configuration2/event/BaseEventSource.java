@@ -215,7 +215,7 @@ public class BaseEventSource implements EventSource {
      * Gets a list with all {@code EventListenerRegistrationData} objects currently contained for this event source. This
      * method allows access to all registered event listeners, independent on their type.
      *
-     * @return a list with information about all registered event listeners
+     * @return A list with information about all registered event listeners
      */
     public List<EventListenerRegistrationData<?>> getEventListenerRegistrations() {
         return eventListeners.getRegistrations();
@@ -227,7 +227,7 @@ public class BaseEventSource implements EventSource {
      *
      * @param eventType the event type object
      * @param <T> The event type
-     * @return a collection with the event listeners of the specified event type (this collection is a snapshot of the
+     * @return A collection with the event listeners of the specified event type (this collection is a snapshot of the
      *         currently registered listeners; it cannot be manipulated)
      */
     public <T extends Event> Collection<EventListener<? super T>> getEventListeners(final EventType<T> eventType) {
@@ -246,7 +246,7 @@ public class BaseEventSource implements EventSource {
     /**
      * Returns a flag whether detail events are enabled.
      *
-     * @return a flag if detail events are generated
+     * @return A flag if detail events are generated
      */
     public boolean isDetailEvents() {
         return checkDetailEvents(0);

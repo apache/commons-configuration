@@ -56,7 +56,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
         /**
          * Checks whether there are more elements. Delegates to the parent iterator.
          *
-         * @return a flag whether there are more elements
+         * @return A flag whether there are more elements
          */
         @Override
         public boolean hasNext() {

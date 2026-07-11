@@ -176,7 +176,7 @@ public final class ConstructorArg {
      * Gets a string representation of this object. This string contains the value of this constructor argument and the
      * explicit type if provided.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

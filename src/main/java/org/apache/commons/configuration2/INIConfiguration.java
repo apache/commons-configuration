@@ -225,7 +225,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         /**
          * Builds a new INIConfiguration.
          *
-         * @return a new INIConfiguration.
+         * @return A new INIConfiguration.
          */
         public INIConfiguration build() {
             return new INIConfiguration(sectionInLineCommentsAllowed);
@@ -271,7 +271,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                  *
                  * @param node the node in question
                  * @param children the children of this node
-                 * @return a list with the filtered children
+                 * @return A list with the filtered children
                  */
                 private List<ImmutableNode> filterChildrenOfGlobalSection(final ImmutableNode node, final List<ImmutableNode> children) {
                     final List<ImmutableNode> filteredList;
@@ -355,7 +355,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Creates a new builder.
      *
-     * @return a new builder.
+     * @return A new builder.
      * @since 2.9.0
      */
     public static Builder builder() {
@@ -432,7 +432,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Checks whether the specified configuration node represents a section.
      *
      * @param node the node in question
-     * @return a flag whether this node represents a section
+     * @return A flag whether this node represents a section
      */
     private static boolean isSectionNode(final ImmutableNode node) {
         return node.getValue() == null;
@@ -452,7 +452,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Tests whether the specified string contains a line continuation marker.
      *
      * @param line the string to check
-     * @return a flag whether this line continues
+     * @return A flag whether this line continues
      */
     private static boolean lineContinues(final String line) {
         final String s = line.trim();
@@ -657,7 +657,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * </ul>
      *
      * @param name the name of the section in question; <strong>null</strong> represents the global section
-     * @return a configuration containing only the properties of the specified section
+     * @return A configuration containing only the properties of the specified section
      */
     public SubnodeConfiguration getSection(final String name) {
         if (name == null) {
@@ -678,7 +678,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Gets a set containing the sections in this INI configuration. Note that changes to this set do not affect the
      * configuration.
      *
-     * @return a set containing the sections.
+     * @return A set containing the sections.
      */
     public Set<String> getSections() {
         return syncRead(() -> {
@@ -722,7 +722,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * Tests whether the specified character is a comment character.
      *
      * @param c the character
-     * @return a flag whether this character starts a comment
+     * @return A flag whether this character starts a comment
      */
     private boolean isCommentChar(final char c) {
         return getCommentLeadingCharsUsedInInput().indexOf(c) >= 0;
@@ -762,7 +762,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param line the line to check
      * @param pos the start position
-     * @return a flag whether this line continues
+     * @return A flag whether this line continues
      */
     private boolean lineContinues(final String line, final int pos) {
         final String s;

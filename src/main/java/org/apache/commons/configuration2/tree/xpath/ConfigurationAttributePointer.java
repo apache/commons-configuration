@@ -182,7 +182,7 @@ final class ConfigurationAttributePointer<T> extends NodePointer {
      * Tests if this node matches the given test. Attribute nodes are text nodes, too, because they can contain a value.
      *
      * @param test the test object
-     * @return a flag if this node corresponds to the test
+     * @return A flag if this node corresponds to the test
      */
     @Override
     public boolean testNode(final NodeTest test) {

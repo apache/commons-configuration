@@ -39,7 +39,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the base path of the associated {@code FileHandler}.
      *
      * @param path the base path
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setBasePath(String path);
 
@@ -47,7 +47,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the encoding of the associated {@code FileHandler}.
      *
      * @param enc the encoding
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setEncoding(String enc);
 
@@ -55,7 +55,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the location of the associated {@code FileHandler} as a {@code File} object.
      *
      * @param file the {@code File} location
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setFile(File file);
 
@@ -63,7 +63,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the file name of the associated {@code FileHandler}.
      *
      * @param name the file name
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setFileName(String name);
 
@@ -71,7 +71,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the {@code FileSystem} of the associated {@code FileHandler}.
      *
      * @param fs the {@code FileSystem}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setFileSystem(FileSystem fs);
 
@@ -79,7 +79,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the {@code FileLocationStrategy} for resolving the referenced file.
      *
      * @param strategy the {@code FileLocationStrategy}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setLocationStrategy(FileLocationStrategy strategy);
 
@@ -87,7 +87,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the location of the associated {@code FileHandler} as an absolute file path.
      *
      * @param path the path location
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setPath(String path);
 
@@ -96,7 +96,7 @@ public interface FileBasedBuilderProperties<T> {
      * detectors can be installed. Per default, a factory creating {@code FileHandlerReloadingDetector} objects is used.
      *
      * @param factory the {@code ReloadingDetectorFactory}
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setReloadingDetectorFactory(ReloadingDetectorFactory factory);
 
@@ -104,7 +104,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the refresh delay for reloading support
      *
      * @param reloadingRefreshDelay the refresh delay (in milliseconds)
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setReloadingRefreshDelay(Long reloadingRefreshDelay);
 
@@ -112,7 +112,7 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
      *
      * @param url the {@code URL} location
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setURL(URL url);
 
@@ -121,7 +121,7 @@ public interface FileBasedBuilderProperties<T> {
      *
      * @param url the {@code URL} location
      * @param urlConnectionOptions options
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @since 2.8.0
      */
     default T setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {

@@ -118,7 +118,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      *
      * @param pointer1 one pointer
      * @param pointer2 another pointer
-     * @return a flag, which pointer should be sorted first
+     * @return A flag, which pointer should be sorted first
      */
     @Override
     public int compareChildNodePointers(final NodePointer pointer1, final NodePointer pointer2) {
@@ -228,7 +228,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns a flag whether this node is a leaf. This is the case if there are no child nodes.
      *
-     * @return a flag if this node is a leaf
+     * @return A flag if this node is a leaf
      */
     @Override
     public boolean isLeaf() {
@@ -249,7 +249,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      * Tests if this node matches the given test. Configuration nodes are text nodes, too because they can contain a value.
      *
      * @param test the test object
-     * @return a flag if this node corresponds to the test
+     * @return A flag if this node corresponds to the test
      */
     @Override
     public boolean testNode(final NodeTest test) {

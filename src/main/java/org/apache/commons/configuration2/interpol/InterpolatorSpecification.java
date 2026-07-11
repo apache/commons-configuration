@@ -127,7 +127,7 @@ public final class InterpolatorSpecification {
          * Adds the given {@code Lookup} object to the list of default lookups.
          *
          * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the {@code Lookup} is <strong>null</strong>
          */
         public Builder withDefaultLookup(final Lookup lookup) {
@@ -141,7 +141,7 @@ public final class InterpolatorSpecification {
          * <strong>null</strong>, then this method has no effect.
          *
          * @param lookups the collection with lookups to be added
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the collection contains <strong>null</strong> entries
          */
         public Builder withDefaultLookups(final Collection<? extends Lookup> lookups) {
@@ -156,7 +156,7 @@ public final class InterpolatorSpecification {
          * {@code ConfigurationInterpolator} has been created and set up externally and can be used directly.
          *
          * @param ci the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public Builder withInterpolator(final ConfigurationInterpolator ci) {
             interpolator = ci;
@@ -168,7 +168,7 @@ public final class InterpolatorSpecification {
          * created {@code ConfigurationInterpolator} instance.
          *
          * @param parent the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public Builder withParentInterpolator(final ConfigurationInterpolator parent) {
             parentInterpolator = parent;
@@ -180,7 +180,7 @@ public final class InterpolatorSpecification {
          *
          * @param prefix the prefix (must not be <strong>null</strong>)
          * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if a required parameter is missing
          */
         public Builder withPrefixLookup(final String prefix, final Lookup lookup) {
@@ -197,7 +197,7 @@ public final class InterpolatorSpecification {
          * this method has no effect.
          *
          * @param lookups the map with prefix lookups to be added
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the map contains <strong>null</strong> values
          */
         public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
@@ -213,7 +213,7 @@ public final class InterpolatorSpecification {
          *
          * @param fn function used to convert interpolated values to string or {@code null} if the
          *      default conversion function is to be used
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public Builder withStringConverter(final Function<Object, String> fn) {
             this.stringConverter = fn;

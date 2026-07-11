@@ -71,7 +71,7 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
      *
      * @param parent the parent node pointer
      * @param qName the name of the selected attribute
-     * @return a list with the selected attributes
+     * @return A list with the selected attributes
      */
     private List<String> createAttributeDataList(final ConfigurationNodePointer<T> parent, final QName qName) {
         final List<String> result = new ArrayList<>();
@@ -94,7 +94,7 @@ final class ConfigurationNodeIteratorAttribute<T> extends AbstractConfigurationN
      * Creates a pointer for the node at the specified position.
      *
      * @param position the desired position
-     * @return a pointer for the attribute at this position
+     * @return A pointer for the attribute at this position
      */
     @Override
     protected NodePointer createNodePointer(final int position) {

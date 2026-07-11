@@ -170,7 +170,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Sets the position of the iteration.
      *
      * @param pos the new position
-     * @return a flag if this is a valid position
+     * @return A flag if this is a valid position
      */
     @Override
     public boolean setPosition(final int pos) {

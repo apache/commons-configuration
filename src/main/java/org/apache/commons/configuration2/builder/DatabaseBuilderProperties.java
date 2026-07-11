@@ -42,7 +42,7 @@ public interface DatabaseBuilderProperties<T> {
      * database update.
      *
      * @param f the value of the auto commit flag
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setAutoCommit(boolean f);
 
@@ -52,7 +52,7 @@ public interface DatabaseBuilderProperties<T> {
      * filtering the configuration name column for this name.
      *
      * @param name the name of this configuration instance
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setConfigurationName(String name);
 
@@ -62,7 +62,7 @@ public interface DatabaseBuilderProperties<T> {
      * specific configuration instance.
      *
      * @param name the column name
-     * @return a reference to this method for method chaining
+     * @return A reference to this method for method chaining
      */
     T setConfigurationNameColumn(String name);
 
@@ -71,7 +71,7 @@ public interface DatabaseBuilderProperties<T> {
      * This is a mandatory property.
      *
      * @param src the data source for the database configuration
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setDataSource(DataSource src);
 
@@ -79,7 +79,7 @@ public interface DatabaseBuilderProperties<T> {
      * Sets the name of the table column containing configuration keys. This is a mandatory property.
      *
      * @param name the column name
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setKeyColumn(String name);
 
@@ -88,7 +88,7 @@ public interface DatabaseBuilderProperties<T> {
      * This is a mandatory property.
      *
      * @param name the name of the table with configuration data
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setTable(String name);
 
@@ -96,7 +96,7 @@ public interface DatabaseBuilderProperties<T> {
      * Sets the name of the table column containing the configuration property value. This is a mandatory property.
      *
      * @param name the column name
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      */
     T setValueColumn(String name);
 }

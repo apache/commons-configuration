@@ -194,7 +194,7 @@ public class FileHandler {
      * defined, result is <strong>null</strong>.
      *
      * @param loc the {@code FileLocator}
-     * @return a {@code File} object pointing to the associated file
+     * @return A {@code File} object pointing to the associated file
      */
     private static File createFile(final FileLocator loc) {
         if (loc.getFileName() == null && loc.getSourceURL() == null) {
@@ -455,7 +455,7 @@ public class FileHandler {
      * the same as the data returned by the single access methods like {@code getFileName()} or {@code getURL()}: These
      * methods try to derive missing data from other values that have been set.
      *
-     * @return a {@code FileLocator} with the referenced file
+     * @return A {@code FileLocator} with the referenced file
      */
     public FileLocator getFileLocator() {
         return fileLocator.get();
@@ -517,7 +517,7 @@ public class FileHandler {
      * Gets the location of the associated file as a URL. If a URL is set, it is directly returned. Otherwise, an attempt
      * to locate the referenced file is made.
      *
-     * @return a URL to the associated file; can be <strong>null</strong> if the location is unspecified
+     * @return A URL to the associated file; can be <strong>null</strong> if the location is unspecified
      */
     public URL getURL() {
         final FileLocator locator = getFileLocator();
@@ -787,7 +787,7 @@ public class FileHandler {
      * referenced file cannot be located, result is <strong>false</strong>. This means that the information in the current
      * {@code FileLocator} is insufficient or wrong. If the {@code FileLocator} is already fully defined, it is not changed.
      *
-     * @return a flag whether the referenced file could be located successfully
+     * @return A flag whether the referenced file could be located successfully
      * @see FileLocatorUtils#fullyInitializedLocator(FileLocator)
      */
     public boolean locate() {

@@ -120,7 +120,7 @@ public class TestPropertiesConfigurationLayout {
         /**
          * Returns a reader for the simulated properties.
          *
-         * @return a reader
+         * @return A reader
          */
         public Reader getReader() {
             return new StringReader(buf.toString());

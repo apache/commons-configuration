@@ -97,7 +97,7 @@ public class Configurations {
      * builder is created).
      *
      * @param file the file to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this file
+     * @return A {@code CombinedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public CombinedConfiguration combined(final File file) throws ConfigurationException {
@@ -110,7 +110,7 @@ public class Configurations {
      * the scenes a builder is created).
      *
      * @param path the path to the file to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this URL
+     * @return A {@code CombinedConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public CombinedConfiguration combined(final String path) throws ConfigurationException {
@@ -123,7 +123,7 @@ public class Configurations {
      * builder is created).
      *
      * @param url the URL to be loaded
-     * @return a {@code CombinedConfiguration} object initialized from this URL
+     * @return A {@code CombinedConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public CombinedConfiguration combined(final URL url) throws ConfigurationException {
@@ -194,7 +194,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param file the file to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return a {@code FileBasedConfiguration} object initialized from this file
+     * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public <T extends FileBasedConfiguration> T fileBased(final Class<T> configClass, final File file) throws ConfigurationException {
@@ -209,7 +209,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param path the path to the file to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return a {@code FileBasedConfiguration} object initialized from this file
+     * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public <T extends FileBasedConfiguration> T fileBased(final Class<T> configClass, final String path) throws ConfigurationException {
@@ -224,7 +224,7 @@ public class Configurations {
      * @param configClass the configuration class
      * @param url the URL to be loaded
      * @param <T> The type of the configuration to be constructed
-     * @return a {@code FileBasedConfiguration} object initialized from this file
+     * @return A {@code FileBasedConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public <T extends FileBasedConfiguration> T fileBased(final Class<T> configClass, final URL url) throws ConfigurationException {
@@ -324,7 +324,7 @@ public class Configurations {
      * created).
      *
      * @param file the file to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
+     * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public INIConfiguration ini(final File file) throws ConfigurationException {
@@ -337,7 +337,7 @@ public class Configurations {
      * the scenes a builder is created).
      *
      * @param path the path to the file to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
+     * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public INIConfiguration ini(final String path) throws ConfigurationException {
@@ -350,7 +350,7 @@ public class Configurations {
      * created).
      *
      * @param url the URL to be loaded
-     * @return a {@code INIConfiguration} object initialized from this file
+     * @return A {@code INIConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public INIConfiguration ini(final URL url) throws ConfigurationException {
@@ -393,7 +393,7 @@ public class Configurations {
      * builder is created).
      *
      * @param file the file to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this file
+     * @return A {@code PropertiesConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public PropertiesConfiguration properties(final File file) throws ConfigurationException {
@@ -406,7 +406,7 @@ public class Configurations {
      * behind the scenes a builder is created).
      *
      * @param path the path to the file to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this path
+     * @return A {@code PropertiesConfiguration} object initialized from this path
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public PropertiesConfiguration properties(final String path) throws ConfigurationException {
@@ -419,7 +419,7 @@ public class Configurations {
      * builder is created).
      *
      * @param url the URL to be loaded
-     * @return a {@code PropertiesConfiguration} object initialized from this URL
+     * @return A {@code PropertiesConfiguration} object initialized from this URL
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public PropertiesConfiguration properties(final URL url) throws ConfigurationException {
@@ -484,7 +484,7 @@ public class Configurations {
      * created).
      *
      * @param file the file to be loaded
-     * @return a {@code XMLConfiguration} object initialized from this file
+     * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public XMLConfiguration xml(final File file) throws ConfigurationException {
@@ -497,7 +497,7 @@ public class Configurations {
      * the scenes a builder is created).
      *
      * @param path the path to the file to be loaded
-     * @return a {@code XMLConfiguration} object initialized from this file
+     * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public XMLConfiguration xml(final String path) throws ConfigurationException {
@@ -510,7 +510,7 @@ public class Configurations {
      * created).
      *
      * @param url the URL to be loaded
-     * @return a {@code XMLConfiguration} object initialized from this file
+     * @return A {@code XMLConfiguration} object initialized from this file
      * @throws ConfigurationException if an error occurred when loading the configuration
      */
     public XMLConfiguration xml(final URL url) throws ConfigurationException {

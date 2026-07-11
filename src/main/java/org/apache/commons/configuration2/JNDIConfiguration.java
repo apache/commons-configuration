@@ -126,7 +126,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Checks whether the specified key is contained in this configuration.
      *
      * @param key the key to check
-     * @return a flag whether this key is stored in this configuration
+     * @return A flag whether this key is stored in this configuration
      */
     @Override
     protected boolean containsKeyInternal(String key) {
@@ -227,7 +227,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
     /**
      * Gets an iterator with all property keys stored in this configuration.
      *
-     * @return an iterator with all keys
+     * @return An iterator with all keys
      */
     @Override
     protected Iterator<String> getKeysInternal() {
@@ -238,7 +238,7 @@ public class JNDIConfiguration extends AbstractConfiguration {
      * Gets an iterator with all property keys starting with the given prefix.
      *
      * @param prefix the prefix
-     * @return an iterator with the selected keys
+     * @return An iterator with the selected keys
      */
     @Override
     protected Iterator<String> getKeysInternal(final String prefix) {

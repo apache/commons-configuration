@@ -463,7 +463,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * in key, the {@code propertyValue} will be undefined.
      *
      * @param key the key to be checked
-     * @return a flag whether this key is defined
+     * @return A flag whether this key is defined
      */
     @Override
     protected boolean containsKeyInternal(final String key) {
@@ -571,7 +571,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * error, an error event will be generated of type {@code READ} with the causing exception. Both the event's
      * {@code propertyName} and the {@code propertyValue} will be undefined.
      *
-     * @return an iterator with the contained keys (an empty iterator in case of an error)
+     * @return An iterator with the contained keys (an empty iterator in case of an error)
      */
     @Override
     protected Iterator<String> getKeysInternal() {
@@ -642,7 +642,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
     /**
      * Returns a flag whether this configuration performs commits after database updates.
      *
-     * @return a flag whether commits are performed
+     * @return A flag whether commits are performed
      */
     public boolean isAutoCommit() {
         return autoCommit;
@@ -653,7 +653,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      * {@code READ} with the causing exception. Both the event's {@code propertyName} and {@code propertyValue} will be
      * undefined.
      *
-     * @return a flag whether this configuration is empty.
+     * @return A flag whether this configuration is empty.
      */
     @Override
     protected boolean isEmptyInternal() {

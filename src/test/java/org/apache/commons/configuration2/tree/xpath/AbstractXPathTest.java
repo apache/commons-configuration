@@ -99,7 +99,7 @@ public abstract class AbstractXPathTest {
      * Returns a list with all node pointers contained in the specified iteration.
      *
      * @param iterator the iterator
-     * @return a list with the node pointers obtained from the iterator
+     * @return A list with the node pointers obtained from the iterator
      */
     protected List<NodePointer> iterationElements(final NodeIterator iterator) {
         final List<NodePointer> result = new ArrayList<>();

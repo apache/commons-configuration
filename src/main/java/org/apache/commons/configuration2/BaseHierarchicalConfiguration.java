@@ -226,7 +226,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param node the current node to be processed
          * @param handler the {@code NodeHandler}
          * @param interpolatedAttributes a map for storing the results
-         * @return a flag whether an attribute value was changed by interpolation
+         * @return A flag whether an attribute value was changed by interpolation
          */
         private boolean interpolateAttributes(final ImmutableNode node, final NodeHandler<ImmutableNode> handler,
             final Map<String, Object> interpolatedAttributes) {
@@ -246,7 +246,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param node the node in question
          * @param handler the {@code NodeHandler}
-         * @return a flag whether this is a leaf node
+         * @return A flag whether this is a leaf node
          */
         private boolean isLeafNode(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
             return handler.getChildren(node).isEmpty();
@@ -298,7 +298,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param interpolatedValue the interpolated value
          * @param value the original value
-         * @return a flag whether the value was changed
+         * @return A flag whether the value was changed
          */
         private boolean valueChanged(final Object interpolatedValue, final Object value) {
             return ObjectUtils.notEqual(interpolatedValue, value);
@@ -351,7 +351,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * Creates a list with immutable configurations from the given input list.
      *
      * @param subs a list with mutable configurations
-     * @return a list with corresponding immutable configurations
+     * @return A list with corresponding immutable configurations
      */
     private static List<ImmutableHierarchicalConfiguration> toImmutable(final List<? extends HierarchicalConfiguration<?>> subs) {
         return subs.stream().map(ConfigurationUtils::unmodifiableConfiguration).collect(Collectors.toList());
@@ -615,7 +615,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * creating a selector.
      *
      * @param key the key of the sub configuration
-     * @return a {@code NodeSelector} for initializing a sub configuration
+     * @return A {@code NodeSelector} for initializing a sub configuration
      * @since 2.0
      */
     protected NodeSelector getSubConfigurationNodeSelector(final String key) {
@@ -703,7 +703,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * values. This implementation is specific for hierarchical configurations. It clones the current configuration and runs
      * a specialized visitor on the clone, which performs interpolation on the single configuration nodes.
      *
-     * @return a configuration with all variables interpolated
+     * @return A configuration with all variables interpolated
      * @since 1.5
      */
     @Override
@@ -741,7 +741,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * configuration.
      *
      * @param prefix the prefix of the keys for the subset
-     * @return a new configuration object representing the selected subset
+     * @return A new configuration object representing the selected subset
      */
     @Override
     public Configuration subset(final String prefix) {
