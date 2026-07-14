@@ -86,8 +86,12 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     }
 
     private static boolean isRecursiveContainer(final Object value) {
+        if (value instanceof Path) {
+            // Don't handle as an Iterable.
+            return false;
+        }
         return value instanceof Iterator
-                || value instanceof Iterable && !(value instanceof Path)
+                || value instanceof Iterable
                 || value != null && value.getClass().isArray();
     }
 
