@@ -39,7 +39,7 @@ import java.util.Set;
  * @since 2.0
  */
 public abstract class AbstractListDelimiterHandler implements ListDelimiterHandler {
-    
+
     static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
         if (value instanceof String) {
             return handler.split((String) value, true);
@@ -74,7 +74,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * @param dejaVue Previously visited objects.
      */
     static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
-                                final Set<Object> dejaVue) {
+            final Set<Object> dejaVue) {
         int size = target.size();
         while (size < limit && iterator.hasNext()) {
             final Object next = iterator.next();
