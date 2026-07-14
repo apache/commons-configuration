@@ -46,7 +46,9 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
         } else if (!isRecursiveContainer(value)) {
             return value != null ? Collections.singletonList(value) : Collections.emptyList();
         }
-        dejaVu.add(value);
+        if (!dejaVu.add(value)) {
+            return Collections.emptyList();
+        }
         final Collection<Object> result = new LinkedList<>();
         try {
             if (value instanceof Iterable) {
@@ -55,7 +57,7 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
                 flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
             } else if (value.getClass().isArray()) {
                 for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
-                    result.addAll(handler.flatten(Array.get(value, idx), limit - size));
+                    result.addAll(flatten(handler, Array.get(value, idx), limit - size, dejaVu));
                 }
             }
         } finally {
@@ -77,11 +79,8 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
             final Set<Object> dejaVue) {
         int size = target.size();
         while (size < limit && iterator.hasNext()) {
-            final Object next = iterator.next();
-            if (!dejaVue.contains(next)) {
-                target.addAll(flatten(handler, next, limit - size, dejaVue));
-                size = target.size();
-            }
+            target.addAll(flatten(handler, iterator.next(), limit - size, dejaVue));
+            size = target.size();
         }
     }
 
