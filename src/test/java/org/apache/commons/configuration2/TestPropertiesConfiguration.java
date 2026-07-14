@@ -511,13 +511,13 @@ public class TestPropertiesConfiguration {
     void testCompress840ArrayListCycle(final int size) {
         final ArrayList<Object> object = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            object.add(i);
+            object.add(String.valueOf(i));
             object.add(object);
             object.add(new ArrayList<>(object));
         }
         final Collection<?> result = testCompress840(object);
         assertNotNull(result);
-        assertEquals(size, result.size());
+        assertEquals((1 << (size + 1)) - 2, result.size());
         object.add(object);
         testCompress840(object);
     }
