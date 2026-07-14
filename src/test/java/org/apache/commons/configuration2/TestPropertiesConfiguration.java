@@ -517,6 +517,8 @@ public class TestPropertiesConfiguration {
         }
         final Collection<?> result = testCompress840(object);
         assertNotNull(result);
+        // Each iteration doubles the previous flattened values and adds two occurrences
+        // of the new scalar: f(n) = 2 * f(n - 1) + 2, with f(0) = 0.
         assertEquals((1 << (size + 1)) - 2, result.size());
         object.add(object);
         testCompress840(object);
