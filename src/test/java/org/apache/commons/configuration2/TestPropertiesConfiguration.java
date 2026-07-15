@@ -511,13 +511,16 @@ public class TestPropertiesConfiguration {
     void testCompress840ArrayListCycle(final int size) {
         final ArrayList<Object> object = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            object.add(i);
+            object.add(String.valueOf(i));
             object.add(object);
             object.add(new ArrayList<>(object));
         }
         final Collection<?> result = testCompress840(object);
         assertNotNull(result);
-        assertEquals(size, result.size());
+        // At each iteration, the previous flattened values and the new scalar appear twice:
+        // once in the original list and once in its copy. Therefore, f(n) = 2 * (f(n - 1) + 1),
+        // with f(0) = 0, which gives f(n) = 2^(n + 1) - 2.
+        assertEquals((1 << (size + 1)) - 2, result.size());
         object.add(object);
         testCompress840(object);
     }

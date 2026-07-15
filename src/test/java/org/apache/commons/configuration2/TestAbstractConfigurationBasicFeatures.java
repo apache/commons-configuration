@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -674,6 +676,32 @@ public class TestAbstractConfigurationBasicFeatures {
         final List<Integer> expected = prepareListTest(config);
         final List<Integer> result = config.getList(Integer.class, KEY_PREFIX);
         assertEquals(expected, result);
+    }
+
+    /**
+     * Tests typed list conversion for delimited values with duplicates.
+     */
+    @Test
+    void testGetListTypedWithDuplicatesAndDelimiterHandling() {
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+
+        config.addProperty("list.strings", Arrays.asList("a", "b", "a"));
+        config.addProperty("list.strings2", Arrays.asList("", "", "a"));
+        config.addProperty("list.ints", Arrays.asList(1, 2, 1));
+        config.addProperty("list.booleans", Arrays.asList(true, false, true));
+        config.addProperty("list.doubles", Arrays.asList(1.5, 2.5, 1.5));
+        config.addProperty("list.paths", Arrays.asList(Paths.get("path1"), Paths.get("path2"), Paths.get("path1")));
+
+        assertEquals(Arrays.asList("a", "b", "a"), config.getList(String.class, "list.strings"));
+        assertEquals(Arrays.asList("", "", "a"), config.getList(String.class, "list.strings2"));
+        assertEquals(Arrays.asList(1, 2, 1), config.getList(Integer.class, "list.ints"));
+        assertEquals(Arrays.asList(Boolean.TRUE, Boolean.FALSE, Boolean.TRUE), config.getList(Boolean.class, "list.booleans"));
+        assertEquals(Arrays.asList(1.5d, 2.5d, 1.5d), config.getList(Double.class, "list.doubles"));
+        assertEquals(
+                Arrays.asList(Paths.get("path1"), Paths.get("path2"), Paths.get("path1")),
+                config.getList(Path.class, "list.paths")
+        );
     }
 
     /**
