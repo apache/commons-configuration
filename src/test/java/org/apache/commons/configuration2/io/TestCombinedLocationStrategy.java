@@ -133,9 +133,9 @@ public class TestCombinedLocationStrategy {
         // Create a collection that throws NPE on contains(null) like List.of() instance does
         final Collection<FileLocationStrategy> collectionThatThrowsNPE = new ArrayList<FileLocationStrategy>(Arrays.asList(getSubStrategies())) {
             @Override
-            public boolean contains(final Object o) {
-                Objects.requireNonNull(o);
-                return super.contains(o);
+            public boolean contains(final Object obj) {
+                Objects.requireNonNull(obj, "obj");
+                return super.contains(obj);
             }
         };
 

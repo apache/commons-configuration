@@ -119,7 +119,7 @@ public interface ImmutableConfiguration {
      * @since 2.13.0
      */
     default void forEach(final BiConsumer<String, Object> action) {
-        Objects.requireNonNull(action);
+        Objects.requireNonNull(action, "action");
         for (final Map.Entry<String, Object> entry : entrySet()) {
             String k;
             Object v;

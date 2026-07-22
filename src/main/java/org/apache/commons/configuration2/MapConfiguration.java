@@ -117,7 +117,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @since 1.8
      */
     public MapConfiguration(final Properties props) {
-        map = toMap(Objects.requireNonNull(props));
+        map = toMap(Objects.requireNonNull(props, "props"));
     }
 
     @Override
