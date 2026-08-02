@@ -1109,7 +1109,7 @@ public class TestINIConfiguration {
      *
      * @param content The content of the file
      * @return The newly created file
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private File writeTestFile(final String content) throws IOException {
         final File file = newFile(tempFolder);

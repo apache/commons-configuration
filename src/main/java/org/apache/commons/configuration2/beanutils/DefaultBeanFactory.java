@@ -205,7 +205,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param bcc The context object defining the bean to be created
      * @return The new bean instance
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     @Override
     public Object createBean(final BeanCreationContext bcc) throws Exception {
@@ -220,7 +220,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param bcc The context object defining the bean to be created
      * @return The new bean instance
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     protected Object createBeanInstance(final BeanCreationContext bcc) throws Exception {
         final Constructor<?> ctor = findMatchingConstructor(bcc.getBeanClass(), bcc.getBeanDeclaration());
@@ -277,7 +277,7 @@ public class DefaultBeanFactory implements BeanFactory {
      *
      * @param bean The newly created bean instance
      * @param bcc The context object defining the bean to be created
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     protected void initBeanInstance(final Object bean, final BeanCreationContext bcc) throws Exception {
         bcc.initBean(bean, bcc.getBeanDeclaration());

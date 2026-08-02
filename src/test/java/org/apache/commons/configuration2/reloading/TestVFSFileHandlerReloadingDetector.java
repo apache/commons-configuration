@@ -155,7 +155,7 @@ public class TestVFSFileHandlerReloadingDetector {
      *
      * @param file The file to be written
      * @param value The value of the test property
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private void writeTestFile(final File file, final String value) throws IOException {
         try (FileWriter out = new FileWriter(file)) {

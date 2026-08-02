@@ -145,7 +145,7 @@ public final class URLConnectionOptions {
      *
      * @param url The URL to open
      * @return A new connection
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException Thrown if an I/O exception occurs.
      */
     public URLConnection openConnection(final URL url) throws IOException {
         return apply(url.openConnection());

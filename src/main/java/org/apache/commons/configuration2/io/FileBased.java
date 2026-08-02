@@ -47,7 +47,7 @@ public interface FileBased {
      * use a {@code FileHandler} for reading data.</strong>
      *
      * @param in The reader
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */
@@ -58,7 +58,7 @@ public interface FileBased {
      * use a {@code FileHandler} for writing data.</strong>
      *
      * @param out The writer
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */

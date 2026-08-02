@@ -44,7 +44,7 @@ public interface InputStreamSupport {
      * @param in The input stream
      * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      */
     void read(InputStream in) throws ConfigurationException, IOException;
 }

@@ -67,7 +67,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      *
      * @param paramcls The parameter class
      * @return The newly created instance
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     private static BuilderParameters createParameterObject(final String paramcls) throws ReflectiveOperationException {
         return (BuilderParameters) ConfigurationUtils.loadClass(paramcls).getConstructor().newInstance();
@@ -130,7 +130,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * @param builder The builder to be initialized
      * @param decl The current {@code ConfigurationDeclaration}
      * @param params The collection with initialization parameter objects
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     protected void configureBuilder(final BasicConfigurationBuilder<? extends Configuration> builder, final ConfigurationDeclaration decl,
         final Collection<BuilderParameters> params) throws Exception {
@@ -145,7 +145,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * @param decl The current {@code ConfigurationDeclaration}
      * @param params initialization parameters for the new builder object
      * @return The newly created builder instance
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     protected BasicConfigurationBuilder<? extends Configuration> createBuilder(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
         throws Exception {
@@ -164,7 +164,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      * the parameter classes passed to the constructor.
      *
      * @return A collection with parameter objects for the builder
-     * @throws Exception if an error occurs while creating parameter objects via reflection
+     * @throws Exception Thrown if an error occurs while creating parameter objects via reflection
      */
     protected Collection<BuilderParameters> createParameterObjects() throws Exception {
         final Collection<BuilderParameters> params = new ArrayList<>(getParameterClasses().size());
@@ -286,7 +286,7 @@ public class BaseConfigurationBuilderProvider implements ConfigurationBuilderPro
      *
      * @param decl The current {@code ConfigurationDeclaration}
      * @param params The collection with (uninitialized) parameter objects
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     protected void initializeParameterObjects(final ConfigurationDeclaration decl, final Collection<BuilderParameters> params) throws Exception {
         inheritParentBuilderProperties(decl, params);

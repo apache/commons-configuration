@@ -356,7 +356,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param writer The writer
      * @param comment The comment to write
-     * @throws IOException if an IO error occurs
+     * @throws IOException Thrown if an IO error occurs
      */
     private static void writeComment(final PropertiesConfiguration.PropertiesWriter writer, final String comment) throws IOException {
         if (comment != null) {

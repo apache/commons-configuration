@@ -263,7 +263,7 @@ public class TestFileHandler {
      *
      * @param in The reader
      * @return The read content
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private static String readReader(final Reader in) throws IOException {
         final StringBuilder buf = new StringBuilder();

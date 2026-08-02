@@ -206,8 +206,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Parses the actual configuration object. The passed input source will be ignored.
      *
      * @param input The input source (ignored)
-     * @throws IOException if no configuration was specified
-     * @throws SAXException if an error occurs during parsing
+     * @throws IOException Thrown if no configuration was specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     @Override
     public void parse(final InputSource input) throws IOException, SAXException {
@@ -218,8 +218,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Parses the current configuration object. The passed system ID will be ignored.
      *
      * @param systemId The system ID (ignored)
-     * @throws IOException if no configuration was specified
-     * @throws SAXException if an error occurs during parsing
+     * @throws IOException Thrown if no configuration was specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     @Override
     public void parse(final String systemId) throws IOException, SAXException {
@@ -229,8 +229,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the configuration object and generates SAX events. This is the main processing method.
      *
-     * @throws IOException if no configuration has been specified
-     * @throws SAXException if an error occurs during parsing
+     * @throws IOException Thrown if no configuration has been specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     protected void parseConfiguration() throws IOException, SAXException {
         if (getParsedConfiguration() == null) {
@@ -254,8 +254,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * {@code endElement()} methods and cares for exception handling. The remaining actions are left to this method that
      * must be implemented in a concrete sub class.
      *
-     * @throws IOException if an IO error occurs
-     * @throws SAXException if a SAX error occurs
+     * @throws IOException Thrown if an IO error occurs
+     * @throws SAXException Thrown if a SAX error occurs
      */
     protected abstract void processKeys() throws IOException, SAXException;
 

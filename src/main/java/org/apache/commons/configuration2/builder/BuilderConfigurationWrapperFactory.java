@@ -76,7 +76,7 @@ public class BuilderConfigurationWrapperFactory {
          * @param method The method to be invoked
          * @param args method arguments
          * @return The return value of the method
-         * @throws Exception if an error occurs
+         * @throws Exception Thrown if an error occurs
          */
         private Object handleConfigurationInvocation(final Method method, final Object[] args) throws ReflectiveOperationException, ConfigurationException {
             return method.invoke(builder.getConfiguration(), args);

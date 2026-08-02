@@ -63,7 +63,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Load the catalogs.
          *
-         * @throws IOException if an error occurs.
+         * @throws IOException Thrown if an error occurs.
          */
         @Override
         public void loadSystemCatalogs() throws IOException {
@@ -401,7 +401,7 @@ public class CatalogResolver implements EntityResolver {
      * @param systemId The system identifier for the entity in question. XML requires a system identifier on all external
      *        entities, so this value is always specified.
      * @return An InputSource for the mapped identifier, or null.
-     * @throws SAXException if an error occurs.
+     * @throws SAXException Thrown if an error occurs.
      */
     @SuppressWarnings("resource") // InputSource wraps an InputStream.
     @Override

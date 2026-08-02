@@ -45,7 +45,7 @@ public interface BeanFactory {
      *
      * @param bcc The context object for the bean to be created
      * @return The new bean instance (should not be <strong>null</strong>)
-     * @throws Exception if an error occurs (the helper classes for creating beans will catch this generic exception and
+     * @throws Exception Thrown if an error occurs (the helper classes for creating beans will catch this generic exception and
      *         wrap it in a configuration exception)
      */
     Object createBean(BeanCreationContext bcc) throws Exception;

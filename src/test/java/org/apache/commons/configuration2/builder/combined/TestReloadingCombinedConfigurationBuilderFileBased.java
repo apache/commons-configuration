@@ -149,7 +149,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      *
      * @param file The file to be written
      * @param content The file's content
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private static void writeFile(final File file, final String content) throws IOException {
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
@@ -172,7 +172,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * builder has been fully initialized.
      *
      * @param defFile The path to the definition file
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      * @throws ConfigurationException if a configuration-related error occurs
      * @throws InterruptedException if waiting is interrupted
      */
@@ -312,7 +312,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * @param tagIdx The index of the tag
      * @param value The value of the reload test property
      * @return The file that was written
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private File writeReloadFile(final File f, final int tagIdx, final int value) throws IOException {
         return writeReloadFile(f, MessageFormat.format(RELOAD_CONTENT, value, tagIdx));
@@ -325,7 +325,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
      * @param f The file to be written or <strong>null</strong> for creating a new one
      * @param content The content of the file
      * @return The {@code File} object for the test file
-     * @throws IOException if an error occurs
+     * @throws IOException Thrown if an error occurs
      */
     private File writeReloadFile(final File f, final String content) throws IOException {
         final File file = f != null ? f : newFile(tempFolder);

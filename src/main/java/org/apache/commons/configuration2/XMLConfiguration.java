@@ -964,7 +964,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param in The input stream.
      * @throws ConfigurationException if an error occurs.
-     * @throws IOException if an IO error occurs.
+     * @throws IOException Thrown if an IO error occurs.
      */
     @Override
     public void read(final InputStream in) throws ConfigurationException, IOException {
@@ -977,7 +977,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param in The reader.
      * @throws ConfigurationException if an error occurs.
-     * @throws IOException if an IO error occurs.
+     * @throws IOException Thrown if an IO error occurs.
      */
     @Override
     public void read(final Reader in) throws ConfigurationException, IOException {
@@ -1101,7 +1101,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param writer The writer used to save the configuration.
      * @throws ConfigurationException if an error occurs.
-     * @throws IOException if an IO error occurs.
+     * @throws IOException Thrown if an IO error occurs.
      */
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException {

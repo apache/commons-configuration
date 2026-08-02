@@ -646,7 +646,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * or whether further properties are available (<strong>true</strong>).
          *
          * @return A flag if further properties are available
-         * @throws IOException if an error occurs
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public boolean nextProperty() throws IOException {
@@ -924,7 +924,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Writes a comment.
          *
          * @param comment The comment to write
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeComment(final String comment) throws IOException {
             writeln("# " + comment);
@@ -934,7 +934,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Helper method for writing a line with the platform specific line ending.
          *
          * @param s The content of the line (may be <strong>null</strong>)
-         * @throws IOException if an error occurs
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public void writeln(final String s) throws IOException {
@@ -949,7 +949,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key The key of the property
          * @param values The array of values of the property
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeProperty(final String key, final List<?> values) throws IOException {
             for (final Object value : values) {
@@ -962,7 +962,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key The key of the property
          * @param value The value of the property
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeProperty(final String key, final Object value) throws IOException {
             writeProperty(key, value, false);
@@ -975,7 +975,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * @param key The property key
          * @param value The property value
          * @param forceSingleLine The &quot;force single line&quot; flag
-         * @throws IOException if an error occurs
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public void writeProperty(final String key, final Object value, final boolean forceSingleLine) throws IOException {

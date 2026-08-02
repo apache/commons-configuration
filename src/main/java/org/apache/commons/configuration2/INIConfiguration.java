@@ -512,7 +512,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      * @param in The reader
      * @param rootBuilder The builder for the top-level section
      * @param sectionBuilders A map storing the section builders
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      */
     private void createNodeBuilders(final BufferedReader in, final ImmutableNode.Builder rootBuilder, final Map<String, ImmutableNode.Builder> sectionBuilders)
         throws IOException {
@@ -800,7 +800,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param val The value to be parsed
      * @param reader The reader (needed if multiple lines have to be read)
-     * @throws IOException if an IO error occurs
+     * @throws IOException Thrown if an IO error occurs
      */
     private String parseValue(final String val, final BufferedReader reader) throws IOException {
         final StringBuilder propertyValue = new StringBuilder();
@@ -873,7 +873,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param in The reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the configuration
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      */
     @Override
     public void read(final Reader in) throws ConfigurationException, IOException {
@@ -931,7 +931,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      *
      * @param writer   The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the configuration
-     * @throws IOException if an I/O error occurs.
+     * @throws IOException Thrown if an I/O error occurs.
      */
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException {

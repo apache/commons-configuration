@@ -135,7 +135,7 @@ public class DatabaseConfigurationTestHelper {
      * Initializes this helper object. This method can be called from a {@code setUp()} method of a unit test class. It
      * creates the database instance if necessary.
      *
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     public void setUp() throws Exception {
         final File script = ConfigurationAssert.getTestFile("testdb.script");
@@ -168,7 +168,7 @@ public class DatabaseConfigurationTestHelper {
      * Creates the internal data source. This method also initializes the database.
      *
      * @return The data source
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     private DataSource setUpDataSource() throws Exception {
         final BasicDataSource ds = new BasicDataSource();
@@ -243,7 +243,7 @@ public class DatabaseConfigurationTestHelper {
      * Frees the resources used by this helper class. This method can be called by a {@code tearDown()} method of a unit
      * test class.
      *
-     * @throws Exception if an error occurs
+     * @throws Exception Thrown if an error occurs
      */
     public void tearDown() throws Exception {
         if (dataSource != null) {

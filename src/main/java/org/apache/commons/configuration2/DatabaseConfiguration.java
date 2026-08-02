@@ -169,7 +169,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param sql The statement to be executed
          * @param nameCol A flag whether the configurationName column should be taken into account
          * @return The prepared statement object
-         * @throws SQLException if an SQL error occurs
+         * @throws SQLException Thrown if an SQL error occurs
          */
         protected PreparedStatement createStatement(final String sql, final boolean nameCol) throws SQLException {
             final String statement;
@@ -231,7 +231,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param nameCol A flag whether the configurationName column should be taken into account
          * @param params The parameters for the statement
          * @return The initialized statement object
-         * @throws SQLException if an SQL error occurs
+         * @throws SQLException Thrown if an SQL error occurs
          */
         protected PreparedStatement initStatement(final String sql, final boolean nameCol, final Object... params) throws SQLException {
             final PreparedStatement ps = createStatement(sql, nameCol);
@@ -255,7 +255,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * @param nameCol A flag whether the configurationName column should be taken into account
          * @param params The parameters for the statement
          * @return The {@code ResultSet} produced by the query
-         * @throws SQLException if an SQL error occurs
+         * @throws SQLException Thrown if an SQL error occurs
          */
         protected ResultSet openResultSet(final String sql, final boolean nameCol, final Object... params) throws SQLException {
             return resultSet = initStatement(sql, nameCol, params).executeQuery();
@@ -266,7 +266,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
          * Here the actual JDBC logic has to be placed.
          *
          * @return The result of the operation
-         * @throws SQLException if an SQL error occurs
+         * @throws SQLException Thrown if an SQL error occurs
          */
         protected abstract T performOperation() throws SQLException;
     }
@@ -291,7 +291,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      *
      * @param clob The CLOB to be converted
      * @return The extracted string value
-     * @throws SQLException if an error occurs
+     * @throws SQLException Thrown if an error occurs
      */
     private static Object convertClob(final Clob clob) throws SQLException {
         final int len = (int) clob.length();
@@ -508,7 +508,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
      *
      * @param rs The current {@code ResultSet}
      * @return The value of the property column
-     * @throws SQLException if an error occurs
+     * @throws SQLException Thrown if an error occurs
      */
     protected Object extractPropertyValue(final ResultSet rs) throws SQLException {
         Object value = rs.getObject(valueColumn);
