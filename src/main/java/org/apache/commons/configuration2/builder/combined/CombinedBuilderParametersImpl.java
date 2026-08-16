@@ -313,7 +313,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Sets the base path for this combined configuration builder. Normally it it not necessary to set the base path
+     * Sets the base path for this combined configuration builder. Normally it is not necessary to set the base path
      * explicitly. Per default, relative file names of configuration sources are resolved based on the location of the
      * definition file. If this is not desired or if the definition configuration is loaded by a different means, the base
      * path for relative file names can be specified using this method.

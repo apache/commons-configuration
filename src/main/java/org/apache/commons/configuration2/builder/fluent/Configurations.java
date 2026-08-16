@@ -368,7 +368,7 @@ public class Configurations {
     }
 
     /**
-     * Creates a builder for a {@code INIConfiguration} and initializes it with the file file identified by the given path.
+     * Creates a builder for a {@code INIConfiguration} and initializes it with the file identified by the given path.
      *
      * @param path The path to the file to be loaded
      * @return The newly created {@code FileBasedConfigurationBuilder}

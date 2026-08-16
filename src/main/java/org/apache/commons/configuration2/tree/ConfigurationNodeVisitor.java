@@ -46,7 +46,7 @@ public interface ConfigurationNodeVisitor<T> {
     boolean terminate();
 
     /**
-     * Visits the specified node after after its children - if existing - have been processed.
+     * Visits the specified node after its children - if existing - have been processed.
      *
      * @param node The node to be visited
      * @param handler The {@code NodeHandler}
