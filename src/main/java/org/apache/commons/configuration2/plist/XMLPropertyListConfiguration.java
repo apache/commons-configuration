@@ -181,6 +181,18 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          */
         private static final DateFormat GNUSTEP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
+        /**
+         * Formats a date∂.
+         *
+         * @param date The date to format.
+         * @return The formatted date string.
+         */
+        static String formatDate(final Date date) {
+            synchronized (FORMAT) {
+                return FORMAT.format(date);
+            }
+        }
+
         /** A collection with child builders of this builder. */
         private final Collection<PListNodeBuilder> childBuilders = new LinkedList<>();
 
@@ -592,9 +604,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (value instanceof Date) {
-            synchronized (PListNodeBuilder.FORMAT) {
-                out.println(padding + "<date>" + PListNodeBuilder.FORMAT.format((Date) value) + "</date>");
-            }
+            out.println(padding + "<date>" + PListNodeBuilder.formatDate((Date) value) + "</date>");
         } else if (value instanceof Calendar) {
             printValue(out, indentLevel, ((Calendar) value).getTime());
         } else if (value instanceof Number) {
