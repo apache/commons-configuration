@@ -645,6 +645,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private CombinedConfiguration currentConfiguration;
 
     /**
+     * A lock object for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * A {@code ConfigurationInterpolator} to be used as parent for all child configurations to enable cross-source
      * interpolation.
      */
@@ -709,11 +714,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @return A set with the names of all builders
      */
-    public synchronized Set<String> builderNames() {
-        if (sourceData == null) {
-            return Collections.emptySet();
+    public Set<String> builderNames() {
+        synchronized (lock) {
+            if (sourceData == null) {
+                return Collections.emptySet();
+            }
+            return Collections.unmodifiableSet(sourceData.builderNames());
         }
-        return Collections.unmodifiableSet(sourceData.builderNames());
     }
 
     /**
@@ -843,8 +850,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @return A collection with the builders for child configuration sources
      */
-    protected synchronized Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders() {
-        return sourceData.getChildBuilders();
+    protected Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders() {
+        synchronized (lock) {
+            return sourceData.getChildBuilders();
+        }
     }
 
     /**
@@ -864,12 +873,14 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return The builder for the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    public synchronized ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder() throws ConfigurationException {
-        if (definitionBuilder == null) {
-            definitionBuilder = setupDefinitionBuilder(getParameters());
-            addDefinitionBuilderChangeListener(definitionBuilder);
+    public ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder() throws ConfigurationException {
+        synchronized (lock) {
+            if (definitionBuilder == null) {
+                definitionBuilder = setupDefinitionBuilder(getParameters());
+                addDefinitionBuilderChangeListener(definitionBuilder);
+            }
+            return definitionBuilder;
         }
-        return definitionBuilder;
     }
 
     /**
@@ -904,15 +915,17 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws ConfigurationException if information about named builders is not yet available or no builder with this name
      *         exists
      */
-    public synchronized ConfigurationBuilder<? extends Configuration> getNamedBuilder(final String name) throws ConfigurationException {
-        if (sourceData == null) {
-            throw new ConfigurationException("Information about child builders has not been setup yet! Call getConfiguration() first.");
+    public ConfigurationBuilder<? extends Configuration> getNamedBuilder(final String name) throws ConfigurationException {
+        synchronized (lock) {
+            if (sourceData == null) {
+                throw new ConfigurationException("Information about child builders has not been setup yet! Call getConfiguration() first.");
+            }
+            final ConfigurationBuilder<? extends Configuration> builder = sourceData.getNamedBuilder(name);
+            if (builder == null) {
+                throw new ConfigurationException("Builder cannot be resolved: %s", name);
+            }
+            return builder;
         }
-        final ConfigurationBuilder<? extends Configuration> builder = sourceData.getNamedBuilder(name);
-        if (builder == null) {
-            throw new ConfigurationException("Builder cannot be resolved: %s", name);
-        }
-        return builder;
     }
 
     /**
@@ -1200,16 +1213,17 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * {@inheritDoc} This implementation resets some specific internal state of this builder.
      */
     @Override
-    public synchronized void resetParameters() {
-        super.resetParameters();
-        definitionBuilder = null;
-        definitionConfiguration = null;
-        currentParameters = null;
-        currentXMLParameters = null;
-
-        if (sourceData != null) {
-            sourceData.cleanUp();
-            sourceData = null;
+    public void resetParameters() {
+        synchronized (lock) {
+            super.resetParameters();
+            definitionBuilder = null;
+            definitionConfiguration = null;
+            currentParameters = null;
+            currentXMLParameters = null;
+            if (sourceData != null) {
+                sourceData.cleanUp();
+                sourceData = null;
+            }
         }
     }
 
