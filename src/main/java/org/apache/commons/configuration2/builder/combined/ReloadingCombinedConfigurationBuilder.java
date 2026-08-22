@@ -71,6 +71,11 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
     private ReloadingController reloadingController;
 
     /**
+     * A lock object for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code ReloadingCombinedConfigurationBuilder}. No parameters are set.
      */
     public ReloadingCombinedConfigurationBuilder() {
@@ -118,9 +123,7 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
         final Collection<ReloadingController> subControllers = new LinkedList<>();
         final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder = getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);
-
         getChildBuilders().forEach(b -> obtainReloadingController(subControllers, b));
-
         final CombinedReloadingController ctrl = new CombinedReloadingController(subControllers);
         ctrl.resetInitialReloadingState();
         return ctrl;
@@ -154,8 +157,10 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * meaningful result before.
      */
     @Override
-    public synchronized ReloadingController getReloadingController() {
-        return reloadingController;
+    public ReloadingController getReloadingController() {
+        synchronized (lock) {
+            return reloadingController;
+        }
     }
 
     /**
