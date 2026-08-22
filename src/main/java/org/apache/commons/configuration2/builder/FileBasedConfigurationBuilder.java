@@ -129,6 +129,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     private boolean resetParameters;
 
     /**
+     * Private lock for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class.
      *
      * @param resCls The result class (must not be <strong>null</strong>
@@ -195,8 +200,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @return The {@code FileHandler} associated with this builder
      */
-    public synchronized FileHandler getFileHandler() {
-        return currentFileHandler != null ? currentFileHandler : fetchFileHandlerFromParameters();
+    public FileHandler getFileHandler() {
+        synchronized (lock) {
+            return currentFileHandler != null ? currentFileHandler : fetchFileHandlerFromParameters();
+        }
     }
 
     /**
@@ -263,8 +270,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @return <strong>true</strong> if auto save is enabled, <strong>false</strong> otherwise
      */
-    public synchronized boolean isAutoSave() {
-        return autoSaveListener != null;
+    public boolean isAutoSave() {
+        synchronized (lock) {
+            return autoSaveListener != null;
+        }
     }
 
     /**
@@ -295,11 +304,13 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param enabled <strong>true</strong> if auto save mode is to be enabled, <strong>false</strong> otherwise
      */
-    public synchronized void setAutoSave(final boolean enabled) {
-        if (enabled) {
-            installAutoSaveListener();
-        } else {
-            removeAutoSaveListener();
+    public void setAutoSave(final boolean enabled) {
+        synchronized (lock) {
+            if (enabled) {
+                installAutoSaveListener();
+            } else {
+                removeAutoSaveListener();
+            }
         }
     }
 
@@ -309,9 +320,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * than reusing the existing one.
      */
     @Override
-    public synchronized BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
-        super.setParameters(params);
-        resetParameters = true;
-        return this;
+    public BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
+        synchronized (lock) {
+            super.setParameters(params);
+            resetParameters = true;
+            return this;
+        }
     }
 }
