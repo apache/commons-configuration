@@ -122,7 +122,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     private final boolean allowFailOnInit;
 
     /** The map with current initialization parameters. */
-    private Map<String, Object> parameters;
+    private Map<String, Object> parameters = Collections.emptyMap();
 
     /** The current bean declaration. */
     private BeanDeclaration resultDeclaration;
@@ -444,10 +444,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @return A map with the current set of initialization parameters
      */
     protected final synchronized Map<String, Object> getParameters() {
-        if (parameters != null) {
-            return parameters;
-        }
-        return Collections.emptyMap();
+        return parameters;
     }
 
     /**
