@@ -131,6 +131,11 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     private volatile T result;
 
     /**
+     * Private lock for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code BasicConfigurationBuilder} and initializes it with the given result class. No
      * initialization properties are set.
      *
@@ -192,13 +197,15 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param params The map with additional initialization parameters; may be <strong>null</strong>, then this call has no effect
      * @return A reference to this builder for method chaining
      */
-    public synchronized BasicConfigurationBuilder<T> addParameters(final Map<String, Object> params) {
-        final Map<String, Object> newParams = new HashMap<>(getParameters());
-        if (params != null) {
-            newParams.putAll(params);
+    public BasicConfigurationBuilder<T> addParameters(final Map<String, Object> params) {
+        synchronized (lock) {
+            final Map<String, Object> newParams = new HashMap<>(getParameters());
+            if (params != null) {
+                newParams.putAll(params);
+            }
+            updateParameters(newParams);
+            return this;
         }
-        updateParameters(newParams);
-        return this;
     }
 
     /**
@@ -260,7 +267,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param target The target configuration builder (must not be <strong>null</strong>)
      * @throws NullPointerException if the target builder is <strong>null</strong>
      */
-    protected synchronized void copyEventListeners(final BasicConfigurationBuilder<?> target) {
+    protected void copyEventListeners(final BasicConfigurationBuilder<?> target) {
         copyEventListeners(target, eventListeners);
     }
 
@@ -274,7 +281,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @throws NullPointerException if the target builder is <strong>null</strong>
      */
     protected void copyEventListeners(final BasicConfigurationBuilder<?> target, final EventListenerList listeners) {
-        target.eventListeners.addAll(listeners);
+        synchronized (lock) {
+            target.eventListeners.addAll(listeners);
+        }
     }
 
     /**
@@ -443,8 +452,10 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @return A map with the current set of initialization parameters
      */
-    protected final synchronized Map<String, Object> getParameters() {
-        return parameters;
+    protected final Map<String, Object> getParameters() {
+        synchronized (lock) {
+            return parameters;
+        }
     }
 
     /**
@@ -463,11 +474,13 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @return The {@code BeanDeclaration} for dynamically creating a result object
      * @throws ConfigurationException if an error occurs
      */
-    protected final synchronized BeanDeclaration getResultDeclaration() throws ConfigurationException {
-        if (resultDeclaration == null) {
-            resultDeclaration = createResultDeclaration(getFilteredParameters());
+    protected final BeanDeclaration getResultDeclaration() throws ConfigurationException {
+        synchronized (lock) {
+            if (resultDeclaration == null) {
+                resultDeclaration = createResultDeclaration(getFilteredParameters());
+            }
+            return resultDeclaration;
         }
-        return resultDeclaration;
     }
 
     /**
@@ -569,9 +582,11 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * Resets this builder. This is a convenience method which combines calls to {@link #resetResult()} and
      * {@link #resetParameters()}.
      */
-    public synchronized void reset() {
-        resetParameters();
-        resetResult();
+    public void reset() {
+        synchronized (lock) {
+            resetParameters();
+            resetResult();
+        }
     }
 
     /**
@@ -608,7 +623,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *        parameters are removed
      * @return A reference to this builder for method chaining
      */
-    public synchronized BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
+    public BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
         updateParameters(params);
         return this;
     }
@@ -619,10 +634,12 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param newParams The map with new parameters (may be <strong>null</strong>)
      */
     private void updateParameters(final Map<String, Object> newParams) {
-        final Map<String, Object> map = new HashMap<>();
-        if (newParams != null) {
-            map.putAll(newParams);
+        synchronized (lock) {
+            final Map<String, Object> map = new HashMap<>();
+            if (newParams != null) {
+                map.putAll(newParams);
+            }
+            parameters = Collections.unmodifiableMap(map);
         }
-        parameters = Collections.unmodifiableMap(map);
     }
 }
