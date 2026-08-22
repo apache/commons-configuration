@@ -129,6 +129,11 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     private final EventListener<ConfigurationBuilderEvent> managedBuilderDelegationListener = this::handleManagedBuilderEvent;
 
     /**
+     * A lock object for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code MultiFileConfigurationBuilder} without setting initialization parameters.
      *
      * @param resCls The result configuration class
@@ -168,11 +173,13 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
      * the internally used configuration builders.
      */
     @Override
-    public synchronized <E extends Event> void addEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
-        super.addEventListener(eventType, l);
-        if (isEventTypeForManagedBuilders(eventType)) {
-            getManagedBuilders().values().forEach(b -> b.addEventListener(eventType, l));
-            configurationListeners.addEventListener(eventType, l);
+    public <E extends Event> void addEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
+        synchronized (lock) {
+            super.addEventListener(eventType, l);
+            if (isEventTypeForManagedBuilders(eventType)) {
+                getManagedBuilders().values().forEach(b -> b.addEventListener(eventType, l));
+                configurationListeners.addEventListener(eventType, l);
+            }
         }
     }
 
@@ -392,27 +399,30 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration> ext
     }
 
     /**
-     * {@inheritDoc} This implementation ensures that the listener is also removed from managed configuration builders if
-     * necessary.
+     * {@inheritDoc} This implementation ensures that the listener is also removed from managed configuration builders if necessary.
      */
     @Override
-    public synchronized <E extends Event> boolean removeEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
-        final boolean result = super.removeEventListener(eventType, l);
-        if (isEventTypeForManagedBuilders(eventType)) {
-            getManagedBuilders().values().forEach(b -> b.removeEventListener(eventType, l));
-            configurationListeners.removeEventListener(eventType, l);
+    public <E extends Event> boolean removeEventListener(final EventType<E> eventType, final EventListener<? super E> l) {
+        synchronized (lock) {
+            final boolean result = super.removeEventListener(eventType, l);
+            if (isEventTypeForManagedBuilders(eventType)) {
+                getManagedBuilders().values().forEach(b -> b.removeEventListener(eventType, l));
+                configurationListeners.removeEventListener(eventType, l);
+            }
+            return result;
         }
-        return result;
     }
 
     /**
      * {@inheritDoc} This implementation clears the cache with all managed builders.
      */
     @Override
-    public synchronized void resetParameters() {
-        getManagedBuilders().values().forEach(b -> b.removeEventListener(ConfigurationBuilderEvent.ANY, managedBuilderDelegationListener));
-        getManagedBuilders().clear();
-        interpolator.set(null);
-        super.resetParameters();
+    public void resetParameters() {
+        synchronized (lock) {
+            getManagedBuilders().values().forEach(b -> b.removeEventListener(ConfigurationBuilderEvent.ANY, managedBuilderDelegationListener));
+            getManagedBuilders().clear();
+            interpolator.set(null);
+            super.resetParameters();
+        }
     }
 }
