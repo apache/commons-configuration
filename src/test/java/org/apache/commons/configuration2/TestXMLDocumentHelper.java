@@ -46,7 +46,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.xml.SecureDocumentBuilderFactory;
-import org.apache.commons.xml.SecureTransformerFactory;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
