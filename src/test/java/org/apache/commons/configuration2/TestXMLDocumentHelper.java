@@ -45,6 +45,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.xml.SecureDocumentBuilderFactory;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -134,7 +135,7 @@ public class TestXMLDocumentHelper {
      * @return The parsed document
      */
     private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
-        final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        final DocumentBuilder builder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         return builder.parse(ConfigurationAssert.getTestFile(name));
     }
 

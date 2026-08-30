@@ -55,6 +55,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.xml.SecureSAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -661,7 +662,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         // parse the file
         final XMLPropertyListHandler handler = new XMLPropertyListHandler();
         try {
-            final SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SecureSAXParserFactory.newInstance();
             factory.setValidating(true);
             final XMLReader xmlReader = factory.newSAXParser().getXMLReader();
             xmlReader.setEntityResolver(resolver);

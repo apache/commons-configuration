@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,6 +54,7 @@ import org.apache.commons.configuration2.tree.NodeTreeWalker;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.commons.xml.SecureDocumentBuilderFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -693,12 +695,24 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         if (getDocumentBuilder() != null) {
             return getDocumentBuilder();
         }
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = SecureDocumentBuilderFactory.newInstance();
         if (isValidating()) {
             factory.setValidating(true);
             if (isSchemaValidation()) {
                 factory.setNamespaceAware(true);
                 factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+                try {
+                    // Due to a bug, the JDK fails to mark schema documents supplied by an EntityResolver2 as resolver-created,
+                    // so the accessExternalSchema check is applied to the resolved source and denies access.
+                    // Downgrading the resolver to a plain EntityResolver works around the check on Java 9+; Java 8 applies the
+                    // check even to sources supplied by a plain resolver, so the schema restriction is lifted entirely.
+                    // This does not reopen external fetches: the secure factory's resolver floor still resolves every lookup
+                    // the entity resolver leaves unresolved to empty content instead of fetching it.
+                    factory.setFeature("http://xml.org/sax/features/use-entity-resolver2", false);
+                    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "all");
+                } catch (final ParserConfigurationException | IllegalArgumentException ignored) {
+                    // Xerces-specific settings: other parsers keep their own configuration.
+                }
             }
         }
 

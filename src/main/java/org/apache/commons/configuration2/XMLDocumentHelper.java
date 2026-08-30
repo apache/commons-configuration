@@ -33,6 +33,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.xml.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.SecureTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -90,15 +92,6 @@ final class XMLDocumentHelper {
         } catch (final ParserConfigurationException pcex) {
             throw new ConfigurationException(pcex);
         }
-    }
-
-    /**
-     * Creates a new {@code DocumentBuilderFactory} instance.
-     *
-     * @return The new factory object
-     */
-    private static DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
     }
 
     /**
@@ -163,7 +156,7 @@ final class XMLDocumentHelper {
      * @return The {@code TransformerFactory}
      */
     static TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
+        return SecureTransformerFactory.newInstance();
     }
 
     /**
@@ -184,7 +177,7 @@ final class XMLDocumentHelper {
      * @throws ConfigurationException if an error occurs when creating the document
      */
     public static XMLDocumentHelper forNewDocument(final String rootElementName) throws ConfigurationException {
-        final Document doc = createDocumentBuilder(createDocumentBuilderFactory()).newDocument();
+        final Document doc = createDocumentBuilder(SecureDocumentBuilderFactory.newInstance()).newDocument();
         final Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
         return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);

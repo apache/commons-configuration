@@ -64,6 +64,8 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.xml.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.SecureTransformerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -155,7 +157,7 @@ public class TestXMLConfiguration {
         final Source source = new DOMSource(node);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final Result result = new StreamResult(bos);
-        final TransformerFactory factory = TransformerFactory.newInstance();
+        final TransformerFactory factory = SecureTransformerFactory.newInstance();
         factory.newTransformer().transform(source, result);
         // 4. Return the resulting byte array
         return bos.toByteArray();
@@ -184,7 +186,7 @@ public class TestXMLConfiguration {
 
     private Node buildDomNodeFixture() throws SAXException, IOException, ParserConfigurationException {
         final String content = "<configuration><test attr=\"x\">1</test></configuration>";
-        final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
+        final Node document = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
         final Node node = document.getFirstChild().getFirstChild(); // <test>
         assertEquals("test", node.getNodeName()); // sanity check
         return node;
@@ -239,7 +241,7 @@ public class TestXMLConfiguration {
      * @throws ParserConfigurationException if an error occurs
      */
     private DocumentBuilder createValidatingDocBuilder() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = SecureDocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         final DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setErrorHandler(new DefaultHandler() {
@@ -252,7 +254,7 @@ public class TestXMLConfiguration {
     }
 
     private Document parseXml(final String xml) throws SAXException, IOException, ParserConfigurationException {
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+        return SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
