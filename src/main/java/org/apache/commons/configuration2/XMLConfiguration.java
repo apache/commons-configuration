@@ -702,15 +702,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
                 factory.setNamespaceAware(true);
                 factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
                 try {
-                    // Due to a bug, the JDK fails to mark schema documents supplied by an EntityResolver2 as resolver-created,
-                    // so the accessExternalSchema check is applied to the resolved source and denies access.
-                    // Downgrading the resolver to a plain EntityResolver works around the check on Java 9+; Java 8 applies the
-                    // check even to sources supplied by a plain resolver, so the schema restriction is lifted entirely.
-                    // This does not reopen external fetches: the secure factory's resolver floor still resolves every lookup
-                    // the entity resolver leaves unresolved to empty content instead of fetching it.
-                    factory.setFeature("http://xml.org/sax/features/use-entity-resolver2", false);
+                    // Due to a bug, the JDK fails to mark schema documents supplied by an entity resolver as resolver-created,
+                    // so the accessExternalSchema check is applied to them and denies access:
+                    //
+                    // - Old JDK 8 versions never mark them.
+                    // - Newer JDK 8 and later versions only fail to mark documents supplied by an EntityResolver2.
+                    //
+                    // Allowing all protocols only stops that check from refusing the documents returned by the resolver:
+                    // the parser never retrieves a schema itself, because the Commons XML ignore-all resolver floor
+                    // resolves every lookup the caller-supplied resolver leaves unresolved to empty content.
                     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "all");
-                } catch (final ParserConfigurationException | IllegalArgumentException ignored) {
+                } catch (final IllegalArgumentException ignored) {
                     // Xerces-specific settings: other parsers keep their own configuration.
                 }
             }

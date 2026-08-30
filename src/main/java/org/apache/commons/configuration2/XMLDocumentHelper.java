@@ -132,7 +132,7 @@ final class XMLDocumentHelper {
      * @throws ConfigurationException if the {@code Transformer} could not be created
      */
     public static Transformer createTransformer() throws ConfigurationException {
-        return createTransformer(createTransformerFactory());
+        return createTransformer(SecureTransformerFactory.newInstance());
     }
 
     /**
@@ -148,15 +148,6 @@ final class XMLDocumentHelper {
         } catch (final TransformerConfigurationException tex) {
             throw new ConfigurationException(tex);
         }
-    }
-
-    /**
-     * Creates a new {@code TransformerFactory}.
-     *
-     * @return The {@code TransformerFactory}
-     */
-    static TransformerFactory createTransformerFactory() {
-        return SecureTransformerFactory.newInstance();
     }
 
     /**
