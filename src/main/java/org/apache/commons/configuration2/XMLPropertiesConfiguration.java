@@ -32,7 +32,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorAware;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.commons.xml.SecureSAXParserFactory;
+import org.apache.commons.xml.secure.SecureSAXParserFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

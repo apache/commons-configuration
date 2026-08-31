@@ -26,7 +26,7 @@ import javax.xml.transform.sax.SAXSource;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.xml.SecureTransformerFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;

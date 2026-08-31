@@ -33,8 +33,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.xml.SecureDocumentBuilderFactory;
-import org.apache.commons.xml.SecureTransformerFactory;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
