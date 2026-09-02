@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaClass;
-import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.beanutils2.DynaBean;
+import org.apache.commons.beanutils2.DynaClass;
+import org.apache.commons.beanutils2.DynaProperty;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 
 /**
