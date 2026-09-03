@@ -33,6 +33,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -93,15 +95,6 @@ final class XMLDocumentHelper {
     }
 
     /**
-     * Creates a new {@code DocumentBuilderFactory} instance.
-     *
-     * @return The new factory object
-     */
-    private static DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
-    }
-
-    /**
      * Creates the element mapping for the specified documents. For each node in the source document an entry is created
      * pointing to the corresponding node in the destination object.
      *
@@ -139,7 +132,7 @@ final class XMLDocumentHelper {
      * @throws ConfigurationException if the {@code Transformer} could not be created
      */
     public static Transformer createTransformer() throws ConfigurationException {
-        return createTransformer(createTransformerFactory());
+        return createTransformer(SecureTransformerFactory.newInstance());
     }
 
     /**
@@ -155,15 +148,6 @@ final class XMLDocumentHelper {
         } catch (final TransformerConfigurationException tex) {
             throw new ConfigurationException(tex);
         }
-    }
-
-    /**
-     * Creates a new {@code TransformerFactory}.
-     *
-     * @return The {@code TransformerFactory}
-     */
-    static TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
     }
 
     /**
@@ -184,7 +168,7 @@ final class XMLDocumentHelper {
      * @throws ConfigurationException if an error occurs when creating the document
      */
     public static XMLDocumentHelper forNewDocument(final String rootElementName) throws ConfigurationException {
-        final Document doc = createDocumentBuilder(createDocumentBuilderFactory()).newDocument();
+        final Document doc = createDocumentBuilder(SecureDocumentBuilderFactory.newInstance()).newDocument();
         final Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
         return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);
