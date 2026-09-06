@@ -27,11 +27,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -80,7 +80,7 @@ public class TestBaseConfigurationXMLReader {
     private void checkDocument(final BaseConfigurationXMLReader creader, final String rootName) throws Exception {
         final SAXSource source = new SAXSource(creader, new InputSource());
         final DOMResult result = new DOMResult();
-        final Transformer trans = TransformerFactory.newInstance().newTransformer();
+        final Transformer trans = SecureTransformerFactory.newInstance().newTransformer();
         trans.transform(source, result);
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);

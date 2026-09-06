@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,6 +54,7 @@ import org.apache.commons.configuration2.tree.NodeTreeWalker;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -693,12 +695,26 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         if (getDocumentBuilder() != null) {
             return getDocumentBuilder();
         }
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = SecureDocumentBuilderFactory.newInstance();
         if (isValidating()) {
             factory.setValidating(true);
             if (isSchemaValidation()) {
                 factory.setNamespaceAware(true);
                 factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+                try {
+                    // Due to a bug, the JDK fails to mark schema documents supplied by an entity resolver as resolver-created,
+                    // so the accessExternalSchema check is applied to them and denies access:
+                    //
+                    // - Old JDK 8 versions never mark them.
+                    // - Newer JDK 8 and later versions only fail to mark documents supplied by an EntityResolver2.
+                    //
+                    // Allowing all protocols only stops that check from refusing the documents returned by the resolver:
+                    // the parser never retrieves a schema itself, because the Commons XML ignore-all resolver floor
+                    // resolves every lookup the caller-supplied resolver leaves unresolved to empty content.
+                    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "all");
+                } catch (final IllegalArgumentException ignored) {
+                    // Xerces-specific settings: other parsers keep their own configuration.
+                }
             }
         }
 
