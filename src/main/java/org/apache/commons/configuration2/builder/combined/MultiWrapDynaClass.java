@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaClass;
-import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.beanutils2.DynaBean;
+import org.apache.commons.beanutils2.DynaClass;
+import org.apache.commons.beanutils2.DynaProperty;
 
 /**
  * <p>
