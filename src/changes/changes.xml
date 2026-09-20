@@ -39,7 +39,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump com.fasterxml.jackson.core:jackson-databind from 2.21.3 to 2.22.1 (#641, #646).</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-logging:commons-logging from 1.3.6 to 1.4.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.dbunit:dbunit from 3.0.0 to 3.2.0 (#643).</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump slf4j.version from 2.0.17 to 2.0.18 (#644).</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump slf4j.version from 2.0.17 to 2.0.19 (#644).</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.logging.log4j:log4j-core from 2.26.0 to 2.26.1.</action>
       <action type="update" dev="ggregory" due-to="María Galbis, Gary Gregory" issue="CONFIGURATION-857">Preserve duplicate non-String scalar values in flatten() (#645).</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.22.0 to 1.22.1.</action>
