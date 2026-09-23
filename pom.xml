@@ -48,6 +48,7 @@
       org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
+      java.applet.*;resolution:=optional,
       javax.servlet.*;resolution:=optional,
       jakarta.servlet.*;resolution:=optional,
       org.apache.commons.jexl2.*;resolution:=optional,
