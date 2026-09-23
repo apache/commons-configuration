@@ -542,6 +542,35 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>java26</id>
+      <activation>
+        <jdk>[26,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <testExcludes>
+                <testExclude>**/TestAppletConfiguration.java</testExclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
+                <exclude>**/TestAppletConfiguration.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!-- Uncomment this and set the path accordingly to enable YourKit -->
     <!-- http://www.yourkit.com/docs/80/help/agent.jsp -->
     <!-- <profile>
