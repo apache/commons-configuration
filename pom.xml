@@ -48,7 +48,7 @@
       org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
-      java.applet.*;resolution:=optional,
+      java.applet;resolution:=optional,
       javax.servlet.*;resolution:=optional,
       jakarta.servlet.*;resolution:=optional,
       org.apache.commons.jexl2.*;resolution:=optional,
@@ -547,6 +547,12 @@
       <activation>
         <jdk>[26,)</jdk>
       </activation>
+      <!--
+        JDK 26 removes the java.applet API, so AppletConfiguration cannot be
+        compiled or tested there. TestWebdavConfigurationBuilder remains
+        excluded by the existing project-wide Surefire configuration; it is
+        not an additional JDK 26 exclusion.
+      -->
       <build>
         <plugins>
           <plugin>
@@ -563,7 +569,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <excludes>
-                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
                 <exclude>**/TestAppletConfiguration.java</exclude>
               </excludes>
             </configuration>
