@@ -26,7 +26,6 @@ import java.io.File;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -74,8 +73,7 @@ public class TestXMLPropertiesConfiguration {
         assertThrows(NullPointerException.class, () -> new XMLPropertiesConfiguration(null));
         // Normal case
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
-        final DocumentBuilderFactory dbFactory = SecureDocumentBuilderFactory.newInstance();
-        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final DocumentBuilder dBuilder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
         final File file = new File(location.toURI());
         final Document doc = dBuilder.parse(file);
@@ -103,8 +101,7 @@ public class TestXMLPropertiesConfiguration {
         final File saveFile = newFile("test2.properties.xml", tempFolder);
 
         // save as DOM into saveFile
-        final DocumentBuilderFactory dbFactory = SecureDocumentBuilderFactory.newInstance();
-        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final DocumentBuilder dBuilder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         final Document document = dBuilder.newDocument();
         conf.save(document, document);
         final TransformerFactory tFactory = SecureTransformerFactory.newInstance();
