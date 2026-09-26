@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.configuration2.tree.InMemoryNodeModelSupport;
@@ -642,9 +641,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
 
     /**
      * Gets a configuration with the content of the specified section. This provides an easy way of working with a single
-     * section only. The way this configuration is structured internally, this method is very similar to calling
-     * {@link HierarchicalConfiguration#configurationAt(String)} with the name of the section in question. There are the
-     * following differences however:
+     * section only. The section name is treated as a literal name of a direct child node of the root (dots are not
+     * interpreted as path separators). There are the following differences compared to
+     * {@link HierarchicalConfiguration#configurationAt(String)}:
      * <ul>
      * <li>This method never throws an exception. If the section does not exist, it is created now. The configuration
      * returned in this case is empty.</li>
@@ -663,15 +662,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         if (name == null) {
             return getGlobalSection();
         }
-        try {
-            return (SubnodeConfiguration) configurationAt(name, true);
-        } catch (final ConfigurationRuntimeException iex) {
-            // the passed in key does not map to exactly one node
-            // obtain the node for the section, create it on demand
-            final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
-            final NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
-            return createSubConfigurationForTrackedNode(selector, this);
-        }
+        // Look up / create a direct root child by exact section name. Using
+        // configurationAt(name) would treat '.' as a path delimiter (CONFIGURATION-820).
+        final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        final NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
+        return createSubConfigurationForTrackedNode(selector, this);
     }
 
     /**
