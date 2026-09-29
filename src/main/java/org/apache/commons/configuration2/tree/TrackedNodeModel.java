@@ -75,9 +75,9 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * {@code SubnodeConfiguration}, there is typically no way to discard the model explicitly. Therefore, it makes sense to
      * do this automatically on finalization.
      *
-     * @param modelSupport the underlying {@code InMemoryNodeModelSupport} (must not be <strong>null</strong>)
-     * @param sel the selector to the root node of this model (must not be <strong>null</strong>)
-     * @param untrackOnFinalize a flag whether the tracked node should be released on finalization
+     * @param modelSupport The underlying {@code InMemoryNodeModelSupport} (must not be <strong>null</strong>)
+     * @param sel The selector to the root node of this model (must not be <strong>null</strong>)
+     * @param untrackOnFinalize A flag whether the tracked node should be released on finalization
      * @throws IllegalArgumentException if a required parameter is missing
      */
     public TrackedNodeModel(final InMemoryNodeModelSupport modelSupport, final NodeSelector sel, final boolean untrackOnFinalize) {
@@ -108,7 +108,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * {@inheritDoc} This implementation clears the sub tree spanned by the associate tracked node. This has the side effect
      * that this in any case becomes detached.
      *
-     * @param resolver the {@code NodeKeyResolver}.
+     * @param resolver The {@code NodeKeyResolver}.
      */
     @Override
     public void clear(final NodeKeyResolver<ImmutableNode> resolver) {
@@ -171,7 +171,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * Gets the parent model. Operations on this model are delegated to this parent model specifying the selector to the
      * tracked node.
      *
-     * @return the parent model
+     * @return The parent model
      */
     public InMemoryNodeModel getParentModel() {
         return getParentModelSupport().getNodeModel();
@@ -180,7 +180,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Gets the {@code InMemoryNodeModelSupport} object which is used to gain access to the underlying node model.
      *
-     * @return the associated {@code InMemoryNodeModelSupport} object
+     * @return The associated {@code InMemoryNodeModelSupport} object
      */
     public InMemoryNodeModelSupport getParentModelSupport() {
         return parentModelSupport;
@@ -189,7 +189,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
     /**
      * Gets the {@code NodeSelector} pointing to the tracked node managed by this model.
      *
-     * @return the tracked node selector
+     * @return The tracked node selector
      */
     public NodeSelector getSelector() {
         return selector;
@@ -200,7 +200,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode> {
      * returns the value of the corresponding flag passed to the constructor. If result is true, the underlying model is
      * asked to untrack the managed node when this object is claimed by the GC.
      *
-     * @return a flag whether the managed tracked node should be released when this object dies
+     * @return A flag whether the managed tracked node should be released when this object dies
      * @see InMemoryNodeModel#untrackNode(NodeSelector)
      */
     public boolean isReleaseTrackedNodeOnFinalize() {

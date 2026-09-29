@@ -53,7 +53,7 @@ public class TestPeriodicReloadingTrigger {
     /**
      * Creates a mock object for a scheduled future.
      *
-     * @return the mock
+     * @return The mock
      */
     @SuppressWarnings("unchecked")
     private static ScheduledFuture<Void> createFutureMock() {
@@ -69,7 +69,7 @@ public class TestPeriodicReloadingTrigger {
     /**
      * Creates a test instance with default parameters.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private PeriodicReloadingTrigger createTrigger() {
         return new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT, executor);

@@ -47,7 +47,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
         /**
          * Creates a new instance of {@code SubsetIterator} and initializes it with the parent iterator.
          *
-         * @param it the iterator of the parent configuration
+         * @param it The iterator of the parent configuration
          */
         public SubsetIterator(final Iterator<String> it) {
             parentIterator = it;
@@ -56,7 +56,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
         /**
          * Checks whether there are more elements. Delegates to the parent iterator.
          *
-         * @return a flag whether there are more elements
+         * @return A flag whether there are more elements
          */
         @Override
         public boolean hasNext() {
@@ -67,7 +67,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
          * Returns the next element in the iteration. This is the next key from the parent configuration, transformed to
          * correspond to the point of view of this subset configuration.
          *
-         * @return the next element
+         * @return The next element
          */
         @Override
         public String next() {
@@ -148,7 +148,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * Gets the key in the subset configuration associated to the specified key in the parent configuration.
      *
      * @param key The key in the parent configuration.
-     * @return the key in the context of this subset configuration
+     * @return The key in the context of this subset configuration
      */
     protected String getChildKey(final String key) {
         if (!key.startsWith(prefix)) {
@@ -187,7 +187,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Gets the parent configuration for this subset.
      *
-     * @return the parent configuration
+     * @return The parent configuration
      */
     public Configuration getParent() {
         return parent;
@@ -197,7 +197,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * Gets the key in the parent configuration associated to the specified key in this subset.
      *
      * @param key The key in the subset.
-     * @return the key as to be used by the parent
+     * @return The key as to be used by the parent
      */
     protected String getParentKey(final String key) {
         if (StringUtils.isEmpty(key)) {
@@ -209,7 +209,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Gets the prefix used to select the properties in the parent configuration.
      *
-     * @return the prefix used by this subset
+     * @return The prefix used by this subset
      */
     public String getPrefix() {
         return prefix;
@@ -263,7 +263,7 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Sets the prefix used to select the properties in the parent configuration.
      *
-     * @param prefix the prefix
+     * @param prefix The prefix
      */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;

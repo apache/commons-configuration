@@ -35,8 +35,8 @@ public class StrictConfigurationComparator implements ConfigurationComparator {
     /**
      * Compare two configuration objects.
      *
-     * @param a the first configuration
-     * @param b the second configuration
+     * @param a The first configuration
+     * @param b The second configuration
      * @return true if keys from a are found in b and keys from b are found in a and for each key in a, the corresponding
      *         value is the sale in for the same key in b
      */

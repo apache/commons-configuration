@@ -64,6 +64,8 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -127,8 +129,8 @@ public class TestXMLConfiguration {
     /**
      * Creates a new XMLConfiguration and loads the specified file.
      *
-     * @param fileName the name of the file to be loaded
-     * @return the newly created configuration instance
+     * @param fileName The name of the file to be loaded
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private static XMLConfiguration createFromFile(final String fileName) throws ConfigurationException {
@@ -141,8 +143,8 @@ public class TestXMLConfiguration {
     /**
      * Helper method for loading the specified configuration file.
      *
-     * @param config the configuration
-     * @param fileName the name of the file to be loaded
+     * @param config The configuration
+     * @param fileName The name of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final XMLConfiguration config, final String fileName) throws ConfigurationException {
@@ -155,7 +157,7 @@ public class TestXMLConfiguration {
         final Source source = new DOMSource(node);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final Result result = new StreamResult(bos);
-        final TransformerFactory factory = TransformerFactory.newInstance();
+        final TransformerFactory factory = SecureTransformerFactory.newInstance();
         factory.newTransformer().transform(source, result);
         // 4. Return the resulting byte array
         return bos.toByteArray();
@@ -184,7 +186,7 @@ public class TestXMLConfiguration {
 
     private Node buildDomNodeFixture() throws SAXException, IOException, ParserConfigurationException {
         final String content = "<configuration><test attr=\"x\">1</test></configuration>";
-        final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
+        final Node document = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes()));
         final Node node = document.getFirstChild().getFirstChild(); // <test>
         assertEquals("test", node.getNodeName()); // sanity check
         return node;
@@ -193,7 +195,7 @@ public class TestXMLConfiguration {
     /**
      * Helper method for testing whether a configuration was correctly saved to the default output file.
      *
-     * @return the newly loaded configuration
+     * @return The newly loaded configuration
      * @throws ConfigurationException if an error occurs
      */
     private XMLConfiguration checkSavedConfig() throws ConfigurationException {
@@ -203,8 +205,8 @@ public class TestXMLConfiguration {
     /**
      * Tests whether the saved configuration file matches the original data.
      *
-     * @param saveFile the saved configuration file
-     * @return the newly loaded configuration
+     * @param saveFile The saved configuration file
+     * @return The newly loaded configuration
      * @throws ConfigurationException if an error occurs
      */
     private XMLConfiguration checkSavedConfig(final File saveFile) throws ConfigurationException {
@@ -216,7 +218,7 @@ public class TestXMLConfiguration {
     /**
      * Helper method for testing saving and loading a configuration when delimiter parsing is disabled.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      * @throws ConfigurationException if an error occurs
      */
     private void checkSaveDelimiterParsingDisabled(final String key) throws ConfigurationException {
@@ -235,11 +237,11 @@ public class TestXMLConfiguration {
     /**
      * Creates a validating document builder.
      *
-     * @return the document builder
+     * @return The document builder
      * @throws ParserConfigurationException if an error occurs
      */
     private DocumentBuilder createValidatingDocBuilder() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = SecureDocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         final DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setErrorHandler(new DefaultHandler() {
@@ -252,7 +254,7 @@ public class TestXMLConfiguration {
     }
 
     private Document parseXml(final String xml) throws SAXException, IOException, ParserConfigurationException {
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+        return SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**

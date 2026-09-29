@@ -95,7 +95,7 @@ public class ExprLookup implements Lookup {
         /**
          * Gets the name to be used in expressions.
          *
-         * @return the name to be used in expressions.
+         * @return The name to be used in expressions.
          */
         public String getName() {
             return key;
@@ -104,7 +104,7 @@ public class ExprLookup implements Lookup {
         /**
          * Sets the value to be used in expressions.
          *
-         * @return the value to be used in expressions.
+         * @return The value to be used in expressions.
          */
         public Object getValue() {
             return value;
@@ -113,7 +113,7 @@ public class ExprLookup implements Lookup {
         /**
          * Sets the name to be used in expressions.
          *
-         * @param name the name to be used in expressions.
+         * @param name The name to be used in expressions.
          */
         public void setName(final String name) {
             this.key = name;
@@ -165,7 +165,7 @@ public class ExprLookup implements Lookup {
         /**
          * Creates a new instance of {@code Variables} and copies the content of the given object.
          *
-         * @param vars the {@code Variables} object to be copied
+         * @param vars The {@code Variables} object to be copied
          */
         public Variables(final Variables vars) {
             super(vars);
@@ -174,7 +174,7 @@ public class ExprLookup implements Lookup {
         /**
          * Gets the variable or null if empty.
          *
-         * @return the variable or null if empty.
+         * @return The variable or null if empty.
          */
         public Variable getVariable() {
             return !isEmpty() ? get(size() - 1) : null;
@@ -243,7 +243,7 @@ public class ExprLookup implements Lookup {
     /**
      * Creates a new {@code JexlContext} and initializes it with the variables managed by this Lookup object.
      *
-     * @return the newly created context
+     * @return The newly created context
      */
     private JexlContext createContext() {
         final JexlContext ctx = new MapContext();
@@ -254,7 +254,7 @@ public class ExprLookup implements Lookup {
     /**
      * Gets the {@code ConfigurationInterpolator} used by this object.
      *
-     * @return the {@code ConfigurationInterpolator}
+     * @return The {@code ConfigurationInterpolator}
      * @since 2.0
      */
     public ConfigurationInterpolator getInterpolator() {
@@ -264,7 +264,7 @@ public class ExprLookup implements Lookup {
     /**
      * Gets the logger used by this object.
      *
-     * @return the {@code Log}
+     * @return The {@code Log}
      * @since 2.0
      */
     public ConfigurationLogger getLogger() {
@@ -275,7 +275,7 @@ public class ExprLookup implements Lookup {
      * Gets the list of Variables that are accessible within expressions. This method returns a copy of the variables
      * managed by this lookup; so modifying this object has no impact on this lookup.
      *
-     * @return the List of Variables that are accessible within expressions.
+     * @return The List of Variables that are accessible within expressions.
      */
     public Variables getVariables() {
         return new Variables(variables);
@@ -284,7 +284,7 @@ public class ExprLookup implements Lookup {
     /**
      * Initializes the specified context with the variables managed by this Lookup object.
      *
-     * @param ctx the context to be initialized
+     * @param ctx The context to be initialized
      */
     private void initializeContext(final JexlContext ctx) {
         variables.forEach(var -> ctx.set(var.getName(), var.getValue()));
@@ -294,7 +294,7 @@ public class ExprLookup implements Lookup {
      * Creates a {@code StringSubstitutor} object which uses the passed in {@code ConfigurationInterpolator} as lookup
      * object.
      *
-     * @param ip the {@code ConfigurationInterpolator} to be used
+     * @param ip The {@code ConfigurationInterpolator} to be used
      */
     private void installSubstitutor(final ConfigurationInterpolator ip) {
         if (ip == null) {
@@ -335,7 +335,7 @@ public class ExprLookup implements Lookup {
     /**
      * Sets the {@code ConfigurationInterpolator} to be used by this object.
      *
-     * @param interpolator the {@code ConfigurationInterpolator} (may be <strong>null</strong>)
+     * @param interpolator The {@code ConfigurationInterpolator} (may be <strong>null</strong>)
      * @since 2.0
      */
     public void setInterpolator(final ConfigurationInterpolator interpolator) {
@@ -346,7 +346,7 @@ public class ExprLookup implements Lookup {
     /**
      * Sets the logger to be used by this object. If no logger is passed in, no log output is generated.
      *
-     * @param logger the {@code Log}
+     * @param logger The {@code Log}
      * @since 2.0
      */
     public void setLogger(final ConfigurationLogger logger) {

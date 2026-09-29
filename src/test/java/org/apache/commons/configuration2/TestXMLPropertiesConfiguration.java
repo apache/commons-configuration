@@ -26,7 +26,6 @@ import java.io.File;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -35,6 +34,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
@@ -51,8 +52,8 @@ public class TestXMLPropertiesConfiguration {
     /**
      * Helper method for loading a configuration file.
      *
-     * @param fileName the name of the file to be loaded
-     * @return the configuration instance
+     * @param fileName The name of the file to be loaded
+     * @return The configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private static XMLPropertiesConfiguration load(final String fileName) throws ConfigurationException {
@@ -72,8 +73,7 @@ public class TestXMLPropertiesConfiguration {
         assertThrows(NullPointerException.class, () -> new XMLPropertiesConfiguration(null));
         // Normal case
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final DocumentBuilder dBuilder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
         final File file = new File(location.toURI());
         final Document doc = dBuilder.parse(file);
@@ -101,11 +101,10 @@ public class TestXMLPropertiesConfiguration {
         final File saveFile = newFile("test2.properties.xml", tempFolder);
 
         // save as DOM into saveFile
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final DocumentBuilder dBuilder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         final Document document = dBuilder.newDocument();
         conf.save(document, document);
-        final TransformerFactory tFactory = TransformerFactory.newInstance();
+        final TransformerFactory tFactory = SecureTransformerFactory.newInstance();
         final Transformer transformer = tFactory.newTransformer();
         final DOMSource source = new DOMSource(document);
         final Result result = new StreamResult(saveFile);

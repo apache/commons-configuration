@@ -102,7 +102,7 @@ public class DefaultFileSystem extends FileSystem {
     /**
      * Create the path to the specified file.
      *
-     * @param file the target file
+     * @param file The target file
      * @throws ConfigurationException if the path cannot be created
      */
     private void createPath(final File file) throws ConfigurationException {

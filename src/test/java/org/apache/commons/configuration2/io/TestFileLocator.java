@@ -56,7 +56,7 @@ public class TestFileLocator {
     /**
      * Tests whether a locator has the expected properties.
      *
-     * @param locator the locator to check
+     * @param locator The locator to check
      */
     private static void checkLocator(final FileLocator locator) {
         assertEquals(BASE_PATH, locator.getBasePath());

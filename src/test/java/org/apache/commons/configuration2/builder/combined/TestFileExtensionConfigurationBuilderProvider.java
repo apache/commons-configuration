@@ -50,7 +50,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
     /**
      * Creates a test instance with default settings.
      *
-     * @return the test object
+     * @return The test object
      */
     private static FileExtensionConfigurationBuilderProvider setUpProvider() {
         return new FileExtensionConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null, MATCH_CLASS, DEF_CLASS, EXT, null);
@@ -59,7 +59,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
     /**
      * Creates a mock for the configuration declaration.
      *
-     * @return the mock object
+     * @return The mock object
      */
     private ConfigurationDeclaration setUpDecl() {
         return Mockito.mock(ConfigurationDeclaration.class);

@@ -46,8 +46,8 @@ public interface FileBased {
      * Reads the content of this object from the given reader. <strong>Client code should not call this method directly, but
      * use a {@code FileHandler} for reading data.</strong>
      *
-     * @param in the reader
-     * @throws IOException if an I/O error occurs.
+     * @param in The reader
+     * @throws IOException Thrown if an I/O error occurs.
      * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */
@@ -57,8 +57,8 @@ public interface FileBased {
      * Writes the content of this object to the given writer. <strong>Client code should not call this method directly, but
      * use a {@code FileHandler} for writing data.</strong>
      *
-     * @param out the writer
-     * @throws IOException if an I/O error occurs.
+     * @param out The writer
+     * @throws IOException Thrown if an I/O error occurs.
      * @throws ConfigurationException if a non-I/O related problem occurs, for example the data read does not have the expected
      *         format
      */

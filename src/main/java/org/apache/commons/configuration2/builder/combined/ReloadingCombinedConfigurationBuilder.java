@@ -58,8 +58,8 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * Checks whether the passed in builder object supports reloading. If yes, its reloading controller is obtained and
      * added to the given list.
      *
-     * @param subControllers the list with sub controllers
-     * @param builder the builder object to be checked
+     * @param subControllers The list with sub controllers
+     * @param builder The builder object to be checked
      */
     public static void obtainReloadingController(final Collection<ReloadingController> subControllers, final Object builder) {
         if (builder instanceof ReloadingControllerSupport) {
@@ -71,6 +71,11 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
     private ReloadingController reloadingController;
 
     /**
+     * A lock object for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code ReloadingCombinedConfigurationBuilder}. No parameters are set.
      */
     public ReloadingCombinedConfigurationBuilder() {
@@ -80,7 +85,7 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * Creates a new instance of {@code ReloadingCombinedConfigurationBuilder} and sets the specified initialization
      * parameters.
      *
-     * @param params a map with initialization parameters
+     * @param params A map with initialization parameters
      */
     public ReloadingCombinedConfigurationBuilder(final Map<String, Object> params) {
         super(params);
@@ -90,8 +95,8 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * Creates a new instance of {@code ReloadingCombinedConfigurationBuilder} and sets the specified initialization
      * parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit The <em>allowFailOnInit</em> flag
      */
     public ReloadingCombinedConfigurationBuilder(final Map<String, Object> params, final boolean allowFailOnInit) {
         super(params, allowFailOnInit);
@@ -111,16 +116,14 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * been created and initialized. It is called from a synchronized block. This implementation creates a
      * {@link CombinedReloadingController}.
      *
-     * @return the {@code ReloadingController} for this builder
+     * @return The {@code ReloadingController} for this builder
      * @throws ConfigurationException if an error occurs
      */
     protected ReloadingController createReloadingController() throws ConfigurationException {
         final Collection<ReloadingController> subControllers = new LinkedList<>();
         final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder = getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);
-
         getChildBuilders().forEach(b -> obtainReloadingController(subControllers, b));
-
         final CombinedReloadingController ctrl = new CombinedReloadingController(subControllers);
         ctrl.resetInitialReloadingState();
         return ctrl;
@@ -154,8 +157,10 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * meaningful result before.
      */
     @Override
-    public synchronized ReloadingController getReloadingController() {
-        return reloadingController;
+    public ReloadingController getReloadingController() {
+        synchronized (lock) {
+            return reloadingController;
+        }
     }
 
     /**

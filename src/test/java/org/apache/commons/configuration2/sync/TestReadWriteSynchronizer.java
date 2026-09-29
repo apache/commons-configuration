@@ -44,7 +44,7 @@ public class TestReadWriteSynchronizer {
         /**
          * Changes the amount of money by the given delata.
          *
-         * @param delta the delta
+         * @param delta The delta
          */
         public void change(final long delta) {
             amount += delta;
@@ -53,7 +53,7 @@ public class TestReadWriteSynchronizer {
         /**
          * Returns the amount of money stored in this account.
          *
-         * @return the amount
+         * @return The amount
          */
         public long getAmount() {
             return amount;
@@ -81,9 +81,9 @@ public class TestReadWriteSynchronizer {
         /**
          * Creates a new instance of {@code ReaderThread}.
          *
-         * @param s the synchronizer to be used
-         * @param readCount the number of read operations
-         * @param accs the accounts to monitor
+         * @param s The synchronizer to be used
+         * @param readCount The number of read operations
+         * @param accs The accounts to monitor
          */
         public ReaderThread(final Synchronizer s, final int readCount, final Account... accs) {
             accounts = accs;
@@ -94,7 +94,7 @@ public class TestReadWriteSynchronizer {
         /**
          * Returns the number of errors occurred during read operations.
          *
-         * @return the number of errors
+         * @return The number of errors
          */
         public int getErrors() {
             return errors;
@@ -141,8 +141,8 @@ public class TestReadWriteSynchronizer {
         /**
          * Creates a new instance of {@code UpdateThread}.
          *
-         * @param s the synchronizer
-         * @param updateCount the number of updates
+         * @param s The synchronizer
+         * @param updateCount The number of updates
          * @param ac1 account 1
          * @param ac2 account 2
          */
@@ -184,8 +184,8 @@ public class TestReadWriteSynchronizer {
     /**
      * Helper method to calculate the sum over all accounts.
      *
-     * @param accounts the accounts to check
-     * @return the sum of the money on these accounts
+     * @param accounts The accounts to check
+     * @return The sum of the money on these accounts
      */
     private static long sumUpAccounts(final Account... accounts) {
         long sum = 0;

@@ -75,7 +75,7 @@ public class TestJakartaServletConfiguration extends TestAbstractConfiguration {
     /**
      * Creates a mocked {@link ServletConfig}.
      *
-     * @param parameters the init parameters to use
+     * @param parameters The init parameters to use
      * @return The created mock
      */
     private ServletConfig mockServletConfig(final Properties parameters) {

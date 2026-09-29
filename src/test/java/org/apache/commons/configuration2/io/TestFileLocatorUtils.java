@@ -69,7 +69,7 @@ public class TestFileLocatorUtils {
     /**
      * Checks whether the specified locator points to the expected test configuration file.
      *
-     * @param locator the locator to check
+     * @param locator The locator to check
      * @throws ConfigurationException if an error occurs
      */
     private static void checkFullyInitializedLocator(final FileLocator locator) throws ConfigurationException {
@@ -90,7 +90,7 @@ public class TestFileLocatorUtils {
     /**
      * Checks whether the expected test configuration can be loaded using the specified handler.
      *
-     * @param handler the file handler
+     * @param handler The file handler
      * @throws ConfigurationException if an error occurs
      */
     private static void checkTestConfiguration(final FileHandler handler) throws ConfigurationException {

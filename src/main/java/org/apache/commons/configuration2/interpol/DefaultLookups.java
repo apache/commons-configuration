@@ -200,8 +200,8 @@ public enum DefaultLookups {
     /**
      * Creates a new instance of {@code DefaultLookups} and sets the prefix and the associated lookup instance.
      *
-     * @param prefix the prefix
-     * @param lookup the {@code Lookup} instance
+     * @param prefix The prefix
+     * @param lookup The {@code Lookup} instance
      */
     DefaultLookups(final String prefix, final Lookup lookup) {
         this.prefix = prefix;
@@ -211,7 +211,7 @@ public enum DefaultLookups {
     /**
      * Gets the standard {@code Lookup} instance of this kind.
      *
-     * @return the associated {@code Lookup} object
+     * @return The associated {@code Lookup} object
      */
     public Lookup getLookup() {
         return lookup;
@@ -220,7 +220,7 @@ public enum DefaultLookups {
     /**
      * Gets the standard prefix for the lookup object of this kind.
      *
-     * @return the prefix
+     * @return The prefix
      */
     public String getPrefix() {
         return prefix;

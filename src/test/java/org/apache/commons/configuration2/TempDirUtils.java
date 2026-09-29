@@ -34,9 +34,9 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh file with a random name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the file under
-     * @return the created file
-     * @throws IOException if an error occurs
+     * @param tempFolder The temporary folder to create the file under
+     * @return The created file
+     * @throws IOException Thrown if an error occurs
      */
     public static File newFile(final File tempFolder) throws IOException {
         return Files.createTempFile(tempFolder.toPath(), TMP_PREFIX, null).toFile();
@@ -45,9 +45,9 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh file with the given name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the file under
-     * @return the created file
-     * @throws IOException if an error occurs
+     * @param tempFolder The temporary folder to create the file under
+     * @return The created file
+     * @throws IOException Thrown if an error occurs
      */
     public static File newFile(final String fileName, final File tempFolder) throws IOException {
         return Files.createFile(tempFolder.toPath().resolve(fileName)).toFile();
@@ -56,9 +56,9 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh folder with a random name under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the folder under
-     * @return the created folder
-     * @throws IOException if an error occurs
+     * @param tempFolder The temporary folder to create the folder under
+     * @return The created folder
+     * @throws IOException Thrown if an error occurs
      */
     public static File newFolder(final File tempFolder) throws IOException {
         return Files.createTempDirectory(tempFolder.toPath(), TMP_PREFIX).toFile();
@@ -67,9 +67,9 @@ public final class TempDirUtils {
     /**
      * Returns a new fresh folder with the given path under a temporary folder.
      *
-     * @param tempFolder the temporary folder to create the folder under
-     * @return the created folder
-     * @throws IOException if an error occurs
+     * @param tempFolder The temporary folder to create the folder under
+     * @return The created folder
+     * @throws IOException Thrown if an error occurs
      */
     public static File newFolder(final String path, final File tempFolder) throws IOException {
         return Files.createDirectory(tempFolder.toPath().resolve(path)).toFile();

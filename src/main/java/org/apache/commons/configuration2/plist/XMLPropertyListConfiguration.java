@@ -55,6 +55,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.xml.secure.SecureSAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -142,7 +143,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Add an object to the array.
          *
-         * @param value the value to be added
+         * @param value The value to be added
          */
         @Override
         public void addValue(final Object value) {
@@ -152,7 +153,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Return the list of values in the array.
          *
-         * @return the {@link List} of values
+         * @return The {@link List} of values
          */
         @Override
         protected Object getNodeValue() {
@@ -181,6 +182,18 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          */
         private static final DateFormat GNUSTEP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
+        /**
+         * Formats a date∂.
+         *
+         * @param date The date to format.
+         * @return The formatted date string.
+         */
+        static String formatDate(final Date date) {
+            synchronized (FORMAT) {
+                return FORMAT.format(date);
+            }
+        }
+
         /** A collection with child builders of this builder. */
         private final Collection<PListNodeBuilder> childBuilders = new LinkedList<>();
 
@@ -193,7 +206,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Adds the given child builder to this builder.
          *
-         * @param child the child builder to be added
+         * @param child The child builder to be added
          */
         public void addChild(final PListNodeBuilder child) {
             childBuilders.add(child);
@@ -202,7 +215,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Parse the specified string as a byte array in base 64 FORMAT and add it to the values of the node.
          *
-         * @param value the value to be added
+         * @param value The value to be added
          */
         public void addDataValue(final String value) {
             addValue(Base64.getMimeDecoder().decode(value.getBytes(DATA_ENCODING)));
@@ -211,7 +224,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Parse the specified string as a date and add it to the values of the node.
          *
-         * @param value the value to be added
+         * @param value The value to be added
          * @throws IllegalArgumentException if the date string cannot be parsed
          */
         public void addDateValue(final String value) {
@@ -242,7 +255,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Parse the specified string as an Interger and add it to the values of the node.
          *
-         * @param value the value to be added
+         * @param value The value to be added
          */
         public void addIntegerValue(final String value) {
             addValue(new BigInteger(value));
@@ -251,7 +264,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Add a sublist to the values of the node.
          *
-         * @param node the node whose value will be added to the current node value
+         * @param node The node whose value will be added to the current node value
          */
         public void addList(final ArrayNodeBuilder node) {
             addValue(node.getNodeValue());
@@ -260,7 +273,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Parse the specified string as a Double and add it to the values of the node.
          *
-         * @param value the value to be added
+         * @param value The value to be added
          */
         public void addRealValue(final String value) {
             addValue(new BigDecimal(value));
@@ -278,7 +291,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * is a list, the specified value is appended to the list. If the existing value is not null, a list with the two values
          * is built.
          *
-         * @param v the value to be added
+         * @param v The value to be added
          */
         public void addValue(final Object v) {
             if (value == null) {
@@ -299,7 +312,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Creates the configuration node defined by this builder.
          *
-         * @return the newly created configuration node
+         * @return The newly created configuration node
          */
         public ImmutableNode createNode() {
             final ImmutableNode.Builder nodeBuilder = new ImmutableNode.Builder(childBuilders.size());
@@ -311,7 +324,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
          * Gets the final value for the node to be created. This method is called when the represented configuration node is
          * actually created.
          *
-         * @return the value of the resulting configuration node
+         * @return The value of the resulting configuration node
          */
         protected Object getNodeValue() {
             return value;
@@ -320,7 +333,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Sets the name of the represented node.
          *
-         * @param nodeName the node name
+         * @param nodeName The node name
          */
         public void setName(final String nodeName) {
             name = nodeName;
@@ -420,7 +433,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Gets the builder for the result node.
          *
-         * @return the result node builder
+         * @return The result node builder
          */
         public PListNodeBuilder getResultBuilder() {
             return resultBuilder;
@@ -439,7 +452,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         /**
          * Returns the node on top of the non-empty stack. Throws an exception if the stack is empty.
          *
-         * @return the top node of the stack
+         * @return The top node of the stack
          * @throws ConfigurationRuntimeException if the stack is empty
          */
         private PListNodeBuilder peekNE() {
@@ -488,8 +501,8 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
      * Transform a map of arbitrary types into a map with string keys and object values. All keys of the source map which
      * are not of type String are dropped.
      *
-     * @param src the map to be converted
-     * @return the resulting map
+     * @param src The map to be converted
+     * @return The resulting map
      */
     private static Map<String, Object> transformMap(final Map<?, ?> src) {
         final Map<String, Object> dest = new HashMap<>();
@@ -515,7 +528,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
      * Creates a new instance of {@code XMLPropertyListConfiguration} and copies the content of the specified configuration
      * into this object.
      *
-     * @param configuration the configuration to copy
+     * @param configuration The configuration to copy
      * @since 1.4
      */
     public XMLPropertyListConfiguration(final HierarchicalConfiguration<ImmutableNode> configuration) {
@@ -525,7 +538,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     /**
      * Creates a new instance of {@code XMLPropertyConfiguration} with the given root node.
      *
-     * @param root the root node
+     * @param root The root node
      */
     XMLPropertyListConfiguration(final ImmutableNode root) {
         super(new InMemoryNodeModel(root));
@@ -545,7 +558,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
     /**
      * Stores the current file locator. This method is called before I/O operations.
      *
-     * @param locator the current {@code FileLocator}
+     * @param locator The current {@code FileLocator}
      */
     @Override
     public void initFileLocator(final FileLocator locator) {
@@ -592,9 +605,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (value instanceof Date) {
-            synchronized (PListNodeBuilder.FORMAT) {
-                out.println(padding + "<date>" + PListNodeBuilder.FORMAT.format((Date) value) + "</date>");
-            }
+            out.println(padding + "<date>" + PListNodeBuilder.formatDate((Date) value) + "</date>");
         } else if (value instanceof Calendar) {
             printValue(out, indentLevel, ((Calendar) value).getTime());
         } else if (value instanceof Number) {
@@ -651,7 +662,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration 
         // parse the file
         final XMLPropertyListHandler handler = new XMLPropertyListHandler();
         try {
-            final SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SecureSAXParserFactory.newInstance();
             factory.setValidating(true);
             final XMLReader xmlReader = factory.newSAXParser().getXMLReader();
             xmlReader.setEntityResolver(resolver);

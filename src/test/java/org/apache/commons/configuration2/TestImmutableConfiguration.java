@@ -42,7 +42,7 @@ public class TestImmutableConfiguration {
     /**
      * Creates a test configuration object filled with properties.
      *
-     * @return the test configuration
+     * @return The test configuration
      * @throws ConfigurationException if an error occurs
      */
     private static PropertiesConfiguration createTestConfig() throws ConfigurationException {
@@ -53,8 +53,8 @@ public class TestImmutableConfiguration {
     /**
      * Obtains all keys from the given iteration.
      *
-     * @param it the iterator
-     * @return a set with all keys
+     * @param it The iterator
+     * @return A set with all keys
      */
     private static Set<String> fetchKeys(final Iterator<String> it) {
         final Set<String> keys = new HashSet<>();

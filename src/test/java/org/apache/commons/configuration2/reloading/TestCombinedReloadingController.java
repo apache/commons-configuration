@@ -53,7 +53,7 @@ public class TestCombinedReloadingController {
     /**
      * Creates a test instance with default settings.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private CombinedReloadingController setUpController() {
         initSubControllers();

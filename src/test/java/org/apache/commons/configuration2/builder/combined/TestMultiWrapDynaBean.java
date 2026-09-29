@@ -94,8 +94,8 @@ public class TestMultiWrapDynaBean {
     /**
      * Creates a new test object with a list of wrapped beans.
      *
-     * @param withDynaBean a flag whether also a DynaBean should be added to the wrapped beans
-     * @return the test bean
+     * @param withDynaBean A flag whether also a DynaBean should be added to the wrapped beans
+     * @return The test bean
      */
     private MultiWrapDynaBean createBean(final boolean withDynaBean) {
         params = new BasicBuilderParameters();

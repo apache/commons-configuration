@@ -55,8 +55,8 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      * Obtains an instance of this class from the given map with parameters. If this map does not contain an instance,
      * result is <strong>null</strong>. This is equivalent to {@code fromParameters(params, false)}.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>)
-     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>)
+     * @return An instance of this class fetched from the map or <strong>null</strong>
      * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params) {
@@ -69,9 +69,9 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
      * {@code getParameters()} method. If the map does not contain an instance under the expected key and the
      * {@code createIfMissing} parameter is <strong>true</strong>, a new instance is created. Otherwise, result is <strong>null</strong>.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>)
-     * @param createIfMissing a flag whether a new instance should be created if necessary
-     * @return an instance of this class fetched from the map or <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>)
+     * @param createIfMissing A flag whether a new instance should be created if necessary
+     * @return An instance of this class fetched from the map or <strong>null</strong>
      * @throws NullPointerException if the map with parameters is <strong>null</strong>
      */
     public static MultiFileBuilderParametersImpl fromParameters(final Map<String, Object> params, final boolean createIfMissing) {
@@ -108,7 +108,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the pattern for determining file names for managed configurations.
      *
-     * @return the file pattern
+     * @return The file pattern
      */
     public String getFilePattern() {
         return filePattern;
@@ -117,7 +117,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the parameters object for managed configuration builders.
      *
-     * @return the parameters for sub configurations
+     * @return The parameters for sub configurations
      */
     public BuilderParameters getManagedBuilderParameters() {
         return managedBuilderParameters;

@@ -45,8 +45,8 @@ final class MultiWrapDynaBean implements DynaBean {
     /**
      * Creates a {@code DynaBean} object for the given bean.
      *
-     * @param bean the bean
-     * @return the {@code DynaBean} for this bean
+     * @param bean The bean
+     * @return The {@code DynaBean} for this bean
      */
     private static DynaBean createDynaBean(final Object bean) {
         if (bean instanceof DynaBean) {
@@ -65,7 +65,7 @@ final class MultiWrapDynaBean implements DynaBean {
      * Creates a new instance of {@code MultiWrapDynaBean} and initializes it with the given collections of beans to be
      * wrapped.
      *
-     * @param beans the wrapped beans
+     * @param beans The wrapped beans
      */
     public MultiWrapDynaBean(final Collection<?> beans) {
         propsToBeans = new HashMap<>();
@@ -97,8 +97,8 @@ final class MultiWrapDynaBean implements DynaBean {
      * Returns the bean instance to which the given property belongs. If no such bean is found, an arbitrary bean is
      * returned. (This causes the operation on this bean to fail with a meaningful error message.)
      *
-     * @param property the property name
-     * @return the bean defining this property
+     * @param property The property name
+     * @return The bean defining this property
      */
     private DynaBean fetchBean(final String property) {
         DynaBean dynaBean = propsToBeans.get(property);

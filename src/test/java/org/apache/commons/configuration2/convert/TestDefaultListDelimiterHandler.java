@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -42,9 +43,9 @@ public class TestDefaultListDelimiterHandler {
      * Helper methods for testing a split operation. A split is executed with the passed in parameters. Then the results are
      * compared to the expected elements.
      *
-     * @param value the value to be split
-     * @param trim the trim flag
-     * @param expectedElements the expected results
+     * @param value The value to be split
+     * @param trim The trim flag
+     * @param expectedElements The expected results
      */
     private void checkSplit(final String value, final boolean trim, final String... expectedElements) {
         final Collection<String> elems = handler.split(value, trim);
@@ -174,5 +175,30 @@ public class TestDefaultListDelimiterHandler {
     @Test
     void testSplitUnexpectedEscape() {
         checkSplit("\\x, \\,y, \\", true, "\\x", ",y", "\\");
+    }
+
+    /**
+     * Tests whether flatten() skips a recursive array reference while keeping the reachable leaf values.
+     */
+    @Test
+    void testFlattenArrayCycle() {
+        final Object[] array = new Object[2];
+        array[0] = "value1,value2";
+        array[1] = array;
+
+        assertIterableEquals(Arrays.asList("value1", "value2"), handler.flatten(array, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Tests whether flatten() skips a recursive list-array cycle while keeping the reachable leaf values.
+     */
+    @Test
+    void testFlattenMixedListAndArrayCycle() {
+        final List<Object> list = new ArrayList<>();
+        final Object[] array = {list};
+        list.add("value1,value2");
+        list.add(array);
+
+        assertIterableEquals(Arrays.asList("value1", "value2"), handler.flatten(list, Integer.MAX_VALUE));
     }
 }

@@ -41,7 +41,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest {
     /**
      * Recursive helper method for testing the returned iterators.
      *
-     * @param p the node pointer to test
+     * @param p The node pointer to test
      */
     private void checkIterators(final NodePointer p) {
         final ImmutableNode node = (ImmutableNode) p.getNode();

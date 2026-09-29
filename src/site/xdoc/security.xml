@@ -19,11 +19,11 @@ limitations under the License.
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Apache Commons Configuration Security Reports</title>
+        <title>Apache Commons Configuration Security</title>
         <author email="dev@commons.apache.org">Commons Team</author>
     </properties>
     <body>
-        <section name="Security Vulnerabilities">
+        <section name="Apache Commons Configuration Security">
             <p>
                 For information about reporting or asking questions about
                 security, please see the
@@ -55,7 +55,7 @@ limitations under the License.
                     'Denial of service' here means causing resource usage disproportionate to the input size.
                 </p>
             </subsection>
-            <subsection name="CVE-2022-33980 prior to 2.8.0, RCE when applied to untrusted input">
+            <subsection name="CVE-2022-33980, prior to 2.8.0, RCE when applied to untrusted input">
                 <p>
                     On 2022-07-06, the Apache Commons Configuration team disclosed
                     <a href="https://www.cve.org/CVERecord?id=CVE-2022-33980">CVE-2022-33980</a>
@@ -124,7 +124,7 @@ limitations under the License.
                         </li>
                     </ul>
              </subsection>
-             <subsection name="CVE-2024-29131 prior to 2.10.1, Out-of-bounds Write vulnerability">
+             <subsection name="CVE-2024-29131, prior to 2.10.1, Out-of-bounds Write vulnerability">
                <p>
                  On 2024-03-20, the Apache Commons Configuration team disclosed <a href="https://www.cve.org/CVERecord?id=CVE-2024-29131">CVE-2024-29131</a>.
                </p>
@@ -135,7 +135,7 @@ limitations under the License.
                  The details are in <a href="https://issues.apache.org/jira/browse/CONFIGURATION-840">CONFIGURATION-840</a>.
                </p>
              </subsection>
-             <subsection name="CVE-2024-29133 prior to 2.10.1, Out-of-bounds Write vulnerability">
+             <subsection name="CVE-2024-29133, prior to 2.10.1, Out-of-bounds Write vulnerability">
                <p>
                  On 2024-03-20, the Apache Commons Configuration team disclosed <a href="https://www.cve.org/CVERecord?id=CVE-2024-29133">CVE-2024-29133</a>.
                </p>
@@ -145,6 +145,23 @@ limitations under the License.
                  Users are recommended to upgrade to version 2.10.1, which fixes the issue. 
                  The details are in <a href="https://issues.apache.org/jira/browse/CONFIGURATION-840">CONFIGURATION-841</a>.
                </p>
+             </subsection>
+             <subsection name="CVE-2026-45205, prior to 2.15.0, StackOverflowError for YAML input with cycles ">
+               <p>
+                 On 2026-05-14, the Apache Commons Configuration team disclosed <a href="https://www.cve.org/CVERecord?id=CVE-2026-45205">CVE-2026-45205</a>.
+               </p>
+               <p>
+                 When processing an untrusted configuration file, Commons Configuration will throw a StackOverflowError for YAML input with cycles.
+                 This issue affects Apache Commons: from 2.2 before 2.15.0.
+                 Users are recommended to upgrade to version 2.15.0, which fixes the issue.
+               </p>
+               <p>
+                 References:
+               </p>
+               <ul>
+                 <li><a href="https://www.cve.org/CVERecord?id=CVE-2026-45205">CVE-2026-45205</a></li>
+                 <li><a href="https://github.com/apache/commons-configuration/pull/634">PR #634</a></li>
+               </ul>
              </subsection>
         </section>
     <section name="Safe Deserialization">

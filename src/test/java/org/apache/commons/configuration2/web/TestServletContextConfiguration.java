@@ -85,7 +85,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration {
     /**
      * Creates a mocked {@link ServletConfig}.
      *
-     * @param parameters the init parameters to use
+     * @param parameters The init parameters to use
      * @return The created mock
      */
     private ServletContext mockServletConfig(final Properties parameters) {

@@ -56,8 +56,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Looks up an instance of this class in the specified parameters map. This is equivalent to
      * {@code fromParameters(params, false);}
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params) {
@@ -69,10 +69,10 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * This method can be used to obtain an instance of this class which has been stored in a parameters map. It is
      * compatible with the {@code getParameters()} method.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
      * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
      *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws NullPointerException if the map is <strong>null</strong>
      */
     public static CombinedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
@@ -127,7 +127,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Gets the base path for relative names of configuration sources. Result may be <strong>null</strong> if no base path has been
      * set.
      *
-     * @return the base path for resolving relative file names
+     * @return The base path for resolving relative file names
      */
     public String getBasePath() {
         return basePath;
@@ -137,7 +137,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Gets the {@code DefaultParametersManager} object for initializing parameter objects for child configuration
      * sources. This method never returns <strong>null</strong>. If no manager was set, a new instance is created right now.
      *
-     * @return the {@code DefaultParametersManager} for child configuration sources
+     * @return The {@code DefaultParametersManager} for child configuration sources
      */
     public DefaultParametersManager getChildDefaultParametersManager() {
         if (childDefaultParametersManager == null) {
@@ -151,7 +151,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * same objects (in the same order) that were passed to {@code addChildParameters()}. The returned collection is a
      * defensive copy; it can be modified, but this has no effect on the parameters stored in this object.
      *
-     * @return a map with default parameters for child sources
+     * @return A map with default parameters for child sources
      */
     public Collection<? extends BuilderParameters> getDefaultChildParameters() {
         return new ArrayList<>(childParameters);
@@ -160,7 +160,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets the {@code ConfigurationBuilder} object for obtaining the definition configuration.
      *
-     * @return the definition {@code ConfigurationBuilder}
+     * @return The definition {@code ConfigurationBuilder}
      */
     public ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder() {
         return definitionBuilder;
@@ -169,7 +169,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets the parameters object for the definition configuration builder if present.
      *
-     * @return the parameters object for the definition configuration builder or <strong>null</strong>
+     * @return The parameters object for the definition configuration builder or <strong>null</strong>
      */
     public BuilderParameters getDefinitionBuilderParameters() {
         return definitionBuilderParameters;
@@ -189,7 +189,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     /**
      * Gets an (unmodifiable) map with the currently registered {@code ConfigurationBuilderProvider} objects.
      *
-     * @return the map with {@code ConfigurationBuilderProvider} objects (the keys are the tag names)
+     * @return The map with {@code ConfigurationBuilderProvider} objects (the keys are the tag names)
      */
     public Map<String, ConfigurationBuilderProvider> getProviders() {
         return Collections.unmodifiableMap(providers);
@@ -213,7 +213,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Returns the current value of the flag that controls whether the settings of the parent combined configuration builder
      * should be inherited by its child configurations.
      *
-     * @return the flag whether settings should be inherited by child configurations
+     * @return The flag whether settings should be inherited by child configurations
      */
     public boolean isInheritSettings() {
         return inheritSettings;
@@ -223,8 +223,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Returns the {@code ConfigurationBuilderProvider} which is registered for the specified tag name or <strong>null</strong> if
      * there is no registration for this tag.
      *
-     * @param tagName the tag name
-     * @return the provider registered for this tag or <strong>null</strong>
+     * @param tagName The tag name
+     * @return The provider registered for this tag or <strong>null</strong>
      */
     public ConfigurationBuilderProvider providerForTag(final String tagName) {
         return providers.get(tagName);
@@ -256,8 +256,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * registered. This method works like the method with the same name, but the map with providers is obtained from the
      * passed in parameters object.
      *
-     * @param params the parameters object from which to copy providers(must not be <strong>null</strong>)
-     * @return a reference to this object for method chaining
+     * @param params The parameters object from which to copy providers(must not be <strong>null</strong>)
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if the source parameters object is <strong>null</strong>
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final CombinedBuilderParametersImpl params) {
@@ -273,9 +273,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * providers contained in a parameters object and adds all standard providers. This way it is possible to override a
      * standard provider by registering a provider object for the same tag name at the parameters object.
      *
-     * @param providers a map with tag names and corresponding providers (must not be <strong>null</strong> or contain <strong>null</strong>
+     * @param providers A map with tag names and corresponding providers (must not be <strong>null</strong> or contain <strong>null</strong>
      *        entries)
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if the map with providers is <strong>null</strong> or contains <strong>null</strong> entries
      */
     public CombinedBuilderParametersImpl registerMissingProviders(final Map<String, ConfigurationBuilderProvider> providers) {
@@ -294,9 +294,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Registers the given {@code ConfigurationBuilderProvider} for the specified tag name. This means that whenever this
      * tag is encountered in a configuration definition file, the corresponding builder provider is invoked.
      *
-     * @param tagName the name of the tag (must not be <strong>null</strong>)
-     * @param provider the {@code ConfigurationBuilderProvider} (must not be <strong>null</strong>)
-     * @return a reference to this object for method chaining
+     * @param tagName The name of the tag (must not be <strong>null</strong>)
+     * @param provider The {@code ConfigurationBuilderProvider} (must not be <strong>null</strong>)
+     * @return A reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */
     @Override
@@ -313,13 +313,13 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     }
 
     /**
-     * Sets the base path for this combined configuration builder. Normally it it not necessary to set the base path
+     * Sets the base path for this combined configuration builder. Normally it is not necessary to set the base path
      * explicitly. Per default, relative file names of configuration sources are resolved based on the location of the
      * definition file. If this is not desired or if the definition configuration is loaded by a different means, the base
      * path for relative file names can be specified using this method.
      *
-     * @param path the base path for resolving relative file names
-     * @return a reference to this object for method chaining
+     * @param path The base path for resolving relative file names
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setBasePath(final String path) {
@@ -341,8 +341,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * Sets the {@code ConfigurationBuilder} for the definition configuration. This is the configuration which contains the
      * configuration sources that form the combined configuration.
      *
-     * @param builder the definition {@code ConfigurationBuilder}
-     * @return a reference to this object for method chaining
+     * @param builder The definition {@code ConfigurationBuilder}
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilder(final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder) {
@@ -355,8 +355,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
      * definition configuration builder is not set explicitly (using the {@link #setDefinitionBuilder(ConfigurationBuilder)}
      * method). In this case, a builder for an XML configuration is created and configured with this parameters object.
      *
-     * @param params the parameters object for the definition configuration builder
-     * @return a reference to this object for method chaining
+     * @param params The parameters object for the definition configuration builder
+     * @return A reference to this object for method chaining
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilderParameters(final BuilderParameters params) {

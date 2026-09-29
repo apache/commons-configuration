@@ -48,7 +48,7 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * by an external component, for example a timer.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends FileBasedConfigurationBuilder<T>
@@ -60,8 +60,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     /**
      * Returns a {@code ReloadingDetectorFactory} either from the passed in parameters or a default factory.
      *
-     * @param params the current parameters object
-     * @return the {@code ReloadingDetectorFactory} to be used
+     * @param params The current parameters object
+     * @return The {@code ReloadingDetectorFactory} to be used
      */
     private static ReloadingDetectorFactory fetchDetectorFactory(final FileBasedBuilderParametersImpl params) {
         final ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
@@ -82,7 +82,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
+     * @param resCls The result class (must not be <strong>null</strong>
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls) {
@@ -94,8 +94,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
@@ -107,9 +107,9 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder} which produces result objects of the
      * specified class and sets initialization parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit The <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
@@ -133,7 +133,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * not support changing the reloading detector; therefore, this level of indirection is needed to change the monitored
      * file dynamically.)
      *
-     * @return the new {@code ReloadingController}
+     * @return The new {@code ReloadingController}
      */
     private ReloadingController createReloadingController() {
         final ReloadingDetector ctrlDetector = createReloadingDetectorForController();
@@ -149,9 +149,9 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Otherwise, a default factory is used to create a {@code FileHandlerReloadingDetector} object. Note: This method is
      * called from a synchronized block.
      *
-     * @param handler the current {@code FileHandler}
-     * @param fbparams the object with parameters related to file-based builders
-     * @return a {@code ReloadingDetector} for this {@code FileHandler}
+     * @param handler The current {@code FileHandler}
+     * @param fbparams The object with parameters related to file-based builders
+     * @return A {@code ReloadingDetector} for this {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */
     protected ReloadingDetector createReloadingDetector(final FileHandler handler, final FileBasedBuilderParametersImpl fbparams)
@@ -163,7 +163,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Creates a {@code ReloadingDetector} wrapper to be passed to the associated {@code ReloadingController}. This detector
      * wrapper simply delegates to the current {@code ReloadingDetector} if it is available.
      *
-     * @return the wrapper {@code ReloadingDetector}
+     * @return The wrapper {@code ReloadingDetector}
      */
     private ReloadingDetector createReloadingDetectorForController() {
         return new ReloadingDetector() {
@@ -187,7 +187,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * Gets the {@code ReloadingController} associated with this builder. This controller is directly created. However,
      * it becomes active (i.e. associated with a meaningful reloading detector) not before a result object was created.
      *
-     * @return the {@code ReloadingController}
+     * @return The {@code ReloadingController}
      */
     @Override
     public ReloadingController getReloadingController() {

@@ -31,63 +31,63 @@ import org.apache.commons.configuration2.io.URLConnectionOptions;
  * This interface defines a set of properties which can be used to specify the location of a configuration source.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  */
 public interface FileBasedBuilderProperties<T> {
 
     /**
      * Sets the base path of the associated {@code FileHandler}.
      *
-     * @param path the base path
-     * @return a reference to this object for method chaining
+     * @param path The base path
+     * @return A reference to this object for method chaining
      */
     T setBasePath(String path);
 
     /**
      * Sets the encoding of the associated {@code FileHandler}.
      *
-     * @param enc the encoding
-     * @return a reference to this object for method chaining
+     * @param enc The encoding
+     * @return A reference to this object for method chaining
      */
     T setEncoding(String enc);
 
     /**
      * Sets the location of the associated {@code FileHandler} as a {@code File} object.
      *
-     * @param file the {@code File} location
-     * @return a reference to this object for method chaining
+     * @param file The {@code File} location
+     * @return A reference to this object for method chaining
      */
     T setFile(File file);
 
     /**
      * Sets the file name of the associated {@code FileHandler}.
      *
-     * @param name the file name
-     * @return a reference to this object for method chaining
+     * @param name The file name
+     * @return A reference to this object for method chaining
      */
     T setFileName(String name);
 
     /**
      * Sets the {@code FileSystem} of the associated {@code FileHandler}.
      *
-     * @param fs the {@code FileSystem}
-     * @return a reference to this object for method chaining
+     * @param fs The {@code FileSystem}
+     * @return A reference to this object for method chaining
      */
     T setFileSystem(FileSystem fs);
 
     /**
      * Sets the {@code FileLocationStrategy} for resolving the referenced file.
      *
-     * @param strategy the {@code FileLocationStrategy}
-     * @return a reference to this object for method chaining
+     * @param strategy The {@code FileLocationStrategy}
+     * @return A reference to this object for method chaining
      */
     T setLocationStrategy(FileLocationStrategy strategy);
 
     /**
      * Sets the location of the associated {@code FileHandler} as an absolute file path.
      *
-     * @param path the path location
-     * @return a reference to this object for method chaining
+     * @param path The path location
+     * @return A reference to this object for method chaining
      */
     T setPath(String path);
 
@@ -95,33 +95,33 @@ public interface FileBasedBuilderProperties<T> {
      * Sets the factory for creating {@code ReloadingDetector} objects. With this method a custom factory for reloading
      * detectors can be installed. Per default, a factory creating {@code FileHandlerReloadingDetector} objects is used.
      *
-     * @param factory the {@code ReloadingDetectorFactory}
-     * @return a reference to this object for method chaining
+     * @param factory The {@code ReloadingDetectorFactory}
+     * @return A reference to this object for method chaining
      */
     T setReloadingDetectorFactory(ReloadingDetectorFactory factory);
 
     /**
      * Sets the refresh delay for reloading support
      *
-     * @param reloadingRefreshDelay the refresh delay (in milliseconds)
-     * @return a reference to this object for method chaining
+     * @param reloadingRefreshDelay The refresh delay (in milliseconds)
+     * @return A reference to this object for method chaining
      */
     T setReloadingRefreshDelay(Long reloadingRefreshDelay);
 
     /**
      * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
      *
-     * @param url the {@code URL} location
-     * @return a reference to this object for method chaining
+     * @param url The {@code URL} location
+     * @return A reference to this object for method chaining
      */
     T setURL(URL url);
 
     /**
      * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
      *
-     * @param url the {@code URL} location
+     * @param url The {@code URL} location
      * @param urlConnectionOptions options
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @since 2.8.0
      */
     default T setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {

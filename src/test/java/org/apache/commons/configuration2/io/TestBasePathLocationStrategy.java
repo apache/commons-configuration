@@ -38,7 +38,7 @@ public class TestBasePathLocationStrategy {
     /**
      * Checks whether the passed in URL points to the expected test file.
      *
-     * @param url the URL to be checked
+     * @param url The URL to be checked
      */
     private static void checkURL(final URL url) {
         assertEquals(FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE).getAbsoluteFile());

@@ -32,7 +32,7 @@ import org.xml.sax.EntityResolver;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  * @since 2.0
  */
 public interface XMLBuilderProperties<T> {
@@ -41,48 +41,48 @@ public interface XMLBuilderProperties<T> {
      * Sets the {@code DocumentBuilder} for parsing an XML document. This is the most flexible way of customizing
      * XML processing.
      *
-     * @param docBuilder the {@code DocumentBuilder} to use
-     * @return a reference to this object for method chaining
+     * @param docBuilder The {@code DocumentBuilder} to use
+     * @return A reference to this object for method chaining
      */
     T setDocumentBuilder(DocumentBuilder docBuilder);
 
     /**
      * Sets the {@code EntityResolver} which maps entity references during XML parsing.
      *
-     * @param resolver the {@code EntityResolver} to use
-     * @return a reference to this object for method chaining
+     * @param resolver The {@code EntityResolver} to use
+     * @return A reference to this object for method chaining
      */
     T setEntityResolver(EntityResolver resolver);
 
     /**
      * Sets the public ID of the DOCTYPE declaration.
      *
-     * @param pubID the public ID
-     * @return a reference to this object for method chaining
+     * @param pubID The public ID
+     * @return A reference to this object for method chaining
      */
     T setPublicID(String pubID);
 
     /**
      * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
      *
-     * @param f the flag value, <strong>true</strong> for schema validation, <strong>false</strong> for DTD validation
-     * @return a reference to this object for method chaining
+     * @param f The flag value, <strong>true</strong> for schema validation, <strong>false</strong> for DTD validation
+     * @return A reference to this object for method chaining
      */
     T setSchemaValidation(boolean f);
 
     /**
      * Sets the system ID of the DOCTYPE declaration.
      *
-     * @param sysID the system ID
-     * @return a reference to this object for method chaining
+     * @param sysID The system ID
+     * @return A reference to this object for method chaining
      */
     T setSystemID(String sysID);
 
     /**
      * Sets a flag whether schema/DTD validation should be performed.
      *
-     * @param f the validation flag
-     * @return a reference to this object for method chaining
+     * @param f The validation flag
+     * @return A reference to this object for method chaining
      */
     T setValidating(boolean f);
 }

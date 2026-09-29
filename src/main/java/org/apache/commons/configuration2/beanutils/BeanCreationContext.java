@@ -34,15 +34,15 @@ public interface BeanCreationContext {
      * Creates a bean based on the given {@code BeanDeclaration}. This method can be used to create dependent beans needed
      * for the initialization of the bean that is actually created.
      *
-     * @param data the {@code BeanDeclaration} describing the bean
-     * @return the bean created based on this declaration
+     * @param data The {@code BeanDeclaration} describing the bean
+     * @return The bean created based on this declaration
      */
     Object createBean(BeanDeclaration data);
 
     /**
      * Gets the class of the bean to be created.
      *
-     * @return the bean class
+     * @return The bean class
      */
     Class<?> getBeanClass();
 
@@ -50,7 +50,7 @@ public interface BeanCreationContext {
      * Gets the {@code BeanDeclaration} with the data for the new bean. This data is used to initialize the bean's
      * properties.
      *
-     * @return the {@code BeanDeclaration} defining the bean to be created
+     * @return The {@code BeanDeclaration} defining the bean to be created
      */
     BeanDeclaration getBeanDeclaration();
 
@@ -58,15 +58,15 @@ public interface BeanCreationContext {
      * Gets the (optional) parameter object for the bean factory. This is a mechanism which can be used to pass custom
      * parameters to a {@link BeanFactory}.
      *
-     * @return the parameter for the bean factory
+     * @return The parameter for the bean factory
      */
     Object getParameter();
 
     /**
      * Initializes a bean's property based on the given {@code BeanDeclaration}.
      *
-     * @param bean the bean to be initialized
-     * @param data the {@code BeanDeclaration} with initialization data for this bean
+     * @param bean The bean to be initialized
+     * @param data The {@code BeanDeclaration} with initialization data for this bean
      */
     void initBean(Object bean, BeanDeclaration data);
 }

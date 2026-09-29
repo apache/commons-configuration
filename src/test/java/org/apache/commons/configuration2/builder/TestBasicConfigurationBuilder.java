@@ -87,9 +87,9 @@ public class TestBasicConfigurationBuilder {
         /**
          * Creates a new instance of {@code AccessBuilderThread}.
          *
-         * @param lstart the latch for controlling the thread start
-         * @param lend the latch for controlling the thread end
-         * @param bldr the builder to be tested
+         * @param lstart The latch for controlling the thread start
+         * @param lend The latch for controlling the thread end
+         * @param bldr The builder to be tested
          */
         public AccessBuilderThread(final CountDownLatch lstart, final CountDownLatch lend, final ConfigurationBuilder<?> bldr) {
             startLatch = lstart;
@@ -155,7 +155,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * Creates a mock for an event listener.
      *
-     * @return the event listener mock
+     * @return The event listener mock
      */
     @SuppressWarnings("unchecked")
     private static EventListener<ConfigurationEvent> createEventListener() {
@@ -165,7 +165,7 @@ public class TestBasicConfigurationBuilder {
     /**
      * Creates a map with test initialization parameters.
      *
-     * @return the map with parameters
+     * @return The map with parameters
      */
     private static Map<String, Object> createTestParameters() {
         final Map<String, Object> params = new HashMap<>();

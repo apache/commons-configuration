@@ -64,7 +64,7 @@ public interface ImmutableConfiguration {
     /**
      * Checks if the configuration contains the specified key.
      *
-     * @param key the key whose presence in this configuration is to be tested
+     * @param key The key whose presence in this configuration is to be tested
      * @return {@code true} if the configuration contains a value for this key, {@code false} otherwise
      */
     boolean containsKey(String key);
@@ -90,7 +90,7 @@ public interface ImmutableConfiguration {
     /**
      * Returns a {@link Set} view of the mappings contained in this configuration.
      *
-     * @return a set view of the mappings contained in this configuration.
+     * @return A set view of the mappings contained in this configuration.
      * @since 2.13.0
      */
     default Set<Map.Entry<String, Object>> entrySet() {
@@ -119,7 +119,7 @@ public interface ImmutableConfiguration {
      * @since 2.13.0
      */
     default void forEach(final BiConsumer<String, Object> action) {
-        Objects.requireNonNull(action);
+        Objects.requireNonNull(action, "action");
         for (final Map.Entry<String, Object> entry : entrySet()) {
             String k;
             Object v;
@@ -139,10 +139,10 @@ public interface ImmutableConfiguration {
      * existing object, the method returns null unless {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
      * {@code true}.
      *
-     * @param <T> the target type of the value
-     * @param cls the target class of the value
-     * @param key the key of the value
-     * @return the value of the requested type for the key
+     * @param <T> The target type of the value
+     * @param cls The target class of the value
+     * @param key The key of the value
+     * @return The value of the requested type for the key
      * @throws java.util.NoSuchElementException if the key doesn't map to an existing object and
      *         {@code throwExceptionOnMissing=true}
      * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the requested
@@ -155,11 +155,11 @@ public interface ImmutableConfiguration {
      * Gets an object of the specified type associated with the given configuration key using a default value. If the key
      * doesn't map to an existing object, the default value is returned.
      *
-     * @param <T> the target type of the value
-     * @param cls the target class of the value
-     * @param key the key of the value
-     * @param defaultValue the default value
-     * @return the value of the requested type for the key
+     * @param <T> The target type of the value
+     * @param cls The target class of the value
+     * @param key The key of the value
+     * @param defaultValue The default value
+     * @return The value of the requested type for the key
      * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the requested
      *         type
      *
@@ -171,7 +171,7 @@ public interface ImmutableConfiguration {
      * Gets an array of typed objects associated with the given configuration key. If the key doesn't map to an existing
      * object, an empty list is returned.
      *
-     * @param cls the type expected for the elements of the array
+     * @param cls The type expected for the elements of the array
      * @param key The configuration key.
      * @return The associated array if the key is found, and the value compatible with the type specified.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
@@ -185,9 +185,9 @@ public interface ImmutableConfiguration {
      * Gets an array of typed objects associated with the given configuration key. If the key doesn't map to an existing
      * object, the default value is returned.
      *
-     * @param cls the type expected for the elements of the array
-     * @param key the configuration key.
-     * @param defaultValue the default value
+     * @param cls The type expected for the elements of the array
+     * @param key The configuration key.
+     * @param defaultValue The default value
      * @return The associated array if the key is found, and the value compatible with the type specified.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with an array of the specified class.
@@ -306,11 +306,11 @@ public interface ImmutableConfiguration {
      * Gets a collection of typed objects associated with the given configuration key. This method works like
      * {@link #getCollection(Class, String, Collection, Collection)} passing in <strong>null</strong> as default value.
      *
-     * @param <T> the element type of the result list
-     * @param cls the element class of the result list
-     * @param key the configuration key
-     * @param target the target collection (may be <strong>null</strong>)
-     * @return the collection to which data was added
+     * @param <T> The element type of the result list
+     * @param cls The element class of the result list
+     * @param key The configuration key
+     * @param target The target collection (may be <strong>null</strong>)
+     * @return The collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
@@ -331,12 +331,12 @@ public interface ImmutableConfiguration {
      * the default collection), return value is the target collection created by this method.</li>
      * </ul>
      *
-     * @param <T> the element type of the result list
-     * @param cls the element class of the result list
-     * @param key the configuration key
-     * @param target the target collection (may be <strong>null</strong>)
-     * @param defaultValue the default value (may be <strong>null</strong>)
-     * @return the collection to which data was added
+     * @param <T> The element type of the result list
+     * @param cls The element class of the result list
+     * @param key The configuration key
+     * @param target The target collection (may be <strong>null</strong>)
+     * @param defaultValue The default value (may be <strong>null</strong>)
+     * @return The collection to which data was added
      * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
@@ -413,8 +413,8 @@ public interface ImmutableConfiguration {
      * {@code ConfigurationDecoder} associated with this configuration. It depends on a specific implementation how this
      * default decoder is obtained.
      *
-     * @param key the configuration key
-     * @return the plain string value of the specified encoded property
+     * @param key The configuration key
+     * @return The plain string value of the specified encoded property
      */
     String getEncodedString(String key);
 
@@ -425,9 +425,9 @@ public interface ImmutableConfiguration {
      * key is not associated with a value, the decoder is not invoked; depending on this configuration's settings either
      * <strong>null</strong> is returned or an exception is thrown.
      *
-     * @param key the configuration key
-     * @param decoder the {@code ConfigurationDecoder} (must not be <strong>null</strong>)
-     * @return the plain string value of the specified encoded property
+     * @param key The configuration key
+     * @param decoder The {@code ConfigurationDecoder} (must not be <strong>null</strong>)
+     * @return The plain string value of the specified encoded property
      * @throws IllegalArgumentException if a <strong>null</strong> decoder is passed
      */
     String getEncodedString(String key, ConfigurationDecoder decoder);
@@ -436,7 +436,7 @@ public interface ImmutableConfiguration {
      * Gets an enum associated with the given configuration key.
      *
      * @param <T> The enum type whose constant is to be returned.
-     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param enumType The {@code Class} object of the enum type from which to return a constant
      * @param key The configuration key.
      * @return The associated enum.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
@@ -457,7 +457,7 @@ public interface ImmutableConfiguration {
      *
      * @param <T> The enum type whose constant is to be returned.
      * @param key The configuration key.
-     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param enumType The {@code Class} object of the enum type from which to return a constant
      * @param defaultValue The default value.
      * @return The associated enum if key is found and has valid format, default value otherwise.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
@@ -615,8 +615,8 @@ public interface ImmutableConfiguration {
      * Gets a list of typed objects associated with the given configuration key returning a null if the key doesn't map to
      * an existing object.
      *
-     * @param <T> the type expected for the elements of the list
-     * @param cls the class expected for the elements of the list
+     * @param <T> The type expected for the elements of the list
+     * @param cls The class expected for the elements of the list
      * @param key The configuration key.
      * @return The associated list if the key is found.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
@@ -633,10 +633,10 @@ public interface ImmutableConfiguration {
      * concrete subclasses), all values are extracted and added to the resulting list - performing a type conversion if
      * necessary.
      *
-     * @param <T> the type expected for the elements of the list
-     * @param cls the class expected for the elements of the list
-     * @param key the configuration key.
-     * @param defaultValue the default value.
+     * @param <T> The type expected for the elements of the list
+     * @param cls The class expected for the elements of the list
+     * @param key The configuration key.
+     * @param defaultValue The default value.
      * @return The associated List.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not
      *         compatible with a list of the specified class.
@@ -729,7 +729,7 @@ public interface ImmutableConfiguration {
      * will stay constant over time (i.e. further update operations on the configuration may change its internal state).
      *
      * @param key property to retrieve
-     * @return the value to which this configuration maps the specified key, or null if the configuration contains no
+     * @return The value to which this configuration maps the specified key, or null if the configuration contains no
      *         mapping for this key.
      */
     Object getProperty(String key);
@@ -823,7 +823,7 @@ public interface ImmutableConfiguration {
      * (The key for the value "Jakarta" is an empty string)
      *
      * @param prefix The prefix used to select the properties.
-     * @return a subset immutable configuration
+     * @return A subset immutable configuration
      */
     ImmutableConfiguration immutableSubset(String prefix);
 
@@ -839,7 +839,7 @@ public interface ImmutableConfiguration {
      * efficient; for some implementations it may be expensive to determine the size. Especially, if you just want to check
      * whether a configuration is empty, it is preferable to use the {@link #isEmpty()} method.
      *
-     * @return the number of keys stored in this configuration
+     * @return The number of keys stored in this configuration
      */
     int size();
 

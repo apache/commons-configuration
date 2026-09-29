@@ -52,7 +52,7 @@ public class TestNodeSelector {
      * {@code DefaultExpressionEngine} instance for resolving keys. Methods for obtaining add or update data objects are not
      * implemented.
      *
-     * @return the {@code NodeKeyResolver}
+     * @return The {@code NodeKeyResolver}
      */
     private static NodeKeyResolver<ImmutableNode> createResolver() {
         final NodeKeyResolver<ImmutableNode> resolver = NodeStructureHelper.createResolverMock();

@@ -42,7 +42,7 @@ import java.util.List;
  * operation) and the new node</li>
  * </ul>
  *
- * @param <T> the type of nodes this class can handle
+ * @param <T> The type of nodes this class can handle
  * @since 1.3
  */
 public class NodeAddData<T> {
@@ -50,8 +50,8 @@ public class NodeAddData<T> {
     /**
      * Creates the list with path nodes. Handles null input.
      *
-     * @param intermediateNodes the nodes passed to the constructor
-     * @return an unmodifiable list of path nodes
+     * @param intermediateNodes The nodes passed to the constructor
+     * @return An unmodifiable list of path nodes
      */
     private static List<String> createPathNodes(final Collection<String> intermediateNodes) {
         if (intermediateNodes == null) {
@@ -77,10 +77,10 @@ public class NodeAddData<T> {
     /**
      * Creates a new instance of {@code NodeAddData} and initializes it.
      *
-     * @param parentNode the parent node of the add operation
-     * @param newName the name of the new node
+     * @param parentNode The parent node of the add operation
+     * @param newName The name of the new node
      * @param isAttr flag whether the new node is an attribute
-     * @param intermediateNodes an optional collection with path nodes
+     * @param intermediateNodes An optional collection with path nodes
      */
     public NodeAddData(final T parentNode, final String newName, final boolean isAttr, final Collection<String> intermediateNodes) {
         parent = parentNode;
@@ -92,7 +92,7 @@ public class NodeAddData<T> {
     /**
      * Gets the name of the new node.
      *
-     * @return the new node's name
+     * @return The new node's name
      */
     public String getNewNodeName() {
         return newNodeName;
@@ -101,7 +101,7 @@ public class NodeAddData<T> {
     /**
      * Gets the parent node.
      *
-     * @return the parent node
+     * @return The parent node
      */
     public T getParent() {
         return parent;
@@ -114,7 +114,7 @@ public class NodeAddData<T> {
      * Then {@code username} is the name of the new node, but the nodes {@code connection} and {@code settings} must be
      * added to the parent node first. In this example these names would be returned by this method.
      *
-     * @return a list with the names of nodes that must be added as parents of the new node (never <strong>null</strong>)
+     * @return A list with the names of nodes that must be added as parents of the new node (never <strong>null</strong>)
      */
     public List<String> getPathNodes() {
         return pathNodes;

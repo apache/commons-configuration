@@ -45,6 +45,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -67,8 +68,8 @@ public class TestXMLDocumentHelper {
     /**
      * Serializes the specified document to a string.
      *
-     * @param document the document
-     * @return the document serialized to a string
+     * @param document The document
+     * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
     private static String documentToString(final Document document) throws ConfigurationException {
@@ -82,8 +83,8 @@ public class TestXMLDocumentHelper {
     /**
      * Serializes the document wrapped by the given helper to a string.
      *
-     * @param helper the document helper
-     * @return the document serialized to a string
+     * @param helper The document helper
+     * @return The document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
     private static String documentToString(final XMLDocumentHelper helper) throws ConfigurationException {
@@ -93,8 +94,8 @@ public class TestXMLDocumentHelper {
     /**
      * Obtains all text elements contained in the given document.
      *
-     * @param document the document
-     * @return a collection with all text elements
+     * @param document The document
+     * @return A collection with all text elements
      */
     private static Collection<Node> findTextElements(final Document document) {
         final Collection<Node> texts = new HashSet<>();
@@ -105,8 +106,8 @@ public class TestXMLDocumentHelper {
     /**
      * Recursively obtains all text elements for the given node.
      *
-     * @param node the node
-     * @param texts the collection with text elements
+     * @param node The node
+     * @param texts The collection with text elements
      */
     private static void findTextElementsForNode(final Node node, final Collection<Node> texts) {
         if (node instanceof Text) {
@@ -121,7 +122,7 @@ public class TestXMLDocumentHelper {
     /**
      * Loads a test XML document.
      *
-     * @return the test document
+     * @return The test document
      */
     private static Document loadDocument() throws ParserConfigurationException, IOException, SAXException {
         return loadDocument(TEST_FILE);
@@ -130,18 +131,18 @@ public class TestXMLDocumentHelper {
     /**
      * Loads the test document with the given name.
      *
-     * @param name the name of the test document
-     * @return the parsed document
+     * @param name The name of the test document
+     * @return The parsed document
      */
     private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
-        final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        final DocumentBuilder builder = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder();
         return builder.parse(ConfigurationAssert.getTestFile(name));
     }
 
     /**
      * Helper method for testing the element mapping of a copied document.
      *
-     * @param file the name of the test file
+     * @param file The name of the test file
      */
     private void checkCopyElementMapping(final String file) throws Exception {
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument(file));
@@ -197,14 +198,6 @@ public class TestXMLDocumentHelper {
 
         final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createDocumentBuilder(factory));
         assertEquals(pcex, cex.getCause());
-    }
-
-    /**
-     * Tests whether a correct transformer factory can be created.
-     */
-    @Test
-    void testCreateTransformerFactory() {
-        assertNotNull(XMLDocumentHelper.createTransformerFactory());
     }
 
     /**

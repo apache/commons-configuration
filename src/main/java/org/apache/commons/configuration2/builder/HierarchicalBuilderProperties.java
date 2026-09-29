@@ -30,7 +30,7 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  * @since 2.0
  */
 public interface HierarchicalBuilderProperties<T> {
@@ -38,8 +38,8 @@ public interface HierarchicalBuilderProperties<T> {
     /**
      * Sets the {@code ExpressionEngine} to be used when querying the configuration.
      *
-     * @param engine the {@code ExpressionEngine}
-     * @return a reference to this object for method chaining
+     * @param engine The {@code ExpressionEngine}
+     * @return A reference to this object for method chaining
      */
     T setExpressionEngine(ExpressionEngine engine);
 }

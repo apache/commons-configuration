@@ -54,7 +54,7 @@ public abstract class NodeCombiner {
      * Creates a node handler object for immutable nodes which can be used by sub classes to perform advanced operations on
      * nodes.
      *
-     * @return the node handler implementation
+     * @return The node handler implementation
      */
     private static NodeHandler<ImmutableNode> createNodeHandler() {
         return new AbstractImmutableNodeHandler() {
@@ -83,7 +83,7 @@ public abstract class NodeCombiner {
     /**
      * Adds the name of a node to the list of known list nodes. This means that nodes with this name will never be combined.
      *
-     * @param nodeName the name to be added
+     * @param nodeName The name to be added
      */
     public void addListNode(final String nodeName) {
         listNodes.add(nodeName);
@@ -93,16 +93,16 @@ public abstract class NodeCombiner {
      * Combines the hierarchies represented by the given root nodes. This method must be defined in concrete sub classes
      * with the implementation of a specific combination algorithm.
      *
-     * @param node1 the first root node
-     * @param node2 the second root node
-     * @return the root node of the resulting combined node structure
+     * @param node1 The first root node
+     * @param node2 The second root node
+     * @return The root node of the resulting combined node structure
      */
     public abstract ImmutableNode combine(ImmutableNode node1, ImmutableNode node2);
 
     /**
      * Gets a set with the names of nodes that are known to be list nodes.
      *
-     * @return a set with the names of list nodes
+     * @return A set with the names of list nodes
      */
     public Set<String> getListNodes() {
         return Collections.unmodifiableSet(listNodes);
@@ -112,8 +112,8 @@ public abstract class NodeCombiner {
      * Checks if a node is a list node. This implementation tests if the given node name is contained in the set of known
      * list nodes. Derived classes which use different criteria may overload this method.
      *
-     * @param node the node to be tested
-     * @return a flag whether this is a list node
+     * @param node The node to be tested
+     * @return A flag whether this is a list node
      */
     public boolean isListNode(final ImmutableNode node) {
         return listNodes.contains(node.getNodeName());

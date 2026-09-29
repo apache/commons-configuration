@@ -61,8 +61,8 @@ public class BuilderConfigurationWrapperFactory {
         /**
          * Creates a new instance of {@code BuilderConfigurationWrapperInvocationHandler}.
          *
-         * @param wrappedBuilder the wrapped builder
-         * @param evSrcSupport the level of {@code EventSource} support
+         * @param wrappedBuilder The wrapped builder
+         * @param evSrcSupport The level of {@code EventSource} support
          */
         public BuilderConfigurationWrapperInvocationHandler(final ConfigurationBuilder<? extends ImmutableConfiguration> wrappedBuilder,
             final EventSourceSupport evSrcSupport) {
@@ -73,10 +73,10 @@ public class BuilderConfigurationWrapperFactory {
         /**
          * Handles a method invocation on the associated builder's configuration object.
          *
-         * @param method the method to be invoked
+         * @param method The method to be invoked
          * @param args method arguments
-         * @return the return value of the method
-         * @throws Exception if an error occurs
+         * @return The return value of the method
+         * @throws Exception Thrown if an error occurs
          */
         private Object handleConfigurationInvocation(final Method method, final Object[] args) throws ReflectiveOperationException, ConfigurationException {
             return method.invoke(builder.getConfiguration(), args);
@@ -86,9 +86,9 @@ public class BuilderConfigurationWrapperFactory {
          * Handles a method invocation on the {@code EventSource} interface. This method evaluates the current
          * {@code EventSourceSupport} object in order to find the appropriate target for the invocation.
          *
-         * @param method the method to be invoked
+         * @param method The method to be invoked
          * @param args method arguments
-         * @return the return value of the method
+         * @return The return value of the method
          * @throws ReflectiveOperationException if an error occurs
          */
         private Object handleEventSourceInvocation(final Method method, final Object... args) throws ReflectiveOperationException {
@@ -102,10 +102,10 @@ public class BuilderConfigurationWrapperFactory {
          * <li>Other method calls are delegated to the builder's configuration object.</li>
          * </ul>
          *
-         * @param proxy the proxy object
-         * @param method the method to be invoked
+         * @param proxy The proxy object
+         * @param method The method to be invoked
          * @param args method arguments
-         * @return the return value of the method
+         * @return The return value of the method
          * @throws ReflectiveOperationException if an error occurs
          * @throws ConfigurationException if an error occurs
          */
@@ -155,12 +155,12 @@ public class BuilderConfigurationWrapperFactory {
      * builder. This is a convenience method which allows creating wrapper configurations without having to instantiate this
      * class.
      *
-     * @param <T> the type of the configuration objects returned by this method
-     * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
+     * @param <T> The type of the configuration objects returned by this method
+     * @param ifcClass The class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
-     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
-     * @param evSrcSupport the level of {@code EventSource} support
-     * @return the wrapper configuration
+     * @param builder The wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
+     * @param evSrcSupport The level of {@code EventSource} support
+     * @return The wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error occurs when creating the
      *         result {@code ImmutableConfiguration}
@@ -181,10 +181,10 @@ public class BuilderConfigurationWrapperFactory {
     /**
      * Gets an array with the classes the generated proxy has to support.
      *
-     * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
+     * @param ifcClass The class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
-     * @param evSrcSupport the level of {@code EventSource} support
-     * @return an array with the interface classes to implement
+     * @param evSrcSupport The level of {@code EventSource} support
+     * @return An array with the interface classes to implement
      */
     private static Class<?>[] getSupportedInterfaces(final Class<?> ifcClass, final EventSourceSupport evSrcSupport) {
         return EventSourceSupport.NONE == evSrcSupport ? new Class<?>[] {ifcClass} : new Class<?>[] {EventSource.class, ifcClass};
@@ -205,7 +205,7 @@ public class BuilderConfigurationWrapperFactory {
      * Creates a new instance of {@code BuilderConfigurationWrapperFactory} and sets the property for supporting the
      * {@code EventSource} interface.
      *
-     * @param evSrcSupport the level of {@code EventSource} support
+     * @param evSrcSupport The level of {@code EventSource} support
      */
     public BuilderConfigurationWrapperFactory(final EventSourceSupport evSrcSupport) {
         eventSourceSupport = evSrcSupport;
@@ -216,11 +216,11 @@ public class BuilderConfigurationWrapperFactory {
      * implementation delegates to
      * {@link #createBuilderConfigurationWrapper(Class, ConfigurationBuilder, EventSourceSupport)}.
      *
-     * @param <T> the type of the configuration objects returned by this method
-     * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
+     * @param <T> The type of the configuration objects returned by this method
+     * @param ifcClass The class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <strong>null</strong>
-     * @param builder the wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
-     * @return the wrapper configuration
+     * @param builder The wrapped {@code ConfigurationBuilder} (must not be <strong>null</strong>)
+     * @return The wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error occurs when creating the
      *         result {@code ImmutableConfiguration}
@@ -232,7 +232,7 @@ public class BuilderConfigurationWrapperFactory {
     /**
      * Gets the level of {@code EventSource} support used when generating {@code ImmutableConfiguration} objects.
      *
-     * @return the level of {@code EventSource} support
+     * @return The level of {@code EventSource} support
      */
     public EventSourceSupport getEventSourceSupport() {
         return eventSourceSupport;

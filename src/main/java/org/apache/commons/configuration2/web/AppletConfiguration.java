@@ -36,7 +36,7 @@ public class AppletConfiguration extends BaseWebConfiguration {
     /**
      * Create an AppletConfiguration using the initialization parameters of the specified Applet.
      *
-     * @param applet the applet
+     * @param applet The applet
      */
     public AppletConfiguration(final Applet applet) {
         this.applet = Objects.requireNonNull(applet, "applet");

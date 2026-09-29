@@ -124,8 +124,8 @@ public class TestConstantLookup {
     /**
      * Generates the name of a variable for a lookup operation based on the given field name of this class.
      *
-     * @param field the field name
-     * @return the variable for looking up this field
+     * @param field The field name
+     * @return The variable for looking up this field
      */
     private String variable(final String field) {
         return getClass().getName() + '.' + field;

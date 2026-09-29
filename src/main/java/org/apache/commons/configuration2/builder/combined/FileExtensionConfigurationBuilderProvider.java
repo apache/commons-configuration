@@ -50,8 +50,8 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /**
      * Extracts the extension from the given file name. The name can be <strong>null</strong>.
      *
-     * @param fileName the file name
-     * @return the extension (<strong>null</strong> if there is none)
+     * @param fileName The file name
+     * @return The extension (<strong>null</strong> if there is none)
      */
     private static String extractExtension(final String fileName) {
         if (fileName == null) {
@@ -65,8 +65,8 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /**
      * Tries to obtain the current file name from the given list of parameter objects.
      *
-     * @param params the parameter objects
-     * @return the file name or <strong>null</strong> if unspecified
+     * @param params The parameter objects
+     * @return The file name or <strong>null</strong> if unspecified
      */
     private static String fetchCurrentFileName(final Collection<BuilderParameters> params) {
         for (final BuilderParameters p : params) {
@@ -87,15 +87,15 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /**
      * Creates a new instance of {@code FileExtensionConfigurationBuilderProvider}.
      *
-     * @param bldrCls the name of the builder class
-     * @param reloadBldrCls the name of a builder class to be used if reloading support is required (<strong>null</strong> if
+     * @param bldrCls The name of the builder class
+     * @param reloadBldrCls The name of a builder class to be used if reloading support is required (<strong>null</strong> if
      *        reloading is not supported)
-     * @param matchingConfigCls the name of the configuration class to be used if the provided file extension matches (must
+     * @param matchingConfigCls The name of the configuration class to be used if the provided file extension matches (must
      *        not be <strong>null</strong>)
-     * @param defConfigClass the name of the configuration class to be used if the provided file extension does not match
+     * @param defConfigClass The name of the configuration class to be used if the provided file extension does not match
      *        (must not be <strong>null</strong>)
-     * @param ext the file extension to select the configuration class (must not be <strong>null</strong>)
-     * @param paramCls a collection with the names of parameters classes; an instance of a parameters object with basic
+     * @param ext The file extension to select the configuration class (must not be <strong>null</strong>)
+     * @param paramCls A collection with the names of parameters classes; an instance of a parameters object with basic
      *        properties is created automatically and does not need to be contained in this list; the collection can be
      *        <strong>null</strong> if no additional parameter objects are needed
      * @throws IllegalArgumentException if a required parameter is missing
@@ -129,7 +129,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
     /**
      * Gets the file extension of this provider.
      *
-     * @return the file extension to match
+     * @return The file extension to match
      */
     public String getExtension() {
         return extension;
@@ -139,7 +139,7 @@ public class FileExtensionConfigurationBuilderProvider extends BaseConfiguration
      * Gets the name of the matching configuration class. This class is used if the file extension matches the extension
      * of this provider.
      *
-     * @return the matching configuration class
+     * @return The matching configuration class
      */
     public String getMatchingConfigurationClass() {
         return matchingConfigurationClass;

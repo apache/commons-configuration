@@ -63,7 +63,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Load the catalogs.
          *
-         * @throws IOException if an error occurs.
+         * @throws IOException Thrown if an error occurs.
          */
         @Override
         public void loadSystemCatalogs() throws IOException {
@@ -232,7 +232,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Gets the ConfigurationInterpolator.
          *
-         * @return the ConfigurationInterpolator.
+         * @return The ConfigurationInterpolator.
          */
         public ConfigurationInterpolator getInterpolator() {
             return interpolator;
@@ -244,7 +244,7 @@ public class CatalogResolver implements EntityResolver {
          *
          * This method always returns a new instance of the underlying catalog class.
          *
-         * @return the Catalog.
+         * @return The Catalog.
          */
         @Override
         public org.apache.xml.resolver.Catalog getPrivateCatalog() {
@@ -291,7 +291,7 @@ public class CatalogResolver implements EntityResolver {
         /**
          * Sets the ConfigurationInterpolator.
          *
-         * @param configurationInterpolator the ConfigurationInterpolator.
+         * @param configurationInterpolator The ConfigurationInterpolator.
          */
         public void setInterpolator(final ConfigurationInterpolator configurationInterpolator) {
             interpolator = configurationInterpolator;
@@ -316,10 +316,10 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Locates a given file. This implementation delegates to the corresponding method in {@link FileLocatorUtils}.
      *
-     * @param fs the {@code FileSystem}
-     * @param basePath the base path
-     * @param name the file name
-     * @return the URL pointing to the file
+     * @param fs The {@code FileSystem}
+     * @param basePath The base path
+     * @param name The file name
+     * @return The URL pointing to the file
      */
     private static URL locate(final FileSystem fs, final String basePath, final String name) {
         return FileLocatorUtils.locate(FileLocatorUtils.fileLocator().fileSystem(fs).basePath(basePath).fileName(name).create());
@@ -358,7 +358,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Gets the logger used by this configuration object.
      *
-     * @return the logger
+     * @return The logger
      */
     public ConfigurationLogger getLogger() {
         return log;
@@ -374,7 +374,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Initializes the logger. Checks for null parameters.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     private void initLogger(final ConfigurationLogger log) {
         this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
@@ -401,7 +401,7 @@ public class CatalogResolver implements EntityResolver {
      * @param systemId The system identifier for the entity in question. XML requires a system identifier on all external
      *        entities, so this value is always specified.
      * @return An InputSource for the mapped identifier, or null.
-     * @throws SAXException if an error occurs.
+     * @throws SAXException Thrown if an error occurs.
      */
     @SuppressWarnings("resource") // InputSource wraps an InputStream.
     @Override
@@ -475,7 +475,7 @@ public class CatalogResolver implements EntityResolver {
     /**
      * Sets the {@code ConfigurationInterpolator}.
      *
-     * @param ci the {@code ConfigurationInterpolator}
+     * @param ci The {@code ConfigurationInterpolator}
      */
     public void setInterpolator(final ConfigurationInterpolator ci) {
         manager.setInterpolator(ci);
@@ -487,7 +487,7 @@ public class CatalogResolver implements EntityResolver {
      * logging should call this method during their initialization with the logger to be used. Passing in <strong>null</strong> as
      * argument disables logging.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     public void setLogger(final ConfigurationLogger log) {
         initLogger(log);

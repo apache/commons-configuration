@@ -47,7 +47,7 @@ public class TestDisabledListDelimiterHandler {
     /**
      * Checks whether the passed in container contains the expected values.
      *
-     * @param container the iterator to test
+     * @param container The iterator to test
      */
     private static void checkIterator(final Iterable<?> container) {
         final Iterator<?> it = container.iterator();

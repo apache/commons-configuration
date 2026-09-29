@@ -146,7 +146,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * Returns the wrapped configuration as a {@code FileBased} object. If this cast is not possible, an exception is
      * thrown.
      *
-     * @return the wrapped configuration as {@code FileBased}
+     * @return The wrapped configuration as {@code FileBased}
      * @throws ConfigurationException if the wrapped configuration does not implement {@code FileBased}
      */
     private FileBased fetchFileBased() throws ConfigurationException {
@@ -408,8 +408,8 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * Uses this configuration's {@code ConfigurationInterpolator} to perform variable substitution on the given pattern
      * string.
      *
-     * @param pattern the pattern string
-     * @return the string with variables replaced
+     * @param pattern The pattern string
+     * @return The string with variables replaced
      */
     private String substitute(final String pattern) {
         return Objects.toString(getInterpolator().interpolate(pattern), null);

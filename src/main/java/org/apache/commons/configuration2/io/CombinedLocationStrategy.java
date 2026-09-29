@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -80,7 +81,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
             if (subStrategies != null) {
                 subStrategies.forEach(e -> {
                     if (e instanceof AbstractFileLocationStrategy) {
-                        AbstractFileLocationStrategy afls = (AbstractFileLocationStrategy) e;
+                        final AbstractFileLocationStrategy afls = (AbstractFileLocationStrategy) e;
                         final Set<String> schemes = afls.getSchemes();
                         schemes.clear();
                         schemes.addAll(getSchemes());
@@ -96,7 +97,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
         /**
          * Sets the collection with sub strategies.
          *
-         * @param subStrategies the collection with sub strategies.
+         * @param subStrategies The collection with sub strategies.
          * @return {@code this} instance.
          */
         public Builder setSubStrategies(final Collection<FileLocationStrategy> subStrategies) {
@@ -119,17 +120,18 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
         if (builder.subStrategies == null) {
             throw new IllegalArgumentException("Collection with sub strategies must not be null.");
         }
-        if (builder.subStrategies.contains(null)) {
+        List<FileLocationStrategy> subStrategiesCopy = new ArrayList<>(builder.subStrategies);
+        if (subStrategiesCopy.contains(null)) {
             throw new IllegalArgumentException("Collection with sub strategies contains null entry.");
         }
-        subStrategies = Collections.unmodifiableCollection(new ArrayList<>(builder.subStrategies));
+        subStrategies = Collections.unmodifiableCollection(subStrategiesCopy);
     }
 
     /**
      * Creates a new instance of {@code CombinedLocationStrategy} and initializes it with the provided sub strategies. The
      * passed in collection must not be <strong>null</strong> or contain <strong>null</strong> elements.
      *
-     * @param subs the collection with sub strategies.
+     * @param subs The collection with sub strategies.
      * @throws IllegalArgumentException if the collection is <strong>null</strong> or has <strong>null</strong> elements.
      */
     public CombinedLocationStrategy(final Collection<FileLocationStrategy> subs) {
@@ -139,7 +141,7 @@ public class CombinedLocationStrategy extends AbstractFileLocationStrategy {
     /**
      * Gets a (unmodifiable) collection with the sub strategies managed by this object.
      *
-     * @return the sub {@code FileLocationStrategy} objects
+     * @return The sub {@code FileLocationStrategy} objects
      */
     public Collection<FileLocationStrategy> getSubStrategies() {
         return subStrategies;

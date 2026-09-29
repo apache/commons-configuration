@@ -32,10 +32,10 @@ class XPathContextFactory {
     /**
      * Creates a new {@code JXPathContext} based on the passed in arguments.
      *
-     * @param root the root node
-     * @param handler the node handler
-     * @param <T> the type of the nodes to be handled
-     * @return the newly created context
+     * @param root The root node
+     * @param handler The node handler
+     * @param <T> The type of the nodes to be handled
+     * @return The newly created context
      */
     <T> JXPathContext createContext(final T root, final NodeHandler<T> handler) {
         final JXPathContext context = JXPathContext.newContext(ConfigurationNodePointerFactory.wrapNode(root, handler));

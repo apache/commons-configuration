@@ -67,7 +67,7 @@ public final class InterpolatorSpecification {
         /**
          * Helper method for checking a lookup. Throws an exception if the lookup is <strong>null</strong>.
          *
-         * @param lookup the lookup to be checked
+         * @param lookup The lookup to be checked
          * @throws IllegalArgumentException if the lookup is <strong>null</strong>
          */
         private static void checkLookup(final Lookup lookup) {
@@ -103,7 +103,7 @@ public final class InterpolatorSpecification {
          * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
          * instance is reset so that it can be reused for creating further specification objects.
          *
-         * @return the newly created {@code InterpolatorSpecification}
+         * @return The newly created {@code InterpolatorSpecification}
          */
         public InterpolatorSpecification create() {
             final InterpolatorSpecification spec = new InterpolatorSpecification(this);
@@ -126,8 +126,8 @@ public final class InterpolatorSpecification {
         /**
          * Adds the given {@code Lookup} object to the list of default lookups.
          *
-         * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @param lookup The {@code Lookup} (must not be <strong>null</strong>)
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the {@code Lookup} is <strong>null</strong>
          */
         public Builder withDefaultLookup(final Lookup lookup) {
@@ -140,8 +140,8 @@ public final class InterpolatorSpecification {
          * Adds the content of the given collection to the default lookups managed by this builder. The collection can be
          * <strong>null</strong>, then this method has no effect.
          *
-         * @param lookups the collection with lookups to be added
-         * @return a reference to this builder for method chaining
+         * @param lookups The collection with lookups to be added
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the collection contains <strong>null</strong> entries
          */
         public Builder withDefaultLookups(final Collection<? extends Lookup> lookups) {
@@ -155,8 +155,8 @@ public final class InterpolatorSpecification {
          * Sets the {@code ConfigurationInterpolator} instance for the {@code InterpolatorSpecification}. This means that a
          * {@code ConfigurationInterpolator} has been created and set up externally and can be used directly.
          *
-         * @param ci the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @param ci The {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+         * @return A reference to this builder for method chaining
          */
         public Builder withInterpolator(final ConfigurationInterpolator ci) {
             interpolator = ci;
@@ -167,8 +167,8 @@ public final class InterpolatorSpecification {
          * Sets an optional parent {@code ConfigurationInterpolator}. If defined, this object is set as parent of a newly
          * created {@code ConfigurationInterpolator} instance.
          *
-         * @param parent the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @param parent The parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+         * @return A reference to this builder for method chaining
          */
         public Builder withParentInterpolator(final ConfigurationInterpolator parent) {
             parentInterpolator = parent;
@@ -178,9 +178,9 @@ public final class InterpolatorSpecification {
         /**
          * Adds a {@code Lookup} object for a given prefix.
          *
-         * @param prefix the prefix (must not be <strong>null</strong>)
-         * @param lookup the {@code Lookup} (must not be <strong>null</strong>)
-         * @return a reference to this builder for method chaining
+         * @param prefix The prefix (must not be <strong>null</strong>)
+         * @param lookup The {@code Lookup} (must not be <strong>null</strong>)
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if a required parameter is missing
          */
         public Builder withPrefixLookup(final String prefix, final Lookup lookup) {
@@ -196,8 +196,8 @@ public final class InterpolatorSpecification {
          * Adds the content of the given map to the prefix lookups managed by this builder. The map can be <strong>null</strong>, then
          * this method has no effect.
          *
-         * @param lookups the map with prefix lookups to be added
-         * @return a reference to this builder for method chaining
+         * @param lookups The map with prefix lookups to be added
+         * @return A reference to this builder for method chaining
          * @throws IllegalArgumentException if the map contains <strong>null</strong> values
          */
         public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups) {
@@ -213,7 +213,7 @@ public final class InterpolatorSpecification {
          *
          * @param fn function used to convert interpolated values to string or {@code null} if the
          *      default conversion function is to be used
-         * @return a reference to this builder for method chaining
+         * @return A reference to this builder for method chaining
          */
         public Builder withStringConverter(final Function<Object, String> fn) {
             this.stringConverter = fn;
@@ -239,7 +239,7 @@ public final class InterpolatorSpecification {
     /**
      * Creates a new instance of {@code InterpolatorSpecification} with the properties defined by the given builder object.
      *
-     * @param builder the builder
+     * @param builder The builder
      */
     private InterpolatorSpecification(final Builder builder) {
         interpolator = builder.interpolator;
@@ -252,7 +252,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets a collection with the default lookups.
      *
-     * @return the default lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
+     * @return The default lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Collection<Lookup> getDefaultLookups() {
         return defaultLookups;
@@ -261,7 +261,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the {@code ConfigurationInterpolator} instance to be used directly.
      *
-     * @return the {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getInterpolator() {
         return interpolator;
@@ -270,7 +270,7 @@ public final class InterpolatorSpecification {
     /**
      * Gets the parent {@code ConfigurationInterpolator} object.
      *
-     * @return the parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
+     * @return The parent {@code ConfigurationInterpolator} (can be <strong>null</strong>)
      */
     public ConfigurationInterpolator getParentInterpolator() {
         return parentInterpolator;
@@ -280,7 +280,7 @@ public final class InterpolatorSpecification {
      * Gets a map with prefix lookups. The keys of the map are the prefix strings, its values are the corresponding
      * {@code Lookup} objects.
      *
-     * @return the prefix lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
+     * @return The prefix lookups for a new {@code ConfigurationInterpolator} instance (never <strong>null</strong>)
      */
     public Map<String, Lookup> getPrefixLookups() {
         return prefixLookups;

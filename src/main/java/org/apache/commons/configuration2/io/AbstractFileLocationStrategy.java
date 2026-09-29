@@ -216,7 +216,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
      * Checks if the scheme is allowed.
      *
      * @param value A URL scheme, never empty or {@code null}.
-     * @param validSet the scheme valid-set.
+     * @param validSet The scheme valid-set.
      */
     private static void checkScheme(final String value, final Set<String> validSet) {
         if (!validSet.isEmpty() && !validSet.contains(StringUtils.toRootLowerCase(value))) {
@@ -228,13 +228,13 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     /**
      * Validates {@code url} against the scheme and host allow-lists.
      *
-     * @param url           the URL to check.
-     * @param validSchemes  the scheme valid-set.
-     * @param validHosts    the host valid-set.
+     * @param url           The URL to check.
+     * @param validSchemes  The scheme valid-set.
+     * @param validHosts    The host valid-set.
      * @throws ConfigurationDeniedException if the URL or any embedded URL fails the check, or a {@code jar:} URL is malformed.
      */
     static void checkUrl(final URL url, final Set<String> validSchemes, final Set<Pattern> validHosts) {
-        String scheme = url.getProtocol();
+        final String scheme = url.getProtocol();
         checkScheme(scheme, validSchemes);
         if ("jar".equalsIgnoreCase(scheme)) {
             try {
@@ -305,7 +305,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     /**
      * Gets the enabled hosts.
      *
-     * @return the enabled hosts.
+     * @return The enabled hosts.
      */
     Set<Pattern> getHosts() {
         return hosts;
@@ -314,7 +314,7 @@ public abstract class AbstractFileLocationStrategy implements FileLocationStrate
     /**
      * Gets the enabled schemes.
      *
-     * @return the enabled schemes.
+     * @return The enabled schemes.
      */
     Set<String> getSchemes() {
         return schemes;

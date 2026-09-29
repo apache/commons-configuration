@@ -125,7 +125,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Checks the content of the passed in configuration object. Used by some tests that copy a configuration.
      *
-     * @param c the configuration to check
+     * @param c The configuration to check
      */
     private static void checkContent(final Configuration c) {
         for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
@@ -160,7 +160,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Creates a {@code DefaultConfigurationKey} object.
      *
-     * @return the new key object
+     * @return The new key object
      */
     private static DefaultConfigurationKey createConfigurationKey() {
         return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);
@@ -169,7 +169,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Returns the total number of fields in the test data structure.
      *
-     * @return the total number of fields
+     * @return The total number of fields
      */
     private static int totalFieldCount() {
         int fieldCount = 0;
@@ -212,8 +212,8 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Helper method for testing the getKeys(String) method.
      *
-     * @param prefix the key to pass into getKeys()
-     * @param expected the expected result
+     * @param prefix The key to pass into getKeys()
+     * @param expected The expected result
      */
     private void checkKeys(final String prefix, final String[] expected) {
         final Set<String> expectedKeys = new HashSet<>();
@@ -239,7 +239,7 @@ public class TestAbstractHierarchicalConfiguration {
     /**
      * Convenience method for obtaining the root node of the test configuration.
      *
-     * @return the root node of the test configuration
+     * @return The root node of the test configuration
      */
     private ImmutableNode getRootNode() {
         return config.getModel().getNodeHandler().getRootNode();

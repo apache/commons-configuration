@@ -34,7 +34,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * This is needed for queries using JXPath.
  * </p>
  *
- * @param <T> the type of the nodes this pointer deals with
+ * @param <T> The type of the nodes this pointer deals with
  * @since 1.3
  */
 final class ConfigurationNodePointer<T> extends NodePointer {
@@ -53,9 +53,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Creates a new instance of {@code ConfigurationNodePointer} and initializes it with its parent pointer.
      *
-     * @param parent the parent pointer
-     * @param node the associated node
-     * @param handler the {@code NodeHandler}
+     * @param parent The parent pointer
+     * @param node The associated node
+     * @param handler The {@code NodeHandler}
      */
     public ConfigurationNodePointer(final ConfigurationNodePointer<T> parent, final T node, final NodeHandler<T> handler) {
         super(parent);
@@ -66,9 +66,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Creates a new instance of {@code ConfigurationNodePointer} pointing to the specified node.
      *
-     * @param node the wrapped node
-     * @param locale the locale
-     * @param handler the {@code NodeHandler}
+     * @param node The wrapped node
+     * @param locale The locale
+     * @param handler The {@code NodeHandler}
      */
     public ConfigurationNodePointer(final T node, final Locale locale, final NodeHandler<T> handler) {
         super(null, locale);
@@ -79,8 +79,8 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the attributes that match the given name.
      *
-     * @param qName the attribute name
-     * @return the iterator for the attributes
+     * @param qName The attribute name
+     * @return The iterator for the attributes
      */
     @Override
     public NodeIterator attributeIterator(final QName qName) {
@@ -92,8 +92,8 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      * child node pointers can only be created by this instance which ensures that they are of the correct type. Therefore,
      * this cast is safe.
      *
-     * @param p the {@code NodePointer} to cast
-     * @return the resulting {@code ConfigurationNodePointer}
+     * @param p The {@code NodePointer} to cast
+     * @return The resulting {@code ConfigurationNodePointer}
      */
     private ConfigurationNodePointer<T> castPointer(final NodePointer p) {
         @SuppressWarnings("unchecked") // see method comment
@@ -104,9 +104,9 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns an iterator for the children of this pointer that match the given test object.
      *
-     * @param test the test object
-     * @param reverse the reverse flag
-     * @param startWith the start value of the iteration
+     * @param test The test object
+     * @param reverse The reverse flag
+     * @param startWith The start value of the iteration
      */
     @Override
     public NodeIterator childIterator(final NodeTest test, final boolean reverse, final NodePointer startWith) {
@@ -118,7 +118,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
      *
      * @param pointer1 one pointer
      * @param pointer2 another pointer
-     * @return a flag, which pointer should be sorted first
+     * @return A flag, which pointer should be sorted first
      */
     @Override
     public int compareChildNodePointers(final NodePointer pointer1, final NodePointer pointer2) {
@@ -140,7 +140,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's base value. This is the associated configuration node.
      *
-     * @return the base value
+     * @return The base value
      */
     @Override
     public Object getBaseValue() {
@@ -150,7 +150,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the wrapped configuration node.
      *
-     * @return the wrapped node
+     * @return The wrapped node
      */
     public T getConfigurationNode() {
         return node;
@@ -159,7 +159,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the immediate node. This is the associated configuration node.
      *
-     * @return the immediate node
+     * @return The immediate node
      */
     @Override
     public Object getImmediateNode() {
@@ -169,7 +169,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's length. This is always 1.
      *
-     * @return the node's length
+     * @return The node's length
      */
     @Override
     public int getLength() {
@@ -179,7 +179,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets this node's name.
      *
-     * @return the name
+     * @return The name
      */
     @Override
     public QName getName() {
@@ -189,7 +189,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the {@code NodeHandler} used by this instance.
      *
-     * @return the {@code NodeHandler}
+     * @return The {@code NodeHandler}
      */
     public NodeHandler<T> getNodeHandler() {
         return handler;
@@ -198,7 +198,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Gets the value of this node.
      *
-     * @return the represented node's value
+     * @return The represented node's value
      */
     @Override
     public Object getValue() {
@@ -208,7 +208,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Checks whether this node pointer refers to an attribute node. This is not the case.
      *
-     * @return the attribute flag
+     * @return The attribute flag
      */
     @Override
     public boolean isAttribute() {
@@ -218,7 +218,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns a flag if this node is a collection. This is not the case.
      *
-     * @return the collection flag
+     * @return The collection flag
      */
     @Override
     public boolean isCollection() {
@@ -228,7 +228,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Returns a flag whether this node is a leaf. This is the case if there are no child nodes.
      *
-     * @return a flag if this node is a leaf
+     * @return A flag if this node is a leaf
      */
     @Override
     public boolean isLeaf() {
@@ -238,7 +238,7 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Sets the value of this node. This is not supported, so always an exception is thrown.
      *
-     * @param value the new value
+     * @param value The new value
      */
     @Override
     public void setValue(final Object value) {
@@ -248,8 +248,8 @@ final class ConfigurationNodePointer<T> extends NodePointer {
     /**
      * Tests if this node matches the given test. Configuration nodes are text nodes, too because they can contain a value.
      *
-     * @param test the test object
-     * @return a flag if this node corresponds to the test
+     * @param test The test object
+     * @return A flag if this node corresponds to the test
      */
     @Override
     public boolean testNode(final NodeTest test) {

@@ -52,7 +52,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration {
     /**
      * Constructs a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
      *
-     * @param decl the child declarations
+     * @param decl The child declarations
      * @throws NullPointerException if the array with child declarations is <strong>null</strong>
      */
     public CombinedBeanDeclaration(final BeanDeclaration... decl) {

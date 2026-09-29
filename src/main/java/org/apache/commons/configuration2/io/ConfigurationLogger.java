@@ -49,8 +49,8 @@ public class ConfigurationLogger {
     /**
      * Creates an internal logger for the given class. Throws an exception if the class is undefined.
      *
-     * @param cls the logger class
-     * @return the logger object
+     * @param cls The logger class
+     * @return The logger object
      * @throws IllegalArgumentException if the logger class is undefined
      */
     private static Log createLoggerForClass(final Class<?> cls) {
@@ -63,8 +63,8 @@ public class ConfigurationLogger {
     /**
      * Creates an internal logger for the given name. Throws an exception if the name is undefined.
      *
-     * @param name the name of the logger
-     * @return the logger object
+     * @param name The name of the logger
+     * @return The logger object
      * @throws IllegalArgumentException if the logger name is undefined
      */
     private static Log createLoggerForName(final String name) {
@@ -78,7 +78,7 @@ public class ConfigurationLogger {
      * Creates a new dummy logger which produces no output. If such a logger is passed to a configuration object, logging is
      * effectively disabled.
      *
-     * @return the new dummy logger
+     * @return The new dummy logger
      */
     public static ConfigurationLogger newDummyLogger() {
         return new ConfigurationLogger(new NoOpLog());
@@ -100,7 +100,7 @@ public class ConfigurationLogger {
      * Creates a new instance of {@code ConfigurationLogger} that uses a logger whose name is derived from the provided
      * class.
      *
-     * @param logCls the class whose name is to be used for logging (must not be <strong>null</strong>)
+     * @param logCls The class whose name is to be used for logging (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the logger class is <strong>null</strong>
      */
     public ConfigurationLogger(final Class<?> logCls) {
@@ -110,7 +110,7 @@ public class ConfigurationLogger {
     /**
      * Creates a new instance of {@code ConfigurationLogger} which wraps the specified logger.
      *
-     * @param wrapped the logger to be wrapped
+     * @param wrapped The logger to be wrapped
      */
     ConfigurationLogger(final Log wrapped) {
         log = wrapped;
@@ -119,7 +119,7 @@ public class ConfigurationLogger {
     /**
      * Creates a new instance of {@code ConfigurationLogger} that uses the specified logger name.
      *
-     * @param loggerName the logger name (must not be <strong>null</strong>)
+     * @param loggerName The logger name (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the logger name is <strong>null</strong>
      */
     public ConfigurationLogger(final String loggerName) {
@@ -129,7 +129,7 @@ public class ConfigurationLogger {
     /**
      * Logs the specified message on debug level.
      *
-     * @param msg the message to be logged
+     * @param msg The message to be logged
      */
     public void debug(final String msg) {
         getLog().debug(msg);
@@ -138,7 +138,7 @@ public class ConfigurationLogger {
     /**
      * Logs the specified message on error level.
      *
-     * @param msg the message to be logged
+     * @param msg The message to be logged
      */
     public void error(final String msg) {
         getLog().error(msg);
@@ -147,8 +147,8 @@ public class ConfigurationLogger {
     /**
      * Logs the specified exception on error level.
      *
-     * @param msg the message to be logged
-     * @param ex the exception to be logged
+     * @param msg The message to be logged
+     * @param ex The exception to be logged
      */
     public void error(final String msg, final Throwable ex) {
         getLog().error(msg, ex);
@@ -157,7 +157,7 @@ public class ConfigurationLogger {
     /**
      * Gets the internal logger.
      *
-     * @return the internal logger
+     * @return The internal logger
      */
     Log getLog() {
         return log;
@@ -166,7 +166,7 @@ public class ConfigurationLogger {
     /**
      * Logs the specified message on info level.
      *
-     * @param msg the message to be logged
+     * @param msg The message to be logged
      */
     public void info(final String msg) {
         getLog().info(msg);
@@ -193,7 +193,7 @@ public class ConfigurationLogger {
     /**
      * Logs the specified message on warn level.
      *
-     * @param msg the message to be logged
+     * @param msg The message to be logged
      */
     public void warn(final String msg) {
         getLog().warn(msg);
@@ -202,8 +202,8 @@ public class ConfigurationLogger {
     /**
      * Logs the specified exception on warn level.
      *
-     * @param msg the message to be logged
-     * @param ex the exception to be logged
+     * @param msg The message to be logged
+     * @param ex The exception to be logged
      */
     public void warn(final String msg, final Throwable ex) {
         getLog().warn(msg, ex);

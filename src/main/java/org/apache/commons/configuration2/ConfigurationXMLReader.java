@@ -69,7 +69,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX characters event.
      *
-     * @param text the text
+     * @param text The text
      */
     protected void fireCharacters(final String text) {
         if (getException() == null) {
@@ -85,7 +85,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX element end event.
      *
-     * @param name the name of the affected element
+     * @param name The name of the affected element
      */
     protected void fireElementEnd(final String name) {
         if (getException() == null) {
@@ -100,8 +100,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Fires a SAX element start event.
      *
-     * @param name the name of the actual element
-     * @param attribs the attributes of this element (can be <strong>null</strong>)
+     * @param name The name of the actual element
+     * @param attribs The attributes of this element (can be <strong>null</strong>)
      */
     protected void fireElementStart(final String name, final Attributes attribs) {
         if (getException() == null) {
@@ -117,7 +117,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the actually set content handler.
      *
-     * @return the content handler
+     * @return The content handler
      */
     @Override
     public ContentHandler getContentHandler() {
@@ -127,7 +127,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the DTD handler. This class does not support DTD handlers, so this method always returns <strong>null</strong>.
      *
-     * @return the DTD handler
+     * @return The DTD handler
      */
     @Override
     public DTDHandler getDTDHandler() {
@@ -138,7 +138,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Gets the entity resolver. This class does not support an entity resolver, so this method always returns
      * <strong>null</strong>.
      *
-     * @return the entity resolver
+     * @return The entity resolver
      */
     @Override
     public EntityResolver getEntityResolver() {
@@ -148,7 +148,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the error handler. This class does not support an error handler, so this method always returns <strong>null</strong>.
      *
-     * @return the error handler
+     * @return The error handler
      */
     @Override
     public ErrorHandler getErrorHandler() {
@@ -158,7 +158,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets a reference to an exception that occurred during parsing.
      *
-     * @return a SAXExcpetion or <strong>null</strong> if none occurred
+     * @return A SAXExcpetion or <strong>null</strong> if none occurred
      */
     public SAXException getException() {
         return exception;
@@ -167,7 +167,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Dummy implementation of the interface method.
      *
-     * @param name the name of the feature
+     * @param name The name of the feature
      * @return always <strong>false</strong> (no features are supported)
      */
     @Override
@@ -178,15 +178,15 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets a reference to the configuration that is parsed by this object.
      *
-     * @return the parsed configuration
+     * @return The parsed configuration
      */
     public abstract Configuration getParsedConfiguration();
 
     /**
      * Dummy implementation of the interface method. No properties are supported, so this method always returns <strong>null</strong>.
      *
-     * @param name the name of the requested property
-     * @return the property value
+     * @param name The name of the requested property
+     * @return The property value
      */
     @Override
     public Object getProperty(final String name) {
@@ -196,7 +196,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Gets the name to be used for the root element.
      *
-     * @return the name for the root element
+     * @return The name for the root element
      */
     public String getRootName() {
         return rootName;
@@ -205,9 +205,9 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the actual configuration object. The passed input source will be ignored.
      *
-     * @param input the input source (ignored)
-     * @throws IOException if no configuration was specified
-     * @throws SAXException if an error occurs during parsing
+     * @param input The input source (ignored)
+     * @throws IOException Thrown if no configuration was specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     @Override
     public void parse(final InputSource input) throws IOException, SAXException {
@@ -217,9 +217,9 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the current configuration object. The passed system ID will be ignored.
      *
-     * @param systemId the system ID (ignored)
-     * @throws IOException if no configuration was specified
-     * @throws SAXException if an error occurs during parsing
+     * @param systemId The system ID (ignored)
+     * @throws IOException Thrown if no configuration was specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     @Override
     public void parse(final String systemId) throws IOException, SAXException {
@@ -229,8 +229,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Parses the configuration object and generates SAX events. This is the main processing method.
      *
-     * @throws IOException if no configuration has been specified
-     * @throws SAXException if an error occurs during parsing
+     * @throws IOException Thrown if no configuration has been specified
+     * @throws SAXException Thrown if an error occurs during parsing
      */
     protected void parseConfiguration() throws IOException, SAXException {
         if (getParsedConfiguration() == null) {
@@ -254,15 +254,15 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * {@code endElement()} methods and cares for exception handling. The remaining actions are left to this method that
      * must be implemented in a concrete sub class.
      *
-     * @throws IOException if an IO error occurs
-     * @throws SAXException if a SAX error occurs
+     * @throws IOException Thrown if an IO error occurs
+     * @throws SAXException Thrown if a SAX error occurs
      */
     protected abstract void processKeys() throws IOException, SAXException;
 
     /**
      * Sets the content handler. The object specified here will receive SAX events during parsing.
      *
-     * @param handler the content handler
+     * @param handler The content handler
      */
     @Override
     public void setContentHandler(final ContentHandler handler) {
@@ -272,7 +272,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the DTD handler. The passed value is ignored.
      *
-     * @param handler the handler to be set
+     * @param handler The handler to be set
      */
     @Override
     public void setDTDHandler(final DTDHandler handler) {
@@ -281,7 +281,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the entity resolver. The passed value is ignored.
      *
-     * @param resolver the entity resolver
+     * @param resolver The entity resolver
      */
     @Override
     public void setEntityResolver(final EntityResolver resolver) {
@@ -290,7 +290,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the error handler. The passed value is ignored.
      *
-     * @param handler the error handler
+     * @param handler The error handler
      */
     @Override
     public void setErrorHandler(final ErrorHandler handler) {
@@ -299,8 +299,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Dummy implementation of the interface method.
      *
-     * @param name the name of the feature to be set
-     * @param value the value of the feature
+     * @param name The name of the feature to be set
+     * @param value The value of the feature
      */
     @Override
     public void setFeature(final String name, final boolean value) {
@@ -310,8 +310,8 @@ public abstract class ConfigurationXMLReader implements XMLReader {
      * Dummy implementation of the interface method. No properties are supported, so a call of this method just has no
      * effect.
      *
-     * @param name the property name
-     * @param value the property value
+     * @param name The property name
+     * @param value The property value
      */
     @Override
     public void setProperty(final String name, final Object value) {
@@ -320,7 +320,7 @@ public abstract class ConfigurationXMLReader implements XMLReader {
     /**
      * Sets the name for the root element.
      *
-     * @param string the name for the root element.
+     * @param string The name for the root element.
      */
     public void setRootName(final String string) {
         rootName = string;

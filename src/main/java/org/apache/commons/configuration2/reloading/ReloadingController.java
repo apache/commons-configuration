@@ -69,7 +69,7 @@ public class ReloadingController implements EventSource {
      * Creates a new instance of {@code ReloadingController} and associates it with the given {@code ReloadingDetector}
      * object.
      *
-     * @param detect the {@code ReloadingDetector} (must not be <strong>null</strong>)
+     * @param detect The {@code ReloadingDetector} (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the detector is undefined
      */
     public ReloadingController(final ReloadingDetector detect) {
@@ -99,7 +99,7 @@ public class ReloadingController implements EventSource {
      * it then returns always <strong>true</strong>.
      *
      * @param data additional data for an event notification
-     * @return a flag whether a reload operation is necessary
+     * @return A flag whether a reload operation is necessary
      */
     public boolean checkForReloading(final Object data) {
         boolean sendEvent = false;
@@ -123,7 +123,7 @@ public class ReloadingController implements EventSource {
     /**
      * Gets the {@code ReloadingDetector} used by this controller.
      *
-     * @return the {@code ReloadingDetector}
+     * @return The {@code ReloadingDetector}
      */
     public ReloadingDetector getDetector() {
         return detector;
@@ -134,7 +134,7 @@ public class ReloadingController implements EventSource {
      * invocation of {@code checkForReloading()} has detected the necessity for a reload operation, but
      * {@code resetReloadingState()} has not been called yet. In this state no further reloading checks are possible.
      *
-     * @return a flag whether this controller is in reloading state
+     * @return A flag whether this controller is in reloading state
      */
     public synchronized boolean isInReloadingState() {
         return reloadingState;

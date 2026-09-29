@@ -41,8 +41,8 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
      * Gets the reference object associated with the specified node. If no reference data is associated with this node,
      * result is <strong>null</strong>.
      *
-     * @param node the node in question
-     * @return the reference object for this node or <strong>null</strong>
+     * @param node The node in question
+     * @return The reference object for this node or <strong>null</strong>
      */
     Object getReference(ImmutableNode node);
 
@@ -52,7 +52,7 @@ public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode> {
      * This is necessary for instance to free some resources. With this method all recorded reference objects can be
      * queried. They are typically returned in the order in which they have been removed.
      *
-     * @return a list with reference objects for nodes removed from the model
+     * @return A list with reference objects for nodes removed from the model
      */
     List<Object> removedReferences();
 }

@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorAware;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.xml.secure.SecureSAXParserFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -164,8 +165,8 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Escapes a property value before it is written to disk.
      *
-     * @param value the value to be escaped
-     * @return the escaped value
+     * @param value The value to be escaped
+     * @return The escaped value
      */
     private String escapeValue(final Object value) {
         final String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
@@ -175,7 +176,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Gets the header comment of this configuration.
      *
-     * @return the header comment
+     * @return The header comment
      */
     public String getHeader() {
         return header;
@@ -184,7 +185,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Initializes this object with a {@code FileLocator}. The locator is accessed during load and save operations.
      *
-     * @param locator the associated {@code FileLocator}
+     * @param locator The associated {@code FileLocator}
      */
     @Override
     public void initFileLocator(final FileLocator locator) {
@@ -221,7 +222,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
 
     @Override
     public void read(final Reader in) throws ConfigurationException {
-        final SAXParserFactory factory = SAXParserFactory.newInstance();
+        final SAXParserFactory factory = SecureSAXParserFactory.newInstance();
         factory.setNamespaceAware(false);
         factory.setValidating(true);
         try {
@@ -263,7 +264,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Sets the header comment of this configuration.
      *
-     * @param header the header comment
+     * @param header The header comment
      */
     public void setHeader(final String header) {
         this.header = header;
@@ -314,9 +315,9 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Writes a list property.
      *
-     * @param out the output stream
-     * @param key the key of the property
-     * @param values a list with all property values
+     * @param out The output stream
+     * @param key The key of the property
+     * @param values A list with all property values
      */
     private void writeProperty(final PrintWriter out, final String key, final List<?> values) {
         values.forEach(value -> writeProperty(out, key, value));
@@ -325,9 +326,9 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements Fil
     /**
      * Writes a property.
      *
-     * @param out the output stream
-     * @param key the key of the property
-     * @param value the value of the property
+     * @param out The output stream
+     * @param key The key of the property
+     * @param value The value of the property
      */
     private void writeProperty(final PrintWriter out, final String key, final Object value) {
         // escape the key

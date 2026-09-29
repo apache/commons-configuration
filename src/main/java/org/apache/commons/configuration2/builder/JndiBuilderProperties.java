@@ -30,7 +30,7 @@ import javax.naming.Context;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  * @since 2.0
  */
 public interface JndiBuilderProperties<T> {
@@ -38,16 +38,16 @@ public interface JndiBuilderProperties<T> {
     /**
      * Sets the JNDI context to be used by the JNDI configuration.
      *
-     * @param ctx the JNDI {@code Context}
-     * @return a reference to this object for method chaining
+     * @param ctx The JNDI {@code Context}
+     * @return A reference to this object for method chaining
      */
     T setContext(Context ctx);
 
     /**
      * Sets the prefix in the JNDI tree. When creating the root JNDI context this prefix is taken into account.
      *
-     * @param p the prefix
-     * @return a reference to this object for method chaining
+     * @param p The prefix
+     * @return A reference to this object for method chaining
      */
     T setPrefix(String p);
 }

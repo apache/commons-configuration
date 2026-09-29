@@ -275,9 +275,9 @@ public class TestPropertiesConfiguration {
     /**
      * Helper method for loading a configuration from a given file.
      *
-     * @param pc the configuration to be loaded
-     * @param fileName the file name
-     * @return the file handler associated with the configuration
+     * @param pc The configuration to be loaded
+     * @param fileName The file name
+     * @return The file handler associated with the configuration
      * @throws ConfigurationException if an error occurs
      */
     private static FileHandler load(final PropertiesConfiguration pc, final String fileName) throws ConfigurationException {
@@ -297,7 +297,7 @@ public class TestPropertiesConfiguration {
     /**
      * Helper method for testing the content of a list with elements that contain backslashes.
      *
-     * @param key the key
+     * @param key The key
      */
     private void checkBackslashList(final String key) {
         final Object prop = conf.getProperty("test." + key);
@@ -309,7 +309,7 @@ public class TestPropertiesConfiguration {
     /**
      * Tests whether the data of a configuration that was copied into the test configuration is correctly saved.
      *
-     * @param copyConf the copied configuration
+     * @param copyConf The copied configuration
      * @throws ConfigurationException if an error occurs
      */
     private void checkCopiedConfig(final Configuration copyConf) throws ConfigurationException {
@@ -325,7 +325,7 @@ public class TestPropertiesConfiguration {
     /**
      * Checks for a property without a value.
      *
-     * @param key the key to be checked
+     * @param key The key to be checked
      */
     private void checkEmpty(final String key) {
         final String empty = conf.getString(key);
@@ -337,7 +337,7 @@ public class TestPropertiesConfiguration {
      * Helper method for testing a saved configuration. Reads in the file using a new instance and compares this instance
      * with the original one.
      *
-     * @return the newly created configuration instance
+     * @return The newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
     private PropertiesConfiguration checkSavedConfig() throws ConfigurationException {
@@ -376,7 +376,7 @@ public class TestPropertiesConfiguration {
     /**
      * Creates a configuration that can be used for testing copy operations.
      *
-     * @return the configuration to be copied
+     * @return The configuration to be copied
      */
     private Configuration setUpCopyConfig() {
         final int count = 25;
@@ -511,13 +511,16 @@ public class TestPropertiesConfiguration {
     void testCompress840ArrayListCycle(final int size) {
         final ArrayList<Object> object = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            object.add(i);
+            object.add(String.valueOf(i));
             object.add(object);
             object.add(new ArrayList<>(object));
         }
         final Collection<?> result = testCompress840(object);
         assertNotNull(result);
-        assertEquals(size, result.size());
+        // At each iteration, the previous flattened values and the new scalar appear twice:
+        // once in the original list and once in its copy. Therefore, f(n) = 2 * (f(n - 1) + 1),
+        // with f(0) = 0, which gives f(n) = 2^(n + 1) - 2.
+        assertEquals((1 << (size + 1)) - 2, result.size());
         object.add(object);
         testCompress840(object);
     }

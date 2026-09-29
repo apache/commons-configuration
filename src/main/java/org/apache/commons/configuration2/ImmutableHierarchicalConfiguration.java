@@ -42,7 +42,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * Gets the expression engine used by this configuration. This method will never return <strong>null</strong>; if no specific
      * expression engine was set, the default expression engine will be returned.
      *
-     * @return the current expression engine
+     * @return The current expression engine
      */
     ExpressionEngine getExpressionEngine();
 
@@ -50,8 +50,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * Gets the maximum defined index for the given key. This is useful if there are multiple values for this key. They
      * can then be addressed separately by specifying indices from 0 to the return value of this method.
      *
-     * @param key the key to be checked
-     * @return the maximum defined index for this key
+     * @param key The key to be checked
+     * @return The maximum defined index for this key
      */
     int getMaxIndex(String key);
 
@@ -61,7 +61,7 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * returned by this method is specific to a concrete implementation. For instance, an XML configuration might return the
      * name of the document element.
      *
-     * @return the name of the root element of this configuration
+     * @return The name of the root element of this configuration
      */
     String getRootElementName();
 
@@ -71,8 +71,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * queried without having to know their exact names. If the passed in key does not point to a single node, an empty list
      * is returned. This is also the result if the node referred to by the key does not have child elements.
      *
-     * @param key the key for selecting the desired parent node
-     * @return a collection with immutable configurations for all child nodes of the selected parent node
+     * @param key The key for selecting the desired parent node
+     * @return A collection with immutable configurations for all child nodes of the selected parent node
      */
     List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(String key);
 
@@ -81,8 +81,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * {@code immutableConfigurationAt(key,
      * <strong>false</strong>)}.
      *
-     * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
+     * @param key The key that selects the sub tree
+     * @return A hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key);
 
@@ -101,10 +101,10 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * subnode configurations and when they should be used.
      * </p>
      *
-     * @param key the key that selects the sub tree
-     * @param supportUpdates a flag whether the returned subnode configuration should be able to handle updates of its
+     * @param key The key that selects the sub tree
+     * @param supportUpdates A flag whether the returned subnode configuration should be able to handle updates of its
      *        parent
-     * @return a hierarchical configuration that contains this sub tree
+     * @return A hierarchical configuration that contains this sub tree
      */
     ImmutableHierarchicalConfiguration immutableConfigurationAt(String key, boolean supportUpdates);
 
@@ -129,8 +129,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      *     ...
      * </pre>
      *
-     * @param key the key for selecting the desired nodes
-     * @return a list with immutable hierarchical configuration objects; each configuration represents one of the nodes
+     * @param key The key for selecting the desired nodes
+     * @return A list with immutable hierarchical configuration objects; each configuration represents one of the nodes
      *         selected by the passed in key
      */
     List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(String key);

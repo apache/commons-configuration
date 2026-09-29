@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  * location is reset, too.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> extends BasicConfigurationBuilder<T> {
@@ -59,8 +59,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Gets the default encoding for the specified configuration class. If an encoding has been set for the specified
      * class (or one of its super classes), it is returned. Otherwise, result is <strong>null</strong>.
      *
-     * @param configClass the configuration class in question
-     * @return the default encoding for this class (may be <strong>null</strong>)
+     * @param configClass The configuration class in question
+     * @return The default encoding for this class (may be <strong>null</strong>)
      */
     public static String getDefaultEncoding(final Class<?> configClass) {
         String enc = DEFAULT_ENCODINGS.get(configClass);
@@ -88,7 +88,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     /**
      * Creates a map with default encodings for configuration classes and populates it with default entries.
      *
-     * @return the map with default encodings
+     * @return The map with default encodings
      */
     private static Map<Class<?>, String> initializeDefaultEncodings() {
         final Map<Class<?>, String> enc = new ConcurrentHashMap<>();
@@ -103,8 +103,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * encoding passed here not only applies to the specified class but also to its sub classes. If the encoding is
      * <strong>null</strong>, it is removed.
      *
-     * @param configClass the name of the configuration class (must not be <strong>null</strong>)
-     * @param encoding the default encoding for this class
+     * @param configClass The name of the configuration class (must not be <strong>null</strong>)
+     * @param encoding The default encoding for this class
      * @throws IllegalArgumentException if the class is <strong>null</strong>
      */
     public static void setDefaultEncoding(final Class<?> configClass, final String encoding) {
@@ -129,9 +129,14 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
     private boolean resetParameters;
 
     /**
+     * Private lock for synchronizing access.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
+     * @param resCls The result class (must not be <strong>null</strong>
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls) {
@@ -142,8 +147,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class
      * and sets initialization parameters.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params) {
@@ -154,9 +159,9 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * Creates a new instance of {@code FileBasedConfigurationBuilder} which produces result objects of the specified class
      * and sets initialization parameters and the <em>allowFailOnInit</em> flag.
      *
-     * @param resCls the result class (must not be <strong>null</strong>
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @param resCls The result class (must not be <strong>null</strong>
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit The <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public FileBasedConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
@@ -177,7 +182,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * is found in this builder's parameters, a new one is created now and stored. This makes it possible to change the
      * location of the associated file even if no parameters object was provided.
      *
-     * @return the {@code FileHandler} from initialization parameters
+     * @return The {@code FileHandler} from initialization parameters
      */
     private FileHandler fetchFileHandlerFromParameters() {
         FileBasedBuilderParametersImpl fileParams = FileBasedBuilderParametersImpl.fromParameters(getParameters(), false);
@@ -193,17 +198,19 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * {@code FileHandler} can be used to save it. Otherwise, the {@code FileHandler} from the initialization parameters is
      * returned (which is not associated with a {@code FileBased} object). Result is never <strong>null</strong>.
      *
-     * @return the {@code FileHandler} associated with this builder
+     * @return The {@code FileHandler} associated with this builder
      */
-    public synchronized FileHandler getFileHandler() {
-        return currentFileHandler != null ? currentFileHandler : fetchFileHandlerFromParameters();
+    public FileHandler getFileHandler() {
+        synchronized (lock) {
+            return currentFileHandler != null ? currentFileHandler : fetchFileHandlerFromParameters();
+        }
     }
 
     /**
      * Initializes the encoding of the specified file handler. If already an encoding is set, it is used. Otherwise, the
      * default encoding for the result configuration class is obtained and set.
      *
-     * @param handler the handler to be initialized
+     * @param handler The handler to be initialized
      */
     private void initEncoding(final FileHandler handler) {
         if (StringUtils.isEmpty(handler.getEncoding())) {
@@ -219,7 +226,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * created, too, and associated with the result object. This new handler is passed to this method. If a location is
      * defined, the result object is loaded from this location. Note: This method is called from a synchronized block.
      *
-     * @param handler the new current {@code FileHandler}
+     * @param handler The new current {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */
     protected void initFileHandler(final FileHandler handler) throws ConfigurationException {
@@ -263,8 +270,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @return <strong>true</strong> if auto save is enabled, <strong>false</strong> otherwise
      */
-    public synchronized boolean isAutoSave() {
-        return autoSaveListener != null;
+    public boolean isAutoSave() {
+        synchronized (lock) {
+            return autoSaveListener != null;
+        }
     }
 
     /**
@@ -295,11 +304,13 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      *
      * @param enabled <strong>true</strong> if auto save mode is to be enabled, <strong>false</strong> otherwise
      */
-    public synchronized void setAutoSave(final boolean enabled) {
-        if (enabled) {
-            installAutoSaveListener();
-        } else {
-            removeAutoSaveListener();
+    public void setAutoSave(final boolean enabled) {
+        synchronized (lock) {
+            if (enabled) {
+                installAutoSaveListener();
+            } else {
+                removeAutoSaveListener();
+            }
         }
     }
 
@@ -309,9 +320,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration> ext
      * than reusing the existing one.
      */
     @Override
-    public synchronized BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
-        super.setParameters(params);
-        resetParameters = true;
-        return this;
+    public BasicConfigurationBuilder<T> setParameters(final Map<String, Object> params) {
+        synchronized (lock) {
+            super.setParameters(params);
+            resetParameters = true;
+            return this;
+        }
     }
 }

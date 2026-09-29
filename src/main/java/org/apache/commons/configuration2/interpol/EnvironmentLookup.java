@@ -49,8 +49,8 @@ public class EnvironmentLookup implements Lookup {
     /**
      * Performs a lookup for the specified variable. This implementation directly delegates to a {@code System.getenv()}.
      *
-     * @param key the key to lookup
-     * @return the value of this key or <strong>null</strong> if it cannot be resolved
+     * @param key The key to lookup
+     * @return The value of this key or <strong>null</strong> if it cannot be resolved
      */
     @Override
     public String lookup(final String key) {

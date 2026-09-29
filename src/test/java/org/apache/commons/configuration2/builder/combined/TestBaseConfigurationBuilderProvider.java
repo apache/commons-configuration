@@ -50,8 +50,8 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Helper method for testing whether the builder's allowFailOnInit flag is set correctly.
      *
-     * @param expFlag the expected flag value
-     * @param props the properties to set in the configuration for the declaration
+     * @param expFlag The expected flag value
+     * @param props The properties to set in the configuration for the declaration
      * @throws ConfigurationException if an error occurs
      */
     private void checkAllowFailOnInit(final boolean expFlag, final String... props) throws ConfigurationException {
@@ -68,8 +68,8 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Helper method for setting up a builder and checking properties of the created configuration object.
      *
-     * @param reload a flag whether reloading is supported
-     * @return the builder created by the provider
+     * @param reload A flag whether reloading is supported
+     * @return The builder created by the provider
      * @throws ConfigurationException if an error occurs
      */
     private ConfigurationBuilder<? extends Configuration> checkBuilder(final boolean reload) throws ConfigurationException {
@@ -89,8 +89,8 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Creates a configuration declaration based on the given configuration.
      *
-     * @param declConfig the configuration for the declaration
-     * @return the declaration
+     * @param declConfig The configuration for the declaration
+     * @return The declaration
      */
     private ConfigurationDeclaration createDeclaration(final HierarchicalConfiguration<?> declConfig) {
         final CombinedConfigurationBuilder parentBuilder = new CombinedConfigurationBuilder() {
@@ -114,7 +114,7 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Creates a default test instance.
      *
-     * @return the test instance
+     * @return The test instance
      */
     private BaseConfigurationBuilderProvider createProvider() {
         return new BaseConfigurationBuilderProvider(FileBasedConfigurationBuilder.class.getName(), ReloadingFileBasedConfigurationBuilder.class.getName(),
@@ -124,8 +124,8 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Creates a configuration object describing a configuration source.
      *
-     * @param reload a flag whether reload operations are supported
-     * @return the configuration object
+     * @param reload A flag whether reload operations are supported
+     * @return The configuration object
      */
     private HierarchicalConfiguration<?> setUpConfig(final boolean reload) {
         final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();

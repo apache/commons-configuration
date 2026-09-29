@@ -36,7 +36,7 @@ import java.util.Map;
  * update based on a passed in instance.
  * </p>
  *
- * @param <T> the type of nodes involved in this update operation
+ * @param <T> The type of nodes involved in this update operation
  * @since 2.0
  */
 public class NodeUpdateData<T> {
@@ -44,9 +44,9 @@ public class NodeUpdateData<T> {
     /**
      * Creates an unmodifiable defensive copy of the passed in collection with may be null.
      *
-     * @param col the collection to be copied
-     * @param <T> the element type of the collection
-     * @return the unmodifiable copy
+     * @param col The collection to be copied
+     * @param <T> The element type of the collection
+     * @return The unmodifiable copy
      */
     private static <T> Collection<T> copyCollection(final Collection<? extends T> col) {
         if (col == null) {
@@ -58,10 +58,10 @@ public class NodeUpdateData<T> {
     /**
      * Creates an unmodifiable defensive copy of the passed in map which may be null.
      *
-     * @param map the map to be copied
-     * @param <K> the type of the keys involved
-     * @param <V> the type of the values involved
-     * @return the unmodifiable copy
+     * @param map The map to be copied
+     * @param <K> The type of the keys involved
+     * @param <V> The type of the values involved
+     * @return The unmodifiable copy
      */
     private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map) {
         if (map == null) {
@@ -86,10 +86,10 @@ public class NodeUpdateData<T> {
      * Creates a new instance of {@code NodeUpdateData} and initializes all its properties. All passed in collections are
      * optional and can be <strong>null</strong>.
      *
-     * @param changedValues the map defining the changed values
-     * @param newValues the collection with the new values
-     * @param removedNodes the collection with the nodes to be removed
-     * @param key the key of the update operation
+     * @param changedValues The map defining the changed values
+     * @param newValues The collection with the new values
+     * @param removedNodes The collection with the nodes to be removed
+     * @param key The key of the update operation
      */
     public NodeUpdateData(final Map<QueryResult<T>, Object> changedValues, final Collection<Object> newValues, final Collection<QueryResult<T>> removedNodes,
         final String key) {
@@ -103,7 +103,7 @@ public class NodeUpdateData<T> {
      * Gets an unmodifiable map with the values to be changed. The keys of the map are the query results for the nodes
      * affected, the values are the new values to be assigned to these nodes.
      *
-     * @return the map with values to be changed
+     * @return The map with values to be changed
      */
     public Map<QueryResult<T>, Object> getChangedValues() {
         return changedValues;
@@ -112,7 +112,7 @@ public class NodeUpdateData<T> {
     /**
      * Gets the key for this update operation.
      *
-     * @return the key for this operation
+     * @return The key for this operation
      */
     public String getKey() {
         return key;
@@ -122,7 +122,7 @@ public class NodeUpdateData<T> {
      * Gets a collection with the values to be newly added. For these values new nodes have to be created and added under
      * the key stored in this object.
      *
-     * @return the collection with new values
+     * @return The collection with new values
      */
     public Collection<Object> getNewValues() {
         return newValues;
@@ -132,7 +132,7 @@ public class NodeUpdateData<T> {
      * Adds a collection with the nodes to be removed. These nodes are no longer needed and have to be removed from the node
      * model processing this request.
      *
-     * @return the collection with nodes to be removed
+     * @return The collection with nodes to be removed
      */
     public Collection<QueryResult<T>> getRemovedNodes() {
         return removedNodes;

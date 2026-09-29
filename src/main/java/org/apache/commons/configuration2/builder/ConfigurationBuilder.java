@@ -36,7 +36,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * configurations can be created.
  * </p>
  *
- * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by this builder
+ * @param <T> The concrete type of the {@code ImmutableConfiguration} class produced by this builder
  * @since 2.0
  */
 public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource {
@@ -45,7 +45,7 @@ public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends 
      * Gets the configuration provided by this builder. An implementation has to perform all necessary steps for creating
      * and initializing a {@code ImmutableConfiguration} object.
      *
-     * @return the configuration
+     * @return The configuration
      * @throws ConfigurationException if an error occurs
      */
     T getConfiguration() throws ConfigurationException;

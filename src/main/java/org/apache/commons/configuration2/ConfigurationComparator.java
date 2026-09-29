@@ -27,8 +27,8 @@ public interface ConfigurationComparator {
     /**
      * Compare two configuration objects.
      *
-     * @param a the first configuration
-     * @param b the second configuration
+     * @param a The first configuration
+     * @param b The second configuration
      * @return true if the two configurations are identical according to the implemented rules
      */
     boolean compare(Configuration a, Configuration b);

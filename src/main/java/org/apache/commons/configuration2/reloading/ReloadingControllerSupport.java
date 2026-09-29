@@ -33,7 +33,7 @@ public interface ReloadingControllerSupport {
     /**
      * Gets the {@code ReloadingController} associated with this object.
      *
-     * @return the associated {@code ReloadingController}
+     * @return The associated {@code ReloadingController}
      */
     ReloadingController getReloadingController();
 }

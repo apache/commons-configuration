@@ -38,7 +38,7 @@ abstract class AbstractImmutableNodeHandler implements NodeHandler<ImmutableNode
     /**
      * Checks if the passed in node is defined. Result is <strong>true</strong> if the node contains any data.
      *
-     * @param node the node in question
+     * @param node The node in question
      * @return <strong>true</strong> if the node is defined, <strong>false</strong> otherwise
      */
     static boolean checkIfNodeDefined(final ImmutableNode node) {

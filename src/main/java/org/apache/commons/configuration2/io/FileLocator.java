@@ -79,7 +79,7 @@ public final class FileLocator {
          * Creates a new instance of {@code FileLocatorBuilder} and initializes the builder's properties from the passed in
          * {@code FileLocator} object.
          *
-         * @param src the source {@code FileLocator} (may be <strong>null</strong>)
+         * @param src The source {@code FileLocator} (may be <strong>null</strong>)
          */
         FileLocatorBuilder(final FileLocator src) {
             if (src != null) {
@@ -90,8 +90,8 @@ public final class FileLocator {
         /**
          * Specifies the base path of the new {@code FileLocator}.
          *
-         * @param path the base path
-         * @return a reference to this builder for method chaining
+         * @param path The base path
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder basePath(final String path) {
             basePath = path;
@@ -101,7 +101,7 @@ public final class FileLocator {
         /**
          * Creates a new immutable {@code FileLocatorImpl} object based on the properties set so far for this builder.
          *
-         * @return the newly created {@code FileLocator} object, never null.
+         * @return The newly created {@code FileLocator} object, never null.
          */
         public FileLocator create() {
             return new FileLocator(this);
@@ -110,8 +110,8 @@ public final class FileLocator {
         /**
          * Specifies the encoding of the new {@code FileLocator}.
          *
-         * @param enc the encoding
-         * @return a reference to this builder for method chaining
+         * @param enc The encoding
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder encoding(final String enc) {
             encoding = enc;
@@ -121,8 +121,8 @@ public final class FileLocator {
         /**
          * Specifies the file name of the new {@code FileLocator}.
          *
-         * @param name the file name
-         * @return a reference to this builder for method chaining
+         * @param name The file name
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileName(final String name) {
             fileName = name;
@@ -132,8 +132,8 @@ public final class FileLocator {
         /**
          * Specifies the {@code FileSystem} of the new {@code FileLocator}.
          *
-         * @param fs the {@code FileSystem}
-         * @return a reference to this builder for method chaining
+         * @param fs The {@code FileSystem}
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder fileSystem(final FileSystem fs) {
             fileSystem = fs;
@@ -143,7 +143,7 @@ public final class FileLocator {
         /**
          * Initializes the properties of this builder from the passed in locator object.
          *
-         * @param src the source {@code FileLocator}
+         * @param src The source {@code FileLocator}
          */
         private void initBuilder(final FileLocator src) {
             basePath = src.getBasePath();
@@ -158,8 +158,8 @@ public final class FileLocator {
         /**
          * Specifies the {@code FileLocationStrategy} to be used when the referenced file is to be located.
          *
-         * @param strategy the {@code FileLocationStrategy}
-         * @return a reference to this builder for method chaining
+         * @param strategy The {@code FileLocationStrategy}
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy) {
             locationStrategy = strategy;
@@ -169,8 +169,8 @@ public final class FileLocator {
         /**
          * Specifies the source URL of the new {@code FileLocator}.
          *
-         * @param url the source URL
-         * @return a reference to this builder for method chaining
+         * @param url The source URL
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder sourceURL(final URL url) {
             this.sourceURL = url;
@@ -180,8 +180,8 @@ public final class FileLocator {
         /**
          * Specifies the source URL connection options of the new {@code FileLocator}.
          *
-         * @param urlConnectionOptions the source URL connection options.
-         * @return a reference to this builder for method chaining
+         * @param urlConnectionOptions The source URL connection options.
+         * @return A reference to this builder for method chaining
          */
         public FileLocatorBuilder urlConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
             this.urlConnectionOptions = urlConnectionOptions;
@@ -214,7 +214,7 @@ public final class FileLocator {
     /**
      * Creates a new instance of {@code FileLocatorImpl} and initializes it from the given builder instance
      *
-     * @param builder the builder
+     * @param builder The builder
      */
     public FileLocator(final FileLocatorBuilder builder) {
         fileName = builder.fileName;
@@ -230,8 +230,8 @@ public final class FileLocator {
      * Compares this object with another one. Two instances of {@code FileLocatorImpl} are considered equal if all of their
      * properties are equal.
      *
-     * @param obj the object to compare to
-     * @return a flag whether these objects are equal
+     * @param obj The object to compare to
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -250,7 +250,7 @@ public final class FileLocator {
     /**
      * Gets the base path stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the base path
+     * @return The base path
      */
     public String getBasePath() {
         return basePath;
@@ -259,7 +259,7 @@ public final class FileLocator {
     /**
      * Gets the encoding stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the encoding
+     * @return The encoding
      */
     public String getEncoding() {
         return encoding;
@@ -268,7 +268,7 @@ public final class FileLocator {
     /**
      * Gets the file name stored in this locator or <strong>null</strong> if it is undefined.
      *
-     * @return the file name
+     * @return The file name
      */
     public String getFileName() {
         return fileName;
@@ -278,7 +278,7 @@ public final class FileLocator {
      * Gets the {@code FileSystem} to be used for accessing the file referenced by this locator or <strong>null</strong> if it is
      * undefined.
      *
-     * @return the {@code FileSystem}
+     * @return The {@code FileSystem}
      */
     public FileSystem getFileSystem() {
         return fileSystem;
@@ -289,7 +289,7 @@ public final class FileLocator {
      * {@code FileLocationStrategy} has been set, result is <strong>null</strong>. This means that the default strategy should be
      * used.
      *
-     * @return the {@code FileLocationStrategy} to be used
+     * @return The {@code FileLocationStrategy} to be used
      */
     public FileLocationStrategy getLocationStrategy() {
         return locationStrategy;
@@ -298,7 +298,7 @@ public final class FileLocator {
     /**
      * Gets the URL pointing to the referenced source file or <strong>null</strong> if it is undefined.
      *
-     * @return the source URL
+     * @return The source URL
      */
     public URL getSourceURL() {
         return sourceURL;
@@ -307,7 +307,7 @@ public final class FileLocator {
     /**
      * Gets the URLConnectionOptions
      *
-     * @return the URLConnectionOptions
+     * @return The URLConnectionOptions
      */
     public URLConnectionOptions getURLConnectionOptions() {
         return urlConnectionOptions;
@@ -316,7 +316,7 @@ public final class FileLocator {
     /**
      * Returns a hash code for this object.
      *
-     * @return a hash code for this object
+     * @return A hash code for this object
      */
     @Override
     public int hashCode() {

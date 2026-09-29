@@ -61,7 +61,7 @@ public class TestDefaultParametersManager {
     /**
      * Checks whether the expected default values have been set on a parameters object.
      *
-     * @param map the map with parameters
+     * @param map The map with parameters
      */
     private static void checkDefaultValues(final Map<String, Object> map) {
         assertEquals(listHandler, map.get("listDelimiterHandler"));
@@ -73,7 +73,7 @@ public class TestDefaultParametersManager {
     /**
      * Checks that no default values have been set on a parameters object.
      *
-     * @param map the map with parameters
+     * @param map The map with parameters
      */
     private static void checkNoDefaultValues(final Map<String, Object> map) {
         assertFalse(map.containsKey("throwExceptionOnMissing"));

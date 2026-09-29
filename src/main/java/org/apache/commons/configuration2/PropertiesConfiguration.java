@@ -263,8 +263,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@code PropertiesConfiguration} is loaded. The reader returned by this method is then used for parsing the properties
          * file.
          *
-         * @param in the underlying reader (of the properties file)
-         * @return the {@code PropertiesReader} for loading the configuration
+         * @param in The underlying reader (of the properties file)
+         * @return The {@code PropertiesReader} for loading the configuration
          */
         PropertiesReader createPropertiesReader(Reader in);
 
@@ -273,9 +273,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@code PropertiesConfiguration} is saved. The writer returned by this method is then used for writing the properties
          * file.
          *
-         * @param out the underlying writer (to the properties file)
-         * @param handler the list delimiter delimiter for list parsing
-         * @return the {@code PropertiesWriter} for saving the configuration
+         * @param out The underlying writer (to the properties file)
+         * @param handler The list delimiter delimiter for list parsing
+         * @return The {@code PropertiesWriter} for saving the configuration
          */
         PropertiesWriter createPropertiesWriter(Writer out, ListDelimiterHandler handler);
     }
@@ -456,8 +456,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Creates a new instance of {@code JupPropertiesWriter}.
          *
-         * @param writer a Writer object providing the underlying stream
-         * @param delHandler the delimiter handler for dealing with properties with multiple values
+         * @param writer A Writer object providing the underlying stream
+         * @param delHandler The delimiter handler for dealing with properties with multiple values
          * @param escapeUnicode whether Unicode characters should be escaped using Unicode escapes
          */
         public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final boolean escapeUnicode) {
@@ -507,8 +507,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Checks if the passed in line should be combined with the following. This is true, if the line ends with an odd number
          * of backslashes.
          *
-         * @param line the line
-         * @return a flag if the lines should be combined
+         * @param line The line
+         * @return A flag if the lines should be combined
          */
         static boolean checkCombineLines(final String line) {
             return countTrailingBS(line) % 2 != 0;
@@ -517,9 +517,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Parse a property line and return the key, the value, and the separator in an array.
          *
-         * @param line the line to parse
+         * @param line The line to parse
          * @param trimValue flag whether the value is to be trimmed
-         * @return an array with the property's key, value, and separator
+         * @return An array with the property's key, value, and separator
          */
         static String[] doParseProperty(final String line, final boolean trimValue) {
             final Matcher matcher = PROPERTY_PATTERN.matcher(line);
@@ -566,7 +566,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the comment lines that have been read for the last property.
          *
-         * @return the comment lines for the last property returned by {@code readProperty()}
+         * @return The comment lines for the last property returned by {@code readProperty()}
          * @since 1.3
          */
         public List<String> getCommentLines() {
@@ -577,7 +577,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the name of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <strong>true</strong>.
          *
-         * @return the name of the last read property
+         * @return The name of the last read property
          * @since 1.3
          */
         public String getPropertyName() {
@@ -588,7 +588,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the separator that was used for the last read property. The separator can be stored so that it can later be
          * restored when saving the configuration.
          *
-         * @return the separator for the last read property
+         * @return The separator for the last read property
          * @since 1.7
          */
         public String getPropertySeparator() {
@@ -599,7 +599,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the value of the last read property. This method can be called after {@link #nextProperty()} was invoked and
          * its return value was <strong>true</strong>.
          *
-         * @return the value of the last read property
+         * @return The value of the last read property
          * @since 1.3
          */
         public String getPropertyValue() {
@@ -610,7 +610,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Sets the name of the current property. This method can be called by {@code parseProperty()} for storing the results
          * of the parse operation. It also ensures that the property key is correctly escaped.
          *
-         * @param name the name of the current property
+         * @param name The name of the current property
          * @since 1.7
          */
         protected void initPropertyName(final String name) {
@@ -622,7 +622,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * associated layout object to keep track of the property separators. When saving the configuration the separators can
          * be restored.
          *
-         * @param value the separator used for the current property
+         * @param value The separator used for the current property
          * @since 1.7
          */
         protected void initPropertySeparator(final String value) {
@@ -633,7 +633,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Sets the value of the current property. This method can be called by {@code parseProperty()} for storing the results
          * of the parse operation. It also ensures that the property value is correctly escaped.
          *
-         * @param value the value of the current property
+         * @param value The value of the current property
          * @since 1.7
          */
         protected void initPropertyValue(final String value) {
@@ -645,8 +645,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * can be obtained using the provided getter methods. The return value indicates whether EOF was reached (<strong>false</strong>)
          * or whether further properties are available (<strong>true</strong>).
          *
-         * @return a flag if further properties are available
-         * @throws IOException if an error occurs
+         * @return A flag if further properties are available
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public boolean nextProperty() throws IOException {
@@ -666,7 +666,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * file. Its task is to split the passed in line into the property key and its value. The results of the parse operation
          * can be stored by calling the {@code initPropertyXXX()} methods.
          *
-         * @param line the line read from the properties file
+         * @param line The line read from the properties file
          * @since 1.7
          */
         protected void parseProperty(final String line) {
@@ -715,8 +715,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Performs unescaping on the given property name.
          *
-         * @param name the property name
-         * @return the unescaped property name
+         * @param name The property name
+         * @return The unescaped property name
          * @since 2.4
          */
         protected String unescapePropertyName(final String name) {
@@ -726,8 +726,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Performs unescaping on the given property value.
          *
-         * @param value the property value
-         * @return the unescaped property value
+         * @param value The property value
+         * @return The unescaped property value
          * @since 2.4
          */
         protected String unescapePropertyValue(final String value) {
@@ -786,8 +786,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Creates a new instance of {@code PropertiesWriter}.
          *
-         * @param writer a Writer object providing the underlying stream
-         * @param delHandler the delimiter handler for dealing with properties with multiple values
+         * @param writer A Writer object providing the underlying stream
+         * @param delHandler The delimiter handler for dealing with properties with multiple values
          */
         public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler) {
             this(writer, delHandler, DEFAULT_TRANSFORMER);
@@ -796,9 +796,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Creates a new instance of {@code PropertiesWriter}.
          *
-         * @param writer a Writer object providing the underlying stream
-         * @param delHandler the delimiter handler for dealing with properties with multiple values
-         * @param valueTransformer the value transformer used to escape property values
+         * @param writer A Writer object providing the underlying stream
+         * @param delHandler The delimiter handler for dealing with properties with multiple values
+         * @param valueTransformer The value transformer used to escape property values
          */
         public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final ValueTransformer valueTransformer) {
             super(writer);
@@ -810,8 +810,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Escapes the key of a property before it gets written to file. This method is called on saving a configuration for
          * each property key. It ensures that separator characters contained in the key are escaped.
          *
-         * @param key the key
-         * @return the escaped key
+         * @param key The key
+         * @return The escaped key
          * @since 2.0
          */
         protected String escapeKey(final String key) {
@@ -837,9 +837,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@code getCurrentSeparator()} is used, which was set by the associated layout object. Derived classes may implement a
          * different strategy for defining the separator.
          *
-         * @param key the property key
-         * @param value the value
-         * @return the separator to be used
+         * @param key The property key
+         * @param value The value
+         * @return The separator to be used
          * @since 1.7
          */
         protected String fetchSeparator(final String key, final Object value) {
@@ -849,7 +849,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the current property separator.
          *
-         * @return the current property separator
+         * @return The current property separator
          * @since 1.7
          */
         public String getCurrentSeparator() {
@@ -860,7 +860,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Gets the delimiter handler for properties with multiple values. This object is used to escape property values so
          * that they can be read in correctly the next time they are loaded.
          *
-         * @return the delimiter handler for properties with multiple values
+         * @return The delimiter handler for properties with multiple values
          * @since 2.0
          */
         public ListDelimiterHandler getDelimiterHandler() {
@@ -870,7 +870,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the global property separator.
          *
-         * @return the global property separator
+         * @return The global property separator
          * @since 1.7
          */
         public String getGlobalSeparator() {
@@ -880,7 +880,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Gets the line separator.
          *
-         * @return the line separator
+         * @return The line separator
          * @since 1.7
          */
         public String getLineSeparator() {
@@ -890,7 +890,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Sets the current property separator. This separator is used when writing the next property.
          *
-         * @param currentSeparator the current property separator
+         * @param currentSeparator The current property separator
          * @since 1.7
          */
         public void setCurrentSeparator(final String currentSeparator) {
@@ -902,7 +902,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * {@link PropertiesConfigurationLayout}. It defines the separator to be used for all properties. If it is undefined,
          * the current separator is used.
          *
-         * @param globalSeparator the global property separator
+         * @param globalSeparator The global property separator
          * @since 1.7
          */
         public void setGlobalSeparator(final String globalSeparator) {
@@ -913,7 +913,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Sets the line separator. Each line written by this writer is terminated with this separator. If not set, the
          * platform-specific line separator is used.
          *
-         * @param lineSeparator the line separator to be used
+         * @param lineSeparator The line separator to be used
          * @since 1.7
          */
         public void setLineSeparator(final String lineSeparator) {
@@ -923,8 +923,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Writes a comment.
          *
-         * @param comment the comment to write
-         * @throws IOException if an I/O error occurs.
+         * @param comment The comment to write
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeComment(final String comment) throws IOException {
             writeln("# " + comment);
@@ -933,8 +933,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Helper method for writing a line with the platform specific line ending.
          *
-         * @param s the content of the line (may be <strong>null</strong>)
-         * @throws IOException if an error occurs
+         * @param s The content of the line (may be <strong>null</strong>)
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public void writeln(final String s) throws IOException {
@@ -949,7 +949,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          *
          * @param key The key of the property
          * @param values The array of values of the property
-         * @throws IOException if an I/O error occurs.
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeProperty(final String key, final List<?> values) throws IOException {
             for (final Object value : values) {
@@ -960,9 +960,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
         /**
          * Writes a property.
          *
-         * @param key the key of the property
-         * @param value the value of the property
-         * @throws IOException if an I/O error occurs.
+         * @param key The key of the property
+         * @param value The value of the property
+         * @throws IOException Thrown if an I/O error occurs.
          */
         public void writeProperty(final String key, final Object value) throws IOException {
             writeProperty(key, value, false);
@@ -972,10 +972,10 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
          * Writes the given property and its value. If the value happens to be a list, the {@code forceSingleLine} flag is
          * evaluated. If it is set, all values are written on a single line using the list delimiter as separator.
          *
-         * @param key the property key
-         * @param value the property value
-         * @param forceSingleLine the &quot;force single line&quot; flag
-         * @throws IOException if an error occurs
+         * @param key The property key
+         * @param value The property value
+         * @param forceSingleLine The &quot;force single line&quot; flag
+         * @throws IOException Thrown if an error occurs
          * @since 1.3
          */
         public void writeProperty(final String key, final Object value, final boolean forceSingleLine) throws IOException {
@@ -1072,8 +1072,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Returns the number of trailing backslashes. This is sometimes needed for the correct handling of escape characters.
      *
-     * @param line the string to investigate
-     * @return the number of trailing backslashes
+     * @param line The string to investigate
+     * @return The number of trailing backslashes
      */
     private static int countTrailingBS(final String line) {
         int bsCount = 0;
@@ -1109,8 +1109,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Tests whether a line is a comment, i.e. whether it starts with a comment character.
      *
-     * @param line the line
-     * @return a flag if this is a comment line
+     * @param line The line
+     * @return A flag if this is a comment line
      * @since 1.3
      */
     static boolean isCommentLine(final String line) {
@@ -1124,8 +1124,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * file an escape character ('\') is detected. If the character following the escape character is recognized as a
      * special character which is escaped per default in a Java properties file, it has to be unescaped.
      *
-     * @param ch the character in question
-     * @return a flag whether this character has to be unescaped
+     * @param ch The character in question
+     * @return A flag whether this character has to be unescaped
      */
     private static boolean needsUnescape(final char ch) {
         return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
@@ -1160,8 +1160,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * This is a slightly modified version of the StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
      * drop escaped separators (i.e '\,').
      *
-     * @param str the {@code String} to unescape, may be null
-     * @return the processed string
+     * @param str The {@code String} to unescape, may be null
+     * @return The processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(final String str) {
@@ -1176,10 +1176,10 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * {@link java.util.Properties} is used (see {@link JupIOFactory}).
      * </p>
      *
-     * @param str the {@code String} to unescape, may be null
+     * @param str The {@code String} to unescape, may be null
      * @param jupCompatible whether unescaping is compatible with {@link java.util.Properties}; otherwise the classic
      *        behavior is used
-     * @return the processed string
+     * @return The processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(final String str, final boolean jupCompatible) {
@@ -1290,7 +1290,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Creates a copy of this object.
      *
-     * @return the copy
+     * @return The copy
      */
     @Override
     public Object clone() {
@@ -1304,7 +1304,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Creates a standard layout object. This configuration is initialized with such a standard layout.
      *
-     * @return the newly created layout object
+     * @return The newly created layout object
      */
     private PropertiesConfigurationLayout createLayout() {
         return new PropertiesConfigurationLayout();
@@ -1313,7 +1313,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the footer comment. This is a comment at the very end of the file.
      *
-     * @return the footer comment
+     * @return The footer comment
      * @since 2.0
      */
     public String getFooter() {
@@ -1323,7 +1323,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the comment header.
      *
-     * @return the comment header
+     * @return The comment header
      * @since 1.1
      */
     public String getHeader() {
@@ -1333,7 +1333,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the current include listener, never null.
      *
-     * @return the current include listener, never null.
+     * @return The current include listener, never null.
      * @since 2.6
      */
     public ConfigurationConsumer<ConfigurationException> getIncludeListener() {
@@ -1343,7 +1343,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the {@code IOFactory} to be used for creating readers and writers when loading or saving this configuration.
      *
-     * @return the {@code IOFactory}
+     * @return The {@code IOFactory}
      * @since 1.7
      */
     public IOFactory getIOFactory() {
@@ -1353,7 +1353,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the associated layout object.
      *
-     * @return the associated layout object
+     * @return The associated layout object
      * @since 1.3
      */
     public PropertiesConfigurationLayout getLayout() {
@@ -1363,7 +1363,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Gets the file locator.
      *
-     * @return the file locator.
+     * @return The file locator.
      * @since 2.15.0
      */
     public FileLocator getLocator() {
@@ -1374,7 +1374,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * Sets the current {@code FileLocator} for a following IO operation. The {@code FileLocator} is needed to resolve
      * include files with relative file names.
      *
-     * @param locator the current {@code FileLocator}
+     * @param locator The current {@code FileLocator}
      * @since 2.0
      */
     @Override
@@ -1386,7 +1386,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * Installs a layout object. It has to be ensured that the layout is registered as change listener at this
      * configuration. If there is already a layout object installed, it has to be removed properly.
      *
-     * @param layout the layout object to be installed
+     * @param layout The layout object to be installed
      */
     private void installLayout(final PropertiesConfigurationLayout layout) {
         // only one layout must exist
@@ -1416,7 +1416,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * {@code include} property is encountered. It tries to resolve relative file names based on the current base path. If
      * this fails, a resolution based on the location of this properties file is tried.
      *
-     * @param fileName the name of the file to load
+     * @param fileName The name of the file to load
      * @param optional whether or not the {@code fileName} is optional
      * @param seenStack Stack of seen include URLs
      * @throws ConfigurationException if loading fails
@@ -1435,7 +1435,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                     url = locateIncludeFile(baseURL.toString(), fileName);
                 }
             }
-        } catch (ConfigurationDeniedException e) {
+        } catch (final ConfigurationDeniedException e) {
             getIncludeListener().accept(new ConfigurationException(e));
         }
         if (optional && url == null) {
@@ -1471,9 +1471,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Locates the URL of an include file using the specified (optional) base path and file name.
      *
-     * @param basePath the base path
-     * @param fileName the file name
-     * @return the URL of the include file or <strong>null</strong> if it cannot be resolved
+     * @param basePath The base path
+     * @param fileName The file name
+     * @return The URL of the include file or <strong>null</strong> if it cannot be resolved
      */
     private URL locateIncludeFile(final String basePath, final String fileName) {
         final FileLocator includeLocator = FileLocatorUtils.fileLocator(locator).sourceURL(null).basePath(basePath).fileName(fileName).create();
@@ -1487,10 +1487,10 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * whether the property should be treated as a normal property. If it is <strong>false</strong>, the layout object will ignore
      * this property.
      *
-     * @param key the property key
-     * @param value the property value
-     * @param seenStack the stack of seen include URLs
-     * @return a flag whether this is a normal property
+     * @param key The property key
+     * @param value The property value
+     * @param seenStack The stack of seen include URLs
+     * @return A flag whether this is a normal property
      * @throws ConfigurationException if an error occurs
      * @since 1.3
      */
@@ -1536,7 +1536,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Sets the footer comment. If set, this comment is written after all properties at the end of the file.
      *
-     * @param footer the footer comment
+     * @param footer The footer comment
      * @since 2.0
      */
     public void setFooter(final String footer) {
@@ -1546,7 +1546,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Sets the comment header.
      *
-     * @param header the header to use
+     * @param header The header to use
      * @since 1.1
      */
     public void setHeader(final String header) {
@@ -1556,7 +1556,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Sets the current include listener, may not be null.
      *
-     * @param includeListener the current include listener, may not be null.
+     * @param includeListener The current include listener, may not be null.
      * @throws IllegalArgumentException if the {@code includeListener} is null.
      * @since 2.6
      */
@@ -1584,7 +1584,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
      * you want to use a custom {@code IOFactory} for changing the {@code PropertiesReader}, you cannot load the
      * configuration data in the constructor.
      *
-     * @param ioFactory the new {@code IOFactory} (must not be <strong>null</strong>)
+     * @param ioFactory The new {@code IOFactory} (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if the {@code IOFactory} is <strong>null</strong>
      * @since 1.7
      */
@@ -1599,7 +1599,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     /**
      * Sets the associated layout object.
      *
-     * @param layout the new layout object; can be <strong>null</strong>, then a new layout object will be created
+     * @param layout The new layout object; can be <strong>null</strong>, then a new layout object will be created
      * @since 1.3
      */
     public void setLayout(final PropertiesConfigurationLayout layout) {

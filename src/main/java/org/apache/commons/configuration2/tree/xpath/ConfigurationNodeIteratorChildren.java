@@ -31,7 +31,7 @@ import org.apache.commons.lang3.Strings;
 /**
  * A specialized iterator implementation for the child nodes of a configuration node.
  *
- * @param <T> the type of the nodes this iterator deals with
+ * @param <T> The type of the nodes this iterator deals with
  * @since 1.3
  */
 final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNodeIterator<T> {
@@ -42,10 +42,10 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorChildren} and initializes it.
      *
-     * @param parent the parent pointer
-     * @param nodeTest the test selecting the sub nodes
-     * @param reverse the reverse flag
-     * @param startsWith the first element of the iteration
+     * @param parent The parent pointer
+     * @param nodeTest The test selecting the sub nodes
+     * @param reverse The reverse flag
+     * @param startsWith The first element of the iteration
      */
     public ConfigurationNodeIteratorChildren(final ConfigurationNodePointer<T> parent, final NodeTest nodeTest, final boolean reverse,
         final ConfigurationNodePointer<T> startsWith) {
@@ -63,8 +63,8 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Creates the configuration node pointer for the current position.
      *
-     * @param position the current position in the iteration
-     * @return the node pointer
+     * @param position The current position in the iteration
+     * @return The node pointer
      */
     @Override
     protected NodePointer createNodePointer(final int position) {
@@ -75,9 +75,9 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Creates the list with sub nodes. This method gets called during initialization phase. It finds out, based on the
      * given test, which nodes must be iterated over.
      *
-     * @param node the current node
-     * @param test the test object
-     * @return a list with the matching nodes
+     * @param node The current node
+     * @param test The test object
+     * @return A list with the matching nodes
      */
     private List<T> createSubNodeList(final T node, final NodeTest test) {
         if (test == null) {
@@ -101,9 +101,9 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Obtains the list of selected nodes for a {@code NodeNameTest} with either a simple or a qualified name.
      *
-     * @param node the current node
-     * @param qName the name to be selected
-     * @return the list with selected sub nodes
+     * @param node The current node
+     * @param qName The name to be selected
+     * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForName(final T node, final QName qName) {
         final String compareName = qualifiedName(qName);
@@ -119,9 +119,9 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Obtains the list of selected sub nodes for a {@code NodeNameTest} with a wildcard name.
      *
-     * @param node the current node
-     * @param qName the name to be selected
-     * @return the list with selected sub nodes
+     * @param node The current node
+     * @param qName The name to be selected
+     * @return The list with selected sub nodes
      */
     private List<T> createSubNodeListForWildcardName(final T node, final QName qName) {
         final List<T> children = getNodeHandler().getChildren(node);
@@ -142,9 +142,9 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
      * Determines the start position of the iteration. Finds the index of the given start node in the children of the root
      * node.
      *
-     * @param children the children of the root node
-     * @param startNode the start node
-     * @return the start node's index
+     * @param children The children of the root node
+     * @param startNode The start node
+     * @return The start node's index
      */
     private int findStartIndex(final List<T> children, final T startNode) {
         int index = 0;
@@ -161,7 +161,7 @@ final class ConfigurationNodeIteratorChildren<T> extends AbstractConfigurationNo
     /**
      * Returns the number of elements in this iteration. This is the number of elements in the children list.
      *
-     * @return the number of elements
+     * @return The number of elements
      */
     @Override
     protected int size() {

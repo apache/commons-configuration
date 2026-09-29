@@ -53,7 +53,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a default executor service. This method is called if no executor has been passed to the constructor.
      *
-     * @return the default executor service
+     * @return The default executor service
      */
     private static ScheduledExecutorService createDefaultExecutorService() {
         final ThreadFactory factory = BasicThreadFactory.builder().namingPattern("ReloadingTrigger-%s").daemon(true).build();
@@ -81,10 +81,10 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} with a default executor service.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
-     * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
-     * @param triggerPeriod the period in which the controller is triggered
-     * @param unit the time unit for the period
+     * @param ctrl The {@code ReloadingController} (must not be <strong>null</strong>)
+     * @param ctrlParam The optional parameter to be passed to the controller when doing reloading checks
+     * @param triggerPeriod The period in which the controller is triggered
+     * @param unit The time unit for the period
      * @throws IllegalArgumentException if a required argument is missing
      */
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit) {
@@ -94,11 +94,11 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates a new instance of {@code PeriodicReloadingTrigger} and sets all parameters.
      *
-     * @param ctrl the {@code ReloadingController} (must not be <strong>null</strong>)
-     * @param ctrlParam the optional parameter to be passed to the controller when doing reloading checks
-     * @param triggerPeriod the period in which the controller is triggered
-     * @param unit the time unit for the period
-     * @param exec the executor service to use (can be <strong>null</strong>, then a default executor service is created
+     * @param ctrl The {@code ReloadingController} (must not be <strong>null</strong>)
+     * @param ctrlParam The optional parameter to be passed to the controller when doing reloading checks
+     * @param triggerPeriod The period in which the controller is triggered
+     * @param unit The time unit for the period
+     * @param exec The executor service to use (can be <strong>null</strong>, then a default executor service is created
      * @throws IllegalArgumentException if a required argument is missing
      */
     public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam, final long triggerPeriod, final TimeUnit unit,
@@ -117,7 +117,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Creates the task which triggers the reloading controller.
      *
-     * @return the newly created trigger task
+     * @return The newly created trigger task
      */
     private Runnable createTriggerTaskCommand() {
         return () -> controller.checkForReloading(controllerParam);
@@ -126,7 +126,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Gets the {@code ScheduledExecutorService} used by this object.
      *
-     * @return the associated {@code ScheduledExecutorService}
+     * @return The associated {@code ScheduledExecutorService}
      */
     ScheduledExecutorService getExecutorService() {
         return executorService;
@@ -135,7 +135,7 @@ public class PeriodicReloadingTrigger {
     /**
      * Returns a flag whether this trigger is currently active.
      *
-     * @return a flag whether this trigger is running
+     * @return A flag whether this trigger is running
      */
     public synchronized boolean isRunning() {
         return triggerTask != null;
@@ -156,7 +156,7 @@ public class PeriodicReloadingTrigger {
      * is <strong>true</strong>, the executor service is also shut down. This should be done if this trigger is the only user of this
      * executor service.
      *
-     * @param shutdownExecutor a flag whether the associated {@code ScheduledExecutorService} is to be shut down
+     * @param shutdownExecutor A flag whether the associated {@code ScheduledExecutorService} is to be shut down
      */
     public void shutdown(final boolean shutdownExecutor) {
         stop();

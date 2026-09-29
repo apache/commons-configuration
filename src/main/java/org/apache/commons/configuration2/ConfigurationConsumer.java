@@ -22,7 +22,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 /**
  * A Configuration task that may throw a ConfigurationException.
  *
- * @param <T> the type of the input to the operation.
+ * @param <T> The type of the input to the operation.
  * @since 2.6
  */
 @FunctionalInterface
@@ -31,7 +31,7 @@ public interface ConfigurationConsumer<T> {
     /**
      * Performs this operation on the given argument.
      *
-     * @param t the input argument
+     * @param t The input argument
      * @throws ConfigurationException May be thrown while performing a Configuration operation.
      */
     void accept(T t) throws ConfigurationException;

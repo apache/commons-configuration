@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -42,24 +43,25 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     static Collection<?> flatten(final ListDelimiterHandler handler, final Object value, final int limit, final Set<Object> dejaVu) {
         if (value instanceof String) {
             return handler.split((String) value, true);
+        } else if (!isRecursiveContainer(value)) {
+            return value != null ? Collections.singletonList(value) : Collections.emptyList();
         }
-        dejaVu.add(value);
+        if (!dejaVu.add(value)) {
+            return Collections.emptyList();
+        }
         final Collection<Object> result = new LinkedList<>();
-        if (value instanceof Path) {
-            // Don't handle as an Iterable.
-            result.add(value);
-        } else if (value instanceof Iterable) {
-            flattenIterator(handler, result, ((Iterable<?>) value).iterator(), limit, dejaVu);
-        } else if (value instanceof Iterator) {
-            flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
-        } else if (value != null) {
-            if (value.getClass().isArray()) {
+        try {
+            if (value instanceof Iterable) {
+                flattenIterator(handler, result, ((Iterable<?>) value).iterator(), limit, dejaVu);
+            } else if (value instanceof Iterator) {
+                flattenIterator(handler, result, (Iterator<?>) value, limit, dejaVu);
+            } else if (value.getClass().isArray()) {
                 for (int len = Array.getLength(value), idx = 0, size = 0; idx < len && size < limit; idx++, size = result.size()) {
-                    result.addAll(handler.flatten(Array.get(value, idx), limit - size));
+                    result.addAll(flatten(handler, Array.get(value, idx), limit - size, dejaVu));
                 }
-            } else {
-                result.add(value);
             }
+        } finally {
+            dejaVu.remove(value);
         }
         return result;
     }
@@ -67,22 +69,29 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
     /**
      * Flattens the given iterator. For each element in the iteration {@code flatten()} is called recursively.
      *
-     * @param handler the working handler
-     * @param target the target collection
-     * @param iterator the iterator to process
-     * @param limit a limit for the number of elements to extract
+     * @param handler The working handler
+     * @param target The target collection
+     * @param iterator The iterator to process
+     * @param limit A limit for the number of elements to extract
      * @param dejaVue Previously visited objects.
      */
     static void flattenIterator(final ListDelimiterHandler handler, final Collection<Object> target, final Iterator<?> iterator, final int limit,
             final Set<Object> dejaVue) {
         int size = target.size();
         while (size < limit && iterator.hasNext()) {
-            final Object next = iterator.next();
-            if (!dejaVue.contains(next)) {
-                target.addAll(flatten(handler, next, limit - size, dejaVue));
-                size = target.size();
-            }
+            target.addAll(flatten(handler, iterator.next(), limit - size, dejaVue));
+            size = target.size();
         }
+    }
+
+    private static boolean isRecursiveContainer(final Object value) {
+        if (value instanceof Path) {
+            // Don't handle as an Iterable.
+            return false;
+        }
+        return value instanceof Iterator
+                || value instanceof Iterable
+                || value != null && value.getClass().isArray();
     }
 
     /**
@@ -107,8 +116,8 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * subclasses have to implement their specific escaping logic here, so that the list delimiters they support are
      * properly escaped.
      *
-     * @param s the string to be escaped (not <strong>null</strong>)
-     * @return the escaped string
+     * @param s The string to be escaped (not <strong>null</strong>)
+     * @return The escaped string
      */
     protected abstract String escapeString(String s);
 
@@ -116,8 +125,8 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * Performs the actual work as advertised by the {@code parse()} method. This method delegates to
      * {@link #flatten(Object, int)} without specifying a limit.
      *
-     * @param value the value to be processed
-     * @return a &quot;flat&quot; collection containing all primitive values of the passed in object
+     * @param value The value to be processed
+     * @return A &quot;flat&quot; collection containing all primitive values of the passed in object
      */
     private Collection<?> flatten(final Object value) {
         return flatten(value, Integer.MAX_VALUE);
@@ -154,9 +163,9 @@ public abstract class AbstractListDelimiterHandler implements ListDelimiterHandl
      * Actually splits the passed in string which is guaranteed to be not <strong>null</strong>. This method is called by the base
      * implementation of the {@code split()} method. Here the actual splitting logic has to be implemented.
      *
-     * @param s the string to be split (not <strong>null</strong>)
-     * @param trim a flag whether the single components have to be trimmed
-     * @return a collection with the extracted components of the passed in string
+     * @param s The string to be split (not <strong>null</strong>)
+     * @param trim A flag whether the single components have to be trimmed
+     * @return A collection with the extracted components of the passed in string
      */
     protected abstract Collection<String> splitString(String s, boolean trim);
 }

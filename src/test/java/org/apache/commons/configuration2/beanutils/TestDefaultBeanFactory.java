@@ -53,9 +53,9 @@ public class TestDefaultBeanFactory {
     /**
      * Creates a bean creation context for a create operation.
      *
-     * @param cls the bean class
-     * @param decl the bean declaration
-     * @return the new creation context
+     * @param cls The bean class
+     * @param decl The bean declaration
+     * @return The new creation context
      */
     private static BeanCreationContext createBcc(final Class<?> cls, final BeanDeclaration decl) {
         return new BeanCreationContext() {
@@ -91,7 +91,7 @@ public class TestDefaultBeanFactory {
     /**
      * Returns an initialized bean declaration.
      *
-     * @return the bean declaration
+     * @return The bean declaration
      */
     private static BeanDeclarationTestImpl setUpBeanDeclaration() {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();

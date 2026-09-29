@@ -67,7 +67,7 @@ public class TestExprLookup {
     /**
      * Loads the test configuration.
      *
-     * @return the test configuration
+     * @return The test configuration
      * @throws ConfigurationException if an error occurs
      */
     private static XMLConfiguration loadConfig() throws ConfigurationException {

@@ -26,9 +26,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -60,7 +62,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Checks whether the passed in combined strategy contains the expected sub strategies.
      *
-     * @param strategy the combined strategy to check
+     * @param strategy The combined strategy to check
      */
     private void checkSubStrategies(final CombinedLocationStrategy strategy) {
         final Collection<FileLocationStrategy> subs = strategy.getSubStrategies();
@@ -70,7 +72,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Helper method for creating a combined strategy with the mock sub strategies.
      *
-     * @return the newly created combined strategy
+     * @return The newly created combined strategy
      */
     private CombinedLocationStrategy createCombinedStrategy() {
         return new CombinedLocationStrategy(Arrays.asList(getSubStrategies()));
@@ -79,7 +81,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Returns the mock file system. It is created on demand.
      *
-     * @return the mock file system
+     * @return The mock file system
      */
     private FileSystem getFileSystem() {
         if (fileSystem == null) {
@@ -91,7 +93,7 @@ public class TestCombinedLocationStrategy {
     /**
      * Returns an array with mock objects for sub strategies.
      *
-     * @return the array with mock strategies
+     * @return The array with mock strategies
      */
     private FileLocationStrategy[] getSubStrategies() {
         if (subStrategies == null) {
@@ -121,6 +123,25 @@ public class TestCombinedLocationStrategy {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         col.add(null);
         assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(col));
+    }
+
+    /**
+     * Tests that the constructor handles collections that throw NPE on contains(null) (like ImmutableList).
+     */
+    @Test
+    void testInitCollectionThrowsNPEOnContainsNull() {
+        // Create a collection that throws NPE on contains(null) like List.of() instance does
+        final Collection<FileLocationStrategy> collectionThatThrowsNPE = new ArrayList<FileLocationStrategy>(Arrays.asList(getSubStrategies())) {
+            @Override
+            public boolean contains(final Object obj) {
+                Objects.requireNonNull(obj, "obj");
+                return super.contains(obj);
+            }
+        };
+
+        // This should not throw NPE - the constructor should handle it gracefully
+        final CombinedLocationStrategy strategy = new CombinedLocationStrategy(collectionThatThrowsNPE);
+        checkSubStrategies(strategy);
     }
 
     /**

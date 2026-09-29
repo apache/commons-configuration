@@ -40,7 +40,7 @@ public class ServletRequestConfiguration extends BaseWebConfiguration {
     /**
      * Create a ServletRequestConfiguration using the request parameters.
      *
-     * @param request the servlet request
+     * @param request The servlet request
      */
     public ServletRequestConfiguration(final ServletRequest request) {
         this.request = Objects.requireNonNull(request, "config");

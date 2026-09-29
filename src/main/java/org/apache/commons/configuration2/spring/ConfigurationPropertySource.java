@@ -32,7 +32,7 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     /**
      * Constructs a new instance.
      *
-     * @param name the associated name.
+     * @param name The associated name.
      */
     protected ConfigurationPropertySource(final String name) {
         super(name);
@@ -41,8 +41,8 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     /**
      * Constructs a new instance.
      *
-     * @param name   the associated name.
-     * @param source the source object.
+     * @param name   The associated name.
+     * @param source The source object.
      */
     public ConfigurationPropertySource(final String name, final Configuration source) {
         super(name, source);

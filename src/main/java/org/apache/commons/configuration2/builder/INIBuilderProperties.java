@@ -28,7 +28,7 @@ package org.apache.commons.configuration2.builder;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the type of the result of all set methods for method chaining
+ * @param <T> The type of the result of all set methods for method chaining
  * @since 2.2
  */
 public interface INIBuilderProperties<T> {
@@ -37,7 +37,7 @@ public interface INIBuilderProperties<T> {
      * Sets the leading comment separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @since 2.5
      */
     default T setCommentLeadingCharsUsedInInput(final String separator) {
@@ -49,7 +49,7 @@ public interface INIBuilderProperties<T> {
      * Sets the key and value separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
-     * @return a reference to this object for method chaining
+     * @return A reference to this object for method chaining
      * @since 2.5
      */
     default T setSeparatorUsedInInput(final String separator) {
@@ -60,8 +60,8 @@ public interface INIBuilderProperties<T> {
     /**
      * Sets the separator between key and value to be used when writing an INI file.
      *
-     * @param separator the new separator for INI output
-     * @return a reference to this object for method chaining
+     * @param separator The new separator for INI output
+     * @return A reference to this object for method chaining
      */
     T setSeparatorUsedInOutput(String separator);
 }

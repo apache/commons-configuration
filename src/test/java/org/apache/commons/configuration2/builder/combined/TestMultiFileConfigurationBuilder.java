@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationLookup;
 import org.apache.commons.configuration2.DynamicCombinedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -49,6 +50,7 @@ import org.apache.commons.configuration2.event.EventListenerTestImpl;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.DefaultLookups;
+import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.junit.jupiter.api.Test;
@@ -64,8 +66,8 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * instance overrides the method for creating managed builders. It stores newly created builders in the passed in
      * collection.
      *
-     * @param managedBuilders a collection in which to store managed builders
-     * @return the test builder instance
+     * @param managedBuilders A collection in which to store managed builders
+     * @return The test builder instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createBuilderWithAccessToManagedBuilders(
         final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders) {
@@ -85,8 +87,8 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     /**
      * Creates a test builder object with default settings.
      *
-     * @param managedParams the parameters for managed configurations
-     * @return the test instance
+     * @param managedParams The parameters for managed configurations
+     * @return The test instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(final BuilderParameters managedParams) {
         return new MultiFileConfigurationBuilder<>(XMLConfiguration.class).configure(createTestBuilderParameters(managedParams));
@@ -334,8 +336,13 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      */
     @Test
     void testSchemaValidationError() {
+        // The testMultiConfiguration_2001.xml configuration references its schema through an absolute https URI.
+        // The hardened parser does not fetch external resources,
+        // so register the local testMultiConfiguration.xsd for that system URI via an XML catalog.
+        final CatalogResolver resolver = new CatalogResolver();
+        resolver.setCatalogFiles(ConfigurationAssert.getTestFile("catalog.xml").getAbsolutePath());
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createTestBuilder(
-            new XMLBuilderParametersImpl().setValidating(true).setSchemaValidation(true));
+            new XMLBuilderParametersImpl().setValidating(true).setSchemaValidation(true).setEntityResolver(resolver));
         switchToConfig("2001");
         final ConfigurationException ex = assertThrows(ConfigurationException.class, builder::getConfiguration);
         Throwable cause = ex.getCause();

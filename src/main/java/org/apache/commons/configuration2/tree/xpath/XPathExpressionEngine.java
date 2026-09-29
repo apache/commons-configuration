@@ -151,9 +151,9 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Converts the objects returned as query result from the JXPathContext to query result objects.
      *
-     * @param results the list with results from the context
-     * @param <T> the type of results to be produced
-     * @return the result list
+     * @param results The list with results from the context
+     * @param <T> The type of results to be produced
+     * @return The result list
      */
     private static <T> List<QueryResult<T>> convertResults(final List<?> results) {
         return results.stream().map(res -> (QueryResult<T>) createResult(res)).collect(Collectors.toList());
@@ -169,9 +169,9 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * This method performs a corresponding cast. Warnings can be suppressed because of the implementation of the query
      * functionality.
      *
-     * @param resObj the query result object
-     * @param <T> the type of the result to be produced
-     * @return the {@code QueryResult}
+     * @param resObj The query result object
+     * @param <T> The type of the result to be produced
+     * @return The {@code QueryResult}
      */
     @SuppressWarnings("unchecked")
     private static <T> QueryResult<T> createResult(final Object resObj) {
@@ -184,11 +184,11 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Determines the index of the given child node in the node list of its parent.
      *
-     * @param parent the parent node
-     * @param child the child node
-     * @param handler the node handler
-     * @param <T> the type of the nodes involved
-     * @return the index of this child node
+     * @param parent The parent node
+     * @param child The child node
+     * @param handler The node handler
+     * @param <T> The type of the nodes involved
+     * @return The index of this child node
      */
     private static <T> int determineIndex(final T parent, final T child, final NodeHandler<T> handler) {
         return handler.getChildren(parent, handler.nodeName(child)).indexOf(child) + 1;
@@ -197,8 +197,8 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Determines the position of the separator in a key for adding new properties. If no delimiter is found, result is -1.
      *
-     * @param key the key
-     * @return the position of the delimiter
+     * @param key The key
+     * @return The position of the delimiter
      */
     private static int findKeySeparator(final String key) {
         int index = key.length() - 1;
@@ -211,8 +211,8 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Helper method for throwing an exception about an invalid path.
      *
-     * @param path the invalid path
-     * @param msg the exception message
+     * @param path The invalid path
+     * @param msg The exception message
      */
     private static void invalidPath(final String path, final String msg) {
         throw new IllegalArgumentException("Invalid node path: \"" + path + "\" " + msg);
@@ -232,7 +232,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * Creates a new instance of {@code XPathExpressionEngine} and sets the context factory. This constructor is mainly used
      * for testing purposes.
      *
-     * @param factory the {@code XPathContextFactory}
+     * @param factory The {@code XPathContextFactory}
      */
     XPathExpressionEngine(final XPathContextFactory factory) {
         contextFactory = factory;
@@ -275,9 +275,9 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Creates the {@code JXPathContext} to be used for executing a query. This method delegates to the context factory.
      *
-     * @param root the configuration root node
-     * @param handler the node handler
-     * @return the new context
+     * @param root The configuration root node
+     * @param handler The node handler
+     * @return The new context
      */
     private <T> JXPathContext createContext(final T root, final NodeHandler<T> handler) {
         return getContextFactory().createContext(root, handler);
@@ -287,9 +287,9 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * Creates a {@code NodeAddData} object as a result of a {@code prepareAdd()} operation. This method interprets the
      * passed in path of the new node.
      *
-     * @param path the path of the new node
-     * @param parentNodeResult the parent node
-     * @param <T> the type of the nodes involved
+     * @param path The path of the new node
+     * @param parentNodeResult The parent node
+     * @param <T> The type of the nodes involved
      */
     <T> NodeAddData<T> createNodeAddData(final String path, final QueryResult<T> parentNodeResult) {
         if (parentNodeResult.isAttributeResult()) {
@@ -342,10 +342,10 @@ public class XPathExpressionEngine implements ExpressionEngine {
      * does not contain a space character. It splits the key at its single components and searches for the last existing
      * component. Then a key compatible key for adding properties is generated.
      *
-     * @param root the root node of the configuration
-     * @param key the key in question
-     * @param handler the node handler
-     * @return the key to be used for adding the property
+     * @param root The root node of the configuration
+     * @param key The key in question
+     * @param handler The node handler
+     * @return The key to be used for adding the property
      */
     private <T> String generateKeyForAdd(final T root, final String key, final NodeHandler<T> handler) {
         int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
@@ -367,7 +367,7 @@ public class XPathExpressionEngine implements ExpressionEngine {
     /**
      * Gets the {@code XPathContextFactory} used by this instance.
      *
-     * @return the {@code XPathContextFactory}
+     * @return The {@code XPathContextFactory}
      */
     XPathContextFactory getContextFactory() {
         return contextFactory;

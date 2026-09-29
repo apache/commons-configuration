@@ -103,8 +103,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Checks an object provided as default value for the {@code getArray()} method. Throws an exception if this is not an
      * array with the correct component type.
      *
-     * @param cls the component class for the array.
-     * @param defaultValue the default value object to be checked.
+     * @param cls The component class for the array.
+     * @param defaultValue The default value object to be checked.
      * @throws IllegalArgumentException if this is not a valid default object.
      */
     private static void checkDefaultValueArray(final Class<?> cls, final Object defaultValue) {
@@ -118,10 +118,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Checks whether the specified value is <strong>null</strong> and throws an exception in this case. This method is used by
      * conversion methods returning primitive Java types. Here values to be returned must not be <strong>null</strong>.
      *
-     * @param <T> the type of the object to be checked.
-     * @param key the key which caused the problem.
-     * @param value the value to be checked.
-     * @return the passed in value for chaining this method call.
+     * @param <T> The type of the object to be checked.
+     * @param key The key which caused the problem.
+     * @param value The value to be checked.
+     * @return The passed in value for chaining this method call.
      * @throws NoSuchElementException if the value is <strong>null</strong>.
      */
     private static <T> T checkNonNullValue(final String key, final T value) {
@@ -135,9 +135,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Finds a {@code ConfigurationLookup} pointing to the specified configuration in the default lookups for the specified
      * {@code ConfigurationInterpolator}.
      *
-     * @param ci the {@code ConfigurationInterpolator} in question.
-     * @param targetConf the target configuration of the searched lookup.
-     * @return the found {@code Lookup} object or <strong>null</strong>.
+     * @param ci The {@code ConfigurationInterpolator} in question.
+     * @param targetConf The target configuration of the searched lookup.
+     * @return The found {@code Lookup} object or <strong>null</strong>.
      */
     private static Lookup findConfigurationLookup(final ConfigurationInterpolator ci, final ImmutableConfiguration targetConf) {
         for (final Lookup l : ci.getDefaultLookups()) {
@@ -152,9 +152,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Handles the default collection for a collection conversion. This method fills the target collection with the content
      * of the default collection. Both collections may be <strong>null</strong>.
      *
-     * @param target the target collection.
-     * @param defaultValue the default collection.
-     * @return the initialized target collection.
+     * @param target The target collection.
+     * @param defaultValue The default collection.
+     * @return The initialized target collection.
      */
     private static <T> Collection<T> handleDefaultCollection(final Collection<T> target, final Collection<T> defaultValue) {
         if (defaultValue == null) {
@@ -174,7 +174,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Helper method for throwing an exception for a key that does not map to an existing object.
      *
-     * @param key the key (to be part of the error message)
+     * @param key The key (to be part of the error message)
      */
     private static void throwMissingPropertyException(final String key) {
         throw new NoSuchElementException(String.format("Key '%s' does not map to an existing object.", key));
@@ -248,8 +248,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Actually adds a property to this configuration. This method is called by {@code addProperty()}. It performs list
      * splitting if necessary and delegates to {@link #addPropertyDirect(String, Object)} for every single property value.
      *
-     * @param key the key of the property to be added.
-     * @param value the new property value.
+     * @param key The key of the property to be added.
+     * @param value The new property value.
      * @since 2.0
      */
     protected void addPropertyInternal(final String key, final Object value) {
@@ -264,7 +264,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * structure (i.e. the parent-child-relationships will get lost). So when dealing with hierarchical configuration
      * objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be used.
      *
-     * @param configuration the configuration to be appended (can be <strong>null</strong>, then this operation will have no effect).
+     * @param configuration The configuration to be appended (can be <strong>null</strong>, then this operation will have no effect).
      * @since 1.5
      */
     public void append(final Configuration configuration) {
@@ -289,7 +289,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * <strong>false</strong>. <strong>In any case the inherited method must be called! Otherwise, proper synchronization is
      * not guaranteed.</strong>
      *
-     * @param optimize a flag whether optimization can be performed.
+     * @param optimize A flag whether optimization can be performed.
      * @since 2.0
      */
     protected void beginRead(final boolean optimize) {
@@ -303,7 +303,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code beginRead()}. <strong>In any case the inherited method must be called! Otherwise, proper synchronization is
      * not guaranteed.</strong>
      *
-     * @param optimize a flag whether optimization can be performed.
+     * @param optimize A flag whether optimization can be performed.
      * @see #beginRead(boolean)
      * @since 2.0
      */
@@ -360,7 +360,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Removes the specified property from this configuration. This implementation performs some preparations and then
      * delegates to {@code clearPropertyDirect()}, which will do the real work.
      *
-     * @param key the key to be removed.
+     * @param key The key to be removed.
      */
     @Override
     public final void clearProperty(final String key) {
@@ -375,7 +375,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Removes the specified property from this configuration. This method is called by {@code clearProperty()} after it has
      * done some preparations. It must be overridden in sub classes.
      *
-     * @param key the key to be removed
+     * @param key The key to be removed
      */
     protected abstract void clearPropertyDirect(String key);
 
@@ -389,7 +389,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * passed in original configuration. This one is replaced by a corresponding {@code Lookup} referring to this
      * configuration.
      *
-     * @param orgConfig the original configuration from which this one was cloned.
+     * @param orgConfig The original configuration from which this one was cloned.
      * @since 2.0
      */
     protected void cloneInterpolator(final AbstractConfiguration orgConfig) {
@@ -407,8 +407,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Checks if the specified value exists in the properties structure mapped by the provided keys.
      *
-     * @param keys an Iterator of String keys to search for the value.
-     * @param value the String value to search for in the properties.
+     * @param keys An Iterator of String keys to search for the value.
+     * @param value The String value to search for in the properties.
      * @return true if the value is found in the properties, false otherwise.
      * @since 2.11.0
      */
@@ -433,7 +433,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Actually checks whether the specified key is contained in this configuration. This method is called by
      * {@code containsKey()}. It has to be defined by concrete subclasses.
      *
-     * @param key the key in question.
+     * @param key The key in question.
      * @return <strong>true</strong> if this key is contained in this configuration, <strong>false</strong> otherwise.
      * @since 2.0
      */
@@ -461,7 +461,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interface).
      * </p>
      *
-     * @param value the value in question
+     * @param value The value in question
      * @return {@code true} if and only if some key maps to the {@code value} argument in this configuration as determined by the {@code equals} method;
      *         {@code false} otherwise.
      * @since 2.11.0
@@ -471,12 +471,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Helper method for obtaining a property value with a type conversion.
      *
-     * @param <T> the target type of the conversion.
-     * @param cls the target class.
-     * @param key the key of the desired property.
-     * @param defValue a default value.
-     * @param throwOnMissing a flag whether an exception should be thrown for a missing value.
-     * @return the converted value.
+     * @param <T> The target type of the conversion.
+     * @param cls The target class.
+     * @param key The key of the desired property.
+     * @param defValue A default value.
+     * @param throwOnMissing A flag whether an exception should be thrown for a missing value.
+     * @return The converted value.
      */
     private <T> T convert(final Class<T> cls, final String key, final T defValue, final boolean throwOnMissing) {
         if (cls.isArray()) {
@@ -500,10 +500,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * default value is returned. It is checked whether the default value is an array with the correct component type. If
      * not, an exception is thrown.
      *
-     * @param cls the component class of the array.
-     * @param key the configuration key.
-     * @param defaultValue an optional default value.
-     * @return the converted array.
+     * @param cls The component class of the array.
+     * @param key The configuration key.
+     * @param defaultValue An optional default value.
+     * @return The converted array.
      * @throws IllegalArgumentException if the default value is not a compatible array.
      */
     private Object convertToArray(final Class<?> cls, final String key, final Object defaultValue) {
@@ -519,7 +519,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * hierarchical configuration objects their {@link BaseHierarchicalConfiguration#clone() clone()} methods should be
      * used.
      *
-     * @param configuration the configuration to copy (can be <strong>null</strong>, then this operation will have no effect)
+     * @param configuration The configuration to copy (can be <strong>null</strong>, then this operation will have no effect)
      * @since 1.5
      */
     public void copy(final Configuration configuration) {
@@ -538,8 +538,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * passed in object has to be escaped so that an add operation yields the same result. If it is a list, all of its
      * values have to be escaped.
      *
-     * @param value the value to be encoded.
-     * @return the encoded value.
+     * @param value The value to be encoded.
+     * @return The encoded value.
      */
     private Object encodeForCopy(final Object value) {
         if (value instanceof Collection) {
@@ -552,8 +552,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Encodes a list with property values so that it can be added to this configuration. This method calls
      * {@code encodeForCopy()} for all list elements.
      *
-     * @param values the list to be encoded.
-     * @return a list with encoded elements.
+     * @param values The list to be encoded.
+     * @return A list with encoded elements.
      */
     private Object encodeListForCopy(final Collection<?> values) {
         return values.stream().map(this::encodeForCopy).collect(Collectors.toList());
@@ -588,8 +588,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code ConfigurationInterpolator}. This method is called to ensure that there is exactly one default lookup querying
      * this configuration.
      *
-     * @param ci the {@code ConfigurationInterpolator} in question.
-     * @return the found {@code Lookup} object or <strong>null</strong>.
+     * @param ci The {@code ConfigurationInterpolator} in question.
+     * @return The found {@code Lookup} object or <strong>null</strong>.
      */
     private Lookup findConfigurationLookup(final ConfigurationInterpolator ci) {
         return findConfigurationLookup(ci, this);
@@ -611,11 +611,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Obtains the property value for the specified key and converts it to the given target class.
      *
-     * @param <T> the target type of the conversion.
-     * @param cls the target class.
-     * @param key the key of the desired property.
-     * @param defaultValue a default value.
-     * @return the converted value of this property.
+     * @param <T> The target type of the conversion.
+     * @param cls The target class.
+     * @param key The key of the desired property.
+     * @param defaultValue A default value.
+     * @return The converted value of this property.
      * @throws ConversionException if the conversion cannot be performed.
      */
     private <T> T getAndConvertProperty(final Class<T> cls, final String key, final T defaultValue) {
@@ -691,9 +691,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Obtains the value of the specified key and tries to convert it into a {@code Boolean} object. If the property has no
      * value, the passed in default value will be used.
      *
-     * @param key the key of the property.
-     * @param defaultValue the default value.
-     * @return the value of this key converted to a {@code Boolean}.
+     * @param key The key of the property.
+     * @param defaultValue The default value.
+     * @return The value of this key converted to a {@code Boolean}.
      * @throws ConversionException if the value cannot be converted to a {@code Boolean}.
      */
     @Override
@@ -741,7 +741,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ConfigurationDecoder} used by this instance.
      *
-     * @return the {@code ConfigurationDecoder}.
+     * @return The {@code ConfigurationDecoder}.
      * @since 2.0
      */
     public ConfigurationDecoder getConfigurationDecoder() {
@@ -751,7 +751,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ConversionHandler} used by this instance.
      *
-     * @return the {@code ConversionHandler}.
+     * @return The {@code ConversionHandler}.
      * @since 2.0
      */
     public ConversionHandler getConversionHandler() {
@@ -853,7 +853,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * resolve values from this configuration instance and support the
      * {@link ConfigurationInterpolator#getDefaultPrefixLookups() default prefix lookups}.
      *
-     * @return the {@code ConfigurationInterpolator} associated with this configuration
+     * @return The {@code ConfigurationInterpolator} associated with this configuration
      * @since 1.4
      * @see ConfigurationInterpolator#getDefaultPrefixLookups()
      */
@@ -896,7 +896,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Creates an iterator for iterating over the keys in this configuration. This method is called by
      * {@code getKeys()}, it has to be defined by concrete subclasses.
      *
-     * @return an {@code Iterator} with all property keys in this configuration.
+     * @return An {@code Iterator} with all property keys in this configuration.
      * @since 2.0
      */
     protected abstract Iterator<String> getKeysInternal();
@@ -907,8 +907,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * iterator which filters for the passed in prefix. Subclasses can override it if they can provide a more efficient way
      * to iterate over specific keys only.
      *
-     * @param prefix the prefix for the keys to be taken into account.
-     * @return an {@code Iterator} returning the filtered keys.
+     * @param prefix The prefix for the keys to be taken into account.
+     * @return An {@code Iterator} returning the filtered keys.
      * @since 2.0
      */
     protected Iterator<String> getKeysInternal(final String prefix) {
@@ -921,9 +921,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * iterator which filters for the passed in prefix. Subclasses can override it if they can provide a more efficient way
      * to iterate over specific keys only.
      *
-     * @param prefix the prefix for the keys to be taken into account.
-     * @param delimiter the prefix delimiter.
-     * @return an {@code Iterator} returning the filtered keys.
+     * @param prefix The prefix for the keys to be taken into account.
+     * @param delimiter The prefix delimiter.
+     * @return An {@code Iterator} returning the filtered keys.
      * @since 2.10.0
      */
     protected Iterator<String> getKeysInternal(final String prefix, final String delimiter) {
@@ -990,7 +990,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the {@code ListDelimiterHandler} used by this instance.
      *
-     * @return the {@code ListDelimiterHandler}
+     * @return The {@code ListDelimiterHandler}
      * @since 2.0
      */
     public ListDelimiterHandler getListDelimiterHandler() {
@@ -1000,7 +1000,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Gets the logger used by this configuration object.
      *
-     * @return the logger
+     * @return The logger
      * @since 2.0
      */
     public ConfigurationLogger getLogger() {
@@ -1077,8 +1077,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Actually obtains the value of the specified property. This method is called by {@code getProperty()}. Concrete
      * subclasses must define it to fetch the value of the desired property.
      *
-     * @param key the key of the property in question.
-     * @return the (raw) value of this property.
+     * @param key The key of the property in question.
+     * @return The (raw) value of this property.
      * @since 2.0
      */
     protected abstract Object getPropertyInternal(String key);
@@ -1138,7 +1138,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code Synchronizer} has been set, a {@link NoOpSynchronizer} is returned. So, per default, instances of
      * {@code AbstractConfiguration} are not thread-safe unless a suitable {@code Synchronizer} is set!
      *
-     * @return the {@code Synchronizer} used by this instance.
+     * @return The {@code Synchronizer} used by this instance.
      * @since 2.0
      */
     @Override
@@ -1155,7 +1155,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Initializes the logger. Supports <strong>null</strong> input. This method can be called by derived classes in order to enable
      * logging.
      *
-     * @param log the logger.
+     * @param log The logger.
      * @since 2.0
      */
     protected final void initLogger(final ConfigurationLogger log) {
@@ -1189,8 +1189,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Returns the interpolated value. This implementation delegates to the current {@code ConfigurationInterpolator}. If no
      * {@code ConfigurationInterpolator} is set, the passed in value is returned without changes.
      *
-     * @param value the value to interpolate.
-     * @return the value with variables substituted.
+     * @param value The value to interpolate.
+     * @return The value with variables substituted.
      */
     protected Object interpolate(final Object value) {
         final ConfigurationInterpolator ci = getInterpolator();
@@ -1201,7 +1201,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * interpolate key names to handle ${key} stuff
      *
      * @param base string to interpolate.
-     * @return the key name with the ${key} substituted.
+     * @return The key name with the ${key} substituted.
      */
     protected String interpolate(final String base) {
         return Objects.toString(interpolate((Object) base), null);
@@ -1214,7 +1214,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * unchanged). This operation is useful if the content of a configuration is to be exported or processed by an external
      * component that does not support variable interpolation.
      *
-     * @return a configuration with all variables interpolated.
+     * @return A configuration with all variables interpolated.
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if this configuration cannot be cloned.
      * @since 1.5
      */
@@ -1251,8 +1251,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * the calling method transforms the value to a string and returns a list or an array with this single element. This
      * implementation returns <strong>true</strong> if the value is of a wrapper type for a primitive type.
      *
-     * @param value the value to be checked.
-     * @return a flag whether the value is a scalar.
+     * @param value The value to be checked.
+     * @return A flag whether the value is a scalar.
      * @since 1.7
      */
     protected boolean isScalarValue(final Object value) {
@@ -1294,7 +1294,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Sets the {@code ConfigurationDecoder} for this configuration. This object is used by
      * {@link #getEncodedString(String)}.
      *
-     * @param configurationDecoder the {@code ConfigurationDecoder}.
+     * @param configurationDecoder The {@code ConfigurationDecoder}.
      * @since 2.0
      */
     public void setConfigurationDecoder(final ConfigurationDecoder configurationDecoder) {
@@ -1307,7 +1307,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * newly created configuration uses a default {@code ConversionHandler} implementation. This can be changed while
      * initializing the configuration (for example via a builder). Note that access to this property is not synchronized.
      *
-     * @param conversionHandler the {@code ConversionHandler} to be used (must not be <strong>null</strong>).
+     * @param conversionHandler The {@code ConversionHandler} to be used (must not be <strong>null</strong>).
      * @throws IllegalArgumentException if the {@code ConversionHandler} is <strong>null</strong>.
      * @since 2.0
      */
@@ -1327,7 +1327,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * builder. Normal client code should better call {@link #installInterpolator(Map, Collection)} to define the
      * {@code ConfigurationInterpolator} in a single step.
      *
-     * @param lookups the collection with default {@code Lookup} objects to be added.
+     * @param lookups The collection with default {@code Lookup} objects to be added.
      * @since 2.0
      */
     public void setDefaultLookups(final Collection<? extends Lookup> lookups) {
@@ -1373,7 +1373,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * exceptions.
      * </p>
      *
-     * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used (must not be <strong>null</strong>).
+     * @param listDelimiterHandler The {@code ListDelimiterHandler} to be used (must not be <strong>null</strong>).
      * @throws IllegalArgumentException if the {@code ListDelimiterHandler} is <strong>null</strong>.
      * @since 2.0
      */
@@ -1390,7 +1390,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * want to enable logging should call this method during their initialization with the logger to be used. It is legal to
      * pass a <strong>null</strong> logger; in this case, logging will be disabled.
      *
-     * @param log the new logger
+     * @param log The new logger
      * @since 2.0
      */
     public void setLogger(final ConfigurationLogger log) {
@@ -1403,7 +1403,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * instance is created. Note: This method is mainly intended to be used for initializing a configuration when it is
      * created by a builder. Normal client code can directly update the {@code ConfigurationInterpolator}.
      *
-     * @param parent the parent {@code ConfigurationInterpolator} to be set.
+     * @param parent The parent {@code ConfigurationInterpolator} to be set.
      * @since 2.0
      */
     public void setParentInterpolator(final ConfigurationInterpolator parent) {
@@ -1424,7 +1424,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * should better call {@link #installInterpolator(Map, Collection)} to define the {@code ConfigurationInterpolator} in a
      * single step.
      *
-     * @param lookups a map with new {@code Lookup} objects and their prefixes (may be <strong>null</strong>).
+     * @param lookups A map with new {@code Lookup} objects and their prefixes (may be <strong>null</strong>).
      * @since 2.0
      */
     public void setPrefixLookups(final Map<String, ? extends Lookup> lookups) {
@@ -1453,8 +1453,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * implementation of this functionality by clearing the specified key and delegating to {@code addProperty()}.
      * Subclasses should override this method if they can provide a more efficient algorithm for setting a property value.
      *
-     * @param key the property key.
-     * @param value the new property value.
+     * @param key The property key.
+     * @param value The new property value.
      * @since 2.0
      */
     protected void setPropertyInternal(final String key, final Object value) {
@@ -1471,7 +1471,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Sets the object responsible for synchronizing this configuration. This method has to be called with a suitable
      * {@code Synchronizer} object when initializing this configuration instance in order to make it thread-safe.
      *
-     * @param synchronizer the new {@code Synchronizer}; can be <strong>null</strong>, then this instance uses a
+     * @param synchronizer The new {@code Synchronizer}; can be <strong>null</strong>, then this instance uses a
      *        {@link NoOpSynchronizer}
      * @since 2.0
      */
@@ -1506,7 +1506,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * The base implementation provided here calculates the size based on the iterator returned by {@code getKeys()}. Sub
      * classes which can determine the size in a more efficient way should override this method.
      *
-     * @return the size of this configuration (i.e. the number of keys).
+     * @return The size of this configuration (i.e. the number of keys).
      */
     protected int sizeInternal() {
         int size = 0;

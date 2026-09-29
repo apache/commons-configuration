@@ -33,6 +33,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,8 +65,8 @@ final class XMLDocumentHelper {
     /**
      * Creates a copy of the specified document.
      *
-     * @param doc the {@code Document}
-     * @return the copy of this document
+     * @param doc The {@code Document}
+     * @return The copy of this document
      * @throws ConfigurationException if an error occurs
      */
     private static Document copyDocument(final Document doc) throws ConfigurationException {
@@ -80,8 +82,8 @@ final class XMLDocumentHelper {
      * Creates a new {@code DocumentBuilder} using the specified factory. Exceptions are rethrown as
      * {@code ConfigurationException} exceptions.
      *
-     * @param factory the {@code DocumentBuilderFactory}
-     * @return the newly created {@code DocumentBuilder}
+     * @param factory The {@code DocumentBuilderFactory}
+     * @return The newly created {@code DocumentBuilder}
      * @throws ConfigurationException if an error occurs
      */
     static DocumentBuilder createDocumentBuilder(final DocumentBuilderFactory factory) throws ConfigurationException {
@@ -93,21 +95,12 @@ final class XMLDocumentHelper {
     }
 
     /**
-     * Creates a new {@code DocumentBuilderFactory} instance.
-     *
-     * @return the new factory object
-     */
-    private static DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
-    }
-
-    /**
      * Creates the element mapping for the specified documents. For each node in the source document an entry is created
      * pointing to the corresponding node in the destination object.
      *
-     * @param doc1 the source document
-     * @param doc2 the destination document
-     * @return the element mapping
+     * @param doc1 The source document
+     * @param doc2 The destination document
+     * @return The element mapping
      */
     private static Map<Node, Node> createElementMapping(final Document doc1, final Document doc2) {
         final Map<Node, Node> mapping = new HashMap<>();
@@ -120,7 +113,7 @@ final class XMLDocumentHelper {
      *
      * @param n1 node 1
      * @param n2 node 2
-     * @param mapping the mapping to be filled
+     * @param mapping The mapping to be filled
      */
     private static void createElementMappingForNodes(final Node n1, final Node n2, final Map<Node, Node> mapping) {
         mapping.put(n1, n2);
@@ -135,18 +128,18 @@ final class XMLDocumentHelper {
     /**
      * Creates a new {@code Transformer} object. No initializations are performed on the new instance.
      *
-     * @return the new {@code Transformer}
+     * @return The new {@code Transformer}
      * @throws ConfigurationException if the {@code Transformer} could not be created
      */
     public static Transformer createTransformer() throws ConfigurationException {
-        return createTransformer(createTransformerFactory());
+        return createTransformer(SecureTransformerFactory.newInstance());
     }
 
     /**
      * Creates a {@code Transformer} using the specified factory.
      *
-     * @param factory the {@code TransformerFactory}
-     * @return the newly created {@code Transformer}
+     * @param factory The {@code TransformerFactory}
+     * @return The newly created {@code Transformer}
      * @throws ConfigurationException if an error occurs
      */
     static Transformer createTransformer(final TransformerFactory factory) throws ConfigurationException {
@@ -158,18 +151,9 @@ final class XMLDocumentHelper {
     }
 
     /**
-     * Creates a new {@code TransformerFactory}.
-     *
-     * @return the {@code TransformerFactory}
-     */
-    static TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
-    }
-
-    /**
      * Creates an empty element mapping.
      *
-     * @return the empty mapping
+     * @return The empty mapping
      */
     private static Map<Node, Node> emptyElementMapping() {
         return Collections.emptyMap();
@@ -179,12 +163,12 @@ final class XMLDocumentHelper {
      * Creates a new instance of {@code XMLDocumentHelper} and initializes it with a newly created, empty {@code Document}.
      * The new document has a root element with the given element name. This element has no further child nodes.
      *
-     * @param rootElementName the name of the root element
-     * @return the newly created instance
+     * @param rootElementName The name of the root element
+     * @return The newly created instance
      * @throws ConfigurationException if an error occurs when creating the document
      */
     public static XMLDocumentHelper forNewDocument(final String rootElementName) throws ConfigurationException {
-        final Document doc = createDocumentBuilder(createDocumentBuilderFactory()).newDocument();
+        final Document doc = createDocumentBuilder(SecureDocumentBuilderFactory.newInstance()).newDocument();
         final Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
         return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);
@@ -201,8 +185,8 @@ final class XMLDocumentHelper {
      * document stored in this instance.</li>
      * </ul>
      *
-     * @param srcDoc the source document
-     * @return the newly created instance
+     * @param srcDoc The source document
+     * @return The newly created instance
      * @throws ConfigurationException if an error occurs
      */
     public static XMLDocumentHelper forSourceDocument(final Document srcDoc) throws ConfigurationException {
@@ -223,9 +207,9 @@ final class XMLDocumentHelper {
      * Performs an XSL transformation on the passed in operands. All possible exceptions are caught and redirected as
      * {@code ConfigurationException} exceptions.
      *
-     * @param transformer the transformer
-     * @param source the source
-     * @param result the result
+     * @param transformer The transformer
+     * @param source The source
+     * @param result The result
      * @throws ConfigurationException if an error occurs
      */
     public static void transform(final Transformer transformer, final Source source, final Result result) throws ConfigurationException {
@@ -253,10 +237,10 @@ final class XMLDocumentHelper {
      * constructor is package private only for testing purposes. Instances should be created using the static factory
      * methods.
      *
-     * @param doc the {@code Document}
-     * @param elemMap the element mapping
-     * @param pubID the public ID of the source document
-     * @param sysID the system ID of the source document
+     * @param doc The {@code Document}
+     * @param elemMap The element mapping
+     * @param pubID The public ID of the source document
+     * @param sysID The system ID of the source document
      */
     XMLDocumentHelper(final Document doc, final Map<Node, Node> elemMap, final String pubID, final String sysID) {
         document = doc;
@@ -269,7 +253,7 @@ final class XMLDocumentHelper {
      * Creates a copy of this object. This copy contains a copy of the document and an element mapping which allows mapping
      * elements from the source document to elements of the copied document.
      *
-     * @return the copy
+     * @return The copy
      * @throws ConfigurationException if an error occurs
      */
     public XMLDocumentHelper createCopy() throws ConfigurationException {
@@ -280,7 +264,7 @@ final class XMLDocumentHelper {
     /**
      * Gets the {@code Document} managed by this helper.
      *
-     * @return the wrapped {@code Document}
+     * @return The wrapped {@code Document}
      */
     public Document getDocument() {
         return document;
@@ -291,7 +275,7 @@ final class XMLDocumentHelper {
      * which correspond to elements in the source document. If this instance has not been created from a source document,
      * the mapping is empty.
      *
-     * @return the element mapping to the source document
+     * @return The element mapping to the source document
      */
     public Map<Node, Node> getElementMapping() {
         return elementMapping;
@@ -300,7 +284,7 @@ final class XMLDocumentHelper {
     /**
      * Gets the public ID of the source document.
      *
-     * @return the public ID of the source document
+     * @return The public ID of the source document
      */
     public String getSourcePublicID() {
         return sourcePublicID;
@@ -309,7 +293,7 @@ final class XMLDocumentHelper {
     /**
      * Gets the system ID of the source document.
      *
-     * @return the system ID of the source document
+     * @return The system ID of the source document
      */
     public String getSourceSystemID() {
         return sourceSystemID;

@@ -49,8 +49,8 @@ public class TestInMemoryNodeModelReferences {
     /**
      * Returns a flat collection of all nodes contained in the specified nodes hierarchy.
      *
-     * @param root the root node of the hierarchy
-     * @return a collection with all nodes in this hierarchy
+     * @param root The root node of the hierarchy
+     * @return A collection with all nodes in this hierarchy
      */
     private Collection<ImmutableNode> collectNodes(final ImmutableNode root) {
         final Set<ImmutableNode> nodes = new HashSet<>();
@@ -66,7 +66,7 @@ public class TestInMemoryNodeModelReferences {
     /**
      * Creates the initial reference data for the test hierarchy.
      *
-     * @return the map with reference data
+     * @return The map with reference data
      */
     private Map<ImmutableNode, String> createReferences() {
         final Collection<ImmutableNode> nodes = collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);

@@ -29,7 +29,7 @@ public interface EntityRegistry {
     /**
      * Gets a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
-     * @return a map with the registered entity IDs
+     * @return A map with the registered entity IDs
      */
     Map<String, URL> getRegisteredEntities();
 

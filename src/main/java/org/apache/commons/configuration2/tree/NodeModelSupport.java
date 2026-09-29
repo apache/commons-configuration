@@ -24,7 +24,7 @@ package org.apache.commons.configuration2.tree;
  * This interface defines a single method for querying a {@code NodeModel}.
  * </p>
  *
- * @param <T> the type of the supported {@code NodeModel}
+ * @param <T> The type of the supported {@code NodeModel}
  * @since 2.0
  */
 public interface NodeModelSupport<T> {
@@ -32,7 +32,7 @@ public interface NodeModelSupport<T> {
     /**
      * Gets the {@code NodeModel} supported by this object.
      *
-     * @return the {@code NodeModel}
+     * @return The {@code NodeModel}
      */
     NodeModel<T> getNodeModel();
 }

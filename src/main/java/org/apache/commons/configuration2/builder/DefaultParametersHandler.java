@@ -28,7 +28,7 @@ package org.apache.commons.configuration2.builder;
  * initialization.
  * </p>
  *
- * @param <T> the type of parameters supported by this handler
+ * @param <T> The type of parameters supported by this handler
  * @since 2.0
  */
 public interface DefaultParametersHandler<T> {
@@ -40,7 +40,7 @@ public interface DefaultParametersHandler<T> {
      * parameters type they are called in the order they have been registered. So handlers registered later can override
      * initializations done by handlers registered earlier.
      *
-     * @param parameters the parameters object to be initialized
+     * @param parameters The parameters object to be initialized
      */
     void initializeDefaults(T parameters);
 }

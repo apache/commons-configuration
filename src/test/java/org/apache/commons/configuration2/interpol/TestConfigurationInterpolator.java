@@ -48,6 +48,7 @@ import java.util.function.Function;
 import org.apache.commons.text.lookup.StringLookupFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetSystemProperty;
 
 /**
  * Test class for ConfigurationInterpolator.
@@ -56,6 +57,8 @@ public class TestConfigurationInterpolator {
 
     /** Constant for a test variable name. */
     private static final String TEST_NAME = "varname";
+
+    private static final String SP_KEY = "TestConfigurationInterpolator.testSystemProperty";
 
     /** Constant for a test variable prefix. */
     private static final String TEST_PREFIX = "prefix";
@@ -98,7 +101,7 @@ public class TestConfigurationInterpolator {
     /**
      * Creates a lookup object that can resolve the test variable (and nothing else).
      *
-     * @return the test lookup object
+     * @return The test lookup object
      */
     private static Lookup setUpTestLookup() {
         return setUpTestLookup(TEST_NAME, TEST_VALUE);
@@ -107,9 +110,9 @@ public class TestConfigurationInterpolator {
     /**
      * Creates a lookup object that can resolve the specified variable (and nothing else).
      *
-     * @param var the variable name
-     * @param value the value of this variable
-     * @return the test lookup object
+     * @param var The variable name
+     * @param value The value of this variable
+     * @return The test lookup object
      */
     private static Lookup setUpTestLookup(final String var, final Object value) {
         final Lookup lookup = mock(Lookup.class);
@@ -467,6 +470,52 @@ public class TestConfigurationInterpolator {
         assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
     }
 
+    @Test
+    void testInterpolationDefaultValueNestedDefault() {
+        final Object value = 42;
+        final String valueStr = Objects.toString(value);
+        final ConfigurationInterpolator confInt = new ConfigurationInterpolator();
+        confInt.setEnableSubstitutionInVariables(true);
+        confInt.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${" + TEST_NAME + ":-123}}"));
+        assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${" + TEST_NAME + ":-123}}}"));
+        assertEquals(valueStr, confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-${" + TEST_NAME + ":-123}}}}"));
+        assertEquals("123", confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-123}}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${UnknownKey1:-${UnknownKey2:-${UnknownKey3:-http://localhost:8080/abc}}}"));
+    }
+
+    @Test
+    @SetSystemProperty(key = SP_KEY, value = "42")
+    void testInterpolationDefaultValueNestedDefaultPrefix() {
+        final Object value = 42;
+        final String valueStr = Objects.toString(value);
+        final ConfigurationInterpolator confInt = new ConfigurationInterpolator();
+        confInt.setEnableSubstitutionInVariables(true);
+        confInt.registerLookup("sys", DefaultLookups.SYSTEM_PROPERTIES.getLookup());
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:" + SP_KEY + ":-123}}"));
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:" + SP_KEY + ":-123}}}"));
+        assertEquals(valueStr, confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-${sys:" + SP_KEY + ":-123}}}}"));
+        assertEquals("123", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-123}}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-http://localhost:8080/abc}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-http://localhost:8080/abc}}"));
+        assertEquals("http://localhost:8080/abc", confInt.interpolate("${sys:UnknownKey1:-${sys:UnknownKey2:-${sys:UnknownKey3:-http://localhost:8080/abc}}}"));
+    }
+
+    /**
+     * Tests an interpolation that consists of a single undefined variable only with and without a default value.
+     */
+    @Test
+    void testInterpolationDefaultValueSingleVariable() {
+        final Object value = 42;
+        final String valueStr = Objects.toString(value);
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals("${I_am_not_defined}", interpolator.interpolate("${I_am_not_defined}"));
+        assertEquals(valueStr, interpolator.interpolate("${I_am_not_defined:-42}"));
+        assertEquals("", interpolator.interpolate("${I_am_not_defined:-}"));
+        assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
+        assertEquals(valueStr, interpolator.interpolate("${" + TEST_NAME + ":-123}"));
+    }
+
     /**
      * Tests interpolation with multiple variables containing arrays.
      */
@@ -557,18 +606,6 @@ public class TestConfigurationInterpolator {
         final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"));
-    }
-
-    /**
-     * Tests an interpolation that consists of a single undefined variable only with and without a default value.
-     */
-    @Test
-    void testInterpolationSingleVariableDefaultValue() {
-        final Object value = 42;
-        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
-        assertEquals("${I_am_not_defined}", interpolator.interpolate("${I_am_not_defined}"));
-        assertEquals("42", interpolator.interpolate("${I_am_not_defined:-42}"));
-        assertEquals("", interpolator.interpolate("${I_am_not_defined:-}"));
     }
 
     /**

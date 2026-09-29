@@ -71,7 +71,7 @@ public final class DefaultExpressionEngineSymbols {
          * {@code DefaultExpressionEngineSymbols} object. This is useful if symbols are to be created which are similar to the
          * passed in instance.
          *
-         * @param c the {@code DefaultExpressionEngineSymbols} object serving as starting point for this builder
+         * @param c The {@code DefaultExpressionEngineSymbols} object serving as starting point for this builder
          */
         public Builder(final DefaultExpressionEngineSymbols c) {
             propertyDelimiter = c.getPropertyDelimiter();
@@ -87,7 +87,7 @@ public final class DefaultExpressionEngineSymbols {
          * method does not change the state of this builder. So it is possible to change properties and create another
          * {@code DefaultExpressionEngineSymbols} instance.
          *
-         * @return the newly created {@code DefaultExpressionEngineSymbols} instance
+         * @return The newly created {@code DefaultExpressionEngineSymbols} instance
          */
         public DefaultExpressionEngineSymbols create() {
             return new DefaultExpressionEngineSymbols(this);
@@ -96,8 +96,8 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing the end marker of an attribute in a property key.
          *
-         * @param attributeEnd the attribute end marker
-         * @return a reference to this object for method chaining
+         * @param attributeEnd The attribute end marker
+         * @return A reference to this object for method chaining
          */
         public Builder setAttributeEnd(final String attributeEnd) {
             this.attributeEnd = attributeEnd;
@@ -108,8 +108,8 @@ public final class DefaultExpressionEngineSymbols {
          * Sets the string representing the start marker of an attribute in a property key. Attribute start and end marker are
          * used together to detect attributes in a property key.
          *
-         * @param attributeStart the attribute start marker
-         * @return a reference to this object for method chaining
+         * @param attributeStart The attribute start marker
+         * @return A reference to this object for method chaining
          */
         public Builder setAttributeStart(final String attributeStart) {
             this.attributeStart = attributeStart;
@@ -121,8 +121,8 @@ public final class DefaultExpressionEngineSymbols {
          * property can be escaped. If for instance &quot;.&quot; is used as property delimiter, you can set the escaped
          * delimiter to &quot;\.&quot; and can then escape the delimiter with a back slash.
          *
-         * @param escapedDelimiter the escaped property delimiter
-         * @return a reference to this object for method chaining
+         * @param escapedDelimiter The escaped property delimiter
+         * @return A reference to this object for method chaining
          */
         public Builder setEscapedDelimiter(final String escapedDelimiter) {
             this.escapedDelimiter = escapedDelimiter;
@@ -132,8 +132,8 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing the end of an index in a property key.
          *
-         * @param indexEnd the index end
-         * @return a reference to this object for method chaining
+         * @param indexEnd The index end
+         * @return A reference to this object for method chaining
          */
         public Builder setIndexEnd(final String indexEnd) {
             this.indexEnd = indexEnd;
@@ -144,8 +144,8 @@ public final class DefaultExpressionEngineSymbols {
          * Sets the string representing the start of an index in a property key. Index start and end marker are used together to
          * detect indices in a property key.
          *
-         * @param is the index start
-         * @return a reference to this object for method chaining
+         * @param is The index start
+         * @return A reference to this object for method chaining
          */
         public Builder setIndexStart(final String is) {
             this.indexStart = is;
@@ -155,8 +155,8 @@ public final class DefaultExpressionEngineSymbols {
         /**
          * Sets the string representing a delimiter for properties.
          *
-         * @param propertyDelimiter the property delimiter
-         * @return a reference to this object for method chaining
+         * @param propertyDelimiter The property delimiter
+         * @return A reference to this object for method chaining
          */
         public Builder setPropertyDelimiter(final String propertyDelimiter) {
             this.propertyDelimiter = propertyDelimiter;
@@ -190,7 +190,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Creates the {@code DefaultExpressionEngineSymbols} object with default symbols.
      *
-     * @return the default symbols instance
+     * @return The default symbols instance
      */
     private static DefaultExpressionEngineSymbols createDefaultSmybols() {
         return new Builder().setPropertyDelimiter(DEFAULT_PROPERTY_DELIMITER).setEscapedDelimiter(DEFAULT_ESCAPED_DELIMITER).setIndexStart(DEFAULT_INDEX_START)
@@ -218,7 +218,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Creates a new instance of {@code DefaultExpressionEngineSymbols}.
      *
-     * @param b the builder for defining the properties of this instance
+     * @param b The builder for defining the properties of this instance
      */
     private DefaultExpressionEngineSymbols(final Builder b) {
         propertyDelimiter = b.propertyDelimiter;
@@ -233,8 +233,8 @@ public final class DefaultExpressionEngineSymbols {
      * Compares this object with another one. Two instances of {@code DefaultExpressionEngineSymbols} are considered equal
      * if all of their properties are equal.
      *
-     * @param obj the object to compare to
-     * @return a flag whether these objects are equal
+     * @param obj The object to compare to
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -254,7 +254,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an attribute end marker.
      *
-     * @return the attribute end marker
+     * @return The attribute end marker
      */
     public String getAttributeEnd() {
         return attributeEnd;
@@ -263,7 +263,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an attribute start marker.
      *
-     * @return the attribute start marker
+     * @return The attribute start marker
      */
     public String getAttributeStart() {
         return attributeStart;
@@ -272,7 +272,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing an escaped property delimiter.
      *
-     * @return the escaped property delimiter
+     * @return The escaped property delimiter
      */
     public String getEscapedDelimiter() {
         return escapedDelimiter;
@@ -281,7 +281,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing the end of an index in a property key.
      *
-     * @return the index end marker
+     * @return The index end marker
      */
     public String getIndexEnd() {
         return indexEnd;
@@ -290,7 +290,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string representing the start of an index in a property key.
      *
-     * @return the index start marker
+     * @return The index start marker
      */
     public String getIndexStart() {
         return indexStart;
@@ -299,7 +299,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Gets the string used as delimiter in property keys.
      *
-     * @return the property delimiter
+     * @return The property delimiter
      */
     public String getPropertyDelimiter() {
         return propertyDelimiter;
@@ -308,7 +308,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Returns a hash code for this object.
      *
-     * @return a hash code
+     * @return A hash code
      */
     @Override
     public int hashCode() {
@@ -319,7 +319,7 @@ public final class DefaultExpressionEngineSymbols {
     /**
      * Returns a string representation for this object. This string contains the values of all properties.
      *
-     * @return a string for this object
+     * @return A string for this object
      */
     @Override
     public String toString() {

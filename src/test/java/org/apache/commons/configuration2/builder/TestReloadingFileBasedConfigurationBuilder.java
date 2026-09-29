@@ -57,7 +57,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
          * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilderTestImpl} and initializes it with a mock
          * reloading detector.
          *
-         * @param detector the mock detector
+         * @param detector The mock detector
          */
         public ReloadingFileBasedConfigurationBuilderTestImpl(final ReloadingDetector detector) {
             super(PropertiesConfiguration.class);
@@ -76,7 +76,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
         /**
          * Returns the file handler that was passed to createReloadingDetector().
          *
-         * @return the file handler
+         * @return The file handler
          */
         public FileHandler getHandlerForDetector() {
             return handlerForDetector;

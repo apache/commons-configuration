@@ -63,8 +63,8 @@ public abstract class AbstractXPathTest {
      * attribute with a counter value. The root node has a special attribute named {@value #ATTR_ROOT} with the value
      * {@code true}.
      *
-     * @param levels the number of levels in the hierarchy
-     * @return the root node of the hierarchy
+     * @param levels The number of levels in the hierarchy
+     * @return The root node of the hierarchy
      */
     protected ImmutableNode constructHierarchy(final int levels) {
         final ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
@@ -76,9 +76,9 @@ public abstract class AbstractXPathTest {
     /**
      * Recursive helper method for creating a level of the node hierarchy.
      *
-     * @param parentBuilder the builder for the parent node
-     * @param value the value of the parent node
-     * @param level the level counter
+     * @param parentBuilder The builder for the parent node
+     * @param value The value of the parent node
+     * @param level The level counter
      */
     private void createLevel(final ImmutableNode.Builder parentBuilder, final String value, final int level) {
         if (level >= 0) {
@@ -98,8 +98,8 @@ public abstract class AbstractXPathTest {
     /**
      * Returns a list with all node pointers contained in the specified iteration.
      *
-     * @param iterator the iterator
-     * @return a list with the node pointers obtained from the iterator
+     * @param iterator The iterator
+     * @return A list with the node pointers obtained from the iterator
      */
     protected List<NodePointer> iterationElements(final NodeIterator iterator) {
         final List<NodePointer> result = new ArrayList<>();
@@ -112,8 +112,8 @@ public abstract class AbstractXPathTest {
     /**
      * Determines the number of elements contained in the given iterator.
      *
-     * @param iterator the iterator
-     * @return the number of elements in this iteration
+     * @param iterator The iterator
+     * @return The number of elements in this iteration
      */
     protected int iteratorSize(final NodeIterator iterator) {
         int cnt = 0;

@@ -52,7 +52,7 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * configuration, but occur for each of the managed configuration.
  * </p>
  *
- * @param <T> the concrete type of {@code Configuration} objects created by this builder
+ * @param <T> The concrete type of {@code Configuration} objects created by this builder
  * @since 2.0
  */
 public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends MultiFileConfigurationBuilder<T>
@@ -64,7 +64,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
     /**
      * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} without setting initialization parameters.
      *
-     * @param resCls the result configuration class
+     * @param resCls The result configuration class
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls) {
@@ -74,8 +74,8 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
     /**
      * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters.
      *
-     * @param resCls the result configuration class
-     * @param params a map with initialization parameters
+     * @param resCls The result configuration class
+     * @param params A map with initialization parameters
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params) {
@@ -86,9 +86,9 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters and a
      * flag whether initialization failures should be ignored.
      *
-     * @param resCls the result configuration class
-     * @param params a map with initialization parameters
-     * @param allowFailOnInit a flag whether initialization errors should be ignored
+     * @param resCls The result configuration class
+     * @param params A map with initialization parameters
+     * @param allowFailOnInit A flag whether initialization errors should be ignored
      * @throws IllegalArgumentException if the result class is <strong>null</strong>
      */
     public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
@@ -108,7 +108,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * {@link CombinedReloadingController} which operates on the reloading controllers of the managed builders created so
      * far.
      *
-     * @return the newly created {@code ReloadingController}
+     * @return The newly created {@code ReloadingController}
      */
     private ReloadingController createReloadingController() {
         final Set<ReloadingController> empty = Collections.emptySet();

@@ -81,8 +81,8 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * comment of the constructor, we expect the {@code Properties} object to contain only String key; therefore, it is safe
      * to do this cast.
      *
-     * @param props the {@code Properties} to be copied.
-     * @return a newly created map with all string keys of the properties.
+     * @param props The {@code Properties} to be copied.
+     * @return A newly created map with all string keys of the properties.
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Object> toMap(final Properties props) {
@@ -101,7 +101,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * Create a Configuration decorator around the specified Map. The map is used to store the configuration properties, any
      * change will also affect the Map.
      *
-     * @param map the map.
+     * @param map The map.
      */
     public MapConfiguration(final Map<String, ?> map) {
         this.map = (Map<String, Object>) Objects.requireNonNull(map, "map");
@@ -113,11 +113,11 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * {@code Properties} actually implements {@code Map<Object, Object>}, we expect it to contain only string keys. Other
      * key types will lead to {@code ClassCastException} exceptions on certain methods.
      *
-     * @param props the {@code Properties} object defining the content of this configuration.
+     * @param props The {@code Properties} object defining the content of this configuration.
      * @since 1.8
      */
     public MapConfiguration(final Properties props) {
-        map = toMap(Objects.requireNonNull(props));
+        map = toMap(Objects.requireNonNull(props, "props"));
     }
 
     @Override
@@ -148,7 +148,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     /**
      * Returns a copy of this object. The returned configuration will contain the same properties as the original. Event listeners are not cloned.
      *
-     * @return the copy.
+     * @return The copy.
      * @since 1.3
      */
     @Override
@@ -188,7 +188,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     /**
      * Gets the Map decorated by this configuration.
      *
-     * @return the map this configuration is based onto.
+     * @return The map this configuration is based onto.
      */
     public Map<String, Object> getMap() {
         return map;
@@ -223,7 +223,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * Sets a flag whether trimming of property values is disabled. This flag is only evaluated if list splitting is
      * enabled. Refer to the header comment for more information about list splitting and trimming.
      *
-     * @param trimmingDisabled a flag whether trimming of property values should be disabled.
+     * @param trimmingDisabled A flag whether trimming of property values should be disabled.
      * @since 1.7
      */
     public void setTrimmingDisabled(final boolean trimmingDisabled) {

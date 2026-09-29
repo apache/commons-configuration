@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -133,8 +135,8 @@ public class TestAbstractConfigurationBasicFeatures {
      * Prepares a test configuration for a test for a list conversion. The configuration is populated with a list property.
      * The returned list contains the expected list values converted to integers.
      *
-     * @param config the test configuration
-     * @return the list with expected values
+     * @param config The test configuration
+     * @return The list with expected values
      */
     private static List<Integer> prepareListTest(final PropertiesConfiguration config) {
         final List<Integer> expected = new ArrayList<>(PROP_COUNT);
@@ -148,7 +150,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for adding properties with multiple values.
      *
-     * @param config the configuration to be used for testing
+     * @param config The configuration to be used for testing
      */
     private void checkAddListProperty(final AbstractConfiguration config) {
         config.addProperty("test", "value1");
@@ -168,9 +170,9 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Tests whether the correct events are received for a copy operation.
      *
-     * @param l the event listener
-     * @param src the configuration that was copied
-     * @param eventType the expected event type
+     * @param l The event listener
+     * @param src The configuration that was copied
+     * @param eventType The expected event type
      */
     private void checkCopyEvents(final CollectingConfigurationListener l, final Configuration src, final EventType<?> eventType) {
         final Map<String, ConfigurationEvent> events = new HashMap<>();
@@ -193,7 +195,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for checking getList() if the property value is a scalar.
      *
-     * @param value the value of the property
+     * @param value The value of the property
      */
     private void checkGetListScalar(final Object value) {
         final BaseConfiguration config = new BaseConfiguration();
@@ -205,7 +207,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Helper method for checking getStringArray() if the property value is a scalar.
      *
-     * @param value the value of the property
+     * @param value The value of the property
      */
     private void checkGetStringArrayScalar(final Object value) {
         final BaseConfiguration config = new BaseConfiguration();
@@ -217,7 +219,7 @@ public class TestAbstractConfigurationBasicFeatures {
     /**
      * Tests the values of list properties after a copy operation.
      *
-     * @param config the configuration to test
+     * @param config The configuration to test
      */
     private void checkListProperties(final Configuration config) {
         List<Object> values = config.getList("list1");
@@ -230,7 +232,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * Creates the destination configuration for testing the copy() and append() methods. This configuration contains keys
      * with a running index and corresponding values starting with the prefix "value".
      *
-     * @return the destination configuration for copy operations
+     * @return The destination configuration for copy operations
      */
     private AbstractConfiguration setUpDestConfig() {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
@@ -245,7 +247,7 @@ public class TestAbstractConfigurationBasicFeatures {
      * Creates the source configuration for testing the copy() and append() methods. This configuration contains keys with
      * an odd index and values starting with the prefix "src". There are also some list properties.
      *
-     * @return the source configuration for copy operations
+     * @return The source configuration for copy operations
      */
     private Configuration setUpSourceConfig() {
         final BaseConfiguration config = new BaseConfiguration();
@@ -674,6 +676,32 @@ public class TestAbstractConfigurationBasicFeatures {
         final List<Integer> expected = prepareListTest(config);
         final List<Integer> result = config.getList(Integer.class, KEY_PREFIX);
         assertEquals(expected, result);
+    }
+
+    /**
+     * Tests typed list conversion for delimited values with duplicates.
+     */
+    @Test
+    void testGetListTypedWithDuplicatesAndDelimiterHandling() {
+        final BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+
+        config.addProperty("list.strings", Arrays.asList("a", "b", "a"));
+        config.addProperty("list.strings2", Arrays.asList("", "", "a"));
+        config.addProperty("list.ints", Arrays.asList(1, 2, 1));
+        config.addProperty("list.booleans", Arrays.asList(true, false, true));
+        config.addProperty("list.doubles", Arrays.asList(1.5, 2.5, 1.5));
+        config.addProperty("list.paths", Arrays.asList(Paths.get("path1"), Paths.get("path2"), Paths.get("path1")));
+
+        assertEquals(Arrays.asList("a", "b", "a"), config.getList(String.class, "list.strings"));
+        assertEquals(Arrays.asList("", "", "a"), config.getList(String.class, "list.strings2"));
+        assertEquals(Arrays.asList(1, 2, 1), config.getList(Integer.class, "list.ints"));
+        assertEquals(Arrays.asList(Boolean.TRUE, Boolean.FALSE, Boolean.TRUE), config.getList(Boolean.class, "list.booleans"));
+        assertEquals(Arrays.asList(1.5d, 2.5d, 1.5d), config.getList(Double.class, "list.doubles"));
+        assertEquals(
+                Arrays.asList(Paths.get("path1"), Paths.get("path2"), Paths.get("path1")),
+                config.getList(Path.class, "list.paths")
+        );
     }
 
     /**

@@ -46,8 +46,8 @@ public class TestJakartaServletRequestConfiguration extends TestAbstractConfigur
     /**
      * Returns a new servlet request configuration that is backed by the passed in configuration.
      *
-     * @param base the configuration with the underlying values
-     * @return the servlet request configuration
+     * @param base The configuration with the underlying values
+     * @return The servlet request configuration
      */
     private AbstractConfiguration createConfiguration(final Configuration base) {
         final HttpServletRequest request = mock(HttpServletRequest.class);

@@ -73,7 +73,7 @@ public class TestConfigurationDynaBean {
     /**
      * Creates the underlying configuration object for the dyna bean.
      *
-     * @return the underlying configuration object
+     * @return The underlying configuration object
      */
     protected Configuration createConfiguration() {
         return new BaseConfiguration();

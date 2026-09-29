@@ -62,8 +62,8 @@ public class TestSubnodeConfiguration {
     /**
      * Adds a tree structure to the root node of the given configuration.
      *
-     * @param configuration the configuration
-     * @param root the root of the tree structure to be added
+     * @param configuration The configuration
+     * @param root The root of the tree structure to be added
      */
     private static void appendTree(final BaseHierarchicalConfiguration configuration, final ImmutableNode root) {
         configuration.addNodes(null, Collections.singleton(root));
@@ -72,7 +72,7 @@ public class TestSubnodeConfiguration {
     /**
      * Initializes the parent configuration. This method creates the typical structure of tables and fields nodes.
      *
-     * @return the parent configuration
+     * @return The parent configuration
      */
     private static BaseHierarchicalConfiguration setUpParentConfig() {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
@@ -89,7 +89,7 @@ public class TestSubnodeConfiguration {
     /**
      * Helper method for testing interpolation facilities between a sub and its parent configuration.
      *
-     * @param withUpdates the supports updates flag
+     * @param withUpdates The supports updates flag
      */
     private void checkInterpolationFromConfigurationAt(final boolean withUpdates) {
         parent.addProperty("base.dir", "/home/foo");
@@ -133,7 +133,7 @@ public class TestSubnodeConfiguration {
     /**
      * Initializes the test configuration using the specified key.
      *
-     * @param key the key
+     * @param key The key
      */
     private void setUpSubnodeConfig(final String key) {
         config = (SubnodeConfiguration) parent.configurationAt(key, true);
@@ -142,8 +142,8 @@ public class TestSubnodeConfiguration {
     /**
      * Sets up the tracked model for the sub configuration.
      *
-     * @param selector the selector
-     * @return the tracked model
+     * @param selector The selector
+     * @return The tracked model
      */
     private TrackedNodeModel setUpTrackedModel(final NodeSelector selector) {
         final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();

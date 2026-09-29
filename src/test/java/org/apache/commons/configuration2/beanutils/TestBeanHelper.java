@@ -76,7 +76,7 @@ public class TestBeanHelper {
         /**
          * Returns the number of beans created via this factory.
          *
-         * @return the number of created beans
+         * @return The number of created beans
          */
         public int getCreateBeanCount() {
             return createBeanCount;
@@ -106,7 +106,7 @@ public class TestBeanHelper {
     /**
      * Tests if the bean was correctly initialized from the data of the test bean declaration.
      *
-     * @param bean the bean to be checked
+     * @param bean The bean to be checked
      */
     private void checkBean(final BeanCreationTestBean bean) {
         assertEquals(TEST_STRING, bean.getStringValue());
@@ -120,7 +120,7 @@ public class TestBeanHelper {
     /**
      * Tests if the bean was correctly initialized from the data of the test bean declaration.
      *
-     * @param bean the bean to be checked
+     * @param bean The bean to be checked
      */
     private void checkBean(final BeanCreationTestBeanWithListChild bean) {
         assertEquals(TEST_STRING, bean.getStringValue());
@@ -157,7 +157,7 @@ public class TestBeanHelper {
     /**
      * Returns an initialized bean declaration.
      *
-     * @return the bean declaration
+     * @return The bean declaration
      */
     private BeanDeclarationTestImpl setUpBeanDeclaration() {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();

@@ -58,8 +58,8 @@ public class EnvironmentConfiguration extends MapConfiguration {
      * Adds a property to this configuration. Because this configuration is read-only, this operation is not allowed and
      * will cause an exception.
      *
-     * @param key the key of the property to be added
-     * @param value the property value
+     * @param key The key of the property to be added
+     * @param value The property value
      */
     @Override
     protected void addPropertyDirect(final String key, final Object value) {
@@ -79,7 +79,7 @@ public class EnvironmentConfiguration extends MapConfiguration {
      * Removes a property from this configuration. Because this configuration is read-only, this operation is not allowed
      * and will cause an exception.
      *
-     * @param key the key of the property to be removed
+     * @param key The key of the property to be removed
      */
     @Override
     protected void clearPropertyDirect(final String key) {

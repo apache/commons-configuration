@@ -44,7 +44,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
      * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
      *
      * @param options options for loading the file
-     * @return the {@code Yaml} instance for loading a file
+     * @return The {@code Yaml} instance for loading a file
      */
     private static Yaml createYamlForReading(final LoaderOptions options) {
         return new Yaml(new SafeConstructor(options), new Representer(new DumperOptions()), new DumperOptions(), options);
@@ -59,7 +59,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     /**
      * Creates a new instance of {@code YAMLConfiguration} as a copy of the specified configuration.
      *
-     * @param c the configuration to be copied
+     * @param c The configuration to be copied
      */
     public YAMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
@@ -73,7 +73,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     /**
      * Loads the configuration from the given input stream.
      *
-     * @param in the input stream
+     * @param in The input stream
      * @throws ConfigurationException if an error occurs
      */
     @Override

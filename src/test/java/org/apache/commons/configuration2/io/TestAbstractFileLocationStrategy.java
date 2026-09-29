@@ -38,8 +38,12 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class TestAbstractFileLocationStrategy {
 
-    private static URL url(final String spec) throws Exception {
-        return new URL(spec);
+    private static Set<Pattern> hosts(final String... regexes) {
+        final LinkedHashSet<Pattern> set = new LinkedHashSet<>();
+        for (final String r : regexes) {
+            set.add(Pattern.compile(r, Pattern.CASE_INSENSITIVE));
+        }
+        return set;
     }
 
     // Bypasses the validation of the single-arg constructor
@@ -49,14 +53,6 @@ public class TestAbstractFileLocationStrategy {
 
     private static Set<String> schemes(final String... values) {
         return new LinkedHashSet<>(Arrays.asList(values));
-    }
-
-    private static Set<Pattern> hosts(final String... regexes) {
-        final LinkedHashSet<Pattern> set = new LinkedHashSet<>();
-        for (final String r : regexes) {
-            set.add(Pattern.compile(r, Pattern.CASE_INSENSITIVE));
-        }
-        return set;
     }
 
     static Stream<Arguments> testCheckUrlAccepts() throws Exception {
@@ -95,6 +91,10 @@ public class TestAbstractFileLocationStrategy {
                 Arguments.of(url("https://evilhost/x.properties"), schemes(), hosts("trusted\\.example")),
                 Arguments.of(url("jar:https://evilhost/x.jar!/y.properties"), schemes(), hosts("trusted\\.example"))
         );
+    }
+
+    private static URL url(final String spec) throws Exception {
+        return new URL(spec);
     }
 
     @Test

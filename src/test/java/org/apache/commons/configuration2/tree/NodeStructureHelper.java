@@ -85,9 +85,9 @@ public final class NodeStructureHelper {
     /**
      * Appends a component to a node path. The component is added separated by a path separator.
      *
-     * @param path the path
-     * @param component the component to be added
-     * @return the resulting path
+     * @param path The path
+     * @param component The component to be added
+     * @return The resulting path
      */
     public static String appendPath(final String path, final String component) {
         final StringBuilder buf = new StringBuilder(StringUtils.length(path) + StringUtils.length(component) + 1);
@@ -98,8 +98,8 @@ public final class NodeStructureHelper {
     /**
      * Returns the name of the author at the given index.
      *
-     * @param idx the index
-     * @return the name of this author
+     * @param idx The index
+     * @return The name of this author
      */
     public static String author(final int idx) {
         return AUTHORS[idx];
@@ -108,7 +108,7 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of authors.
      *
-     * @return the number of authors
+     * @return The number of authors
      */
     public static int authorsLength() {
         return AUTHORS.length;
@@ -118,7 +118,7 @@ public final class NodeStructureHelper {
      * Creates a tree with a root node whose children are the test authors. Each other has his works as child nodes. Each
      * work has its personae as children.
      *
-     * @return the root node of the authors tree
+     * @return The root node of the authors tree
      */
     private static ImmutableNode createAuthorsTree() {
         final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(AUTHORS.length);
@@ -142,8 +142,8 @@ public final class NodeStructureHelper {
      * Helper method for creating a field node with its children. Nodes of this type are used within the tables tree. They
      * define a single column of a table.
      *
-     * @param name the name of the field
-     * @return the field node
+     * @param name The name of the field
+     * @return The field node
      */
     public static ImmutableNode createFieldNode(final String name) {
         final ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
@@ -154,9 +154,9 @@ public final class NodeStructureHelper {
     /**
      * Helper method for creating an immutable node with a name and a value.
      *
-     * @param name the node's name
-     * @param value the node's value
-     * @return the new node
+     * @param name The node's name
+     * @param value The node's value
+     * @return The new node
      */
     public static ImmutableNode createNode(final String name, final Object value) {
         return new ImmutableNode.Builder().name(name).value(value).create();
@@ -167,7 +167,7 @@ public final class NodeStructureHelper {
      * attribute pointing to the author who invented this person. There is a single child node for the associated work which
      * has again a child and an attribute.
      *
-     * @return the root node of the personae tree
+     * @return The root node of the personae tree
      */
     private static ImmutableNode createPersonaeTree() {
         final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
@@ -189,7 +189,7 @@ public final class NodeStructureHelper {
     /**
      * Creates a mock for a resolver.
      *
-     * @return the resolver mock
+     * @return The resolver mock
      */
     @SuppressWarnings("unchecked")
     public static NodeKeyResolver<ImmutableNode> createResolverMock() {
@@ -201,7 +201,7 @@ public final class NodeStructureHelper {
      *
      * tables table name fields field name field name
      *
-     * @return the resulting nodes structure
+     * @return The resulting nodes structure
      */
     private static ImmutableNode createTablesTree() {
         return createTablesTree(TABLES, FIELDS);
@@ -211,9 +211,9 @@ public final class NodeStructureHelper {
      * Creates as tree with database table data based on the passed in arrays of table names and fields for tables. Works
      * like the method without parameters, but allows defining the data of the structure.
      *
-     * @param tables an array with the names of the tables
-     * @param fields an array with the fields of the single tables
-     * @return the resulting nodes structure
+     * @param tables An array with the names of the tables
+     * @param fields An array with the fields of the single tables
+     * @return The resulting nodes structure
      */
     public static ImmutableNode createTablesTree(final String[] tables, final String[][] fields) {
         final ImmutableNode.Builder bldTables = new ImmutableNode.Builder(tables.length);
@@ -236,9 +236,9 @@ public final class NodeStructureHelper {
     /**
      * Returns the name of the specified field in the tables tree.
      *
-     * @param tabIdx the index of the table
-     * @param fldIdx the index of the field
-     * @return the name of this field
+     * @param tabIdx The index of the table
+     * @param fldIdx The index of the field
+     * @return The name of this field
      */
     public static String field(final int tabIdx, final int fldIdx) {
         return FIELDS[tabIdx][fldIdx];
@@ -247,8 +247,8 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of fields in the test table with the given index.
      *
-     * @param tabIdx the index of the table
-     * @return the number of fields in this table
+     * @param tabIdx The index of the table
+     * @return The number of fields in this table
      */
     public static int fieldsLength(final int tabIdx) {
         return FIELDS[tabIdx].length;
@@ -257,10 +257,10 @@ public final class NodeStructureHelper {
     /**
      * Helper method for evaluating a single component of a node key.
      *
-     * @param parent the current parent node
-     * @param components the array with the components of the node key
-     * @param currentIdx the index of the current path component
-     * @return the found target node
+     * @param parent The current parent node
+     * @param components The array with the components of the node key
+     * @param currentIdx The index of the current path component
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     private static ImmutableNode findNode(final ImmutableNode parent, final String[] components, final int currentIdx) {
@@ -292,7 +292,7 @@ public final class NodeStructureHelper {
      * Returns a clone of the array with the table fields. This is useful if a slightly different tree structure should be
      * created.
      *
-     * @return the cloned field names
+     * @return The cloned field names
      */
     public static String[][] getClonedFields() {
         final String[][] fieldNamesNew = new String[FIELDS.length][];
@@ -306,7 +306,7 @@ public final class NodeStructureHelper {
      * Returns a clone of the array with the table names. This is useful if a slightly different tree structure should be
      * created.
      *
-     * @return the cloned table names
+     * @return The cloned table names
      */
     public static String[] getClonedTables() {
         return TABLES.clone();
@@ -317,9 +317,9 @@ public final class NodeStructureHelper {
      * {@code path/to/node}. If there are multiple sibling nodes with the same name, a numerical index can be specified in
      * parenthesis.
      *
-     * @param root the root node
-     * @param key the key to the desired node
-     * @return the node with this key
+     * @param root The root node
+     * @param key The key to the desired node
+     * @return The node with this key
      * @throws NoSuchElementException if the key cannot be resolved
      */
     public static ImmutableNode nodeForKey(final ImmutableNode root, final String key) {
@@ -331,9 +331,9 @@ public final class NodeStructureHelper {
      * Evaluates the given key and finds the corresponding child node of the root node of the specified model. This is a
      * convenience method that works like the method with the same name, but obtains the root node from the given model.
      *
-     * @param model the node model
-     * @param key the key to the desired node
-     * @return the found target node
+     * @param model The node model
+     * @param key The key to the desired node
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     public static ImmutableNode nodeForKey(final InMemoryNodeModel model, final String key) {
@@ -345,9 +345,9 @@ public final class NodeStructureHelper {
      * object. This is a convenience method that works like the method with the same name, but obtains the root node from
      * the given handler object.
      *
-     * @param handler the {@code NodeHandler} object
-     * @param key the key to the desired node
-     * @return the found target node
+     * @param handler The {@code NodeHandler} object
+     * @param key The key to the desired node
+     * @return The found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
     public static ImmutableNode nodeForKey(final NodeHandler<ImmutableNode> handler, final String key) {
@@ -357,8 +357,8 @@ public final class NodeStructureHelper {
     /**
      * Convenience method for creating a path for accessing a node based on the node names.
      *
-     * @param path an array with the expected node names on the path
-     * @return the resulting path as string
+     * @param path An array with the expected node names on the path
+     * @return The resulting path as string
      */
     public static String nodePath(final String... path) {
         return StringUtils.join(path, PATH_SEPARATOR);
@@ -367,9 +367,9 @@ public final class NodeStructureHelper {
     /**
      * Convenience method for creating a node path with a special end node.
      *
-     * @param endNode the name of the last path component
-     * @param path an array with the expected node names on the path
-     * @return the resulting path as string
+     * @param endNode The name of the last path component
+     * @param path An array with the expected node names on the path
+     * @return The resulting path as string
      */
     public static String nodePathWithEndNode(final String endNode, final String... path) {
         return nodePath(path) + PATH_SEPARATOR + endNode;
@@ -378,10 +378,10 @@ public final class NodeStructureHelper {
     /**
      * Returns the name of a persona.
      *
-     * @param authorIdx the author index
-     * @param workIdx the index of the work
-     * @param personaIdx the index of the persona
-     * @return the name of this persona
+     * @param authorIdx The author index
+     * @param workIdx The index of the work
+     * @param personaIdx The index of the persona
+     * @return The name of this persona
      */
     public static String persona(final int authorIdx, final int workIdx, final int personaIdx) {
         return PERSONAE[authorIdx][workIdx][personaIdx];
@@ -390,9 +390,9 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of personae in the given work of the specified author.
      *
-     * @param authorIdx the author index
-     * @param workIdx the index of the work
-     * @return the number of personae in this work
+     * @param authorIdx The author index
+     * @param workIdx The index of the work
+     * @return The number of personae in this work
      */
     public static int personaeLength(final int authorIdx, final int workIdx) {
         return PERSONAE[authorIdx][workIdx].length;
@@ -401,7 +401,7 @@ public final class NodeStructureHelper {
     /**
      * Prepares the passed in resolver mock to resolve add keys. They are interpreted on a default expression engine.
      *
-     * @param resolver the {@code NodeKeyResolver} mock
+     * @param resolver The {@code NodeKeyResolver} mock
      */
     public static void prepareResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
         when(resolver.resolveAddKey(any(), any(), any())).then(invocation -> {
@@ -416,7 +416,7 @@ public final class NodeStructureHelper {
      * Prepares a mock for a resolver to expect arbitrary resolve operations. These operations are implemented on top of a
      * default expression engine.
      *
-     * @param resolver the mock resolver
+     * @param resolver The mock resolver
      */
     @SuppressWarnings("unchecked")
     public static void prepareResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
@@ -431,8 +431,8 @@ public final class NodeStructureHelper {
     /**
      * Returns the name of the test table with the given index.
      *
-     * @param idx the index of the table
-     * @return the name of the test table with this index
+     * @param idx The index of the table
+     * @return The name of the test table with this index
      */
     public static String table(final int idx) {
         return TABLES[idx];
@@ -441,7 +441,7 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of tables in the tables tree.
      *
-     * @return the number of tables
+     * @return The number of tables
      */
     public static int tablesLength() {
         return TABLES.length;
@@ -450,9 +450,9 @@ public final class NodeStructureHelper {
     /**
      * Returns the work of an author with a given index.
      *
-     * @param authorIdx the author index
-     * @param idx the index of the work
-     * @return the desired work
+     * @param authorIdx The author index
+     * @param idx The index of the work
+     * @return The desired work
      */
     public static String work(final int authorIdx, final int idx) {
         return WORKS[authorIdx][idx];
@@ -461,8 +461,8 @@ public final class NodeStructureHelper {
     /**
      * Returns the number of works for the author with the given index.
      *
-     * @param authorIdx the author index
-     * @return the number of works of this author
+     * @param authorIdx The author index
+     * @return The number of works of this author
      */
     public static int worksLength(final int authorIdx) {
         return WORKS[authorIdx].length;

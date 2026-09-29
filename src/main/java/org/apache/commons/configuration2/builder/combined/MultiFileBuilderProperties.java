@@ -31,7 +31,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * available properties and may be extended even in minor releases.
  * </p>
  *
- * @param <T> the return type of all methods for allowing method chaining
+ * @param <T> The return type of all methods for allowing method chaining
  * @since 2.0
  */
 public interface MultiFileBuilderProperties<T> {
@@ -39,8 +39,8 @@ public interface MultiFileBuilderProperties<T> {
     /**
      * Sets the pattern string. Based on this pattern the configuration file to be loaded is determined.
      *
-     * @param p the pattern string
-     * @return a reference to this object for method chaining
+     * @param p The pattern string
+     * @return A reference to this object for method chaining
      */
     T setFilePattern(String p);
 
@@ -48,8 +48,8 @@ public interface MultiFileBuilderProperties<T> {
      * Sets a parameters object to be used when creating a managed configuration. These parameters configure sub
      * configurations.
      *
-     * @param p the parameters object for a sub configuration
-     * @return a reference to this object for method chaining
+     * @param p The parameters object for a sub configuration
+     * @return A reference to this object for method chaining
      */
     T setManagedBuilderParameters(BuilderParameters p);
 }

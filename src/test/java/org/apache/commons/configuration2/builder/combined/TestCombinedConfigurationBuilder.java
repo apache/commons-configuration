@@ -273,7 +273,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Helper method for testing the attributes of a combined configuration created by the builder.
      *
-     * @param cc the configuration to be checked
+     * @param cc The configuration to be checked
      */
     private static void checkCombinedConfigAttrs(final CombinedConfiguration cc) {
         final ListDelimiterHandler handler = cc.getListDelimiterHandler();
@@ -285,8 +285,8 @@ public class TestCombinedConfigurationBuilder {
      * Creates a configuration builder for the definition configuration which always returns the passed in definition
      * configuration.
      *
-     * @param defConfig the definition configuration
-     * @return the definition builder
+     * @param defConfig The definition configuration
+     * @return The definition builder
      */
     protected static BasicConfigurationBuilder<? extends BaseHierarchicalConfiguration> createDefinitionBuilder(final BaseHierarchicalConfiguration defConfig) {
         return new ConstantConfigurationBuilder(defConfig);
@@ -296,9 +296,9 @@ public class TestCombinedConfigurationBuilder {
      * Convenience method for creating a definition configuration. This method creates a configuration containing a tag
      * referring to a configuration source. The tag has attributes defined by the given map.
      *
-     * @param tag the name of the tag to create
-     * @param attrs the attributes of this tag
-     * @return the definition configuration
+     * @param tag The name of the tag to create
+     * @param attrs The attributes of this tag
+     * @return The definition configuration
      */
     protected static BaseHierarchicalConfiguration createDefinitionConfig(final String tag, final Map<String, Object> attrs) {
         final BaseHierarchicalConfiguration defConfig = new BaseHierarchicalConfiguration();
@@ -312,8 +312,8 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Prepares a parameters object for a test for properties inheritance.
      *
-     * @param params the {@code Parameters} object
-     * @return the builder parameters
+     * @param params The {@code Parameters} object
+     * @return The builder parameters
      */
     private static XMLBuilderParameters prepareParamsForInheritanceTest(final Parameters params) {
         final DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
@@ -326,7 +326,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Sets the system property which selects a specific file managed by a MultiFileConfigurationBuilder.
      *
-     * @param key the key to select the desired file
+     * @param key The key to select the desired file
      */
     private static void switchToMultiFile(final String key) {
         System.setProperty(MULTI_FILE_PROPERTY, key);
@@ -341,7 +341,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Tests if the configuration was correctly created by the builder.
      *
-     * @return the combined configuration obtained from the builder
+     * @return The combined configuration obtained from the builder
      */
     private CombinedConfiguration checkConfiguration() throws ConfigurationException {
         final CombinedConfiguration compositeConfiguration = builder.getConfiguration();
@@ -363,7 +363,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Helper method for testing whether the file system can be customized in the configuration definition file.
      *
-     * @param fsFile the file to be processed
+     * @param fsFile The file to be processed
      * @throws ConfigurationException if an error occurs
      */
     private void checkFileSystem(final File fsFile) throws ConfigurationException {
@@ -377,9 +377,9 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Helper method for testing whether properties of a MultiFileConfiguration can be obtained.
      *
-     * @param key the key of the file to be accessed
-     * @param config the configuration to check
-     * @param rows the expected value of the test property
+     * @param key The key of the file to be accessed
+     * @param config The configuration to check
+     * @param rows The expected value of the test property
      */
     private void checkMultiFile(final String key, final CombinedConfiguration config, final int rows) {
         switchToMultiFile(key);
@@ -389,7 +389,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Checks if the passed in configuration contains the expected properties.
      *
-     * @param compositeConfiguration the configuration to check
+     * @param compositeConfiguration The configuration to check
      */
     private void checkProperties(final Configuration compositeConfiguration) {
         assertTrue(compositeConfiguration.getBoolean("test.boolean"));
@@ -400,8 +400,8 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Loads a test file which includes a MultiFileConfigurationBuilder declaration and returns the resulting configuration.
      *
-     * @param fileName the name of the file to be loaded
-     * @return the resulting combined configuration
+     * @param fileName The name of the file to be loaded
+     * @return The resulting combined configuration
      * @throws ConfigurationException if an error occurs
      */
     private CombinedConfiguration createMultiFileConfig(final String fileName) throws ConfigurationException {
@@ -415,7 +415,7 @@ public class TestCombinedConfigurationBuilder {
     /**
      * Creates an object with parameters for defining the file to be loaded.
      *
-     * @return the parameters object
+     * @return The parameters object
      */
     protected FileBasedBuilderParameters createParameters() {
         return parameters.fileBased();
@@ -425,8 +425,8 @@ public class TestCombinedConfigurationBuilder {
      * Prepares a test with a combined configuration that uses a single sub builder. This method adds some default
      * attributes to the given map, creates the corresponding definition builder and configures the combined builder.
      *
-     * @param attrs the map with attributes
-     * @return the definition builder
+     * @param attrs The map with attributes
+     * @return The definition builder
      */
     private BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> prepareSubBuilderTest(final Map<String, Object> attrs) {
         attrs.put("fileName", TEST_SUB_XML);

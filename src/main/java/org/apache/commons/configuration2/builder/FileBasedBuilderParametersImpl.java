@@ -61,8 +61,8 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * additional settings which are stored directly in the newly created object. If the map is <strong>null</strong>, an
      * uninitialized instance is returned.
      *
-     * @param map the map with properties (must not be <strong>null</strong>)
-     * @return the newly created instance
+     * @param map The map with properties (must not be <strong>null</strong>)
+     * @return The newly created instance
      * @throws ClassCastException if the map contains invalid data
      */
     public static FileBasedBuilderParametersImpl fromMap(final Map<String, ?> map) {
@@ -78,8 +78,8 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Looks up an instance of this class in the specified parameters map. This is equivalent to
      * {@code fromParameters(params, false};}
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static FileBasedBuilderParametersImpl fromParameters(final Map<String, ?> params) {
@@ -91,10 +91,10 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * This method can be used to obtain an instance of this class which has been stored in a parameters map. It is
      * compatible with the {@code getParameters()} method.
      *
-     * @param params the map with parameters (must not be <strong>null</strong>
+     * @param params The map with parameters (must not be <strong>null</strong>
      * @param createIfMissing determines the behavior if no instance is found in the map; if <strong>true</strong>, a new instance
      *        with default settings is created; if <strong>false</strong>, <strong>null</strong> is returned
-     * @return the instance obtained from the map or <strong>null</strong>
+     * @return The instance obtained from the map or <strong>null</strong>
      * @throws IllegalArgumentException if the map is <strong>null</strong>
      */
     public static FileBasedBuilderParametersImpl fromParameters(final Map<String, ?> params, final boolean createIfMissing) {
@@ -131,7 +131,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Creates a new instance of {@code FileBasedBuilderParametersImpl} and associates it with the given {@code FileHandler}
      * object. If the handler is <strong>null</strong>, a new handler instance is created.
      *
-     * @param handler the associated {@code FileHandler} (can be <strong>null</strong>)
+     * @param handler The associated {@code FileHandler} (can be <strong>null</strong>)
      */
     public FileBasedBuilderParametersImpl(final FileHandler handler) {
         fileHandler = handler != null ? handler : new FileHandler();
@@ -151,7 +151,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Gets the {@code FileHandler} managed by this object. This object is updated every time the file location is
      * changed.
      *
-     * @return the managed {@code FileHandler}
+     * @return The managed {@code FileHandler}
      */
     public FileHandler getFileHandler() {
         return fileHandler;
@@ -173,7 +173,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
      * Gets the {@code ReloadingDetectorFactory}. Result may be <strong>null</strong> which means that the default factory is to be
      * used.
      *
-     * @return the {@code ReloadingDetectorFactory}
+     * @return The {@code ReloadingDetectorFactory}
      */
     public ReloadingDetectorFactory getReloadingDetectorFactory() {
         return reloadingDetectorFactory;
@@ -182,7 +182,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters imple
     /**
      * Gets the refresh delay for reload operations. Result may be <strong>null</strong> if this value has not been set.
      *
-     * @return the reloading refresh delay
+     * @return The reloading refresh delay
      */
     public Long getReloadingRefreshDelay() {
         return reloadingRefreshDelay;

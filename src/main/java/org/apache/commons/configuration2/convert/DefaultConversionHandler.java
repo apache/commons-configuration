@@ -72,8 +72,8 @@ public class DefaultConversionHandler implements ConversionHandler {
      * Obtains a {@code ConfigurationInterpolator}. If the passed in one is not <strong>null</strong>, it is used. Otherwise, a
      * default one is returned.
      *
-     * @param ci the {@code ConfigurationInterpolator} provided by the caller
-     * @return the {@code ConfigurationInterpolator} to be used
+     * @param ci The {@code ConfigurationInterpolator} provided by the caller
+     * @return The {@code ConfigurationInterpolator} to be used
      */
     private static ConfigurationInterpolator fetchInterpolator(final ConfigurationInterpolator ci) {
         return ci != null ? ci : NULL_INTERPOLATOR;
@@ -102,11 +102,11 @@ public class DefaultConversionHandler implements ConversionHandler {
      * value. Eventually, {@link #convertValue(Object, Class, ConfigurationInterpolator)} is called with the single value to
      * be converted.
      *
-     * @param <T> the desired target type of the conversion
-     * @param src the source object to be converted
-     * @param targetCls the desired target class
-     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the converted value
+     * @param <T> The desired target type of the conversion
+     * @param src The source object to be converted
+     * @param targetCls The desired target class
+     * @param ci The {@code ConfigurationInterpolator} (not <strong>null</strong>)
+     * @return The converted value
      * @throws ConversionException if conversion is not possible
      */
     protected <T> T convert(final Object src, final Class<T> targetCls, final ConfigurationInterpolator ci) {
@@ -117,11 +117,11 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Helper method for converting all values of a source object and storing them in a collection.
      *
-     * @param <T> the target type of the conversion
-     * @param src the source object
-     * @param elemClass the target class of the conversion
-     * @param ci the {@code ConfigurationInterpolator}
-     * @param dest the collection in which to store the results
+     * @param <T> The target type of the conversion
+     * @param src The source object
+     * @param elemClass The target class of the conversion
+     * @param ci The {@code ConfigurationInterpolator}
+     * @param dest The collection in which to store the results
      * @throws ConversionException if a conversion cannot be performed
      */
     private <T> void convertToCollection(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci, final Collection<T> dest) {
@@ -133,11 +133,11 @@ public class DefaultConversionHandler implements ConversionHandler {
      * be a single value, but it can be <strong>null</strong>. Derived classes that want to extend the available conversions, but are
      * happy with the handling of complex objects, just need to override this method.
      *
-     * @param <T> the desired target type of the conversion
-     * @param src the source object (a single value)
-     * @param targetCls the target class of the conversion
-     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the converted value
+     * @param <T> The desired target type of the conversion
+     * @param src The source object (a single value)
+     * @param targetCls The target class of the conversion
+     * @param ci The {@code ConfigurationInterpolator} (not <strong>null</strong>)
+     * @return The converted value
      * @throws ConversionException if conversion is not possible
      */
     protected <T> T convertValue(final Object src, final Class<T> targetCls, final ConfigurationInterpolator ci) {
@@ -156,10 +156,10 @@ public class DefaultConversionHandler implements ConversionHandler {
      * Extracts a single value from a complex object. This method is called by {@code convert()} if the source object is
      * complex. This implementation extracts the first value from the complex object and returns it.
      *
-     * @param container the complex object
-     * @param targetCls the target class of the conversion
-     * @param ci the {@code ConfigurationInterpolator} (not <strong>null</strong>)
-     * @return the value to be converted (may be <strong>null</strong> if no values are found)
+     * @param container The complex object
+     * @param targetCls The target class of the conversion
+     * @param ci The {@code ConfigurationInterpolator} (not <strong>null</strong>)
+     * @return The value to be converted (may be <strong>null</strong> if no values are found)
      */
     protected Object extractConversionValue(final Object container, final Class<?> targetCls, final ConfigurationInterpolator ci) {
         final Collection<?> values = extractValues(container, 1);
@@ -169,8 +169,8 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Extracts all values contained in the given source object and returns them as a flat collection.
      *
-     * @param source the source object (may be a single value or a complex object)
-     * @return a collection with all extracted values
+     * @param source The source object (may be a single value or a complex object)
+     * @return A collection with all extracted values
      */
     protected Collection<?> extractValues(final Object source) {
         return extractValues(source, Integer.MAX_VALUE);
@@ -180,9 +180,9 @@ public class DefaultConversionHandler implements ConversionHandler {
      * Extracts a maximum number of values contained in the given source object and returns them as flat collection. This
      * method is useful if the caller only needs a subset of values, for example only the first one.
      *
-     * @param source the source object (may be a single value or a complex object)
-     * @param limit the number of elements to extract
-     * @return a collection with all extracted values
+     * @param source The source object (may be a single value or a complex object)
+     * @param limit The number of elements to extract
+     * @return A collection with all extracted values
      */
     protected Collection<?> extractValues(final Object source, final int limit) {
         return listDelimiterHandler.flatten(source, limit);
@@ -191,7 +191,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Gets the date format used by this conversion handler.
      *
-     * @return the date format
+     * @return The date format
      */
     public String getDateFormat() {
         final String fmt = dateFormat;
@@ -201,7 +201,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Gets the {@link ListDelimiterHandler} used for extracting values from complex objects.
      *
-     * @return the {@link ListDelimiterHandler} used for extracting values from complex objects, never null.
+     * @return The {@link ListDelimiterHandler} used for extracting values from complex objects, never null.
      * @since 2.9.0
      */
     public ListDelimiterHandler getListDelimiterHandler() {
@@ -218,7 +218,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * <li>Arrays</li>
      * </ul>
      *
-     * @param src the source object
+     * @param src The source object
      * @return <strong>true</strong> if this is a complex object, <strong>false</strong> otherwise
      */
     protected boolean isComplexObject(final Object src) {
@@ -231,8 +231,8 @@ public class DefaultConversionHandler implements ConversionHandler {
      * returns <strong>true</strong> if and only if the passed in object is an empty string. With this method it can be controlled if
      * and how empty elements in configurations are handled.
      *
-     * @param src the object to be tested
-     * @return a flag whether this object is an empty element
+     * @param src The object to be tested
+     * @return A flag whether this object is an empty element
      */
     protected boolean isEmptyElement(final Object src) {
         return src instanceof CharSequence && ((CharSequence) src).length() == 0;
@@ -243,7 +243,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * {@code Calendar} objects. The string is passed to the {@link java.text.SimpleDateFormat} class, so it must be
      * compatible with this class. If no date format has been set, a default format is used.
      *
-     * @param dateFormat the date format string
+     * @param dateFormat The date format string
      * @see #DEFAULT_DATE_FORMAT
      */
     public void setDateFormat(final String dateFormat) {
@@ -253,7 +253,7 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Sets the {@link ListDelimiterHandler} used for extracting values from complex objects.
      *
-     * @param listDelimiterHandler the {@link ListDelimiterHandler} used for extracting values from complex objects. Setting
+     * @param listDelimiterHandler The {@link ListDelimiterHandler} used for extracting values from complex objects. Setting
      *        the value to null resets the value to its default.
      * @since 2.9.0
      */
@@ -306,10 +306,10 @@ public class DefaultConversionHandler implements ConversionHandler {
     /**
      * Converts the given source object to an array of objects.
      *
-     * @param src the source object
-     * @param elemClass the element class of the array
-     * @param ci the {@code ConfigurationInterpolator}
-     * @return the result array
+     * @param src The source object
+     * @param elemClass The element class of the array
+     * @param ci The {@code ConfigurationInterpolator}
+     * @return The result array
      * @throws ConversionException if a conversion cannot be performed
      */
     private <T> T[] toObjectArray(final Object src, final Class<T> elemClass, final ConfigurationInterpolator ci) {
@@ -326,10 +326,10 @@ public class DefaultConversionHandler implements ConversionHandler {
      * object is already an array of the correct type or a corresponding wrapper type. If not, all values are extracted,
      * converted one by one, and stored in a newly created array.
      *
-     * @param src the source object
-     * @param elemClass the element class of the array
-     * @param ci the {@code ConfigurationInterpolator}
-     * @return the result array
+     * @param src The source object
+     * @param elemClass The element class of the array
+     * @param ci The {@code ConfigurationInterpolator}
+     * @return The result array
      * @throws ConversionException if a conversion cannot be performed
      */
     private Object toPrimitiveArray(final Object src, final Class<?> elemClass, final ConfigurationInterpolator ci) {

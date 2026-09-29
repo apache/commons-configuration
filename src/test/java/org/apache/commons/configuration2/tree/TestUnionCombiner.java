@@ -31,7 +31,7 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     /**
      * Creates the combiner.
      *
-     * @return the combiner
+     * @return The combiner
      */
     @Override
     protected NodeCombiner createCombiner() {

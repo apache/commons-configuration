@@ -30,7 +30,7 @@ package org.apache.commons.configuration2.tree;
  * traversal process.
  * </p>
  *
- * @param <T> the type of the nodes processed by this visitor
+ * @param <T> The type of the nodes processed by this visitor
  * @since 1.3
  */
 public interface ConfigurationNodeVisitor<T> {
@@ -41,23 +41,23 @@ public interface ConfigurationNodeVisitor<T> {
      * hierarchy. After that node was found, there is no need to process the remaining nodes, too. This method is called
      * after each visited node. A result of <strong>true</strong> indicates that the current iteration is to be aborted.
      *
-     * @return a flag if the visit process should be stopped
+     * @return A flag if the visit process should be stopped
      */
     boolean terminate();
 
     /**
-     * Visits the specified node after after its children - if existing - have been processed.
+     * Visits the specified node after its children - if existing - have been processed.
      *
-     * @param node the node to be visited
-     * @param handler the {@code NodeHandler}
+     * @param node The node to be visited
+     * @param handler The {@code NodeHandler}
      */
     void visitAfterChildren(T node, NodeHandler<T> handler);
 
     /**
      * Visits the specified node before the children of this node - if existing - are processed.
      *
-     * @param node the node to be visited
-     * @param handler the {@code NodeHandler}
+     * @param node The node to be visited
+     * @param handler The {@code NodeHandler}
      */
     void visitBeforeChildren(T node, NodeHandler<T> handler);
 }

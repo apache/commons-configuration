@@ -26,7 +26,7 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
     /**
      * Creates a new instance of {@code EventListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<strong>null</strong> if the source need not to be checked)
+     * @param source The event source (<strong>null</strong> if the source need not to be checked)
      */
     public EventListenerTestImpl(final Object source) {
         super(source);
@@ -35,10 +35,10 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
     /**
      * Checks an expected event.
      *
-     * @param type the event type
-     * @param propName the expected property name
-     * @param propValue the expected property value
-     * @param before the expected before flag
+     * @param type The event type
+     * @param propName The expected property name
+     * @param propValue The expected property value
+     * @param before The expected before flag
      */
     public void checkEvent(final EventType<?> type, final String propName, final Object propValue, final boolean before) {
         final ConfigurationEvent e = nextEvent(type);

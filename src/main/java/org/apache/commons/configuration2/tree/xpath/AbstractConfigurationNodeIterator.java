@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  * implement specific behavior based on the concrete node type (child node or attribute node).
  * </p>
  *
- * @param <T> the type of the nodes this iterator deals with
+ * @param <T> The type of the nodes this iterator deals with
  * @since 1.3
  */
 abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
@@ -45,9 +45,9 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Generates a qualified name with a namespace prefix.
      *
-     * @param prefix the prefix
-     * @param name the name (may be <strong>null</strong>)
-     * @return the qualified name
+     * @param prefix The prefix
+     * @param name The name (may be <strong>null</strong>)
+     * @return The qualified name
      */
     protected static String prefixName(final String prefix, final String name) {
         return String.format(FMT_NAMESPACE, prefix, StringUtils.defaultString(name));
@@ -57,8 +57,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Returns the qualified name from the given {@code QName}. If the name has no namespace, result is the simple name.
      * Otherwise, the namespace prefix is added.
      *
-     * @param qName the {@code QName}
-     * @return the qualified name
+     * @param qName The {@code QName}
+     * @return The qualified name
      */
     protected static String qualifiedName(final QName qName) {
         return qName.getPrefix() == null ? qName.getName() : prefixName(qName.getPrefix(), qName.getName());
@@ -79,8 +79,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorBase} and initializes it.
      *
-     * @param parent the parent pointer
-     * @param reverse the reverse flag
+     * @param parent The parent pointer
+     * @param reverse The reverse flag
      */
     protected AbstractConfigurationNodeIterator(final ConfigurationNodePointer<T> parent, final boolean reverse) {
         this.parent = parent;
@@ -91,15 +91,15 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
      * Creates the configuration node pointer for the current position. This method is called by {@code getNodePointer()}.
      * Derived classes must create the correct pointer object.
      *
-     * @param position the current position in the iteration
-     * @return the node pointer
+     * @param position The current position in the iteration
+     * @return The node pointer
      */
     protected abstract NodePointer createNodePointer(int position);
 
     /**
      * Gets the maximum position for this iterator.
      *
-     * @return the maximum allowed position
+     * @return The maximum allowed position
      */
     protected int getMaxPosition() {
         return reverse ? getStartOffset() + 1 : size() - getStartOffset();
@@ -108,7 +108,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the node handler for the managed nodes. This is a convenience method.
      *
-     * @return the node handler
+     * @return The node handler
      */
     protected NodeHandler<T> getNodeHandler() {
         return getParent().getNodeHandler();
@@ -117,7 +117,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the current node pointer.
      *
-     * @return the current pointer in this iteration
+     * @return The current pointer in this iteration
      */
     @Override
     public NodePointer getNodePointer() {
@@ -131,7 +131,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the parent node pointer.
      *
-     * @return the parent node pointer
+     * @return The parent node pointer
      */
     protected ConfigurationNodePointer<T> getParent() {
         return parent;
@@ -140,7 +140,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the position of the iteration.
      *
-     * @return the position
+     * @return The position
      */
     @Override
     public int getPosition() {
@@ -150,7 +150,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Gets the start offset of the iteration.
      *
-     * @return the start offset
+     * @return The start offset
      */
     protected int getStartOffset() {
         return startOffset;
@@ -159,8 +159,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Returns the index in the data list for the given position. This method also checks the reverse flag.
      *
-     * @param pos the position (1-based)
-     * @return the corresponding list index
+     * @param pos The position (1-based)
+     * @return The corresponding list index
      */
     protected int positionToIndex(final int pos) {
         return (reverse ? 1 - pos : pos - 1) + getStartOffset();
@@ -169,8 +169,8 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Sets the position of the iteration.
      *
-     * @param pos the new position
-     * @return a flag if this is a valid position
+     * @param pos The new position
+     * @return A flag if this is a valid position
      */
     @Override
     public boolean setPosition(final int pos) {
@@ -181,7 +181,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Sets the start offset of the iteration. This is used when a start element was set.
      *
-     * @param startOffset the start offset
+     * @param startOffset The start offset
      */
     protected void setStartOffset(final int startOffset) {
         this.startOffset = startOffset;
@@ -195,7 +195,7 @@ abstract class AbstractConfigurationNodeIterator<T> implements NodeIterator {
     /**
      * Returns the number of elements in this iteration.
      *
-     * @return the number of elements
+     * @return The number of elements
      */
     protected abstract int size();
 }

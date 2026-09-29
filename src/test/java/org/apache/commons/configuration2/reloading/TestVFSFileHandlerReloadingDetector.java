@@ -153,9 +153,9 @@ public class TestVFSFileHandlerReloadingDetector {
     /**
      * Writes a test configuration file containing a single property with the given value.
      *
-     * @param file the file to be written
-     * @param value the value of the test property
-     * @throws IOException if an error occurs
+     * @param file The file to be written
+     * @param value The value of the test property
+     * @throws IOException Thrown if an error occurs
      */
     private void writeTestFile(final File file, final String value) throws IOException {
         try (FileWriter out = new FileWriter(file)) {

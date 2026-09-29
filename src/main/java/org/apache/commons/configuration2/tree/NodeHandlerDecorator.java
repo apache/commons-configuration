@@ -29,7 +29,7 @@ import java.util.Set;
  * classes have to implement the {@code getDecoratedNodeHandler()} method to provide the underlying handler.
  * </p>
  *
- * @param <T> the type of the nodes supported by this handler
+ * @param <T> The type of the nodes supported by this handler
  * @since 2.0
  */
 public abstract class NodeHandlerDecorator<T> implements NodeHandler<T> {
@@ -75,7 +75,7 @@ public abstract class NodeHandlerDecorator<T> implements NodeHandler<T> {
      * Gets the {@code NodeHandler} object that is decorated by this instance. All method calls are delegated to this
      * object.
      *
-     * @return the decorated {@code NodeHandler}
+     * @return The decorated {@code NodeHandler}
      */
     protected abstract NodeHandler<T> getDecoratedNodeHandler();
 

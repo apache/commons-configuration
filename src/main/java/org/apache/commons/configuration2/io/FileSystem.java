@@ -50,23 +50,23 @@ public abstract class FileSystem {
     /**
      * Gets the base path of the given path, for example a directory for a file.
      *
-     * @param path the source path.
-     * @return the base path.
+     * @param path The source path.
+     * @return The base path.
      */
     public abstract String getBasePath(String path);
 
     /**
      * Gets the file name of the given path.
      *
-     * @param path the source path.
-     * @return the file name.
+     * @param path The source path.
+     * @return The file name.
      */
     public abstract String getFileName(String path);
 
     /**
      * Gets the FileSystem options provider.
      *
-     * @return the FileSystem options provider.
+     * @return The FileSystem options provider.
      */
     public FileOptionsProvider getFileOptionsProvider() {
         return this.optionsProvider;
@@ -75,8 +75,8 @@ public abstract class FileSystem {
     /**
      * Gets an input stream for a URL.
      *
-     * @param url the source URL.
-     * @return an input stream.
+     * @param url The source URL.
+     * @return An input stream.
      * @throws ConfigurationException if an problem occurs getting the input stream.
      */
     public abstract InputStream getInputStream(URL url) throws ConfigurationException;
@@ -84,9 +84,9 @@ public abstract class FileSystem {
     /**
      * Not abstract for binary compatibility.
      *
-     * @param url the URL of the file
-     * @param urlConnectionOptions the URLConnection options
-     * @return the input stream for the specified URL
+     * @param url The URL of the file
+     * @param urlConnectionOptions The URLConnection options
+     * @return The input stream for the specified URL
      * @throws ConfigurationException if an error occurs while opening the file
      *
      * @since 2.8.0
@@ -98,7 +98,7 @@ public abstract class FileSystem {
     /**
      * Gets the logger used by this FileSystem.
      *
-     * @return the logger
+     * @return The logger
      */
     public ConfigurationLogger getLogger() {
         final ConfigurationLogger result = log;
@@ -108,8 +108,8 @@ public abstract class FileSystem {
     /**
      * Gets an output stream for a File.
      *
-     * @param file the source File.
-     * @return an output stream.
+     * @param file The source File.
+     * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
     public abstract OutputStream getOutputStream(File file) throws ConfigurationException;
@@ -117,8 +117,8 @@ public abstract class FileSystem {
     /**
      * Gets an output stream for a URL.
      *
-     * @param url the source URL.
-     * @return an output stream.
+     * @param url The source URL.
+     * @return An output stream.
      * @throws ConfigurationException if an problem occurs getting the output stream.
      */
     public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
@@ -142,7 +142,7 @@ public abstract class FileSystem {
      *
      * @param basePath The base path.
      * @param fileName The file name.
-     * @return a URL.
+     * @return A URL.
      * @throws MalformedURLException if a problem occurs creating the URL.
      */
     public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
@@ -152,7 +152,7 @@ public abstract class FileSystem {
      *
      * @param basePath The base path.
      * @param fileName The file name.
-     * @return a URL.
+     * @return A URL.
      */
     public abstract URL locateFromURL(String basePath, String fileName);
 
@@ -171,7 +171,7 @@ public abstract class FileSystem {
      * logging should call this method during their initialization with the logger to be used. Passing in a <strong>null</strong>
      * argument disables logging.
      *
-     * @param log the new logger
+     * @param log The new logger
      */
     public void setLogger(final ConfigurationLogger log) {
         this.log = log;

@@ -29,7 +29,7 @@ import java.util.Map;
  * processing of complex update operations.
  * </p>
  *
- * @param <T> the type of the nodes supported by this resolver
+ * @param <T> The type of the nodes supported by this resolver
  * @since 2.0
  */
 public interface NodeKeyResolver<T> {
@@ -41,10 +41,10 @@ public interface NodeKeyResolver<T> {
      * passed in subsequent calls. An implementation may use this to avoid that keys for nodes already encountered have to
      * be generated again.
      *
-     * @param node the node in question
-     * @param cache a map serving as cache
-     * @param handler the {@code NodeHandler}
-     * @return a key for the specified node
+     * @param node The node in question
+     * @param cache A map serving as cache
+     * @param handler The {@code NodeHandler}
+     * @return A key for the specified node
      */
     String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler);
 
@@ -52,10 +52,10 @@ public interface NodeKeyResolver<T> {
      * Resolves a key of an add operation. Result is a {@code NodeAddData} object containing all information for actually
      * performing the add operation at the specified key.
      *
-     * @param root the root node
-     * @param key the key to be resolved
-     * @param handler the {@code NodeHandler}
-     * @return a {@code NodeAddData} object to be used for the add operation
+     * @param root The root node
+     * @param key The key to be resolved
+     * @param handler The {@code NodeHandler}
+     * @return A {@code NodeAddData} object to be used for the add operation
      */
     NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
 
@@ -63,10 +63,10 @@ public interface NodeKeyResolver<T> {
      * Performs a query for the specified key on the given root node. This is a thin wrapper over the {@code query()} method
      * of an {@link ExpressionEngine}.
      *
-     * @param root the root node
-     * @param key the key to be resolved
-     * @param handler the {@code NodeHandler}
-     * @return a list with query results
+     * @param root The root node
+     * @param key The key to be resolved
+     * @param handler The {@code NodeHandler}
+     * @return A list with query results
      */
     List<QueryResult<T>> resolveKey(T root, String key, NodeHandler<T> handler);
 
@@ -75,10 +75,10 @@ public interface NodeKeyResolver<T> {
      * results of type node and do not support attributes (for example for tracking nodes). This operation can be used in such
      * cases. It works like {@code resolveKey()}, but filters only for results of type node.
      *
-     * @param root the root node
-     * @param key the key to be resolved
-     * @param handler the {@code NodeHandler}
-     * @return a list with the resolved nodes
+     * @param root The root node
+     * @param key The key to be resolved
+     * @param handler The {@code NodeHandler}
+     * @return A list with the resolved nodes
      */
     List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler);
 
@@ -86,12 +86,12 @@ public interface NodeKeyResolver<T> {
      * Resolves a key for an update operation. Result is a {@code NodeUpdateData} object containing all information for
      * actually performing the update operation at the specified key using the provided new value object.
      *
-     * @param root the root node
-     * @param key the key to be resolved
-     * @param newValue the new value for the key to be updated; this can be a single value or a container for multiple
+     * @param root The root node
+     * @param key The key to be resolved
+     * @param newValue The new value for the key to be updated; this can be a single value or a container for multiple
      *        values
-     * @param handler the {@code NodeHandler}
-     * @return a {@code NodeUpdateData} object to be used for this update operation
+     * @param handler The {@code NodeHandler}
+     * @return A {@code NodeUpdateData} object to be used for this update operation
      */
     NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue, NodeHandler<T> handler);
 }

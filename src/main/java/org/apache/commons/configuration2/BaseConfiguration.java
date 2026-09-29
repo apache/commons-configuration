@@ -81,7 +81,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     /**
      * Clear a property in the configuration.
      *
-     * @param key the key to remove along with corresponding value.
+     * @param key The key to remove along with corresponding value.
      */
     @Override
     protected void clearPropertyDirect(final String key) {
@@ -92,7 +92,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * Creates a copy of this object. This implementation will create a deep clone, i.e. the map that stores the properties
      * is cloned, too. So changes performed at the copy won't affect the original and vice versa.
      *
-     * @return the copy
+     * @return The copy
      * @since 1.3
      */
     @Override
@@ -111,7 +111,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     /**
      * Clones the internal map with the data of this configuration.
      *
-     * @param copy the copy created by the {@code clone()} method
+     * @param copy The copy created by the {@code clone()} method
      * @throws CloneNotSupportedException if the map cannot be cloned
      */
     private void cloneStore(final BaseConfiguration copy) throws CloneNotSupportedException {
@@ -131,7 +131,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     /**
      * check if the configuration contains the key
      *
-     * @param key the configuration key
+     * @param key The configuration key
      * @return {@code true} if Configuration contain given key, {@code false} otherwise.
      */
     @Override

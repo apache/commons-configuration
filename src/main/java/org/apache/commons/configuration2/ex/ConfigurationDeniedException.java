@@ -29,7 +29,7 @@ public class ConfigurationDeniedException extends ConfigurationRuntimeException 
     /**
      * Constructs a new {@code ConfigurationDeniedException} with specified detail message using {@link String#format(String,Object...)}.
      *
-     * @param message the error message.
+     * @param message The error message.
      * @param args    arguments to the error message.
      * @see String#format(String,Object...)
      */
@@ -40,8 +40,8 @@ public class ConfigurationDeniedException extends ConfigurationRuntimeException 
     /**
      * Constructs a new {@code ConfigurationDeniedException} with specified detail message using {@link String#format(String,Object...)} and cause.
      *
-     * @param cause the cause.
-     * @param message the error message.
+     * @param cause The cause.
+     * @param message The error message.
      * @param args    arguments to the error message.
      * @see String#format(String,Object...)
      */

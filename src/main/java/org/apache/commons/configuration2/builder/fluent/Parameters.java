@@ -87,8 +87,8 @@ public final class Parameters {
         /**
          * Checks whether the specified method belongs to an interface which requires fluent result values.
          *
-         * @param method the method to be checked
-         * @return a flag whether the method's result should be handled as a fluent result value
+         * @param method The method to be checked
+         * @return A flag whether the method's result should be handled as a fluent result value
          */
         private static boolean isFluentResult(final Method method) {
             final Class<?> declaringClass = method.getDeclaringClass();
@@ -101,7 +101,7 @@ public final class Parameters {
         /**
          * Creates a new instance of {@code ParametersIfcInvocationHandler} and sets the wrapped parameters object.
          *
-         * @param targetObj the target object for reflection calls
+         * @param targetObj The target object for reflection calls
          */
         public ParametersIfcInvocationHandler(final Object targetObj) {
             target = targetObj;
@@ -133,7 +133,7 @@ public final class Parameters {
      * Because {@code DefaultParametersManager} is thread-safe, it makes sense to share a single instance between multiple
      * {@code Parameters} objects; that way the same initialization is performed on newly created parameters objects.
      *
-     * @param manager the {@code DefaultParametersHandler} (may be <strong>null</strong>, then a new default instance is created)
+     * @param manager The {@code DefaultParametersHandler} (may be <strong>null</strong>, then a new default instance is created)
      */
     public Parameters(final DefaultParametersManager manager) {
         defaultParametersManager = manager != null ? manager : new DefaultParametersManager();
@@ -142,7 +142,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for basic configuration properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public BasicBuilderParameters basic() {
         return new BasicBuilderParameters();
@@ -151,7 +151,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for combined configuration builder properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public CombinedBuilderParameters combined() {
         return createParametersProxy(new CombinedBuilderParametersImpl(), CombinedBuilderParameters.class);
@@ -161,11 +161,11 @@ public final class Parameters {
      * Creates a proxy object for a given parameters interface based on the given implementation object. The newly created
      * object is initialized with default values if there are matching {@link DefaultParametersHandler} objects.
      *
-     * @param <T> the type of the parameters interface
-     * @param target the implementing target object
-     * @param ifcClass the interface class
-     * @param superIfcs an array with additional interface classes to be implemented
-     * @return the proxy object
+     * @param <T> The type of the parameters interface
+     * @param target The implementing target object
+     * @param ifcClass The interface class
+     * @param superIfcs An array with additional interface classes to be implemented
+     * @return The proxy object
      */
     private <T> T createParametersProxy(final Object target, final Class<T> ifcClass, final Class<?>... superIfcs) {
         final Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
@@ -179,7 +179,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for database configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public DatabaseBuilderParameters database() {
         return createParametersProxy(new DatabaseBuilderParametersImpl(), DatabaseBuilderParameters.class);
@@ -188,7 +188,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for file-based configuration properties.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public FileBasedBuilderParameters fileBased() {
         return createParametersProxy(new FileBasedBuilderParametersImpl(), FileBasedBuilderParameters.class);
@@ -197,7 +197,7 @@ public final class Parameters {
     /**
      * Gets the {@code DefaultParametersManager} associated with this object.
      *
-     * @return the {@code DefaultParametersManager}
+     * @return The {@code DefaultParametersManager}
      */
     public DefaultParametersManager getDefaultParametersManager() {
         return defaultParametersManager;
@@ -206,7 +206,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for hierarchical configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public HierarchicalBuilderParameters hierarchical() {
         return createParametersProxy(new HierarchicalBuilderParametersImpl(), HierarchicalBuilderParameters.class, FileBasedBuilderParameters.class);
@@ -215,7 +215,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for INI configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public INIBuilderParameters ini() {
         return createParametersProxy(new INIBuilderParametersImpl(), INIBuilderParameters.class, FileBasedBuilderParameters.class,
@@ -225,7 +225,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for JNDI configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public JndiBuilderParameters jndi() {
         return createParametersProxy(new JndiBuilderParametersImpl(), JndiBuilderParameters.class);
@@ -234,7 +234,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for a builder for multiple file-based configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public MultiFileBuilderParameters multiFile() {
         return createParametersProxy(new MultiFileBuilderParametersImpl(), MultiFileBuilderParameters.class);
@@ -243,7 +243,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for properties configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public PropertiesBuilderParameters properties() {
         return createParametersProxy(new PropertiesBuilderParametersImpl(), PropertiesBuilderParameters.class, FileBasedBuilderParameters.class);
@@ -253,9 +253,9 @@ public final class Parameters {
      * Registers the specified {@code DefaultParametersHandler} object for the given parameters class. This is a convenience
      * method which just delegates to the associated {@code DefaultParametersManager}.
      *
-     * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
+     * @param <T> The type of the parameters supported by this handler
+     * @param paramsClass The parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler The {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is missing
      * @see DefaultParametersManager
      */
@@ -268,10 +268,10 @@ public final class Parameters {
      * inheritance hierarchy. This is a convenience method which just delegates to the associated
      * {@code DefaultParametersManager}.
      *
-     * @param <T> the type of the parameters supported by this handler
-     * @param paramsClass the parameters class supported by this handler (must not be <strong>null</strong>)
-     * @param handler the {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
-     * @param startClass an optional start class in the hierarchy of parameter objects for which this handler should be
+     * @param <T> The type of the parameters supported by this handler
+     * @param paramsClass The parameters class supported by this handler (must not be <strong>null</strong>)
+     * @param handler The {@code DefaultParametersHandler} to be registered (must not be <strong>null</strong>)
+     * @param startClass An optional start class in the hierarchy of parameter objects for which this handler should be
      *        applied
      * @throws IllegalArgumentException if a required parameter is missing
      */
@@ -282,7 +282,7 @@ public final class Parameters {
     /**
      * Creates a new instance of a parameters object for XML configurations.
      *
-     * @return the new parameters object
+     * @return The new parameters object
      */
     public XMLBuilderParameters xml() {
         return createParametersProxy(new XMLBuilderParametersImpl(), XMLBuilderParameters.class, FileBasedBuilderParameters.class,

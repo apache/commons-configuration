@@ -30,7 +30,7 @@ package org.apache.commons.configuration2.event;
  * components.
  * </p>
  *
- * @param <T> the type of events processed by the listener
+ * @param <T> The type of events processed by the listener
  * @since 2.0
  */
 public final class EventListenerRegistrationData<T extends Event> {
@@ -47,8 +47,8 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Creates a new instance of {@code EventListenerRegistrationData}.
      *
-     * @param type the event type (must not be <strong>null</strong>)
-     * @param lstnr the event listener (must not be <strong>null</strong>)
+     * @param type The event type (must not be <strong>null</strong>)
+     * @param lstnr The event listener (must not be <strong>null</strong>)
      * @throws IllegalArgumentException if a required parameter is <strong>null</strong>
      */
     public EventListenerRegistrationData(final EventType<T> type, final EventListener<? super T> lstnr) {
@@ -67,8 +67,8 @@ public final class EventListenerRegistrationData<T extends Event> {
      * Compares this object with another one. Two instances of {@code EventListenerRegistrationData} are considered equal if
      * they reference the same listener and event type.
      *
-     * @param obj the object to be compared to
-     * @return a flag whether these objects are equal
+     * @param obj The object to be compared to
+     * @return A flag whether these objects are equal
      */
     @Override
     public boolean equals(final Object obj) {
@@ -86,7 +86,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Gets the event type for this listener registration.
      *
-     * @return the event type
+     * @return The event type
      */
     public EventType<T> getEventType() {
         return eventType;
@@ -95,7 +95,7 @@ public final class EventListenerRegistrationData<T extends Event> {
     /**
      * Gets the listener this registration is about.
      *
-     * @return the event listener
+     * @return The event listener
      */
     public EventListener<? super T> getListener() {
         return listener;

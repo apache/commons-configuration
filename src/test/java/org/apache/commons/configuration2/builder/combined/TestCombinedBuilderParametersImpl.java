@@ -52,7 +52,7 @@ public class TestCombinedBuilderParametersImpl {
     /**
      * Creates a mock for a defaults handler.
      *
-     * @return the handler mock
+     * @return The handler mock
      */
     @SuppressWarnings("unchecked")
     private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock() {
