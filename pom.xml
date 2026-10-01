@@ -548,10 +548,12 @@
         <jdk>[26,)</jdk>
       </activation>
       <!--
-        JDK 26 removes the java.applet API, so AppletConfiguration cannot be
-        compiled or tested there. TestWebdavConfigurationBuilder remains
-        excluded by the existing project-wide Surefire configuration; it is
-        not an additional JDK 26 exclusion.
+        JDK 26 removes the java.applet API, so TestAppletConfiguration must be
+        excluded from test compilation and execution. TestWebdavConfigurationBuilder
+        is also excluded because its WebDAV integration test is already outside
+        this profile's supported, self-contained test scope. Keep this profile
+        limited to the JDK 26+ test exclusions required for those unavailable
+        APIs and environment-dependent coverage.
       -->
       <build>
         <plugins>
