@@ -45,7 +45,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.22.0 to 1.22.1.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.20.0 to 3.21.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.yaml:snakeyaml from 2.6 to 2.7.</action>
-      
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump slf4j.version from 2.0.19 to 2.0.20.</action>
     </release>
     <release version="2.15.1" date="2026-05-21" description="This is a feature and maintenance release. Java 8 or later is required.">
       <!-- FIX -->
