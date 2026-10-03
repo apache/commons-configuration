@@ -33,6 +33,7 @@
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in ReloadingCombinedConfigurationBuilder.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_ACCESSIBLE_OBJECT_SYNCHRONIZATION in XMLPropertyListConfiguration.</action>
       <action type="fix" dev="pkarwasz" due-to="Piotr P. Karwasz, Gary Gregory">Create XML parsers through org.apache.commons:commons-secure-xml, so external entities and DTDs are no longer fetched by default.</action>
+      <action type="fix" dev="pkarwasz" due-to="Guido Schnepp, Gary Gregory, Efe" issue="CONFIGURATION-858">Fix Moditect module generation on Java 26 and later (#657)</action>
       <!-- ADD -->
       <!-- UPDATE -->
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-parent from 100 to 105.</action>
