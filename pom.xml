@@ -48,6 +48,7 @@
       org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
+      java.applet;resolution:=optional,
       javax.servlet.*;resolution:=optional,
       jakarta.servlet.*;resolution:=optional,
       org.apache.commons.jexl2.*;resolution:=optional,
@@ -536,6 +537,63 @@
                 --illegal-access=permit
                 --add-opens java.base/java.lang=ALL-UNNAMED                     
               </argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>java26</id>
+      <activation>
+        <jdk>[26,)</jdk>
+      </activation>
+      <!--
+        JDK 26 removes the java.applet API, so TestAppletConfiguration must be
+        excluded from test compilation and execution. TestWebdavConfigurationBuilder
+        is also excluded because its WebDAV integration test is already outside
+        this profile's supported, self-contained test scope. Keep this profile
+        limited to the JDK 26+ test exclusions required for those unavailable
+        APIs and environment-dependent coverage.
+      -->
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.moditect</groupId>
+            <artifactId>moditect-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-module-infos</id>
+                <configuration>
+                  <jdepsExtraArgs combine.self="override">
+                    <arg>--multi-release=${moditect.java.version}</arg>
+                    <arg>--ignore-missing-deps</arg>
+                  </jdepsExtraArgs>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <jdepsExtraArgs>
+                <arg>--multi-release=${moditect.java.version}</arg>
+                <arg>--ignore-missing-deps</arg>
+              </jdepsExtraArgs>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <testExcludes>
+                <testExclude>**/TestAppletConfiguration.java</testExclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/TestAppletConfiguration.java</exclude>
+              </excludes>
             </configuration>
           </plugin>
         </plugins>
