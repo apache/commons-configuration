@@ -157,7 +157,9 @@ public class DefaultExpressionEngine implements ExpressionEngine {
         final String nodeName = handler.nodeName(node);
         final T parent = handler.getParent(node);
         final DefaultConfigurationKey key = new DefaultConfigurationKey(this, parentKey);
-        key.append(StringUtils.defaultString(nodeName));
+        // Escape delimiters in the node name so names containing '.' remain a single
+        // path component (needed for INI section tracking, CONFIGURATION-820).
+        key.append(StringUtils.defaultString(nodeName), true);
 
         if (parent != null) {
             // this is not the root key

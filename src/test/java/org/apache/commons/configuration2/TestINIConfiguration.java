@@ -447,6 +447,31 @@ public class TestINIConfiguration {
     }
 
     /**
+     * Tests that a section name containing a '.' is treated as a literal section
+     * and that multiple properties round-trip on write (CONFIGURATION-820).
+     */
+    @Test
+    void testGetSectionWithDottedNameWritesAllProperties() throws ConfigurationException, IOException {
+        final INIConfiguration config = new INIConfiguration();
+        final HierarchicalConfiguration<ImmutableNode> section = config.getSection("sec.sec");
+        section.setProperty("p1", "val1");
+        section.setProperty("p2", "val2");
+        config.setSeparatorUsedInOutput("=");
+
+        final StringWriter writer = new StringWriter();
+        config.write(writer);
+        final String output = writer.toString();
+
+        assertTrue(output.contains("[sec.sec]"), () -> "missing section header: " + output);
+        assertTrue(output.contains("p1=val1"), () -> "missing p1: " + output);
+        assertTrue(output.contains("p2=val2"), () -> "missing p2: " + output);
+
+        final INIConfiguration reloaded = setUpConfig(output);
+        assertEquals("val1", reloaded.getSection("sec.sec").getString("p1"));
+        assertEquals("val2", reloaded.getSection("sec.sec").getString("p2"));
+    }
+
+    /**
      * Tests querying a non existing section.
      */
     @Test
