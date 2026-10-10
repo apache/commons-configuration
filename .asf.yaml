@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons Configuration"
   homepage: https://commons.apache.org/configuration/
+  autolink_jira:
+    - CONFIGURATION
   
   pull_requests:
     # allow auto-merge
