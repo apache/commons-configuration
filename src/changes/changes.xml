@@ -43,7 +43,7 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory">[test] Bump slf4j.version from 2.0.17 to 2.0.19 (#644).</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.logging.log4j:log4j-core from 2.26.0 to 2.26.1.</action>
       <action type="update" dev="ggregory" due-to="María Galbis, Gary Gregory" issue="CONFIGURATION-857">Preserve duplicate non-String scalar values in flatten() (#645).</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.22.0 to 1.22.1.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-codec:commons-codec from 1.22.0 to 1.23.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.apache.commons:commons-lang3 from 3.20.0 to 3.21.0.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump org.yaml:snakeyaml from 2.6 to 2.7.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump slf4j.version from 2.0.19 to 2.0.20.</action>
