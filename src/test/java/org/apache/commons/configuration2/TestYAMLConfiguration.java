@@ -167,4 +167,38 @@ public class TestYAMLConfiguration {
         final List<?> key5 = (List<?>) ((Map<?, ?>) parsed.get("key4")).get("key5");
         assertEquals(Arrays.asList("col1", "col2"), key5);
     }
+
+    @Test
+    void testSharedListAlias() throws ConfigurationException {
+        final YAMLConfiguration configuration = new YAMLConfiguration();
+        configuration.read(new StringReader(
+            "connections:\n"
+            + "  primary: &writer\n"
+            + "    - host: writer.example.com\n"
+            + "  direct: *writer\n"
+            + "  direct_ro: *writer\n"
+            + "  replica:\n"
+            + "    - host: reader.example.com\n"));
+
+        assertEquals("writer.example.com", configuration.getString("connections.primary.host"));
+        assertEquals("writer.example.com", configuration.getString("connections.direct.host"));
+        assertEquals("writer.example.com", configuration.getString("connections.direct_ro.host"));
+        assertEquals("reader.example.com", configuration.getString("connections.replica.host"));
+    }
+
+    @Test
+    void testSharedMapAlias() throws ConfigurationException {
+        final YAMLConfiguration configuration = new YAMLConfiguration();
+        configuration.read(new StringReader(
+            "defaults: &defaults\n"
+            + "  timeout: 30\n"
+            + "service1:\n"
+            + "  settings: *defaults\n"
+            + "service2:\n"
+            + "  settings: *defaults\n"));
+
+        assertEquals(30, configuration.getInt("defaults.timeout"));
+        assertEquals(30, configuration.getInt("service1.settings.timeout"));
+        assertEquals(30, configuration.getInt("service2.settings.timeout"));
+    }
 }
