@@ -1296,7 +1296,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     public Object clone() {
         final PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
         if (layout != null) {
-            copy.setLayout(new PropertiesConfigurationLayout(layout));
+            copy.installLayout(new PropertiesConfigurationLayout(layout));
         }
         return copy;
     }
