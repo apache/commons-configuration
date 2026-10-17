@@ -112,4 +112,13 @@
     <Class name="~.*" />
     <Bug pattern="CT_CONSTRUCTOR_THROW" />
   </Match>  
+  <!-- Reason: Locks intentionally remain held until the matching endRead() or endWrite() call. -->
+  <Match>
+    <Class name="org.apache.commons.configuration2.sync.ReadWriteSynchronizer" />
+    <Or>
+      <Method name="beginRead" />
+      <Method name="beginWrite" />
+    </Or>
+    <Bug pattern="UL_UNRELEASED_LOCK" />
+  </Match>
 </FindBugsFilter>

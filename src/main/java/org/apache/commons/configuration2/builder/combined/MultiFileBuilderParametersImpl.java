@@ -101,7 +101,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters imple
     @Override
     public MultiFileBuilderParametersImpl clone() {
         final MultiFileBuilderParametersImpl copy = (MultiFileBuilderParametersImpl) super.clone();
-        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils.cloneIfPossible(getManagedBuilderParameters()));
+        copy.managedBuilderParameters = (BuilderParameters) ConfigurationUtils.cloneIfPossible(managedBuilderParameters);
         return copy;
     }
 

@@ -119,7 +119,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters implem
     @Override
     public CombinedBuilderParametersImpl clone() {
         final CombinedBuilderParametersImpl copy = (CombinedBuilderParametersImpl) super.clone();
-        copy.setDefinitionBuilderParameters((BuilderParameters) ConfigurationUtils.cloneIfPossible(getDefinitionBuilderParameters()));
+        copy.definitionBuilderParameters = (BuilderParameters) ConfigurationUtils.cloneIfPossible(definitionBuilderParameters);
         return copy;
     }
 

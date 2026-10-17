@@ -462,6 +462,29 @@ public class TestPropertiesConfiguration {
     }
 
     /**
+     * Tests whether cloning a subclass installs an independent layout without invoking its setter.
+     */
+    @Test
+    void testCloneDoesNotCallOverriddenSetter() {
+        final PropertiesConfiguration original = new PropertiesConfiguration() {
+            @Override
+            public void setLayout(final PropertiesConfigurationLayout layout) {
+                throw new AssertionError("Cloning must not invoke the overridden setter");
+            }
+        };
+        original.addProperty("key", "original");
+        final PropertiesConfiguration copy = (PropertiesConfiguration) original.clone();
+        assertSame(original.getClass(), copy.getClass());
+        assertNotSame(original.getLayout(), copy.getLayout());
+        assertEquals(1, copy.getEventListeners(ConfigurationEvent.ANY).size());
+        assertSame(copy.getLayout(), copy.getEventListeners(ConfigurationEvent.ANY).iterator().next());
+        copy.addProperty("copyOnly", "value");
+        assertTrue(copy.getLayout().getKeys().contains("copyOnly"));
+        assertFalse(original.getLayout().getKeys().contains("copyOnly"));
+        assertFalse(original.containsKey("copyOnly"));
+    }
+
+    /**
      * Tests the clone() method when no layout object exists yet.
      */
     @Test

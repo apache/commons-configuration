@@ -77,6 +77,54 @@ public class TestCombinedBuilderParametersImpl {
     }
 
     /**
+     * Tests whether cloning a subclass copies stored parameters without invoking its getter.
+     */
+    @Test
+    void testCloneDoesNotCallOverriddenGetter() {
+        final int[] getterCalls = {0};
+        final XMLBuilderParametersImpl nested = new XMLBuilderParametersImpl();
+        nested.setSystemID("testSystemID");
+        final CombinedBuilderParametersImpl original = new CombinedBuilderParametersImpl() {
+            @Override
+            public BuilderParameters getDefinitionBuilderParameters() {
+                getterCalls[0]++;
+                return super.getDefinitionBuilderParameters();
+            }
+        };
+        original.setDefinitionBuilderParameters(nested);
+        final CombinedBuilderParametersImpl copy = original.clone();
+        assertEquals(0, getterCalls[0]);
+        assertSame(original.getClass(), copy.getClass());
+        assertSame(nested, original.getDefinitionBuilderParameters());
+        assertNotSame(nested, copy.getDefinitionBuilderParameters());
+        assertEquals("testSystemID", copy.getDefinitionBuilderParameters().getParameters().get("systemID"));
+    }
+
+    /**
+     * Tests whether cloning a subclass copies nested parameters without invoking its setter.
+     */
+    @Test
+    void testCloneDoesNotCallOverriddenSetter() {
+        final XMLBuilderParametersImpl nested = new XMLBuilderParametersImpl();
+        nested.setSystemID("testSystemID");
+        final CombinedBuilderParametersImpl original = new CombinedBuilderParametersImpl() {
+            {
+                super.setDefinitionBuilderParameters(nested);
+            }
+
+            @Override
+            public CombinedBuilderParametersImpl setDefinitionBuilderParameters(final BuilderParameters parameters) {
+                throw new AssertionError("Cloning must not invoke the overridden setter");
+            }
+        };
+        final CombinedBuilderParametersImpl copy = original.clone();
+        assertSame(original.getClass(), copy.getClass());
+        assertSame(nested, original.getDefinitionBuilderParameters());
+        assertNotSame(nested, copy.getDefinitionBuilderParameters());
+        assertEquals("testSystemID", copy.getDefinitionBuilderParameters().getParameters().get("systemID"));
+    }
+
+    /**
      * Tests whether a new instance can be created if none is found in the parameters map.
      */
     @Test

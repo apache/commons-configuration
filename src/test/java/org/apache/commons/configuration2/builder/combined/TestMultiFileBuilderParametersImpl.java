@@ -79,6 +79,54 @@ public class TestMultiFileBuilderParametersImpl {
     }
 
     /**
+     * Tests whether cloning a subclass copies stored parameters without invoking its getter.
+     */
+    @Test
+    void testCloneDoesNotCallOverriddenGetter() {
+        final int[] getterCalls = {0};
+        final FileBasedBuilderParametersImpl nested = new FileBasedBuilderParametersImpl();
+        nested.setFileName("test.xml");
+        final MultiFileBuilderParametersImpl original = new MultiFileBuilderParametersImpl() {
+            @Override
+            public BuilderParameters getManagedBuilderParameters() {
+                getterCalls[0]++;
+                return super.getManagedBuilderParameters();
+            }
+        };
+        original.setManagedBuilderParameters(nested);
+        final MultiFileBuilderParametersImpl copy = original.clone();
+        assertEquals(0, getterCalls[0]);
+        assertSame(original.getClass(), copy.getClass());
+        assertSame(nested, original.getManagedBuilderParameters());
+        assertNotSame(nested, copy.getManagedBuilderParameters());
+        assertEquals("test.xml", ((FileBasedBuilderParametersImpl) copy.getManagedBuilderParameters()).getFileHandler().getFileName());
+    }
+
+    /**
+     * Tests whether cloning a subclass copies nested parameters without invoking its setter.
+     */
+    @Test
+    void testCloneDoesNotCallOverriddenSetter() {
+        final FileBasedBuilderParametersImpl nested = new FileBasedBuilderParametersImpl();
+        nested.setFileName("test.xml");
+        final MultiFileBuilderParametersImpl original = new MultiFileBuilderParametersImpl() {
+            {
+                super.setManagedBuilderParameters(nested);
+            }
+
+            @Override
+            public MultiFileBuilderParametersImpl setManagedBuilderParameters(final BuilderParameters parameters) {
+                throw new AssertionError("Cloning must not invoke the overridden setter");
+            }
+        };
+        final MultiFileBuilderParametersImpl copy = original.clone();
+        assertSame(original.getClass(), copy.getClass());
+        assertSame(nested, original.getManagedBuilderParameters());
+        assertNotSame(nested, copy.getManagedBuilderParameters());
+        assertEquals("test.xml", ((FileBasedBuilderParametersImpl) copy.getManagedBuilderParameters()).getFileHandler().getFileName());
+    }
+
+    /**
      * Tests whether an instance can be obtained from a parameters map.
      */
     @Test
