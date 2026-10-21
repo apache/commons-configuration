@@ -27,13 +27,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.FluentPropertyBeanIntrospector;
-import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.beanutils.WrapDynaBean;
-import org.apache.commons.beanutils.WrapDynaClass;
+import org.apache.commons.beanutils2.BeanUtilsBean;
+import org.apache.commons.beanutils2.ConvertUtilsBean;
+import org.apache.commons.beanutils2.DynaBean;
+import org.apache.commons.beanutils2.FluentPropertyBeanIntrospector;
+import org.apache.commons.beanutils2.PropertyUtilsBean;
+import org.apache.commons.beanutils2.WrapDynaBean;
+import org.apache.commons.beanutils2.WrapDynaClass;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.ClassUtils;
 
