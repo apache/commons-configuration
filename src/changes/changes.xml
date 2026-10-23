@@ -28,7 +28,6 @@
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Add messages when throwing NullPointerException.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in BasicConfigurationBuilder.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in CombinedConfigurationBuilder.</action>
-      <action type="fix" issue="CONFIGURATION-786">Child configurations are reloaded after a change of the definition configuration.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in FileBasedConfigurationBuilder.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in MultiFileConfigurationBuilder.</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix SpotBugs USO_UNSAFE_METHOD_SYNCHRONIZATION in ReloadingCombinedConfigurationBuilder.</action>
