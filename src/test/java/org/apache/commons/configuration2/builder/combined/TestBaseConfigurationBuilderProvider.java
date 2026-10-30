@@ -148,6 +148,7 @@ public class TestBaseConfigurationBuilderProvider {
     /**
      * Tests that the allowFailOnInit flag is not set for builders which are not optional.
      */
+    @Test
     void testGetBuilderAllowFailOnInitNotOptional() throws ConfigurationException {
         checkAllowFailOnInit(false, CombinedConfigurationBuilder.ATTR_FORCECREATE);
     }

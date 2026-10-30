@@ -65,6 +65,7 @@ public class TestJSONConfiguration {
     /**
      * Tests CONFIGURATION-793.
      */
+    @Test
     void testGetListNestedWithList() {
         assertEquals(Arrays.asList("col1", "col2"), jsonConfiguration.getList(String.class, "key4.key5"));
     }
