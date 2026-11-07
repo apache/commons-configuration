@@ -176,7 +176,7 @@ public class TestHierarchicalXMLConfiguration {
         config.setProperty("clear", "yes");
         config.setProperty("mean", "now it's simple");
         config.addProperty("[@topattr]", "available");
-        config.addProperty("[@topattr_other]", "successfull");
+        config.addProperty("[@topattr_other]", "successful");
 
         final File saveFile = newFile(TEST_SAVENAME, tempFolder);
         handler.save(saveFile);
