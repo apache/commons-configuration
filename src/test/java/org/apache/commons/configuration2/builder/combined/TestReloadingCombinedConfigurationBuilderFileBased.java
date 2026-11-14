@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.builder.combined;
 
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.reloading.AlwaysReloadingDetector;
 import org.apache.commons.configuration2.reloading.RandomReloadingDetector;
+import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.configuration2.tree.MergeCombiner;
@@ -260,6 +262,55 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
         builder.configure(parameters.combined().setDefinitionBuilder(
             new ReloadingFileBasedConfigurationBuilder<>(XMLConfiguration.class).configure(parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile))));
         checkReloadDefinitionFile(defFile);
+    }
+
+    /**
+     * Tests whether the reloading controller obtained from the builder is still connected to the child configuration
+     * sources after the definition file has been reloaded. A reload of the definition configuration creates a new set of
+     * child builders; the controller held by a caller - for instance by a {@code PeriodicReloadingTrigger} - must
+     * nevertheless detect changes of the newly created child configuration sources.
+     */
+    @Test
+    void testReloadChildFileAfterDefinitionReload() throws Exception {
+        final long fileTimeBase = 1_000_000_000_000L;
+        final File childFile1 = writeReloadFile(null, 1, 0);
+        assertTrue(childFile1.setLastModified(fileTimeBase));
+        final File childFile2 = writeReloadFile(null, 1, 1);
+        assertTrue(childFile2.setLastModified(fileTimeBase + 1000));
+        final File defFile = newFile(tempFolder);
+        final XMLConfiguration definition = new XMLConfiguration();
+        addReloadSource(definition, childFile1.getAbsolutePath());
+        definition.addProperty(PROP_SRC + "[@reloadingRefreshDelay]", 0L);
+        new FileHandler(definition).save(defFile);
+        assertTrue(defFile.setLastModified(fileTimeBase + 2000));
+
+        builder.configure(parameters.combined().setDefinitionBuilderParameters(parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
+        CombinedConfiguration config = builder.getConfiguration();
+        assertEquals(0, config.getInt(testProperty(1)));
+
+        // the controller is obtained once and kept by the caller like a reloading trigger does
+        final ReloadingController controller = builder.getReloadingController();
+
+        // change the definition file so that it refers to a different child configuration source
+        definition.setProperty(PROP_SRC + "[@fileName]", childFile2.getAbsolutePath());
+        new FileHandler(definition).save(defFile);
+        assertTrue(defFile.setLastModified(fileTimeBase + 3000));
+        assertTrue(controller.checkForReloading(null));
+        config = builder.getConfiguration();
+        assertEquals(1, config.getInt(testProperty(1)));
+
+        // a modification of the child configuration source which is no longer referenced must not cause a reload
+        writeReloadFile(childFile1, 1, 3);
+        assertTrue(childFile1.setLastModified(fileTimeBase + 4000));
+        assertFalse(controller.checkForReloading(null));
+        assertEquals(1, builder.getConfiguration().getInt(testProperty(1)));
+
+        // a change of the new child configuration source must still be detected by the original controller
+        writeReloadFile(childFile2, 1, 2);
+        assertTrue(childFile2.setLastModified(fileTimeBase + 5000));
+        assertTrue(controller.checkForReloading(null));
+        config = builder.getConfiguration();
+        assertEquals(2, config.getInt(testProperty(1)));
     }
 
     /**
