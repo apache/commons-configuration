@@ -17,6 +17,10 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -531,5 +535,21 @@ public class TestConfigurationUtils {
 
         config.setProperty("one", "1");
         assertEquals("two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config));
+
+        assertEquals("", ConfigurationUtils.toString((Configuration) null));
+        assertEquals("", ConfigurationUtils.toString((ImmutableConfiguration) null));
+    }
+
+    @Test
+    public void testDumpNullSafe() {
+        ConfigurationUtils.dump((Configuration) null, (PrintStream) null);
+        ConfigurationUtils.dump((Configuration) null, (PrintWriter) null);
+        ConfigurationUtils.dump((ImmutableConfiguration) null, (PrintStream) null);
+        ConfigurationUtils.dump((ImmutableConfiguration) null, (PrintWriter) null);
+
+        final StringWriter writer = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(writer);
+        ConfigurationUtils.dump((ImmutableConfiguration) null, printWriter);
+        assertEquals("", writer.toString());
     }
 }
