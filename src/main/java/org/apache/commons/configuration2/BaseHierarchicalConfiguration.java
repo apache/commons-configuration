@@ -681,6 +681,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         sub.setSynchronizer(getSynchronizer());
         sub.setExpressionEngine(getExpressionEngine());
         sub.setListDelimiterHandler(getListDelimiterHandler());
+        sub.setConversionHandler(getConversionHandler());
         sub.setThrowExceptionOnMissing(isThrowExceptionOnMissing());
         sub.getInterpolator().setParentInterpolator(getInterpolator());
     }
