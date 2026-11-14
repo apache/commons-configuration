@@ -366,6 +366,9 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void dump(final ImmutableConfiguration configuration, final PrintStream out) {
+        if (configuration == null || out == null) {
+            return;
+        }
         dump(configuration, new PrintWriter(out));
     }
 
@@ -377,6 +380,9 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static void dump(final ImmutableConfiguration configuration, final PrintWriter out) {
+        if (configuration == null || out == null) {
+            return;
+        }
         final AtomicInteger last = new AtomicInteger(configuration.size());
         configuration.forEach((k, v) -> {
             out.print(k);
@@ -470,6 +476,9 @@ public final class ConfigurationUtils {
      * @since 2.2
      */
     public static String toString(final ImmutableConfiguration configuration) {
+        if (configuration == null) {
+            return "";
+        }
         final StringWriter writer = new StringWriter();
         dump(configuration, new PrintWriter(writer));
         return writer.toString();
