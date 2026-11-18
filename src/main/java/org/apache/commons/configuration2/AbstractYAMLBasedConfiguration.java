@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,23 +75,28 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * Creates a part of the hierarchical nodes structure of the resulting configuration. The passed in element is converted into one or multiple configuration
      * nodes. (If list structures are involved, multiple nodes are returned.)
      *
+     * <p>
+     * A map or collection that contains itself, directly or indirectly, through a YAML alias is skipped when it is reached again to avoid an infinite
+     * recursion. A map or collection that is referenced several times through YAML aliases without a cycle is processed each time.
+     * </p>
+     *
      * @param key     The key of the new node(s).
      * @param elem    The element to be processed.
-     * @param visited The set of visited objects.
+     * @param visited The maps and collections on the path from the root to the element.
      * @return A list with configuration nodes representing the element
      */
     private static List<ImmutableNode> constructHierarchy(final String key, final Object elem, final Set<Object> visited) {
-        if (elem instanceof Map) {
-            return isVisisted(elem, visited) ? Collections.emptyList() : parseMap((Map<String, Object>) elem, key, visited);
-        }
-        if (elem instanceof Collection) {
-            return isVisisted(elem, visited) ? Collections.emptyList() : parseCollection((Collection<Object>) elem, key, visited);
+        if (elem instanceof Map || elem instanceof Collection) {
+            if (!visited.add(elem)) {
+                return Collections.emptyList();
+            }
+            try {
+                return elem instanceof Map ? parseMap((Map<String, Object>) elem, key, visited) : parseCollection((Collection<Object>) elem, key, visited);
+            } finally {
+                visited.remove(elem);
+            }
         }
         return Collections.singletonList(new ImmutableNode.Builder().name(key).value(elem).create());
-    }
-
-    private static boolean isVisisted(final Object elem, final Set<Object> visited) {
-        return !visited.add(System.identityHashCode(elem));
     }
 
     /**
@@ -169,7 +174,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param map The map to be processed
      */
     protected void load(final Map<String, Object> map) {
-        final List<ImmutableNode> roots = constructHierarchy(StringUtils.EMPTY, map, new HashSet<>());
+        final List<ImmutableNode> roots = constructHierarchy(StringUtils.EMPTY, map, Collections.newSetFromMap(new IdentityHashMap<>()));
         if (!roots.isEmpty()) {
             getNodeModel().setRootNode(roots.get(0));
         }
