@@ -25,9 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.configuration2.convert.ConversionHandler;
+import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ImmutableNode;
@@ -304,6 +308,25 @@ public class TestHierarchicalConfiguration {
         final BaseHierarchicalConfiguration sub = (BaseHierarchicalConfiguration) subs.get(0);
         assertEquals(config.getListDelimiterHandler(), sub.getListDelimiterHandler());
         assertTrue(sub.isThrowExceptionOnMissing());
+    }
+
+    /**
+     * Tests whether sub configurations use the conversion handler of their parent.
+     */
+    @Test
+    void testSubConfigurationsUseConversionHandlerOfParent() {
+        final ConversionHandler handler = new DefaultConversionHandler() {
+            @Override
+            public <T> T to(final Object src, final Class<T> targetCls, final ConfigurationInterpolator ci) {
+                return targetCls == Locale.class ? targetCls.cast(Locale.CANADA) : super.to(src, targetCls, ci);
+            }
+        };
+        config.setConversionHandler(handler);
+        final String key = "tables.table(0)";
+        assertEquals(Locale.CANADA, config.configurationAt(key).get(Locale.class, "name"));
+        assertEquals(Locale.CANADA, config.configurationAt(key, true).get(Locale.class, "name"));
+        assertEquals(Locale.CANADA, config.immutableConfigurationAt(key).get(Locale.class, "name"));
+        assertEquals(Locale.CANADA, config.childConfigurationsAt("tables").get(0).get(Locale.class, "name"));
     }
 
     /**
