@@ -55,12 +55,12 @@
     		</p>
     			<source><![CDATA[
 Parameters params = new Parameters();
-FileBasedConfigurationBuilder<Configuration> builderDefaults =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<PropertiesConfiguration> builderDefaults =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFile(fileToDefaults));
-FileBasedConfigurationBuilder<Configuration> builderOther =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<PropertiesConfiguration> builderOther =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFile(fileToOtherProperties));
 
@@ -80,8 +80,8 @@ cc.addConfiguration(builderDefaults.getConfiguration());
 			</p>
     			<source><![CDATA[
 Parameters params = new Parameters();
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class, null, true)
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class, null, true)
     .configure(params.properties()
         .setFile(fileToSaveChangesIn));
 
@@ -101,9 +101,9 @@ Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
 FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
     new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class);
 PropertiesConfiguration config = builder.getConfiguration();
-for (Iterator<String> i = changes.getKeys(); i.hasNext()){
+for (Iterator<String> i = changes.getKeys(); i.hasNext();){
     String key = i.next();
-    Object value = changes.get(key);
+    Object value = changes.getProperty(key);
     config.setProperty(key, value);
 }
 ]]></source>

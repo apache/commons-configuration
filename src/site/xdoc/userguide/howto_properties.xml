@@ -179,11 +179,11 @@ List&lt;Object&gt; colorList = config.getList("colors.pie");
         </p>
         <source><![CDATA[
 Parameters params = new Parameters();
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFileName("usergui.properties")
-        .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
 Configuration config = builder.getConfiguration();
 ]]></source>
         <p>
