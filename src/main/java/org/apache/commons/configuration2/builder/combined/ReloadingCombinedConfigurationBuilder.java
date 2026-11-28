@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.builder.combined;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -71,6 +72,13 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
     private ReloadingController reloadingController;
 
     /**
+     * An immutable snapshot of the reloading controllers currently managed by the combined reloading controller. It is
+     * replaced under the lock of this builder whenever the managed builders change and is volatile so that the combined
+     * reloading controller can read it without acquiring that lock.
+     */
+    private volatile Collection<ReloadingController> subControllers = Collections.emptyList();
+
+    /**
      * A lock object for synchronizing access.
      */
     private final Object lock = new Object();
@@ -120,11 +128,13 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
      * @throws ConfigurationException if an error occurs
      */
     protected ReloadingController createReloadingController() throws ConfigurationException {
-        final Collection<ReloadingController> subControllers = new LinkedList<>();
-        final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder = getDefinitionBuilder();
-        obtainReloadingController(subControllers, defBuilder);
-        getChildBuilders().forEach(b -> obtainReloadingController(subControllers, b));
-        final CombinedReloadingController ctrl = new CombinedReloadingController(subControllers);
+        refreshSubControllers();
+        final CombinedReloadingController ctrl = new CombinedReloadingController(Collections.emptyList()) {
+            @Override
+            public Collection<ReloadingController> getSubControllers() {
+                return ReloadingCombinedConfigurationBuilder.this.subControllers;
+            }
+        };
         ctrl.resetInitialReloadingState();
         return ctrl;
     }
@@ -172,6 +182,23 @@ public class ReloadingCombinedConfigurationBuilder extends CombinedConfiguration
         super.initResultInstance(result);
         if (reloadingController == null) {
             reloadingController = createReloadingController();
+        } else {
+            refreshSubControllers();
         }
+    }
+
+    /**
+     * Updates the snapshot of the reloading controllers managed by the combined reloading controller. This method is
+     * called with the lock of this builder held, after the builders of the combined configuration have been created or
+     * replaced. The volatile snapshot makes the current controllers visible to the combined reloading controller without
+     * that controller acquiring the lock of this builder, so no lock ordering problems can be introduced.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    private void refreshSubControllers() throws ConfigurationException {
+        final Collection<ReloadingController> ctrls = new LinkedList<>();
+        obtainReloadingController(ctrls, getDefinitionBuilder());
+        getChildBuilders().forEach(b -> obtainReloadingController(ctrls, b));
+        subControllers = Collections.unmodifiableCollection(ctrls);
     }
 }
